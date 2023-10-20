@@ -4,31 +4,31 @@ using UnityEngine;
 // Token: 0x02000080 RID: 128
 public class CharacterCameraConstraint : MonoBehaviour
 {
-	// Token: 0x06000295 RID: 661 RVA: 0x00011277 File Offset: 0x0000F477
+	// Token: 0x06000295 RID: 661 RVA: 0x00011053 File Offset: 0x0000F253
 	private CharacterCameraConstraint()
 	{
 	}
 
-	// Token: 0x06000296 RID: 662 RVA: 0x0001127F File Offset: 0x0000F47F
+	// Token: 0x06000296 RID: 662 RVA: 0x0001105B File Offset: 0x0000F25B
 	private void Awake()
 	{
 		this._character = base.GetComponent<CapsuleCollider>();
 		this._simplePlayerController = base.GetComponent<SimpleCapsuleWithStickMovement>();
 	}
 
-	// Token: 0x06000297 RID: 663 RVA: 0x00011299 File Offset: 0x0000F499
+	// Token: 0x06000297 RID: 663 RVA: 0x00011075 File Offset: 0x0000F275
 	private void OnEnable()
 	{
 		this._simplePlayerController.CameraUpdated += this.CameraUpdate;
 	}
 
-	// Token: 0x06000298 RID: 664 RVA: 0x000112B2 File Offset: 0x0000F4B2
+	// Token: 0x06000298 RID: 664 RVA: 0x0001108E File Offset: 0x0000F28E
 	private void OnDisable()
 	{
 		this._simplePlayerController.CameraUpdated -= this.CameraUpdate;
 	}
 
-	// Token: 0x06000299 RID: 665 RVA: 0x000112CC File Offset: 0x0000F4CC
+	// Token: 0x06000299 RID: 665 RVA: 0x000110A8 File Offset: 0x0000F2A8
 	private void CameraUpdate()
 	{
 		float value = 0f;
@@ -62,7 +62,7 @@ public class CharacterCameraConstraint : MonoBehaviour
 		this.CameraRig.transform.localPosition = new Vector3(0f, y, 0f);
 	}
 
-	// Token: 0x0600029A RID: 666 RVA: 0x00011454 File Offset: 0x0000F654
+	// Token: 0x0600029A RID: 666 RVA: 0x00011230 File Offset: 0x0000F430
 	private bool CheckCameraOverlapped()
 	{
 		Camera component = this.CameraRig.centerEyeAnchor.GetComponent<Camera>();
@@ -76,7 +76,7 @@ public class CharacterCameraConstraint : MonoBehaviour
 		return Physics.SphereCast(position, component.nearClipPlane, direction, out raycastHit, magnitude, this.CollideLayers, QueryTriggerInteraction.Ignore);
 	}
 
-	// Token: 0x0600029B RID: 667 RVA: 0x00011544 File Offset: 0x0000F744
+	// Token: 0x0600029B RID: 667 RVA: 0x00011320 File Offset: 0x0000F520
 	private bool CheckCameraNearClipping(out float result)
 	{
 		Camera component = this.CameraRig.centerEyeAnchor.GetComponent<Camera>();

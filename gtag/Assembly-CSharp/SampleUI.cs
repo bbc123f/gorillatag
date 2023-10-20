@@ -5,7 +5,7 @@ using UnityEngine.UI;
 // Token: 0x020000A4 RID: 164
 public class SampleUI : MonoBehaviour
 {
-	// Token: 0x06000395 RID: 917 RVA: 0x00015ED8 File Offset: 0x000140D8
+	// Token: 0x06000395 RID: 917 RVA: 0x00015CB4 File Offset: 0x00013EB4
 	private void Start()
 	{
 		DebugUIBuilder.instance.AddLabel("Enable Firebase in your project before running this sample", 1);
@@ -13,7 +13,7 @@ public class SampleUI : MonoBehaviour
 		this.inMenu = true;
 	}
 
-	// Token: 0x06000396 RID: 918 RVA: 0x00015EFC File Offset: 0x000140FC
+	// Token: 0x06000396 RID: 918 RVA: 0x00015CD8 File Offset: 0x00013ED8
 	private void Update()
 	{
 		if (OVRInput.GetDown(OVRInput.Button.Two, OVRInput.Controller.Active) || OVRInput.GetDown(OVRInput.Button.Start, OVRInput.Controller.Active))
@@ -30,7 +30,7 @@ public class SampleUI : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000397 RID: 919 RVA: 0x00015F54 File Offset: 0x00014154
+	// Token: 0x06000397 RID: 919 RVA: 0x00015D30 File Offset: 0x00013F30
 	private string GetText()
 	{
 		return this.inputText.GetComponentInChildren<InputField>().text;

@@ -4,7 +4,7 @@ using UnityEngine;
 // Token: 0x0200008F RID: 143
 public class TeleportOrientationHandlerThumbstick : TeleportOrientationHandler
 {
-	// Token: 0x06000318 RID: 792 RVA: 0x00013108 File Offset: 0x00011308
+	// Token: 0x06000318 RID: 792 RVA: 0x00012EE4 File Offset: 0x000110E4
 	protected override void InitializeTeleportDestination()
 	{
 		this._initialRotation = base.LocomotionTeleport.GetHeadRotationY();
@@ -12,7 +12,7 @@ public class TeleportOrientationHandlerThumbstick : TeleportOrientationHandler
 		this._lastValidDirection = default(Vector2);
 	}
 
-	// Token: 0x06000319 RID: 793 RVA: 0x00013134 File Offset: 0x00011334
+	// Token: 0x06000319 RID: 793 RVA: 0x00012F10 File Offset: 0x00011110
 	protected override void UpdateTeleportDestination()
 	{
 		float num;

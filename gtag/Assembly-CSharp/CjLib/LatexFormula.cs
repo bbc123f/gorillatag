@@ -3,21 +3,21 @@ using UnityEngine;
 
 namespace CjLib
 {
-	// Token: 0x02000355 RID: 853
+	// Token: 0x02000357 RID: 855
 	[ExecuteInEditMode]
 	public class LatexFormula : MonoBehaviour
 	{
-		// Token: 0x0400199A RID: 6554
+		// Token: 0x040019A7 RID: 6567
 		public static readonly string BaseUrl = "http://tex.s2cms.ru/svg/f(x) ";
 
-		// Token: 0x0400199B RID: 6555
+		// Token: 0x040019A8 RID: 6568
 		private int m_hash = LatexFormula.BaseUrl.GetHashCode();
 
-		// Token: 0x0400199C RID: 6556
+		// Token: 0x040019A9 RID: 6569
 		[SerializeField]
 		private string m_formula = "";
 
-		// Token: 0x0400199D RID: 6557
+		// Token: 0x040019AA RID: 6570
 		private Texture m_texture;
 	}
 }

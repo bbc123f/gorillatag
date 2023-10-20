@@ -7,10 +7,10 @@ using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
 
-// Token: 0x02000167 RID: 359
+// Token: 0x02000168 RID: 360
 public class GorillaBattleManager : GorillaGameManager, IInRoomCallbacks, IMatchmakingCallbacks, IPunObservable
 {
-	// Token: 0x060008E3 RID: 2275 RVA: 0x00035F8D File Offset: 0x0003418D
+	// Token: 0x060008E7 RID: 2279 RVA: 0x00035E8E File Offset: 0x0003408E
 	private void ActivateBattleBalloons(bool enable)
 	{
 		if (GorillaTagger.Instance.offlineVRRig != null)
@@ -19,19 +19,19 @@ public class GorillaBattleManager : GorillaGameManager, IInRoomCallbacks, IMatch
 		}
 	}
 
-	// Token: 0x060008E4 RID: 2276 RVA: 0x00035FBB File Offset: 0x000341BB
+	// Token: 0x060008E8 RID: 2280 RVA: 0x00035EBC File Offset: 0x000340BC
 	private bool HasFlag(GorillaBattleManager.BattleStatus state, GorillaBattleManager.BattleStatus statusFlag)
 	{
 		return (state & statusFlag) > GorillaBattleManager.BattleStatus.None;
 	}
 
-	// Token: 0x060008E5 RID: 2277 RVA: 0x00035FC3 File Offset: 0x000341C3
+	// Token: 0x060008E9 RID: 2281 RVA: 0x00035EC4 File Offset: 0x000340C4
 	public override string GameMode()
 	{
 		return "BATTLE";
 	}
 
-	// Token: 0x060008E6 RID: 2278 RVA: 0x00035FCC File Offset: 0x000341CC
+	// Token: 0x060008EA RID: 2282 RVA: 0x00035ECC File Offset: 0x000340CC
 	private void ActivateDefaultSlingShot()
 	{
 		VRRig offlineVRRig = GorillaTagger.Instance.offlineVRRig;
@@ -43,7 +43,7 @@ public class GorillaBattleManager : GorillaGameManager, IInRoomCallbacks, IMatch
 		}
 	}
 
-	// Token: 0x060008E7 RID: 2279 RVA: 0x00036016 File Offset: 0x00034216
+	// Token: 0x060008EB RID: 2283 RVA: 0x00035F16 File Offset: 0x00034116
 	public override void Awake()
 	{
 		base.Awake();
@@ -56,14 +56,14 @@ public class GorillaBattleManager : GorillaGameManager, IInRoomCallbacks, IMatch
 		this.ActivateBattleBalloons(true);
 	}
 
-	// Token: 0x060008E8 RID: 2280 RVA: 0x0003604F File Offset: 0x0003424F
+	// Token: 0x060008EC RID: 2284 RVA: 0x00035F4F File Offset: 0x0003414F
 	private void Transition(GorillaBattleManager.BattleState newState)
 	{
 		this.currentState = newState;
 		Debug.Log("current state is: " + this.currentState.ToString());
 	}
 
-	// Token: 0x060008E9 RID: 2281 RVA: 0x00036078 File Offset: 0x00034278
+	// Token: 0x060008ED RID: 2285 RVA: 0x00035F78 File Offset: 0x00034178
 	public void UpdateBattleState()
 	{
 		if (base.photonView.IsMine)
@@ -121,7 +121,7 @@ public class GorillaBattleManager : GorillaGameManager, IInRoomCallbacks, IMatch
 		}
 	}
 
-	// Token: 0x060008EA RID: 2282 RVA: 0x00036184 File Offset: 0x00034384
+	// Token: 0x060008EE RID: 2286 RVA: 0x00036084 File Offset: 0x00034284
 	private bool CheckForGameEnd()
 	{
 		this.bcount = 0;
@@ -150,7 +150,7 @@ public class GorillaBattleManager : GorillaGameManager, IInRoomCallbacks, IMatch
 		return this.bcount == 0 || this.rcount == 0;
 	}
 
-	// Token: 0x060008EB RID: 2283 RVA: 0x0003625C File Offset: 0x0003445C
+	// Token: 0x060008EF RID: 2287 RVA: 0x0003615C File Offset: 0x0003435C
 	public IEnumerator StartBattleCountdown()
 	{
 		this.coroutineRunning = true;
@@ -185,7 +185,7 @@ public class GorillaBattleManager : GorillaGameManager, IInRoomCallbacks, IMatch
 		yield break;
 	}
 
-	// Token: 0x060008EC RID: 2284 RVA: 0x0003626C File Offset: 0x0003446C
+	// Token: 0x060008F0 RID: 2288 RVA: 0x0003616C File Offset: 0x0003436C
 	public void StartBattle()
 	{
 		foreach (Player player in PhotonNetwork.PlayerList)
@@ -203,7 +203,7 @@ public class GorillaBattleManager : GorillaGameManager, IInRoomCallbacks, IMatch
 		}
 	}
 
-	// Token: 0x060008ED RID: 2285 RVA: 0x000362DC File Offset: 0x000344DC
+	// Token: 0x060008F1 RID: 2289 RVA: 0x000361DC File Offset: 0x000343DC
 	private bool EndBattleGame()
 	{
 		if ((float)PhotonNetwork.PlayerList.Length >= this.playerMin)
@@ -227,19 +227,19 @@ public class GorillaBattleManager : GorillaGameManager, IInRoomCallbacks, IMatch
 		return false;
 	}
 
-	// Token: 0x060008EE RID: 2286 RVA: 0x00036365 File Offset: 0x00034565
+	// Token: 0x060008F2 RID: 2290 RVA: 0x00036265 File Offset: 0x00034465
 	public bool BattleEnd()
 	{
 		return Time.time > this.timeBattleEnded + this.tagCoolDown;
 	}
 
-	// Token: 0x060008EF RID: 2287 RVA: 0x0003637B File Offset: 0x0003457B
+	// Token: 0x060008F3 RID: 2291 RVA: 0x0003627B File Offset: 0x0003447B
 	public bool SlingshotHit(Player myPlayer, Player otherPlayer)
 	{
 		return this.playerLives.TryGetValue(otherPlayer.ActorNumber, out this.lives) && this.lives > 0;
 	}
 
-	// Token: 0x060008F0 RID: 2288 RVA: 0x000363A4 File Offset: 0x000345A4
+	// Token: 0x060008F4 RID: 2292 RVA: 0x000362A4 File Offset: 0x000344A4
 	[PunRPC]
 	public void ReportSlingshotHit(Player taggedPlayer, Vector3 hitLocation, int projectileCount, PhotonMessageInfo info)
 	{
@@ -308,7 +308,7 @@ public class GorillaBattleManager : GorillaGameManager, IInRoomCallbacks, IMatch
 		}
 	}
 
-	// Token: 0x060008F1 RID: 2289 RVA: 0x000365BC File Offset: 0x000347BC
+	// Token: 0x060008F5 RID: 2293 RVA: 0x000364BC File Offset: 0x000346BC
 	public override void ReportContactWithLava(Player player)
 	{
 		if (!base.photonView.IsMine || this.currentState != GorillaBattleManager.BattleState.GameRunning)
@@ -330,13 +330,13 @@ public class GorillaBattleManager : GorillaGameManager, IInRoomCallbacks, IMatch
 		}
 	}
 
-	// Token: 0x060008F2 RID: 2290 RVA: 0x00036644 File Offset: 0x00034844
+	// Token: 0x060008F6 RID: 2294 RVA: 0x00036544 File Offset: 0x00034744
 	public override bool LavaWouldAffectPlayer(Player player, bool enteredLavaThisFrame)
 	{
 		return this.playerLives.TryGetValue(player.ActorNumber, out this.lives) && this.lives > 0;
 	}
 
-	// Token: 0x060008F3 RID: 2291 RVA: 0x0003666C File Offset: 0x0003486C
+	// Token: 0x060008F7 RID: 2295 RVA: 0x0003656C File Offset: 0x0003476C
 	public override void OnPlayerEnteredRoom(Player newPlayer)
 	{
 		base.OnPlayerEnteredRoom(newPlayer);
@@ -357,7 +357,7 @@ public class GorillaBattleManager : GorillaGameManager, IInRoomCallbacks, IMatch
 		this.playerProjectiles.Add(newPlayer, new List<GorillaGameManager.ProjectileInfo>());
 	}
 
-	// Token: 0x060008F4 RID: 2292 RVA: 0x000366EC File Offset: 0x000348EC
+	// Token: 0x060008F8 RID: 2296 RVA: 0x000365EC File Offset: 0x000347EC
 	public override void OnPlayerLeftRoom(Player otherPlayer)
 	{
 		base.OnPlayerLeftRoom(otherPlayer);
@@ -376,12 +376,12 @@ public class GorillaBattleManager : GorillaGameManager, IInRoomCallbacks, IMatch
 		this.playerVRRigDict.Remove(otherPlayer.ActorNumber);
 	}
 
-	// Token: 0x060008F5 RID: 2293 RVA: 0x00036777 File Offset: 0x00034977
+	// Token: 0x060008F9 RID: 2297 RVA: 0x00036677 File Offset: 0x00034877
 	void IInRoomCallbacks.OnMasterClientSwitched(Player newMasterClient)
 	{
 	}
 
-	// Token: 0x060008F6 RID: 2294 RVA: 0x0003677C File Offset: 0x0003497C
+	// Token: 0x060008FA RID: 2298 RVA: 0x0003667C File Offset: 0x0003487C
 	void IPunObservable.OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
 	{
 		if (info.Sender != PhotonNetwork.MasterClient)
@@ -410,7 +410,7 @@ public class GorillaBattleManager : GorillaGameManager, IInRoomCallbacks, IMatch
 		this.CopyArrayToBattleDict();
 	}
 
-	// Token: 0x060008F7 RID: 2295 RVA: 0x00036868 File Offset: 0x00034A68
+	// Token: 0x060008FB RID: 2299 RVA: 0x00036768 File Offset: 0x00034968
 	public override int MyMatIndex(Player forPlayer)
 	{
 		this.tempStatus = this.GetPlayerStatus(forPlayer);
@@ -466,7 +466,7 @@ public class GorillaBattleManager : GorillaGameManager, IInRoomCallbacks, IMatch
 		return 0;
 	}
 
-	// Token: 0x060008F8 RID: 2296 RVA: 0x00036954 File Offset: 0x00034B54
+	// Token: 0x060008FC RID: 2300 RVA: 0x00036854 File Offset: 0x00034A54
 	public override float[] LocalPlayerSpeed()
 	{
 		if (this.playerStatusDict.TryGetValue(PhotonNetwork.LocalPlayer.ActorNumber, out this.tempStatus))
@@ -495,7 +495,7 @@ public class GorillaBattleManager : GorillaGameManager, IInRoomCallbacks, IMatch
 		return this.playerSpeed;
 	}
 
-	// Token: 0x060008F9 RID: 2297 RVA: 0x00036A35 File Offset: 0x00034C35
+	// Token: 0x060008FD RID: 2301 RVA: 0x00036935 File Offset: 0x00034B35
 	public override void Update()
 	{
 		base.Update();
@@ -506,7 +506,7 @@ public class GorillaBattleManager : GorillaGameManager, IInRoomCallbacks, IMatch
 		this.ActivateDefaultSlingShot();
 	}
 
-	// Token: 0x060008FA RID: 2298 RVA: 0x00036A58 File Offset: 0x00034C58
+	// Token: 0x060008FE RID: 2302 RVA: 0x00036958 File Offset: 0x00034B58
 	public override void InfrequentUpdate()
 	{
 		base.InfrequentUpdate();
@@ -528,7 +528,7 @@ public class GorillaBattleManager : GorillaGameManager, IInRoomCallbacks, IMatch
 		}
 	}
 
-	// Token: 0x060008FB RID: 2299 RVA: 0x00036AF4 File Offset: 0x00034CF4
+	// Token: 0x060008FF RID: 2303 RVA: 0x000369F4 File Offset: 0x00034BF4
 	public int GetPlayerLives(Player player)
 	{
 		if (player == null)
@@ -542,21 +542,21 @@ public class GorillaBattleManager : GorillaGameManager, IInRoomCallbacks, IMatch
 		return 0;
 	}
 
-	// Token: 0x060008FC RID: 2300 RVA: 0x00036B1C File Offset: 0x00034D1C
+	// Token: 0x06000900 RID: 2304 RVA: 0x00036A1C File Offset: 0x00034C1C
 	public bool PlayerInHitCooldown(Player player)
 	{
 		float num;
 		return this.playerHitTimes.TryGetValue(player.ActorNumber, out num) && num + this.hitCooldown > Time.time;
 	}
 
-	// Token: 0x060008FD RID: 2301 RVA: 0x00036B50 File Offset: 0x00034D50
+	// Token: 0x06000901 RID: 2305 RVA: 0x00036A50 File Offset: 0x00034C50
 	public bool PlayerInStunCooldown(Player player)
 	{
 		float num;
 		return this.playerStunTimes.TryGetValue(player.ActorNumber, out num) && num + this.hitCooldown + this.stunGracePeriod > Time.time;
 	}
 
-	// Token: 0x060008FE RID: 2302 RVA: 0x00036B8A File Offset: 0x00034D8A
+	// Token: 0x06000902 RID: 2306 RVA: 0x00036A8A File Offset: 0x00034C8A
 	public GorillaBattleManager.BattleStatus GetPlayerStatus(Player player)
 	{
 		if (this.playerStatusDict.TryGetValue(player.ActorNumber, out this.tempStatus))
@@ -566,52 +566,52 @@ public class GorillaBattleManager : GorillaGameManager, IInRoomCallbacks, IMatch
 		return GorillaBattleManager.BattleStatus.None;
 	}
 
-	// Token: 0x060008FF RID: 2303 RVA: 0x00036BAD File Offset: 0x00034DAD
+	// Token: 0x06000903 RID: 2307 RVA: 0x00036AAD File Offset: 0x00034CAD
 	public bool OnRedTeam(GorillaBattleManager.BattleStatus status)
 	{
 		return this.HasFlag(status, GorillaBattleManager.BattleStatus.RedTeam);
 	}
 
-	// Token: 0x06000900 RID: 2304 RVA: 0x00036BB8 File Offset: 0x00034DB8
+	// Token: 0x06000904 RID: 2308 RVA: 0x00036AB8 File Offset: 0x00034CB8
 	public bool OnRedTeam(Player player)
 	{
 		GorillaBattleManager.BattleStatus playerStatus = this.GetPlayerStatus(player);
 		return this.OnRedTeam(playerStatus);
 	}
 
-	// Token: 0x06000901 RID: 2305 RVA: 0x00036BD4 File Offset: 0x00034DD4
+	// Token: 0x06000905 RID: 2309 RVA: 0x00036AD4 File Offset: 0x00034CD4
 	public bool OnBlueTeam(GorillaBattleManager.BattleStatus status)
 	{
 		return this.HasFlag(status, GorillaBattleManager.BattleStatus.BlueTeam);
 	}
 
-	// Token: 0x06000902 RID: 2306 RVA: 0x00036BE0 File Offset: 0x00034DE0
+	// Token: 0x06000906 RID: 2310 RVA: 0x00036AE0 File Offset: 0x00034CE0
 	public bool OnBlueTeam(Player player)
 	{
 		GorillaBattleManager.BattleStatus playerStatus = this.GetPlayerStatus(player);
 		return this.OnBlueTeam(playerStatus);
 	}
 
-	// Token: 0x06000903 RID: 2307 RVA: 0x00036BFC File Offset: 0x00034DFC
+	// Token: 0x06000907 RID: 2311 RVA: 0x00036AFC File Offset: 0x00034CFC
 	public bool OnNoTeam(GorillaBattleManager.BattleStatus status)
 	{
 		return !this.OnRedTeam(status) && !this.OnBlueTeam(status);
 	}
 
-	// Token: 0x06000904 RID: 2308 RVA: 0x00036C14 File Offset: 0x00034E14
+	// Token: 0x06000908 RID: 2312 RVA: 0x00036B14 File Offset: 0x00034D14
 	public bool OnNoTeam(Player player)
 	{
 		GorillaBattleManager.BattleStatus playerStatus = this.GetPlayerStatus(player);
 		return this.OnNoTeam(playerStatus);
 	}
 
-	// Token: 0x06000905 RID: 2309 RVA: 0x00036C30 File Offset: 0x00034E30
+	// Token: 0x06000909 RID: 2313 RVA: 0x00036B30 File Offset: 0x00034D30
 	public override bool LocalCanTag(Player myPlayer, Player otherPlayer)
 	{
 		return false;
 	}
 
-	// Token: 0x06000906 RID: 2310 RVA: 0x00036C34 File Offset: 0x00034E34
+	// Token: 0x0600090A RID: 2314 RVA: 0x00036B34 File Offset: 0x00034D34
 	public bool OnSameTeam(GorillaBattleManager.BattleStatus playerA, GorillaBattleManager.BattleStatus playerB)
 	{
 		bool flag = this.OnRedTeam(playerA) && this.OnRedTeam(playerB);
@@ -619,7 +619,7 @@ public class GorillaBattleManager : GorillaGameManager, IInRoomCallbacks, IMatch
 		return flag || flag2;
 	}
 
-	// Token: 0x06000907 RID: 2311 RVA: 0x00036C6C File Offset: 0x00034E6C
+	// Token: 0x0600090B RID: 2315 RVA: 0x00036B6C File Offset: 0x00034D6C
 	public bool OnSameTeam(Player myPlayer, Player otherPlayer)
 	{
 		GorillaBattleManager.BattleStatus playerStatus = this.GetPlayerStatus(myPlayer);
@@ -627,7 +627,7 @@ public class GorillaBattleManager : GorillaGameManager, IInRoomCallbacks, IMatch
 		return this.OnSameTeam(playerStatus, playerStatus2);
 	}
 
-	// Token: 0x06000908 RID: 2312 RVA: 0x00036C94 File Offset: 0x00034E94
+	// Token: 0x0600090C RID: 2316 RVA: 0x00036B94 File Offset: 0x00034D94
 	public bool LocalCanHit(Player myPlayer, Player otherPlayer)
 	{
 		bool flag = !this.OnSameTeam(myPlayer, otherPlayer);
@@ -635,7 +635,7 @@ public class GorillaBattleManager : GorillaGameManager, IInRoomCallbacks, IMatch
 		return flag && flag2;
 	}
 
-	// Token: 0x06000909 RID: 2313 RVA: 0x00036CBC File Offset: 0x00034EBC
+	// Token: 0x0600090D RID: 2317 RVA: 0x00036BBC File Offset: 0x00034DBC
 	private void CopyBattleDictToArray()
 	{
 		for (int i = 0; i < this.playerLivesArray.Length; i++)
@@ -654,7 +654,7 @@ public class GorillaBattleManager : GorillaGameManager, IInRoomCallbacks, IMatch
 		}
 	}
 
-	// Token: 0x0600090A RID: 2314 RVA: 0x00036D78 File Offset: 0x00034F78
+	// Token: 0x0600090E RID: 2318 RVA: 0x00036C78 File Offset: 0x00034E78
 	private void CopyArrayToBattleDict()
 	{
 		for (int i = 0; i < this.playerLivesArray.Length; i++)
@@ -681,31 +681,31 @@ public class GorillaBattleManager : GorillaGameManager, IInRoomCallbacks, IMatch
 		}
 	}
 
-	// Token: 0x0600090B RID: 2315 RVA: 0x00036E4B File Offset: 0x0003504B
+	// Token: 0x0600090F RID: 2319 RVA: 0x00036D4B File Offset: 0x00034F4B
 	private GorillaBattleManager.BattleStatus SetFlag(GorillaBattleManager.BattleStatus currState, GorillaBattleManager.BattleStatus flag)
 	{
 		return currState | flag;
 	}
 
-	// Token: 0x0600090C RID: 2316 RVA: 0x00036E50 File Offset: 0x00035050
+	// Token: 0x06000910 RID: 2320 RVA: 0x00036D50 File Offset: 0x00034F50
 	private GorillaBattleManager.BattleStatus SetFlagExclusive(GorillaBattleManager.BattleStatus currState, GorillaBattleManager.BattleStatus flag)
 	{
 		return flag;
 	}
 
-	// Token: 0x0600090D RID: 2317 RVA: 0x00036E53 File Offset: 0x00035053
+	// Token: 0x06000911 RID: 2321 RVA: 0x00036D53 File Offset: 0x00034F53
 	private GorillaBattleManager.BattleStatus ClearFlag(GorillaBattleManager.BattleStatus currState, GorillaBattleManager.BattleStatus flag)
 	{
 		return currState & ~flag;
 	}
 
-	// Token: 0x0600090E RID: 2318 RVA: 0x00036E59 File Offset: 0x00035059
+	// Token: 0x06000912 RID: 2322 RVA: 0x00036D59 File Offset: 0x00034F59
 	private bool FlagIsSet(GorillaBattleManager.BattleStatus currState, GorillaBattleManager.BattleStatus flag)
 	{
 		return (currState & flag) > GorillaBattleManager.BattleStatus.None;
 	}
 
-	// Token: 0x0600090F RID: 2319 RVA: 0x00036E64 File Offset: 0x00035064
+	// Token: 0x06000913 RID: 2323 RVA: 0x00036D64 File Offset: 0x00034F64
 	public void RandomizeTeams()
 	{
 		int[] array = new int[this.currentPlayerArray.Length];
@@ -726,7 +726,7 @@ public class GorillaBattleManager : GorillaGameManager, IInRoomCallbacks, IMatch
 		}
 	}
 
-	// Token: 0x06000910 RID: 2320 RVA: 0x00036F28 File Offset: 0x00035128
+	// Token: 0x06000914 RID: 2324 RVA: 0x00036E28 File Offset: 0x00035028
 	public void AddPlayerToCorrectTeam(Player newPlayer)
 	{
 		this.rcount = 0;
@@ -749,7 +749,7 @@ public class GorillaBattleManager : GorillaGameManager, IInRoomCallbacks, IMatch
 		}
 	}
 
-	// Token: 0x06000911 RID: 2321 RVA: 0x00037040 File Offset: 0x00035240
+	// Token: 0x06000915 RID: 2325 RVA: 0x00036F40 File Offset: 0x00035140
 	private void InitializePlayerStatus()
 	{
 		this.keyValuePairsStatus = this.playerStatusDict.ToArray<KeyValuePair<int, GorillaBattleManager.BattleStatus>>();
@@ -759,7 +759,7 @@ public class GorillaBattleManager : GorillaGameManager, IInRoomCallbacks, IMatch
 		}
 	}
 
-	// Token: 0x06000912 RID: 2322 RVA: 0x00037090 File Offset: 0x00035290
+	// Token: 0x06000916 RID: 2326 RVA: 0x00036F90 File Offset: 0x00035190
 	private void UpdatePlayerStatus()
 	{
 		this.keyValuePairsStatus = this.playerStatusDict.ToArray<KeyValuePair<int, GorillaBattleManager.BattleStatus>>();
@@ -796,7 +796,7 @@ public class GorillaBattleManager : GorillaGameManager, IInRoomCallbacks, IMatch
 		}
 	}
 
-	// Token: 0x06000913 RID: 2323 RVA: 0x0003721C File Offset: 0x0003541C
+	// Token: 0x06000917 RID: 2327 RVA: 0x0003711C File Offset: 0x0003531C
 	public override void OnDisable()
 	{
 		base.OnDisable();
@@ -812,127 +812,127 @@ public class GorillaBattleManager : GorillaGameManager, IInRoomCallbacks, IMatch
 		this.ActivateBattleBalloons(false);
 	}
 
-	// Token: 0x04000AED RID: 2797
+	// Token: 0x04000AF1 RID: 2801
 	private float playerMin = 2f;
 
-	// Token: 0x04000AEE RID: 2798
+	// Token: 0x04000AF2 RID: 2802
 	public float tagCoolDown = 5f;
 
-	// Token: 0x04000AEF RID: 2799
+	// Token: 0x04000AF3 RID: 2803
 	public Dictionary<int, int> playerLives = new Dictionary<int, int>();
 
-	// Token: 0x04000AF0 RID: 2800
+	// Token: 0x04000AF4 RID: 2804
 	public Dictionary<int, GorillaBattleManager.BattleStatus> playerStatusDict = new Dictionary<int, GorillaBattleManager.BattleStatus>();
 
-	// Token: 0x04000AF1 RID: 2801
+	// Token: 0x04000AF5 RID: 2805
 	public Dictionary<int, float> playerHitTimes = new Dictionary<int, float>();
 
-	// Token: 0x04000AF2 RID: 2802
+	// Token: 0x04000AF6 RID: 2806
 	public Dictionary<int, float> playerStunTimes = new Dictionary<int, float>();
 
-	// Token: 0x04000AF3 RID: 2803
+	// Token: 0x04000AF7 RID: 2807
 	public int[] playerActorNumberArray = new int[10];
 
-	// Token: 0x04000AF4 RID: 2804
+	// Token: 0x04000AF8 RID: 2808
 	public int[] playerLivesArray = new int[10];
 
-	// Token: 0x04000AF5 RID: 2805
+	// Token: 0x04000AF9 RID: 2809
 	public GorillaBattleManager.BattleStatus[] playerStatusArray = new GorillaBattleManager.BattleStatus[10];
 
-	// Token: 0x04000AF6 RID: 2806
+	// Token: 0x04000AFA RID: 2810
 	public bool teamBattle = true;
 
-	// Token: 0x04000AF7 RID: 2807
+	// Token: 0x04000AFB RID: 2811
 	public int countDownTime;
 
-	// Token: 0x04000AF8 RID: 2808
+	// Token: 0x04000AFC RID: 2812
 	private float timeBattleEnded;
 
-	// Token: 0x04000AF9 RID: 2809
+	// Token: 0x04000AFD RID: 2813
 	public float hitCooldown = 3f;
 
-	// Token: 0x04000AFA RID: 2810
+	// Token: 0x04000AFE RID: 2814
 	public float stunGracePeriod = 2f;
 
-	// Token: 0x04000AFB RID: 2811
+	// Token: 0x04000AFF RID: 2815
 	public object objRef;
 
-	// Token: 0x04000AFC RID: 2812
+	// Token: 0x04000B00 RID: 2816
 	private bool playerInList;
 
-	// Token: 0x04000AFD RID: 2813
+	// Token: 0x04000B01 RID: 2817
 	private bool coroutineRunning;
 
-	// Token: 0x04000AFE RID: 2814
+	// Token: 0x04000B02 RID: 2818
 	private int lives;
 
-	// Token: 0x04000AFF RID: 2815
+	// Token: 0x04000B03 RID: 2819
 	private int outLives;
 
-	// Token: 0x04000B00 RID: 2816
+	// Token: 0x04000B04 RID: 2820
 	private int bcount;
 
-	// Token: 0x04000B01 RID: 2817
+	// Token: 0x04000B05 RID: 2821
 	private int rcount;
 
-	// Token: 0x04000B02 RID: 2818
+	// Token: 0x04000B06 RID: 2822
 	private int randInt;
 
-	// Token: 0x04000B03 RID: 2819
+	// Token: 0x04000B07 RID: 2823
 	private float outHitTime;
 
-	// Token: 0x04000B04 RID: 2820
+	// Token: 0x04000B08 RID: 2824
 	private PhotonView tempView;
 
-	// Token: 0x04000B05 RID: 2821
+	// Token: 0x04000B09 RID: 2825
 	private KeyValuePair<int, int>[] keyValuePairs;
 
-	// Token: 0x04000B06 RID: 2822
+	// Token: 0x04000B0A RID: 2826
 	private KeyValuePair<int, GorillaBattleManager.BattleStatus>[] keyValuePairsStatus;
 
-	// Token: 0x04000B07 RID: 2823
+	// Token: 0x04000B0B RID: 2827
 	private GorillaBattleManager.BattleStatus tempStatus;
 
-	// Token: 0x04000B08 RID: 2824
+	// Token: 0x04000B0C RID: 2828
 	private GorillaBattleManager.BattleState currentState;
 
-	// Token: 0x02000418 RID: 1048
+	// Token: 0x0200041A RID: 1050
 	public enum BattleStatus
 	{
-		// Token: 0x04001CFC RID: 7420
+		// Token: 0x04001D09 RID: 7433
 		RedTeam = 1,
-		// Token: 0x04001CFD RID: 7421
+		// Token: 0x04001D0A RID: 7434
 		BlueTeam,
-		// Token: 0x04001CFE RID: 7422
+		// Token: 0x04001D0B RID: 7435
 		Normal = 4,
-		// Token: 0x04001CFF RID: 7423
+		// Token: 0x04001D0C RID: 7436
 		Hit = 8,
-		// Token: 0x04001D00 RID: 7424
+		// Token: 0x04001D0D RID: 7437
 		Stunned = 16,
-		// Token: 0x04001D01 RID: 7425
+		// Token: 0x04001D0E RID: 7438
 		Grace = 32,
-		// Token: 0x04001D02 RID: 7426
+		// Token: 0x04001D0F RID: 7439
 		Eliminated = 64,
-		// Token: 0x04001D03 RID: 7427
+		// Token: 0x04001D10 RID: 7440
 		None = 0
 	}
 
-	// Token: 0x02000419 RID: 1049
+	// Token: 0x0200041B RID: 1051
 	private enum BattleState
 	{
-		// Token: 0x04001D05 RID: 7429
+		// Token: 0x04001D12 RID: 7442
 		NotEnoughPlayers,
-		// Token: 0x04001D06 RID: 7430
+		// Token: 0x04001D13 RID: 7443
 		GameEnd,
-		// Token: 0x04001D07 RID: 7431
+		// Token: 0x04001D14 RID: 7444
 		GameEndWaiting,
-		// Token: 0x04001D08 RID: 7432
+		// Token: 0x04001D15 RID: 7445
 		StartCountdown,
-		// Token: 0x04001D09 RID: 7433
+		// Token: 0x04001D16 RID: 7446
 		CountingDownToStart,
-		// Token: 0x04001D0A RID: 7434
+		// Token: 0x04001D17 RID: 7447
 		GameStart,
-		// Token: 0x04001D0B RID: 7435
+		// Token: 0x04001D18 RID: 7448
 		GameRunning
 	}
 }

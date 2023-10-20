@@ -1,6 +1,6 @@
 ﻿using System;
 
-// Token: 0x020001FC RID: 508
+// Token: 0x020001FD RID: 509
 internal interface ITickSystem : ITickSystemPre, ITickSystemTick, ITickSystemPost
 {
 }

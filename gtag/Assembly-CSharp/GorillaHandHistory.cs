@@ -4,14 +4,14 @@ using UnityEngine;
 // Token: 0x0200013C RID: 316
 public class GorillaHandHistory : MonoBehaviour
 {
-	// Token: 0x0600081D RID: 2077 RVA: 0x00033078 File Offset: 0x00031278
+	// Token: 0x0600081E RID: 2078 RVA: 0x00032EB8 File Offset: 0x000310B8
 	private void Start()
 	{
 		this.direction = default(Vector3);
 		this.lastPosition = default(Vector3);
 	}
 
-	// Token: 0x0600081E RID: 2078 RVA: 0x00033092 File Offset: 0x00031292
+	// Token: 0x0600081F RID: 2079 RVA: 0x00032ED2 File Offset: 0x000310D2
 	private void FixedUpdate()
 	{
 		this.direction = this.lastPosition - base.transform.position;

@@ -2,10 +2,10 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-// Token: 0x02000228 RID: 552
+// Token: 0x02000229 RID: 553
 public static class StaticHash
 {
-	// Token: 0x06000DA3 RID: 3491 RVA: 0x0004FC9C File Offset: 0x0004DE9C
+	// Token: 0x06000DA9 RID: 3497 RVA: 0x0004FEFC File Offset: 0x0004E0FC
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static int Calculate(int i)
 	{
@@ -17,7 +17,7 @@ public static class StaticHash
 		return (int)(num ^ 3042594569U ^ num >> 16);
 	}
 
-	// Token: 0x06000DA4 RID: 3492 RVA: 0x0004FCF8 File Offset: 0x0004DEF8
+	// Token: 0x06000DAA RID: 3498 RVA: 0x0004FF58 File Offset: 0x0004E158
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static int Calculate(float f)
 	{
@@ -27,7 +27,7 @@ public static class StaticHash
 		}.int32);
 	}
 
-	// Token: 0x06000DA5 RID: 3493 RVA: 0x0004FD20 File Offset: 0x0004DF20
+	// Token: 0x06000DAB RID: 3499 RVA: 0x0004FF80 File Offset: 0x0004E180
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static int Combine(float f1, float f2)
 	{
@@ -36,7 +36,7 @@ public static class StaticHash
 		return StaticHash.Combine(i, i2);
 	}
 
-	// Token: 0x06000DA6 RID: 3494 RVA: 0x0004FD40 File Offset: 0x0004DF40
+	// Token: 0x06000DAC RID: 3500 RVA: 0x0004FFA0 File Offset: 0x0004E1A0
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static int Combine(float f1, float f2, float f3)
 	{
@@ -46,7 +46,7 @@ public static class StaticHash
 		return StaticHash.Combine(i, i2, i3);
 	}
 
-	// Token: 0x06000DA7 RID: 3495 RVA: 0x0004FD68 File Offset: 0x0004DF68
+	// Token: 0x06000DAD RID: 3501 RVA: 0x0004FFC8 File Offset: 0x0004E1C8
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static int Combine(float f1, float f2, float f3, float f4)
 	{
@@ -57,7 +57,7 @@ public static class StaticHash
 		return StaticHash.Combine(i, i2, i3, i4);
 	}
 
-	// Token: 0x06000DA8 RID: 3496 RVA: 0x0004FD98 File Offset: 0x0004DF98
+	// Token: 0x06000DAE RID: 3502 RVA: 0x0004FFF8 File Offset: 0x0004E1F8
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static int Calculate(long l)
 	{
@@ -70,7 +70,7 @@ public static class StaticHash
 		return (int)num;
 	}
 
-	// Token: 0x06000DA9 RID: 3497 RVA: 0x0004FDD4 File Offset: 0x0004DFD4
+	// Token: 0x06000DAF RID: 3503 RVA: 0x00050034 File Offset: 0x0004E234
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static int Combine(long l1, long l2)
 	{
@@ -79,7 +79,7 @@ public static class StaticHash
 		return StaticHash.Combine(i, i2);
 	}
 
-	// Token: 0x06000DAA RID: 3498 RVA: 0x0004FDF4 File Offset: 0x0004DFF4
+	// Token: 0x06000DB0 RID: 3504 RVA: 0x00050054 File Offset: 0x0004E254
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static int Combine(long l1, long l2, long l3)
 	{
@@ -89,7 +89,7 @@ public static class StaticHash
 		return StaticHash.Combine(i, i2, i3);
 	}
 
-	// Token: 0x06000DAB RID: 3499 RVA: 0x0004FE1C File Offset: 0x0004E01C
+	// Token: 0x06000DB1 RID: 3505 RVA: 0x0005007C File Offset: 0x0004E27C
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static int Combine(long l1, long l2, long l3, long l4)
 	{
@@ -100,7 +100,7 @@ public static class StaticHash
 		return StaticHash.Combine(i, i2, i3, i4);
 	}
 
-	// Token: 0x06000DAC RID: 3500 RVA: 0x0004FE4C File Offset: 0x0004E04C
+	// Token: 0x06000DB2 RID: 3506 RVA: 0x000500AC File Offset: 0x0004E2AC
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static int Calculate(double d)
 	{
@@ -110,7 +110,7 @@ public static class StaticHash
 		}.int64);
 	}
 
-	// Token: 0x06000DAD RID: 3501 RVA: 0x0004FE74 File Offset: 0x0004E074
+	// Token: 0x06000DB3 RID: 3507 RVA: 0x000500D4 File Offset: 0x0004E2D4
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static int Combine(double d1, double d2)
 	{
@@ -119,7 +119,7 @@ public static class StaticHash
 		return StaticHash.Combine(i, i2);
 	}
 
-	// Token: 0x06000DAE RID: 3502 RVA: 0x0004FE94 File Offset: 0x0004E094
+	// Token: 0x06000DB4 RID: 3508 RVA: 0x000500F4 File Offset: 0x0004E2F4
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static int Combine(double d1, double d2, double d3)
 	{
@@ -129,7 +129,7 @@ public static class StaticHash
 		return StaticHash.Combine(i, i2, i3);
 	}
 
-	// Token: 0x06000DAF RID: 3503 RVA: 0x0004FEBC File Offset: 0x0004E0BC
+	// Token: 0x06000DB5 RID: 3509 RVA: 0x0005011C File Offset: 0x0004E31C
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static int Combine(double d1, double d2, double d3, double d4)
 	{
@@ -140,7 +140,7 @@ public static class StaticHash
 		return StaticHash.Combine(i, i2, i3, i4);
 	}
 
-	// Token: 0x06000DB0 RID: 3504 RVA: 0x0004FEEC File Offset: 0x0004E0EC
+	// Token: 0x06000DB6 RID: 3510 RVA: 0x0005014C File Offset: 0x0004E34C
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static int Calculate(bool b)
 	{
@@ -151,7 +151,7 @@ public static class StaticHash
 		return -1266253386;
 	}
 
-	// Token: 0x06000DB1 RID: 3505 RVA: 0x0004FEFC File Offset: 0x0004E0FC
+	// Token: 0x06000DB7 RID: 3511 RVA: 0x0005015C File Offset: 0x0004E35C
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static int Combine(bool b1, bool b2)
 	{
@@ -160,7 +160,7 @@ public static class StaticHash
 		return StaticHash.Combine(i, i2);
 	}
 
-	// Token: 0x06000DB2 RID: 3506 RVA: 0x0004FF1C File Offset: 0x0004E11C
+	// Token: 0x06000DB8 RID: 3512 RVA: 0x0005017C File Offset: 0x0004E37C
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static int Combine(bool b1, bool b2, bool b3)
 	{
@@ -170,7 +170,7 @@ public static class StaticHash
 		return StaticHash.Combine(i, i2, i3);
 	}
 
-	// Token: 0x06000DB3 RID: 3507 RVA: 0x0004FF44 File Offset: 0x0004E144
+	// Token: 0x06000DB9 RID: 3513 RVA: 0x000501A4 File Offset: 0x0004E3A4
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static int Combine(bool b1, bool b2, bool b3, bool b4)
 	{
@@ -181,14 +181,14 @@ public static class StaticHash
 		return StaticHash.Combine(i, i2, i3, i4);
 	}
 
-	// Token: 0x06000DB4 RID: 3508 RVA: 0x0004FF74 File Offset: 0x0004E174
+	// Token: 0x06000DBA RID: 3514 RVA: 0x000501D4 File Offset: 0x0004E3D4
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static int Calculate(DateTime dt)
 	{
 		return StaticHash.Calculate(dt.ToBinary());
 	}
 
-	// Token: 0x06000DB5 RID: 3509 RVA: 0x0004FF84 File Offset: 0x0004E184
+	// Token: 0x06000DBB RID: 3515 RVA: 0x000501E4 File Offset: 0x0004E3E4
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static int Calculate(string s)
 	{
@@ -224,7 +224,7 @@ public static class StaticHash
 		return (int)(num + (num >> 6));
 	}
 
-	// Token: 0x06000DB6 RID: 3510 RVA: 0x0005002C File Offset: 0x0004E22C
+	// Token: 0x06000DBC RID: 3516 RVA: 0x0005028C File Offset: 0x0004E48C
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static int Combine(string s1, string s2)
 	{
@@ -233,7 +233,7 @@ public static class StaticHash
 		return StaticHash.Combine(i, i2);
 	}
 
-	// Token: 0x06000DB7 RID: 3511 RVA: 0x0005004C File Offset: 0x0004E24C
+	// Token: 0x06000DBD RID: 3517 RVA: 0x000502AC File Offset: 0x0004E4AC
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static int Combine(string s1, string s2, string s3)
 	{
@@ -243,7 +243,7 @@ public static class StaticHash
 		return StaticHash.Combine(i, i2, i3);
 	}
 
-	// Token: 0x06000DB8 RID: 3512 RVA: 0x00050074 File Offset: 0x0004E274
+	// Token: 0x06000DBE RID: 3518 RVA: 0x000502D4 File Offset: 0x0004E4D4
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static int Combine(string s1, string s2, string s3, string s4)
 	{
@@ -254,7 +254,7 @@ public static class StaticHash
 		return StaticHash.Combine(i, i2, i3, i4);
 	}
 
-	// Token: 0x06000DB9 RID: 3513 RVA: 0x000500A4 File Offset: 0x0004E2A4
+	// Token: 0x06000DBF RID: 3519 RVA: 0x00050304 File Offset: 0x0004E504
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static int Calculate(byte[] bytes)
 	{
@@ -290,7 +290,7 @@ public static class StaticHash
 		return (int)(num + (num >> 6));
 	}
 
-	// Token: 0x06000DBA RID: 3514 RVA: 0x00050138 File Offset: 0x0004E338
+	// Token: 0x06000DC0 RID: 3520 RVA: 0x00050398 File Offset: 0x0004E598
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static int Combine(int i1, int i2)
 	{
@@ -303,7 +303,7 @@ public static class StaticHash
 		return (int)result;
 	}
 
-	// Token: 0x06000DBB RID: 3515 RVA: 0x00050164 File Offset: 0x0004E364
+	// Token: 0x06000DC1 RID: 3521 RVA: 0x000503C4 File Offset: 0x0004E5C4
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static int Combine(int i1, int i2, int i3)
 	{
@@ -317,7 +317,7 @@ public static class StaticHash
 		return (int)num3;
 	}
 
-	// Token: 0x06000DBC RID: 3516 RVA: 0x00050194 File Offset: 0x0004E394
+	// Token: 0x06000DC2 RID: 3522 RVA: 0x000503F4 File Offset: 0x0004E5F4
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static int Combine(int i1, int i2, int i3, int i4)
 	{
@@ -333,7 +333,7 @@ public static class StaticHash
 		return (int)num3;
 	}
 
-	// Token: 0x06000DBD RID: 3517 RVA: 0x000501D4 File Offset: 0x0004E3D4
+	// Token: 0x06000DC3 RID: 3523 RVA: 0x00050434 File Offset: 0x0004E634
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static int Combine(int[] values)
 	{
@@ -370,7 +370,7 @@ public static class StaticHash
 		return (int)num4;
 	}
 
-	// Token: 0x06000DBE RID: 3518 RVA: 0x00050270 File Offset: 0x0004E470
+	// Token: 0x06000DC4 RID: 3524 RVA: 0x000504D0 File Offset: 0x0004E6D0
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	private static void Mix(ref uint a, ref uint b, ref uint c)
 	{
@@ -394,7 +394,7 @@ public static class StaticHash
 		b += a;
 	}
 
-	// Token: 0x06000DBF RID: 3519 RVA: 0x00050324 File Offset: 0x0004E524
+	// Token: 0x06000DC5 RID: 3525 RVA: 0x00050584 File Offset: 0x0004E784
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	private static void Finalize(ref uint a, ref uint b, ref uint c)
 	{
@@ -414,35 +414,35 @@ public static class StaticHash
 		c -= StaticHash.Rotate(b, 24);
 	}
 
-	// Token: 0x06000DC0 RID: 3520 RVA: 0x000503C3 File Offset: 0x0004E5C3
+	// Token: 0x06000DC6 RID: 3526 RVA: 0x00050623 File Offset: 0x0004E823
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	private static uint Rotate(uint x, int k)
 	{
 		return x << k | x >> 32 - k;
 	}
 
-	// Token: 0x0200047B RID: 1147
+	// Token: 0x0200047D RID: 1149
 	[StructLayout(LayoutKind.Explicit)]
 	private struct SingleInt32
 	{
-		// Token: 0x04001EA9 RID: 7849
+		// Token: 0x04001EB6 RID: 7862
 		[FieldOffset(0)]
 		public float single;
 
-		// Token: 0x04001EAA RID: 7850
+		// Token: 0x04001EB7 RID: 7863
 		[FieldOffset(0)]
 		public int int32;
 	}
 
-	// Token: 0x0200047C RID: 1148
+	// Token: 0x0200047E RID: 1150
 	[StructLayout(LayoutKind.Explicit)]
 	private struct DoubleInt64
 	{
-		// Token: 0x04001EAB RID: 7851
+		// Token: 0x04001EB8 RID: 7864
 		[FieldOffset(0)]
 		public double @double;
 
-		// Token: 0x04001EAC RID: 7852
+		// Token: 0x04001EB9 RID: 7865
 		[FieldOffset(0)]
 		public long int64;
 	}

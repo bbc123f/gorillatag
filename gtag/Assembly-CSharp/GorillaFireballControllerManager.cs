@@ -5,10 +5,10 @@ using UnityEngine;
 using UnityEngine.XR;
 using Valve.VR;
 
-// Token: 0x020001BD RID: 445
+// Token: 0x020001BE RID: 446
 public class GorillaFireballControllerManager : MonoBehaviour
 {
-	// Token: 0x06000B59 RID: 2905 RVA: 0x000459E8 File Offset: 0x00043BE8
+	// Token: 0x06000B5F RID: 2911 RVA: 0x00045C50 File Offset: 0x00043E50
 	private void Update()
 	{
 		if (!this.hasInitialized)
@@ -49,7 +49,7 @@ public class GorillaFireballControllerManager : MonoBehaviour
 		this.rightHandLastState = axis;
 	}
 
-	// Token: 0x06000B5A RID: 2906 RVA: 0x00045AEC File Offset: 0x00043CEC
+	// Token: 0x06000B60 RID: 2912 RVA: 0x00045D54 File Offset: 0x00043F54
 	public void TryThrowFireball(bool isLeftHand)
 	{
 		if (isLeftHand && GorillaPlaySpace.Instance.myVRRig.leftHandTransform.GetComponentInChildren<GorillaFireball>() != null)
@@ -63,7 +63,7 @@ public class GorillaFireballControllerManager : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000B5B RID: 2907 RVA: 0x00045B6C File Offset: 0x00043D6C
+	// Token: 0x06000B61 RID: 2913 RVA: 0x00045DD4 File Offset: 0x00043FD4
 	public void CreateFireball(bool isLeftHand)
 	{
 		object[] array = new object[1];
@@ -81,21 +81,21 @@ public class GorillaFireballControllerManager : MonoBehaviour
 		PhotonNetwork.Instantiate("GorillaPrefabs/GorillaFireball", position, Quaternion.identity, 0, array);
 	}
 
-	// Token: 0x04000EB5 RID: 3765
+	// Token: 0x04000EB9 RID: 3769
 	public InputDevice leftHand;
 
-	// Token: 0x04000EB6 RID: 3766
+	// Token: 0x04000EBA RID: 3770
 	public InputDevice rightHand;
 
-	// Token: 0x04000EB7 RID: 3767
+	// Token: 0x04000EBB RID: 3771
 	public bool hasInitialized;
 
-	// Token: 0x04000EB8 RID: 3768
+	// Token: 0x04000EBC RID: 3772
 	public float leftHandLastState;
 
-	// Token: 0x04000EB9 RID: 3769
+	// Token: 0x04000EBD RID: 3773
 	public float rightHandLastState;
 
-	// Token: 0x04000EBA RID: 3770
+	// Token: 0x04000EBE RID: 3774
 	public float throwingThreshold = 0.9f;
 }

@@ -5,7 +5,7 @@ using UnityEngine.UI;
 // Token: 0x02000053 RID: 83
 public class DevInspector : MonoBehaviour
 {
-	// Token: 0x0600018E RID: 398 RVA: 0x0000C163 File Offset: 0x0000A363
+	// Token: 0x0600018E RID: 398 RVA: 0x0000C1AB File Offset: 0x0000A3AB
 	private void OnEnable()
 	{
 		Object.Destroy(base.gameObject);

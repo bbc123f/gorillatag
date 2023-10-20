@@ -5,7 +5,7 @@ using UnityEngine;
 // Token: 0x020000DA RID: 218
 public class BattleBalloons : MonoBehaviour
 {
-	// Token: 0x060004F1 RID: 1265 RVA: 0x0001F6E8 File Offset: 0x0001D8E8
+	// Token: 0x060004F1 RID: 1265 RVA: 0x0001F4DC File Offset: 0x0001D6DC
 	protected void Awake()
 	{
 		this.matPropBlock = new MaterialPropertyBlock();
@@ -19,13 +19,13 @@ public class BattleBalloons : MonoBehaviour
 		this.colorShaderPropID = Shader.PropertyToID("_Color");
 	}
 
-	// Token: 0x060004F2 RID: 1266 RVA: 0x0001F773 File Offset: 0x0001D973
+	// Token: 0x060004F2 RID: 1266 RVA: 0x0001F567 File Offset: 0x0001D767
 	protected void OnEnable()
 	{
 		this.UpdateBalloonColors();
 	}
 
-	// Token: 0x060004F3 RID: 1267 RVA: 0x0001F77C File Offset: 0x0001D97C
+	// Token: 0x060004F3 RID: 1267 RVA: 0x0001F570 File Offset: 0x0001D770
 	protected void LateUpdate()
 	{
 		if (GorillaGameManager.instance != null && (this.bMgr != null || GorillaGameManager.instance.gameObject.GetComponent<GorillaBattleManager>() != null))
@@ -56,7 +56,7 @@ public class BattleBalloons : MonoBehaviour
 		this.UpdateBalloonColors();
 	}
 
-	// Token: 0x060004F4 RID: 1268 RVA: 0x0001F870 File Offset: 0x0001DA70
+	// Token: 0x060004F4 RID: 1268 RVA: 0x0001F664 File Offset: 0x0001D864
 	private void PopBalloon(int i)
 	{
 		GameObject gameObject = ObjectPools.instance.Instantiate(this.balloonPopFXPrefab);
@@ -68,7 +68,7 @@ public class BattleBalloons : MonoBehaviour
 		}
 	}
 
-	// Token: 0x060004F5 RID: 1269 RVA: 0x0001F8C8 File Offset: 0x0001DAC8
+	// Token: 0x060004F5 RID: 1269 RVA: 0x0001F6BC File Offset: 0x0001D8BC
 	public void UpdateBalloonColors()
 	{
 		if (this.bMgr != null && this.myRig.creator != null)

@@ -3,16 +3,16 @@ using UnityEngine;
 
 namespace OculusSampleFramework
 {
-	// Token: 0x020002C8 RID: 712
+	// Token: 0x020002CA RID: 714
 	public class GrabbableCrosshair : MonoBehaviour
 	{
-		// Token: 0x0600133B RID: 4923 RVA: 0x0006F3FF File Offset: 0x0006D5FF
+		// Token: 0x06001342 RID: 4930 RVA: 0x0006F8CB File Offset: 0x0006DACB
 		private void Start()
 		{
 			this.m_centerEyeAnchor = GameObject.Find("CenterEyeAnchor").transform;
 		}
 
-		// Token: 0x0600133C RID: 4924 RVA: 0x0006F418 File Offset: 0x0006D618
+		// Token: 0x06001343 RID: 4931 RVA: 0x0006F8E4 File Offset: 0x0006DAE4
 		public void SetState(GrabbableCrosshair.CrosshairState cs)
 		{
 			this.m_state = cs;
@@ -35,7 +35,7 @@ namespace OculusSampleFramework
 			}
 		}
 
-		// Token: 0x0600133D RID: 4925 RVA: 0x0006F481 File Offset: 0x0006D681
+		// Token: 0x06001344 RID: 4932 RVA: 0x0006F94D File Offset: 0x0006DB4D
 		private void Update()
 		{
 			if (this.m_state != GrabbableCrosshair.CrosshairState.Disabled)
@@ -44,28 +44,28 @@ namespace OculusSampleFramework
 			}
 		}
 
-		// Token: 0x04001618 RID: 5656
+		// Token: 0x04001625 RID: 5669
 		private GrabbableCrosshair.CrosshairState m_state;
 
-		// Token: 0x04001619 RID: 5657
+		// Token: 0x04001626 RID: 5670
 		private Transform m_centerEyeAnchor;
 
-		// Token: 0x0400161A RID: 5658
+		// Token: 0x04001627 RID: 5671
 		[SerializeField]
 		private GameObject m_targetedCrosshair;
 
-		// Token: 0x0400161B RID: 5659
+		// Token: 0x04001628 RID: 5672
 		[SerializeField]
 		private GameObject m_enabledCrosshair;
 
-		// Token: 0x020004E4 RID: 1252
+		// Token: 0x020004E6 RID: 1254
 		public enum CrosshairState
 		{
-			// Token: 0x0400205C RID: 8284
+			// Token: 0x04002069 RID: 8297
 			Disabled,
-			// Token: 0x0400205D RID: 8285
+			// Token: 0x0400206A RID: 8298
 			Enabled,
-			// Token: 0x0400205E RID: 8286
+			// Token: 0x0400206B RID: 8299
 			Targeted
 		}
 	}

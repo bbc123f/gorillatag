@@ -6,7 +6,7 @@ using UnityEngine;
 public class SimpleResizable : MonoBehaviour
 {
 	// Token: 0x17000035 RID: 53
-	// (get) Token: 0x06000439 RID: 1081 RVA: 0x0001BA55 File Offset: 0x00019C55
+	// (get) Token: 0x06000439 RID: 1081 RVA: 0x0001B831 File Offset: 0x00019A31
 	public Vector3 PivotPosition
 	{
 		get
@@ -16,21 +16,21 @@ public class SimpleResizable : MonoBehaviour
 	}
 
 	// Token: 0x17000036 RID: 54
-	// (get) Token: 0x0600043A RID: 1082 RVA: 0x0001BA62 File Offset: 0x00019C62
-	// (set) Token: 0x0600043B RID: 1083 RVA: 0x0001BA6A File Offset: 0x00019C6A
+	// (get) Token: 0x0600043A RID: 1082 RVA: 0x0001B83E File Offset: 0x00019A3E
+	// (set) Token: 0x0600043B RID: 1083 RVA: 0x0001B846 File Offset: 0x00019A46
 	public Vector3 NewSize { get; set; }
 
 	// Token: 0x17000037 RID: 55
-	// (get) Token: 0x0600043C RID: 1084 RVA: 0x0001BA73 File Offset: 0x00019C73
-	// (set) Token: 0x0600043D RID: 1085 RVA: 0x0001BA7B File Offset: 0x00019C7B
+	// (get) Token: 0x0600043C RID: 1084 RVA: 0x0001B84F File Offset: 0x00019A4F
+	// (set) Token: 0x0600043D RID: 1085 RVA: 0x0001B857 File Offset: 0x00019A57
 	public Vector3 DefaultSize { get; private set; }
 
 	// Token: 0x17000038 RID: 56
-	// (get) Token: 0x0600043E RID: 1086 RVA: 0x0001BA84 File Offset: 0x00019C84
-	// (set) Token: 0x0600043F RID: 1087 RVA: 0x0001BA8C File Offset: 0x00019C8C
+	// (get) Token: 0x0600043E RID: 1086 RVA: 0x0001B860 File Offset: 0x00019A60
+	// (set) Token: 0x0600043F RID: 1087 RVA: 0x0001B868 File Offset: 0x00019A68
 	public Mesh Mesh { get; private set; }
 
-	// Token: 0x06000440 RID: 1088 RVA: 0x0001BA98 File Offset: 0x00019C98
+	// Token: 0x06000440 RID: 1088 RVA: 0x0001B874 File Offset: 0x00019A74
 	private void Awake()
 	{
 		this.Mesh = base.GetComponent<MeshFilter>().sharedMesh;
@@ -84,16 +84,16 @@ public class SimpleResizable : MonoBehaviour
 	[SerializeField]
 	private Transform _pivotTransform;
 
-	// Token: 0x020003D9 RID: 985
+	// Token: 0x020003DB RID: 987
 	public enum Method
 	{
-		// Token: 0x04001C34 RID: 7220
+		// Token: 0x04001C41 RID: 7233
 		Adapt,
-		// Token: 0x04001C35 RID: 7221
+		// Token: 0x04001C42 RID: 7234
 		AdaptWithAsymmetricalPadding,
-		// Token: 0x04001C36 RID: 7222
+		// Token: 0x04001C43 RID: 7235
 		Scale,
-		// Token: 0x04001C37 RID: 7223
+		// Token: 0x04001C44 RID: 7236
 		None
 	}
 }

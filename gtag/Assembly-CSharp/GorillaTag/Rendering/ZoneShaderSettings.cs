@@ -4,34 +4,34 @@ using UnityEngine;
 
 namespace GorillaTag.Rendering
 {
-	// Token: 0x0200032C RID: 812
+	// Token: 0x0200032E RID: 814
 	[ExecuteInEditMode]
 	public class ZoneShaderSettings : MonoBehaviour
 	{
-		// Token: 0x17000189 RID: 393
-		// (get) Token: 0x06001690 RID: 5776 RVA: 0x0007D7F3 File Offset: 0x0007B9F3
-		// (set) Token: 0x06001691 RID: 5777 RVA: 0x0007D7FA File Offset: 0x0007B9FA
+		// Token: 0x1700018B RID: 395
+		// (get) Token: 0x06001699 RID: 5785 RVA: 0x0007DCDB File Offset: 0x0007BEDB
+		// (set) Token: 0x0600169A RID: 5786 RVA: 0x0007DCE2 File Offset: 0x0007BEE2
 		[DebugReadout]
 		public static ZoneShaderSettings defaultsInstance { get; private set; }
 
-		// Token: 0x1700018A RID: 394
-		// (get) Token: 0x06001692 RID: 5778 RVA: 0x0007D802 File Offset: 0x0007BA02
-		// (set) Token: 0x06001693 RID: 5779 RVA: 0x0007D809 File Offset: 0x0007BA09
+		// Token: 0x1700018C RID: 396
+		// (get) Token: 0x0600169B RID: 5787 RVA: 0x0007DCEA File Offset: 0x0007BEEA
+		// (set) Token: 0x0600169C RID: 5788 RVA: 0x0007DCF1 File Offset: 0x0007BEF1
 		public static bool hasDefaultsInstance { get; private set; }
 
-		// Token: 0x1700018B RID: 395
-		// (get) Token: 0x06001694 RID: 5780 RVA: 0x0007D811 File Offset: 0x0007BA11
-		// (set) Token: 0x06001695 RID: 5781 RVA: 0x0007D818 File Offset: 0x0007BA18
+		// Token: 0x1700018D RID: 397
+		// (get) Token: 0x0600169D RID: 5789 RVA: 0x0007DCF9 File Offset: 0x0007BEF9
+		// (set) Token: 0x0600169E RID: 5790 RVA: 0x0007DD00 File Offset: 0x0007BF00
 		[DebugReadout]
 		public static ZoneShaderSettings activeInstance { get; private set; }
 
-		// Token: 0x1700018C RID: 396
-		// (get) Token: 0x06001696 RID: 5782 RVA: 0x0007D820 File Offset: 0x0007BA20
-		// (set) Token: 0x06001697 RID: 5783 RVA: 0x0007D827 File Offset: 0x0007BA27
+		// Token: 0x1700018E RID: 398
+		// (get) Token: 0x0600169F RID: 5791 RVA: 0x0007DD08 File Offset: 0x0007BF08
+		// (set) Token: 0x060016A0 RID: 5792 RVA: 0x0007DD0F File Offset: 0x0007BF0F
 		public static bool hasActiveInstance { get; private set; }
 
-		// Token: 0x1700018D RID: 397
-		// (get) Token: 0x06001698 RID: 5784 RVA: 0x0007D82F File Offset: 0x0007BA2F
+		// Token: 0x1700018F RID: 399
+		// (get) Token: 0x060016A1 RID: 5793 RVA: 0x0007DD17 File Offset: 0x0007BF17
 		[DebugReadout]
 		private float GroundFogDepthFadeSq
 		{
@@ -41,8 +41,8 @@ namespace GorillaTag.Rendering
 			}
 		}
 
-		// Token: 0x1700018E RID: 398
-		// (get) Token: 0x06001699 RID: 5785 RVA: 0x0007D84E File Offset: 0x0007BA4E
+		// Token: 0x17000190 RID: 400
+		// (get) Token: 0x060016A2 RID: 5794 RVA: 0x0007DD36 File Offset: 0x0007BF36
 		[DebugReadout]
 		private float GroundFogHeightFade
 		{
@@ -52,7 +52,7 @@ namespace GorillaTag.Rendering
 			}
 		}
 
-		// Token: 0x0600169A RID: 5786 RVA: 0x0007D868 File Offset: 0x0007BA68
+		// Token: 0x060016A3 RID: 5795 RVA: 0x0007DD50 File Offset: 0x0007BF50
 		public void SetZoneLiquidTypeKeywordEnum(ZoneShaderSettings.EZoneLiquidType liquidType)
 		{
 			if (liquidType == ZoneShaderSettings.EZoneLiquidType.None)
@@ -79,7 +79,7 @@ namespace GorillaTag.Rendering
 			Shader.DisableKeyword("_GLOBAL_ZONE_LIQUID_TYPE__LAVA");
 		}
 
-		// Token: 0x0600169B RID: 5787 RVA: 0x0007D8C4 File Offset: 0x0007BAC4
+		// Token: 0x060016A4 RID: 5796 RVA: 0x0007DDAC File Offset: 0x0007BFAC
 		protected void Awake()
 		{
 			if (base.gameObject.scene.name == null)
@@ -110,7 +110,7 @@ namespace GorillaTag.Rendering
 			};
 		}
 
-		// Token: 0x0600169C RID: 5788 RVA: 0x0007D948 File Offset: 0x0007BB48
+		// Token: 0x060016A5 RID: 5797 RVA: 0x0007DE30 File Offset: 0x0007C030
 		protected void OnDestroy()
 		{
 			if (base.gameObject.scene.name == null)
@@ -123,7 +123,7 @@ namespace GorillaTag.Rendering
 			}
 		}
 
-		// Token: 0x0600169D RID: 5789 RVA: 0x0007D980 File Offset: 0x0007BB80
+		// Token: 0x060016A6 RID: 5798 RVA: 0x0007DE68 File Offset: 0x0007C068
 		protected void OnEnable()
 		{
 			this.hasMainWaterSurfacePlane = ((this.mainWaterSurfacePlane_overrideMode == ZoneShaderSettings.EOverrideMode.ApplyNewValue || this.isDefaultValues) && this.mainWaterSurfacePlane != null);
@@ -155,7 +155,7 @@ namespace GorillaTag.Rendering
 			ZoneShaderSettings.activeInstance.ApplyValues();
 		}
 
-		// Token: 0x0600169E RID: 5790 RVA: 0x0007DA7C File Offset: 0x0007BC7C
+		// Token: 0x060016A7 RID: 5799 RVA: 0x0007DF64 File Offset: 0x0007C164
 		protected void OnDisable()
 		{
 			if (base.gameObject.scene.name == null)
@@ -197,7 +197,7 @@ namespace GorillaTag.Rendering
 			}
 		}
 
-		// Token: 0x0600169F RID: 5791 RVA: 0x0007DB30 File Offset: 0x0007BD30
+		// Token: 0x060016A8 RID: 5800 RVA: 0x0007E018 File Offset: 0x0007C218
 		private static bool TryGetClosestActiveInstanceToPlayer(out ZoneShaderSettings closest)
 		{
 			closest = null;
@@ -227,7 +227,7 @@ namespace GorillaTag.Rendering
 			return closest != null;
 		}
 
-		// Token: 0x060016A0 RID: 5792 RVA: 0x0007DBC7 File Offset: 0x0007BDC7
+		// Token: 0x060016A9 RID: 5801 RVA: 0x0007E0AF File Offset: 0x0007C2AF
 		protected void LateUpdate()
 		{
 			if (!this.hasMainWaterSurfacePlane || this.mainWaterSurfacePlane.gameObject.isStatic || !ZoneShaderSettings.hasDefaultsInstance || ZoneShaderSettings.appIsQuitting || ZoneShaderSettings.activeInstance != this)
@@ -237,7 +237,7 @@ namespace GorillaTag.Rendering
 			this.UpdateMainPlaneShaderProperty();
 		}
 
-		// Token: 0x060016A1 RID: 5793 RVA: 0x0007DC08 File Offset: 0x0007BE08
+		// Token: 0x060016AA RID: 5802 RVA: 0x0007E0F0 File Offset: 0x0007C2F0
 		private void UpdateMainPlaneShaderProperty()
 		{
 			Transform transform = null;
@@ -261,7 +261,7 @@ namespace GorillaTag.Rendering
 			Shader.SetGlobalVector(this.shaderParam_GlobalMainWaterSurfacePlane, new Vector4(up.x, up.y, up.z, w));
 		}
 
-		// Token: 0x060016A2 RID: 5794 RVA: 0x0007DCA4 File Offset: 0x0007BEA4
+		// Token: 0x060016AB RID: 5803 RVA: 0x0007E18C File Offset: 0x0007C38C
 		private void ApplyValues()
 		{
 			if (!ZoneShaderSettings.hasDefaultsInstance || ZoneShaderSettings.appIsQuitting)
@@ -344,7 +344,7 @@ namespace GorillaTag.Rendering
 			this.UpdateMainPlaneShaderProperty();
 		}
 
-		// Token: 0x060016A3 RID: 5795 RVA: 0x0007DF8F File Offset: 0x0007C18F
+		// Token: 0x060016AC RID: 5804 RVA: 0x0007E477 File Offset: 0x0007C677
 		public static void ApplyDefaultValues()
 		{
 			if (!ZoneShaderSettings.hasDefaultsInstance || ZoneShaderSettings.appIsQuitting)
@@ -354,7 +354,7 @@ namespace GorillaTag.Rendering
 			ZoneShaderSettings.defaultsInstance.ApplyValues();
 		}
 
-		// Token: 0x060016A4 RID: 5796 RVA: 0x0007DFAA File Offset: 0x0007C1AA
+		// Token: 0x060016AD RID: 5805 RVA: 0x0007E492 File Offset: 0x0007C692
 		private void ApplyColor(int shaderProp, ZoneShaderSettings.EOverrideMode overrideMode, Color value, Color defaultValue)
 		{
 			if (overrideMode == ZoneShaderSettings.EOverrideMode.ApplyNewValue || this.isDefaultValues)
@@ -368,7 +368,7 @@ namespace GorillaTag.Rendering
 			}
 		}
 
-		// Token: 0x060016A5 RID: 5797 RVA: 0x0007DFD7 File Offset: 0x0007C1D7
+		// Token: 0x060016AE RID: 5806 RVA: 0x0007E4BF File Offset: 0x0007C6BF
 		private void ApplyFloat(int shaderProp, ZoneShaderSettings.EOverrideMode overrideMode, float value, float defaultValue)
 		{
 			if (overrideMode == ZoneShaderSettings.EOverrideMode.ApplyNewValue || this.isDefaultValues)
@@ -382,200 +382,200 @@ namespace GorillaTag.Rendering
 			}
 		}
 
-		// Token: 0x0400189A RID: 6298
+		// Token: 0x040018A7 RID: 6311
 		private static bool appIsQuitting = false;
 
-		// Token: 0x0400189F RID: 6303
+		// Token: 0x040018AC RID: 6316
 		[DebugReadout]
 		[NonSerialized]
 		public static List<ZoneShaderSettings> activeInstanceQueue = new List<ZoneShaderSettings>(32);
 
-		// Token: 0x040018A0 RID: 6304
+		// Token: 0x040018AD RID: 6317
 		[Tooltip("These values will be used as the default global values that will be fallen back to when not in a zone and that the other scripts will reference.")]
 		public bool isDefaultValues;
 
-		// Token: 0x040018A1 RID: 6305
+		// Token: 0x040018AE RID: 6318
 		private static readonly int groundFogColor_shaderProp = Shader.PropertyToID("_ZoneGroundFogColor");
 
-		// Token: 0x040018A2 RID: 6306
+		// Token: 0x040018AF RID: 6319
 		[SerializeField]
 		private ZoneShaderSettings.EOverrideMode groundFogColor_overrideMode;
 
-		// Token: 0x040018A3 RID: 6307
+		// Token: 0x040018B0 RID: 6320
 		[SerializeField]
 		private Color groundFogColor = new Color(0.7f, 0.9f, 1f, 1f);
 
-		// Token: 0x040018A4 RID: 6308
+		// Token: 0x040018B1 RID: 6321
 		private static readonly int groundFogDepthFadeSq_shaderProp = Shader.PropertyToID("_ZoneGroundFogDepthFadeSq");
 
-		// Token: 0x040018A5 RID: 6309
+		// Token: 0x040018B2 RID: 6322
 		[SerializeField]
 		private ZoneShaderSettings.EOverrideMode groundFogDepthFade_overrideMode;
 
-		// Token: 0x040018A6 RID: 6310
+		// Token: 0x040018B3 RID: 6323
 		[SerializeField]
 		private float _groundFogDepthFadeSize = 20f;
 
-		// Token: 0x040018A7 RID: 6311
+		// Token: 0x040018B4 RID: 6324
 		private static readonly int groundFogHeight_shaderProp = Shader.PropertyToID("_ZoneGroundFogHeight");
 
-		// Token: 0x040018A8 RID: 6312
+		// Token: 0x040018B5 RID: 6325
 		[SerializeField]
 		private ZoneShaderSettings.EOverrideMode groundFogHeight_overrideMode;
 
-		// Token: 0x040018A9 RID: 6313
+		// Token: 0x040018B6 RID: 6326
 		[SerializeField]
 		private float groundFogHeight = 7.45f;
 
-		// Token: 0x040018AA RID: 6314
+		// Token: 0x040018B7 RID: 6327
 		private static readonly int groundFogHeightFade_shaderProp = Shader.PropertyToID("_ZoneGroundFogHeightFade");
 
-		// Token: 0x040018AB RID: 6315
+		// Token: 0x040018B8 RID: 6328
 		[SerializeField]
 		private ZoneShaderSettings.EOverrideMode groundFogHeightFade_overrideMode;
 
-		// Token: 0x040018AC RID: 6316
+		// Token: 0x040018B9 RID: 6329
 		[SerializeField]
 		private float _groundFogHeightFadeSize = 20f;
 
-		// Token: 0x040018AD RID: 6317
+		// Token: 0x040018BA RID: 6330
 		[SerializeField]
 		private ZoneShaderSettings.EOverrideMode zoneLiquidType_overrideMode;
 
-		// Token: 0x040018AE RID: 6318
+		// Token: 0x040018BB RID: 6331
 		[SerializeField]
 		private ZoneShaderSettings.EZoneLiquidType zoneLiquidType = ZoneShaderSettings.EZoneLiquidType.Water;
 
-		// Token: 0x040018AF RID: 6319
+		// Token: 0x040018BC RID: 6332
 		private static readonly int shaderParam_GlobalZoneLiquidUVScale = Shader.PropertyToID("_GlobalZoneLiquidUVScale");
 
-		// Token: 0x040018B0 RID: 6320
+		// Token: 0x040018BD RID: 6333
 		[SerializeField]
 		private ZoneShaderSettings.EOverrideMode zoneLiquidUVScale_overrideMode;
 
-		// Token: 0x040018B1 RID: 6321
+		// Token: 0x040018BE RID: 6334
 		[Tooltip("Fog params are: start, distance (end - start), unused, unused")]
 		[SerializeField]
 		private float zoneLiquidUVScale = 1f;
 
-		// Token: 0x040018B2 RID: 6322
+		// Token: 0x040018BF RID: 6335
 		private static readonly int shaderParam_GlobalWaterTintColor = Shader.PropertyToID("_GlobalWaterTintColor");
 
-		// Token: 0x040018B3 RID: 6323
+		// Token: 0x040018C0 RID: 6336
 		[SerializeField]
 		private ZoneShaderSettings.EOverrideMode underwaterTintColor_overrideMode;
 
-		// Token: 0x040018B4 RID: 6324
+		// Token: 0x040018C1 RID: 6337
 		[SerializeField]
 		private Color underwaterTintColor = new Color(0.3f, 0.65f, 1f, 0.2f);
 
-		// Token: 0x040018B5 RID: 6325
+		// Token: 0x040018C2 RID: 6338
 		private static readonly int shaderParam_GlobalUnderwaterFogColor = Shader.PropertyToID("_GlobalUnderwaterFogColor");
 
-		// Token: 0x040018B6 RID: 6326
+		// Token: 0x040018C3 RID: 6339
 		[SerializeField]
 		private ZoneShaderSettings.EOverrideMode underwaterFogColor_overrideMode;
 
-		// Token: 0x040018B7 RID: 6327
+		// Token: 0x040018C4 RID: 6340
 		[SerializeField]
 		private Color underwaterFogColor = new Color(0.12f, 0.41f, 0.77f);
 
-		// Token: 0x040018B8 RID: 6328
+		// Token: 0x040018C5 RID: 6341
 		private static readonly int shaderParam_GlobalUnderwaterFogParams = Shader.PropertyToID("_GlobalUnderwaterFogParams");
 
-		// Token: 0x040018B9 RID: 6329
+		// Token: 0x040018C6 RID: 6342
 		[SerializeField]
 		private ZoneShaderSettings.EOverrideMode underwaterFogParams_overrideMode;
 
-		// Token: 0x040018BA RID: 6330
+		// Token: 0x040018C7 RID: 6343
 		[Tooltip("Fog params are: start, distance (end - start), unused, unused")]
 		[SerializeField]
 		private Vector4 underwaterFogParams = new Vector4(-5f, 40f, 0f, 0f);
 
-		// Token: 0x040018BB RID: 6331
+		// Token: 0x040018C8 RID: 6344
 		private static readonly int shaderParam_GlobalUnderwaterCausticsParams = Shader.PropertyToID("_GlobalUnderwaterCausticsParams");
 
-		// Token: 0x040018BC RID: 6332
+		// Token: 0x040018C9 RID: 6345
 		[SerializeField]
 		private ZoneShaderSettings.EOverrideMode underwaterCausticsParams_overrideMode;
 
-		// Token: 0x040018BD RID: 6333
+		// Token: 0x040018CA RID: 6346
 		[Tooltip("Caustics params are: speed1, scale, alpha, unused")]
 		[SerializeField]
 		private Vector4 underwaterCausticsParams = new Vector4(0.075f, 0.075f, 1f, 0f);
 
-		// Token: 0x040018BE RID: 6334
+		// Token: 0x040018CB RID: 6347
 		private static readonly int shaderParam_GlobalUnderwaterCausticsTex = Shader.PropertyToID("_GlobalUnderwaterCausticsTex");
 
-		// Token: 0x040018BF RID: 6335
+		// Token: 0x040018CC RID: 6348
 		[SerializeField]
 		private ZoneShaderSettings.EOverrideMode underwaterCausticsTexture_overrideMode;
 
-		// Token: 0x040018C0 RID: 6336
+		// Token: 0x040018CD RID: 6349
 		[SerializeField]
 		private Texture2D underwaterCausticsTexture;
 
-		// Token: 0x040018C1 RID: 6337
+		// Token: 0x040018CE RID: 6350
 		private static readonly int shaderParam_GlobalUnderwaterEffectsDistanceToSurfaceFade = Shader.PropertyToID("_GlobalUnderwaterEffectsDistanceToSurfaceFade");
 
-		// Token: 0x040018C2 RID: 6338
+		// Token: 0x040018CF RID: 6351
 		[SerializeField]
 		private ZoneShaderSettings.EOverrideMode underwaterEffectsDistanceToSurfaceFade_overrideMode;
 
-		// Token: 0x040018C3 RID: 6339
+		// Token: 0x040018D0 RID: 6352
 		[SerializeField]
 		private Vector2 underwaterEffectsDistanceToSurfaceFade = new Vector2(0.0001f, 50f);
 
-		// Token: 0x040018C4 RID: 6340
+		// Token: 0x040018D1 RID: 6353
 		private const string kEdTooltip_liquidResidueTex = "This is used for things like the charred surface effect when lava burns static geo.";
 
-		// Token: 0x040018C5 RID: 6341
+		// Token: 0x040018D2 RID: 6354
 		private static readonly int shaderParam_GlobalLiquidResidueTex = Shader.PropertyToID("_GlobalLiquidResidueTex");
 
-		// Token: 0x040018C6 RID: 6342
+		// Token: 0x040018D3 RID: 6355
 		[SerializeField]
 		[Tooltip("This is used for things like the charred surface effect when lava burns static geo.")]
 		private ZoneShaderSettings.EOverrideMode liquidResidueTex_overrideMode;
 
-		// Token: 0x040018C7 RID: 6343
+		// Token: 0x040018D4 RID: 6356
 		[SerializeField]
 		[Tooltip("This is used for things like the charred surface effect when lava burns static geo.")]
 		private Texture2D liquidResidueTex;
 
-		// Token: 0x040018C8 RID: 6344
+		// Token: 0x040018D5 RID: 6357
 		private readonly int shaderParam_GlobalMainWaterSurfacePlane = Shader.PropertyToID("_GlobalMainWaterSurfacePlane");
 
-		// Token: 0x040018C9 RID: 6345
+		// Token: 0x040018D6 RID: 6358
 		private bool hasMainWaterSurfacePlane;
 
-		// Token: 0x040018CA RID: 6346
+		// Token: 0x040018D7 RID: 6359
 		[SerializeField]
 		private ZoneShaderSettings.EOverrideMode mainWaterSurfacePlane_overrideMode;
 
-		// Token: 0x040018CB RID: 6347
+		// Token: 0x040018D8 RID: 6360
 		[Tooltip("TODO: remove this when there is a way to precalculate the nearest triangle plane per vertex so it will work better for rivers.")]
 		[SerializeField]
 		private Transform mainWaterSurfacePlane;
 
-		// Token: 0x02000510 RID: 1296
+		// Token: 0x02000512 RID: 1298
 		public enum EOverrideMode
 		{
-			// Token: 0x0400212C RID: 8492
+			// Token: 0x04002139 RID: 8505
 			LeaveUnchanged,
-			// Token: 0x0400212D RID: 8493
+			// Token: 0x0400213A RID: 8506
 			ApplyNewValue,
-			// Token: 0x0400212E RID: 8494
+			// Token: 0x0400213B RID: 8507
 			ApplyDefaultValue
 		}
 
-		// Token: 0x02000511 RID: 1297
+		// Token: 0x02000513 RID: 1299
 		public enum EZoneLiquidType
 		{
-			// Token: 0x04002130 RID: 8496
+			// Token: 0x0400213D RID: 8509
 			None,
-			// Token: 0x04002131 RID: 8497
+			// Token: 0x0400213E RID: 8510
 			Water,
-			// Token: 0x04002132 RID: 8498
+			// Token: 0x0400213F RID: 8511
 			Lava
 		}
 	}

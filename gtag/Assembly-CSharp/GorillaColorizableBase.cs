@@ -1,9 +1,9 @@
 ﻿using System;
 using UnityEngine;
 
-// Token: 0x0200016D RID: 365
+// Token: 0x0200016E RID: 366
 public abstract class GorillaColorizableBase : MonoBehaviour
 {
-	// Token: 0x06000927 RID: 2343
+	// Token: 0x0600092B RID: 2347
 	public abstract void SetColor(Color color);
 }

@@ -4,25 +4,25 @@ using UnityEngine;
 // Token: 0x02000090 RID: 144
 public class TeleportPoint : MonoBehaviour
 {
-	// Token: 0x0600031B RID: 795 RVA: 0x000132F7 File Offset: 0x000114F7
+	// Token: 0x0600031B RID: 795 RVA: 0x000130D3 File Offset: 0x000112D3
 	private void Start()
 	{
 	}
 
-	// Token: 0x0600031C RID: 796 RVA: 0x000132F9 File Offset: 0x000114F9
+	// Token: 0x0600031C RID: 796 RVA: 0x000130D5 File Offset: 0x000112D5
 	public Transform GetDestTransform()
 	{
 		return this.destTransform;
 	}
 
-	// Token: 0x0600031D RID: 797 RVA: 0x00013304 File Offset: 0x00011504
+	// Token: 0x0600031D RID: 797 RVA: 0x000130E0 File Offset: 0x000112E0
 	private void Update()
 	{
 		float value = Mathf.SmoothStep(this.fullIntensity, this.lowIntensity, (Time.time - this.lastLookAtTime) * this.dimmingSpeed);
 		base.GetComponent<MeshRenderer>().material.SetFloat("_Intensity", value);
 	}
 
-	// Token: 0x0600031E RID: 798 RVA: 0x0001334C File Offset: 0x0001154C
+	// Token: 0x0600031E RID: 798 RVA: 0x00013128 File Offset: 0x00011328
 	public void OnLookAt()
 	{
 		this.lastLookAtTime = Time.time;

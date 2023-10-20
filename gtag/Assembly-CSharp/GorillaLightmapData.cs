@@ -1,10 +1,10 @@
 ﻿using System;
 using UnityEngine;
 
-// Token: 0x0200017E RID: 382
+// Token: 0x0200017F RID: 383
 public class GorillaLightmapData : MonoBehaviour
 {
-	// Token: 0x060009A4 RID: 2468 RVA: 0x0003B0FC File Offset: 0x000392FC
+	// Token: 0x060009A8 RID: 2472 RVA: 0x0003B0B4 File Offset: 0x000392B4
 	public void Awake()
 	{
 		this.lights = new Color[this.lightTextures.Length][];
@@ -19,20 +19,20 @@ public class GorillaLightmapData : MonoBehaviour
 		}
 	}
 
-	// Token: 0x04000BD6 RID: 3030
+	// Token: 0x04000BDA RID: 3034
 	[SerializeField]
 	public Texture2D[] dirTextures;
 
-	// Token: 0x04000BD7 RID: 3031
+	// Token: 0x04000BDB RID: 3035
 	[SerializeField]
 	public Texture2D[] lightTextures;
 
-	// Token: 0x04000BD8 RID: 3032
+	// Token: 0x04000BDC RID: 3036
 	public Color[][] lights;
 
-	// Token: 0x04000BD9 RID: 3033
+	// Token: 0x04000BDD RID: 3037
 	public Color[][] dirs;
 
-	// Token: 0x04000BDA RID: 3034
+	// Token: 0x04000BDE RID: 3038
 	public bool done;
 }

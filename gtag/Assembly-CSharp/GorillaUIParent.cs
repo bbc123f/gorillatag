@@ -1,10 +1,10 @@
 ﻿using System;
 using UnityEngine;
 
-// Token: 0x0200018A RID: 394
+// Token: 0x0200018B RID: 395
 public class GorillaUIParent : MonoBehaviour
 {
-	// Token: 0x06000A23 RID: 2595 RVA: 0x0003ED32 File Offset: 0x0003CF32
+	// Token: 0x06000A28 RID: 2600 RVA: 0x0003EE62 File Offset: 0x0003D062
 	private void Awake()
 	{
 		if (GorillaUIParent.instance == null)
@@ -18,6 +18,6 @@ public class GorillaUIParent : MonoBehaviour
 		}
 	}
 
-	// Token: 0x04000C8E RID: 3214
+	// Token: 0x04000C92 RID: 3218
 	public static volatile GorillaUIParent instance;
 }

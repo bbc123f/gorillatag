@@ -6,7 +6,7 @@ using UnityEngine;
 // Token: 0x020000E3 RID: 227
 public class SlingshotLifeIndicator : MonoBehaviourPunCallbacks, IInRoomCallbacks
 {
-	// Token: 0x06000551 RID: 1361 RVA: 0x000220D4 File Offset: 0x000202D4
+	// Token: 0x06000551 RID: 1361 RVA: 0x00021EC8 File Offset: 0x000200C8
 	private void SetActive(GameObject obj, bool active)
 	{
 		if (!obj.activeSelf && active)
@@ -19,7 +19,7 @@ public class SlingshotLifeIndicator : MonoBehaviourPunCallbacks, IInRoomCallback
 		}
 	}
 
-	// Token: 0x06000552 RID: 1362 RVA: 0x000220FC File Offset: 0x000202FC
+	// Token: 0x06000552 RID: 1362 RVA: 0x00021EF0 File Offset: 0x000200F0
 	private void LateUpdate()
 	{
 		if (!PhotonNetwork.InRoom || (this.checkedBattle && !this.inBattle))
@@ -64,21 +64,21 @@ public class SlingshotLifeIndicator : MonoBehaviourPunCallbacks, IInRoomCallback
 		this.SetActive(this.indicator3, playerLives >= 3);
 	}
 
-	// Token: 0x06000553 RID: 1363 RVA: 0x00022230 File Offset: 0x00020430
+	// Token: 0x06000553 RID: 1363 RVA: 0x00022024 File Offset: 0x00020224
 	public override void OnDisable()
 	{
 		base.OnDisable();
 		this.Reset();
 	}
 
-	// Token: 0x06000554 RID: 1364 RVA: 0x0002223E File Offset: 0x0002043E
+	// Token: 0x06000554 RID: 1364 RVA: 0x00022032 File Offset: 0x00020232
 	public override void OnLeftRoom()
 	{
 		base.OnLeftRoom();
 		this.Reset();
 	}
 
-	// Token: 0x06000555 RID: 1365 RVA: 0x0002224C File Offset: 0x0002044C
+	// Token: 0x06000555 RID: 1365 RVA: 0x00022040 File Offset: 0x00020240
 	public void Reset()
 	{
 		this.bMgr = null;

@@ -3,19 +3,19 @@ using UnityEngine;
 
 namespace OculusSampleFramework
 {
-	// Token: 0x020002CE RID: 718
+	// Token: 0x020002D0 RID: 720
 	public interface ColliderZone
 	{
-		// Token: 0x1700012E RID: 302
-		// (get) Token: 0x06001360 RID: 4960
+		// Token: 0x17000130 RID: 304
+		// (get) Token: 0x06001367 RID: 4967
 		Collider Collider { get; }
 
-		// Token: 0x1700012F RID: 303
-		// (get) Token: 0x06001361 RID: 4961
+		// Token: 0x17000131 RID: 305
+		// (get) Token: 0x06001368 RID: 4968
 		Interactable ParentInteractable { get; }
 
-		// Token: 0x17000130 RID: 304
-		// (get) Token: 0x06001362 RID: 4962
+		// Token: 0x17000132 RID: 306
+		// (get) Token: 0x06001369 RID: 4969
 		InteractableCollisionDepth CollisionDepth { get; }
 	}
 }

@@ -6,11 +6,11 @@ using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
 
-// Token: 0x020001E7 RID: 487
+// Token: 0x020001E8 RID: 488
 public class PhotonTag : MonoBehaviour, IOnEventCallback, IEquatable<PhotonTag>
 {
-	// Token: 0x17000092 RID: 146
-	// (get) Token: 0x06000CA7 RID: 3239 RVA: 0x0004BE4C File Offset: 0x0004A04C
+	// Token: 0x17000094 RID: 148
+	// (get) Token: 0x06000CAD RID: 3245 RVA: 0x0004C0B4 File Offset: 0x0004A2B4
 	public Id128 TagId
 	{
 		get
@@ -19,8 +19,8 @@ public class PhotonTag : MonoBehaviour, IOnEventCallback, IEquatable<PhotonTag>
 		}
 	}
 
-	// Token: 0x17000093 RID: 147
-	// (get) Token: 0x06000CA8 RID: 3240 RVA: 0x0004BE54 File Offset: 0x0004A054
+	// Token: 0x17000095 RID: 149
+	// (get) Token: 0x06000CAE RID: 3246 RVA: 0x0004C0BC File Offset: 0x0004A2BC
 	public Id128 SubId
 	{
 		get
@@ -29,7 +29,7 @@ public class PhotonTag : MonoBehaviour, IOnEventCallback, IEquatable<PhotonTag>
 		}
 	}
 
-	// Token: 0x06000CA9 RID: 3241 RVA: 0x0004BE5C File Offset: 0x0004A05C
+	// Token: 0x06000CAF RID: 3247 RVA: 0x0004C0C4 File Offset: 0x0004A2C4
 	private void OnEnable()
 	{
 		if (Application.isPlaying)
@@ -38,7 +38,7 @@ public class PhotonTag : MonoBehaviour, IOnEventCallback, IEquatable<PhotonTag>
 		}
 	}
 
-	// Token: 0x06000CAA RID: 3242 RVA: 0x0004BE6B File Offset: 0x0004A06B
+	// Token: 0x06000CB0 RID: 3248 RVA: 0x0004C0D3 File Offset: 0x0004A2D3
 	private void OnDisable()
 	{
 		if (Application.isPlaying)
@@ -47,19 +47,19 @@ public class PhotonTag : MonoBehaviour, IOnEventCallback, IEquatable<PhotonTag>
 		}
 	}
 
-	// Token: 0x06000CAB RID: 3243 RVA: 0x0004BE7A File Offset: 0x0004A07A
+	// Token: 0x06000CB1 RID: 3249 RVA: 0x0004C0E2 File Offset: 0x0004A2E2
 	void IOnEventCallback.OnEvent(EventData ev)
 	{
 		byte code = ev.Code;
 	}
 
-	// Token: 0x06000CAC RID: 3244 RVA: 0x0004BE89 File Offset: 0x0004A089
+	// Token: 0x06000CB2 RID: 3250 RVA: 0x0004C0F1 File Offset: 0x0004A2F1
 	[Conditional("UNITY_EDITOR")]
 	private void Reset()
 	{
 	}
 
-	// Token: 0x06000CAD RID: 3245 RVA: 0x0004BE8B File Offset: 0x0004A08B
+	// Token: 0x06000CB3 RID: 3251 RVA: 0x0004C0F3 File Offset: 0x0004A2F3
 	[Conditional("UNITY_EDITOR")]
 	private void ComputeID()
 	{
@@ -70,7 +70,7 @@ public class PhotonTag : MonoBehaviour, IOnEventCallback, IEquatable<PhotonTag>
 		this._tagId = BuildSafe.ComponentUtils.GetComponentID(this, 0);
 	}
 
-	// Token: 0x06000CAE RID: 3246 RVA: 0x0004BEA8 File Offset: 0x0004A0A8
+	// Token: 0x06000CB4 RID: 3252 RVA: 0x0004C110 File Offset: 0x0004A310
 	public bool Equals(PhotonTag other)
 	{
 		if (other == null)
@@ -85,7 +85,7 @@ public class PhotonTag : MonoBehaviour, IOnEventCallback, IEquatable<PhotonTag>
 		return base.Equals(other) && flag;
 	}
 
-	// Token: 0x06000CAF RID: 3247 RVA: 0x0004BEF4 File Offset: 0x0004A0F4
+	// Token: 0x06000CB5 RID: 3253 RVA: 0x0004C15C File Offset: 0x0004A35C
 	public override bool Equals(object obj)
 	{
 		if (this != obj)
@@ -96,32 +96,32 @@ public class PhotonTag : MonoBehaviour, IOnEventCallback, IEquatable<PhotonTag>
 		return true;
 	}
 
-	// Token: 0x06000CB0 RID: 3248 RVA: 0x0004BF1A File Offset: 0x0004A11A
+	// Token: 0x06000CB6 RID: 3254 RVA: 0x0004C182 File Offset: 0x0004A382
 	public override int GetHashCode()
 	{
 		return StaticHash.Combine(this._tagId.GetHashCode(), this._subId.GetHashCode());
 	}
 
-	// Token: 0x06000CB1 RID: 3249 RVA: 0x0004BF43 File Offset: 0x0004A143
+	// Token: 0x06000CB7 RID: 3255 RVA: 0x0004C1AB File Offset: 0x0004A3AB
 	public static bool operator ==(PhotonTag x, PhotonTag y)
 	{
 		return object.Equals(x, y);
 	}
 
-	// Token: 0x06000CB2 RID: 3250 RVA: 0x0004BF4C File Offset: 0x0004A14C
+	// Token: 0x06000CB8 RID: 3256 RVA: 0x0004C1B4 File Offset: 0x0004A3B4
 	public static bool operator !=(PhotonTag x, PhotonTag y)
 	{
 		return !object.Equals(x, y);
 	}
 
-	// Token: 0x04001002 RID: 4098
+	// Token: 0x04001006 RID: 4102
 	public const byte PHOTON_TAG_CODE = 177;
 
-	// Token: 0x04001003 RID: 4099
+	// Token: 0x04001007 RID: 4103
 	[SerializeField]
 	private Id128 _tagId;
 
-	// Token: 0x04001004 RID: 4100
+	// Token: 0x04001008 RID: 4104
 	[SerializeField]
 	private Id128 _subId;
 }

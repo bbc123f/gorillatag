@@ -7,10 +7,10 @@ using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.UI;
 
-// Token: 0x02000183 RID: 387
+// Token: 0x02000184 RID: 388
 public class GorillaScoreBoard : MonoBehaviourPunCallbacks, IInRoomCallbacks, IOnEventCallback
 {
-	// Token: 0x060009CC RID: 2508 RVA: 0x0003BC2B File Offset: 0x00039E2B
+	// Token: 0x060009D1 RID: 2513 RVA: 0x0003BD5B File Offset: 0x00039F5B
 	public void Awake()
 	{
 		PhotonNetwork.AddCallbackTarget(this);
@@ -21,7 +21,7 @@ public class GorillaScoreBoard : MonoBehaviourPunCallbacks, IInRoomCallbacks, IO
 		base.StartCoroutine(this.InfrequentUpdateCoroutine());
 	}
 
-	// Token: 0x060009CD RID: 2509 RVA: 0x0003BC68 File Offset: 0x00039E68
+	// Token: 0x060009D2 RID: 2514 RVA: 0x0003BD98 File Offset: 0x00039F98
 	public string GetBeginningString()
 	{
 		if (GorillaGameManager.instance != null)
@@ -31,7 +31,7 @@ public class GorillaScoreBoard : MonoBehaviourPunCallbacks, IInRoomCallbacks, IO
 		return "ROOM ID: " + ((!PhotonNetwork.CurrentRoom.IsVisible) ? "-PRIVATE-" : PhotonNetwork.CurrentRoom.Name) + "\n   PLAYER      COLOR   MUTE   REPORT";
 	}
 
-	// Token: 0x060009CE RID: 2510 RVA: 0x0003BCF3 File Offset: 0x00039EF3
+	// Token: 0x060009D3 RID: 2515 RVA: 0x0003BE23 File Offset: 0x0003A023
 	private IEnumerator InfrequentUpdateCoroutine()
 	{
 		yield return new WaitForSeconds(Random.Range(0f, 1f));
@@ -43,7 +43,7 @@ public class GorillaScoreBoard : MonoBehaviourPunCallbacks, IInRoomCallbacks, IO
 		yield break;
 	}
 
-	// Token: 0x060009CF RID: 2511 RVA: 0x0003BD04 File Offset: 0x00039F04
+	// Token: 0x060009D4 RID: 2516 RVA: 0x0003BE34 File Offset: 0x0003A034
 	private void InfrequentUpdate(bool forcedRefresh)
 	{
 		try
@@ -112,13 +112,13 @@ public class GorillaScoreBoard : MonoBehaviourPunCallbacks, IInRoomCallbacks, IO
 		}
 	}
 
-	// Token: 0x060009D0 RID: 2512 RVA: 0x0003BFA8 File Offset: 0x0003A1A8
+	// Token: 0x060009D5 RID: 2517 RVA: 0x0003C0D8 File Offset: 0x0003A2D8
 	public override void OnPlayerLeftRoom(Player otherPlayer)
 	{
 		this.InfrequentUpdate(true);
 	}
 
-	// Token: 0x060009D1 RID: 2513 RVA: 0x0003BFB4 File Offset: 0x0003A1B4
+	// Token: 0x060009D6 RID: 2518 RVA: 0x0003C0E4 File Offset: 0x0003A2E4
 	public void RedrawPlayerLines()
 	{
 		this.lines.Sort((GorillaPlayerScoreboardLine line1, GorillaPlayerScoreboardLine line2) => line1.playerActorNumber.CompareTo(line2.playerActorNumber));
@@ -159,12 +159,12 @@ public class GorillaScoreBoard : MonoBehaviourPunCallbacks, IInRoomCallbacks, IO
 		}
 	}
 
-	// Token: 0x060009D2 RID: 2514 RVA: 0x0003C158 File Offset: 0x0003A358
+	// Token: 0x060009D7 RID: 2519 RVA: 0x0003C288 File Offset: 0x0003A488
 	void IOnEventCallback.OnEvent(EventData photonEvent)
 	{
 	}
 
-	// Token: 0x060009D3 RID: 2515 RVA: 0x0003C15A File Offset: 0x0003A35A
+	// Token: 0x060009D8 RID: 2520 RVA: 0x0003C28A File Offset: 0x0003A48A
 	public IEnumerator RefreshData(int actorNumber1, int actorNumber2)
 	{
 		yield return new WaitForSeconds(1f);
@@ -183,7 +183,7 @@ public class GorillaScoreBoard : MonoBehaviourPunCallbacks, IInRoomCallbacks, IO
 		yield break;
 	}
 
-	// Token: 0x060009D4 RID: 2516 RVA: 0x0003C178 File Offset: 0x0003A378
+	// Token: 0x060009D9 RID: 2521 RVA: 0x0003C2A8 File Offset: 0x0003A4A8
 	private int GetActorIDFromUserID(string userID)
 	{
 		foreach (Player player in PhotonNetwork.PlayerList)
@@ -196,7 +196,7 @@ public class GorillaScoreBoard : MonoBehaviourPunCallbacks, IInRoomCallbacks, IO
 		return -1;
 	}
 
-	// Token: 0x060009D5 RID: 2517 RVA: 0x0003C1B4 File Offset: 0x0003A3B4
+	// Token: 0x060009DA RID: 2522 RVA: 0x0003C2E4 File Offset: 0x0003A4E4
 	public string NormalizeName(bool doIt, string text)
 	{
 		if (doIt)
@@ -211,45 +211,45 @@ public class GorillaScoreBoard : MonoBehaviourPunCallbacks, IInRoomCallbacks, IO
 		return text;
 	}
 
-	// Token: 0x04000C0B RID: 3083
+	// Token: 0x04000C0F RID: 3087
 	public GameObject scoreBoardLinePrefab;
 
-	// Token: 0x04000C0C RID: 3084
+	// Token: 0x04000C10 RID: 3088
 	public int startingYValue;
 
-	// Token: 0x04000C0D RID: 3085
+	// Token: 0x04000C11 RID: 3089
 	public int lineHeight;
 
-	// Token: 0x04000C0E RID: 3086
+	// Token: 0x04000C12 RID: 3090
 	public GorillaGameManager gameManager;
 
-	// Token: 0x04000C0F RID: 3087
+	// Token: 0x04000C13 RID: 3091
 	public string gameType;
 
-	// Token: 0x04000C10 RID: 3088
+	// Token: 0x04000C14 RID: 3092
 	public bool includeMMR;
 
-	// Token: 0x04000C11 RID: 3089
+	// Token: 0x04000C15 RID: 3093
 	public bool isActive;
 
-	// Token: 0x04000C12 RID: 3090
+	// Token: 0x04000C16 RID: 3094
 	public List<GorillaPlayerScoreboardLine> lines;
 
-	// Token: 0x04000C13 RID: 3091
+	// Token: 0x04000C17 RID: 3095
 	public Text boardText;
 
-	// Token: 0x04000C14 RID: 3092
+	// Token: 0x04000C18 RID: 3096
 	public Text buttonText;
 
-	// Token: 0x04000C15 RID: 3093
+	// Token: 0x04000C19 RID: 3097
 	private Player playerForVRRig;
 
-	// Token: 0x04000C16 RID: 3094
+	// Token: 0x04000C1A RID: 3098
 	private int i;
 
-	// Token: 0x04000C17 RID: 3095
+	// Token: 0x04000C1B RID: 3099
 	private VRRig currentRig;
 
-	// Token: 0x04000C18 RID: 3096
+	// Token: 0x04000C1C RID: 3100
 	private Player outPlayer;
 }

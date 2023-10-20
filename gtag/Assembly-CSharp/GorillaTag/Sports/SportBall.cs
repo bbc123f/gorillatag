@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace GorillaTag.Sports
 {
-	// Token: 0x0200031E RID: 798
+	// Token: 0x02000320 RID: 800
 	public class SportBall : MonoBehaviour
 	{
 	}

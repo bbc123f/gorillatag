@@ -2,10 +2,10 @@
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
-// Token: 0x0200020E RID: 526
+// Token: 0x0200020F RID: 527
 public static class ColorUtils
 {
-	// Token: 0x06000D39 RID: 3385 RVA: 0x0004D8FC File Offset: 0x0004BAFC
+	// Token: 0x06000D3F RID: 3391 RVA: 0x0004DB5C File Offset: 0x0004BD5C
 	public static Color ComposeHDR(Color baseColor, float intensity)
 	{
 		intensity = Mathf.Clamp(intensity, -10f, 10f);
@@ -24,7 +24,7 @@ public static class ColorUtils
 		return color;
 	}
 
-	// Token: 0x06000D3A RID: 3386 RVA: 0x0004D968 File Offset: 0x0004BB68
+	// Token: 0x06000D40 RID: 3392 RVA: 0x0004DBC8 File Offset: 0x0004BDC8
 	[return: TupleElementNames(new string[]
 	{
 		"baseColor",
@@ -52,6 +52,6 @@ public static class ColorUtils
 		return new ValueTuple<Color, float>(c, item);
 	}
 
-	// Token: 0x04001065 RID: 4197
+	// Token: 0x0400106A RID: 4202
 	private const byte kMaxByteForOverexposedColor = 191;
 }

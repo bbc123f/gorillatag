@@ -6,20 +6,20 @@ using UnityEngine.UI;
 // Token: 0x020000CD RID: 205
 public class UiAxis1dInspector : MonoBehaviour
 {
-	// Token: 0x0600048B RID: 1163 RVA: 0x0001D248 File Offset: 0x0001B448
+	// Token: 0x0600048B RID: 1163 RVA: 0x0001D024 File Offset: 0x0001B224
 	public void SetExtents(float minExtent, float maxExtent)
 	{
 		this.m_minExtent = minExtent;
 		this.m_maxExtent = maxExtent;
 	}
 
-	// Token: 0x0600048C RID: 1164 RVA: 0x0001D258 File Offset: 0x0001B458
+	// Token: 0x0600048C RID: 1164 RVA: 0x0001D034 File Offset: 0x0001B234
 	public void SetName(string name)
 	{
 		this.m_nameLabel.text = name;
 	}
 
-	// Token: 0x0600048D RID: 1165 RVA: 0x0001D268 File Offset: 0x0001B468
+	// Token: 0x0600048D RID: 1165 RVA: 0x0001D044 File Offset: 0x0001B244
 	public void SetValue(float value)
 	{
 		this.m_valueLabel.text = string.Format("[{0}]", value.ToString("f2"));

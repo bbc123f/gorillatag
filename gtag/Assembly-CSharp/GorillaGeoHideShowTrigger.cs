@@ -2,10 +2,10 @@
 using GorillaExtensions;
 using UnityEngine;
 
-// Token: 0x02000174 RID: 372
+// Token: 0x02000175 RID: 373
 public class GorillaGeoHideShowTrigger : GorillaTriggerBox
 {
-	// Token: 0x0600095F RID: 2399 RVA: 0x000389F4 File Offset: 0x00036BF4
+	// Token: 0x06000963 RID: 2403 RVA: 0x000389AC File Offset: 0x00036BAC
 	public override void OnBoxTriggered()
 	{
 		if (this.makeSureThisIsDisabled != null)
@@ -34,12 +34,12 @@ public class GorillaGeoHideShowTrigger : GorillaTriggerBox
 		}
 	}
 
-	// Token: 0x04000B76 RID: 2934
+	// Token: 0x04000B7A RID: 2938
 	public GameObject[] makeSureThisIsDisabled;
 
-	// Token: 0x04000B77 RID: 2935
+	// Token: 0x04000B7B RID: 2939
 	public GameObject[] makeSureThisIsEnabled;
 
-	// Token: 0x04000B78 RID: 2936
+	// Token: 0x04000B7C RID: 2940
 	public bool lotsOfStuff;
 }

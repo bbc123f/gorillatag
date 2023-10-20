@@ -5,13 +5,13 @@ using UnityEngine;
 // Token: 0x02000099 RID: 153
 public class TeleportTransitionWarp : TeleportTransition
 {
-	// Token: 0x06000342 RID: 834 RVA: 0x00013845 File Offset: 0x00011A45
+	// Token: 0x06000342 RID: 834 RVA: 0x00013621 File Offset: 0x00011821
 	protected override void LocomotionTeleportOnEnterStateTeleporting()
 	{
 		base.StartCoroutine(this.DoWarp());
 	}
 
-	// Token: 0x06000343 RID: 835 RVA: 0x00013854 File Offset: 0x00011A54
+	// Token: 0x06000343 RID: 835 RVA: 0x00013630 File Offset: 0x00011830
 	private IEnumerator DoWarp()
 	{
 		base.LocomotionTeleport.IsTransitioning = true;

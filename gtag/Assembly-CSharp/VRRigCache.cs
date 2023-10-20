@@ -8,7 +8,7 @@ using UnityEngine;
 // Token: 0x02000161 RID: 353
 internal class VRRigCache : MonoBehaviourPunCallbacks
 {
-	// Token: 0x060008B3 RID: 2227 RVA: 0x000356A0 File Offset: 0x000338A0
+	// Token: 0x060008B4 RID: 2228 RVA: 0x000354E0 File Offset: 0x000336E0
 	public static bool TryFindRigPlayer(VRRig rig, out Player player)
 	{
 		player = null;
@@ -32,13 +32,13 @@ internal class VRRigCache : MonoBehaviourPunCallbacks
 		return false;
 	}
 
-	// Token: 0x17000067 RID: 103
-	// (get) Token: 0x060008B4 RID: 2228 RVA: 0x00035734 File Offset: 0x00033934
-	// (set) Token: 0x060008B5 RID: 2229 RVA: 0x0003573B File Offset: 0x0003393B
+	// Token: 0x17000068 RID: 104
+	// (get) Token: 0x060008B5 RID: 2229 RVA: 0x00035574 File Offset: 0x00033774
+	// (set) Token: 0x060008B6 RID: 2230 RVA: 0x0003557B File Offset: 0x0003377B
 	public static VRRigCache Instance { get; private set; }
 
-	// Token: 0x17000068 RID: 104
-	// (get) Token: 0x060008B6 RID: 2230 RVA: 0x00035743 File Offset: 0x00033943
+	// Token: 0x17000069 RID: 105
+	// (get) Token: 0x060008B7 RID: 2231 RVA: 0x00035583 File Offset: 0x00033783
 	public Transform NetworkParent
 	{
 		get
@@ -47,7 +47,7 @@ internal class VRRigCache : MonoBehaviourPunCallbacks
 		}
 	}
 
-	// Token: 0x060008B7 RID: 2231 RVA: 0x0003574C File Offset: 0x0003394C
+	// Token: 0x060008B8 RID: 2232 RVA: 0x0003558C File Offset: 0x0003378C
 	private void Start()
 	{
 		if (VRRigCache.Instance != null && VRRigCache.Instance != this)
@@ -73,7 +73,7 @@ internal class VRRigCache : MonoBehaviourPunCallbacks
 		}
 	}
 
-	// Token: 0x060008B8 RID: 2232 RVA: 0x000357D8 File Offset: 0x000339D8
+	// Token: 0x060008B9 RID: 2233 RVA: 0x00035618 File Offset: 0x00033818
 	private void OnDestroy()
 	{
 		if (VRRigCache.Instance == this)
@@ -82,7 +82,7 @@ internal class VRRigCache : MonoBehaviourPunCallbacks
 		}
 	}
 
-	// Token: 0x060008B9 RID: 2233 RVA: 0x000357ED File Offset: 0x000339ED
+	// Token: 0x060008BA RID: 2234 RVA: 0x0003562D File Offset: 0x0003382D
 	private RigContainer SpawnRig()
 	{
 		if (this.rigTemplate.activeSelf)
@@ -97,7 +97,7 @@ internal class VRRigCache : MonoBehaviourPunCallbacks
 		return gameObject.GetComponent<RigContainer>();
 	}
 
-	// Token: 0x060008BA RID: 2234 RVA: 0x00035828 File Offset: 0x00033A28
+	// Token: 0x060008BB RID: 2235 RVA: 0x00035668 File Offset: 0x00033868
 	internal bool TryGetVrrig(Player targetPlayer, out RigContainer playerRig)
 	{
 		playerRig = null;
@@ -135,7 +135,7 @@ internal class VRRigCache : MonoBehaviourPunCallbacks
 		return true;
 	}
 
-	// Token: 0x060008BB RID: 2235 RVA: 0x000358E0 File Offset: 0x00033AE0
+	// Token: 0x060008BC RID: 2236 RVA: 0x00035720 File Offset: 0x00033920
 	private void AddRigToGorillaParent(Player player, VRRig vrrig)
 	{
 		GorillaParent instance = GorillaParent.instance;
@@ -155,7 +155,7 @@ internal class VRRigCache : MonoBehaviourPunCallbacks
 		instance.vrrigDict[player] = vrrig;
 	}
 
-	// Token: 0x060008BC RID: 2236 RVA: 0x00035944 File Offset: 0x00033B44
+	// Token: 0x060008BD RID: 2237 RVA: 0x00035784 File Offset: 0x00033984
 	public override void OnPlayerEnteredRoom(Player newPlayer)
 	{
 		RigContainer rigContainer;
@@ -165,7 +165,7 @@ internal class VRRigCache : MonoBehaviourPunCallbacks
 		}
 	}
 
-	// Token: 0x060008BD RID: 2237 RVA: 0x0003596C File Offset: 0x00033B6C
+	// Token: 0x060008BE RID: 2238 RVA: 0x000357AC File Offset: 0x000339AC
 	public override void OnJoinedRoom()
 	{
 		foreach (Player player in PhotonNetwork.PlayerList)
@@ -178,7 +178,7 @@ internal class VRRigCache : MonoBehaviourPunCallbacks
 		}
 	}
 
-	// Token: 0x060008BE RID: 2238 RVA: 0x000359AC File Offset: 0x00033BAC
+	// Token: 0x060008BF RID: 2239 RVA: 0x000357EC File Offset: 0x000339EC
 	private void RemoveRigFromGorillaParent(Player player, VRRig vrrig)
 	{
 		GorillaParent instance = GorillaParent.instance;
@@ -196,7 +196,7 @@ internal class VRRigCache : MonoBehaviourPunCallbacks
 		}
 	}
 
-	// Token: 0x060008BF RID: 2239 RVA: 0x00035A04 File Offset: 0x00033C04
+	// Token: 0x060008C0 RID: 2240 RVA: 0x00035844 File Offset: 0x00033A44
 	public override void OnPlayerLeftRoom(Player otherPlayer)
 	{
 		RigContainer rigContainer;
@@ -211,7 +211,7 @@ internal class VRRigCache : MonoBehaviourPunCallbacks
 		this.LogError("failed to find player's vrrig who left " + otherPlayer.ToStringFull());
 	}
 
-	// Token: 0x060008C0 RID: 2240 RVA: 0x00035A68 File Offset: 0x00033C68
+	// Token: 0x060008C1 RID: 2241 RVA: 0x000358A8 File Offset: 0x00033AA8
 	public override void OnLeftRoom()
 	{
 		foreach (Player player in VRRigCache.rigsInUse.Keys.ToArray<Player>())
@@ -228,17 +228,17 @@ internal class VRRigCache : MonoBehaviourPunCallbacks
 		}
 	}
 
-	// Token: 0x060008C1 RID: 2241 RVA: 0x00035AE9 File Offset: 0x00033CE9
+	// Token: 0x060008C2 RID: 2242 RVA: 0x00035929 File Offset: 0x00033B29
 	private void LogInfo(string log)
 	{
 	}
 
-	// Token: 0x060008C2 RID: 2242 RVA: 0x00035AEB File Offset: 0x00033CEB
+	// Token: 0x060008C3 RID: 2243 RVA: 0x0003592B File Offset: 0x00033B2B
 	private void LogWarning(string log)
 	{
 	}
 
-	// Token: 0x060008C3 RID: 2243 RVA: 0x00035AED File Offset: 0x00033CED
+	// Token: 0x060008C4 RID: 2244 RVA: 0x0003592D File Offset: 0x00033B2D
 	private void LogError(string log)
 	{
 	}

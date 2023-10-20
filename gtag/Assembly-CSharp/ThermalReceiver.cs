@@ -6,7 +6,7 @@ using UnityEngine;
 public class ThermalReceiver : MonoBehaviour, IDynamicFloat, IResettableItem
 {
 	// Token: 0x1700001B RID: 27
-	// (get) Token: 0x06000245 RID: 581 RVA: 0x0000F73B File Offset: 0x0000D93B
+	// (get) Token: 0x06000245 RID: 581 RVA: 0x0000F517 File Offset: 0x0000D717
 	public float Farenheit
 	{
 		get
@@ -16,7 +16,7 @@ public class ThermalReceiver : MonoBehaviour, IDynamicFloat, IResettableItem
 	}
 
 	// Token: 0x1700001C RID: 28
-	// (get) Token: 0x06000246 RID: 582 RVA: 0x0000F74F File Offset: 0x0000D94F
+	// (get) Token: 0x06000246 RID: 582 RVA: 0x0000F52B File Offset: 0x0000D72B
 	public float floatValue
 	{
 		get
@@ -25,25 +25,25 @@ public class ThermalReceiver : MonoBehaviour, IDynamicFloat, IResettableItem
 		}
 	}
 
-	// Token: 0x06000247 RID: 583 RVA: 0x0000F757 File Offset: 0x0000D957
+	// Token: 0x06000247 RID: 583 RVA: 0x0000F533 File Offset: 0x0000D733
 	protected void Awake()
 	{
 		this.defaultCelsius = this.celsius;
 	}
 
-	// Token: 0x06000248 RID: 584 RVA: 0x0000F765 File Offset: 0x0000D965
+	// Token: 0x06000248 RID: 584 RVA: 0x0000F541 File Offset: 0x0000D741
 	protected void OnEnable()
 	{
 		ThermalManager.Register(this);
 	}
 
-	// Token: 0x06000249 RID: 585 RVA: 0x0000F76D File Offset: 0x0000D96D
+	// Token: 0x06000249 RID: 585 RVA: 0x0000F549 File Offset: 0x0000D749
 	protected void OnDisable()
 	{
 		ThermalManager.Unregister(this);
 	}
 
-	// Token: 0x0600024A RID: 586 RVA: 0x0000F775 File Offset: 0x0000D975
+	// Token: 0x0600024A RID: 586 RVA: 0x0000F551 File Offset: 0x0000D751
 	public void ResetToDefaultState()
 	{
 		this.celsius = this.defaultCelsius;

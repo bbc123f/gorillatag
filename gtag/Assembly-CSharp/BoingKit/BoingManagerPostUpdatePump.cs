@@ -3,16 +3,16 @@ using UnityEngine;
 
 namespace BoingKit
 {
-	// Token: 0x02000369 RID: 873
+	// Token: 0x0200036B RID: 875
 	public class BoingManagerPostUpdatePump : MonoBehaviour
 	{
-		// Token: 0x060019A4 RID: 6564 RVA: 0x0008DDC7 File Offset: 0x0008BFC7
+		// Token: 0x060019AD RID: 6573 RVA: 0x0008E2AF File Offset: 0x0008C4AF
 		private void Start()
 		{
 			Object.DontDestroyOnLoad(base.gameObject);
 		}
 
-		// Token: 0x060019A5 RID: 6565 RVA: 0x0008DDD4 File Offset: 0x0008BFD4
+		// Token: 0x060019AE RID: 6574 RVA: 0x0008E2BC File Offset: 0x0008C4BC
 		private bool TryDestroyDuplicate()
 		{
 			if (BoingManager.s_managerGo == base.gameObject)
@@ -23,7 +23,7 @@ namespace BoingKit
 			return true;
 		}
 
-		// Token: 0x060019A6 RID: 6566 RVA: 0x0008DDF6 File Offset: 0x0008BFF6
+		// Token: 0x060019AF RID: 6575 RVA: 0x0008E2DE File Offset: 0x0008C4DE
 		private void FixedUpdate()
 		{
 			if (this.TryDestroyDuplicate())
@@ -33,7 +33,7 @@ namespace BoingKit
 			BoingManager.Execute(BoingManager.UpdateMode.FixedUpdate);
 		}
 
-		// Token: 0x060019A7 RID: 6567 RVA: 0x0008DE07 File Offset: 0x0008C007
+		// Token: 0x060019B0 RID: 6576 RVA: 0x0008E2EF File Offset: 0x0008C4EF
 		private void Update()
 		{
 			if (this.TryDestroyDuplicate())
@@ -46,7 +46,7 @@ namespace BoingKit
 			BoingManager.PullBonesResults(BoingManager.UpdateMode.EarlyUpdate);
 		}
 
-		// Token: 0x060019A8 RID: 6568 RVA: 0x0008DE2A File Offset: 0x0008C02A
+		// Token: 0x060019B1 RID: 6577 RVA: 0x0008E312 File Offset: 0x0008C512
 		private void LateUpdate()
 		{
 			if (this.TryDestroyDuplicate())

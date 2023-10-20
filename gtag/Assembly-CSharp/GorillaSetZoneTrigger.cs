@@ -4,7 +4,7 @@ using UnityEngine;
 // Token: 0x02000079 RID: 121
 public class GorillaSetZoneTrigger : GorillaTriggerBox
 {
-	// Token: 0x06000265 RID: 613 RVA: 0x000101A3 File Offset: 0x0000E3A3
+	// Token: 0x06000265 RID: 613 RVA: 0x0000FF7F File Offset: 0x0000E17F
 	public override void OnBoxTriggered()
 	{
 		ZoneManagement.SetActiveZones(this.zones);

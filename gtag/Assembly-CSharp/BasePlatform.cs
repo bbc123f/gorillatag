@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-// Token: 0x02000196 RID: 406
+// Token: 0x02000197 RID: 407
 public class BasePlatform : MonoBehaviour
 {
 }

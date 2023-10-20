@@ -7,7 +7,7 @@ using UnityEngine.UI;
 // Token: 0x0200007D RID: 125
 public class DebugUIBuilder : MonoBehaviour
 {
-	// Token: 0x06000273 RID: 627 RVA: 0x00010490 File Offset: 0x0000E690
+	// Token: 0x06000273 RID: 627 RVA: 0x0001026C File Offset: 0x0000E46C
 	public void Awake()
 	{
 		DebugUIBuilder.instance = this;
@@ -48,7 +48,7 @@ public class DebugUIBuilder : MonoBehaviour
 		this.lp.gameObject.SetActive(false);
 	}
 
-	// Token: 0x06000274 RID: 628 RVA: 0x00010620 File Offset: 0x0000E820
+	// Token: 0x06000274 RID: 628 RVA: 0x000103FC File Offset: 0x0000E5FC
 	public void Show()
 	{
 		this.Relayout();
@@ -84,7 +84,7 @@ public class DebugUIBuilder : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000275 RID: 629 RVA: 0x000107A8 File Offset: 0x0000E9A8
+	// Token: 0x06000275 RID: 629 RVA: 0x00010584 File Offset: 0x0000E784
 	public void Hide()
 	{
 		base.gameObject.SetActive(false);
@@ -102,7 +102,7 @@ public class DebugUIBuilder : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000276 RID: 630 RVA: 0x00010830 File Offset: 0x0000EA30
+	// Token: 0x06000276 RID: 630 RVA: 0x0001060C File Offset: 0x0000E80C
 	private void StackedRelayout()
 	{
 		for (int i = 0; i < this.targetContentPanels.Length; i++)
@@ -132,7 +132,7 @@ public class DebugUIBuilder : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000277 RID: 631 RVA: 0x00010940 File Offset: 0x0000EB40
+	// Token: 0x06000277 RID: 631 RVA: 0x0001071C File Offset: 0x0000E91C
 	private void PanelCentricRelayout()
 	{
 		if (!this.isHorizontal)
@@ -175,7 +175,7 @@ public class DebugUIBuilder : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000278 RID: 632 RVA: 0x00010ACB File Offset: 0x0000ECCB
+	// Token: 0x06000278 RID: 632 RVA: 0x000108A7 File Offset: 0x0000EAA7
 	private void Relayout()
 	{
 		if (this.usePanelCentricRelayout)
@@ -186,7 +186,7 @@ public class DebugUIBuilder : MonoBehaviour
 		this.StackedRelayout();
 	}
 
-	// Token: 0x06000279 RID: 633 RVA: 0x00010AE4 File Offset: 0x0000ECE4
+	// Token: 0x06000279 RID: 633 RVA: 0x000108C0 File Offset: 0x0000EAC0
 	private void AddRect(RectTransform r, int targetCanvas)
 	{
 		if (targetCanvas > this.targetContentPanels.Length)
@@ -209,7 +209,7 @@ public class DebugUIBuilder : MonoBehaviour
 		}
 	}
 
-	// Token: 0x0600027A RID: 634 RVA: 0x00010B78 File Offset: 0x0000ED78
+	// Token: 0x0600027A RID: 634 RVA: 0x00010954 File Offset: 0x0000EB54
 	public RectTransform AddButton(string label, DebugUIBuilder.OnClick handler = null, int buttonIndex = -1, int targetCanvas = 0, bool highResolutionText = false)
 	{
 		RectTransform component;
@@ -241,7 +241,7 @@ public class DebugUIBuilder : MonoBehaviour
 		return component;
 	}
 
-	// Token: 0x0600027B RID: 635 RVA: 0x00010C30 File Offset: 0x0000EE30
+	// Token: 0x0600027B RID: 635 RVA: 0x00010A0C File Offset: 0x0000EC0C
 	public RectTransform AddLabel(string label, int targetCanvas = 0)
 	{
 		RectTransform component = Object.Instantiate<RectTransform>(this.labelPrefab).GetComponent<RectTransform>();
@@ -250,7 +250,7 @@ public class DebugUIBuilder : MonoBehaviour
 		return component;
 	}
 
-	// Token: 0x0600027C RID: 636 RVA: 0x00010C64 File Offset: 0x0000EE64
+	// Token: 0x0600027C RID: 636 RVA: 0x00010A40 File Offset: 0x0000EC40
 	public RectTransform AddSlider(string label, float min, float max, DebugUIBuilder.OnSlider onValueChanged, bool wholeNumbersOnly = false, int targetCanvas = 0)
 	{
 		RectTransform rectTransform = Object.Instantiate<RectTransform>(this.sliderPrefab);
@@ -266,7 +266,7 @@ public class DebugUIBuilder : MonoBehaviour
 		return rectTransform;
 	}
 
-	// Token: 0x0600027D RID: 637 RVA: 0x00010CC8 File Offset: 0x0000EEC8
+	// Token: 0x0600027D RID: 637 RVA: 0x00010AA4 File Offset: 0x0000ECA4
 	public RectTransform AddDivider(int targetCanvas = 0)
 	{
 		RectTransform rectTransform = Object.Instantiate<RectTransform>(this.dividerPrefab);
@@ -274,7 +274,7 @@ public class DebugUIBuilder : MonoBehaviour
 		return rectTransform;
 	}
 
-	// Token: 0x0600027E RID: 638 RVA: 0x00010CEC File Offset: 0x0000EEEC
+	// Token: 0x0600027E RID: 638 RVA: 0x00010AC8 File Offset: 0x0000ECC8
 	public RectTransform AddToggle(string label, DebugUIBuilder.OnToggleValueChange onValueChanged, int targetCanvas = 0)
 	{
 		RectTransform rectTransform = Object.Instantiate<RectTransform>(this.togglePrefab);
@@ -288,7 +288,7 @@ public class DebugUIBuilder : MonoBehaviour
 		return rectTransform;
 	}
 
-	// Token: 0x0600027F RID: 639 RVA: 0x00010D50 File Offset: 0x0000EF50
+	// Token: 0x0600027F RID: 639 RVA: 0x00010B2C File Offset: 0x0000ED2C
 	public RectTransform AddToggle(string label, DebugUIBuilder.OnToggleValueChange onValueChanged, bool defaultValue, int targetCanvas = 0)
 	{
 		RectTransform rectTransform = Object.Instantiate<RectTransform>(this.togglePrefab);
@@ -303,7 +303,7 @@ public class DebugUIBuilder : MonoBehaviour
 		return rectTransform;
 	}
 
-	// Token: 0x06000280 RID: 640 RVA: 0x00010DC0 File Offset: 0x0000EFC0
+	// Token: 0x06000280 RID: 640 RVA: 0x00010B9C File Offset: 0x0000ED9C
 	public RectTransform AddRadio(string label, string group, DebugUIBuilder.OnToggleValueChange handler, int targetCanvas = 0)
 	{
 		RectTransform rectTransform = Object.Instantiate<RectTransform>(this.radioPrefab);
@@ -335,7 +335,7 @@ public class DebugUIBuilder : MonoBehaviour
 		return rectTransform;
 	}
 
-	// Token: 0x06000281 RID: 641 RVA: 0x00010E88 File Offset: 0x0000F088
+	// Token: 0x06000281 RID: 641 RVA: 0x00010C64 File Offset: 0x0000EE64
 	public RectTransform AddTextField(string label, int targetCanvas = 0)
 	{
 		RectTransform component = Object.Instantiate<RectTransform>(this.textPrefab).GetComponent<RectTransform>();
@@ -344,7 +344,7 @@ public class DebugUIBuilder : MonoBehaviour
 		return component;
 	}
 
-	// Token: 0x06000282 RID: 642 RVA: 0x00010EBB File Offset: 0x0000F0BB
+	// Token: 0x06000282 RID: 642 RVA: 0x00010C97 File Offset: 0x0000EE97
 	public void ToggleLaserPointer(bool isOn)
 	{
 		if (this.lp)
@@ -460,19 +460,19 @@ public class DebugUIBuilder : MonoBehaviour
 	// Token: 0x0400035C RID: 860
 	public bool usePanelCentricRelayout;
 
-	// Token: 0x020003A4 RID: 932
-	// (Invoke) Token: 0x06001AE8 RID: 6888
+	// Token: 0x020003A6 RID: 934
+	// (Invoke) Token: 0x06001AF1 RID: 6897
 	public delegate void OnClick();
 
-	// Token: 0x020003A5 RID: 933
-	// (Invoke) Token: 0x06001AEC RID: 6892
+	// Token: 0x020003A7 RID: 935
+	// (Invoke) Token: 0x06001AF5 RID: 6901
 	public delegate void OnToggleValueChange(Toggle t);
 
-	// Token: 0x020003A6 RID: 934
-	// (Invoke) Token: 0x06001AF0 RID: 6896
+	// Token: 0x020003A8 RID: 936
+	// (Invoke) Token: 0x06001AF9 RID: 6905
 	public delegate void OnSlider(float f);
 
-	// Token: 0x020003A7 RID: 935
-	// (Invoke) Token: 0x06001AF4 RID: 6900
+	// Token: 0x020003A9 RID: 937
+	// (Invoke) Token: 0x06001AFD RID: 6909
 	public delegate bool ActiveUpdate();
 }

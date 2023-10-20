@@ -3,31 +3,31 @@ using UnityEngine;
 
 namespace CjLib
 {
-	// Token: 0x02000358 RID: 856
+	// Token: 0x0200035A RID: 858
 	public struct Vector2Spring
 	{
-		// Token: 0x060018E0 RID: 6368 RVA: 0x00089AA2 File Offset: 0x00087CA2
+		// Token: 0x060018E9 RID: 6377 RVA: 0x00089F8A File Offset: 0x0008818A
 		public void Reset()
 		{
 			this.Value = Vector2.zero;
 			this.Velocity = Vector2.zero;
 		}
 
-		// Token: 0x060018E1 RID: 6369 RVA: 0x00089ABA File Offset: 0x00087CBA
+		// Token: 0x060018EA RID: 6378 RVA: 0x00089FA2 File Offset: 0x000881A2
 		public void Reset(Vector2 initValue)
 		{
 			this.Value = initValue;
 			this.Velocity = Vector2.zero;
 		}
 
-		// Token: 0x060018E2 RID: 6370 RVA: 0x00089ACE File Offset: 0x00087CCE
+		// Token: 0x060018EB RID: 6379 RVA: 0x00089FB6 File Offset: 0x000881B6
 		public void Reset(Vector2 initValue, Vector2 initVelocity)
 		{
 			this.Value = initValue;
 			this.Velocity = initVelocity;
 		}
 
-		// Token: 0x060018E3 RID: 6371 RVA: 0x00089AE0 File Offset: 0x00087CE0
+		// Token: 0x060018EC RID: 6380 RVA: 0x00089FC8 File Offset: 0x000881C8
 		public Vector2 TrackDampingRatio(Vector2 targetValue, float angularFrequency, float dampingRatio, float deltaTime)
 		{
 			if (angularFrequency < MathUtil.Epsilon)
@@ -53,7 +53,7 @@ namespace CjLib
 			return this.Value;
 		}
 
-		// Token: 0x060018E4 RID: 6372 RVA: 0x00089BDC File Offset: 0x00087DDC
+		// Token: 0x060018ED RID: 6381 RVA: 0x0008A0C4 File Offset: 0x000882C4
 		public Vector2 TrackHalfLife(Vector2 targetValue, float frequencyHz, float halfLife, float deltaTime)
 		{
 			if (halfLife < MathUtil.Epsilon)
@@ -67,7 +67,7 @@ namespace CjLib
 			return this.TrackDampingRatio(targetValue, num, dampingRatio, deltaTime);
 		}
 
-		// Token: 0x060018E5 RID: 6373 RVA: 0x00089C28 File Offset: 0x00087E28
+		// Token: 0x060018EE RID: 6382 RVA: 0x0008A110 File Offset: 0x00088310
 		public Vector2 TrackExponential(Vector2 targetValue, float halfLife, float deltaTime)
 		{
 			if (halfLife < MathUtil.Epsilon)
@@ -81,13 +81,13 @@ namespace CjLib
 			return this.TrackDampingRatio(targetValue, angularFrequency, dampingRatio, deltaTime);
 		}
 
-		// Token: 0x040019B0 RID: 6576
+		// Token: 0x040019BD RID: 6589
 		public static readonly int Stride = 16;
 
-		// Token: 0x040019B1 RID: 6577
+		// Token: 0x040019BE RID: 6590
 		public Vector2 Value;
 
-		// Token: 0x040019B2 RID: 6578
+		// Token: 0x040019BF RID: 6591
 		public Vector2 Velocity;
 	}
 }

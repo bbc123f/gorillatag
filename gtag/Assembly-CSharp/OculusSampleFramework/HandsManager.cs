@@ -5,12 +5,12 @@ using UnityEngine;
 
 namespace OculusSampleFramework
 {
-	// Token: 0x020002D1 RID: 721
+	// Token: 0x020002D3 RID: 723
 	public class HandsManager : MonoBehaviour
 	{
-		// Token: 0x17000131 RID: 305
-		// (get) Token: 0x06001364 RID: 4964 RVA: 0x0006FC54 File Offset: 0x0006DE54
-		// (set) Token: 0x06001365 RID: 4965 RVA: 0x0006FC5E File Offset: 0x0006DE5E
+		// Token: 0x17000133 RID: 307
+		// (get) Token: 0x0600136B RID: 4971 RVA: 0x00070120 File Offset: 0x0006E320
+		// (set) Token: 0x0600136C RID: 4972 RVA: 0x0007012A File Offset: 0x0006E32A
 		public OVRHand RightHand
 		{
 			get
@@ -23,9 +23,9 @@ namespace OculusSampleFramework
 			}
 		}
 
-		// Token: 0x17000132 RID: 306
-		// (get) Token: 0x06001366 RID: 4966 RVA: 0x0006FC69 File Offset: 0x0006DE69
-		// (set) Token: 0x06001367 RID: 4967 RVA: 0x0006FC73 File Offset: 0x0006DE73
+		// Token: 0x17000134 RID: 308
+		// (get) Token: 0x0600136D RID: 4973 RVA: 0x00070135 File Offset: 0x0006E335
+		// (set) Token: 0x0600136E RID: 4974 RVA: 0x0007013F File Offset: 0x0006E33F
 		public OVRSkeleton RightHandSkeleton
 		{
 			get
@@ -38,9 +38,9 @@ namespace OculusSampleFramework
 			}
 		}
 
-		// Token: 0x17000133 RID: 307
-		// (get) Token: 0x06001368 RID: 4968 RVA: 0x0006FC7E File Offset: 0x0006DE7E
-		// (set) Token: 0x06001369 RID: 4969 RVA: 0x0006FC88 File Offset: 0x0006DE88
+		// Token: 0x17000135 RID: 309
+		// (get) Token: 0x0600136F RID: 4975 RVA: 0x0007014A File Offset: 0x0006E34A
+		// (set) Token: 0x06001370 RID: 4976 RVA: 0x00070154 File Offset: 0x0006E354
 		public OVRSkeletonRenderer RightHandSkeletonRenderer
 		{
 			get
@@ -53,9 +53,9 @@ namespace OculusSampleFramework
 			}
 		}
 
-		// Token: 0x17000134 RID: 308
-		// (get) Token: 0x0600136A RID: 4970 RVA: 0x0006FC93 File Offset: 0x0006DE93
-		// (set) Token: 0x0600136B RID: 4971 RVA: 0x0006FC9D File Offset: 0x0006DE9D
+		// Token: 0x17000136 RID: 310
+		// (get) Token: 0x06001371 RID: 4977 RVA: 0x0007015F File Offset: 0x0006E35F
+		// (set) Token: 0x06001372 RID: 4978 RVA: 0x00070169 File Offset: 0x0006E369
 		public OVRMesh RightHandMesh
 		{
 			get
@@ -68,9 +68,9 @@ namespace OculusSampleFramework
 			}
 		}
 
-		// Token: 0x17000135 RID: 309
-		// (get) Token: 0x0600136C RID: 4972 RVA: 0x0006FCA8 File Offset: 0x0006DEA8
-		// (set) Token: 0x0600136D RID: 4973 RVA: 0x0006FCB2 File Offset: 0x0006DEB2
+		// Token: 0x17000137 RID: 311
+		// (get) Token: 0x06001373 RID: 4979 RVA: 0x00070174 File Offset: 0x0006E374
+		// (set) Token: 0x06001374 RID: 4980 RVA: 0x0007017E File Offset: 0x0006E37E
 		public OVRMeshRenderer RightHandMeshRenderer
 		{
 			get
@@ -83,9 +83,9 @@ namespace OculusSampleFramework
 			}
 		}
 
-		// Token: 0x17000136 RID: 310
-		// (get) Token: 0x0600136E RID: 4974 RVA: 0x0006FCBD File Offset: 0x0006DEBD
-		// (set) Token: 0x0600136F RID: 4975 RVA: 0x0006FCC7 File Offset: 0x0006DEC7
+		// Token: 0x17000138 RID: 312
+		// (get) Token: 0x06001375 RID: 4981 RVA: 0x00070189 File Offset: 0x0006E389
+		// (set) Token: 0x06001376 RID: 4982 RVA: 0x00070193 File Offset: 0x0006E393
 		public OVRHand LeftHand
 		{
 			get
@@ -98,9 +98,9 @@ namespace OculusSampleFramework
 			}
 		}
 
-		// Token: 0x17000137 RID: 311
-		// (get) Token: 0x06001370 RID: 4976 RVA: 0x0006FCD2 File Offset: 0x0006DED2
-		// (set) Token: 0x06001371 RID: 4977 RVA: 0x0006FCDC File Offset: 0x0006DEDC
+		// Token: 0x17000139 RID: 313
+		// (get) Token: 0x06001377 RID: 4983 RVA: 0x0007019E File Offset: 0x0006E39E
+		// (set) Token: 0x06001378 RID: 4984 RVA: 0x000701A8 File Offset: 0x0006E3A8
 		public OVRSkeleton LeftHandSkeleton
 		{
 			get
@@ -113,9 +113,9 @@ namespace OculusSampleFramework
 			}
 		}
 
-		// Token: 0x17000138 RID: 312
-		// (get) Token: 0x06001372 RID: 4978 RVA: 0x0006FCE7 File Offset: 0x0006DEE7
-		// (set) Token: 0x06001373 RID: 4979 RVA: 0x0006FCF1 File Offset: 0x0006DEF1
+		// Token: 0x1700013A RID: 314
+		// (get) Token: 0x06001379 RID: 4985 RVA: 0x000701B3 File Offset: 0x0006E3B3
+		// (set) Token: 0x0600137A RID: 4986 RVA: 0x000701BD File Offset: 0x0006E3BD
 		public OVRSkeletonRenderer LeftHandSkeletonRenderer
 		{
 			get
@@ -128,9 +128,9 @@ namespace OculusSampleFramework
 			}
 		}
 
-		// Token: 0x17000139 RID: 313
-		// (get) Token: 0x06001374 RID: 4980 RVA: 0x0006FCFC File Offset: 0x0006DEFC
-		// (set) Token: 0x06001375 RID: 4981 RVA: 0x0006FD06 File Offset: 0x0006DF06
+		// Token: 0x1700013B RID: 315
+		// (get) Token: 0x0600137B RID: 4987 RVA: 0x000701C8 File Offset: 0x0006E3C8
+		// (set) Token: 0x0600137C RID: 4988 RVA: 0x000701D2 File Offset: 0x0006E3D2
 		public OVRMesh LeftHandMesh
 		{
 			get
@@ -143,9 +143,9 @@ namespace OculusSampleFramework
 			}
 		}
 
-		// Token: 0x1700013A RID: 314
-		// (get) Token: 0x06001376 RID: 4982 RVA: 0x0006FD11 File Offset: 0x0006DF11
-		// (set) Token: 0x06001377 RID: 4983 RVA: 0x0006FD1B File Offset: 0x0006DF1B
+		// Token: 0x1700013C RID: 316
+		// (get) Token: 0x0600137D RID: 4989 RVA: 0x000701DD File Offset: 0x0006E3DD
+		// (set) Token: 0x0600137E RID: 4990 RVA: 0x000701E7 File Offset: 0x0006E3E7
 		public OVRMeshRenderer LeftHandMeshRenderer
 		{
 			get
@@ -158,12 +158,12 @@ namespace OculusSampleFramework
 			}
 		}
 
-		// Token: 0x1700013B RID: 315
-		// (get) Token: 0x06001378 RID: 4984 RVA: 0x0006FD26 File Offset: 0x0006DF26
-		// (set) Token: 0x06001379 RID: 4985 RVA: 0x0006FD2D File Offset: 0x0006DF2D
+		// Token: 0x1700013D RID: 317
+		// (get) Token: 0x0600137F RID: 4991 RVA: 0x000701F2 File Offset: 0x0006E3F2
+		// (set) Token: 0x06001380 RID: 4992 RVA: 0x000701F9 File Offset: 0x0006E3F9
 		public static HandsManager Instance { get; private set; }
 
-		// Token: 0x0600137A RID: 4986 RVA: 0x0006FD38 File Offset: 0x0006DF38
+		// Token: 0x06001381 RID: 4993 RVA: 0x00070204 File Offset: 0x0006E404
 		private void Awake()
 		{
 			if (HandsManager.Instance && HandsManager.Instance != this)
@@ -187,7 +187,7 @@ namespace OculusSampleFramework
 			base.StartCoroutine(this.FindSkeletonVisualGameObjects());
 		}
 
-		// Token: 0x0600137B RID: 4987 RVA: 0x0006FE44 File Offset: 0x0006E044
+		// Token: 0x06001382 RID: 4994 RVA: 0x00070310 File Offset: 0x0006E510
 		private void Update()
 		{
 			HandsManager.HandsVisualMode visualMode = this.VisualMode;
@@ -210,7 +210,7 @@ namespace OculusSampleFramework
 			this._leftMeshRenderer.sharedMaterial.SetFloat(this.HandAlphaId, this._currentHandAlpha);
 		}
 
-		// Token: 0x0600137C RID: 4988 RVA: 0x0006FEBF File Offset: 0x0006E0BF
+		// Token: 0x06001383 RID: 4995 RVA: 0x0007038B File Offset: 0x0006E58B
 		private IEnumerator FindSkeletonVisualGameObjects()
 		{
 			while (!this._leftSkeletonVisual || !this._rightSkeletonVisual)
@@ -237,7 +237,7 @@ namespace OculusSampleFramework
 			yield break;
 		}
 
-		// Token: 0x0600137D RID: 4989 RVA: 0x0006FECE File Offset: 0x0006E0CE
+		// Token: 0x06001384 RID: 4996 RVA: 0x0007039A File Offset: 0x0006E59A
 		public void SwitchVisualization()
 		{
 			if (!this._leftSkeletonVisual || !this._rightSkeletonVisual)
@@ -248,7 +248,7 @@ namespace OculusSampleFramework
 			this.SetToCurrentVisualMode();
 		}
 
-		// Token: 0x0600137E RID: 4990 RVA: 0x0006FF04 File Offset: 0x0006E104
+		// Token: 0x06001385 RID: 4997 RVA: 0x000703D0 File Offset: 0x0006E5D0
 		private void SetToCurrentVisualMode()
 		{
 			switch (this.VisualMode)
@@ -282,7 +282,7 @@ namespace OculusSampleFramework
 			}
 		}
 
-		// Token: 0x0600137F RID: 4991 RVA: 0x00070024 File Offset: 0x0006E224
+		// Token: 0x06001386 RID: 4998 RVA: 0x000704F0 File Offset: 0x0006E6F0
 		public static List<OVRBoneCapsule> GetCapsulesPerBone(OVRSkeleton skeleton, OVRSkeleton.BoneId boneId)
 		{
 			List<OVRBoneCapsule> list = new List<OVRBoneCapsule>();
@@ -297,67 +297,67 @@ namespace OculusSampleFramework
 			return list;
 		}
 
-		// Token: 0x06001380 RID: 4992 RVA: 0x00070070 File Offset: 0x0006E270
+		// Token: 0x06001387 RID: 4999 RVA: 0x0007053C File Offset: 0x0006E73C
 		public bool IsInitialized()
 		{
 			return this.LeftHandSkeleton && this.LeftHandSkeleton.IsInitialized && this.RightHandSkeleton && this.RightHandSkeleton.IsInitialized && this.LeftHandMesh && this.LeftHandMesh.IsInitialized && this.RightHandMesh && this.RightHandMesh.IsInitialized;
 		}
 
-		// Token: 0x0400163C RID: 5692
+		// Token: 0x04001649 RID: 5705
 		private const string SKELETON_VISUALIZER_NAME = "SkeletonRenderer";
 
-		// Token: 0x0400163D RID: 5693
+		// Token: 0x0400164A RID: 5706
 		[SerializeField]
 		private GameObject _leftHand;
 
-		// Token: 0x0400163E RID: 5694
+		// Token: 0x0400164B RID: 5707
 		[SerializeField]
 		private GameObject _rightHand;
 
-		// Token: 0x0400163F RID: 5695
+		// Token: 0x0400164C RID: 5708
 		public HandsManager.HandsVisualMode VisualMode;
 
-		// Token: 0x04001640 RID: 5696
+		// Token: 0x0400164D RID: 5709
 		private OVRHand[] _hand = new OVRHand[2];
 
-		// Token: 0x04001641 RID: 5697
+		// Token: 0x0400164E RID: 5710
 		private OVRSkeleton[] _handSkeleton = new OVRSkeleton[2];
 
-		// Token: 0x04001642 RID: 5698
+		// Token: 0x0400164F RID: 5711
 		private OVRSkeletonRenderer[] _handSkeletonRenderer = new OVRSkeletonRenderer[2];
 
-		// Token: 0x04001643 RID: 5699
+		// Token: 0x04001650 RID: 5712
 		private OVRMesh[] _handMesh = new OVRMesh[2];
 
-		// Token: 0x04001644 RID: 5700
+		// Token: 0x04001651 RID: 5713
 		private OVRMeshRenderer[] _handMeshRenderer = new OVRMeshRenderer[2];
 
-		// Token: 0x04001645 RID: 5701
+		// Token: 0x04001652 RID: 5714
 		private SkinnedMeshRenderer _leftMeshRenderer;
 
-		// Token: 0x04001646 RID: 5702
+		// Token: 0x04001653 RID: 5715
 		private SkinnedMeshRenderer _rightMeshRenderer;
 
-		// Token: 0x04001647 RID: 5703
+		// Token: 0x04001654 RID: 5716
 		private GameObject _leftSkeletonVisual;
 
-		// Token: 0x04001648 RID: 5704
+		// Token: 0x04001655 RID: 5717
 		private GameObject _rightSkeletonVisual;
 
-		// Token: 0x04001649 RID: 5705
+		// Token: 0x04001656 RID: 5718
 		private float _currentHandAlpha = 1f;
 
-		// Token: 0x0400164A RID: 5706
+		// Token: 0x04001657 RID: 5719
 		private int HandAlphaId = Shader.PropertyToID("_HandAlpha");
 
-		// Token: 0x020004E6 RID: 1254
+		// Token: 0x020004E8 RID: 1256
 		public enum HandsVisualMode
 		{
-			// Token: 0x04002063 RID: 8291
+			// Token: 0x04002070 RID: 8304
 			Mesh,
-			// Token: 0x04002064 RID: 8292
+			// Token: 0x04002071 RID: 8305
 			Skeleton,
-			// Token: 0x04002065 RID: 8293
+			// Token: 0x04002072 RID: 8306
 			Both
 		}
 	}

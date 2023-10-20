@@ -6,13 +6,13 @@ using UnityEngine.UI;
 // Token: 0x020000D5 RID: 213
 public class GorillaReportButton : MonoBehaviour
 {
-	// Token: 0x060004BE RID: 1214 RVA: 0x0001E54D File Offset: 0x0001C74D
+	// Token: 0x060004BE RID: 1214 RVA: 0x0001E329 File Offset: 0x0001C529
 	public void AssignParentLine(GorillaPlayerScoreboardLine parent)
 	{
 		this.parentLine = parent;
 	}
 
-	// Token: 0x060004BF RID: 1215 RVA: 0x0001E558 File Offset: 0x0001C758
+	// Token: 0x060004BF RID: 1215 RVA: 0x0001E334 File Offset: 0x0001C534
 	private void OnTriggerEnter(Collider collider)
 	{
 		if (base.enabled && this.touchTime + this.debounceTime < Time.time)
@@ -35,7 +35,7 @@ public class GorillaReportButton : MonoBehaviour
 		}
 	}
 
-	// Token: 0x060004C0 RID: 1216 RVA: 0x0001E64B File Offset: 0x0001C84B
+	// Token: 0x060004C0 RID: 1216 RVA: 0x0001E427 File Offset: 0x0001C627
 	private void OnTriggerExit(Collider other)
 	{
 		if (this.metaReportType != GorillaReportButton.MetaReportReason.Cancel)
@@ -44,7 +44,7 @@ public class GorillaReportButton : MonoBehaviour
 		}
 	}
 
-	// Token: 0x060004C1 RID: 1217 RVA: 0x0001E663 File Offset: 0x0001C863
+	// Token: 0x060004C1 RID: 1217 RVA: 0x0001E43F File Offset: 0x0001C63F
 	public void UpdateColor()
 	{
 		if (this.isOn)
@@ -94,25 +94,25 @@ public class GorillaReportButton : MonoBehaviour
 	// Token: 0x04000585 RID: 1413
 	public bool selected;
 
-	// Token: 0x020003E2 RID: 994
+	// Token: 0x020003E4 RID: 996
 	[SerializeField]
 	public enum MetaReportReason
 	{
-		// Token: 0x04001C4C RID: 7244
+		// Token: 0x04001C59 RID: 7257
 		HateSpeech,
-		// Token: 0x04001C4D RID: 7245
+		// Token: 0x04001C5A RID: 7258
 		Cheating,
-		// Token: 0x04001C4E RID: 7246
+		// Token: 0x04001C5B RID: 7259
 		Toxicity,
-		// Token: 0x04001C4F RID: 7247
+		// Token: 0x04001C5C RID: 7260
 		Bullying,
-		// Token: 0x04001C50 RID: 7248
+		// Token: 0x04001C5D RID: 7261
 		Doxing,
-		// Token: 0x04001C51 RID: 7249
+		// Token: 0x04001C5E RID: 7262
 		Impersonation,
-		// Token: 0x04001C52 RID: 7250
+		// Token: 0x04001C5F RID: 7263
 		Submit,
-		// Token: 0x04001C53 RID: 7251
+		// Token: 0x04001C60 RID: 7264
 		Cancel
 	}
 }

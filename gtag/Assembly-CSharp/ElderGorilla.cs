@@ -5,7 +5,7 @@ using UnityEngine;
 // Token: 0x0200015A RID: 346
 public class ElderGorilla : MonoBehaviour
 {
-	// Token: 0x06000889 RID: 2185 RVA: 0x00034D28 File Offset: 0x00032F28
+	// Token: 0x0600088A RID: 2186 RVA: 0x00034B68 File Offset: 0x00032D68
 	private void Update()
 	{
 		if (Player.Instance == null)
@@ -28,7 +28,7 @@ public class ElderGorilla : MonoBehaviour
 		this.CheckMicVolume();
 	}
 
-	// Token: 0x0600088A RID: 2186 RVA: 0x00034DC8 File Offset: 0x00032FC8
+	// Token: 0x0600088B RID: 2187 RVA: 0x00034C08 File Offset: 0x00032E08
 	private void CheckHandDistance(Transform hand)
 	{
 		float num = Vector3.Distance(hand.localPosition, this.tHMD.localPosition);
@@ -43,7 +43,7 @@ public class ElderGorilla : MonoBehaviour
 		}
 	}
 
-	// Token: 0x0600088B RID: 2187 RVA: 0x00034E18 File Offset: 0x00033018
+	// Token: 0x0600088C RID: 2188 RVA: 0x00034C58 File Offset: 0x00032E58
 	private void CheckHeight()
 	{
 		float y = this.tHMD.localPosition.y;
@@ -68,7 +68,7 @@ public class ElderGorilla : MonoBehaviour
 		}
 	}
 
-	// Token: 0x0600088C RID: 2188 RVA: 0x00034E9E File Offset: 0x0003309E
+	// Token: 0x0600088D RID: 2189 RVA: 0x00034CDE File Offset: 0x00032EDE
 	private void CheckMicVolume()
 	{
 		float currentPeakAmp = GorillaTagger.Instance.myRecorder.LevelMeter.CurrentPeakAmp;

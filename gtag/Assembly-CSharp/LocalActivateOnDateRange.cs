@@ -5,7 +5,7 @@ using UnityEngine;
 // Token: 0x02000064 RID: 100
 public class LocalActivateOnDateRange : MonoBehaviour
 {
-	// Token: 0x060001DF RID: 479 RVA: 0x0000D3F4 File Offset: 0x0000B5F4
+	// Token: 0x060001DF RID: 479 RVA: 0x0000D43C File Offset: 0x0000B63C
 	private void Awake()
 	{
 		GameObject[] array = this.gameObjectsToActivate;
@@ -15,20 +15,20 @@ public class LocalActivateOnDateRange : MonoBehaviour
 		}
 	}
 
-	// Token: 0x060001E0 RID: 480 RVA: 0x0000D41F File Offset: 0x0000B61F
+	// Token: 0x060001E0 RID: 480 RVA: 0x0000D467 File Offset: 0x0000B667
 	private void OnEnable()
 	{
 		this.InitActiveTimes();
 	}
 
-	// Token: 0x060001E1 RID: 481 RVA: 0x0000D428 File Offset: 0x0000B628
+	// Token: 0x060001E1 RID: 481 RVA: 0x0000D470 File Offset: 0x0000B670
 	private void InitActiveTimes()
 	{
 		this.activationTime = new DateTime(this.activationYear, this.activationMonth, this.activationDay, this.activationHour, this.activationMinute, this.activationSecond, DateTimeKind.Utc);
 		this.deactivationTime = new DateTime(this.deactivationYear, this.deactivationMonth, this.deactivationDay, this.deactivationHour, this.deactivationMinute, this.deactivationSecond, DateTimeKind.Utc);
 	}
 
-	// Token: 0x060001E2 RID: 482 RVA: 0x0000D498 File Offset: 0x0000B698
+	// Token: 0x060001E2 RID: 482 RVA: 0x0000D4E0 File Offset: 0x0000B6E0
 	private void LateUpdate()
 	{
 		DateTime utcNow = DateTime.UtcNow;

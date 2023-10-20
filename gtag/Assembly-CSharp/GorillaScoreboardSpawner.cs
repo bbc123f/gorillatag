@@ -6,22 +6,22 @@ using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.UI;
 
-// Token: 0x020001B5 RID: 437
+// Token: 0x020001B6 RID: 438
 public class GorillaScoreboardSpawner : MonoBehaviourPunCallbacks
 {
-	// Token: 0x06000B26 RID: 2854 RVA: 0x00044D69 File Offset: 0x00042F69
+	// Token: 0x06000B2C RID: 2860 RVA: 0x00044FD1 File Offset: 0x000431D1
 	public void Awake()
 	{
 		base.StartCoroutine(this.UpdateBoard());
 	}
 
-	// Token: 0x06000B27 RID: 2855 RVA: 0x00044D78 File Offset: 0x00042F78
+	// Token: 0x06000B2D RID: 2861 RVA: 0x00044FE0 File Offset: 0x000431E0
 	public bool IsCurrentScoreboard()
 	{
 		return base.gameObject.activeInHierarchy;
 	}
 
-	// Token: 0x06000B28 RID: 2856 RVA: 0x00044D88 File Offset: 0x00042F88
+	// Token: 0x06000B2E RID: 2862 RVA: 0x00044FF0 File Offset: 0x000431F0
 	public override void OnJoinedRoom()
 	{
 		if (this.IsCurrentScoreboard())
@@ -38,13 +38,13 @@ public class GorillaScoreboardSpawner : MonoBehaviourPunCallbacks
 		}
 	}
 
-	// Token: 0x06000B29 RID: 2857 RVA: 0x00044E01 File Offset: 0x00043001
+	// Token: 0x06000B2F RID: 2863 RVA: 0x00045069 File Offset: 0x00043269
 	public override void OnDisconnected(DisconnectCause cause)
 	{
 		this.OnLeftRoom();
 	}
 
-	// Token: 0x06000B2A RID: 2858 RVA: 0x00044E09 File Offset: 0x00043009
+	// Token: 0x06000B30 RID: 2864 RVA: 0x00045071 File Offset: 0x00043271
 	public bool IsVisible()
 	{
 		if (!this.forOverlay)
@@ -54,7 +54,7 @@ public class GorillaScoreboardSpawner : MonoBehaviourPunCallbacks
 		return GorillaLocomotion.Player.Instance.inOverlay;
 	}
 
-	// Token: 0x06000B2B RID: 2859 RVA: 0x00044E29 File Offset: 0x00043029
+	// Token: 0x06000B31 RID: 2865 RVA: 0x00045091 File Offset: 0x00043291
 	private IEnumerator UpdateBoard()
 	{
 		for (;;)
@@ -90,7 +90,7 @@ public class GorillaScoreboardSpawner : MonoBehaviourPunCallbacks
 		yield break;
 	}
 
-	// Token: 0x06000B2C RID: 2860 RVA: 0x00044E38 File Offset: 0x00043038
+	// Token: 0x06000B32 RID: 2866 RVA: 0x000450A0 File Offset: 0x000432A0
 	public override void OnLeftRoom()
 	{
 		if (this.currentScoreboard != null)
@@ -104,30 +104,30 @@ public class GorillaScoreboardSpawner : MonoBehaviourPunCallbacks
 		}
 	}
 
-	// Token: 0x04000E7E RID: 3710
+	// Token: 0x04000E82 RID: 3714
 	public string gameType;
 
-	// Token: 0x04000E7F RID: 3711
+	// Token: 0x04000E83 RID: 3715
 	public bool includeMMR;
 
-	// Token: 0x04000E80 RID: 3712
+	// Token: 0x04000E84 RID: 3716
 	public GameObject scoreboardPrefab;
 
-	// Token: 0x04000E81 RID: 3713
+	// Token: 0x04000E85 RID: 3717
 	public GameObject notInRoomText;
 
-	// Token: 0x04000E82 RID: 3714
+	// Token: 0x04000E86 RID: 3718
 	public GameObject controllingParentGameObject;
 
-	// Token: 0x04000E83 RID: 3715
+	// Token: 0x04000E87 RID: 3719
 	public bool isActive = true;
 
-	// Token: 0x04000E84 RID: 3716
+	// Token: 0x04000E88 RID: 3720
 	public GorillaScoreBoard currentScoreboard;
 
-	// Token: 0x04000E85 RID: 3717
+	// Token: 0x04000E89 RID: 3721
 	public bool lastVisible;
 
-	// Token: 0x04000E86 RID: 3718
+	// Token: 0x04000E8A RID: 3722
 	public bool forOverlay;
 }

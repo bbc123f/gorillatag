@@ -2,101 +2,101 @@
 
 namespace emotitron.Compression
 {
-	// Token: 0x02000338 RID: 824
+	// Token: 0x0200033A RID: 826
 	public static class ArraySerializeUnsafe
 	{
-		// Token: 0x0600173A RID: 5946 RVA: 0x0007FEFC File Offset: 0x0007E0FC
+		// Token: 0x06001743 RID: 5955 RVA: 0x000803E4 File Offset: 0x0007E5E4
 		public unsafe static void WriteSigned(ulong* buffer, int value, ref int bitposition, int bits)
 		{
 			uint num = (uint)(value << 1 ^ value >> 31);
 			ArraySerializeUnsafe.Write(buffer, (ulong)num, ref bitposition, bits);
 		}
 
-		// Token: 0x0600173B RID: 5947 RVA: 0x0007FF1C File Offset: 0x0007E11C
+		// Token: 0x06001744 RID: 5956 RVA: 0x00080404 File Offset: 0x0007E604
 		public unsafe static void AppendSigned(ulong* buffer, int value, ref int bitposition, int bits)
 		{
 			uint num = (uint)(value << 1 ^ value >> 31);
 			ArraySerializeUnsafe.Append(buffer, (ulong)num, ref bitposition, bits);
 		}
 
-		// Token: 0x0600173C RID: 5948 RVA: 0x0007FF3C File Offset: 0x0007E13C
+		// Token: 0x06001745 RID: 5957 RVA: 0x00080424 File Offset: 0x0007E624
 		public unsafe static void AddSigned(this int value, ulong* uPtr, ref int bitposition, int bits)
 		{
 			uint num = (uint)(value << 1 ^ value >> 31);
 			ArraySerializeUnsafe.Append(uPtr, (ulong)num, ref bitposition, bits);
 		}
 
-		// Token: 0x0600173D RID: 5949 RVA: 0x0007FF5C File Offset: 0x0007E15C
+		// Token: 0x06001746 RID: 5958 RVA: 0x00080444 File Offset: 0x0007E644
 		public unsafe static void AddSigned(this short value, ulong* uPtr, ref int bitposition, int bits)
 		{
 			uint num = (uint)((int)value << 1 ^ value >> 31);
 			ArraySerializeUnsafe.Append(uPtr, (ulong)num, ref bitposition, bits);
 		}
 
-		// Token: 0x0600173E RID: 5950 RVA: 0x0007FF7C File Offset: 0x0007E17C
+		// Token: 0x06001747 RID: 5959 RVA: 0x00080464 File Offset: 0x0007E664
 		public unsafe static void AddSigned(this sbyte value, ulong* uPtr, ref int bitposition, int bits)
 		{
 			uint num = (uint)((int)value << 1 ^ value >> 31);
 			ArraySerializeUnsafe.Append(uPtr, (ulong)num, ref bitposition, bits);
 		}
 
-		// Token: 0x0600173F RID: 5951 RVA: 0x0007FF9C File Offset: 0x0007E19C
+		// Token: 0x06001748 RID: 5960 RVA: 0x00080484 File Offset: 0x0007E684
 		public unsafe static void InjectSigned(this int value, ulong* uPtr, ref int bitposition, int bits)
 		{
 			uint num = (uint)(value << 1 ^ value >> 31);
 			ArraySerializeUnsafe.Write(uPtr, (ulong)num, ref bitposition, bits);
 		}
 
-		// Token: 0x06001740 RID: 5952 RVA: 0x0007FFBC File Offset: 0x0007E1BC
+		// Token: 0x06001749 RID: 5961 RVA: 0x000804A4 File Offset: 0x0007E6A4
 		public unsafe static void InjectSigned(this short value, ulong* uPtr, ref int bitposition, int bits)
 		{
 			uint num = (uint)((int)value << 1 ^ value >> 31);
 			ArraySerializeUnsafe.Write(uPtr, (ulong)num, ref bitposition, bits);
 		}
 
-		// Token: 0x06001741 RID: 5953 RVA: 0x0007FFDC File Offset: 0x0007E1DC
+		// Token: 0x0600174A RID: 5962 RVA: 0x000804C4 File Offset: 0x0007E6C4
 		public unsafe static void InjectSigned(this sbyte value, ulong* uPtr, ref int bitposition, int bits)
 		{
 			uint num = (uint)((int)value << 1 ^ value >> 31);
 			ArraySerializeUnsafe.Write(uPtr, (ulong)num, ref bitposition, bits);
 		}
 
-		// Token: 0x06001742 RID: 5954 RVA: 0x0007FFFC File Offset: 0x0007E1FC
+		// Token: 0x0600174B RID: 5963 RVA: 0x000804E4 File Offset: 0x0007E6E4
 		public unsafe static void PokeSigned(this int value, ulong* uPtr, int bitposition, int bits)
 		{
 			uint num = (uint)(value << 1 ^ value >> 31);
 			ArraySerializeUnsafe.Write(uPtr, (ulong)num, ref bitposition, bits);
 		}
 
-		// Token: 0x06001743 RID: 5955 RVA: 0x00080020 File Offset: 0x0007E220
+		// Token: 0x0600174C RID: 5964 RVA: 0x00080508 File Offset: 0x0007E708
 		public unsafe static void PokeSigned(this short value, ulong* uPtr, int bitposition, int bits)
 		{
 			uint num = (uint)((int)value << 1 ^ value >> 31);
 			ArraySerializeUnsafe.Write(uPtr, (ulong)num, ref bitposition, bits);
 		}
 
-		// Token: 0x06001744 RID: 5956 RVA: 0x00080044 File Offset: 0x0007E244
+		// Token: 0x0600174D RID: 5965 RVA: 0x0008052C File Offset: 0x0007E72C
 		public unsafe static void PokeSigned(this sbyte value, ulong* uPtr, int bitposition, int bits)
 		{
 			uint num = (uint)((int)value << 1 ^ value >> 31);
 			ArraySerializeUnsafe.Write(uPtr, (ulong)num, ref bitposition, bits);
 		}
 
-		// Token: 0x06001745 RID: 5957 RVA: 0x00080068 File Offset: 0x0007E268
+		// Token: 0x0600174E RID: 5966 RVA: 0x00080550 File Offset: 0x0007E750
 		public unsafe static int ReadSigned(ulong* uPtr, ref int bitposition, int bits)
 		{
 			uint num = (uint)ArraySerializeUnsafe.Read(uPtr, ref bitposition, bits);
 			return (int)((ulong)(num >> 1) ^ (ulong)((long)(-(long)(num & 1U))));
 		}
 
-		// Token: 0x06001746 RID: 5958 RVA: 0x0008008C File Offset: 0x0007E28C
+		// Token: 0x0600174F RID: 5967 RVA: 0x00080574 File Offset: 0x0007E774
 		public unsafe static int PeekSigned(ulong* uPtr, int bitposition, int bits)
 		{
 			uint num = (uint)ArraySerializeUnsafe.Read(uPtr, ref bitposition, bits);
 			return (int)((ulong)(num >> 1) ^ (ulong)((long)(-(long)(num & 1U))));
 		}
 
-		// Token: 0x06001747 RID: 5959 RVA: 0x000800B0 File Offset: 0x0007E2B0
+		// Token: 0x06001750 RID: 5968 RVA: 0x00080598 File Offset: 0x0007E798
 		public unsafe static void Append(ulong* uPtr, ulong value, ref int bitposition, int bits)
 		{
 			if (bits == 0)
@@ -112,7 +112,7 @@ namespace emotitron.Compression
 			bitposition += bits;
 		}
 
-		// Token: 0x06001748 RID: 5960 RVA: 0x00080108 File Offset: 0x0007E308
+		// Token: 0x06001751 RID: 5969 RVA: 0x000805F0 File Offset: 0x0007E7F0
 		public unsafe static void Write(ulong* uPtr, ulong value, ref int bitposition, int bits)
 		{
 			if (bits == 0)
@@ -136,7 +136,7 @@ namespace emotitron.Compression
 			bitposition += bits;
 		}
 
-		// Token: 0x06001749 RID: 5961 RVA: 0x0008018C File Offset: 0x0007E38C
+		// Token: 0x06001752 RID: 5970 RVA: 0x00080674 File Offset: 0x0007E874
 		public unsafe static ulong Read(ulong* uPtr, ref int bitposition, int bits)
 		{
 			if (bits == 0)
@@ -156,7 +156,7 @@ namespace emotitron.Compression
 			return num3 & num2;
 		}
 
-		// Token: 0x0600174A RID: 5962 RVA: 0x000801F0 File Offset: 0x0007E3F0
+		// Token: 0x06001753 RID: 5971 RVA: 0x000806D8 File Offset: 0x0007E8D8
 		public unsafe static ulong Read(ulong* uPtr, int bitposition, int bits)
 		{
 			if (bits == 0)
@@ -176,151 +176,151 @@ namespace emotitron.Compression
 			return num3 & num2;
 		}
 
-		// Token: 0x0600174B RID: 5963 RVA: 0x0008024F File Offset: 0x0007E44F
+		// Token: 0x06001754 RID: 5972 RVA: 0x00080737 File Offset: 0x0007E937
 		public unsafe static void Add(this ulong value, ulong* uPtr, int bitposition, int bits)
 		{
 			ArraySerializeUnsafe.Append(uPtr, value, ref bitposition, bits);
 		}
 
-		// Token: 0x0600174C RID: 5964 RVA: 0x0008025B File Offset: 0x0007E45B
+		// Token: 0x06001755 RID: 5973 RVA: 0x00080743 File Offset: 0x0007E943
 		public unsafe static void Add(this uint value, ulong* uPtr, int bitposition, int bits)
 		{
 			ArraySerializeUnsafe.Append(uPtr, (ulong)value, ref bitposition, bits);
 		}
 
-		// Token: 0x0600174D RID: 5965 RVA: 0x00080268 File Offset: 0x0007E468
+		// Token: 0x06001756 RID: 5974 RVA: 0x00080750 File Offset: 0x0007E950
 		public unsafe static void Add(this ushort value, ulong* uPtr, int bitposition, int bits)
 		{
 			ArraySerializeUnsafe.Append(uPtr, (ulong)value, ref bitposition, bits);
 		}
 
-		// Token: 0x0600174E RID: 5966 RVA: 0x00080275 File Offset: 0x0007E475
+		// Token: 0x06001757 RID: 5975 RVA: 0x0008075D File Offset: 0x0007E95D
 		public unsafe static void Add(this byte value, ulong* uPtr, int bitposition, int bits)
 		{
 			ArraySerializeUnsafe.Append(uPtr, (ulong)value, ref bitposition, bits);
 		}
 
-		// Token: 0x0600174F RID: 5967 RVA: 0x00080282 File Offset: 0x0007E482
+		// Token: 0x06001758 RID: 5976 RVA: 0x0008076A File Offset: 0x0007E96A
 		public unsafe static void AddUnsigned(this long value, ulong* uPtr, int bitposition, int bits)
 		{
 			ArraySerializeUnsafe.Append(uPtr, (ulong)value, ref bitposition, bits);
 		}
 
-		// Token: 0x06001750 RID: 5968 RVA: 0x0008028E File Offset: 0x0007E48E
+		// Token: 0x06001759 RID: 5977 RVA: 0x00080776 File Offset: 0x0007E976
 		public unsafe static void AddUnsigned(this int value, ulong* uPtr, int bitposition, int bits)
 		{
 			ArraySerializeUnsafe.Append(uPtr, (ulong)((long)value), ref bitposition, bits);
 		}
 
-		// Token: 0x06001751 RID: 5969 RVA: 0x0008029B File Offset: 0x0007E49B
+		// Token: 0x0600175A RID: 5978 RVA: 0x00080783 File Offset: 0x0007E983
 		public unsafe static void AddUnsigned(this short value, ulong* uPtr, int bitposition, int bits)
 		{
 			ArraySerializeUnsafe.Append(uPtr, (ulong)((long)value), ref bitposition, bits);
 		}
 
-		// Token: 0x06001752 RID: 5970 RVA: 0x000802A8 File Offset: 0x0007E4A8
+		// Token: 0x0600175B RID: 5979 RVA: 0x00080790 File Offset: 0x0007E990
 		public unsafe static void AddUnsigned(this sbyte value, ulong* uPtr, int bitposition, int bits)
 		{
 			ArraySerializeUnsafe.Append(uPtr, (ulong)((long)value), ref bitposition, bits);
 		}
 
-		// Token: 0x06001753 RID: 5971 RVA: 0x000802B5 File Offset: 0x0007E4B5
+		// Token: 0x0600175C RID: 5980 RVA: 0x0008079D File Offset: 0x0007E99D
 		public unsafe static void Inject(this ulong value, ulong* uPtr, ref int bitposition, int bits)
 		{
 			ArraySerializeUnsafe.Write(uPtr, value, ref bitposition, bits);
 		}
 
-		// Token: 0x06001754 RID: 5972 RVA: 0x000802C0 File Offset: 0x0007E4C0
+		// Token: 0x0600175D RID: 5981 RVA: 0x000807A8 File Offset: 0x0007E9A8
 		public unsafe static void Inject(this uint value, ulong* uPtr, ref int bitposition, int bits)
 		{
 			ArraySerializeUnsafe.Write(uPtr, (ulong)value, ref bitposition, bits);
 		}
 
-		// Token: 0x06001755 RID: 5973 RVA: 0x000802CC File Offset: 0x0007E4CC
+		// Token: 0x0600175E RID: 5982 RVA: 0x000807B4 File Offset: 0x0007E9B4
 		public unsafe static void Inject(this ushort value, ulong* uPtr, ref int bitposition, int bits)
 		{
 			ArraySerializeUnsafe.Write(uPtr, (ulong)value, ref bitposition, bits);
 		}
 
-		// Token: 0x06001756 RID: 5974 RVA: 0x000802D8 File Offset: 0x0007E4D8
+		// Token: 0x0600175F RID: 5983 RVA: 0x000807C0 File Offset: 0x0007E9C0
 		public unsafe static void Inject(this byte value, ulong* uPtr, ref int bitposition, int bits)
 		{
 			ArraySerializeUnsafe.Write(uPtr, (ulong)value, ref bitposition, bits);
 		}
 
-		// Token: 0x06001757 RID: 5975 RVA: 0x000802E4 File Offset: 0x0007E4E4
+		// Token: 0x06001760 RID: 5984 RVA: 0x000807CC File Offset: 0x0007E9CC
 		public unsafe static void InjectUnsigned(this long value, ulong* uPtr, ref int bitposition, int bits)
 		{
 			ArraySerializeUnsafe.Write(uPtr, (ulong)value, ref bitposition, bits);
 		}
 
-		// Token: 0x06001758 RID: 5976 RVA: 0x000802EF File Offset: 0x0007E4EF
+		// Token: 0x06001761 RID: 5985 RVA: 0x000807D7 File Offset: 0x0007E9D7
 		public unsafe static void InjectUnsigned(this int value, ulong* uPtr, ref int bitposition, int bits)
 		{
 			ArraySerializeUnsafe.Write(uPtr, (ulong)((long)value), ref bitposition, bits);
 		}
 
-		// Token: 0x06001759 RID: 5977 RVA: 0x000802FB File Offset: 0x0007E4FB
+		// Token: 0x06001762 RID: 5986 RVA: 0x000807E3 File Offset: 0x0007E9E3
 		public unsafe static void InjectUnsigned(this short value, ulong* uPtr, int bitposition, int bits)
 		{
 			ArraySerializeUnsafe.Write(uPtr, (ulong)((long)value), ref bitposition, bits);
 		}
 
-		// Token: 0x0600175A RID: 5978 RVA: 0x00080308 File Offset: 0x0007E508
+		// Token: 0x06001763 RID: 5987 RVA: 0x000807F0 File Offset: 0x0007E9F0
 		public unsafe static void InjectUnsigned(this sbyte value, ulong* uPtr, ref int bitposition, int bits)
 		{
 			ArraySerializeUnsafe.Write(uPtr, (ulong)((long)value), ref bitposition, bits);
 		}
 
-		// Token: 0x0600175B RID: 5979 RVA: 0x00080314 File Offset: 0x0007E514
+		// Token: 0x06001764 RID: 5988 RVA: 0x000807FC File Offset: 0x0007E9FC
 		public unsafe static void Poke(this ulong value, ulong* uPtr, int bitposition, int bits)
 		{
 			ArraySerializeUnsafe.Write(uPtr, value, ref bitposition, bits);
 		}
 
-		// Token: 0x0600175C RID: 5980 RVA: 0x00080320 File Offset: 0x0007E520
+		// Token: 0x06001765 RID: 5989 RVA: 0x00080808 File Offset: 0x0007EA08
 		public unsafe static void Poke(this uint value, ulong* uPtr, int bitposition, int bits)
 		{
 			ArraySerializeUnsafe.Write(uPtr, (ulong)value, ref bitposition, bits);
 		}
 
-		// Token: 0x0600175D RID: 5981 RVA: 0x0008032D File Offset: 0x0007E52D
+		// Token: 0x06001766 RID: 5990 RVA: 0x00080815 File Offset: 0x0007EA15
 		public unsafe static void Poke(this ushort value, ulong* uPtr, int bitposition, int bits)
 		{
 			ArraySerializeUnsafe.Write(uPtr, (ulong)value, ref bitposition, bits);
 		}
 
-		// Token: 0x0600175E RID: 5982 RVA: 0x0008033A File Offset: 0x0007E53A
+		// Token: 0x06001767 RID: 5991 RVA: 0x00080822 File Offset: 0x0007EA22
 		public unsafe static void Poke(this byte value, ulong* uPtr, int bitposition, int bits)
 		{
 			ArraySerializeUnsafe.Write(uPtr, (ulong)value, ref bitposition, bits);
 		}
 
-		// Token: 0x0600175F RID: 5983 RVA: 0x00080347 File Offset: 0x0007E547
+		// Token: 0x06001768 RID: 5992 RVA: 0x0008082F File Offset: 0x0007EA2F
 		public unsafe static void InjectUnsigned(this long value, ulong* uPtr, int bitposition, int bits)
 		{
 			ArraySerializeUnsafe.Write(uPtr, (ulong)value, ref bitposition, bits);
 		}
 
-		// Token: 0x06001760 RID: 5984 RVA: 0x00080353 File Offset: 0x0007E553
+		// Token: 0x06001769 RID: 5993 RVA: 0x0008083B File Offset: 0x0007EA3B
 		public unsafe static void InjectUnsigned(this int value, ulong* uPtr, int bitposition, int bits)
 		{
 			ArraySerializeUnsafe.Write(uPtr, (ulong)((long)value), ref bitposition, bits);
 		}
 
-		// Token: 0x06001761 RID: 5985 RVA: 0x00080360 File Offset: 0x0007E560
+		// Token: 0x0600176A RID: 5994 RVA: 0x00080848 File Offset: 0x0007EA48
 		public unsafe static void PokeUnsigned(this short value, ulong* uPtr, int bitposition, int bits)
 		{
 			ArraySerializeUnsafe.Write(uPtr, (ulong)((long)value), ref bitposition, bits);
 		}
 
-		// Token: 0x06001762 RID: 5986 RVA: 0x0008036D File Offset: 0x0007E56D
+		// Token: 0x0600176B RID: 5995 RVA: 0x00080855 File Offset: 0x0007EA55
 		public unsafe static void PokeUnsigned(this sbyte value, ulong* uPtr, int bitposition, int bits)
 		{
 			ArraySerializeUnsafe.Write(uPtr, (ulong)((long)value), ref bitposition, bits);
 		}
 
-		// Token: 0x06001763 RID: 5987 RVA: 0x0008037C File Offset: 0x0007E57C
+		// Token: 0x0600176C RID: 5996 RVA: 0x00080864 File Offset: 0x0007EA64
 		public unsafe static void ReadOutUnsafe(ulong* sourcePtr, int sourcePos, ulong* targetPtr, ref int targetPos, int bits)
 		{
 			if (bits == 0)
@@ -338,7 +338,7 @@ namespace emotitron.Compression
 			targetPos += bits;
 		}
 
-		// Token: 0x06001764 RID: 5988 RVA: 0x000803C4 File Offset: 0x0007E5C4
+		// Token: 0x0600176D RID: 5997 RVA: 0x000808AC File Offset: 0x0007EAAC
 		public unsafe static void ReadOutUnsafe(this ulong[] source, int sourcePos, byte[] target, ref int targetPos, int bits)
 		{
 			if (bits == 0)
@@ -382,7 +382,7 @@ namespace emotitron.Compression
 			targetPos += bits;
 		}
 
-		// Token: 0x06001765 RID: 5989 RVA: 0x00080450 File Offset: 0x0007E650
+		// Token: 0x0600176E RID: 5998 RVA: 0x00080938 File Offset: 0x0007EB38
 		public unsafe static void ReadOutUnsafe(this ulong[] source, int sourcePos, uint[] target, ref int targetPos, int bits)
 		{
 			if (bits == 0)
@@ -426,7 +426,7 @@ namespace emotitron.Compression
 			targetPos += bits;
 		}
 
-		// Token: 0x06001766 RID: 5990 RVA: 0x000804DC File Offset: 0x0007E6DC
+		// Token: 0x0600176F RID: 5999 RVA: 0x000809C4 File Offset: 0x0007EBC4
 		public unsafe static void ReadOutUnsafe(this ulong[] source, int sourcePos, ulong[] target, ref int targetPos, int bits)
 		{
 			if (bits == 0)
@@ -469,7 +469,7 @@ namespace emotitron.Compression
 			targetPos += bits;
 		}
 
-		// Token: 0x06001767 RID: 5991 RVA: 0x00080564 File Offset: 0x0007E764
+		// Token: 0x06001770 RID: 6000 RVA: 0x00080A4C File Offset: 0x0007EC4C
 		public unsafe static void ReadOutUnsafe(this uint[] source, int sourcePos, byte[] target, ref int targetPos, int bits)
 		{
 			if (bits == 0)
@@ -514,7 +514,7 @@ namespace emotitron.Compression
 			targetPos += bits;
 		}
 
-		// Token: 0x06001768 RID: 5992 RVA: 0x000805F4 File Offset: 0x0007E7F4
+		// Token: 0x06001771 RID: 6001 RVA: 0x00080ADC File Offset: 0x0007ECDC
 		public unsafe static void ReadOutUnsafe(this uint[] source, int sourcePos, uint[] target, ref int targetPos, int bits)
 		{
 			if (bits == 0)
@@ -559,7 +559,7 @@ namespace emotitron.Compression
 			targetPos += bits;
 		}
 
-		// Token: 0x06001769 RID: 5993 RVA: 0x00080684 File Offset: 0x0007E884
+		// Token: 0x06001772 RID: 6002 RVA: 0x00080B6C File Offset: 0x0007ED6C
 		public unsafe static void ReadOutUnsafe(this uint[] source, int sourcePos, ulong[] target, ref int targetPos, int bits)
 		{
 			if (bits == 0)
@@ -603,7 +603,7 @@ namespace emotitron.Compression
 			targetPos += bits;
 		}
 
-		// Token: 0x0600176A RID: 5994 RVA: 0x00080710 File Offset: 0x0007E910
+		// Token: 0x06001773 RID: 6003 RVA: 0x00080BF8 File Offset: 0x0007EDF8
 		public unsafe static void ReadOutUnsafe(this byte[] source, int sourcePos, ulong[] target, ref int targetPos, int bits)
 		{
 			if (bits == 0)
@@ -647,7 +647,7 @@ namespace emotitron.Compression
 			targetPos += bits;
 		}
 
-		// Token: 0x0600176B RID: 5995 RVA: 0x0008079C File Offset: 0x0007E99C
+		// Token: 0x06001774 RID: 6004 RVA: 0x00080C84 File Offset: 0x0007EE84
 		public unsafe static void ReadOutUnsafe(this byte[] source, int sourcePos, uint[] target, ref int targetPos, int bits)
 		{
 			if (bits == 0)
@@ -692,7 +692,7 @@ namespace emotitron.Compression
 			targetPos += bits;
 		}
 
-		// Token: 0x0600176C RID: 5996 RVA: 0x0008082C File Offset: 0x0007EA2C
+		// Token: 0x06001775 RID: 6005 RVA: 0x00080D14 File Offset: 0x0007EF14
 		public unsafe static void ReadOutUnsafe(this byte[] source, int sourcePos, byte[] target, ref int targetPos, int bits)
 		{
 			if (bits == 0)
@@ -737,7 +737,7 @@ namespace emotitron.Compression
 			targetPos += bits;
 		}
 
-		// Token: 0x04001901 RID: 6401
+		// Token: 0x0400190E RID: 6414
 		private const string bufferOverrunMsg = "Byte buffer overrun. Dataloss will occur.";
 	}
 }

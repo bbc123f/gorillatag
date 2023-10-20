@@ -6,27 +6,27 @@ using UnityEngine;
 public class GorillaVelocityEstimator : MonoBehaviour
 {
 	// Token: 0x17000007 RID: 7
-	// (get) Token: 0x06000106 RID: 262 RVA: 0x000099B2 File Offset: 0x00007BB2
-	// (set) Token: 0x06000107 RID: 263 RVA: 0x000099BA File Offset: 0x00007BBA
+	// (get) Token: 0x06000106 RID: 262 RVA: 0x000099FA File Offset: 0x00007BFA
+	// (set) Token: 0x06000107 RID: 263 RVA: 0x00009A02 File Offset: 0x00007C02
 	public Vector3 linearVelocity { get; private set; }
 
 	// Token: 0x17000008 RID: 8
-	// (get) Token: 0x06000108 RID: 264 RVA: 0x000099C3 File Offset: 0x00007BC3
-	// (set) Token: 0x06000109 RID: 265 RVA: 0x000099CB File Offset: 0x00007BCB
+	// (get) Token: 0x06000108 RID: 264 RVA: 0x00009A0B File Offset: 0x00007C0B
+	// (set) Token: 0x06000109 RID: 265 RVA: 0x00009A13 File Offset: 0x00007C13
 	public Vector3 angularVelocity { get; private set; }
 
 	// Token: 0x17000009 RID: 9
-	// (get) Token: 0x0600010A RID: 266 RVA: 0x000099D4 File Offset: 0x00007BD4
-	// (set) Token: 0x0600010B RID: 267 RVA: 0x000099DC File Offset: 0x00007BDC
+	// (get) Token: 0x0600010A RID: 266 RVA: 0x00009A1C File Offset: 0x00007C1C
+	// (set) Token: 0x0600010B RID: 267 RVA: 0x00009A24 File Offset: 0x00007C24
 	public Vector3 handPos { get; private set; }
 
-	// Token: 0x0600010C RID: 268 RVA: 0x000099E5 File Offset: 0x00007BE5
+	// Token: 0x0600010C RID: 268 RVA: 0x00009A2D File Offset: 0x00007C2D
 	private void Awake()
 	{
 		this.history = new GorillaVelocityEstimator.VelocityHistorySample[this.numFrames];
 	}
 
-	// Token: 0x0600010D RID: 269 RVA: 0x000099F8 File Offset: 0x00007BF8
+	// Token: 0x0600010D RID: 269 RVA: 0x00009A40 File Offset: 0x00007C40
 	private void OnEnable()
 	{
 		this.currentFrame = 0;
@@ -38,7 +38,7 @@ public class GorillaVelocityEstimator : MonoBehaviour
 		this.lastRotation = base.transform.rotation;
 	}
 
-	// Token: 0x0600010E RID: 270 RVA: 0x00009A54 File Offset: 0x00007C54
+	// Token: 0x0600010E RID: 270 RVA: 0x00009A9C File Offset: 0x00007C9C
 	protected void LateUpdate()
 	{
 		Vector3 position = base.transform.position;
@@ -104,13 +104,13 @@ public class GorillaVelocityEstimator : MonoBehaviour
 	// Token: 0x04000172 RID: 370
 	public bool useGlobalSpace;
 
-	// Token: 0x0200038C RID: 908
+	// Token: 0x0200038E RID: 910
 	public struct VelocityHistorySample
 	{
-		// Token: 0x04001B0A RID: 6922
+		// Token: 0x04001B17 RID: 6935
 		public Vector3 linear;
 
-		// Token: 0x04001B0B RID: 6923
+		// Token: 0x04001B18 RID: 6936
 		public Vector3 angular;
 	}
 }

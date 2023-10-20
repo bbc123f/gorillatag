@@ -5,7 +5,7 @@ using UnityEngine;
 // Token: 0x02000121 RID: 289
 public class YorickLook : MonoBehaviour
 {
-	// Token: 0x060007A9 RID: 1961 RVA: 0x00030D58 File Offset: 0x0002EF58
+	// Token: 0x060007AA RID: 1962 RVA: 0x00030B98 File Offset: 0x0002ED98
 	private void Awake()
 	{
 		this.layerMask = LayerMask.GetMask(new string[]
@@ -15,7 +15,7 @@ public class YorickLook : MonoBehaviour
 		this.overlapColliders = new Collider[10];
 	}
 
-	// Token: 0x060007AA RID: 1962 RVA: 0x00030D88 File Offset: 0x0002EF88
+	// Token: 0x060007AB RID: 1963 RVA: 0x00030BC8 File Offset: 0x0002EDC8
 	private void LateUpdate()
 	{
 		this.rigs.Clear();

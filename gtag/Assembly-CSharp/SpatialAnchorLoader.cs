@@ -4,7 +4,7 @@ using UnityEngine;
 // Token: 0x020000C8 RID: 200
 public class SpatialAnchorLoader : MonoBehaviour
 {
-	// Token: 0x06000476 RID: 1142 RVA: 0x0001CB90 File Offset: 0x0001AD90
+	// Token: 0x06000476 RID: 1142 RVA: 0x0001C96C File Offset: 0x0001AB6C
 	public void LoadAnchorsByUuid()
 	{
 		if (!PlayerPrefs.HasKey("numUuids"))
@@ -33,13 +33,13 @@ public class SpatialAnchorLoader : MonoBehaviour
 		});
 	}
 
-	// Token: 0x06000477 RID: 1143 RVA: 0x0001CC58 File Offset: 0x0001AE58
+	// Token: 0x06000477 RID: 1143 RVA: 0x0001CA34 File Offset: 0x0001AC34
 	private void Awake()
 	{
 		this._onLoadAnchor = new Action<OVRSpatialAnchor.UnboundAnchor, bool>(this.OnLocalized);
 	}
 
-	// Token: 0x06000478 RID: 1144 RVA: 0x0001CC6C File Offset: 0x0001AE6C
+	// Token: 0x06000478 RID: 1144 RVA: 0x0001CA48 File Offset: 0x0001AC48
 	private void Load(OVRSpatialAnchor.LoadOptions options)
 	{
 		OVRSpatialAnchor.LoadUnboundAnchors(options, delegate(OVRSpatialAnchor.UnboundAnchor[] anchors)
@@ -63,7 +63,7 @@ public class SpatialAnchorLoader : MonoBehaviour
 		});
 	}
 
-	// Token: 0x06000479 RID: 1145 RVA: 0x0001CC84 File Offset: 0x0001AE84
+	// Token: 0x06000479 RID: 1145 RVA: 0x0001CA60 File Offset: 0x0001AC60
 	private void OnLocalized(OVRSpatialAnchor.UnboundAnchor unboundAnchor, bool success)
 	{
 		if (!success)
@@ -81,7 +81,7 @@ public class SpatialAnchorLoader : MonoBehaviour
 		}
 	}
 
-	// Token: 0x0600047A RID: 1146 RVA: 0x0001CCE3 File Offset: 0x0001AEE3
+	// Token: 0x0600047A RID: 1146 RVA: 0x0001CABF File Offset: 0x0001ACBF
 	private static void Log(string message)
 	{
 		Debug.Log("[SpatialAnchorsUnity]: " + message);

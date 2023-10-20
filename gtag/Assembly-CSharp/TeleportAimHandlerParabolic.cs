@@ -5,7 +5,7 @@ using UnityEngine;
 // Token: 0x02000086 RID: 134
 public class TeleportAimHandlerParabolic : TeleportAimHandler
 {
-	// Token: 0x060002E3 RID: 739 RVA: 0x000124FC File Offset: 0x000106FC
+	// Token: 0x060002E3 RID: 739 RVA: 0x000122D8 File Offset: 0x000104D8
 	public override void GetPoints(List<Vector3> points)
 	{
 		Ray ray;

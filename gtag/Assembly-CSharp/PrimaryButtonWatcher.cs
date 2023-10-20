@@ -6,7 +6,7 @@ using UnityEngine.XR;
 // Token: 0x0200014A RID: 330
 public class PrimaryButtonWatcher : MonoBehaviour
 {
-	// Token: 0x06000840 RID: 2112 RVA: 0x000334F4 File Offset: 0x000316F4
+	// Token: 0x06000841 RID: 2113 RVA: 0x00033334 File Offset: 0x00031534
 	private void Awake()
 	{
 		if (this.primaryButtonPress == null)
@@ -16,7 +16,7 @@ public class PrimaryButtonWatcher : MonoBehaviour
 		this.devicesWithPrimaryButton = new List<InputDevice>();
 	}
 
-	// Token: 0x06000841 RID: 2113 RVA: 0x00033514 File Offset: 0x00031714
+	// Token: 0x06000842 RID: 2114 RVA: 0x00033354 File Offset: 0x00031554
 	private void OnEnable()
 	{
 		List<InputDevice> list = new List<InputDevice>();
@@ -29,7 +29,7 @@ public class PrimaryButtonWatcher : MonoBehaviour
 		InputDevices.deviceDisconnected += this.InputDevices_deviceDisconnected;
 	}
 
-	// Token: 0x06000842 RID: 2114 RVA: 0x00033590 File Offset: 0x00031790
+	// Token: 0x06000843 RID: 2115 RVA: 0x000333D0 File Offset: 0x000315D0
 	private void OnDisable()
 	{
 		InputDevices.deviceConnected -= this.InputDevices_deviceConnected;
@@ -37,7 +37,7 @@ public class PrimaryButtonWatcher : MonoBehaviour
 		this.devicesWithPrimaryButton.Clear();
 	}
 
-	// Token: 0x06000843 RID: 2115 RVA: 0x000335C0 File Offset: 0x000317C0
+	// Token: 0x06000844 RID: 2116 RVA: 0x00033400 File Offset: 0x00031600
 	private void InputDevices_deviceConnected(InputDevice device)
 	{
 		bool flag;
@@ -47,7 +47,7 @@ public class PrimaryButtonWatcher : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000844 RID: 2116 RVA: 0x000335E9 File Offset: 0x000317E9
+	// Token: 0x06000845 RID: 2117 RVA: 0x00033429 File Offset: 0x00031629
 	private void InputDevices_deviceDisconnected(InputDevice device)
 	{
 		if (this.devicesWithPrimaryButton.Contains(device))
@@ -56,7 +56,7 @@ public class PrimaryButtonWatcher : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000845 RID: 2117 RVA: 0x00033608 File Offset: 0x00031808
+	// Token: 0x06000846 RID: 2118 RVA: 0x00033448 File Offset: 0x00031648
 	private void Update()
 	{
 		bool flag = false;

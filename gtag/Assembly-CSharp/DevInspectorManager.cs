@@ -5,7 +5,7 @@ using UnityEngine;
 public class DevInspectorManager : MonoBehaviour
 {
 	// Token: 0x17000011 RID: 17
-	// (get) Token: 0x06000190 RID: 400 RVA: 0x0000C17F File Offset: 0x0000A37F
+	// (get) Token: 0x06000190 RID: 400 RVA: 0x0000C1C7 File Offset: 0x0000A3C7
 	public static DevInspectorManager instance
 	{
 		get

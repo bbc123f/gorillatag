@@ -4,13 +4,13 @@ using UnityEngine;
 // Token: 0x0200008E RID: 142
 public class TeleportOrientationHandlerHMD : TeleportOrientationHandler
 {
-	// Token: 0x06000315 RID: 789 RVA: 0x00012F4C File Offset: 0x0001114C
+	// Token: 0x06000315 RID: 789 RVA: 0x00012D28 File Offset: 0x00010F28
 	protected override void InitializeTeleportDestination()
 	{
 		this._initialRotation = Quaternion.identity;
 	}
 
-	// Token: 0x06000316 RID: 790 RVA: 0x00012F5C File Offset: 0x0001115C
+	// Token: 0x06000316 RID: 790 RVA: 0x00012D38 File Offset: 0x00010F38
 	protected override void UpdateTeleportDestination()
 	{
 		if (this.AimData.Destination != null && (this.UpdateOrientationDuringAim || base.LocomotionTeleport.CurrentState == LocomotionTeleport.States.PreTeleport))

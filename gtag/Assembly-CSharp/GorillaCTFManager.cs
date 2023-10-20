@@ -1,6 +1,6 @@
 ﻿using System;
 
-// Token: 0x0200016F RID: 367
+// Token: 0x02000170 RID: 368
 public class GorillaCTFManager : GorillaGameManager
 {
 }

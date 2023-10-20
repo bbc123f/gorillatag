@@ -4,16 +4,16 @@ using CjLib;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-// Token: 0x020001FE RID: 510
+// Token: 0x020001FF RID: 511
 public class AutoCatchThrowBall : MonoBehaviour
 {
-	// Token: 0x06000D11 RID: 3345 RVA: 0x0004CF12 File Offset: 0x0004B112
+	// Token: 0x06000D17 RID: 3351 RVA: 0x0004D172 File Offset: 0x0004B372
 	private void Start()
 	{
 		this.vrRig = base.GetComponent<VRRig>();
 	}
 
-	// Token: 0x06000D12 RID: 3346 RVA: 0x0004CF20 File Offset: 0x0004B120
+	// Token: 0x06000D18 RID: 3352 RVA: 0x0004D180 File Offset: 0x0004B380
 	private void Update()
 	{
 		float time = Time.time;
@@ -87,7 +87,7 @@ public class AutoCatchThrowBall : MonoBehaviour
 		DebugUtil.DrawRect(vector, quaternion * Quaternion.AngleAxis(-90f, Vector3.right), Vector2.one, Color.green, true, DebugUtil.Style.Wireframe);
 	}
 
-	// Token: 0x06000D13 RID: 3347 RVA: 0x0004D25C File Offset: 0x0004B45C
+	// Token: 0x06000D19 RID: 3353 RVA: 0x0004D4BC File Offset: 0x0004B6BC
 	private void Throw(TransferrableObject transferrable, Vector3 throwDir)
 	{
 		Rigidbody componentInChildren = transferrable.GetComponentInChildren<Rigidbody>();
@@ -98,46 +98,46 @@ public class AutoCatchThrowBall : MonoBehaviour
 		Debug.Log(string.Format("Throwing {0} in direction {1} at position {2}", transferrable.gameObject.name, throwDir, transferrable.transform.position));
 	}
 
-	// Token: 0x04001032 RID: 4146
+	// Token: 0x04001037 RID: 4151
 	public GameObject ballPrefab;
 
-	// Token: 0x04001033 RID: 4147
+	// Token: 0x04001038 RID: 4152
 	public float throwPitch = 20f;
 
-	// Token: 0x04001034 RID: 4148
+	// Token: 0x04001039 RID: 4153
 	public float throwSpeed = 5f;
 
-	// Token: 0x04001035 RID: 4149
+	// Token: 0x0400103A RID: 4154
 	public float throwWaitTime = 1f;
 
-	// Token: 0x04001036 RID: 4150
+	// Token: 0x0400103B RID: 4155
 	public float catchWaitTime = 0.2f;
 
-	// Token: 0x04001037 RID: 4151
+	// Token: 0x0400103C RID: 4156
 	public LayerMask ballLayer;
 
-	// Token: 0x04001038 RID: 4152
+	// Token: 0x0400103D RID: 4157
 	private VRRig vrRig;
 
-	// Token: 0x04001039 RID: 4153
+	// Token: 0x0400103E RID: 4158
 	private Collider[] overlapResults = new Collider[32];
 
-	// Token: 0x0400103A RID: 4154
+	// Token: 0x0400103F RID: 4159
 	private List<AutoCatchThrowBall.HeldBall> heldBalls = new List<AutoCatchThrowBall.HeldBall>();
 
-	// Token: 0x0200046E RID: 1134
+	// Token: 0x02000470 RID: 1136
 	private struct HeldBall
 	{
-		// Token: 0x04001E7A RID: 7802
+		// Token: 0x04001E87 RID: 7815
 		public bool held;
 
-		// Token: 0x04001E7B RID: 7803
+		// Token: 0x04001E88 RID: 7816
 		public float catchTime;
 
-		// Token: 0x04001E7C RID: 7804
+		// Token: 0x04001E89 RID: 7817
 		public float throwTime;
 
-		// Token: 0x04001E7D RID: 7805
+		// Token: 0x04001E8A RID: 7818
 		public TransferrableObject transferrable;
 	}
 }

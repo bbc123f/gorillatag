@@ -4,7 +4,7 @@ using UnityEngine;
 // Token: 0x02000094 RID: 148
 public class TeleportTargetHandlerNode : TeleportTargetHandler
 {
-	// Token: 0x06000335 RID: 821 RVA: 0x000135E8 File Offset: 0x000117E8
+	// Token: 0x06000335 RID: 821 RVA: 0x000133C4 File Offset: 0x000115C4
 	protected override bool ConsiderTeleport(Vector3 start, ref Vector3 end)
 	{
 		if (!base.LocomotionTeleport.AimCollisionTest(start, end, this.AimCollisionLayerMask | this.TeleportLayerMask, out this.AimData.TargetHitInfo))

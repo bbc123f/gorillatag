@@ -1,10 +1,10 @@
 ﻿using System;
 using UnityEngine;
 
-// Token: 0x02000211 RID: 529
+// Token: 0x02000212 RID: 530
 public class DelayedDestroyPooledObj : MonoBehaviour
 {
-	// Token: 0x06000D42 RID: 3394 RVA: 0x0004DCBA File Offset: 0x0004BEBA
+	// Token: 0x06000D48 RID: 3400 RVA: 0x0004DF1A File Offset: 0x0004C11A
 	protected void OnEnable()
 	{
 		if (ObjectPools.instance == null || !ObjectPools.instance.initialized)
@@ -14,7 +14,7 @@ public class DelayedDestroyPooledObj : MonoBehaviour
 		this.timeToDie = Time.time + this.destroyDelay;
 	}
 
-	// Token: 0x06000D43 RID: 3395 RVA: 0x0004DCE8 File Offset: 0x0004BEE8
+	// Token: 0x06000D49 RID: 3401 RVA: 0x0004DF48 File Offset: 0x0004C148
 	protected void LateUpdate()
 	{
 		if (Time.time > this.timeToDie)
@@ -23,10 +23,10 @@ public class DelayedDestroyPooledObj : MonoBehaviour
 		}
 	}
 
-	// Token: 0x04001071 RID: 4209
+	// Token: 0x04001076 RID: 4214
 	[Tooltip("Return to the object pool after this many seconds.")]
 	public float destroyDelay;
 
-	// Token: 0x04001072 RID: 4210
+	// Token: 0x04001077 RID: 4215
 	private float timeToDie = -1f;
 }

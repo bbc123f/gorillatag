@@ -5,14 +5,14 @@ using UnityEngine;
 // Token: 0x0200015B RID: 347
 public class EnclosedSpaceVolume : GorillaTriggerBox
 {
-	// Token: 0x0600088E RID: 2190 RVA: 0x00034ECE File Offset: 0x000330CE
+	// Token: 0x0600088F RID: 2191 RVA: 0x00034D0E File Offset: 0x00032F0E
 	private void Awake()
 	{
 		this.audioSourceInside.volume = this.quietVolume;
 		this.audioSourceOutside.volume = this.loudVolume;
 	}
 
-	// Token: 0x0600088F RID: 2191 RVA: 0x00034EF2 File Offset: 0x000330F2
+	// Token: 0x06000890 RID: 2192 RVA: 0x00034D32 File Offset: 0x00032F32
 	private void OnTriggerEnter(Collider other)
 	{
 		if (other.attachedRigidbody.GetComponentInParent<Player>() != null)
@@ -22,7 +22,7 @@ public class EnclosedSpaceVolume : GorillaTriggerBox
 		}
 	}
 
-	// Token: 0x06000890 RID: 2192 RVA: 0x00034F29 File Offset: 0x00033129
+	// Token: 0x06000891 RID: 2193 RVA: 0x00034D69 File Offset: 0x00032F69
 	private void OnTriggerExit(Collider other)
 	{
 		if (other.attachedRigidbody.GetComponentInParent<Player>() != null)

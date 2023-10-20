@@ -3,10 +3,10 @@ using UnityEngine;
 
 namespace BoingKit
 {
-	// Token: 0x02000379 RID: 889
+	// Token: 0x0200037B RID: 891
 	public class Collision
 	{
-		// Token: 0x06001A43 RID: 6723 RVA: 0x0009209C File Offset: 0x0009029C
+		// Token: 0x06001A4C RID: 6732 RVA: 0x00092584 File Offset: 0x00090784
 		public static bool SphereSphere(Vector3 centerA, float radiusA, Vector3 centerB, float radiusB, out Vector3 push)
 		{
 			push = Vector3.zero;
@@ -22,7 +22,7 @@ namespace BoingKit
 			return true;
 		}
 
-		// Token: 0x06001A44 RID: 6724 RVA: 0x00092104 File Offset: 0x00090304
+		// Token: 0x06001A4D RID: 6733 RVA: 0x000925EC File Offset: 0x000907EC
 		public static bool SphereSphereInverse(Vector3 centerA, float radiusA, Vector3 centerB, float radiusB, out Vector3 push)
 		{
 			push = Vector3.zero;
@@ -38,7 +38,7 @@ namespace BoingKit
 			return true;
 		}
 
-		// Token: 0x06001A45 RID: 6725 RVA: 0x0009216C File Offset: 0x0009036C
+		// Token: 0x06001A4E RID: 6734 RVA: 0x00092654 File Offset: 0x00090854
 		public static bool SphereCapsule(Vector3 centerA, float radiusA, Vector3 headB, Vector3 tailB, float radiusB, out Vector3 push)
 		{
 			push = Vector3.zero;
@@ -55,7 +55,7 @@ namespace BoingKit
 			return Collision.SphereSphere(centerA, radiusA, centerB, radiusB, out push);
 		}
 
-		// Token: 0x06001A46 RID: 6726 RVA: 0x00092200 File Offset: 0x00090400
+		// Token: 0x06001A4F RID: 6735 RVA: 0x000926E8 File Offset: 0x000908E8
 		public static bool SphereCapsuleInverse(Vector3 centerA, float radiusA, Vector3 headB, Vector3 tailB, float radiusB, out Vector3 push)
 		{
 			push = Vector3.zero;
@@ -72,7 +72,7 @@ namespace BoingKit
 			return Collision.SphereSphereInverse(centerA, radiusA, centerB, radiusB, out push);
 		}
 
-		// Token: 0x06001A47 RID: 6727 RVA: 0x00092294 File Offset: 0x00090494
+		// Token: 0x06001A50 RID: 6736 RVA: 0x0009277C File Offset: 0x0009097C
 		public static bool SphereBox(Vector3 centerOffsetA, float radiusA, Vector3 halfExtentB, out Vector3 push)
 		{
 			push = Vector3.zero;
@@ -117,7 +117,7 @@ namespace BoingKit
 			return true;
 		}
 
-		// Token: 0x06001A48 RID: 6728 RVA: 0x000924D5 File Offset: 0x000906D5
+		// Token: 0x06001A51 RID: 6737 RVA: 0x000929BD File Offset: 0x00090BBD
 		public static bool SphereBoxInverse(Vector3 centerOffsetA, float radiusA, Vector3 halfExtentB, out Vector3 push)
 		{
 			push = Vector3.zero;

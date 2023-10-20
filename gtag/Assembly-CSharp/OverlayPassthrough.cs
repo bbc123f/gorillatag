@@ -4,7 +4,7 @@ using UnityEngine;
 // Token: 0x020000B3 RID: 179
 public class OverlayPassthrough : MonoBehaviour
 {
-	// Token: 0x060003F7 RID: 1015 RVA: 0x0001A730 File Offset: 0x00018930
+	// Token: 0x060003F7 RID: 1015 RVA: 0x0001A50C File Offset: 0x0001870C
 	private void Start()
 	{
 		GameObject gameObject = GameObject.Find("OVRCameraRig");
@@ -20,7 +20,7 @@ public class OverlayPassthrough : MonoBehaviour
 		}
 	}
 
-	// Token: 0x060003F8 RID: 1016 RVA: 0x0001A780 File Offset: 0x00018980
+	// Token: 0x060003F8 RID: 1016 RVA: 0x0001A55C File Offset: 0x0001875C
 	private void Update()
 	{
 		if (OVRInput.GetDown(OVRInput.Button.One, OVRInput.Controller.RTouch))

@@ -4,7 +4,7 @@ using UnityEngine;
 // Token: 0x0200014E RID: 334
 public class Campfire : MonoBehaviour
 {
-	// Token: 0x0600084E RID: 2126 RVA: 0x00033934 File Offset: 0x00031B34
+	// Token: 0x0600084F RID: 2127 RVA: 0x00033774 File Offset: 0x00031974
 	private void Start()
 	{
 		this.lastAngleBottom = 0f;
@@ -23,7 +23,7 @@ public class Campfire : MonoBehaviour
 		this.wasActive = false;
 	}
 
-	// Token: 0x0600084F RID: 2127 RVA: 0x00033A18 File Offset: 0x00031C18
+	// Token: 0x06000850 RID: 2128 RVA: 0x00033858 File Offset: 0x00031A58
 	private void LateUpdate()
 	{
 		if (BetterDayNightManager.instance == null)
@@ -60,7 +60,7 @@ public class Campfire : MonoBehaviour
 		this.ReturnToOff(ref this.topFire, this.startingRotationTop, ref this.mergedTop);
 	}
 
-	// Token: 0x06000850 RID: 2128 RVA: 0x00033C0C File Offset: 0x00031E0C
+	// Token: 0x06000851 RID: 2129 RVA: 0x00033A4C File Offset: 0x00031C4C
 	private void Flap(ref float perlinValue, float perlinStep, ref float lastAngle, ref Transform flameTransform, float range, float multiplier, ref bool isMerged)
 	{
 		perlinValue += perlinStep;
@@ -92,7 +92,7 @@ public class Campfire : MonoBehaviour
 		flameTransform.localEulerAngles = this.tempVec;
 	}
 
-	// Token: 0x06000851 RID: 2129 RVA: 0x00033D4C File Offset: 0x00031F4C
+	// Token: 0x06000852 RID: 2130 RVA: 0x00033B8C File Offset: 0x00031D8C
 	private void ReturnToOff(ref Transform startTransform, float targetAngle, ref bool isMerged)
 	{
 		this.tempVec.x = targetAngle;

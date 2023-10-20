@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// Token: 0x0200022A RID: 554
+// Token: 0x0200022B RID: 555
 public static class TransformUtils
 {
-	// Token: 0x06000DC9 RID: 3529 RVA: 0x00050418 File Offset: 0x0004E618
+	// Token: 0x06000DCF RID: 3535 RVA: 0x00050678 File Offset: 0x0004E878
 	public static Hash128 ComputePathHash(Transform t)
 	{
 		if (t == null)
@@ -23,7 +23,7 @@ public static class TransformUtils
 		return result;
 	}
 
-	// Token: 0x06000DCA RID: 3530 RVA: 0x0005046C File Offset: 0x0004E66C
+	// Token: 0x06000DD0 RID: 3536 RVA: 0x000506CC File Offset: 0x0004E8CC
 	public static string GetScenePath(Transform t)
 	{
 		if (t == null)
@@ -40,7 +40,7 @@ public static class TransformUtils
 		return text;
 	}
 
-	// Token: 0x06000DCB RID: 3531 RVA: 0x000504B8 File Offset: 0x0004E6B8
+	// Token: 0x06000DD1 RID: 3537 RVA: 0x00050718 File Offset: 0x0004E918
 	public static string GetScenePathReverse(Transform t)
 	{
 		if (t == null)
@@ -62,6 +62,6 @@ public static class TransformUtils
 		return text;
 	}
 
-	// Token: 0x040010C0 RID: 4288
+	// Token: 0x040010C5 RID: 4293
 	private const string kFwdSlash = "/";
 }

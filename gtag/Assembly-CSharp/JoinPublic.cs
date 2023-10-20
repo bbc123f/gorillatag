@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-// Token: 0x02000203 RID: 515
+// Token: 0x02000204 RID: 516
 public class JoinPublic : MonoBehaviour
 {
 }

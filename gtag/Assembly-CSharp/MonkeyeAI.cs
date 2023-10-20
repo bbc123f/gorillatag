@@ -177,12 +177,21 @@ public class MonkeyeAI : MonoBehaviour
 	{
 		this.path = path_;
 		this.currentWaypoint = 0;
-		this.nextWaypointDistance = this.Distance2D(base.transform.position, this.path.vectorPath[this.currentWaypoint]);
+		if (this.path.vectorPath.Count < 1)
+		{
+			base.transform.position = this.sleepPt.position;
+			base.transform.rotation = this.sleepPt.rotation;
+			this.path = null;
+		}
+		else
+		{
+			this.nextWaypointDistance = this.Distance2D(base.transform.position, this.path.vectorPath[this.currentWaypoint]);
+		}
 		this.reachedEndOfPath = false;
 		this.calculatingPath = false;
 	}
 
-	// Token: 0x060000C3 RID: 195 RVA: 0x00007BB4 File Offset: 0x00005DB4
+	// Token: 0x060000C3 RID: 195 RVA: 0x00007BFC File Offset: 0x00005DFC
 	private void FollowPath()
 	{
 		if (this.path == null || this.currentWaypoint >= this.path.vectorPath.Count)
@@ -223,7 +232,7 @@ public class MonkeyeAI : MonoBehaviour
 		base.transform.rotation = Quaternion.LookRotation(forward);
 	}
 
-	// Token: 0x060000C4 RID: 196 RVA: 0x00007D8C File Offset: 0x00005F8C
+	// Token: 0x060000C4 RID: 196 RVA: 0x00007DD4 File Offset: 0x00005FD4
 	private bool PlayerNear(VRRig rig, float dist, out float playerDist)
 	{
 		if (rig == null)
@@ -235,7 +244,7 @@ public class MonkeyeAI : MonoBehaviour
 		return playerDist < dist && Physics.RaycastNonAlloc(new Ray(base.transform.position, rig.transform.position - base.transform.position), this.rayResults, playerDist, this.layerMask) <= 0;
 	}
 
-	// Token: 0x060000C5 RID: 197 RVA: 0x00007E19 File Offset: 0x00006019
+	// Token: 0x060000C5 RID: 197 RVA: 0x00007E61 File Offset: 0x00006061
 	private void Sleeping()
 	{
 		this.audioSource.volume = Mathf.Min(this.sleepLoopVolume, this.audioSource.volume + Time.deltaTime / this.sleepLoopFadeInTime);
@@ -243,7 +252,7 @@ public class MonkeyeAI : MonoBehaviour
 		this.PickNewPath(false);
 	}
 
-	// Token: 0x060000C6 RID: 198 RVA: 0x00007E58 File Offset: 0x00006058
+	// Token: 0x060000C6 RID: 198 RVA: 0x00007EA0 File Offset: 0x000060A0
 	private bool ClosestPlayer(in Vector3 myPos, out VRRig outRig)
 	{
 		float num = float.MaxValue;
@@ -260,7 +269,7 @@ public class MonkeyeAI : MonoBehaviour
 		return num != float.MaxValue;
 	}
 
-	// Token: 0x060000C7 RID: 199 RVA: 0x00007ED8 File Offset: 0x000060D8
+	// Token: 0x060000C7 RID: 199 RVA: 0x00007F20 File Offset: 0x00006120
 	private bool CheckForChase()
 	{
 		foreach (VRRig vrrig in this.GetValidChoosableRigs())
@@ -277,7 +286,7 @@ public class MonkeyeAI : MonoBehaviour
 		return false;
 	}
 
-	// Token: 0x060000C8 RID: 200 RVA: 0x00007F58 File Offset: 0x00006158
+	// Token: 0x060000C8 RID: 200 RVA: 0x00007FA0 File Offset: 0x000061A0
 	private void Patrolling()
 	{
 		this.audioSource.volume = Mathf.Min(this.patrolLoopVolume, this.audioSource.volume + Time.deltaTime / this.patrolLoopFadeInTime);
@@ -288,7 +297,7 @@ public class MonkeyeAI : MonoBehaviour
 		this.CheckForChase();
 	}
 
-	// Token: 0x060000C9 RID: 201 RVA: 0x00007FAC File Offset: 0x000061AC
+	// Token: 0x060000C9 RID: 201 RVA: 0x00007FF4 File Offset: 0x000061F4
 	private void Chasing()
 	{
 		this.audioSource.volume = Mathf.Min(this.chaseLoopVolume, this.audioSource.volume + Time.deltaTime / this.chaseLoopFadeInTime);
@@ -305,7 +314,7 @@ public class MonkeyeAI : MonoBehaviour
 		}
 	}
 
-	// Token: 0x060000CA RID: 202 RVA: 0x00008038 File Offset: 0x00006238
+	// Token: 0x060000CA RID: 202 RVA: 0x00008080 File Offset: 0x00006280
 	private void ReturnToSleepPt()
 	{
 		if (this.path == null)
@@ -323,7 +332,7 @@ public class MonkeyeAI : MonoBehaviour
 		}
 	}
 
-	// Token: 0x060000CB RID: 203 RVA: 0x00008090 File Offset: 0x00006290
+	// Token: 0x060000CB RID: 203 RVA: 0x000080D8 File Offset: 0x000062D8
 	private void UpdateClientState()
 	{
 		if (this.wasConnectedToRoom && !PhotonNetwork.IsConnected)
@@ -390,14 +399,14 @@ public class MonkeyeAI : MonoBehaviour
 		this.animController.SetInteger(MonkeyeAI.animStateID, (int)this.replState.state);
 	}
 
-	// Token: 0x060000CC RID: 204 RVA: 0x00008314 File Offset: 0x00006514
+	// Token: 0x060000CC RID: 204 RVA: 0x0000835C File Offset: 0x0000655C
 	private void SetDefaultState()
 	{
 		this.SetState(MonkeyeAI_ReplState.EStates.Sleeping);
 		this.SetDefaultAttackState();
 	}
 
-	// Token: 0x060000CD RID: 205 RVA: 0x00008324 File Offset: 0x00006524
+	// Token: 0x060000CD RID: 205 RVA: 0x0000836C File Offset: 0x0000656C
 	private void SetDefaultAttackState()
 	{
 		this.replState.floorEnabled = true;
@@ -409,14 +418,14 @@ public class MonkeyeAI : MonoBehaviour
 		this.replState.alpha = 0f;
 	}
 
-	// Token: 0x060000CE RID: 206 RVA: 0x0000839B File Offset: 0x0000659B
+	// Token: 0x060000CE RID: 206 RVA: 0x000083E3 File Offset: 0x000065E3
 	private void ExitAttackState()
 	{
 		this.SetDefaultAttackState();
 		this.SetState(MonkeyeAI_ReplState.EStates.Patrolling);
 	}
 
-	// Token: 0x060000CF RID: 207 RVA: 0x000083AC File Offset: 0x000065AC
+	// Token: 0x060000CF RID: 207 RVA: 0x000083F4 File Offset: 0x000065F4
 	private void BeginAttack()
 	{
 		this.path = null;
@@ -430,7 +439,7 @@ public class MonkeyeAI : MonoBehaviour
 		}
 	}
 
-	// Token: 0x060000D0 RID: 208 RVA: 0x0000841C File Offset: 0x0000661C
+	// Token: 0x060000D0 RID: 208 RVA: 0x00008464 File Offset: 0x00006664
 	private void OpenFloor()
 	{
 		this.replState.alpha = Mathf.Lerp(0f, 1f, 1f - Mathf.Clamp01(this.replState.timer / this.openFloorTime));
@@ -442,7 +451,7 @@ public class MonkeyeAI : MonoBehaviour
 		}
 	}
 
-	// Token: 0x060000D1 RID: 209 RVA: 0x00008496 File Offset: 0x00006696
+	// Token: 0x060000D1 RID: 209 RVA: 0x000084DE File Offset: 0x000066DE
 	private void DropPlayer()
 	{
 		if (this.replState.timer <= 0f)
@@ -453,7 +462,7 @@ public class MonkeyeAI : MonoBehaviour
 		}
 	}
 
-	// Token: 0x060000D2 RID: 210 RVA: 0x000084CE File Offset: 0x000066CE
+	// Token: 0x060000D2 RID: 210 RVA: 0x00008516 File Offset: 0x00006716
 	private void CloseFloor()
 	{
 		if (this.replState.timer <= 0f)
@@ -462,7 +471,7 @@ public class MonkeyeAI : MonoBehaviour
 		}
 	}
 
-	// Token: 0x060000D3 RID: 211 RVA: 0x000084E8 File Offset: 0x000066E8
+	// Token: 0x060000D3 RID: 211 RVA: 0x00008530 File Offset: 0x00006730
 	private void ValidateChasingRig()
 	{
 		if (this.targetRig == null)
@@ -486,7 +495,7 @@ public class MonkeyeAI : MonoBehaviour
 		}
 	}
 
-	// Token: 0x060000D4 RID: 212 RVA: 0x00008570 File Offset: 0x00006770
+	// Token: 0x060000D4 RID: 212 RVA: 0x000085B8 File Offset: 0x000067B8
 	public void SetState(MonkeyeAI_ReplState.EStates state_)
 	{
 		this.replState.state = state_;
@@ -523,7 +532,7 @@ public class MonkeyeAI : MonoBehaviour
 		}
 	}
 
-	// Token: 0x060000D5 RID: 213 RVA: 0x000086BC File Offset: 0x000068BC
+	// Token: 0x060000D5 RID: 213 RVA: 0x00008704 File Offset: 0x00006904
 	public List<VRRig> GetValidChoosableRigs()
 	{
 		this.validRigs.Clear();
@@ -537,7 +546,7 @@ public class MonkeyeAI : MonoBehaviour
 		return this.validRigs;
 	}
 
-	// Token: 0x060000D6 RID: 214 RVA: 0x00008744 File Offset: 0x00006944
+	// Token: 0x060000D6 RID: 214 RVA: 0x0000878C File Offset: 0x0000698C
 	private void Update()
 	{
 		this.UpdateClientState();
@@ -616,13 +625,13 @@ public class MonkeyeAI : MonoBehaviour
 		}
 	}
 
-	// Token: 0x060000D7 RID: 215 RVA: 0x0000890C File Offset: 0x00006B0C
+	// Token: 0x060000D7 RID: 215 RVA: 0x00008954 File Offset: 0x00006B54
 	protected void LateUpdate()
 	{
 		this.wasConnectedToRoom = PhotonNetwork.InRoom;
 	}
 
-	// Token: 0x060000D8 RID: 216 RVA: 0x0000891C File Offset: 0x00006B1C
+	// Token: 0x060000D8 RID: 216 RVA: 0x00008964 File Offset: 0x00006B64
 	private void AntiOverlapAssurance()
 	{
 		if ((!this._view.IsMine && PhotonNetwork.InRoom) || !this.playerCollection.gameObject.activeInHierarchy)
@@ -652,7 +661,7 @@ public class MonkeyeAI : MonoBehaviour
 		}
 	}
 
-	// Token: 0x060000D9 RID: 217 RVA: 0x00008A28 File Offset: 0x00006C28
+	// Token: 0x060000D9 RID: 217 RVA: 0x00008A70 File Offset: 0x00006C70
 	private void SetTargetPlayer([CanBeNull] VRRig rig)
 	{
 		if (rig == null)

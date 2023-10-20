@@ -7,10 +7,10 @@ using GorillaLocomotion.Gameplay;
 using Photon.Pun;
 using UnityEngine;
 
-// Token: 0x02000192 RID: 402
+// Token: 0x02000193 RID: 403
 public class MagicCauldron : MonoBehaviourPunCallbacks, IPunObservable
 {
-	// Token: 0x06000A4E RID: 2638 RVA: 0x0004030C File Offset: 0x0003E50C
+	// Token: 0x06000A53 RID: 2643 RVA: 0x0004043C File Offset: 0x0003E63C
 	private void Awake()
 	{
 		this.currentIngredients.Clear();
@@ -41,19 +41,19 @@ public class MagicCauldron : MonoBehaviourPunCallbacks, IPunObservable
 		this.reusableFXContext.fxCallBack = new MagicCauldron.IngrediantFXContext.Callback(this.OnIngredientAdd);
 	}
 
-	// Token: 0x06000A4F RID: 2639 RVA: 0x000403EA File Offset: 0x0003E5EA
+	// Token: 0x06000A54 RID: 2644 RVA: 0x0004051A File Offset: 0x0003E71A
 	private void Start()
 	{
 		this.ChangeState(MagicCauldron.CauldronState.notReady);
 	}
 
-	// Token: 0x06000A50 RID: 2640 RVA: 0x000403F3 File Offset: 0x0003E5F3
+	// Token: 0x06000A55 RID: 2645 RVA: 0x00040523 File Offset: 0x0003E723
 	private void LateUpdate()
 	{
 		this.UpdateState();
 	}
 
-	// Token: 0x06000A51 RID: 2641 RVA: 0x000403FB File Offset: 0x0003E5FB
+	// Token: 0x06000A56 RID: 2646 RVA: 0x0004052B File Offset: 0x0003E72B
 	private IEnumerator LevitationSpellCoroutine()
 	{
 		Player.Instance.SetHalloweenLevitation(this.levitationStrength, this.levitationDuration, this.levitationBlendOutDuration, this.levitationBonusStrength, this.levitationBonusOffAtYSpeed, this.levitationBonusFullAtYSpeed);
@@ -62,7 +62,7 @@ public class MagicCauldron : MonoBehaviourPunCallbacks, IPunObservable
 		yield break;
 	}
 
-	// Token: 0x06000A52 RID: 2642 RVA: 0x0004040C File Offset: 0x0003E60C
+	// Token: 0x06000A57 RID: 2647 RVA: 0x0004053C File Offset: 0x0003E73C
 	private void ChangeState(MagicCauldron.CauldronState state)
 	{
 		this.currentState = state;
@@ -125,7 +125,7 @@ public class MagicCauldron : MonoBehaviourPunCallbacks, IPunObservable
 		}
 	}
 
-	// Token: 0x06000A53 RID: 2643 RVA: 0x00040600 File Offset: 0x0003E800
+	// Token: 0x06000A58 RID: 2648 RVA: 0x00040730 File Offset: 0x0003E930
 	private void UpdateState()
 	{
 		if (base.photonView.IsMine)
@@ -176,19 +176,19 @@ public class MagicCauldron : MonoBehaviourPunCallbacks, IPunObservable
 		}
 	}
 
-	// Token: 0x06000A54 RID: 2644 RVA: 0x000406CE File Offset: 0x0003E8CE
+	// Token: 0x06000A59 RID: 2649 RVA: 0x000407FE File Offset: 0x0003E9FE
 	public void OnEventStart()
 	{
 		this.ChangeState(MagicCauldron.CauldronState.ready);
 	}
 
-	// Token: 0x06000A55 RID: 2645 RVA: 0x000406D7 File Offset: 0x0003E8D7
+	// Token: 0x06000A5A RID: 2650 RVA: 0x00040807 File Offset: 0x0003EA07
 	public void OnEventEnd()
 	{
 		this.ChangeState(MagicCauldron.CauldronState.notReady);
 	}
 
-	// Token: 0x06000A56 RID: 2646 RVA: 0x000406E0 File Offset: 0x0003E8E0
+	// Token: 0x06000A5B RID: 2651 RVA: 0x00040810 File Offset: 0x0003EA10
 	[PunRPC]
 	public void OnIngredientAdd(int _ingredientIndex, PhotonMessageInfo info)
 	{
@@ -200,10 +200,10 @@ public class MagicCauldron : MonoBehaviourPunCallbacks, IPunObservable
 		}
 		this.reusableFXContext.playerSettings = rigContainer.Rig.fxSettings;
 		this.reusableIngrediantArgs.key = _ingredientIndex;
-		FXSystem.PlayFX<MagicCauldron.IngredientArgs>(FXType.HWIngredients, this.reusableFXContext, this.reusableIngrediantArgs);
+		FXSystem.PlayFX<MagicCauldron.IngredientArgs>(FXType.HWIngredients, this.reusableFXContext, this.reusableIngrediantArgs, default(PhotonMessageInfo));
 	}
 
-	// Token: 0x06000A57 RID: 2647 RVA: 0x00040744 File Offset: 0x0003E944
+	// Token: 0x06000A5C RID: 2652 RVA: 0x0004087C File Offset: 0x0003EA7C
 	private void OnIngredientAdd(int _ingredientIndex)
 	{
 		if (this.audioSource)
@@ -246,7 +246,7 @@ public class MagicCauldron : MonoBehaviourPunCallbacks, IPunObservable
 		this.UpdateCauldronColor(magicIngredientType.color);
 	}
 
-	// Token: 0x06000A58 RID: 2648 RVA: 0x00040874 File Offset: 0x0003EA74
+	// Token: 0x06000A5D RID: 2653 RVA: 0x000409AC File Offset: 0x0003EBAC
 	private bool CheckIngredients()
 	{
 		foreach (MagicCauldron.Recipe recipe in this.recipes)
@@ -260,7 +260,7 @@ public class MagicCauldron : MonoBehaviourPunCallbacks, IPunObservable
 		return false;
 	}
 
-	// Token: 0x06000A59 RID: 2649 RVA: 0x000408EC File Offset: 0x0003EAEC
+	// Token: 0x06000A5E RID: 2654 RVA: 0x00040A24 File Offset: 0x0003EC24
 	private void UpdateCauldronColor(Color color)
 	{
 		if (this.bubblesParticle)
@@ -293,7 +293,7 @@ public class MagicCauldron : MonoBehaviourPunCallbacks, IPunObservable
 		}
 	}
 
-	// Token: 0x06000A5A RID: 2650 RVA: 0x000409A8 File Offset: 0x0003EBA8
+	// Token: 0x06000A5F RID: 2655 RVA: 0x00040AE0 File Offset: 0x0003ECE0
 	private void OnTriggerEnter(Collider other)
 	{
 		ThrowableSetDressing componentInParent = other.GetComponentInParent<ThrowableSetDressing>();
@@ -321,14 +321,14 @@ public class MagicCauldron : MonoBehaviourPunCallbacks, IPunObservable
 		}
 	}
 
-	// Token: 0x06000A5B RID: 2651 RVA: 0x00040A89 File Offset: 0x0003EC89
+	// Token: 0x06000A60 RID: 2656 RVA: 0x00040BC1 File Offset: 0x0003EDC1
 	public override void OnDisable()
 	{
 		base.OnDisable();
 		this.currentIngredients.Clear();
 	}
 
-	// Token: 0x06000A5C RID: 2652 RVA: 0x00040A9C File Offset: 0x0003EC9C
+	// Token: 0x06000A61 RID: 2657 RVA: 0x00040BD4 File Offset: 0x0003EDD4
 	public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
 	{
 		if (!info.Sender.IsMasterClient)
@@ -360,167 +360,167 @@ public class MagicCauldron : MonoBehaviourPunCallbacks, IPunObservable
 		}
 	}
 
-	// Token: 0x04000CF4 RID: 3316
+	// Token: 0x04000CF8 RID: 3320
 	public List<MagicCauldron.Recipe> recipes = new List<MagicCauldron.Recipe>();
 
-	// Token: 0x04000CF5 RID: 3317
+	// Token: 0x04000CF9 RID: 3321
 	public float maxTimeToAddAllIngredients = 30f;
 
-	// Token: 0x04000CF6 RID: 3318
+	// Token: 0x04000CFA RID: 3322
 	public float summonWitchesDuration = 20f;
 
-	// Token: 0x04000CF7 RID: 3319
+	// Token: 0x04000CFB RID: 3323
 	public float recipeFailedDuration = 5f;
 
-	// Token: 0x04000CF8 RID: 3320
+	// Token: 0x04000CFC RID: 3324
 	public float cooldownDuration = 30f;
 
-	// Token: 0x04000CF9 RID: 3321
+	// Token: 0x04000CFD RID: 3325
 	public MagicIngredientType[] allIngredients;
 
-	// Token: 0x04000CFA RID: 3322
+	// Token: 0x04000CFE RID: 3326
 	public GameObject flyingWitchesContainer;
 
-	// Token: 0x04000CFB RID: 3323
+	// Token: 0x04000CFF RID: 3327
 	[SerializeField]
 	private AudioSource audioSource;
 
-	// Token: 0x04000CFC RID: 3324
+	// Token: 0x04000D00 RID: 3328
 	public AudioClip ingredientAddedAudio;
 
-	// Token: 0x04000CFD RID: 3325
+	// Token: 0x04000D01 RID: 3329
 	public AudioClip recipeFailedAudio;
 
-	// Token: 0x04000CFE RID: 3326
+	// Token: 0x04000D02 RID: 3330
 	public ParticleSystem bubblesParticle;
 
-	// Token: 0x04000CFF RID: 3327
+	// Token: 0x04000D03 RID: 3331
 	public ParticleSystem successParticle;
 
-	// Token: 0x04000D00 RID: 3328
+	// Token: 0x04000D04 RID: 3332
 	public ParticleSystem splashParticle;
 
-	// Token: 0x04000D01 RID: 3329
+	// Token: 0x04000D05 RID: 3333
 	public Color CauldronActiveColor;
 
-	// Token: 0x04000D02 RID: 3330
+	// Token: 0x04000D06 RID: 3334
 	public Color CauldronFailedColor;
 
-	// Token: 0x04000D03 RID: 3331
+	// Token: 0x04000D07 RID: 3335
 	[Tooltip("only if we are using the time of day event")]
 	public Color CauldronNotReadyColor;
 
-	// Token: 0x04000D04 RID: 3332
+	// Token: 0x04000D08 RID: 3336
 	private readonly List<NoncontrollableBroomstick> witchesComponent = new List<NoncontrollableBroomstick>();
 
-	// Token: 0x04000D05 RID: 3333
+	// Token: 0x04000D09 RID: 3337
 	private readonly List<MagicIngredientType> currentIngredients = new List<MagicIngredientType>();
 
-	// Token: 0x04000D06 RID: 3334
+	// Token: 0x04000D0A RID: 3338
 	private float currentStateElapsedTime;
 
-	// Token: 0x04000D07 RID: 3335
+	// Token: 0x04000D0B RID: 3339
 	private MagicCauldron.CauldronState currentState;
 
-	// Token: 0x04000D08 RID: 3336
+	// Token: 0x04000D0C RID: 3340
 	[SerializeField]
 	private Renderer rendr;
 
-	// Token: 0x04000D09 RID: 3337
+	// Token: 0x04000D0D RID: 3341
 	private Color cauldronColor;
 
-	// Token: 0x04000D0A RID: 3338
+	// Token: 0x04000D0E RID: 3342
 	private Color currentColor;
 
-	// Token: 0x04000D0B RID: 3339
+	// Token: 0x04000D0F RID: 3343
 	private int currentRecipeIndex;
 
-	// Token: 0x04000D0C RID: 3340
+	// Token: 0x04000D10 RID: 3344
 	private int ingredientIndex;
 
-	// Token: 0x04000D0D RID: 3341
+	// Token: 0x04000D11 RID: 3345
 	private float waitTimeToSummonWitches = 2f;
 
-	// Token: 0x04000D0E RID: 3342
+	// Token: 0x04000D12 RID: 3346
 	[Space]
 	[SerializeField]
 	private MagicCauldronLiquid _liquid;
 
-	// Token: 0x04000D0F RID: 3343
+	// Token: 0x04000D13 RID: 3347
 	private MagicCauldron.IngrediantFXContext reusableFXContext = new MagicCauldron.IngrediantFXContext();
 
-	// Token: 0x04000D10 RID: 3344
+	// Token: 0x04000D14 RID: 3348
 	private MagicCauldron.IngredientArgs reusableIngrediantArgs = new MagicCauldron.IngredientArgs();
 
-	// Token: 0x04000D11 RID: 3345
+	// Token: 0x04000D15 RID: 3349
 	public bool testLevitationAlwaysOn;
 
-	// Token: 0x04000D12 RID: 3346
+	// Token: 0x04000D16 RID: 3350
 	public float levitationRadius;
 
-	// Token: 0x04000D13 RID: 3347
+	// Token: 0x04000D17 RID: 3351
 	public float levitationSpellDuration;
 
-	// Token: 0x04000D14 RID: 3348
+	// Token: 0x04000D18 RID: 3352
 	public float levitationStrength;
 
-	// Token: 0x04000D15 RID: 3349
+	// Token: 0x04000D19 RID: 3353
 	public float levitationDuration;
 
-	// Token: 0x04000D16 RID: 3350
+	// Token: 0x04000D1A RID: 3354
 	public float levitationBlendOutDuration;
 
-	// Token: 0x04000D17 RID: 3351
+	// Token: 0x04000D1B RID: 3355
 	public float levitationBonusStrength;
 
-	// Token: 0x04000D18 RID: 3352
+	// Token: 0x04000D1C RID: 3356
 	public float levitationBonusOffAtYSpeed;
 
-	// Token: 0x04000D19 RID: 3353
+	// Token: 0x04000D1D RID: 3357
 	public float levitationBonusFullAtYSpeed;
 
-	// Token: 0x0200043B RID: 1083
+	// Token: 0x0200043D RID: 1085
 	private enum CauldronState
 	{
-		// Token: 0x04001D8B RID: 7563
+		// Token: 0x04001D98 RID: 7576
 		notReady,
-		// Token: 0x04001D8C RID: 7564
+		// Token: 0x04001D99 RID: 7577
 		ready,
-		// Token: 0x04001D8D RID: 7565
+		// Token: 0x04001D9A RID: 7578
 		recipeCollecting,
-		// Token: 0x04001D8E RID: 7566
+		// Token: 0x04001D9B RID: 7579
 		recipeActivated,
-		// Token: 0x04001D8F RID: 7567
+		// Token: 0x04001D9C RID: 7580
 		summoned,
-		// Token: 0x04001D90 RID: 7568
+		// Token: 0x04001D9D RID: 7581
 		failed,
-		// Token: 0x04001D91 RID: 7569
+		// Token: 0x04001D9E RID: 7582
 		cooldown
 	}
 
-	// Token: 0x0200043C RID: 1084
+	// Token: 0x0200043E RID: 1086
 	[Serializable]
 	public struct Recipe
 	{
-		// Token: 0x04001D92 RID: 7570
+		// Token: 0x04001D9F RID: 7583
 		public List<MagicIngredientType> recipeIngredients;
 
-		// Token: 0x04001D93 RID: 7571
+		// Token: 0x04001DA0 RID: 7584
 		public AudioClip successAudio;
 	}
 
-	// Token: 0x0200043D RID: 1085
+	// Token: 0x0200043F RID: 1087
 	private class IngredientArgs : FXSArgs
 	{
-		// Token: 0x04001D94 RID: 7572
+		// Token: 0x04001DA1 RID: 7585
 		public int key;
 	}
 
-	// Token: 0x0200043E RID: 1086
+	// Token: 0x02000440 RID: 1088
 	private class IngrediantFXContext : IFXContextParems<MagicCauldron.IngredientArgs>
 	{
-		// Token: 0x17000234 RID: 564
-		// (get) Token: 0x06001CBB RID: 7355 RVA: 0x00098A70 File Offset: 0x00096C70
+		// Token: 0x17000236 RID: 566
+		// (get) Token: 0x06001CC4 RID: 7364 RVA: 0x00098E14 File Offset: 0x00097014
 		FXSystemSettings IFXContextParems<MagicCauldron.IngredientArgs>.settings
 		{
 			get
@@ -529,20 +529,20 @@ public class MagicCauldron : MonoBehaviourPunCallbacks, IPunObservable
 			}
 		}
 
-		// Token: 0x06001CBC RID: 7356 RVA: 0x00098A78 File Offset: 0x00096C78
+		// Token: 0x06001CC5 RID: 7365 RVA: 0x00098E1C File Offset: 0x0009701C
 		void IFXContextParems<MagicCauldron.IngredientArgs>.OnPlayFX(MagicCauldron.IngredientArgs args)
 		{
 			this.fxCallBack(args.key);
 		}
 
-		// Token: 0x04001D95 RID: 7573
+		// Token: 0x04001DA2 RID: 7586
 		public FXSystemSettings playerSettings;
 
-		// Token: 0x04001D96 RID: 7574
+		// Token: 0x04001DA3 RID: 7587
 		public MagicCauldron.IngrediantFXContext.Callback fxCallBack;
 
-		// Token: 0x0200054E RID: 1358
-		// (Invoke) Token: 0x06001FC3 RID: 8131
+		// Token: 0x02000550 RID: 1360
+		// (Invoke) Token: 0x06001FCC RID: 8140
 		public delegate void Callback(int key);
 	}
 }

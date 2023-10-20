@@ -2,32 +2,32 @@
 
 namespace LitJson
 {
-	// Token: 0x0200027C RID: 636
+	// Token: 0x0200027D RID: 637
 	public enum JsonToken
 	{
-		// Token: 0x040011F8 RID: 4600
-		None,
-		// Token: 0x040011F9 RID: 4601
-		ObjectStart,
-		// Token: 0x040011FA RID: 4602
-		PropertyName,
-		// Token: 0x040011FB RID: 4603
-		ObjectEnd,
-		// Token: 0x040011FC RID: 4604
-		ArrayStart,
-		// Token: 0x040011FD RID: 4605
-		ArrayEnd,
 		// Token: 0x040011FE RID: 4606
-		Int,
+		None,
 		// Token: 0x040011FF RID: 4607
-		Long,
+		ObjectStart,
 		// Token: 0x04001200 RID: 4608
-		Double,
+		PropertyName,
 		// Token: 0x04001201 RID: 4609
-		String,
+		ObjectEnd,
 		// Token: 0x04001202 RID: 4610
-		Boolean,
+		ArrayStart,
 		// Token: 0x04001203 RID: 4611
+		ArrayEnd,
+		// Token: 0x04001204 RID: 4612
+		Int,
+		// Token: 0x04001205 RID: 4613
+		Long,
+		// Token: 0x04001206 RID: 4614
+		Double,
+		// Token: 0x04001207 RID: 4615
+		String,
+		// Token: 0x04001208 RID: 4616
+		Boolean,
+		// Token: 0x04001209 RID: 4617
 		Null
 	}
 }

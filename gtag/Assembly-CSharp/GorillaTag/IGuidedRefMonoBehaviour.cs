@@ -3,11 +3,11 @@ using UnityEngine;
 
 namespace GorillaTag
 {
-	// Token: 0x02000305 RID: 773
+	// Token: 0x02000307 RID: 775
 	public interface IGuidedRefMonoBehaviour : IGuidedRefObject
 	{
-		// Token: 0x17000176 RID: 374
-		// (get) Token: 0x06001594 RID: 5524
+		// Token: 0x17000178 RID: 376
+		// (get) Token: 0x0600159D RID: 5533
 		Transform transform { get; }
 	}
 }

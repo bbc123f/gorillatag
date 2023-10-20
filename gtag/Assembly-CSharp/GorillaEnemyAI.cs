@@ -5,12 +5,12 @@ using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.AI;
 
-// Token: 0x020001BA RID: 442
+// Token: 0x020001BB RID: 443
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(Rigidbody))]
 public class GorillaEnemyAI : MonoBehaviourPun, IPunObservable, IInRoomCallbacks
 {
-	// Token: 0x06000B44 RID: 2884 RVA: 0x000455BC File Offset: 0x000437BC
+	// Token: 0x06000B4A RID: 2890 RVA: 0x00045824 File Offset: 0x00043A24
 	private void Start()
 	{
 		this.agent = base.GetComponent<NavMeshAgent>();
@@ -23,7 +23,7 @@ public class GorillaEnemyAI : MonoBehaviourPun, IPunObservable, IInRoomCallbacks
 		}
 	}
 
-	// Token: 0x06000B45 RID: 2885 RVA: 0x00045614 File Offset: 0x00043814
+	// Token: 0x06000B4B RID: 2891 RVA: 0x0004587C File Offset: 0x00043A7C
 	void IPunObservable.OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
 	{
 		if (stream.IsWriting)
@@ -36,7 +36,7 @@ public class GorillaEnemyAI : MonoBehaviourPun, IPunObservable, IInRoomCallbacks
 		this.targetRotation = (Vector3)stream.ReceiveNext();
 	}
 
-	// Token: 0x06000B46 RID: 2886 RVA: 0x00045678 File Offset: 0x00043878
+	// Token: 0x06000B4C RID: 2892 RVA: 0x000458E0 File Offset: 0x00043AE0
 	private void Update()
 	{
 		if (PhotonNetwork.IsMasterClient)
@@ -54,7 +54,7 @@ public class GorillaEnemyAI : MonoBehaviourPun, IPunObservable, IInRoomCallbacks
 		base.transform.eulerAngles = Vector3.Lerp(base.transform.eulerAngles, this.targetRotation, this.lerpValue);
 	}
 
-	// Token: 0x06000B47 RID: 2887 RVA: 0x00045768 File Offset: 0x00043968
+	// Token: 0x06000B4D RID: 2893 RVA: 0x000459D0 File Offset: 0x00043BD0
 	private void FindClosestPlayer()
 	{
 		VRRig[] array = Object.FindObjectsOfType<VRRig>();
@@ -72,7 +72,7 @@ public class GorillaEnemyAI : MonoBehaviourPun, IPunObservable, IInRoomCallbacks
 		this.playerTransform = vrrig.transform;
 	}
 
-	// Token: 0x06000B48 RID: 2888 RVA: 0x000457D9 File Offset: 0x000439D9
+	// Token: 0x06000B4E RID: 2894 RVA: 0x00045A41 File Offset: 0x00043C41
 	private void OnCollisionEnter(Collision collision)
 	{
 		if (collision.gameObject.layer == 19)
@@ -81,7 +81,7 @@ public class GorillaEnemyAI : MonoBehaviourPun, IPunObservable, IInRoomCallbacks
 		}
 	}
 
-	// Token: 0x06000B49 RID: 2889 RVA: 0x000457F5 File Offset: 0x000439F5
+	// Token: 0x06000B4F RID: 2895 RVA: 0x00045A5D File Offset: 0x00043C5D
 	void IInRoomCallbacks.OnMasterClientSwitched(Player newMasterClient)
 	{
 		if (PhotonNetwork.IsMasterClient)
@@ -91,41 +91,41 @@ public class GorillaEnemyAI : MonoBehaviourPun, IPunObservable, IInRoomCallbacks
 		}
 	}
 
-	// Token: 0x06000B4A RID: 2890 RVA: 0x00045816 File Offset: 0x00043A16
+	// Token: 0x06000B50 RID: 2896 RVA: 0x00045A7E File Offset: 0x00043C7E
 	void IInRoomCallbacks.OnPlayerEnteredRoom(Player newPlayer)
 	{
 	}
 
-	// Token: 0x06000B4B RID: 2891 RVA: 0x00045818 File Offset: 0x00043A18
+	// Token: 0x06000B51 RID: 2897 RVA: 0x00045A80 File Offset: 0x00043C80
 	void IInRoomCallbacks.OnPlayerLeftRoom(Player otherPlayer)
 	{
 	}
 
-	// Token: 0x06000B4C RID: 2892 RVA: 0x0004581A File Offset: 0x00043A1A
+	// Token: 0x06000B52 RID: 2898 RVA: 0x00045A82 File Offset: 0x00043C82
 	void IInRoomCallbacks.OnRoomPropertiesUpdate(Hashtable propertiesThatChanged)
 	{
 	}
 
-	// Token: 0x06000B4D RID: 2893 RVA: 0x0004581C File Offset: 0x00043A1C
+	// Token: 0x06000B53 RID: 2899 RVA: 0x00045A84 File Offset: 0x00043C84
 	void IInRoomCallbacks.OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
 	{
 	}
 
-	// Token: 0x04000EAA RID: 3754
+	// Token: 0x04000EAE RID: 3758
 	public Transform playerTransform;
 
-	// Token: 0x04000EAB RID: 3755
+	// Token: 0x04000EAF RID: 3759
 	private NavMeshAgent agent;
 
-	// Token: 0x04000EAC RID: 3756
+	// Token: 0x04000EB0 RID: 3760
 	private Rigidbody r;
 
-	// Token: 0x04000EAD RID: 3757
+	// Token: 0x04000EB1 RID: 3761
 	private Vector3 targetPosition;
 
-	// Token: 0x04000EAE RID: 3758
+	// Token: 0x04000EB2 RID: 3762
 	private Vector3 targetRotation;
 
-	// Token: 0x04000EAF RID: 3759
+	// Token: 0x04000EB3 RID: 3763
 	public float lerpValue;
 }

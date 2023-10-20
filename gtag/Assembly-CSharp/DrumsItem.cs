@@ -6,7 +6,7 @@ using UnityEngine;
 // Token: 0x0200010B RID: 267
 public class DrumsItem : MonoBehaviour
 {
-	// Token: 0x06000688 RID: 1672 RVA: 0x00028F70 File Offset: 0x00027170
+	// Token: 0x06000689 RID: 1673 RVA: 0x00028DB0 File Offset: 0x00026FB0
 	private void Start()
 	{
 		this.leftHandIndicator = GorillaTagger.Instance.leftHandTriggerCollider.GetComponent<GorillaTriggerColliderHandIndicator>();
@@ -18,14 +18,14 @@ public class DrumsItem : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000689 RID: 1673 RVA: 0x00028FE3 File Offset: 0x000271E3
+	// Token: 0x0600068A RID: 1674 RVA: 0x00028E23 File Offset: 0x00027023
 	private void LateUpdate()
 	{
 		this.CheckHandHit(ref this.leftHandIn, ref this.leftHandIndicator, true);
 		this.CheckHandHit(ref this.rightHandIn, ref this.rightHandIndicator, false);
 	}
 
-	// Token: 0x0600068A RID: 1674 RVA: 0x0002900C File Offset: 0x0002720C
+	// Token: 0x0600068B RID: 1675 RVA: 0x00028E4C File Offset: 0x0002704C
 	private void CheckHandHit(ref bool handIn, ref GorillaTriggerColliderHandIndicator handIndicator, bool isLeftHand)
 	{
 		this.spherecastSweep = handIndicator.transform.position - handIndicator.lastPosition;
@@ -77,7 +77,7 @@ public class DrumsItem : MonoBehaviour
 		handIn = this.drumHit;
 	}
 
-	// Token: 0x0600068B RID: 1675 RVA: 0x00029227 File Offset: 0x00027427
+	// Token: 0x0600068C RID: 1676 RVA: 0x00029067 File Offset: 0x00027267
 	private int RayCastHitCompare(RaycastHit a, RaycastHit b)
 	{
 		if (a.distance < b.distance)
@@ -91,7 +91,7 @@ public class DrumsItem : MonoBehaviour
 		return 1;
 	}
 
-	// Token: 0x0600068C RID: 1676 RVA: 0x00029250 File Offset: 0x00027450
+	// Token: 0x0600068D RID: 1677 RVA: 0x00029090 File Offset: 0x00027290
 	public void DrumHit(Drum tempDrumInner, bool isLeftHand, float hitVelocity)
 	{
 		if (isLeftHand)

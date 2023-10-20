@@ -3,10 +3,10 @@ using UnityEngine;
 
 namespace GorillaLocomotion.Gameplay
 {
-	// Token: 0x0200029B RID: 667
+	// Token: 0x0200029D RID: 669
 	public class GorillaZiplineSegment : MonoBehaviour
 	{
-		// Token: 0x040013F7 RID: 5111
+		// Token: 0x04001404 RID: 5124
 		public float startT;
 	}
 }

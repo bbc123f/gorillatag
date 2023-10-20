@@ -2,10 +2,10 @@
 using Photon.Pun;
 using UnityEngine;
 
-// Token: 0x0200017C RID: 380
+// Token: 0x0200017D RID: 381
 public class GorillaJoinTeamBox : GorillaTriggerBox
 {
-	// Token: 0x0600099F RID: 2463 RVA: 0x0003B06C File Offset: 0x0003926C
+	// Token: 0x060009A3 RID: 2467 RVA: 0x0003B024 File Offset: 0x00039224
 	public override void OnBoxTriggered()
 	{
 		base.OnBoxTriggered();
@@ -15,6 +15,6 @@ public class GorillaJoinTeamBox : GorillaTriggerBox
 		}
 	}
 
-	// Token: 0x04000BD1 RID: 3025
+	// Token: 0x04000BD5 RID: 3029
 	public bool joinRedTeam;
 }

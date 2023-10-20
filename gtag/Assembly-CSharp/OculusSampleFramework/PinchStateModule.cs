@@ -3,11 +3,11 @@ using UnityEngine;
 
 namespace OculusSampleFramework
 {
-	// Token: 0x020002E0 RID: 736
+	// Token: 0x020002E2 RID: 738
 	public class PinchStateModule
 	{
-		// Token: 0x17000155 RID: 341
-		// (get) Token: 0x060013DB RID: 5083 RVA: 0x00070F2D File Offset: 0x0006F12D
+		// Token: 0x17000157 RID: 343
+		// (get) Token: 0x060013E2 RID: 5090 RVA: 0x000713F9 File Offset: 0x0006F5F9
 		public bool PinchUpAndDownOnFocusedObject
 		{
 			get
@@ -16,8 +16,8 @@ namespace OculusSampleFramework
 			}
 		}
 
-		// Token: 0x17000156 RID: 342
-		// (get) Token: 0x060013DC RID: 5084 RVA: 0x00070F46 File Offset: 0x0006F146
+		// Token: 0x17000158 RID: 344
+		// (get) Token: 0x060013E3 RID: 5091 RVA: 0x00071412 File Offset: 0x0006F612
 		public bool PinchSteadyOnFocusedObject
 		{
 			get
@@ -26,8 +26,8 @@ namespace OculusSampleFramework
 			}
 		}
 
-		// Token: 0x17000157 RID: 343
-		// (get) Token: 0x060013DD RID: 5085 RVA: 0x00070F5F File Offset: 0x0006F15F
+		// Token: 0x17000159 RID: 345
+		// (get) Token: 0x060013E4 RID: 5092 RVA: 0x0007142B File Offset: 0x0006F62B
 		public bool PinchDownOnFocusedObject
 		{
 			get
@@ -36,14 +36,14 @@ namespace OculusSampleFramework
 			}
 		}
 
-		// Token: 0x060013DE RID: 5086 RVA: 0x00070F78 File Offset: 0x0006F178
+		// Token: 0x060013E5 RID: 5093 RVA: 0x00071444 File Offset: 0x0006F644
 		public PinchStateModule()
 		{
 			this._currPinchState = PinchStateModule.PinchState.None;
 			this._firstFocusedInteractable = null;
 		}
 
-		// Token: 0x060013DF RID: 5087 RVA: 0x00070F90 File Offset: 0x0006F190
+		// Token: 0x060013E6 RID: 5094 RVA: 0x0007145C File Offset: 0x0006F65C
 		public void UpdateState(OVRHand hand, Interactable currFocusedInteractable)
 		{
 			float fingerPinchStrength = hand.GetFingerPinchStrength(OVRHand.HandFinger.Index);
@@ -93,25 +93,25 @@ namespace OculusSampleFramework
 			}
 		}
 
-		// Token: 0x04001691 RID: 5777
+		// Token: 0x0400169E RID: 5790
 		private const float PINCH_STRENGTH_THRESHOLD = 1f;
 
-		// Token: 0x04001692 RID: 5778
+		// Token: 0x0400169F RID: 5791
 		private PinchStateModule.PinchState _currPinchState;
 
-		// Token: 0x04001693 RID: 5779
+		// Token: 0x040016A0 RID: 5792
 		private Interactable _firstFocusedInteractable;
 
-		// Token: 0x020004EB RID: 1259
+		// Token: 0x020004ED RID: 1261
 		private enum PinchState
 		{
-			// Token: 0x04002076 RID: 8310
+			// Token: 0x04002083 RID: 8323
 			None,
-			// Token: 0x04002077 RID: 8311
+			// Token: 0x04002084 RID: 8324
 			PinchDown,
-			// Token: 0x04002078 RID: 8312
+			// Token: 0x04002085 RID: 8325
 			PinchStay,
-			// Token: 0x04002079 RID: 8313
+			// Token: 0x04002086 RID: 8326
 			PinchUp
 		}
 	}

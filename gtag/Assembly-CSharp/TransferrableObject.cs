@@ -10,18 +10,18 @@ using UnityEngine.XR;
 // Token: 0x0200011D RID: 285
 public class TransferrableObject : HoldableObject, ISelfValidator, IRequestableOwnershipGuardCallbacks, IPreDisable
 {
-	// Token: 0x06000744 RID: 1860 RVA: 0x0002E038 File Offset: 0x0002C238
+	// Token: 0x06000745 RID: 1861 RVA: 0x0002DE78 File Offset: 0x0002C078
 	public void FixTransformOverride()
 	{
 		this.transferrableItemSlotTransformOverride = base.GetComponent<TransferrableItemSlotTransformOverride>();
 	}
 
-	// Token: 0x06000745 RID: 1861 RVA: 0x0002E046 File Offset: 0x0002C246
+	// Token: 0x06000746 RID: 1862 RVA: 0x0002DE86 File Offset: 0x0002C086
 	public void Validate(SelfValidationResult result)
 	{
 	}
 
-	// Token: 0x06000746 RID: 1862 RVA: 0x0002E048 File Offset: 0x0002C248
+	// Token: 0x06000747 RID: 1863 RVA: 0x0002DE88 File Offset: 0x0002C088
 	public void SetTargetRig(VRRig rig)
 	{
 		if (rig == null)
@@ -70,8 +70,8 @@ public class TransferrableObject : HoldableObject, ISelfValidator, IRequestableO
 		}
 	}
 
-	// Token: 0x17000051 RID: 81
-	// (get) Token: 0x06000747 RID: 1863 RVA: 0x0002E118 File Offset: 0x0002C318
+	// Token: 0x17000052 RID: 82
+	// (get) Token: 0x06000748 RID: 1864 RVA: 0x0002DF58 File Offset: 0x0002C158
 	public bool IsLocalOwnedWorldShareable
 	{
 		get
@@ -80,7 +80,7 @@ public class TransferrableObject : HoldableObject, ISelfValidator, IRequestableO
 		}
 	}
 
-	// Token: 0x06000748 RID: 1864 RVA: 0x0002E139 File Offset: 0x0002C339
+	// Token: 0x06000749 RID: 1865 RVA: 0x0002DF79 File Offset: 0x0002C179
 	public void WorldShareableRequestOwnership()
 	{
 		if (this.worldShareableInstance != null)
@@ -91,12 +91,12 @@ public class TransferrableObject : HoldableObject, ISelfValidator, IRequestableO
 		}
 	}
 
-	// Token: 0x17000052 RID: 82
-	// (get) Token: 0x06000749 RID: 1865 RVA: 0x0002E178 File Offset: 0x0002C378
-	// (set) Token: 0x0600074A RID: 1866 RVA: 0x0002E180 File Offset: 0x0002C380
+	// Token: 0x17000053 RID: 83
+	// (get) Token: 0x0600074A RID: 1866 RVA: 0x0002DFB8 File Offset: 0x0002C1B8
+	// (set) Token: 0x0600074B RID: 1867 RVA: 0x0002DFC0 File Offset: 0x0002C1C0
 	private protected bool appIsQuitting { protected get; private set; }
 
-	// Token: 0x0600074B RID: 1867 RVA: 0x0002E18C File Offset: 0x0002C38C
+	// Token: 0x0600074C RID: 1868 RVA: 0x0002DFCC File Offset: 0x0002C1CC
 	protected virtual void Awake()
 	{
 		if (this.rigidbodyInstance == null)
@@ -129,7 +129,7 @@ public class TransferrableObject : HoldableObject, ISelfValidator, IRequestableO
 		};
 	}
 
-	// Token: 0x0600074C RID: 1868 RVA: 0x0002E248 File Offset: 0x0002C448
+	// Token: 0x0600074D RID: 1869 RVA: 0x0002E088 File Offset: 0x0002C288
 	private void SetInitMatrix()
 	{
 		this.initMatrix = base.transform.LocalMatrixRelativeToParentWithScale();
@@ -158,12 +158,12 @@ public class TransferrableObject : HoldableObject, ISelfValidator, IRequestableO
 		this.positionInitialized = true;
 	}
 
-	// Token: 0x0600074D RID: 1869 RVA: 0x0002E3BD File Offset: 0x0002C5BD
+	// Token: 0x0600074E RID: 1870 RVA: 0x0002E1FD File Offset: 0x0002C3FD
 	protected virtual void Start()
 	{
 	}
 
-	// Token: 0x0600074E RID: 1870 RVA: 0x0002E3C0 File Offset: 0x0002C5C0
+	// Token: 0x0600074F RID: 1871 RVA: 0x0002E200 File Offset: 0x0002C400
 	public override void OnEnable()
 	{
 		base.OnEnable();
@@ -259,7 +259,7 @@ public class TransferrableObject : HoldableObject, ISelfValidator, IRequestableO
 		}
 	}
 
-	// Token: 0x0600074F RID: 1871 RVA: 0x0002E600 File Offset: 0x0002C800
+	// Token: 0x06000750 RID: 1872 RVA: 0x0002E440 File Offset: 0x0002C640
 	public override void OnDisable()
 	{
 		base.OnDisable();
@@ -287,7 +287,7 @@ public class TransferrableObject : HoldableObject, ISelfValidator, IRequestableO
 		this.PlayDestroyedOrDisabledEffect();
 	}
 
-	// Token: 0x06000750 RID: 1872 RVA: 0x0002E6CC File Offset: 0x0002C8CC
+	// Token: 0x06000751 RID: 1873 RVA: 0x0002E50C File Offset: 0x0002C70C
 	public void CleanupDisable()
 	{
 		this.currentState = TransferrableObject.PositionState.None;
@@ -310,7 +310,7 @@ public class TransferrableObject : HoldableObject, ISelfValidator, IRequestableO
 		transform.SetLocalMatrixRelativeToParentWithXParity(defaultTransformationMatrix);
 	}
 
-	// Token: 0x06000751 RID: 1873 RVA: 0x0002E757 File Offset: 0x0002C957
+	// Token: 0x06000752 RID: 1874 RVA: 0x0002E597 File Offset: 0x0002C797
 	public virtual void PreDisable()
 	{
 		this.itemState = TransferrableObject.ItemStates.State0;
@@ -319,7 +319,7 @@ public class TransferrableObject : HoldableObject, ISelfValidator, IRequestableO
 		this.ResetToDefaultState();
 	}
 
-	// Token: 0x06000752 RID: 1874 RVA: 0x0002E774 File Offset: 0x0002C974
+	// Token: 0x06000753 RID: 1875 RVA: 0x0002E5B4 File Offset: 0x0002C7B4
 	public virtual Matrix4x4 GetDefaultTransformationMatrix()
 	{
 		TransferrableObject.PositionState positionState = this.currentState;
@@ -334,7 +334,7 @@ public class TransferrableObject : HoldableObject, ISelfValidator, IRequestableO
 		return this.rightHandMatrix;
 	}
 
-	// Token: 0x06000753 RID: 1875 RVA: 0x0002E7A6 File Offset: 0x0002C9A6
+	// Token: 0x06000754 RID: 1876 RVA: 0x0002E5E6 File Offset: 0x0002C7E6
 	public virtual bool ShouldBeKinematic()
 	{
 		if (this.detatchOnGrab)
@@ -344,7 +344,7 @@ public class TransferrableObject : HoldableObject, ISelfValidator, IRequestableO
 		return this.currentState != TransferrableObject.PositionState.Dropped;
 	}
 
-	// Token: 0x06000754 RID: 1876 RVA: 0x0002E7E4 File Offset: 0x0002C9E4
+	// Token: 0x06000755 RID: 1877 RVA: 0x0002E624 File Offset: 0x0002C824
 	private void SpawnShareableObject()
 	{
 		if (this.isSceneObject)
@@ -379,7 +379,7 @@ public class TransferrableObject : HoldableObject, ISelfValidator, IRequestableO
 		}
 	}
 
-	// Token: 0x06000755 RID: 1877 RVA: 0x0002E870 File Offset: 0x0002CA70
+	// Token: 0x06000756 RID: 1878 RVA: 0x0002E6B0 File Offset: 0x0002C8B0
 	public void SpawnTransferableObjectViews()
 	{
 		Debug.Log("SpawnTransferableObjectViews on gameobject " + base.gameObject.name);
@@ -398,7 +398,7 @@ public class TransferrableObject : HoldableObject, ISelfValidator, IRequestableO
 		});
 	}
 
-	// Token: 0x06000756 RID: 1878 RVA: 0x0002E904 File Offset: 0x0002CB04
+	// Token: 0x06000757 RID: 1879 RVA: 0x0002E744 File Offset: 0x0002C944
 	public override void OnJoinedRoom()
 	{
 		base.OnJoinedRoom();
@@ -426,7 +426,7 @@ public class TransferrableObject : HoldableObject, ISelfValidator, IRequestableO
 		}
 	}
 
-	// Token: 0x06000757 RID: 1879 RVA: 0x0002E97C File Offset: 0x0002CB7C
+	// Token: 0x06000758 RID: 1880 RVA: 0x0002E7BC File Offset: 0x0002C9BC
 	public override void OnLeftRoom()
 	{
 		base.OnLeftRoom();
@@ -461,37 +461,37 @@ public class TransferrableObject : HoldableObject, ISelfValidator, IRequestableO
 		}
 	}
 
-	// Token: 0x06000758 RID: 1880 RVA: 0x0002EA48 File Offset: 0x0002CC48
+	// Token: 0x06000759 RID: 1881 RVA: 0x0002E888 File Offset: 0x0002CA88
 	public bool IsLocalObject()
 	{
 		return this.myRig != null && this.myRig.isOfflineVRRig;
 	}
 
-	// Token: 0x06000759 RID: 1881 RVA: 0x0002EA5F File Offset: 0x0002CC5F
+	// Token: 0x0600075A RID: 1882 RVA: 0x0002E89F File Offset: 0x0002CA9F
 	public override void OnPlayerLeftRoom(Player otherPlayer)
 	{
 		base.OnPlayerLeftRoom(otherPlayer);
 		bool flag = this.isSceneObject;
 	}
 
-	// Token: 0x0600075A RID: 1882 RVA: 0x0002EA6F File Offset: 0x0002CC6F
+	// Token: 0x0600075B RID: 1883 RVA: 0x0002E8AF File Offset: 0x0002CAAF
 	public void SetWorldShareableItem(WorldShareableItem item)
 	{
 		this.worldShareableInstance = item;
 		this.OnWorldShareableItemSpawn();
 	}
 
-	// Token: 0x0600075B RID: 1883 RVA: 0x0002EA7E File Offset: 0x0002CC7E
+	// Token: 0x0600075C RID: 1884 RVA: 0x0002E8BE File Offset: 0x0002CABE
 	protected virtual void OnWorldShareableItemSpawn()
 	{
 	}
 
-	// Token: 0x0600075C RID: 1884 RVA: 0x0002EA80 File Offset: 0x0002CC80
+	// Token: 0x0600075D RID: 1885 RVA: 0x0002E8C0 File Offset: 0x0002CAC0
 	protected virtual void PlayDestroyedOrDisabledEffect()
 	{
 	}
 
-	// Token: 0x0600075D RID: 1885 RVA: 0x0002EA84 File Offset: 0x0002CC84
+	// Token: 0x0600075E RID: 1886 RVA: 0x0002E8C4 File Offset: 0x0002CAC4
 	protected virtual void OnItemDestroyedOrDisabled()
 	{
 		if (this.worldShareableInstance)
@@ -509,7 +509,7 @@ public class TransferrableObject : HoldableObject, ISelfValidator, IRequestableO
 		this.currentState = TransferrableObject.PositionState.None;
 	}
 
-	// Token: 0x0600075E RID: 1886 RVA: 0x0002EAF3 File Offset: 0x0002CCF3
+	// Token: 0x0600075F RID: 1887 RVA: 0x0002E933 File Offset: 0x0002CB33
 	protected virtual void LateUpdate()
 	{
 		if (this.IsLocalObject() && this.canDrop)
@@ -528,7 +528,7 @@ public class TransferrableObject : HoldableObject, ISelfValidator, IRequestableO
 		this.previousState = this.currentState;
 	}
 
-	// Token: 0x0600075F RID: 1887 RVA: 0x0002EB33 File Offset: 0x0002CD33
+	// Token: 0x06000760 RID: 1888 RVA: 0x0002E973 File Offset: 0x0002CB73
 	protected Transform DefaultAnchor()
 	{
 		if (this._isDefaultAnchorSet)
@@ -540,7 +540,7 @@ public class TransferrableObject : HoldableObject, ISelfValidator, IRequestableO
 		return this._defaultAnchor;
 	}
 
-	// Token: 0x06000760 RID: 1888 RVA: 0x0002EB73 File Offset: 0x0002CD73
+	// Token: 0x06000761 RID: 1889 RVA: 0x0002E9B3 File Offset: 0x0002CBB3
 	private Transform GetAnchor(TransferrableObject.PositionState pos)
 	{
 		if (this.grabAnchor == null)
@@ -554,14 +554,14 @@ public class TransferrableObject : HoldableObject, ISelfValidator, IRequestableO
 		return this.DefaultAnchor();
 	}
 
-	// Token: 0x06000761 RID: 1889 RVA: 0x0002EBA0 File Offset: 0x0002CDA0
+	// Token: 0x06000762 RID: 1890 RVA: 0x0002E9E0 File Offset: 0x0002CBE0
 	protected bool Attached()
 	{
 		bool flag = this.InHand() && this.detatchOnGrab;
 		return !this.Dropped() && !flag;
 	}
 
-	// Token: 0x06000762 RID: 1890 RVA: 0x0002EBD0 File Offset: 0x0002CDD0
+	// Token: 0x06000763 RID: 1891 RVA: 0x0002EA10 File Offset: 0x0002CC10
 	private Transform GetTargetStorageZone(BodyDockPositions.DropPositions state)
 	{
 		switch (state)
@@ -591,7 +591,7 @@ public class TransferrableObject : HoldableObject, ISelfValidator, IRequestableO
 		throw new ArgumentOutOfRangeException();
 	}
 
-	// Token: 0x06000763 RID: 1891 RVA: 0x0002EC54 File Offset: 0x0002CE54
+	// Token: 0x06000764 RID: 1892 RVA: 0x0002EA94 File Offset: 0x0002CC94
 	public Transform GetTargetDock(TransferrableObject.PositionState state, VRRig rig)
 	{
 		BodyDockPositions myBodyDockPositions = rig.myBodyDockPositions;
@@ -634,7 +634,7 @@ public class TransferrableObject : HoldableObject, ISelfValidator, IRequestableO
 		return null;
 	}
 
-	// Token: 0x06000764 RID: 1892 RVA: 0x0002ED30 File Offset: 0x0002CF30
+	// Token: 0x06000765 RID: 1893 RVA: 0x0002EB70 File Offset: 0x0002CD70
 	private void UpdateFollowXform()
 	{
 		TransferrableObject.PositionState positionState = this.currentState;
@@ -843,7 +843,7 @@ public class TransferrableObject : HoldableObject, ISelfValidator, IRequestableO
 		}
 	}
 
-	// Token: 0x06000765 RID: 1893 RVA: 0x0002F374 File Offset: 0x0002D574
+	// Token: 0x06000766 RID: 1894 RVA: 0x0002F1B4 File Offset: 0x0002D3B4
 	public virtual void DropItem()
 	{
 		if (EquipmentInteractor.instance.leftHandHeldEquipment == this)
@@ -875,7 +875,7 @@ public class TransferrableObject : HoldableObject, ISelfValidator, IRequestableO
 		}
 	}
 
-	// Token: 0x06000766 RID: 1894 RVA: 0x0002F4A4 File Offset: 0x0002D6A4
+	// Token: 0x06000767 RID: 1895 RVA: 0x0002F2E4 File Offset: 0x0002D4E4
 	protected virtual void LateUpdateShared()
 	{
 		this.disableItem = true;
@@ -947,7 +947,7 @@ public class TransferrableObject : HoldableObject, ISelfValidator, IRequestableO
 		}
 	}
 
-	// Token: 0x06000767 RID: 1895 RVA: 0x0002F644 File Offset: 0x0002D844
+	// Token: 0x06000768 RID: 1896 RVA: 0x0002F484 File Offset: 0x0002D684
 	public virtual void ResetToHome()
 	{
 		if (this.isSceneObject)
@@ -965,7 +965,7 @@ public class TransferrableObject : HoldableObject, ISelfValidator, IRequestableO
 		}
 	}
 
-	// Token: 0x06000768 RID: 1896 RVA: 0x0002F690 File Offset: 0x0002D890
+	// Token: 0x06000769 RID: 1897 RVA: 0x0002F4D0 File Offset: 0x0002D6D0
 	protected void ResetXf()
 	{
 		if (!this.positionInitialized)
@@ -1013,7 +1013,7 @@ public class TransferrableObject : HoldableObject, ISelfValidator, IRequestableO
 		}
 	}
 
-	// Token: 0x06000769 RID: 1897 RVA: 0x0002F80C File Offset: 0x0002DA0C
+	// Token: 0x0600076A RID: 1898 RVA: 0x0002F64C File Offset: 0x0002D84C
 	protected void ReDock()
 	{
 		if (this.IsMyItem())
@@ -1027,7 +1027,7 @@ public class TransferrableObject : HoldableObject, ISelfValidator, IRequestableO
 		this.ResetXf();
 	}
 
-	// Token: 0x0600076A RID: 1898 RVA: 0x0002F864 File Offset: 0x0002DA64
+	// Token: 0x0600076B RID: 1899 RVA: 0x0002F6A4 File Offset: 0x0002D8A4
 	private void HandleLocalInput()
 	{
 		GameObject[] array;
@@ -1078,12 +1078,12 @@ public class TransferrableObject : HoldableObject, ISelfValidator, IRequestableO
 		}
 	}
 
-	// Token: 0x0600076B RID: 1899 RVA: 0x0002F98B File Offset: 0x0002DB8B
+	// Token: 0x0600076C RID: 1900 RVA: 0x0002F7CB File Offset: 0x0002D9CB
 	protected virtual void LocalMyObjectValidation()
 	{
 	}
 
-	// Token: 0x0600076C RID: 1900 RVA: 0x0002F990 File Offset: 0x0002DB90
+	// Token: 0x0600076D RID: 1901 RVA: 0x0002F7D0 File Offset: 0x0002D9D0
 	protected virtual void LocalPersistanceValidation()
 	{
 		if (this.maxDistanceFromOriginBeforeRespawn != 0f && Vector3.Distance(base.transform.position, this.originPoint.position) > this.maxDistanceFromOriginBeforeRespawn)
@@ -1109,7 +1109,7 @@ public class TransferrableObject : HoldableObject, ISelfValidator, IRequestableO
 		}
 	}
 
-	// Token: 0x0600076D RID: 1901 RVA: 0x0002FA90 File Offset: 0x0002DC90
+	// Token: 0x0600076E RID: 1902 RVA: 0x0002F8D0 File Offset: 0x0002DAD0
 	public void ObjectBeingTaken()
 	{
 		if (EquipmentInteractor.instance.leftHandHeldEquipment == this)
@@ -1124,7 +1124,7 @@ public class TransferrableObject : HoldableObject, ISelfValidator, IRequestableO
 		}
 	}
 
-	// Token: 0x0600076E RID: 1902 RVA: 0x0002FB38 File Offset: 0x0002DD38
+	// Token: 0x0600076F RID: 1903 RVA: 0x0002F978 File Offset: 0x0002DB78
 	protected virtual void LateUpdateLocal()
 	{
 		this.wasHover = this.isHover;
@@ -1147,7 +1147,7 @@ public class TransferrableObject : HoldableObject, ISelfValidator, IRequestableO
 		this.HandleLocalInput();
 	}
 
-	// Token: 0x0600076F RID: 1903 RVA: 0x0002FBEC File Offset: 0x0002DDEC
+	// Token: 0x06000770 RID: 1904 RVA: 0x0002FA2C File Offset: 0x0002DC2C
 	protected void LateUpdateReplicatedSceneObject()
 	{
 		if (this.myOnlineRig != null)
@@ -1166,7 +1166,7 @@ public class TransferrableObject : HoldableObject, ISelfValidator, IRequestableO
 		}
 	}
 
-	// Token: 0x06000770 RID: 1904 RVA: 0x0002FC90 File Offset: 0x0002DE90
+	// Token: 0x06000771 RID: 1905 RVA: 0x0002FAD0 File Offset: 0x0002DCD0
 	protected virtual void LateUpdateReplicated()
 	{
 		if (this.isSceneObject || this.shareable)
@@ -1218,7 +1218,7 @@ public class TransferrableObject : HoldableObject, ISelfValidator, IRequestableO
 		}
 	}
 
-	// Token: 0x06000771 RID: 1905 RVA: 0x0002FDEC File Offset: 0x0002DFEC
+	// Token: 0x06000772 RID: 1906 RVA: 0x0002FC2C File Offset: 0x0002DE2C
 	public virtual void ResetToDefaultState()
 	{
 		this.canAutoGrabLeft = true;
@@ -1238,7 +1238,7 @@ public class TransferrableObject : HoldableObject, ISelfValidator, IRequestableO
 		this.ResetXf();
 	}
 
-	// Token: 0x06000772 RID: 1906 RVA: 0x0002FE70 File Offset: 0x0002E070
+	// Token: 0x06000773 RID: 1907 RVA: 0x0002FCB0 File Offset: 0x0002DEB0
 	public override void OnGrab(InteractionPoint pointGrabbed, GameObject grabbingHand)
 	{
 		if (!(this.worldShareableInstance == null) && !this.worldShareableInstance.guard.isTrulyMine)
@@ -1289,7 +1289,7 @@ public class TransferrableObject : HoldableObject, ISelfValidator, IRequestableO
 		}
 	}
 
-	// Token: 0x06000773 RID: 1907 RVA: 0x000300A0 File Offset: 0x0002E2A0
+	// Token: 0x06000774 RID: 1908 RVA: 0x0002FEE0 File Offset: 0x0002E0E0
 	public override void OnRelease(DropZone zoneReleased, GameObject releasingHand)
 	{
 		if (!this.IsMyItem())
@@ -1359,7 +1359,7 @@ public class TransferrableObject : HoldableObject, ISelfValidator, IRequestableO
 		}
 	}
 
-	// Token: 0x06000774 RID: 1908 RVA: 0x00030290 File Offset: 0x0002E490
+	// Token: 0x06000775 RID: 1909 RVA: 0x000300D0 File Offset: 0x0002E2D0
 	public override void DropItemCleanup()
 	{
 		if (this.currentState == TransferrableObject.PositionState.Dropped)
@@ -1395,7 +1395,7 @@ public class TransferrableObject : HoldableObject, ISelfValidator, IRequestableO
 		}
 	}
 
-	// Token: 0x06000775 RID: 1909 RVA: 0x00030300 File Offset: 0x0002E500
+	// Token: 0x06000776 RID: 1910 RVA: 0x00030140 File Offset: 0x0002E340
 	public virtual void OnHover(InteractionPoint pointHovered, GameObject hoveringHand)
 	{
 		if (!this.IsGrabbable())
@@ -1409,7 +1409,7 @@ public class TransferrableObject : HoldableObject, ISelfValidator, IRequestableO
 		this.isHover = true;
 	}
 
-	// Token: 0x06000776 RID: 1910 RVA: 0x00030364 File Offset: 0x0002E564
+	// Token: 0x06000777 RID: 1911 RVA: 0x000301A4 File Offset: 0x0002E3A4
 	protected void ActivateItemFX(float hapticStrength, float hapticDuration, int soundIndex, float soundVolume)
 	{
 		bool flag = this.currentState == TransferrableObject.PositionState.InLeftHand;
@@ -1426,12 +1426,12 @@ public class TransferrableObject : HoldableObject, ISelfValidator, IRequestableO
 		GorillaTagger.Instance.StartVibration(flag, hapticStrength, hapticDuration);
 	}
 
-	// Token: 0x06000777 RID: 1911 RVA: 0x000303E5 File Offset: 0x0002E5E5
+	// Token: 0x06000778 RID: 1912 RVA: 0x00030225 File Offset: 0x0002E425
 	public virtual void PlayNote(int note, float volume)
 	{
 	}
 
-	// Token: 0x06000778 RID: 1912 RVA: 0x000303E7 File Offset: 0x0002E5E7
+	// Token: 0x06000779 RID: 1913 RVA: 0x00030227 File Offset: 0x0002E427
 	public virtual bool AutoGrabTrue(bool leftGrabbingHand)
 	{
 		if (!leftGrabbingHand)
@@ -1441,85 +1441,85 @@ public class TransferrableObject : HoldableObject, ISelfValidator, IRequestableO
 		return this.canAutoGrabLeft;
 	}
 
-	// Token: 0x06000779 RID: 1913 RVA: 0x000303F9 File Offset: 0x0002E5F9
+	// Token: 0x0600077A RID: 1914 RVA: 0x00030239 File Offset: 0x0002E439
 	public virtual bool CanActivate()
 	{
 		return true;
 	}
 
-	// Token: 0x0600077A RID: 1914 RVA: 0x000303FC File Offset: 0x0002E5FC
+	// Token: 0x0600077B RID: 1915 RVA: 0x0003023C File Offset: 0x0002E43C
 	public virtual bool CanDeactivate()
 	{
 		return true;
 	}
 
-	// Token: 0x0600077B RID: 1915 RVA: 0x000303FF File Offset: 0x0002E5FF
+	// Token: 0x0600077C RID: 1916 RVA: 0x0003023F File Offset: 0x0002E43F
 	public virtual void OnActivate()
 	{
 		this.latched = true;
 	}
 
-	// Token: 0x0600077C RID: 1916 RVA: 0x00030408 File Offset: 0x0002E608
+	// Token: 0x0600077D RID: 1917 RVA: 0x00030248 File Offset: 0x0002E448
 	public virtual void OnDeactivate()
 	{
 		this.latched = false;
 	}
 
-	// Token: 0x0600077D RID: 1917 RVA: 0x00030411 File Offset: 0x0002E611
+	// Token: 0x0600077E RID: 1918 RVA: 0x00030251 File Offset: 0x0002E451
 	public virtual bool IsMyItem()
 	{
 		return GorillaTagger.Instance == null || (this.targetRig != null && this.targetRig == GorillaTagger.Instance.offlineVRRig);
 	}
 
-	// Token: 0x0600077E RID: 1918 RVA: 0x0003043B File Offset: 0x0002E63B
+	// Token: 0x0600077F RID: 1919 RVA: 0x0003027B File Offset: 0x0002E47B
 	protected virtual bool IsHeld()
 	{
 		return EquipmentInteractor.instance != null && (EquipmentInteractor.instance.leftHandHeldEquipment == this || EquipmentInteractor.instance.rightHandHeldEquipment == this);
 	}
 
-	// Token: 0x0600077F RID: 1919 RVA: 0x00030470 File Offset: 0x0002E670
+	// Token: 0x06000780 RID: 1920 RVA: 0x000302B0 File Offset: 0x0002E4B0
 	public virtual bool IsGrabbable()
 	{
 		return this.IsMyItem() || ((this.isSceneObject || this.shareable) && (this.isSceneObject || this.shareable) && (this.allowPlayerStealing || this.currentState == TransferrableObject.PositionState.Dropped || this.currentState == TransferrableObject.PositionState.None));
 	}
 
-	// Token: 0x06000780 RID: 1920 RVA: 0x000304CF File Offset: 0x0002E6CF
+	// Token: 0x06000781 RID: 1921 RVA: 0x0003030F File Offset: 0x0002E50F
 	public bool InHand()
 	{
 		return this.currentState == TransferrableObject.PositionState.InLeftHand || this.currentState == TransferrableObject.PositionState.InRightHand;
 	}
 
-	// Token: 0x06000781 RID: 1921 RVA: 0x000304E5 File Offset: 0x0002E6E5
+	// Token: 0x06000782 RID: 1922 RVA: 0x00030325 File Offset: 0x0002E525
 	public bool Dropped()
 	{
 		return this.currentState == TransferrableObject.PositionState.Dropped;
 	}
 
-	// Token: 0x06000782 RID: 1922 RVA: 0x000304F4 File Offset: 0x0002E6F4
+	// Token: 0x06000783 RID: 1923 RVA: 0x00030334 File Offset: 0x0002E534
 	public bool InLeftHand()
 	{
 		return this.currentState == TransferrableObject.PositionState.InLeftHand;
 	}
 
-	// Token: 0x06000783 RID: 1923 RVA: 0x000304FF File Offset: 0x0002E6FF
+	// Token: 0x06000784 RID: 1924 RVA: 0x0003033F File Offset: 0x0002E53F
 	public bool InRightHand()
 	{
 		return this.currentState == TransferrableObject.PositionState.InRightHand;
 	}
 
-	// Token: 0x06000784 RID: 1924 RVA: 0x0003050A File Offset: 0x0002E70A
+	// Token: 0x06000785 RID: 1925 RVA: 0x0003034A File Offset: 0x0002E54A
 	public bool OnChest()
 	{
 		return this.currentState == TransferrableObject.PositionState.OnChest;
 	}
 
-	// Token: 0x06000785 RID: 1925 RVA: 0x00030516 File Offset: 0x0002E716
+	// Token: 0x06000786 RID: 1926 RVA: 0x00030356 File Offset: 0x0002E556
 	public bool OnShoulder()
 	{
 		return this.currentState == TransferrableObject.PositionState.OnLeftShoulder || this.currentState == TransferrableObject.PositionState.OnRightShoulder;
 	}
 
-	// Token: 0x06000786 RID: 1926 RVA: 0x0003052E File Offset: 0x0002E72E
+	// Token: 0x06000787 RID: 1927 RVA: 0x0003036E File Offset: 0x0002E56E
 	protected Player OwningPlayer()
 	{
 		if (this.myRig == null)
@@ -1529,7 +1529,7 @@ public class TransferrableObject : HoldableObject, ISelfValidator, IRequestableO
 		return PhotonNetwork.LocalPlayer;
 	}
 
-	// Token: 0x06000787 RID: 1927 RVA: 0x00030554 File Offset: 0x0002E754
+	// Token: 0x06000788 RID: 1928 RVA: 0x00030394 File Offset: 0x0002E594
 	public virtual void OnOwnershipTransferred(Player toPlayer, Player fromPlayer)
 	{
 		if (toPlayer != null && toPlayer.Equals(fromPlayer))
@@ -1572,7 +1572,7 @@ public class TransferrableObject : HoldableObject, ISelfValidator, IRequestableO
 		}
 	}
 
-	// Token: 0x06000788 RID: 1928 RVA: 0x000305FC File Offset: 0x0002E7FC
+	// Token: 0x06000789 RID: 1929 RVA: 0x0003043C File Offset: 0x0002E63C
 	public bool OnOwnershipRequest(Player fromPlayer)
 	{
 		if (GorillaGameManager.instance)
@@ -1618,7 +1618,7 @@ public class TransferrableObject : HoldableObject, ISelfValidator, IRequestableO
 		return false;
 	}
 
-	// Token: 0x06000789 RID: 1929 RVA: 0x000306C4 File Offset: 0x0002E8C4
+	// Token: 0x0600078A RID: 1930 RVA: 0x00030504 File Offset: 0x0002E704
 	public bool OnMasterClientAssistedTakeoverRequest(Player fromPlayer, Player toPlayer)
 	{
 		VRRig vrrig = GorillaGameManager.StaticFindRigForPlayer(fromPlayer);
@@ -1653,7 +1653,7 @@ public class TransferrableObject : HoldableObject, ISelfValidator, IRequestableO
 		return false;
 	}
 
-	// Token: 0x0600078A RID: 1930 RVA: 0x0003076C File Offset: 0x0002E96C
+	// Token: 0x0600078B RID: 1931 RVA: 0x000305AC File Offset: 0x0002E7AC
 	public void OnMyOwnerLeft()
 	{
 		if (this.currentState == TransferrableObject.PositionState.None || this.currentState == TransferrableObject.PositionState.Dropped)
@@ -1669,7 +1669,7 @@ public class TransferrableObject : HoldableObject, ISelfValidator, IRequestableO
 		}
 	}
 
-	// Token: 0x0600078B RID: 1931 RVA: 0x000307D3 File Offset: 0x0002E9D3
+	// Token: 0x0600078C RID: 1932 RVA: 0x00030613 File Offset: 0x0002E813
 	public void OnMyCreatorLeft()
 	{
 		this.OnItemDestroyedOrDisabled();
@@ -1932,51 +1932,51 @@ public class TransferrableObject : HoldableObject, ISelfValidator, IRequestableO
 	// Token: 0x04000930 RID: 2352
 	private bool transferrableItemSlotTransformOverrideApplicable;
 
-	// Token: 0x02000404 RID: 1028
+	// Token: 0x02000406 RID: 1030
 	public enum ItemStates
 	{
-		// Token: 0x04001CB0 RID: 7344
+		// Token: 0x04001CBD RID: 7357
 		State0 = 1,
-		// Token: 0x04001CB1 RID: 7345
+		// Token: 0x04001CBE RID: 7358
 		State1,
-		// Token: 0x04001CB2 RID: 7346
+		// Token: 0x04001CBF RID: 7359
 		State2 = 4,
-		// Token: 0x04001CB3 RID: 7347
+		// Token: 0x04001CC0 RID: 7360
 		State3 = 8,
-		// Token: 0x04001CB4 RID: 7348
+		// Token: 0x04001CC1 RID: 7361
 		State4 = 16
 	}
 
-	// Token: 0x02000405 RID: 1029
+	// Token: 0x02000407 RID: 1031
 	[Flags]
 	public enum PositionState
 	{
-		// Token: 0x04001CB6 RID: 7350
+		// Token: 0x04001CC3 RID: 7363
 		OnLeftArm = 1,
-		// Token: 0x04001CB7 RID: 7351
+		// Token: 0x04001CC4 RID: 7364
 		OnRightArm = 2,
-		// Token: 0x04001CB8 RID: 7352
+		// Token: 0x04001CC5 RID: 7365
 		InLeftHand = 4,
-		// Token: 0x04001CB9 RID: 7353
+		// Token: 0x04001CC6 RID: 7366
 		InRightHand = 8,
-		// Token: 0x04001CBA RID: 7354
+		// Token: 0x04001CC7 RID: 7367
 		OnChest = 16,
-		// Token: 0x04001CBB RID: 7355
+		// Token: 0x04001CC8 RID: 7368
 		OnLeftShoulder = 32,
-		// Token: 0x04001CBC RID: 7356
+		// Token: 0x04001CC9 RID: 7369
 		OnRightShoulder = 64,
-		// Token: 0x04001CBD RID: 7357
+		// Token: 0x04001CCA RID: 7370
 		Dropped = 128,
-		// Token: 0x04001CBE RID: 7358
+		// Token: 0x04001CCB RID: 7371
 		None = 0
 	}
 
-	// Token: 0x02000406 RID: 1030
+	// Token: 0x02000408 RID: 1032
 	public enum InterpolateState
 	{
-		// Token: 0x04001CC0 RID: 7360
+		// Token: 0x04001CCD RID: 7373
 		None,
-		// Token: 0x04001CC1 RID: 7361
+		// Token: 0x04001CCE RID: 7374
 		Interpolating
 	}
 }

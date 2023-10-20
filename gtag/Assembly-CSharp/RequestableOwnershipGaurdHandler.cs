@@ -8,13 +8,13 @@ using UnityEngine;
 // Token: 0x0200006B RID: 107
 internal class RequestableOwnershipGaurdHandler : IPunOwnershipCallbacks, IInRoomCallbacks
 {
-	// Token: 0x060001FE RID: 510 RVA: 0x0000DF62 File Offset: 0x0000C162
+	// Token: 0x060001FE RID: 510 RVA: 0x0000DFAA File Offset: 0x0000C1AA
 	static RequestableOwnershipGaurdHandler()
 	{
 		PhotonNetwork.AddCallbackTarget(RequestableOwnershipGaurdHandler.callbackInstance);
 	}
 
-	// Token: 0x060001FF RID: 511 RVA: 0x0000DF8C File Offset: 0x0000C18C
+	// Token: 0x060001FF RID: 511 RVA: 0x0000DFD4 File Offset: 0x0000C1D4
 	internal static void RegisterView(PhotonView view, RequestableOwnershipGuard guard)
 	{
 		if (view == null || RequestableOwnershipGaurdHandler.gaurdedViews.Contains(view))
@@ -25,7 +25,7 @@ internal class RequestableOwnershipGaurdHandler : IPunOwnershipCallbacks, IInRoo
 		RequestableOwnershipGaurdHandler.guardingLookup.Add(view, guard);
 	}
 
-	// Token: 0x06000200 RID: 512 RVA: 0x0000DFBD File Offset: 0x0000C1BD
+	// Token: 0x06000200 RID: 512 RVA: 0x0000E005 File Offset: 0x0000C205
 	internal static void RemoveView(PhotonView view)
 	{
 		if (view == null)
@@ -36,7 +36,7 @@ internal class RequestableOwnershipGaurdHandler : IPunOwnershipCallbacks, IInRoo
 		RequestableOwnershipGaurdHandler.guardingLookup.Remove(view);
 	}
 
-	// Token: 0x06000201 RID: 513 RVA: 0x0000DFE4 File Offset: 0x0000C1E4
+	// Token: 0x06000201 RID: 513 RVA: 0x0000E02C File Offset: 0x0000C22C
 	internal static void RegisterViews(PhotonView[] views, RequestableOwnershipGuard guard)
 	{
 		for (int i = 0; i < views.Length; i++)
@@ -45,7 +45,7 @@ internal class RequestableOwnershipGaurdHandler : IPunOwnershipCallbacks, IInRoo
 		}
 	}
 
-	// Token: 0x06000202 RID: 514 RVA: 0x0000E00C File Offset: 0x0000C20C
+	// Token: 0x06000202 RID: 514 RVA: 0x0000E054 File Offset: 0x0000C254
 	public static void RemoveViews(PhotonView[] views, RequestableOwnershipGuard guard)
 	{
 		for (int i = 0; i < views.Length; i++)
@@ -54,7 +54,7 @@ internal class RequestableOwnershipGaurdHandler : IPunOwnershipCallbacks, IInRoo
 		}
 	}
 
-	// Token: 0x06000203 RID: 515 RVA: 0x0000E034 File Offset: 0x0000C234
+	// Token: 0x06000203 RID: 515 RVA: 0x0000E07C File Offset: 0x0000C27C
 	void IPunOwnershipCallbacks.OnOwnershipTransfered(PhotonView targetView, Player previousOwner)
 	{
 		if (!RequestableOwnershipGaurdHandler.gaurdedViews.Contains(targetView))
@@ -74,37 +74,37 @@ internal class RequestableOwnershipGaurdHandler : IPunOwnershipCallbacks, IInRoo
 		}
 	}
 
-	// Token: 0x06000204 RID: 516 RVA: 0x0000E099 File Offset: 0x0000C299
+	// Token: 0x06000204 RID: 516 RVA: 0x0000E0E1 File Offset: 0x0000C2E1
 	void IPunOwnershipCallbacks.OnOwnershipRequest(PhotonView targetView, Player requestingPlayer)
 	{
 	}
 
-	// Token: 0x06000205 RID: 517 RVA: 0x0000E09B File Offset: 0x0000C29B
+	// Token: 0x06000205 RID: 517 RVA: 0x0000E0E3 File Offset: 0x0000C2E3
 	void IPunOwnershipCallbacks.OnOwnershipTransferFailed(PhotonView targetView, Player senderOfFailedRequest)
 	{
 	}
 
-	// Token: 0x06000206 RID: 518 RVA: 0x0000E09D File Offset: 0x0000C29D
+	// Token: 0x06000206 RID: 518 RVA: 0x0000E0E5 File Offset: 0x0000C2E5
 	public void OnPlayerEnteredRoom(Player newPlayer)
 	{
 	}
 
-	// Token: 0x06000207 RID: 519 RVA: 0x0000E09F File Offset: 0x0000C29F
+	// Token: 0x06000207 RID: 519 RVA: 0x0000E0E7 File Offset: 0x0000C2E7
 	public void OnPlayerLeftRoom(Player otherPlayer)
 	{
 	}
 
-	// Token: 0x06000208 RID: 520 RVA: 0x0000E0A1 File Offset: 0x0000C2A1
+	// Token: 0x06000208 RID: 520 RVA: 0x0000E0E9 File Offset: 0x0000C2E9
 	public void OnRoomPropertiesUpdate(Hashtable propertiesThatChanged)
 	{
 	}
 
-	// Token: 0x06000209 RID: 521 RVA: 0x0000E0A3 File Offset: 0x0000C2A3
+	// Token: 0x06000209 RID: 521 RVA: 0x0000E0EB File Offset: 0x0000C2EB
 	public void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
 	{
 	}
 
-	// Token: 0x0600020A RID: 522 RVA: 0x0000E0A8 File Offset: 0x0000C2A8
+	// Token: 0x0600020A RID: 522 RVA: 0x0000E0F0 File Offset: 0x0000C2F0
 	void IInRoomCallbacks.OnMasterClientSwitched(Player newMasterClient)
 	{
 		foreach (PhotonView photonView in RequestableOwnershipGaurdHandler.gaurdedViews)

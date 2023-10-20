@@ -4,13 +4,13 @@ using UnityEngine;
 // Token: 0x02000074 RID: 116
 public class ThermalSourceVolume : MonoBehaviour
 {
-	// Token: 0x0600024C RID: 588 RVA: 0x0000F7A1 File Offset: 0x0000D9A1
+	// Token: 0x0600024C RID: 588 RVA: 0x0000F57D File Offset: 0x0000D77D
 	protected void OnEnable()
 	{
 		ThermalManager.Register(this);
 	}
 
-	// Token: 0x0600024D RID: 589 RVA: 0x0000F7A9 File Offset: 0x0000D9A9
+	// Token: 0x0600024D RID: 589 RVA: 0x0000F585 File Offset: 0x0000D785
 	protected void OnDisable()
 	{
 		ThermalManager.Unregister(this);

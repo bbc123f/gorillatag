@@ -14,11 +14,11 @@ using UnityEngine.UI;
 
 namespace GorillaNetworking
 {
-	// Token: 0x020002B8 RID: 696
+	// Token: 0x020002BA RID: 698
 	public class PlayFabAuthenticator : MonoBehaviour
 	{
-		// Token: 0x17000119 RID: 281
-		// (get) Token: 0x060012CF RID: 4815 RVA: 0x0006D880 File Offset: 0x0006BA80
+		// Token: 0x1700011B RID: 283
+		// (get) Token: 0x060012D6 RID: 4822 RVA: 0x0006DD4C File Offset: 0x0006BF4C
 		public GorillaComputer gorillaComputer
 		{
 			get
@@ -27,7 +27,7 @@ namespace GorillaNetworking
 			}
 		}
 
-		// Token: 0x060012D0 RID: 4816 RVA: 0x0006D88C File Offset: 0x0006BA8C
+		// Token: 0x060012D7 RID: 4823 RVA: 0x0006DD58 File Offset: 0x0006BF58
 		public void Awake()
 		{
 			if (PlayFabAuthenticator.instance == null)
@@ -53,7 +53,7 @@ namespace GorillaNetworking
 			PlayFabSettings.DisableFocusTimeCollection = true;
 		}
 
-		// Token: 0x060012D1 RID: 4817 RVA: 0x0006D940 File Offset: 0x0006BB40
+		// Token: 0x060012D8 RID: 4824 RVA: 0x0006DE0C File Offset: 0x0006C00C
 		public void AuthenticateWithPlayFab()
 		{
 			if (!this.loginFailed)
@@ -76,7 +76,7 @@ namespace GorillaNetworking
 			}
 		}
 
-		// Token: 0x060012D2 RID: 4818 RVA: 0x0006D9DC File Offset: 0x0006BBDC
+		// Token: 0x060012D9 RID: 4825 RVA: 0x0006DEA8 File Offset: 0x0006C0A8
 		private void OnGetAuthSessionTicketResponse(GetAuthSessionTicketResponse_t pCallback)
 		{
 			Debug.Log("Got steam auth session ticket!");
@@ -88,7 +88,7 @@ namespace GorillaNetworking
 			}, new Action<LoginResult>(this.OnLoginWithSteamResponse), new Action<PlayFabError>(this.OnPlayFabError), null, null);
 		}
 
-		// Token: 0x060012D3 RID: 4819 RVA: 0x0006DA48 File Offset: 0x0006BC48
+		// Token: 0x060012DA RID: 4826 RVA: 0x0006DF14 File Offset: 0x0006C114
 		private void OnLoginWithSteamResponse(LoginResult obj)
 		{
 			this._playFabId = obj.PlayFabId;
@@ -101,7 +101,7 @@ namespace GorillaNetworking
 			}, new Action<bool>(this.OnCachePlayFabIdRequest)));
 		}
 
-		// Token: 0x060012D4 RID: 4820 RVA: 0x0006DAAF File Offset: 0x0006BCAF
+		// Token: 0x060012DB RID: 4827 RVA: 0x0006DF7B File Offset: 0x0006C17B
 		private void OnCachePlayFabIdRequest(bool success)
 		{
 			if (success)
@@ -113,7 +113,7 @@ namespace GorillaNetworking
 			Debug.LogError("Could not cache PlayFab Id.  Cannot continue.");
 		}
 
-		// Token: 0x060012D5 RID: 4821 RVA: 0x0006DACF File Offset: 0x0006BCCF
+		// Token: 0x060012DC RID: 4828 RVA: 0x0006DF9B File Offset: 0x0006C19B
 		private void MaybeGetNonce(LoginResult obj)
 		{
 			this._playFabId = obj.PlayFabId;
@@ -121,13 +121,13 @@ namespace GorillaNetworking
 			this.AdvanceLogin();
 		}
 
-		// Token: 0x060012D6 RID: 4822 RVA: 0x0006DAEF File Offset: 0x0006BCEF
+		// Token: 0x060012DD RID: 4829 RVA: 0x0006DFBB File Offset: 0x0006C1BB
 		private void AdvanceLogin()
 		{
 			this.RequestPhotonToken(this._playFabId, this._sessionTicket);
 		}
 
-		// Token: 0x060012D7 RID: 4823 RVA: 0x0006DB04 File Offset: 0x0006BD04
+		// Token: 0x060012DE RID: 4830 RVA: 0x0006DFD0 File Offset: 0x0006C1D0
 		private void RequestPhotonToken(string playFabId, string sessionTicket)
 		{
 			this.LogMessage("Received Title Data. Requesting photon token for app ID: " + PhotonNetwork.PhotonServerSettings.AppSettings.AppIdRealtime + " and title ID: " + PlayFabSettings.TitleId);
@@ -140,7 +140,7 @@ namespace GorillaNetworking
 			}, new Action<GetPhotonAuthenticationTokenResult>(this.AuthenticateWithPhoton), new Action<PlayFabError>(this.OnPlayFabError), null, null);
 		}
 
-		// Token: 0x060012D8 RID: 4824 RVA: 0x0006DBAC File Offset: 0x0006BDAC
+		// Token: 0x060012DF RID: 4831 RVA: 0x0006E078 File Offset: 0x0006C278
 		private void AuthenticateWithPhoton(GetPhotonAuthenticationTokenResult photonTokenResult)
 		{
 			AuthenticationValues authenticationValues = new AuthenticationValues(PlayFabSettings.DeviceUniqueIdentifier);
@@ -213,7 +213,7 @@ namespace GorillaNetworking
 			}
 		}
 
-		// Token: 0x060012D9 RID: 4825 RVA: 0x0006DD3C File Offset: 0x0006BF3C
+		// Token: 0x060012E0 RID: 4832 RVA: 0x0006E208 File Offset: 0x0006C408
 		private void OnPlayFabError(PlayFabError obj)
 		{
 			this.LogMessage(obj.ErrorMessage);
@@ -261,7 +261,7 @@ namespace GorillaNetworking
 			}
 		}
 
-		// Token: 0x060012DA RID: 4826 RVA: 0x0006DF74 File Offset: 0x0006C174
+		// Token: 0x060012E1 RID: 4833 RVA: 0x0006E440 File Offset: 0x0006C640
 		private static void AddGenericId(string serviceName, string userId)
 		{
 			AddGenericIDRequest addGenericIDRequest = new AddGenericIDRequest();
@@ -278,12 +278,12 @@ namespace GorillaNetworking
 			}, null, null);
 		}
 
-		// Token: 0x060012DB RID: 4827 RVA: 0x0006DFE4 File Offset: 0x0006C1E4
+		// Token: 0x060012E2 RID: 4834 RVA: 0x0006E4B0 File Offset: 0x0006C6B0
 		public void LogMessage(string message)
 		{
 		}
 
-		// Token: 0x060012DC RID: 4828 RVA: 0x0006DFE8 File Offset: 0x0006C1E8
+		// Token: 0x060012E3 RID: 4835 RVA: 0x0006E4B4 File Offset: 0x0006C6B4
 		private void GetPlayerDisplayName(string playFabId)
 		{
 			GetPlayerProfileRequest getPlayerProfileRequest = new GetPlayerProfileRequest();
@@ -301,7 +301,7 @@ namespace GorillaNetworking
 			}, null, null);
 		}
 
-		// Token: 0x060012DD RID: 4829 RVA: 0x0006E048 File Offset: 0x0006C248
+		// Token: 0x060012E4 RID: 4836 RVA: 0x0006E514 File Offset: 0x0006C714
 		public void SetDisplayName(string playerName)
 		{
 			if (this._displayName == null || (this._displayName.Length > 4 && this._displayName.Substring(0, this._displayName.Length - 4) != playerName))
@@ -318,7 +318,7 @@ namespace GorillaNetworking
 			}
 		}
 
-		// Token: 0x060012DE RID: 4830 RVA: 0x0006E0E8 File Offset: 0x0006C2E8
+		// Token: 0x060012E5 RID: 4837 RVA: 0x0006E5B4 File Offset: 0x0006C7B4
 		public void ScreenDebug(string debugString)
 		{
 			Debug.Log(debugString);
@@ -329,13 +329,13 @@ namespace GorillaNetworking
 			}
 		}
 
-		// Token: 0x060012DF RID: 4831 RVA: 0x0006E114 File Offset: 0x0006C314
+		// Token: 0x060012E6 RID: 4838 RVA: 0x0006E5E0 File Offset: 0x0006C7E0
 		public void ScreenDebugClear()
 		{
 			this.debugText.text = "";
 		}
 
-		// Token: 0x060012E0 RID: 4832 RVA: 0x0006E128 File Offset: 0x0006C328
+		// Token: 0x060012E7 RID: 4839 RVA: 0x0006E5F4 File Offset: 0x0006C7F4
 		public string GetSteamAuthTicket()
 		{
 			Array.Resize<byte>(ref this.ticketBlob, (int)this.ticketSize);
@@ -347,7 +347,7 @@ namespace GorillaNetworking
 			return stringBuilder.ToString();
 		}
 
-		// Token: 0x060012E1 RID: 4833 RVA: 0x0006E17D File Offset: 0x0006C37D
+		// Token: 0x060012E8 RID: 4840 RVA: 0x0006E649 File Offset: 0x0006C849
 		public IEnumerator PlayfabAuthenticate(PlayFabAuthenticator.PlayfabAuthRequestData data, Action<PlayFabAuthenticator.PlayfabAuthResponseData> callback)
 		{
 			UnityWebRequest request = new UnityWebRequest("https://auth-prod.gtag-cf.com/api/PlayFabAuthentication", "POST");
@@ -399,7 +399,7 @@ namespace GorillaNetworking
 			yield break;
 		}
 
-		// Token: 0x060012E2 RID: 4834 RVA: 0x0006E19C File Offset: 0x0006C39C
+		// Token: 0x060012E9 RID: 4841 RVA: 0x0006E668 File Offset: 0x0006C868
 		private void ShowBanMessage(PlayFabAuthenticator.BanInfo banInfo)
 		{
 			try
@@ -421,7 +421,7 @@ namespace GorillaNetworking
 			}
 		}
 
-		// Token: 0x060012E3 RID: 4835 RVA: 0x0006E250 File Offset: 0x0006C450
+		// Token: 0x060012EA RID: 4842 RVA: 0x0006E71C File Offset: 0x0006C91C
 		public IEnumerator CachePlayFabId(PlayFabAuthenticator.CachePlayFabIdRequest data, Action<bool> callback)
 		{
 			Debug.Log("Trying to cache playfab Id");
@@ -472,155 +472,155 @@ namespace GorillaNetworking
 			yield break;
 		}
 
-		// Token: 0x040015D2 RID: 5586
+		// Token: 0x040015DF RID: 5599
 		public static volatile PlayFabAuthenticator instance;
 
-		// Token: 0x040015D3 RID: 5587
+		// Token: 0x040015E0 RID: 5600
 		public const string Playfab_TitleId_Prod = "63FDD";
 
-		// Token: 0x040015D4 RID: 5588
+		// Token: 0x040015E1 RID: 5601
 		public const string Playfab_TitleId_Dev = "195C0";
 
-		// Token: 0x040015D5 RID: 5589
+		// Token: 0x040015E2 RID: 5602
 		public const string Playfab_Auth_API = "https://auth-prod.gtag-cf.com";
 
-		// Token: 0x040015D6 RID: 5590
+		// Token: 0x040015E3 RID: 5603
 		public string _playFabPlayerIdCache;
 
-		// Token: 0x040015D7 RID: 5591
+		// Token: 0x040015E4 RID: 5604
 		private string _sessionTicket;
 
-		// Token: 0x040015D8 RID: 5592
+		// Token: 0x040015E5 RID: 5605
 		private string _playFabId;
 
-		// Token: 0x040015D9 RID: 5593
+		// Token: 0x040015E6 RID: 5606
 		private string _displayName;
 
-		// Token: 0x040015DA RID: 5594
+		// Token: 0x040015E7 RID: 5607
 		private string _nonce;
 
-		// Token: 0x040015DB RID: 5595
+		// Token: 0x040015E8 RID: 5608
 		private string _orgScopedId;
 
-		// Token: 0x040015DC RID: 5596
+		// Token: 0x040015E9 RID: 5609
 		public string userID;
 
-		// Token: 0x040015DD RID: 5597
+		// Token: 0x040015EA RID: 5610
 		private string userToken;
 
-		// Token: 0x040015DE RID: 5598
+		// Token: 0x040015EB RID: 5611
 		private string platform;
 
-		// Token: 0x040015DF RID: 5599
+		// Token: 0x040015EC RID: 5612
 		private byte[] m_Ticket;
 
-		// Token: 0x040015E0 RID: 5600
+		// Token: 0x040015ED RID: 5613
 		private uint m_pcbTicket;
 
-		// Token: 0x040015E1 RID: 5601
+		// Token: 0x040015EE RID: 5614
 		public Text debugText;
 
-		// Token: 0x040015E2 RID: 5602
+		// Token: 0x040015EF RID: 5615
 		public bool screenDebugMode;
 
-		// Token: 0x040015E3 RID: 5603
+		// Token: 0x040015F0 RID: 5616
 		public bool loginFailed;
 
-		// Token: 0x040015E4 RID: 5604
+		// Token: 0x040015F1 RID: 5617
 		[FormerlySerializedAs("loginDisplayID")]
 		public string oculusID = "";
 
-		// Token: 0x040015E5 RID: 5605
+		// Token: 0x040015F2 RID: 5618
 		public GameObject emptyObject;
 
-		// Token: 0x040015E6 RID: 5606
+		// Token: 0x040015F3 RID: 5619
 		private int playFabAuthRetryCount;
 
-		// Token: 0x040015E7 RID: 5607
+		// Token: 0x040015F4 RID: 5620
 		private int playFabMaxRetries = 5;
 
-		// Token: 0x040015E8 RID: 5608
+		// Token: 0x040015F5 RID: 5621
 		private int playFabCacheRetryCount;
 
-		// Token: 0x040015E9 RID: 5609
+		// Token: 0x040015F6 RID: 5622
 		private int playFabCacheMaxRetries = 5;
 
-		// Token: 0x040015EA RID: 5610
+		// Token: 0x040015F7 RID: 5623
 		private HAuthTicket m_HAuthTicket;
 
-		// Token: 0x040015EB RID: 5611
+		// Token: 0x040015F8 RID: 5624
 		private byte[] ticketBlob = new byte[1024];
 
-		// Token: 0x040015EC RID: 5612
+		// Token: 0x040015F9 RID: 5625
 		private uint ticketSize;
 
-		// Token: 0x040015ED RID: 5613
+		// Token: 0x040015FA RID: 5626
 		protected Callback<GetAuthSessionTicketResponse_t> m_GetAuthSessionTicketResponse;
-
-		// Token: 0x020004D5 RID: 1237
-		[Serializable]
-		public class CachePlayFabIdRequest
-		{
-			// Token: 0x04002021 RID: 8225
-			public string Platform;
-
-			// Token: 0x04002022 RID: 8226
-			public string SessionTicket;
-
-			// Token: 0x04002023 RID: 8227
-			public string PlayFabId;
-		}
-
-		// Token: 0x020004D6 RID: 1238
-		[Serializable]
-		public class PlayfabAuthRequestData
-		{
-			// Token: 0x04002024 RID: 8228
-			public string CustomId;
-
-			// Token: 0x04002025 RID: 8229
-			public string AppId;
-
-			// Token: 0x04002026 RID: 8230
-			public string AppVersion;
-
-			// Token: 0x04002027 RID: 8231
-			public string Nonce;
-
-			// Token: 0x04002028 RID: 8232
-			public string OculusId;
-
-			// Token: 0x04002029 RID: 8233
-			public string Platform;
-		}
 
 		// Token: 0x020004D7 RID: 1239
 		[Serializable]
-		public class PlayfabAuthResponseData
+		public class CachePlayFabIdRequest
 		{
-			// Token: 0x0400202A RID: 8234
+			// Token: 0x0400202E RID: 8238
+			public string Platform;
+
+			// Token: 0x0400202F RID: 8239
 			public string SessionTicket;
 
-			// Token: 0x0400202B RID: 8235
-			public string EntityToken;
-
-			// Token: 0x0400202C RID: 8236
+			// Token: 0x04002030 RID: 8240
 			public string PlayFabId;
-
-			// Token: 0x0400202D RID: 8237
-			public string EntityId;
-
-			// Token: 0x0400202E RID: 8238
-			public string EntityType;
 		}
 
 		// Token: 0x020004D8 RID: 1240
+		[Serializable]
+		public class PlayfabAuthRequestData
+		{
+			// Token: 0x04002031 RID: 8241
+			public string CustomId;
+
+			// Token: 0x04002032 RID: 8242
+			public string AppId;
+
+			// Token: 0x04002033 RID: 8243
+			public string AppVersion;
+
+			// Token: 0x04002034 RID: 8244
+			public string Nonce;
+
+			// Token: 0x04002035 RID: 8245
+			public string OculusId;
+
+			// Token: 0x04002036 RID: 8246
+			public string Platform;
+		}
+
+		// Token: 0x020004D9 RID: 1241
+		[Serializable]
+		public class PlayfabAuthResponseData
+		{
+			// Token: 0x04002037 RID: 8247
+			public string SessionTicket;
+
+			// Token: 0x04002038 RID: 8248
+			public string EntityToken;
+
+			// Token: 0x04002039 RID: 8249
+			public string PlayFabId;
+
+			// Token: 0x0400203A RID: 8250
+			public string EntityId;
+
+			// Token: 0x0400203B RID: 8251
+			public string EntityType;
+		}
+
+		// Token: 0x020004DA RID: 1242
 		public class BanInfo
 		{
-			// Token: 0x0400202F RID: 8239
+			// Token: 0x0400203C RID: 8252
 			public string BanMessage;
 
-			// Token: 0x04002030 RID: 8240
+			// Token: 0x0400203D RID: 8253
 			public string BanExpirationTime;
 		}
 	}

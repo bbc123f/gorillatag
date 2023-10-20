@@ -5,7 +5,7 @@ using UnityEngine.XR;
 // Token: 0x0200014C RID: 332
 public class AutomaticAdjustIPD : MonoBehaviour
 {
-	// Token: 0x06000849 RID: 2121 RVA: 0x00033784 File Offset: 0x00031984
+	// Token: 0x0600084A RID: 2122 RVA: 0x000335C4 File Offset: 0x000317C4
 	private void Update()
 	{
 		InputDevice inputDevice = this.headset;

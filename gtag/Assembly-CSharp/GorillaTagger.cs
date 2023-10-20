@@ -12,11 +12,11 @@ using Steamworks;
 using UnityEngine;
 using UnityEngine.XR;
 
-// Token: 0x02000184 RID: 388
+// Token: 0x02000185 RID: 389
 public class GorillaTagger : MonoBehaviour, IGuidedRefReceiver, IGuidedRefMonoBehaviour, IGuidedRefObject
 {
-	// Token: 0x17000070 RID: 112
-	// (get) Token: 0x060009D7 RID: 2519 RVA: 0x0003C21B File Offset: 0x0003A41B
+	// Token: 0x17000072 RID: 114
+	// (get) Token: 0x060009DC RID: 2524 RVA: 0x0003C34B File Offset: 0x0003A54B
 	public static GorillaTagger Instance
 	{
 		get
@@ -25,8 +25,8 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiver, IGuidedRefMonoBe
 		}
 	}
 
-	// Token: 0x17000071 RID: 113
-	// (get) Token: 0x060009D8 RID: 2520 RVA: 0x0003C222 File Offset: 0x0003A422
+	// Token: 0x17000073 RID: 115
+	// (get) Token: 0x060009DD RID: 2525 RVA: 0x0003C352 File Offset: 0x0003A552
 	public PhotonView myVRRig
 	{
 		get
@@ -35,18 +35,18 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiver, IGuidedRefMonoBe
 		}
 	}
 
-	// Token: 0x17000072 RID: 114
-	// (get) Token: 0x060009D9 RID: 2521 RVA: 0x0003C22F File Offset: 0x0003A42F
-	// (set) Token: 0x060009DA RID: 2522 RVA: 0x0003C237 File Offset: 0x0003A437
+	// Token: 0x17000074 RID: 116
+	// (get) Token: 0x060009DE RID: 2526 RVA: 0x0003C35F File Offset: 0x0003A55F
+	// (set) Token: 0x060009DF RID: 2527 RVA: 0x0003C367 File Offset: 0x0003A567
 	public Rigidbody rigidbody { get; private set; }
 
-	// Token: 0x17000073 RID: 115
-	// (get) Token: 0x060009DB RID: 2523 RVA: 0x0003C240 File Offset: 0x0003A440
-	// (set) Token: 0x060009DC RID: 2524 RVA: 0x0003C248 File Offset: 0x0003A448
+	// Token: 0x17000075 RID: 117
+	// (get) Token: 0x060009E0 RID: 2528 RVA: 0x0003C370 File Offset: 0x0003A570
+	// (set) Token: 0x060009E1 RID: 2529 RVA: 0x0003C378 File Offset: 0x0003A578
 	public Recorder myRecorder { get; private set; }
 
-	// Token: 0x17000074 RID: 116
-	// (get) Token: 0x060009DD RID: 2525 RVA: 0x0003C251 File Offset: 0x0003A451
+	// Token: 0x17000076 RID: 118
+	// (get) Token: 0x060009E2 RID: 2530 RVA: 0x0003C381 File Offset: 0x0003A581
 	public float sphereCastRadius
 	{
 		get
@@ -55,7 +55,7 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiver, IGuidedRefMonoBe
 		}
 	}
 
-	// Token: 0x060009DE RID: 2526 RVA: 0x0003C258 File Offset: 0x0003A458
+	// Token: 0x060009E3 RID: 2531 RVA: 0x0003C388 File Offset: 0x0003A588
 	protected void Awake()
 	{
 		this.GuidedRefInitialize();
@@ -91,7 +91,7 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiver, IGuidedRefMonoBe
 		this.rigidbody = base.GetComponent<Rigidbody>();
 	}
 
-	// Token: 0x060009DF RID: 2527 RVA: 0x0003C405 File Offset: 0x0003A605
+	// Token: 0x060009E4 RID: 2532 RVA: 0x0003C535 File Offset: 0x0003A735
 	protected void OnDestroy()
 	{
 		if (GorillaTagger._instance == this)
@@ -101,7 +101,7 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiver, IGuidedRefMonoBe
 		}
 	}
 
-	// Token: 0x060009E0 RID: 2528 RVA: 0x0003C420 File Offset: 0x0003A620
+	// Token: 0x060009E5 RID: 2533 RVA: 0x0003C550 File Offset: 0x0003A750
 	private void IsXRSubsystemActive()
 	{
 		this.loadedDeviceName = XRSettings.loadedDeviceName;
@@ -121,7 +121,7 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiver, IGuidedRefMonoBe
 		this.xrSubsystemIsActive = false;
 	}
 
-	// Token: 0x060009E1 RID: 2529 RVA: 0x0003C494 File Offset: 0x0003A694
+	// Token: 0x060009E6 RID: 2534 RVA: 0x0003C5C4 File Offset: 0x0003A7C4
 	protected void Start()
 	{
 		this.IsXRSubsystemActive();
@@ -143,13 +143,13 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiver, IGuidedRefMonoBe
 		}
 	}
 
-	// Token: 0x060009E2 RID: 2530 RVA: 0x0003C5DC File Offset: 0x0003A7DC
+	// Token: 0x060009E7 RID: 2535 RVA: 0x0003C70C File Offset: 0x0003A90C
 	private void OnGameOverlayActivated(GameOverlayActivated_t pCallback)
 	{
 		this.isGameOverlayActive = (pCallback.m_bActive > 0);
 	}
 
-	// Token: 0x060009E3 RID: 2531 RVA: 0x0003C5F0 File Offset: 0x0003A7F0
+	// Token: 0x060009E8 RID: 2536 RVA: 0x0003C720 File Offset: 0x0003A920
 	protected void LateUpdate()
 	{
 		if (this.isGameOverlayActive)
@@ -442,7 +442,7 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiver, IGuidedRefMonoBe
 		}
 	}
 
-	// Token: 0x060009E4 RID: 2532 RVA: 0x0003D4D4 File Offset: 0x0003B6D4
+	// Token: 0x060009E9 RID: 2537 RVA: 0x0003D604 File Offset: 0x0003B804
 	private bool TryToTag(RaycastHit hitInfo, bool isBodyTag, out Photon.Realtime.Player taggedPlayer, out Photon.Realtime.Player touchedPlayer)
 	{
 		taggedPlayer = null;
@@ -473,13 +473,13 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiver, IGuidedRefMonoBe
 		return false;
 	}
 
-	// Token: 0x060009E5 RID: 2533 RVA: 0x0003D619 File Offset: 0x0003B819
+	// Token: 0x060009EA RID: 2538 RVA: 0x0003D749 File Offset: 0x0003B949
 	public void StartVibration(bool forLeftController, float amplitude, float duration)
 	{
 		base.StartCoroutine(this.HapticPulses(forLeftController, amplitude, duration));
 	}
 
-	// Token: 0x060009E6 RID: 2534 RVA: 0x0003D62B File Offset: 0x0003B82B
+	// Token: 0x060009EB RID: 2539 RVA: 0x0003D75B File Offset: 0x0003B95B
 	private IEnumerator HapticPulses(bool forLeftController, float amplitude, float duration)
 	{
 		float startTime = Time.time;
@@ -501,7 +501,7 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiver, IGuidedRefMonoBe
 		yield break;
 	}
 
-	// Token: 0x060009E7 RID: 2535 RVA: 0x0003D650 File Offset: 0x0003B850
+	// Token: 0x060009EC RID: 2540 RVA: 0x0003D780 File Offset: 0x0003B980
 	public void DoVibration(XRNode node, float amplitude, float duration)
 	{
 		InputDevice deviceAtXRNode = InputDevices.GetDeviceAtXRNode(node);
@@ -511,7 +511,7 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiver, IGuidedRefMonoBe
 		}
 	}
 
-	// Token: 0x060009E8 RID: 2536 RVA: 0x0003D678 File Offset: 0x0003B878
+	// Token: 0x060009ED RID: 2541 RVA: 0x0003D7A8 File Offset: 0x0003B9A8
 	public void UpdateColor(float red, float green, float blue)
 	{
 		if (GorillaComputer.instance != null)
@@ -528,7 +528,7 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiver, IGuidedRefMonoBe
 		}
 	}
 
-	// Token: 0x060009E9 RID: 2537 RVA: 0x0003D6E4 File Offset: 0x0003B8E4
+	// Token: 0x060009EE RID: 2542 RVA: 0x0003D814 File Offset: 0x0003BA14
 	protected void OnTriggerEnter(Collider other)
 	{
 		if (PhotonNetwork.InRoom && other.gameObject.layer == 15 && other.gameObject != null && other.gameObject.GetComponent<GorillaTriggerBox>() != null)
@@ -546,7 +546,7 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiver, IGuidedRefMonoBe
 		}
 	}
 
-	// Token: 0x060009EA RID: 2538 RVA: 0x0003D76C File Offset: 0x0003B96C
+	// Token: 0x060009EF RID: 2543 RVA: 0x0003D89C File Offset: 0x0003BA9C
 	public void ShowCosmeticParticles(bool showParticles)
 	{
 		if (showParticles)
@@ -559,7 +559,7 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiver, IGuidedRefMonoBe
 		this.mirrorCamera.cullingMask &= ~(1 << LayerMask.NameToLayer("GorillaCosmeticParticle"));
 	}
 
-	// Token: 0x060009EB RID: 2539 RVA: 0x0003D80D File Offset: 0x0003BA0D
+	// Token: 0x060009F0 RID: 2544 RVA: 0x0003D93D File Offset: 0x0003BB3D
 	public void ApplyStatusEffect(GorillaTagger.StatusEffect newStatus, float duration)
 	{
 		this.EndStatusEffect(this.currentStatus);
@@ -578,7 +578,7 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiver, IGuidedRefMonoBe
 		}
 	}
 
-	// Token: 0x060009EC RID: 2540 RVA: 0x0003D84D File Offset: 0x0003BA4D
+	// Token: 0x060009F1 RID: 2545 RVA: 0x0003D97D File Offset: 0x0003BB7D
 	private void CheckEndStatusEffect()
 	{
 		if (Time.time > this.statusEndTime)
@@ -587,7 +587,7 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiver, IGuidedRefMonoBe
 		}
 	}
 
-	// Token: 0x060009ED RID: 2541 RVA: 0x0003D868 File Offset: 0x0003BA68
+	// Token: 0x060009F2 RID: 2546 RVA: 0x0003D998 File Offset: 0x0003BB98
 	private void EndStatusEffect(GorillaTagger.StatusEffect effectToEnd)
 	{
 		switch (effectToEnd)
@@ -606,13 +606,13 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiver, IGuidedRefMonoBe
 		}
 	}
 
-	// Token: 0x060009EE RID: 2542 RVA: 0x0003D897 File Offset: 0x0003BA97
+	// Token: 0x060009F3 RID: 2547 RVA: 0x0003D9C7 File Offset: 0x0003BBC7
 	private float CalcSlideControl(float fps)
 	{
 		return Mathf.Pow(Mathf.Pow(1f - this.baseSlideControl, 120f), 1f / fps);
 	}
 
-	// Token: 0x060009EF RID: 2543 RVA: 0x0003D8BB File Offset: 0x0003BABB
+	// Token: 0x060009F4 RID: 2548 RVA: 0x0003D9EB File Offset: 0x0003BBEB
 	public static void OnPlayerSpawned(Action action)
 	{
 		if (GorillaTagger._instance)
@@ -623,13 +623,13 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiver, IGuidedRefMonoBe
 		GorillaTagger.onPlayerSpawnedRootCallback = (Action)Delegate.Combine(GorillaTagger.onPlayerSpawnedRootCallback, action);
 	}
 
-	// Token: 0x060009F0 RID: 2544 RVA: 0x0003D8E5 File Offset: 0x0003BAE5
+	// Token: 0x060009F5 RID: 2549 RVA: 0x0003DA15 File Offset: 0x0003BC15
 	public void GuidedRefInitialize()
 	{
 		this.offlineVRRig_guidedRef.fieldId = GuidedRefRelayHub.RegisterReceiverFieldWithParentHub(this, "offlineVRRig", this.offlineVRRig_guidedRef.targetId, this.offlineVRRig_guidedRef.hubId);
 	}
 
-	// Token: 0x060009F1 RID: 2545 RVA: 0x0003D914 File Offset: 0x0003BB14
+	// Token: 0x060009F6 RID: 2550 RVA: 0x0003DA44 File Offset: 0x0003BC44
 	public bool GuidRefResolveReference(int fieldId, IGuidedRefTarget target)
 	{
 		Debug.Log("poop target.GuidedRefTargetObject=" + target.GuidedRefTargetObject.name);
@@ -641,19 +641,19 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiver, IGuidedRefMonoBe
 		return false;
 	}
 
-	// Token: 0x060009F3 RID: 2547 RVA: 0x0003DA11 File Offset: 0x0003BC11
+	// Token: 0x060009F8 RID: 2552 RVA: 0x0003DB41 File Offset: 0x0003BD41
 	Transform IGuidedRefMonoBehaviour.get_transform()
 	{
 		return base.transform;
 	}
 
-	// Token: 0x060009F4 RID: 2548 RVA: 0x0003DA19 File Offset: 0x0003BC19
+	// Token: 0x060009F9 RID: 2553 RVA: 0x0003DB49 File Offset: 0x0003BD49
 	int IGuidedRefObject.GetInstanceID()
 	{
 		return base.GetInstanceID();
 	}
 
-	// Token: 0x060009F5 RID: 2549 RVA: 0x0003DA24 File Offset: 0x0003BC24
+	// Token: 0x060009FA RID: 2554 RVA: 0x0003DB54 File Offset: 0x0003BD54
 	[CompilerGenerated]
 	private void <LateUpdate>g__TryTaggingAllHits|96_0(bool isBodyTag)
 	{
@@ -667,251 +667,251 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiver, IGuidedRefMonoBe
 		}
 	}
 
-	// Token: 0x04000C19 RID: 3097
+	// Token: 0x04000C1D RID: 3101
 	private static GorillaTagger _instance;
 
-	// Token: 0x04000C1A RID: 3098
+	// Token: 0x04000C1E RID: 3102
 	public static bool hasInstance;
 
-	// Token: 0x04000C1B RID: 3099
+	// Token: 0x04000C1F RID: 3103
 	public bool inCosmeticsRoom;
 
-	// Token: 0x04000C1C RID: 3100
+	// Token: 0x04000C20 RID: 3104
 	public SphereCollider headCollider;
 
-	// Token: 0x04000C1D RID: 3101
+	// Token: 0x04000C21 RID: 3105
 	public CapsuleCollider bodyCollider;
 
-	// Token: 0x04000C1E RID: 3102
+	// Token: 0x04000C22 RID: 3106
 	private Vector3 lastLeftHandPositionForTag;
 
-	// Token: 0x04000C1F RID: 3103
+	// Token: 0x04000C23 RID: 3107
 	private Vector3 lastRightHandPositionForTag;
 
-	// Token: 0x04000C20 RID: 3104
+	// Token: 0x04000C24 RID: 3108
 	private Vector3 lastBodyPositionForTag;
 
-	// Token: 0x04000C21 RID: 3105
+	// Token: 0x04000C25 RID: 3109
 	private Vector3 lastHeadPositionForTag;
 
-	// Token: 0x04000C22 RID: 3106
+	// Token: 0x04000C26 RID: 3110
 	public Transform rightHandTransform;
 
-	// Token: 0x04000C23 RID: 3107
+	// Token: 0x04000C27 RID: 3111
 	public Transform leftHandTransform;
 
-	// Token: 0x04000C24 RID: 3108
+	// Token: 0x04000C28 RID: 3112
 	public float hapticWaitSeconds = 0.05f;
 
-	// Token: 0x04000C25 RID: 3109
+	// Token: 0x04000C29 RID: 3113
 	public float handTapVolume = 0.1f;
 
-	// Token: 0x04000C26 RID: 3110
+	// Token: 0x04000C2A RID: 3114
 	public float tapCoolDown = 0.15f;
 
-	// Token: 0x04000C27 RID: 3111
+	// Token: 0x04000C2B RID: 3115
 	public float lastLeftTap;
 
-	// Token: 0x04000C28 RID: 3112
+	// Token: 0x04000C2C RID: 3116
 	public float lastRightTap;
 
-	// Token: 0x04000C29 RID: 3113
+	// Token: 0x04000C2D RID: 3117
 	public float tapHapticDuration = 0.05f;
 
-	// Token: 0x04000C2A RID: 3114
+	// Token: 0x04000C2E RID: 3118
 	public float tapHapticStrength = 0.5f;
 
-	// Token: 0x04000C2B RID: 3115
+	// Token: 0x04000C2F RID: 3119
 	public float tagHapticDuration = 0.15f;
 
-	// Token: 0x04000C2C RID: 3116
+	// Token: 0x04000C30 RID: 3120
 	public float tagHapticStrength = 1f;
 
-	// Token: 0x04000C2D RID: 3117
+	// Token: 0x04000C31 RID: 3121
 	public float taggedHapticDuration = 0.35f;
 
-	// Token: 0x04000C2E RID: 3118
+	// Token: 0x04000C32 RID: 3122
 	public float taggedHapticStrength = 1f;
 
-	// Token: 0x04000C2F RID: 3119
+	// Token: 0x04000C33 RID: 3123
 	private bool leftHandTouching;
 
-	// Token: 0x04000C30 RID: 3120
+	// Token: 0x04000C34 RID: 3124
 	private bool rightHandTouching;
 
-	// Token: 0x04000C31 RID: 3121
+	// Token: 0x04000C35 RID: 3125
 	public float taggedTime;
 
-	// Token: 0x04000C32 RID: 3122
+	// Token: 0x04000C36 RID: 3126
 	public float tagCooldown;
 
-	// Token: 0x04000C33 RID: 3123
+	// Token: 0x04000C37 RID: 3127
 	public float slowCooldown = 3f;
 
-	// Token: 0x04000C34 RID: 3124
+	// Token: 0x04000C38 RID: 3128
 	public VRRig offlineVRRig;
 
-	// Token: 0x04000C35 RID: 3125
+	// Token: 0x04000C39 RID: 3129
 	public GuidedRefBasicReceiverFieldInfo offlineVRRig_guidedRef;
 
-	// Token: 0x04000C36 RID: 3126
+	// Token: 0x04000C3A RID: 3130
 	public GameObject thirdPersonCamera;
 
-	// Token: 0x04000C37 RID: 3127
+	// Token: 0x04000C3B RID: 3131
 	public GameObject mainCamera;
 
-	// Token: 0x04000C38 RID: 3128
+	// Token: 0x04000C3C RID: 3132
 	public bool testTutorial;
 
-	// Token: 0x04000C39 RID: 3129
+	// Token: 0x04000C3D RID: 3133
 	public bool disableTutorial;
 
-	// Token: 0x04000C3A RID: 3130
+	// Token: 0x04000C3E RID: 3134
 	public bool frameRateUpdated;
 
-	// Token: 0x04000C3B RID: 3131
+	// Token: 0x04000C3F RID: 3135
 	public GameObject leftHandTriggerCollider;
 
-	// Token: 0x04000C3C RID: 3132
+	// Token: 0x04000C40 RID: 3136
 	public GameObject rightHandTriggerCollider;
 
-	// Token: 0x04000C3D RID: 3133
+	// Token: 0x04000C41 RID: 3137
 	public Camera mirrorCamera;
 
-	// Token: 0x04000C3E RID: 3134
+	// Token: 0x04000C42 RID: 3138
 	public AudioSource leftHandSlideSource;
 
-	// Token: 0x04000C3F RID: 3135
+	// Token: 0x04000C43 RID: 3139
 	public AudioSource rightHandSlideSource;
 
-	// Token: 0x04000C40 RID: 3136
+	// Token: 0x04000C44 RID: 3140
 	public bool overrideNotInFocus;
 
-	// Token: 0x04000C42 RID: 3138
+	// Token: 0x04000C46 RID: 3142
 	private Vector3 leftRaycastSweep;
 
-	// Token: 0x04000C43 RID: 3139
+	// Token: 0x04000C47 RID: 3143
 	private Vector3 leftHeadRaycastSweep;
 
-	// Token: 0x04000C44 RID: 3140
+	// Token: 0x04000C48 RID: 3144
 	private Vector3 rightRaycastSweep;
 
-	// Token: 0x04000C45 RID: 3141
+	// Token: 0x04000C49 RID: 3145
 	private Vector3 rightHeadRaycastSweep;
 
-	// Token: 0x04000C46 RID: 3142
+	// Token: 0x04000C4A RID: 3146
 	private Vector3 headRaycastSweep;
 
-	// Token: 0x04000C47 RID: 3143
+	// Token: 0x04000C4B RID: 3147
 	private Vector3 bodyRaycastSweep;
 
-	// Token: 0x04000C48 RID: 3144
+	// Token: 0x04000C4C RID: 3148
 	private InputDevice rightDevice;
 
-	// Token: 0x04000C49 RID: 3145
+	// Token: 0x04000C4D RID: 3149
 	private InputDevice leftDevice;
 
-	// Token: 0x04000C4A RID: 3146
+	// Token: 0x04000C4E RID: 3150
 	private bool primaryButtonPressRight;
 
-	// Token: 0x04000C4B RID: 3147
+	// Token: 0x04000C4F RID: 3151
 	private bool secondaryButtonPressRight;
 
-	// Token: 0x04000C4C RID: 3148
+	// Token: 0x04000C50 RID: 3152
 	private bool primaryButtonPressLeft;
 
-	// Token: 0x04000C4D RID: 3149
+	// Token: 0x04000C51 RID: 3153
 	private bool secondaryButtonPressLeft;
 
-	// Token: 0x04000C4E RID: 3150
+	// Token: 0x04000C52 RID: 3154
 	private RaycastHit hitInfo;
 
-	// Token: 0x04000C4F RID: 3151
+	// Token: 0x04000C53 RID: 3155
 	public Photon.Realtime.Player otherPlayer;
 
-	// Token: 0x04000C50 RID: 3152
+	// Token: 0x04000C54 RID: 3156
 	private Photon.Realtime.Player tryPlayer;
 
-	// Token: 0x04000C51 RID: 3153
+	// Token: 0x04000C55 RID: 3157
 	private Photon.Realtime.Player touchedPlayer;
 
-	// Token: 0x04000C52 RID: 3154
+	// Token: 0x04000C56 RID: 3158
 	private Vector3 topVector;
 
-	// Token: 0x04000C53 RID: 3155
+	// Token: 0x04000C57 RID: 3159
 	private Vector3 bottomVector;
 
-	// Token: 0x04000C54 RID: 3156
+	// Token: 0x04000C58 RID: 3160
 	private Vector3 bodyVector;
 
-	// Token: 0x04000C55 RID: 3157
+	// Token: 0x04000C59 RID: 3161
 	private int tempInt;
 
-	// Token: 0x04000C56 RID: 3158
+	// Token: 0x04000C5A RID: 3162
 	private InputDevice inputDevice;
 
-	// Token: 0x04000C57 RID: 3159
+	// Token: 0x04000C5B RID: 3163
 	private bool wasInOverlay;
 
-	// Token: 0x04000C58 RID: 3160
+	// Token: 0x04000C5C RID: 3164
 	private PhotonView tempView;
 
-	// Token: 0x04000C59 RID: 3161
+	// Token: 0x04000C5D RID: 3165
 	private Photon.Realtime.Player tempCreator;
 
-	// Token: 0x04000C5A RID: 3162
+	// Token: 0x04000C5E RID: 3166
 	public GorillaTagger.StatusEffect currentStatus;
 
-	// Token: 0x04000C5B RID: 3163
+	// Token: 0x04000C5F RID: 3167
 	public float statusStartTime;
 
-	// Token: 0x04000C5C RID: 3164
+	// Token: 0x04000C60 RID: 3168
 	public float statusEndTime;
 
-	// Token: 0x04000C5D RID: 3165
+	// Token: 0x04000C61 RID: 3169
 	private float refreshRate;
 
-	// Token: 0x04000C5E RID: 3166
+	// Token: 0x04000C62 RID: 3170
 	private float baseSlideControl;
 
-	// Token: 0x04000C5F RID: 3167
+	// Token: 0x04000C63 RID: 3171
 	private int gorillaTagColliderLayerMask;
 
-	// Token: 0x04000C60 RID: 3168
+	// Token: 0x04000C64 RID: 3172
 	private RaycastHit[] nonAllocRaycastHits = new RaycastHit[30];
 
-	// Token: 0x04000C61 RID: 3169
+	// Token: 0x04000C65 RID: 3173
 	private int nonAllocHits;
 
-	// Token: 0x04000C63 RID: 3171
+	// Token: 0x04000C67 RID: 3175
 	private bool xrSubsystemIsActive;
 
-	// Token: 0x04000C64 RID: 3172
+	// Token: 0x04000C68 RID: 3176
 	public string loadedDeviceName = "";
 
-	// Token: 0x04000C65 RID: 3173
+	// Token: 0x04000C69 RID: 3177
 	private Callback<GameOverlayActivated_t> gameOverlayActivatedCb;
 
-	// Token: 0x04000C66 RID: 3174
+	// Token: 0x04000C6A RID: 3178
 	private bool isGameOverlayActive;
 
-	// Token: 0x04000C67 RID: 3175
+	// Token: 0x04000C6B RID: 3179
 	private static Action onPlayerSpawnedRootCallback;
 
-	// Token: 0x02000434 RID: 1076
+	// Token: 0x02000436 RID: 1078
 	public enum StatusEffect
 	{
-		// Token: 0x04001D6A RID: 7530
+		// Token: 0x04001D77 RID: 7543
 		None,
-		// Token: 0x04001D6B RID: 7531
+		// Token: 0x04001D78 RID: 7544
 		Frozen,
-		// Token: 0x04001D6C RID: 7532
+		// Token: 0x04001D79 RID: 7545
 		Slowed,
-		// Token: 0x04001D6D RID: 7533
+		// Token: 0x04001D7A RID: 7546
 		Dead,
-		// Token: 0x04001D6E RID: 7534
+		// Token: 0x04001D7B RID: 7547
 		Infected,
-		// Token: 0x04001D6F RID: 7535
+		// Token: 0x04001D7C RID: 7548
 		It
 	}
 }

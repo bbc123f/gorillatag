@@ -5,7 +5,7 @@ using UnityEngine.Playables;
 // Token: 0x02000065 RID: 101
 public class LocalChestController : MonoBehaviour
 {
-	// Token: 0x060001E4 RID: 484 RVA: 0x0000D584 File Offset: 0x0000B784
+	// Token: 0x060001E4 RID: 484 RVA: 0x0000D5CC File Offset: 0x0000B7CC
 	private void OnTriggerEnter(Collider other)
 	{
 		if (this.isOpen)

@@ -1,38 +1,38 @@
 ﻿using System;
 
-// Token: 0x020001AE RID: 430
+// Token: 0x020001AF RID: 431
 public enum DevButtonType
 {
-	// Token: 0x04000E2E RID: 3630
-	LogLevel,
-	// Token: 0x04000E2F RID: 3631
-	Grow,
-	// Token: 0x04000E30 RID: 3632
-	Shrink,
-	// Token: 0x04000E31 RID: 3633
-	ScrollUp,
 	// Token: 0x04000E32 RID: 3634
-	Mute,
+	LogLevel,
 	// Token: 0x04000E33 RID: 3635
-	LineExpand,
+	Grow,
 	// Token: 0x04000E34 RID: 3636
-	LineForward,
+	Shrink,
 	// Token: 0x04000E35 RID: 3637
-	ScrollDown,
+	ScrollUp,
 	// Token: 0x04000E36 RID: 3638
-	Bottom,
+	Mute,
 	// Token: 0x04000E37 RID: 3639
-	Toggle,
+	LineExpand,
 	// Token: 0x04000E38 RID: 3640
-	Clear,
+	LineForward,
 	// Token: 0x04000E39 RID: 3641
-	ConsoleMode,
+	ScrollDown,
 	// Token: 0x04000E3A RID: 3642
-	InspectorMode,
+	Bottom,
 	// Token: 0x04000E3B RID: 3643
-	ComponentInspectorMode,
+	Toggle,
 	// Token: 0x04000E3C RID: 3644
-	InspectorShowAllFields,
+	Clear,
 	// Token: 0x04000E3D RID: 3645
+	ConsoleMode,
+	// Token: 0x04000E3E RID: 3646
+	InspectorMode,
+	// Token: 0x04000E3F RID: 3647
+	ComponentInspectorMode,
+	// Token: 0x04000E40 RID: 3648
+	InspectorShowAllFields,
+	// Token: 0x04000E41 RID: 3649
 	InspectorShowPrivateItems
 }

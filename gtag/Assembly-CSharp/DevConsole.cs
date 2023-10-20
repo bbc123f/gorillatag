@@ -9,7 +9,7 @@ using UnityEngine.UI;
 public class DevConsole : MonoBehaviour, IDebugObject
 {
 	// Token: 0x1700000A RID: 10
-	// (get) Token: 0x06000179 RID: 377 RVA: 0x0000BEFF File Offset: 0x0000A0FF
+	// (get) Token: 0x06000179 RID: 377 RVA: 0x0000BF47 File Offset: 0x0000A147
 	public static DevConsole instance
 	{
 		get
@@ -23,7 +23,7 @@ public class DevConsole : MonoBehaviour, IDebugObject
 	}
 
 	// Token: 0x1700000B RID: 11
-	// (get) Token: 0x0600017A RID: 378 RVA: 0x0000BF1D File Offset: 0x0000A11D
+	// (get) Token: 0x0600017A RID: 378 RVA: 0x0000BF65 File Offset: 0x0000A165
 	public static List<DevConsole.LogEntry> logEntries
 	{
 		get
@@ -32,7 +32,7 @@ public class DevConsole : MonoBehaviour, IDebugObject
 		}
 	}
 
-	// Token: 0x0600017B RID: 379 RVA: 0x0000BF2C File Offset: 0x0000A12C
+	// Token: 0x0600017B RID: 379 RVA: 0x0000BF74 File Offset: 0x0000A174
 	public void OnDestroyDebugObject()
 	{
 		Debug.Log("Destroying debug instances now");
@@ -42,7 +42,7 @@ public class DevConsole : MonoBehaviour, IDebugObject
 		}
 	}
 
-	// Token: 0x0600017C RID: 380 RVA: 0x0000BF8C File Offset: 0x0000A18C
+	// Token: 0x0600017C RID: 380 RVA: 0x0000BFD4 File Offset: 0x0000A1D4
 	private void OnEnable()
 	{
 		base.gameObject.SetActive(false);
@@ -124,12 +124,12 @@ public class DevConsole : MonoBehaviour, IDebugObject
 	// Token: 0x04000231 RID: 561
 	public List<DevConsoleInstance> instances;
 
-	// Token: 0x02000396 RID: 918
+	// Token: 0x02000398 RID: 920
 	[Serializable]
 	public class LogEntry
 	{
-		// Token: 0x170001C4 RID: 452
-		// (get) Token: 0x06001AC9 RID: 6857 RVA: 0x00094775 File Offset: 0x00092975
+		// Token: 0x170001C6 RID: 454
+		// (get) Token: 0x06001AD2 RID: 6866 RVA: 0x00094C5D File Offset: 0x00092E5D
 		public string Message
 		{
 			get
@@ -142,7 +142,7 @@ public class DevConsole : MonoBehaviour, IDebugObject
 			}
 		}
 
-		// Token: 0x06001ACA RID: 6858 RVA: 0x000947A4 File Offset: 0x000929A4
+		// Token: 0x06001AD3 RID: 6867 RVA: 0x00094C8C File Offset: 0x00092E8C
 		public LogEntry(string message, LogType type, string trace)
 		{
 			this._Message = message;
@@ -163,45 +163,45 @@ public class DevConsole : MonoBehaviour, IDebugObject
 			this.index = DevConsole.LogEntry.TotalIndex;
 		}
 
-		// Token: 0x04001B2C RID: 6956
+		// Token: 0x04001B39 RID: 6969
 		private static int TotalIndex;
 
-		// Token: 0x04001B2D RID: 6957
+		// Token: 0x04001B3A RID: 6970
 		[SerializeReference]
 		[SerializeField]
 		public readonly string _Message;
 
-		// Token: 0x04001B2E RID: 6958
+		// Token: 0x04001B3B RID: 6971
 		[SerializeField]
 		[SerializeReference]
 		public readonly LogType Type;
 
-		// Token: 0x04001B2F RID: 6959
+		// Token: 0x04001B3C RID: 6972
 		public readonly string Trace;
 
-		// Token: 0x04001B30 RID: 6960
+		// Token: 0x04001B3D RID: 6973
 		public bool forwarded;
 
-		// Token: 0x04001B31 RID: 6961
+		// Token: 0x04001B3E RID: 6974
 		public int repeatCount = 1;
 
-		// Token: 0x04001B32 RID: 6962
+		// Token: 0x04001B3F RID: 6975
 		public bool filtered;
 
-		// Token: 0x04001B33 RID: 6963
+		// Token: 0x04001B40 RID: 6976
 		public int index;
 	}
 
-	// Token: 0x02000397 RID: 919
+	// Token: 0x02000399 RID: 921
 	[Serializable]
 	public class DisplayedLogLine
 	{
-		// Token: 0x170001C5 RID: 453
-		// (get) Token: 0x06001ACB RID: 6859 RVA: 0x00094850 File Offset: 0x00092A50
-		// (set) Token: 0x06001ACC RID: 6860 RVA: 0x00094858 File Offset: 0x00092A58
+		// Token: 0x170001C7 RID: 455
+		// (get) Token: 0x06001AD4 RID: 6868 RVA: 0x00094D38 File Offset: 0x00092F38
+		// (set) Token: 0x06001AD5 RID: 6869 RVA: 0x00094D40 File Offset: 0x00092F40
 		public Type data { get; set; }
 
-		// Token: 0x06001ACD RID: 6861 RVA: 0x00094864 File Offset: 0x00092A64
+		// Token: 0x06001AD6 RID: 6870 RVA: 0x00094D4C File Offset: 0x00092F4C
 		public DisplayedLogLine(GameObject obj)
 		{
 			this.lineText = obj.GetComponentInChildren<Text>();
@@ -221,39 +221,39 @@ public class DevConsole : MonoBehaviour, IDebugObject
 			}
 		}
 
-		// Token: 0x04001B34 RID: 6964
+		// Token: 0x04001B41 RID: 6977
 		public GorillaDevButton[] buttons;
 
-		// Token: 0x04001B35 RID: 6965
+		// Token: 0x04001B42 RID: 6978
 		public Text lineText;
 
-		// Token: 0x04001B36 RID: 6966
+		// Token: 0x04001B43 RID: 6979
 		public RectTransform transform;
 
-		// Token: 0x04001B37 RID: 6967
+		// Token: 0x04001B44 RID: 6980
 		public int targetMessage;
 
-		// Token: 0x04001B38 RID: 6968
+		// Token: 0x04001B45 RID: 6981
 		public GorillaDevButton maximizeButton;
 
-		// Token: 0x04001B39 RID: 6969
+		// Token: 0x04001B46 RID: 6982
 		public GorillaDevButton forwardButton;
 
-		// Token: 0x04001B3A RID: 6970
+		// Token: 0x04001B47 RID: 6983
 		public SpriteRenderer backdrop;
 
-		// Token: 0x04001B3B RID: 6971
+		// Token: 0x04001B48 RID: 6984
 		private bool expanded;
 
-		// Token: 0x04001B3C RID: 6972
+		// Token: 0x04001B49 RID: 6985
 		public DevInspector inspector;
 	}
 
-	// Token: 0x02000398 RID: 920
+	// Token: 0x0200039A RID: 922
 	[Serializable]
 	public class MessagePayload
 	{
-		// Token: 0x06001ACE RID: 6862 RVA: 0x000948E0 File Offset: 0x00092AE0
+		// Token: 0x06001AD7 RID: 6871 RVA: 0x00094DC8 File Offset: 0x00092FC8
 		public static List<DevConsole.MessagePayload> GeneratePayloads(string username, List<DevConsole.LogEntry> entries)
 		{
 			List<DevConsole.MessagePayload> list = new List<DevConsole.MessagePayload>();
@@ -293,14 +293,14 @@ public class DevConsole : MonoBehaviour, IDebugObject
 			return list;
 		}
 
-		// Token: 0x04001B3E RID: 6974
+		// Token: 0x04001B4B RID: 6987
 		public DevConsole.MessagePayload.Block[] blocks;
 
-		// Token: 0x0200054B RID: 1355
+		// Token: 0x0200054D RID: 1357
 		[Serializable]
 		public class Block
 		{
-			// Token: 0x06001FBD RID: 8125 RVA: 0x000A3241 File Offset: 0x000A1441
+			// Token: 0x06001FC6 RID: 8134 RVA: 0x000A354D File Offset: 0x000A174D
 			public Block(string markdownText)
 			{
 				this.text = new DevConsole.MessagePayload.TextBlock
@@ -311,21 +311,21 @@ public class DevConsole : MonoBehaviour, IDebugObject
 				this.type = "section";
 			}
 
-			// Token: 0x0400221F RID: 8735
+			// Token: 0x0400222C RID: 8748
 			public string type;
 
-			// Token: 0x04002220 RID: 8736
+			// Token: 0x0400222D RID: 8749
 			public DevConsole.MessagePayload.TextBlock text;
 		}
 
-		// Token: 0x0200054C RID: 1356
+		// Token: 0x0200054E RID: 1358
 		[Serializable]
 		public class TextBlock
 		{
-			// Token: 0x04002221 RID: 8737
+			// Token: 0x0400222E RID: 8750
 			public string type;
 
-			// Token: 0x04002222 RID: 8738
+			// Token: 0x0400222F RID: 8751
 			public string text;
 		}
 	}

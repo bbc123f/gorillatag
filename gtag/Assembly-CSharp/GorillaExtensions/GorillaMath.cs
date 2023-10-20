@@ -4,10 +4,10 @@ using UnityEngine;
 
 namespace GorillaExtensions
 {
-	// Token: 0x020002F9 RID: 761
+	// Token: 0x020002FB RID: 763
 	public static class GorillaMath
 	{
-		// Token: 0x0600156C RID: 5484 RVA: 0x00076604 File Offset: 0x00074804
+		// Token: 0x06001575 RID: 5493 RVA: 0x00076AEC File Offset: 0x00074CEC
 		public static Vector3 GetAngularVelocity(Quaternion oldRotation, Quaternion newRotation)
 		{
 			Quaternion quaternion = newRotation * Quaternion.Inverse(oldRotation);
@@ -34,7 +34,7 @@ namespace GorillaExtensions
 			return zero;
 		}
 
-		// Token: 0x0600156D RID: 5485 RVA: 0x000766C0 File Offset: 0x000748C0
+		// Token: 0x06001576 RID: 5494 RVA: 0x00076BA8 File Offset: 0x00074DA8
 		public static float FastInvSqrt(float z)
 		{
 			if (z == 0f)
@@ -50,13 +50,13 @@ namespace GorillaExtensions
 			return floatIntUnion.f * z;
 		}
 
-		// Token: 0x0600156E RID: 5486 RVA: 0x00076733 File Offset: 0x00074933
+		// Token: 0x06001577 RID: 5495 RVA: 0x00076C1B File Offset: 0x00074E1B
 		public static float Dot2(in Vector3 v)
 		{
 			return Vector3.Dot(v, v);
 		}
 
-		// Token: 0x0600156F RID: 5487 RVA: 0x00076748 File Offset: 0x00074948
+		// Token: 0x06001578 RID: 5496 RVA: 0x00076C30 File Offset: 0x00074E30
 		public static Vector4 RaycastToCappedCone(in Vector3 rayOrigin, in Vector3 rayDirection, in Vector3 coneTip, in Vector3 coneBase, in float coneTipRadius, in float coneBaseRadius)
 		{
 			Vector3 vector = coneBase - coneTip;
@@ -107,11 +107,11 @@ namespace GorillaExtensions
 			return -Vector4.one;
 		}
 
-		// Token: 0x020004F9 RID: 1273
+		// Token: 0x020004FB RID: 1275
 		[Serializable]
 		public struct RemapFloatInfo
 		{
-			// Token: 0x06001F40 RID: 8000 RVA: 0x000A1B80 File Offset: 0x0009FD80
+			// Token: 0x06001F49 RID: 8009 RVA: 0x000A1E8C File Offset: 0x000A008C
 			public RemapFloatInfo(float fromMin = 0f, float toMin = 0f, float fromMax = 1f, float toMax = 1f)
 			{
 				this.fromMin = fromMin;
@@ -120,7 +120,7 @@ namespace GorillaExtensions
 				this.toMax = toMax;
 			}
 
-			// Token: 0x06001F41 RID: 8001 RVA: 0x000A1BA0 File Offset: 0x0009FDA0
+			// Token: 0x06001F4A RID: 8010 RVA: 0x000A1EAC File Offset: 0x000A00AC
 			public void OnValidate()
 			{
 				if (this.fromMin < this.fromMax)
@@ -133,40 +133,40 @@ namespace GorillaExtensions
 				}
 			}
 
-			// Token: 0x06001F42 RID: 8002 RVA: 0x000A1BED File Offset: 0x0009FDED
+			// Token: 0x06001F4B RID: 8011 RVA: 0x000A1EF9 File Offset: 0x000A00F9
 			public bool IsValid()
 			{
 				return this.fromMin < this.fromMax && this.toMin < this.toMax;
 			}
 
-			// Token: 0x06001F43 RID: 8003 RVA: 0x000A1C0D File Offset: 0x0009FE0D
+			// Token: 0x06001F4C RID: 8012 RVA: 0x000A1F19 File Offset: 0x000A0119
 			public float Remap(float value)
 			{
 				return this.toMin + (value - this.fromMin) / (this.fromMax - this.fromMin) * (this.toMax - this.toMin);
 			}
 
-			// Token: 0x040020BE RID: 8382
+			// Token: 0x040020CB RID: 8395
 			public float fromMin;
 
-			// Token: 0x040020BF RID: 8383
+			// Token: 0x040020CC RID: 8396
 			public float toMin;
 
-			// Token: 0x040020C0 RID: 8384
+			// Token: 0x040020CD RID: 8397
 			public float fromMax;
 
-			// Token: 0x040020C1 RID: 8385
+			// Token: 0x040020CE RID: 8398
 			public float toMax;
 		}
 
-		// Token: 0x020004FA RID: 1274
+		// Token: 0x020004FC RID: 1276
 		[StructLayout(LayoutKind.Explicit)]
 		private struct FloatIntUnion
 		{
-			// Token: 0x040020C2 RID: 8386
+			// Token: 0x040020CF RID: 8399
 			[FieldOffset(0)]
 			public float f;
 
-			// Token: 0x040020C3 RID: 8387
+			// Token: 0x040020D0 RID: 8400
 			[FieldOffset(0)]
 			public int tmp;
 		}

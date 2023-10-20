@@ -5,7 +5,7 @@ using UnityEngine;
 [DefaultExecutionOrder(-9999)]
 public class ScenePreparer : MonoBehaviour
 {
-	// Token: 0x06000236 RID: 566 RVA: 0x0000F41C File Offset: 0x0000D61C
+	// Token: 0x06000236 RID: 566 RVA: 0x0000F1F8 File Offset: 0x0000D3F8
 	protected void Awake()
 	{
 		bool flag = false;

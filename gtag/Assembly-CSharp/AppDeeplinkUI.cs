@@ -7,7 +7,7 @@ using UnityEngine.UI;
 // Token: 0x020000A0 RID: 160
 public class AppDeeplinkUI : MonoBehaviour
 {
-	// Token: 0x0600037D RID: 893 RVA: 0x0001580C File Offset: 0x00013A0C
+	// Token: 0x0600037D RID: 893 RVA: 0x000155E8 File Offset: 0x000137E8
 	private void Start()
 	{
 		DebugUIBuilder instance = DebugUIBuilder.instance;
@@ -29,7 +29,7 @@ public class AppDeeplinkUI : MonoBehaviour
 		instance.Show();
 	}
 
-	// Token: 0x0600037E RID: 894 RVA: 0x0001591C File Offset: 0x00013B1C
+	// Token: 0x0600037E RID: 894 RVA: 0x000156F8 File Offset: 0x000138F8
 	private void Update()
 	{
 		DebugUIBuilder instance = DebugUIBuilder.instance;
@@ -54,7 +54,7 @@ public class AppDeeplinkUI : MonoBehaviour
 		}
 	}
 
-	// Token: 0x0600037F RID: 895 RVA: 0x000159F4 File Offset: 0x00013BF4
+	// Token: 0x0600037F RID: 895 RVA: 0x000157D0 File Offset: 0x000139D0
 	private void LaunchUnrealDeeplinkSample()
 	{
 		Debug.Log(string.Format("LaunchOtherApp({0})", 4055411724486843UL));
@@ -63,7 +63,7 @@ public class AppDeeplinkUI : MonoBehaviour
 		Oculus.Platform.Application.LaunchOtherApp(4055411724486843UL, applicationOptions);
 	}
 
-	// Token: 0x06000380 RID: 896 RVA: 0x00015A4C File Offset: 0x00013C4C
+	// Token: 0x06000380 RID: 896 RVA: 0x00015828 File Offset: 0x00013A28
 	private void LaunchSelf()
 	{
 		ulong num;
@@ -76,7 +76,7 @@ public class AppDeeplinkUI : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000381 RID: 897 RVA: 0x00015AA0 File Offset: 0x00013CA0
+	// Token: 0x06000381 RID: 897 RVA: 0x0001587C File Offset: 0x00013A7C
 	private void LaunchOtherApp()
 	{
 		ulong num;

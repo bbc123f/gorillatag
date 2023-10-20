@@ -4,22 +4,22 @@ using UnityEngine;
 
 namespace OculusSampleFramework
 {
-	// Token: 0x020002CB RID: 715
+	// Token: 0x020002CD RID: 717
 	public class BoneCapsuleTriggerLogic : MonoBehaviour
 	{
-		// Token: 0x06001346 RID: 4934 RVA: 0x0006F537 File Offset: 0x0006D737
+		// Token: 0x0600134D RID: 4941 RVA: 0x0006FA03 File Offset: 0x0006DC03
 		private void OnDisable()
 		{
 			this.CollidersTouchingUs.Clear();
 		}
 
-		// Token: 0x06001347 RID: 4935 RVA: 0x0006F544 File Offset: 0x0006D744
+		// Token: 0x0600134E RID: 4942 RVA: 0x0006FA10 File Offset: 0x0006DC10
 		private void Update()
 		{
 			this.CleanUpDeadColliders();
 		}
 
-		// Token: 0x06001348 RID: 4936 RVA: 0x0006F54C File Offset: 0x0006D74C
+		// Token: 0x0600134F RID: 4943 RVA: 0x0006FA18 File Offset: 0x0006DC18
 		private void OnTriggerEnter(Collider other)
 		{
 			ButtonTriggerZone component = other.GetComponent<ButtonTriggerZone>();
@@ -29,7 +29,7 @@ namespace OculusSampleFramework
 			}
 		}
 
-		// Token: 0x06001349 RID: 4937 RVA: 0x0006F58C File Offset: 0x0006D78C
+		// Token: 0x06001350 RID: 4944 RVA: 0x0006FA58 File Offset: 0x0006DC58
 		private void OnTriggerExit(Collider other)
 		{
 			ButtonTriggerZone component = other.GetComponent<ButtonTriggerZone>();
@@ -39,7 +39,7 @@ namespace OculusSampleFramework
 			}
 		}
 
-		// Token: 0x0600134A RID: 4938 RVA: 0x0006F5CC File Offset: 0x0006D7CC
+		// Token: 0x06001351 RID: 4945 RVA: 0x0006FA98 File Offset: 0x0006DC98
 		private void CleanUpDeadColliders()
 		{
 			this._elementsToCleanUp.Clear();
@@ -56,13 +56,13 @@ namespace OculusSampleFramework
 			}
 		}
 
-		// Token: 0x04001620 RID: 5664
+		// Token: 0x0400162D RID: 5677
 		public InteractableToolTags ToolTags;
 
-		// Token: 0x04001621 RID: 5665
+		// Token: 0x0400162E RID: 5678
 		public HashSet<ColliderZone> CollidersTouchingUs = new HashSet<ColliderZone>();
 
-		// Token: 0x04001622 RID: 5666
+		// Token: 0x0400162F RID: 5679
 		private List<ColliderZone> _elementsToCleanUp = new List<ColliderZone>();
 	}
 }

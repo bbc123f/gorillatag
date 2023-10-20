@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// Token: 0x020001C8 RID: 456
+// Token: 0x020001C9 RID: 457
 public static class AnimationCurves
 {
-	// Token: 0x06000B96 RID: 2966 RVA: 0x00047968 File Offset: 0x00045B68
+	// Token: 0x06000B9C RID: 2972 RVA: 0x00047BD0 File Offset: 0x00045DD0
 	static AnimationCurves()
 	{
 		Dictionary<AnimationCurves.EaseType, AnimationCurve> dictionary = new Dictionary<AnimationCurves.EaseType, AnimationCurve>();
@@ -45,27 +45,27 @@ public static class AnimationCurves
 		AnimationCurves.gEaseTypeToCurve = dictionary;
 	}
 
-	// Token: 0x06000B97 RID: 2967 RVA: 0x00048E9A File Offset: 0x0004709A
+	// Token: 0x06000B9D RID: 2973 RVA: 0x00049102 File Offset: 0x00047302
 	public static AnimationCurve GetCurveForEase(AnimationCurves.EaseType ease)
 	{
 		return AnimationCurves.gEaseTypeToCurve[ease];
 	}
 
-	// Token: 0x04000F26 RID: 3878
+	// Token: 0x04000F2A RID: 3882
 	public static readonly AnimationCurve EaseInQuad = new AnimationCurve(new Keyframe[]
 	{
 		new Keyframe(0f, 0f, 0f, 0f, 0f, 0.333333f),
 		new Keyframe(1f, 1f, 2.000003f, 0f, 0.333333f, 0f)
 	});
 
-	// Token: 0x04000F27 RID: 3879
+	// Token: 0x04000F2B RID: 3883
 	public static readonly AnimationCurve EaseOutQuad = new AnimationCurve(new Keyframe[]
 	{
 		new Keyframe(0f, 0f, 0f, 2.000003f, 0f, 0.333333f),
 		new Keyframe(1f, 1f, 0f, 0f, 0.333333f, 0f)
 	});
 
-	// Token: 0x04000F28 RID: 3880
+	// Token: 0x04000F2C RID: 3884
 	public static readonly AnimationCurve EaseInOutQuad = new AnimationCurve(new Keyframe[]
 	{
 		new Keyframe(0f, 0f, 0f, 0f, 0f, 0.333334f),
@@ -73,21 +73,21 @@ public static class AnimationCurves
 		new Keyframe(1f, 1f, 0f, 0f, 0.333334f, 0f)
 	});
 
-	// Token: 0x04000F29 RID: 3881
+	// Token: 0x04000F2D RID: 3885
 	public static readonly AnimationCurve EaseInCubic = new AnimationCurve(new Keyframe[]
 	{
 		new Keyframe(0f, 0f, 0f, 0f, 0f, 0.333333f),
 		new Keyframe(1f, 1f, 3.000003f, 0f, 0.333333f, 0f)
 	});
 
-	// Token: 0x04000F2A RID: 3882
+	// Token: 0x04000F2E RID: 3886
 	public static readonly AnimationCurve EaseOutCubic = new AnimationCurve(new Keyframe[]
 	{
 		new Keyframe(0f, 0f, 0f, 3.000003f, 0f, 0.333333f),
 		new Keyframe(1f, 1f, 0f, 0f, 0.333333f, 0f)
 	});
 
-	// Token: 0x04000F2B RID: 3883
+	// Token: 0x04000F2F RID: 3887
 	public static readonly AnimationCurve EaseInOutCubic = new AnimationCurve(new Keyframe[]
 	{
 		new Keyframe(0f, 0f, 0f, 0f, 0f, 0.333334f),
@@ -95,21 +95,21 @@ public static class AnimationCurves
 		new Keyframe(1f, 1f, 0f, 0f, 0.333334f, 0f)
 	});
 
-	// Token: 0x04000F2C RID: 3884
+	// Token: 0x04000F30 RID: 3888
 	public static readonly AnimationCurve EaseInQuart = new AnimationCurve(new Keyframe[]
 	{
 		new Keyframe(0f, 0f, 0f, 0.0139424f, 0f, 0.434789f),
 		new Keyframe(1f, 1f, 3.985819f, 0f, 0.269099f, 0f)
 	});
 
-	// Token: 0x04000F2D RID: 3885
+	// Token: 0x04000F31 RID: 3889
 	public static readonly AnimationCurve EaseOutQuart = new AnimationCurve(new Keyframe[]
 	{
 		new Keyframe(0f, 0f, 0f, 3.985823f, 0f, 0.269099f),
 		new Keyframe(1f, 1f, 0.01394233f, 0f, 0.434789f, 0f)
 	});
 
-	// Token: 0x04000F2E RID: 3886
+	// Token: 0x04000F32 RID: 3890
 	public static readonly AnimationCurve EaseInOutQuart = new AnimationCurve(new Keyframe[]
 	{
 		new Keyframe(0f, 0f, 0f, 0.01394243f, 0f, 0.434788f),
@@ -117,21 +117,21 @@ public static class AnimationCurves
 		new Keyframe(1f, 1f, 0.0139425f, 0f, 0.434788f, 0f)
 	});
 
-	// Token: 0x04000F2F RID: 3887
+	// Token: 0x04000F33 RID: 3891
 	public static readonly AnimationCurve EaseInQuint = new AnimationCurve(new Keyframe[]
 	{
 		new Keyframe(0f, 0f, 0f, 0.02411811f, 0f, 0.519568f),
 		new Keyframe(1f, 1f, 4.951815f, 0f, 0.225963f, 0f)
 	});
 
-	// Token: 0x04000F30 RID: 3888
+	// Token: 0x04000F34 RID: 3892
 	public static readonly AnimationCurve EaseOutQuint = new AnimationCurve(new Keyframe[]
 	{
 		new Keyframe(0f, 0f, 0f, 4.953289f, 0f, 0.225963f),
 		new Keyframe(1f, 1f, 0.02414908f, 0f, 0.518901f, 0f)
 	});
 
-	// Token: 0x04000F31 RID: 3889
+	// Token: 0x04000F35 RID: 3893
 	public static readonly AnimationCurve EaseInOutQuint = new AnimationCurve(new Keyframe[]
 	{
 		new Keyframe(0f, 0f, 0f, 0.02412004f, 0f, 0.519568f),
@@ -139,21 +139,21 @@ public static class AnimationCurves
 		new Keyframe(1f, 1f, 0.02415099f, 0f, 0.5189019f, 0f)
 	});
 
-	// Token: 0x04000F32 RID: 3890
+	// Token: 0x04000F36 RID: 3894
 	public static readonly AnimationCurve EaseInSine = new AnimationCurve(new Keyframe[]
 	{
 		new Keyframe(0f, 0f, 0f, -0.001208493f, 0f, 0.36078f),
 		new Keyframe(1f, 1f, 1.572508f, 0f, 0.326514f, 0f)
 	});
 
-	// Token: 0x04000F33 RID: 3891
+	// Token: 0x04000F37 RID: 3895
 	public static readonly AnimationCurve EaseOutSine = new AnimationCurve(new Keyframe[]
 	{
 		new Keyframe(0f, 0f, 0f, 1.573552f, 0f, 0.330931f),
 		new Keyframe(1f, 1f, -0.0009282457f, 0f, 0.358689f, 0f)
 	});
 
-	// Token: 0x04000F34 RID: 3892
+	// Token: 0x04000F38 RID: 3896
 	public static readonly AnimationCurve EaseInOutSine = new AnimationCurve(new Keyframe[]
 	{
 		new Keyframe(0f, 0f, 0f, -0.001202949f, 0f, 0.36078f),
@@ -161,21 +161,21 @@ public static class AnimationCurves
 		new Keyframe(1f, 1f, -0.0009312395f, 0f, 0.358688f, 0f)
 	});
 
-	// Token: 0x04000F35 RID: 3893
+	// Token: 0x04000F39 RID: 3897
 	public static readonly AnimationCurve EaseInExpo = new AnimationCurve(new Keyframe[]
 	{
 		new Keyframe(0f, 0f, 0f, 0.03124388f, 0f, 0.636963f),
 		new Keyframe(1f, 1f, 6.815432f, 0f, 0.155667f, 0f)
 	});
 
-	// Token: 0x04000F36 RID: 3894
+	// Token: 0x04000F3A RID: 3898
 	public static readonly AnimationCurve EaseOutExpo = new AnimationCurve(new Keyframe[]
 	{
 		new Keyframe(0f, 0f, 0f, 6.815433f, 0f, 0.155667f),
 		new Keyframe(1f, 1f, 0.03124354f, 0f, 0.636963f, 0f)
 	});
 
-	// Token: 0x04000F37 RID: 3895
+	// Token: 0x04000F3B RID: 3899
 	public static readonly AnimationCurve EaseInOutExpo = new AnimationCurve(new Keyframe[]
 	{
 		new Keyframe(0f, 0f, 0f, 0.03124509f, 0f, 0.636964f),
@@ -183,21 +183,21 @@ public static class AnimationCurves
 		new Keyframe(1f, 1f, 0.03124377f, 0f, 0.636964f, 0f)
 	});
 
-	// Token: 0x04000F38 RID: 3896
+	// Token: 0x04000F3C RID: 3900
 	public static readonly AnimationCurve EaseInCirc = new AnimationCurve(new Keyframe[]
 	{
 		new Keyframe(0f, 0f, 0f, 0.002162338f, 0f, 0.55403f),
 		new Keyframe(1f, 1f, 459.267f, 0f, 0.001197994f, 0f)
 	});
 
-	// Token: 0x04000F39 RID: 3897
+	// Token: 0x04000F3D RID: 3901
 	public static readonly AnimationCurve EaseOutCirc = new AnimationCurve(new Keyframe[]
 	{
 		new Keyframe(0f, 0f, 0f, 461.7679f, 0f, 0.001198f),
 		new Keyframe(1f, 1f, 0.00216235f, 0f, 0.554024f, 0f)
 	});
 
-	// Token: 0x04000F3A RID: 3898
+	// Token: 0x04000F3E RID: 3902
 	public static readonly AnimationCurve EaseInOutCirc = new AnimationCurve(new Keyframe[]
 	{
 		new Keyframe(0f, 0f, 0f, 0.002162353f, 0f, 0.554026f),
@@ -205,7 +205,7 @@ public static class AnimationCurves
 		new Keyframe(1f, 1f, 0.00216245f, 0f, 0.554026f, 0f)
 	});
 
-	// Token: 0x04000F3B RID: 3899
+	// Token: 0x04000F3F RID: 3903
 	public static readonly AnimationCurve EaseInBounce = new AnimationCurve(new Keyframe[]
 	{
 		new Keyframe(0f, 0f, 0f, 0.6874897f, 0f, 0.3333663f),
@@ -215,7 +215,7 @@ public static class AnimationCurves
 		new Keyframe(1f, 1f, 0f, 0f, 0.3333663f, 0f)
 	});
 
-	// Token: 0x04000F3C RID: 3900
+	// Token: 0x04000F40 RID: 3904
 	public static readonly AnimationCurve EaseOutBounce = new AnimationCurve(new Keyframe[]
 	{
 		new Keyframe(0f, 0f, 0f, 0f, 0f, 0.3333663f),
@@ -225,7 +225,7 @@ public static class AnimationCurves
 		new Keyframe(1f, 1f, 0.6875f, 0f, 0.3333663f, 0f)
 	});
 
-	// Token: 0x04000F3D RID: 3901
+	// Token: 0x04000F41 RID: 3905
 	public static readonly AnimationCurve EaseInOutBounce = new AnimationCurve(new Keyframe[]
 	{
 		new Keyframe(0f, 0f, 0f, 0.6875001f, 0f, 0.333011f),
@@ -239,21 +239,21 @@ public static class AnimationCurves
 		new Keyframe(1f, 1f, 0.6875f, 0f, 0.3367105f, 0f)
 	});
 
-	// Token: 0x04000F3E RID: 3902
+	// Token: 0x04000F42 RID: 3906
 	public static readonly AnimationCurve EaseInBack = new AnimationCurve(new Keyframe[]
 	{
 		new Keyframe(0f, 0f, 0f, 0f, 0f, 0.333333f),
 		new Keyframe(1f, 1f, 4.701583f, 0f, 0.333333f, 0f)
 	});
 
-	// Token: 0x04000F3F RID: 3903
+	// Token: 0x04000F43 RID: 3907
 	public static readonly AnimationCurve EaseOutBack = new AnimationCurve(new Keyframe[]
 	{
 		new Keyframe(0f, 0f, 0f, 4.701584f, 0f, 0.333333f),
 		new Keyframe(1f, 1f, 0f, 0f, 0.333333f, 0f)
 	});
 
-	// Token: 0x04000F40 RID: 3904
+	// Token: 0x04000F44 RID: 3908
 	public static readonly AnimationCurve EaseInOutBack = new AnimationCurve(new Keyframe[]
 	{
 		new Keyframe(0f, 0f, 0f, 0f, 0f, 0.333334f),
@@ -261,7 +261,7 @@ public static class AnimationCurves
 		new Keyframe(1f, 1f, 0f, 0f, 0.333334f, 0f)
 	});
 
-	// Token: 0x04000F41 RID: 3905
+	// Token: 0x04000F45 RID: 3909
 	public static readonly AnimationCurve EaseInElastic = new AnimationCurve(new Keyframe[]
 	{
 		new Keyframe(0f, 0f, 0f, 0.0143284f, 0f, 1f),
@@ -271,7 +271,7 @@ public static class AnimationCurves
 		new Keyframe(1f, 1f, 12.51956f, 0f, 0.5916666f, 0f)
 	});
 
-	// Token: 0x04000F42 RID: 3906
+	// Token: 0x04000F46 RID: 3910
 	public static readonly AnimationCurve EaseOutElastic = new AnimationCurve(new Keyframe[]
 	{
 		new Keyframe(0f, 0f, 0f, 12.51956f, 0f, 0.5916667f),
@@ -281,7 +281,7 @@ public static class AnimationCurves
 		new Keyframe(1f, 1f, 0.01432861f, 0f, 1f, 0f)
 	});
 
-	// Token: 0x04000F43 RID: 3907
+	// Token: 0x04000F47 RID: 3911
 	public static readonly AnimationCurve EaseInOutElastic = new AnimationCurve(new Keyframe[]
 	{
 		new Keyframe(0f, 0f, 0f, 0.01433143f, 0f, 1f),
@@ -295,7 +295,7 @@ public static class AnimationCurves
 		new Keyframe(1f, 1f, 0.01432828f, 0f, 1f, 0f)
 	});
 
-	// Token: 0x04000F44 RID: 3908
+	// Token: 0x04000F48 RID: 3912
 	public static readonly AnimationCurve Spring = new AnimationCurve(new Keyframe[]
 	{
 		new Keyframe(0f, 0f, 0f, 3.582263f, 0f, 0.2385296f),
@@ -306,14 +306,14 @@ public static class AnimationCurves
 		new Keyframe(1f, 1f, -0.2023914f, 0f, 0.3296829f, 0f)
 	});
 
-	// Token: 0x04000F45 RID: 3909
+	// Token: 0x04000F49 RID: 3913
 	public static readonly AnimationCurve Linear = new AnimationCurve(new Keyframe[]
 	{
 		new Keyframe(0f, 0f, 0f, 1f, 0f, 0f),
 		new Keyframe(1f, 1f, 1f, 0f, 0f, 0f)
 	});
 
-	// Token: 0x04000F46 RID: 3910
+	// Token: 0x04000F4A RID: 3914
 	public static readonly AnimationCurve Step = new AnimationCurve(new Keyframe[]
 	{
 		new Keyframe(0f, 0f, 0f, 0f, 0f, 0f),
@@ -322,77 +322,77 @@ public static class AnimationCurves
 		new Keyframe(1f, 1f, 0f, 0f, 0f, 0f)
 	});
 
-	// Token: 0x04000F47 RID: 3911
+	// Token: 0x04000F4B RID: 3915
 	private static Dictionary<AnimationCurves.EaseType, AnimationCurve> gEaseTypeToCurve;
 
-	// Token: 0x02000458 RID: 1112
+	// Token: 0x0200045A RID: 1114
 	public enum EaseType
 	{
-		// Token: 0x04001DF7 RID: 7671
-		EaseInQuad = 1,
-		// Token: 0x04001DF8 RID: 7672
-		EaseOutQuad,
-		// Token: 0x04001DF9 RID: 7673
-		EaseInOutQuad,
-		// Token: 0x04001DFA RID: 7674
-		EaseInCubic,
-		// Token: 0x04001DFB RID: 7675
-		EaseOutCubic,
-		// Token: 0x04001DFC RID: 7676
-		EaseInOutCubic,
-		// Token: 0x04001DFD RID: 7677
-		EaseInQuart,
-		// Token: 0x04001DFE RID: 7678
-		EaseOutQuart,
-		// Token: 0x04001DFF RID: 7679
-		EaseInOutQuart,
-		// Token: 0x04001E00 RID: 7680
-		EaseInQuint,
-		// Token: 0x04001E01 RID: 7681
-		EaseOutQuint,
-		// Token: 0x04001E02 RID: 7682
-		EaseInOutQuint,
-		// Token: 0x04001E03 RID: 7683
-		EaseInSine,
 		// Token: 0x04001E04 RID: 7684
-		EaseOutSine,
+		EaseInQuad = 1,
 		// Token: 0x04001E05 RID: 7685
-		EaseInOutSine,
+		EaseOutQuad,
 		// Token: 0x04001E06 RID: 7686
-		EaseInExpo,
+		EaseInOutQuad,
 		// Token: 0x04001E07 RID: 7687
-		EaseOutExpo,
+		EaseInCubic,
 		// Token: 0x04001E08 RID: 7688
-		EaseInOutExpo,
+		EaseOutCubic,
 		// Token: 0x04001E09 RID: 7689
-		EaseInCirc,
+		EaseInOutCubic,
 		// Token: 0x04001E0A RID: 7690
-		EaseOutCirc,
+		EaseInQuart,
 		// Token: 0x04001E0B RID: 7691
-		EaseInOutCirc,
+		EaseOutQuart,
 		// Token: 0x04001E0C RID: 7692
-		EaseInBounce,
+		EaseInOutQuart,
 		// Token: 0x04001E0D RID: 7693
-		EaseOutBounce,
+		EaseInQuint,
 		// Token: 0x04001E0E RID: 7694
-		EaseInOutBounce,
+		EaseOutQuint,
 		// Token: 0x04001E0F RID: 7695
-		EaseInBack,
+		EaseInOutQuint,
 		// Token: 0x04001E10 RID: 7696
-		EaseOutBack,
+		EaseInSine,
 		// Token: 0x04001E11 RID: 7697
-		EaseInOutBack,
+		EaseOutSine,
 		// Token: 0x04001E12 RID: 7698
-		EaseInElastic,
+		EaseInOutSine,
 		// Token: 0x04001E13 RID: 7699
-		EaseOutElastic,
+		EaseInExpo,
 		// Token: 0x04001E14 RID: 7700
-		EaseInOutElastic,
+		EaseOutExpo,
 		// Token: 0x04001E15 RID: 7701
-		Spring,
+		EaseInOutExpo,
 		// Token: 0x04001E16 RID: 7702
-		Linear,
+		EaseInCirc,
 		// Token: 0x04001E17 RID: 7703
+		EaseOutCirc,
+		// Token: 0x04001E18 RID: 7704
+		EaseInOutCirc,
+		// Token: 0x04001E19 RID: 7705
+		EaseInBounce,
+		// Token: 0x04001E1A RID: 7706
+		EaseOutBounce,
+		// Token: 0x04001E1B RID: 7707
+		EaseInOutBounce,
+		// Token: 0x04001E1C RID: 7708
+		EaseInBack,
+		// Token: 0x04001E1D RID: 7709
+		EaseOutBack,
+		// Token: 0x04001E1E RID: 7710
+		EaseInOutBack,
+		// Token: 0x04001E1F RID: 7711
+		EaseInElastic,
+		// Token: 0x04001E20 RID: 7712
+		EaseOutElastic,
+		// Token: 0x04001E21 RID: 7713
+		EaseInOutElastic,
+		// Token: 0x04001E22 RID: 7714
+		Spring,
+		// Token: 0x04001E23 RID: 7715
+		Linear,
+		// Token: 0x04001E24 RID: 7716
 		Step
 	}
 }

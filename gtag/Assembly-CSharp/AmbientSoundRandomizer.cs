@@ -1,22 +1,22 @@
 ﻿using System;
 using UnityEngine;
 
-// Token: 0x02000208 RID: 520
+// Token: 0x02000209 RID: 521
 public class AmbientSoundRandomizer : MonoBehaviour
 {
-	// Token: 0x06000D28 RID: 3368 RVA: 0x0004D567 File Offset: 0x0004B767
+	// Token: 0x06000D2E RID: 3374 RVA: 0x0004D7C7 File Offset: 0x0004B9C7
 	private void Button_Cache()
 	{
 		this.audioSources = base.GetComponentsInChildren<AudioSource>();
 	}
 
-	// Token: 0x06000D29 RID: 3369 RVA: 0x0004D575 File Offset: 0x0004B775
+	// Token: 0x06000D2F RID: 3375 RVA: 0x0004D7D5 File Offset: 0x0004B9D5
 	private void Awake()
 	{
 		this.SetTarget();
 	}
 
-	// Token: 0x06000D2A RID: 3370 RVA: 0x0004D580 File Offset: 0x0004B780
+	// Token: 0x06000D30 RID: 3376 RVA: 0x0004D7E0 File Offset: 0x0004B9E0
 	private void Update()
 	{
 		if (this.timer >= this.timerTarget)
@@ -31,32 +31,32 @@ public class AmbientSoundRandomizer : MonoBehaviour
 		this.timer += Time.deltaTime;
 	}
 
-	// Token: 0x06000D2B RID: 3371 RVA: 0x0004D5F4 File Offset: 0x0004B7F4
+	// Token: 0x06000D31 RID: 3377 RVA: 0x0004D854 File Offset: 0x0004BA54
 	private void SetTarget()
 	{
 		this.timerTarget = this.baseTime + Random.Range(0f, this.randomModifier);
 		this.timer = 0f;
 	}
 
-	// Token: 0x04001054 RID: 4180
+	// Token: 0x04001059 RID: 4185
 	[SerializeField]
 	private AudioSource[] audioSources;
 
-	// Token: 0x04001055 RID: 4181
+	// Token: 0x0400105A RID: 4186
 	[SerializeField]
 	private AudioClip[] audioClips;
 
-	// Token: 0x04001056 RID: 4182
+	// Token: 0x0400105B RID: 4187
 	[SerializeField]
 	private float baseTime = 15f;
 
-	// Token: 0x04001057 RID: 4183
+	// Token: 0x0400105C RID: 4188
 	[SerializeField]
 	private float randomModifier = 5f;
 
-	// Token: 0x04001058 RID: 4184
+	// Token: 0x0400105D RID: 4189
 	private float timer;
 
-	// Token: 0x04001059 RID: 4185
+	// Token: 0x0400105E RID: 4190
 	private float timerTarget;
 }

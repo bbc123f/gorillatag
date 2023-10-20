@@ -4,7 +4,7 @@ using UnityEngine;
 // Token: 0x020000D6 RID: 214
 public class BalloonDynamics : MonoBehaviour
 {
-	// Token: 0x060004C3 RID: 1219 RVA: 0x0001E6A4 File Offset: 0x0001C8A4
+	// Token: 0x060004C3 RID: 1219 RVA: 0x0001E480 File Offset: 0x0001C680
 	private void Awake()
 	{
 		this.rb = base.GetComponent<Rigidbody>();
@@ -13,14 +13,14 @@ public class BalloonDynamics : MonoBehaviour
 		this.grabPtInitParent = this.grabPt.transform.parent;
 	}
 
-	// Token: 0x060004C4 RID: 1220 RVA: 0x0001E6F0 File Offset: 0x0001C8F0
+	// Token: 0x060004C4 RID: 1220 RVA: 0x0001E4CC File Offset: 0x0001C6CC
 	private void Start()
 	{
 		this.airResistance = Mathf.Clamp(this.airResistance, 0f, 1f);
 		this.balloonCollider.enabled = false;
 	}
 
-	// Token: 0x060004C5 RID: 1221 RVA: 0x0001E71C File Offset: 0x0001C91C
+	// Token: 0x060004C5 RID: 1221 RVA: 0x0001E4F8 File Offset: 0x0001C6F8
 	public void ReParent()
 	{
 		if (this.grabPt != null)
@@ -30,7 +30,7 @@ public class BalloonDynamics : MonoBehaviour
 		this.bouyancyActualHeight = Random.Range(this.bouyancyMinHeight, this.bouyancyMaxHeight);
 	}
 
-	// Token: 0x060004C6 RID: 1222 RVA: 0x0001E76C File Offset: 0x0001C96C
+	// Token: 0x060004C6 RID: 1222 RVA: 0x0001E548 File Offset: 0x0001C748
 	private void ApplyBouyancyForce()
 	{
 		float num = this.bouyancyActualHeight + Mathf.Sin(Time.time) * this.varianceMaxheight;
@@ -39,20 +39,20 @@ public class BalloonDynamics : MonoBehaviour
 		this.rb.AddForce(new Vector3(0f, y, 0f), ForceMode.Acceleration);
 	}
 
-	// Token: 0x060004C7 RID: 1223 RVA: 0x0001E7CC File Offset: 0x0001C9CC
+	// Token: 0x060004C7 RID: 1223 RVA: 0x0001E5A8 File Offset: 0x0001C7A8
 	private void ApplyUpRightForce()
 	{
 		Vector3 torque = Vector3.Cross(base.transform.up, Vector3.up) * this.upRightTorque;
 		this.rb.AddTorque(torque);
 	}
 
-	// Token: 0x060004C8 RID: 1224 RVA: 0x0001E806 File Offset: 0x0001CA06
+	// Token: 0x060004C8 RID: 1224 RVA: 0x0001E5E2 File Offset: 0x0001C7E2
 	private void ApplyAirResistance()
 	{
 		this.rb.velocity *= 1f - this.airResistance;
 	}
 
-	// Token: 0x060004C9 RID: 1225 RVA: 0x0001E82C File Offset: 0x0001CA2C
+	// Token: 0x060004C9 RID: 1225 RVA: 0x0001E608 File Offset: 0x0001C808
 	private void ApplyDistanceConstraint()
 	{
 		this.knot.transform.position - base.transform.position;
@@ -74,7 +74,7 @@ public class BalloonDynamics : MonoBehaviour
 		}
 	}
 
-	// Token: 0x060004CA RID: 1226 RVA: 0x0001E934 File Offset: 0x0001CB34
+	// Token: 0x060004CA RID: 1226 RVA: 0x0001E710 File Offset: 0x0001C910
 	public void EnableDynamics(bool enable, bool kinematic)
 	{
 		this.enableDynamics = enable;
@@ -93,14 +93,14 @@ public class BalloonDynamics : MonoBehaviour
 		}
 	}
 
-	// Token: 0x060004CB RID: 1227 RVA: 0x0001E99E File Offset: 0x0001CB9E
+	// Token: 0x060004CB RID: 1227 RVA: 0x0001E77A File Offset: 0x0001C97A
 	public void EnableDistanceConstraints(bool enable)
 	{
 		this.enableDistanceConstraints = enable;
 	}
 
 	// Token: 0x1700003B RID: 59
-	// (get) Token: 0x060004CC RID: 1228 RVA: 0x0001E9A7 File Offset: 0x0001CBA7
+	// (get) Token: 0x060004CC RID: 1228 RVA: 0x0001E783 File Offset: 0x0001C983
 	public bool ColliderEnabled
 	{
 		get
@@ -109,7 +109,7 @@ public class BalloonDynamics : MonoBehaviour
 		}
 	}
 
-	// Token: 0x060004CD RID: 1229 RVA: 0x0001E9C4 File Offset: 0x0001CBC4
+	// Token: 0x060004CD RID: 1229 RVA: 0x0001E7A0 File Offset: 0x0001C9A0
 	private void FixedUpdate()
 	{
 		if (this.enableDynamics)

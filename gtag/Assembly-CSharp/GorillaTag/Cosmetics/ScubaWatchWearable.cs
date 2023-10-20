@@ -4,11 +4,11 @@ using UnityEngine;
 
 namespace GorillaTag.Cosmetics
 {
-	// Token: 0x02000330 RID: 816
+	// Token: 0x02000332 RID: 818
 	[ExecuteAlways]
 	public class ScubaWatchWearable : MonoBehaviour
 	{
-		// Token: 0x060016AE RID: 5806 RVA: 0x0007E208 File Offset: 0x0007C408
+		// Token: 0x060016B7 RID: 5815 RVA: 0x0007E6F0 File Offset: 0x0007C8F0
 		protected void Update()
 		{
 			Player instance = Player.Instance;
@@ -36,30 +36,30 @@ namespace GorillaTag.Cosmetics
 			this.dialNeedle.localRotation = this.initialDialRotation * Quaternion.AngleAxis(angle, this.dialRotationAxis);
 		}
 
-		// Token: 0x040018D1 RID: 6353
+		// Token: 0x040018DE RID: 6366
 		public bool onLeftHand;
 
-		// Token: 0x040018D2 RID: 6354
+		// Token: 0x040018DF RID: 6367
 		[Tooltip("The transform that will be rotated to indicate the current depth.")]
 		public Transform dialNeedle;
 
-		// Token: 0x040018D3 RID: 6355
+		// Token: 0x040018E0 RID: 6368
 		[Tooltip("If your rotation is not zeroed out then click the Auto button to use the current rotation as 0.")]
 		public Quaternion initialDialRotation;
 
-		// Token: 0x040018D4 RID: 6356
+		// Token: 0x040018E1 RID: 6369
 		[Tooltip("The range of depth values that the dial will rotate between.")]
 		public Vector2 depthRange = new Vector2(0f, 20f);
 
-		// Token: 0x040018D5 RID: 6357
+		// Token: 0x040018E2 RID: 6370
 		[Tooltip("The range of rotation values that the dial will rotate between.")]
 		public Vector2 dialRotationRange = new Vector2(0f, 360f);
 
-		// Token: 0x040018D6 RID: 6358
+		// Token: 0x040018E3 RID: 6371
 		[Tooltip("The axis that the dial will rotate around.")]
 		public Vector3 dialRotationAxis = Vector3.right;
 
-		// Token: 0x040018D7 RID: 6359
+		// Token: 0x040018E4 RID: 6372
 		[Tooltip("The current depth of the player.")]
 		[DebugOption]
 		private float currentDepth;

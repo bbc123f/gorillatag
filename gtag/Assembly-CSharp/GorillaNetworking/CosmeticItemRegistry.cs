@@ -4,10 +4,10 @@ using UnityEngine;
 
 namespace GorillaNetworking
 {
-	// Token: 0x020002AC RID: 684
+	// Token: 0x020002AE RID: 686
 	public class CosmeticItemRegistry
 	{
-		// Token: 0x060011E0 RID: 4576 RVA: 0x00065C74 File Offset: 0x00063E74
+		// Token: 0x060011E7 RID: 4583 RVA: 0x00066140 File Offset: 0x00064340
 		public void Initialize(GameObject[] cosmetics)
 		{
 			foreach (GameObject gameObject in cosmetics)
@@ -40,7 +40,7 @@ namespace GorillaNetworking
 			}
 		}
 
-		// Token: 0x060011E1 RID: 4577 RVA: 0x00065D46 File Offset: 0x00063F46
+		// Token: 0x060011E8 RID: 4584 RVA: 0x00066212 File Offset: 0x00064412
 		public CosmeticItemInstance Cosmetic(string itemName)
 		{
 			if (itemName.Length == 0 || itemName == "NOTHING")
@@ -50,10 +50,10 @@ namespace GorillaNetworking
 			return this.nameToCosmeticMap[itemName];
 		}
 
-		// Token: 0x040014C0 RID: 5312
+		// Token: 0x040014CD RID: 5325
 		private Dictionary<string, CosmeticItemInstance> nameToCosmeticMap = new Dictionary<string, CosmeticItemInstance>();
 
-		// Token: 0x040014C1 RID: 5313
+		// Token: 0x040014CE RID: 5326
 		private GameObject nullItem;
 	}
 }

@@ -7,33 +7,33 @@ using UnityEngine.Events;
 // Token: 0x02000128 RID: 296
 public class BubbleGumEvents : MonoBehaviour
 {
-	// Token: 0x060007C1 RID: 1985 RVA: 0x000312D4 File Offset: 0x0002F4D4
+	// Token: 0x060007C2 RID: 1986 RVA: 0x00031114 File Offset: 0x0002F314
 	private void OnEnable()
 	{
 		this._edible.onBiteWorld.AddListener(new UnityAction<VRRig, int>(this.OnBiteWorld));
 		this._edible.onBiteView.AddListener(new UnityAction<VRRig, int>(this.OnBiteView));
 	}
 
-	// Token: 0x060007C2 RID: 1986 RVA: 0x0003130E File Offset: 0x0002F50E
+	// Token: 0x060007C3 RID: 1987 RVA: 0x0003114E File Offset: 0x0002F34E
 	private void OnDisable()
 	{
 		this._edible.onBiteWorld.RemoveListener(new UnityAction<VRRig, int>(this.OnBiteWorld));
 		this._edible.onBiteView.RemoveListener(new UnityAction<VRRig, int>(this.OnBiteView));
 	}
 
-	// Token: 0x060007C3 RID: 1987 RVA: 0x00031348 File Offset: 0x0002F548
+	// Token: 0x060007C4 RID: 1988 RVA: 0x00031188 File Offset: 0x0002F388
 	public void OnBiteView(VRRig rig, int nextState)
 	{
 		this.OnBite(rig, nextState, true);
 	}
 
-	// Token: 0x060007C4 RID: 1988 RVA: 0x00031353 File Offset: 0x0002F553
+	// Token: 0x060007C5 RID: 1989 RVA: 0x00031193 File Offset: 0x0002F393
 	public void OnBiteWorld(VRRig rig, int nextState)
 	{
 		this.OnBite(rig, nextState, false);
 	}
 
-	// Token: 0x060007C5 RID: 1989 RVA: 0x00031360 File Offset: 0x0002F560
+	// Token: 0x060007C6 RID: 1990 RVA: 0x000311A0 File Offset: 0x0002F3A0
 	public void OnBite(VRRig rig, int nextState, bool isViewRig)
 	{
 		GorillaTagger instance = GorillaTagger.Instance;
@@ -85,16 +85,16 @@ public class BubbleGumEvents : MonoBehaviour
 	// Token: 0x0400095B RID: 2395
 	private static Dictionary<GameObject, GumBubble> gTargetCache = new Dictionary<GameObject, GumBubble>(16);
 
-	// Token: 0x0200040E RID: 1038
+	// Token: 0x02000410 RID: 1040
 	public enum EdibleState
 	{
-		// Token: 0x04001CD9 RID: 7385
+		// Token: 0x04001CE6 RID: 7398
 		A = 1,
-		// Token: 0x04001CDA RID: 7386
+		// Token: 0x04001CE7 RID: 7399
 		B,
-		// Token: 0x04001CDB RID: 7387
+		// Token: 0x04001CE8 RID: 7400
 		C = 4,
-		// Token: 0x04001CDC RID: 7388
+		// Token: 0x04001CE9 RID: 7401
 		D = 8
 	}
 }

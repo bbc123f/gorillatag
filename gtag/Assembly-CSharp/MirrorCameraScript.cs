@@ -4,7 +4,7 @@ using UnityEngine;
 // Token: 0x02000066 RID: 102
 public class MirrorCameraScript : MonoBehaviour
 {
-	// Token: 0x060001E6 RID: 486 RVA: 0x0000D609 File Offset: 0x0000B809
+	// Token: 0x060001E6 RID: 486 RVA: 0x0000D651 File Offset: 0x0000B851
 	private void Start()
 	{
 		if (this.mainCamera == null)
@@ -13,7 +13,7 @@ public class MirrorCameraScript : MonoBehaviour
 		}
 	}
 
-	// Token: 0x060001E7 RID: 487 RVA: 0x0000D624 File Offset: 0x0000B824
+	// Token: 0x060001E7 RID: 487 RVA: 0x0000D66C File Offset: 0x0000B86C
 	private void LateUpdate()
 	{
 		Vector3 position = base.transform.position;
@@ -41,7 +41,7 @@ public class MirrorCameraScript : MonoBehaviour
 		}
 	}
 
-	// Token: 0x060001E8 RID: 488 RVA: 0x0000D7D8 File Offset: 0x0000B9D8
+	// Token: 0x060001E8 RID: 488 RVA: 0x0000D820 File Offset: 0x0000BA20
 	private void CalculateReflectionMatrix(ref Matrix4x4 reflectionMatrix, Vector4 plane)
 	{
 		reflectionMatrix.m00 = 1f - 2f * plane[0] * plane[0];
@@ -62,7 +62,7 @@ public class MirrorCameraScript : MonoBehaviour
 		reflectionMatrix.m33 = 1f;
 	}
 
-	// Token: 0x060001E9 RID: 489 RVA: 0x0000D980 File Offset: 0x0000BB80
+	// Token: 0x060001E9 RID: 489 RVA: 0x0000D9C8 File Offset: 0x0000BBC8
 	private Vector4 CameraSpacePlane(Camera cam, Vector3 pos, Vector3 normal, float sideSign)
 	{
 		Vector3 point = pos + normal * 0.07f;

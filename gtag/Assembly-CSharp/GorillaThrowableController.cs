@@ -3,10 +3,10 @@ using UnityEngine;
 using UnityEngine.XR;
 using Valve.VR;
 
-// Token: 0x020001B6 RID: 438
+// Token: 0x020001B7 RID: 439
 public class GorillaThrowableController : MonoBehaviour
 {
-	// Token: 0x06000B2E RID: 2862 RVA: 0x00044E87 File Offset: 0x00043087
+	// Token: 0x06000B34 RID: 2868 RVA: 0x000450EF File Offset: 0x000432EF
 	protected void Awake()
 	{
 		this.gorillaThrowableLayerMask = LayerMask.GetMask(new string[]
@@ -15,7 +15,7 @@ public class GorillaThrowableController : MonoBehaviour
 		});
 	}
 
-	// Token: 0x06000B2F RID: 2863 RVA: 0x00044EA4 File Offset: 0x000430A4
+	// Token: 0x06000B35 RID: 2869 RVA: 0x0004510C File Offset: 0x0004330C
 	private void LateUpdate()
 	{
 		if (this.testCanGrab)
@@ -69,7 +69,7 @@ public class GorillaThrowableController : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000B30 RID: 2864 RVA: 0x00044FF0 File Offset: 0x000431F0
+	// Token: 0x06000B36 RID: 2870 RVA: 0x00045258 File Offset: 0x00043458
 	private bool CheckIfHandHasReleased(XRNode node)
 	{
 		this.inputDevice = InputDevices.GetDeviceAtXRNode(node);
@@ -85,7 +85,7 @@ public class GorillaThrowableController : MonoBehaviour
 		return false;
 	}
 
-	// Token: 0x06000B31 RID: 2865 RVA: 0x0004506C File Offset: 0x0004326C
+	// Token: 0x06000B37 RID: 2871 RVA: 0x000452D4 File Offset: 0x000434D4
 	private bool CheckIfHandHasGrabbed(XRNode node)
 	{
 		this.inputDevice = InputDevices.GetDeviceAtXRNode(node);
@@ -98,7 +98,7 @@ public class GorillaThrowableController : MonoBehaviour
 		return this.triggerValue > 0.75f;
 	}
 
-	// Token: 0x06000B32 RID: 2866 RVA: 0x000450E8 File Offset: 0x000432E8
+	// Token: 0x06000B38 RID: 2872 RVA: 0x00045350 File Offset: 0x00043550
 	private bool CanGrabAnObject(Transform handTransform, out Collider returnCollider)
 	{
 		this.magnitude = 100f;
@@ -126,69 +126,69 @@ public class GorillaThrowableController : MonoBehaviour
 		return false;
 	}
 
-	// Token: 0x06000B33 RID: 2867 RVA: 0x000451D1 File Offset: 0x000433D1
+	// Token: 0x06000B39 RID: 2873 RVA: 0x00045439 File Offset: 0x00043639
 	public void GrabbableObjectHover(bool isLeft)
 	{
 		GorillaTagger.Instance.StartVibration(isLeft, this.hoverVibrationStrength, this.hoverVibrationDuration);
 	}
 
-	// Token: 0x04000E87 RID: 3719
+	// Token: 0x04000E8B RID: 3723
 	public Transform leftHandController;
 
-	// Token: 0x04000E88 RID: 3720
+	// Token: 0x04000E8C RID: 3724
 	public Transform rightHandController;
 
-	// Token: 0x04000E89 RID: 3721
+	// Token: 0x04000E8D RID: 3725
 	public bool leftHandIsGrabbing;
 
-	// Token: 0x04000E8A RID: 3722
+	// Token: 0x04000E8E RID: 3726
 	public bool rightHandIsGrabbing;
 
-	// Token: 0x04000E8B RID: 3723
+	// Token: 0x04000E8F RID: 3727
 	public GorillaThrowable leftHandGrabbedObject;
 
-	// Token: 0x04000E8C RID: 3724
+	// Token: 0x04000E90 RID: 3728
 	public GorillaThrowable rightHandGrabbedObject;
 
-	// Token: 0x04000E8D RID: 3725
+	// Token: 0x04000E91 RID: 3729
 	public float hoverVibrationStrength = 0.25f;
 
-	// Token: 0x04000E8E RID: 3726
+	// Token: 0x04000E92 RID: 3730
 	public float hoverVibrationDuration = 0.05f;
 
-	// Token: 0x04000E8F RID: 3727
+	// Token: 0x04000E93 RID: 3731
 	public float handRadius = 0.05f;
 
-	// Token: 0x04000E90 RID: 3728
+	// Token: 0x04000E94 RID: 3732
 	private InputDevice rightDevice;
 
-	// Token: 0x04000E91 RID: 3729
+	// Token: 0x04000E95 RID: 3733
 	private InputDevice leftDevice;
 
-	// Token: 0x04000E92 RID: 3730
+	// Token: 0x04000E96 RID: 3734
 	private InputDevice inputDevice;
 
-	// Token: 0x04000E93 RID: 3731
+	// Token: 0x04000E97 RID: 3735
 	private float triggerValue;
 
-	// Token: 0x04000E94 RID: 3732
+	// Token: 0x04000E98 RID: 3736
 	private bool boolVar;
 
-	// Token: 0x04000E95 RID: 3733
+	// Token: 0x04000E99 RID: 3737
 	private Collider[] colliders = new Collider[10];
 
-	// Token: 0x04000E96 RID: 3734
+	// Token: 0x04000E9A RID: 3738
 	private Collider minCollider;
 
-	// Token: 0x04000E97 RID: 3735
+	// Token: 0x04000E9B RID: 3739
 	private Collider returnCollider;
 
-	// Token: 0x04000E98 RID: 3736
+	// Token: 0x04000E9C RID: 3740
 	private float magnitude;
 
-	// Token: 0x04000E99 RID: 3737
+	// Token: 0x04000E9D RID: 3741
 	public bool testCanGrab;
 
-	// Token: 0x04000E9A RID: 3738
+	// Token: 0x04000E9E RID: 3742
 	private int gorillaThrowableLayerMask;
 }

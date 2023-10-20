@@ -2,14 +2,14 @@
 
 namespace Viveport.Internal
 {
-	// Token: 0x0200025D RID: 605
+	// Token: 0x0200025E RID: 606
 	internal enum EAchievementDisplayAttribute
 	{
-		// Token: 0x040011BB RID: 4539
+		// Token: 0x040011C1 RID: 4545
 		k_EAchievementDisplayAttributeName,
-		// Token: 0x040011BC RID: 4540
+		// Token: 0x040011C2 RID: 4546
 		k_EAchievementDisplayAttributeDesc,
-		// Token: 0x040011BD RID: 4541
+		// Token: 0x040011C3 RID: 4547
 		k_EAchievementDisplayAttributeHidden
 	}
 }

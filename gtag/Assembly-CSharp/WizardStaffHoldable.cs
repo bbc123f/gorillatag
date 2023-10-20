@@ -5,7 +5,7 @@ using UnityEngine;
 // Token: 0x02000039 RID: 57
 public class WizardStaffHoldable : TransferrableObject
 {
-	// Token: 0x06000140 RID: 320 RVA: 0x0000AD40 File Offset: 0x00008F40
+	// Token: 0x06000140 RID: 320 RVA: 0x0000AD88 File Offset: 0x00008F88
 	protected override void Awake()
 	{
 		base.Awake();
@@ -14,21 +14,21 @@ public class WizardStaffHoldable : TransferrableObject
 		this.effectsHaveBeenPlayed = false;
 	}
 
-	// Token: 0x06000141 RID: 321 RVA: 0x0000AD72 File Offset: 0x00008F72
+	// Token: 0x06000141 RID: 321 RVA: 0x0000ADBA File Offset: 0x00008FBA
 	public override void OnEnable()
 	{
 		base.OnEnable();
 		this.InitToDefault();
 	}
 
-	// Token: 0x06000142 RID: 322 RVA: 0x0000AD80 File Offset: 0x00008F80
+	// Token: 0x06000142 RID: 322 RVA: 0x0000ADC8 File Offset: 0x00008FC8
 	public override void ResetToDefaultState()
 	{
 		base.ResetToDefaultState();
 		this.InitToDefault();
 	}
 
-	// Token: 0x06000143 RID: 323 RVA: 0x0000AD8E File Offset: 0x00008F8E
+	// Token: 0x06000143 RID: 323 RVA: 0x0000ADD6 File Offset: 0x00008FD6
 	private void InitToDefault()
 	{
 		this.cooldownRemaining = 0f;
@@ -39,7 +39,7 @@ public class WizardStaffHoldable : TransferrableObject
 		this.effectsHaveBeenPlayed = false;
 	}
 
-	// Token: 0x06000144 RID: 324 RVA: 0x0000ADC0 File Offset: 0x00008FC0
+	// Token: 0x06000144 RID: 324 RVA: 0x0000AE08 File Offset: 0x00009008
 	protected override void LateUpdateLocal()
 	{
 		base.LateUpdateLocal();
@@ -61,7 +61,7 @@ public class WizardStaffHoldable : TransferrableObject
 		this.cooldownRemaining = this.cooldown;
 	}
 
-	// Token: 0x06000145 RID: 325 RVA: 0x0000AE44 File Offset: 0x00009044
+	// Token: 0x06000145 RID: 325 RVA: 0x0000AE8C File Offset: 0x0000908C
 	protected override void LateUpdateShared()
 	{
 		base.LateUpdateShared();
@@ -98,7 +98,7 @@ public class WizardStaffHoldable : TransferrableObject
 		}
 	}
 
-	// Token: 0x06000146 RID: 326 RVA: 0x0000AF34 File Offset: 0x00009134
+	// Token: 0x06000146 RID: 326 RVA: 0x0000AF7C File Offset: 0x0000917C
 	protected override void LateUpdateReplicated()
 	{
 		base.LateUpdateReplicated();

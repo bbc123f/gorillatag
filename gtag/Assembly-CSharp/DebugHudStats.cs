@@ -4,16 +4,16 @@ using GorillaLocomotion;
 using UnityEngine;
 using UnityEngine.UI;
 
-// Token: 0x02000210 RID: 528
+// Token: 0x02000211 RID: 529
 public class DebugHudStats : MonoBehaviour
 {
-	// Token: 0x06000D3F RID: 3391 RVA: 0x0004DB7E File Offset: 0x0004BD7E
+	// Token: 0x06000D45 RID: 3397 RVA: 0x0004DDDE File Offset: 0x0004BFDE
 	private void Awake()
 	{
 		base.gameObject.SetActive(false);
 	}
 
-	// Token: 0x06000D40 RID: 3392 RVA: 0x0004DB8C File Offset: 0x0004BD8C
+	// Token: 0x06000D46 RID: 3398 RVA: 0x0004DDEC File Offset: 0x0004BFEC
 	private void Update()
 	{
 		if (this.firstAwake == 0f)
@@ -50,38 +50,38 @@ public class DebugHudStats : MonoBehaviour
 		this.updateTimer = 0f;
 	}
 
-	// Token: 0x04001066 RID: 4198
+	// Token: 0x0400106B RID: 4203
 	[SerializeField]
 	private Text text;
 
-	// Token: 0x04001067 RID: 4199
+	// Token: 0x0400106C RID: 4204
 	[SerializeField]
 	private float delayUpdateRate = 0.25f;
 
-	// Token: 0x04001068 RID: 4200
+	// Token: 0x0400106D RID: 4205
 	private float updateTimer;
 
-	// Token: 0x04001069 RID: 4201
+	// Token: 0x0400106E RID: 4206
 	private bool lastCheckInvalid;
 
-	// Token: 0x0400106A RID: 4202
+	// Token: 0x0400106F RID: 4207
 	public float sessionAnytrackingLost;
 
-	// Token: 0x0400106B RID: 4203
+	// Token: 0x04001070 RID: 4208
 	public float last30SecondsTrackingLost;
 
-	// Token: 0x0400106C RID: 4204
+	// Token: 0x04001071 RID: 4209
 	private float firstAwake;
 
-	// Token: 0x0400106D RID: 4205
+	// Token: 0x04001072 RID: 4210
 	private bool wasTrackingLost;
 
-	// Token: 0x0400106E RID: 4206
+	// Token: 0x04001073 RID: 4211
 	private bool leftHandTracked;
 
-	// Token: 0x0400106F RID: 4207
+	// Token: 0x04001074 RID: 4212
 	private bool rightHandTracked;
 
-	// Token: 0x04001070 RID: 4208
+	// Token: 0x04001075 RID: 4213
 	private StringBuilder builder;
 }

@@ -5,14 +5,14 @@ using UnityEngine;
 // Token: 0x0200011F RID: 287
 public class UmbrellaItem : TransferrableObject
 {
-	// Token: 0x06000792 RID: 1938 RVA: 0x00030905 File Offset: 0x0002EB05
+	// Token: 0x06000793 RID: 1939 RVA: 0x00030745 File Offset: 0x0002E945
 	protected override void Start()
 	{
 		base.Start();
 		this.itemState = TransferrableObject.ItemStates.State1;
 	}
 
-	// Token: 0x06000793 RID: 1939 RVA: 0x00030914 File Offset: 0x0002EB14
+	// Token: 0x06000794 RID: 1940 RVA: 0x00030754 File Offset: 0x0002E954
 	public override void OnActivate()
 	{
 		base.OnActivate();
@@ -36,21 +36,21 @@ public class UmbrellaItem : TransferrableObject
 		this.OnUmbrellaStateChanged();
 	}
 
-	// Token: 0x06000794 RID: 1940 RVA: 0x000309AC File Offset: 0x0002EBAC
+	// Token: 0x06000795 RID: 1941 RVA: 0x000307EC File Offset: 0x0002E9EC
 	public override void OnEnable()
 	{
 		base.OnEnable();
 		this.OnUmbrellaStateChanged();
 	}
 
-	// Token: 0x06000795 RID: 1941 RVA: 0x000309BA File Offset: 0x0002EBBA
+	// Token: 0x06000796 RID: 1942 RVA: 0x000307FA File Offset: 0x0002E9FA
 	public override void OnDisable()
 	{
 		base.OnDisable();
 		BetterDayNightManager.instance.collidersToAddToWeatherSystems.Remove(this.umbrellaRainDestroyTrigger);
 	}
 
-	// Token: 0x06000796 RID: 1942 RVA: 0x000309DA File Offset: 0x0002EBDA
+	// Token: 0x06000797 RID: 1943 RVA: 0x0003081A File Offset: 0x0002EA1A
 	public override void ResetToDefaultState()
 	{
 		base.ResetToDefaultState();
@@ -59,7 +59,7 @@ public class UmbrellaItem : TransferrableObject
 		this.OnUmbrellaStateChanged();
 	}
 
-	// Token: 0x06000797 RID: 1943 RVA: 0x00030A07 File Offset: 0x0002EC07
+	// Token: 0x06000798 RID: 1944 RVA: 0x00030847 File Offset: 0x0002EA47
 	public override void OnRelease(DropZone zoneReleased, GameObject releasingHand)
 	{
 		base.OnRelease(zoneReleased, releasingHand);
@@ -73,7 +73,7 @@ public class UmbrellaItem : TransferrableObject
 		}
 	}
 
-	// Token: 0x06000798 RID: 1944 RVA: 0x00030A2C File Offset: 0x0002EC2C
+	// Token: 0x06000799 RID: 1945 RVA: 0x0003086C File Offset: 0x0002EA6C
 	protected override void LateUpdateShared()
 	{
 		base.LateUpdateShared();
@@ -86,7 +86,7 @@ public class UmbrellaItem : TransferrableObject
 		this.previousUmbrellaState = itemState;
 	}
 
-	// Token: 0x06000799 RID: 1945 RVA: 0x00030A7C File Offset: 0x0002EC7C
+	// Token: 0x0600079A RID: 1946 RVA: 0x000308BC File Offset: 0x0002EABC
 	protected virtual void OnUmbrellaStateChanged()
 	{
 		bool flag = this.itemState == TransferrableObject.ItemStates.State0;
@@ -112,7 +112,7 @@ public class UmbrellaItem : TransferrableObject
 		}
 	}
 
-	// Token: 0x0600079A RID: 1946 RVA: 0x00030AF0 File Offset: 0x0002ECF0
+	// Token: 0x0600079B RID: 1947 RVA: 0x00030930 File Offset: 0x0002EB30
 	protected virtual void UpdateAngles(Quaternion[] toAngles, float t)
 	{
 		for (int i = 0; i < this.umbrellaBones.Length; i++)
@@ -121,7 +121,7 @@ public class UmbrellaItem : TransferrableObject
 		}
 	}
 
-	// Token: 0x0600079B RID: 1947 RVA: 0x00030B38 File Offset: 0x0002ED38
+	// Token: 0x0600079C RID: 1948 RVA: 0x00030978 File Offset: 0x0002EB78
 	protected void GenerateAngles()
 	{
 		this.startingAngles = new Quaternion[this.umbrellaBones.Length];
@@ -136,13 +136,13 @@ public class UmbrellaItem : TransferrableObject
 		}
 	}
 
-	// Token: 0x0600079C RID: 1948 RVA: 0x00030BCB File Offset: 0x0002EDCB
+	// Token: 0x0600079D RID: 1949 RVA: 0x00030A0B File Offset: 0x0002EC0B
 	public override bool CanActivate()
 	{
 		return true;
 	}
 
-	// Token: 0x0600079D RID: 1949 RVA: 0x00030BCE File Offset: 0x0002EDCE
+	// Token: 0x0600079E RID: 1950 RVA: 0x00030A0E File Offset: 0x0002EC0E
 	public override bool CanDeactivate()
 	{
 		return true;
@@ -192,12 +192,12 @@ public class UmbrellaItem : TransferrableObject
 	// Token: 0x0400093D RID: 2365
 	private UmbrellaItem.UmbrellaStates previousUmbrellaState = UmbrellaItem.UmbrellaStates.UmbrellaOpen;
 
-	// Token: 0x02000409 RID: 1033
+	// Token: 0x0200040B RID: 1035
 	private enum UmbrellaStates
 	{
-		// Token: 0x04001CCA RID: 7370
+		// Token: 0x04001CD7 RID: 7383
 		UmbrellaOpen = 1,
-		// Token: 0x04001CCB RID: 7371
+		// Token: 0x04001CD8 RID: 7384
 		UmbrellaClosed
 	}
 }

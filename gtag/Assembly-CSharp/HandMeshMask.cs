@@ -4,7 +4,7 @@ using UnityEngine;
 // Token: 0x020000B0 RID: 176
 public class HandMeshMask : MonoBehaviour
 {
-	// Token: 0x060003DF RID: 991 RVA: 0x00017F80 File Offset: 0x00016180
+	// Token: 0x060003DF RID: 991 RVA: 0x00017D5C File Offset: 0x00015F5C
 	private void Awake()
 	{
 		base.transform.position = Vector3.zero;
@@ -18,7 +18,7 @@ public class HandMeshMask : MonoBehaviour
 		this.maskMeshObject.GetComponent<MeshRenderer>().material = this.maskMaterial;
 	}
 
-	// Token: 0x060003E0 RID: 992 RVA: 0x00018028 File Offset: 0x00016228
+	// Token: 0x060003E0 RID: 992 RVA: 0x00017E04 File Offset: 0x00016004
 	private void Update()
 	{
 		this.radialDivisions = Mathf.Max(2, this.radialDivisions);
@@ -31,7 +31,7 @@ public class HandMeshMask : MonoBehaviour
 		this.maskMeshObject.SetActive(active);
 	}
 
-	// Token: 0x060003E1 RID: 993 RVA: 0x0001809C File Offset: 0x0001629C
+	// Token: 0x060003E1 RID: 993 RVA: 0x00017E78 File Offset: 0x00016078
 	private void CreateHandMesh()
 	{
 		int num = 8 + (this.radialDivisions - 2) * 2;
@@ -73,7 +73,7 @@ public class HandMeshMask : MonoBehaviour
 		this.maskMesh.triangles = this.handTriangles;
 	}
 
-	// Token: 0x060003E2 RID: 994 RVA: 0x000182FC File Offset: 0x000164FC
+	// Token: 0x060003E2 RID: 994 RVA: 0x000180D8 File Offset: 0x000162D8
 	private void AddKnuckleMesh(int knuckleVerts, float point1scale, float point2scale, Vector3 point1, Vector3 point2)
 	{
 		int num = this.vertCounter;
@@ -176,7 +176,7 @@ public class HandMeshMask : MonoBehaviour
 		}
 	}
 
-	// Token: 0x060003E3 RID: 995 RVA: 0x0001868C File Offset: 0x0001688C
+	// Token: 0x060003E3 RID: 995 RVA: 0x00018468 File Offset: 0x00016668
 	private void AddPalmMesh(int knuckleVerts)
 	{
 		int num = this.vertCounter;
@@ -480,7 +480,7 @@ public class HandMeshMask : MonoBehaviour
 		this.AddKnuckleMesh(knuckleVerts, 1.3f, 1f, this.referenceHand.Bones[0].Transform.position, this.referenceHand.Bones[6].Transform.position);
 	}
 
-	// Token: 0x060003E4 RID: 996 RVA: 0x0001946C File Offset: 0x0001766C
+	// Token: 0x060003E4 RID: 996 RVA: 0x00019248 File Offset: 0x00017448
 	private void AddVertex(Vector3 position, Vector2 uv, Color color)
 	{
 		this.handVertices[this.vertCounter] = position;

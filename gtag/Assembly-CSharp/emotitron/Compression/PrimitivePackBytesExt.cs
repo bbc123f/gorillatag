@@ -2,10 +2,10 @@
 
 namespace emotitron.Compression
 {
-	// Token: 0x0200033D RID: 829
+	// Token: 0x0200033F RID: 831
 	public static class PrimitivePackBytesExt
 	{
-		// Token: 0x06001782 RID: 6018 RVA: 0x00080CB4 File Offset: 0x0007EEB4
+		// Token: 0x0600178B RID: 6027 RVA: 0x0008119C File Offset: 0x0007F39C
 		public static ulong WritePackedBytes(this ulong buffer, ulong value, ref int bitposition, int bits)
 		{
 			int bits2 = (bits + 7 >> 3).UsedBitCount();
@@ -15,7 +15,7 @@ namespace emotitron.Compression
 			return buffer;
 		}
 
-		// Token: 0x06001783 RID: 6019 RVA: 0x00080CF0 File Offset: 0x0007EEF0
+		// Token: 0x0600178C RID: 6028 RVA: 0x000811D8 File Offset: 0x0007F3D8
 		public static uint WritePackedBytes(this uint buffer, uint value, ref int bitposition, int bits)
 		{
 			int bits2 = (bits + 7 >> 3).UsedBitCount();
@@ -25,7 +25,7 @@ namespace emotitron.Compression
 			return buffer;
 		}
 
-		// Token: 0x06001784 RID: 6020 RVA: 0x00080D2C File Offset: 0x0007EF2C
+		// Token: 0x0600178D RID: 6029 RVA: 0x00081214 File Offset: 0x0007F414
 		public static void InjectPackedBytes(this ulong value, ref ulong buffer, ref int bitposition, int bits)
 		{
 			int bits2 = (bits + 7 >> 3).UsedBitCount();
@@ -34,7 +34,7 @@ namespace emotitron.Compression
 			buffer = buffer.Write(value, ref bitposition, num << 3);
 		}
 
-		// Token: 0x06001785 RID: 6021 RVA: 0x00080D68 File Offset: 0x0007EF68
+		// Token: 0x0600178E RID: 6030 RVA: 0x00081250 File Offset: 0x0007F450
 		public static void InjectPackedBytes(this uint value, ref uint buffer, ref int bitposition, int bits)
 		{
 			int bits2 = (bits + 7 >> 3).UsedBitCount();
@@ -43,7 +43,7 @@ namespace emotitron.Compression
 			buffer = buffer.Write((ulong)value, ref bitposition, num << 3);
 		}
 
-		// Token: 0x06001786 RID: 6022 RVA: 0x00080DA4 File Offset: 0x0007EFA4
+		// Token: 0x0600178F RID: 6031 RVA: 0x0008128C File Offset: 0x0007F48C
 		public static ulong ReadPackedBytes(this ulong buffer, ref int bitposition, int bits)
 		{
 			int bits2 = (bits + 7 >> 3).UsedBitCount();
@@ -51,7 +51,7 @@ namespace emotitron.Compression
 			return buffer.Read(ref bitposition, num << 3);
 		}
 
-		// Token: 0x06001787 RID: 6023 RVA: 0x00080DD0 File Offset: 0x0007EFD0
+		// Token: 0x06001790 RID: 6032 RVA: 0x000812B8 File Offset: 0x0007F4B8
 		public static uint ReadPackedBytes(this uint buffer, ref int bitposition, int bits)
 		{
 			int bits2 = (bits + 7 >> 3).UsedBitCount();
@@ -59,14 +59,14 @@ namespace emotitron.Compression
 			return buffer.Read(ref bitposition, num << 3);
 		}
 
-		// Token: 0x06001788 RID: 6024 RVA: 0x00080DFC File Offset: 0x0007EFFC
+		// Token: 0x06001791 RID: 6033 RVA: 0x000812E4 File Offset: 0x0007F4E4
 		public static ulong WriteSignedPackedBytes(this ulong buffer, int value, ref int bitposition, int bits)
 		{
 			uint num = (uint)(value << 1 ^ value >> 31);
 			return buffer.WritePackedBytes((ulong)num, ref bitposition, bits);
 		}
 
-		// Token: 0x06001789 RID: 6025 RVA: 0x00080E1C File Offset: 0x0007F01C
+		// Token: 0x06001792 RID: 6034 RVA: 0x00081304 File Offset: 0x0007F504
 		public static int ReadSignedPackedBytes(this ulong buffer, ref int bitposition, int bits)
 		{
 			uint num = (uint)buffer.ReadPackedBytes(ref bitposition, bits);

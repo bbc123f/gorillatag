@@ -4,10 +4,10 @@ using UnityEngine;
 
 namespace GorillaTag.Rendering.MeshCombiner
 {
-	// Token: 0x0200032F RID: 815
+	// Token: 0x02000331 RID: 817
 	public class EdMeshCombinerSceneProcessor : MonoBehaviour
 	{
-		// Token: 0x060016AA RID: 5802 RVA: 0x0007E1E3 File Offset: 0x0007C3E3
+		// Token: 0x060016B3 RID: 5811 RVA: 0x0007E6CB File Offset: 0x0007C8CB
 		protected void Awake()
 		{
 			if (Application.isPlaying)
@@ -16,22 +16,22 @@ namespace GorillaTag.Rendering.MeshCombiner
 			}
 		}
 
-		// Token: 0x060016AB RID: 5803 RVA: 0x0007E1F2 File Offset: 0x0007C3F2
+		// Token: 0x060016B4 RID: 5812 RVA: 0x0007E6DA File Offset: 0x0007C8DA
 		protected void OnEnable()
 		{
 		}
 
-		// Token: 0x040018CD RID: 6349
+		// Token: 0x040018DA RID: 6362
 		public const bool kDebugAllowMeshCombining = true;
 
-		// Token: 0x040018CE RID: 6350
+		// Token: 0x040018DB RID: 6363
 		[NonSerialized]
 		private static string _dummyProp = "";
 
-		// Token: 0x040018CF RID: 6351
+		// Token: 0x040018DC RID: 6364
 		private static Dictionary<Hash128, Mesh> meshCache;
 
-		// Token: 0x040018D0 RID: 6352
+		// Token: 0x040018DD RID: 6365
 		private static int aliveInstanceCount;
 	}
 }

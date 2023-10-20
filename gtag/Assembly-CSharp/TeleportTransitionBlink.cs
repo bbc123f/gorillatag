@@ -5,13 +5,13 @@ using UnityEngine;
 // Token: 0x02000097 RID: 151
 public class TeleportTransitionBlink : TeleportTransition
 {
-	// Token: 0x0600033D RID: 829 RVA: 0x00013794 File Offset: 0x00011994
+	// Token: 0x0600033D RID: 829 RVA: 0x00013570 File Offset: 0x00011770
 	protected override void LocomotionTeleportOnEnterStateTeleporting()
 	{
 		base.StartCoroutine(this.BlinkCoroutine());
 	}
 
-	// Token: 0x0600033E RID: 830 RVA: 0x000137A3 File Offset: 0x000119A3
+	// Token: 0x0600033E RID: 830 RVA: 0x0001357F File Offset: 0x0001177F
 	protected IEnumerator BlinkCoroutine()
 	{
 		base.LocomotionTeleport.IsTransitioning = true;

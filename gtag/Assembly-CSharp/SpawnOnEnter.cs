@@ -4,7 +4,7 @@ using UnityEngine;
 // Token: 0x0200002E RID: 46
 public class SpawnOnEnter : MonoBehaviour
 {
-	// Token: 0x06000104 RID: 260 RVA: 0x00009962 File Offset: 0x00007B62
+	// Token: 0x06000104 RID: 260 RVA: 0x000099AA File Offset: 0x00007BAA
 	public void OnTriggerEnter(Collider other)
 	{
 		if (Time.time > this.lastSpawnTime + this.cooldown)

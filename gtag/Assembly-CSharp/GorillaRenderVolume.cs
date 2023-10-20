@@ -4,7 +4,7 @@ using UnityEngine;
 // Token: 0x02000058 RID: 88
 public class GorillaRenderVolume : MonoBehaviour
 {
-	// Token: 0x06000196 RID: 406 RVA: 0x0000C1F4 File Offset: 0x0000A3F4
+	// Token: 0x06000196 RID: 406 RVA: 0x0000C23C File Offset: 0x0000A43C
 	protected void Awake()
 	{
 		Renderer[] array = this.renderers;
@@ -16,7 +16,7 @@ public class GorillaRenderVolume : MonoBehaviour
 		this.layerMask = 1 << LayerMask.NameToLayer("Camera Scene Trigger");
 	}
 
-	// Token: 0x06000197 RID: 407 RVA: 0x0000C248 File Offset: 0x0000A448
+	// Token: 0x06000197 RID: 407 RVA: 0x0000C290 File Offset: 0x0000A490
 	protected void LateUpdate()
 	{
 		Transform transform = Camera.main.transform;

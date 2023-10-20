@@ -6,7 +6,7 @@ using UnityEngine.UI;
 // Token: 0x02000159 RID: 345
 public class GorillaScoreCounter : MonoBehaviour
 {
-	// Token: 0x06000886 RID: 2182 RVA: 0x00034C94 File Offset: 0x00032E94
+	// Token: 0x06000887 RID: 2183 RVA: 0x00034AD4 File Offset: 0x00032CD4
 	private void Awake()
 	{
 		this.text = base.gameObject.GetComponent<Text>();
@@ -18,7 +18,7 @@ public class GorillaScoreCounter : MonoBehaviour
 		this.attribute = "blueScore";
 	}
 
-	// Token: 0x06000887 RID: 2183 RVA: 0x00034CC8 File Offset: 0x00032EC8
+	// Token: 0x06000888 RID: 2184 RVA: 0x00034B08 File Offset: 0x00032D08
 	private void Update()
 	{
 		if (PhotonNetwork.CurrentRoom != null && PhotonNetwork.CurrentRoom.CustomProperties[this.attribute] != null)

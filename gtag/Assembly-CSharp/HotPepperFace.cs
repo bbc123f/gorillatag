@@ -4,7 +4,7 @@ using UnityEngine;
 // Token: 0x0200012B RID: 299
 public class HotPepperFace : MonoBehaviour
 {
-	// Token: 0x060007D6 RID: 2006 RVA: 0x000317A4 File Offset: 0x0002F9A4
+	// Token: 0x060007D7 RID: 2007 RVA: 0x000315E4 File Offset: 0x0002F7E4
 	public void PlayFX(float delay)
 	{
 		if (delay < 0f)
@@ -15,7 +15,7 @@ public class HotPepperFace : MonoBehaviour
 		base.Invoke("PlayFX", delay);
 	}
 
-	// Token: 0x060007D7 RID: 2007 RVA: 0x000317C1 File Offset: 0x0002F9C1
+	// Token: 0x060007D8 RID: 2008 RVA: 0x00031601 File Offset: 0x0002F801
 	public void PlayFX()
 	{
 		this._faceMesh.SetActive(true);
@@ -25,7 +25,7 @@ public class HotPepperFace : MonoBehaviour
 		base.Invoke("StopFX", this._effectLength);
 	}
 
-	// Token: 0x060007D8 RID: 2008 RVA: 0x00031801 File Offset: 0x0002FA01
+	// Token: 0x060007D9 RID: 2009 RVA: 0x00031641 File Offset: 0x0002F841
 	public void StopFX()
 	{
 		this._faceMesh.SetActive(false);

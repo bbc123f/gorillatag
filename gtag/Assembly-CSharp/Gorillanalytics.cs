@@ -10,10 +10,10 @@ using PlayFab;
 using PlayFab.CloudScriptModels;
 using UnityEngine;
 
-// Token: 0x02000180 RID: 384
+// Token: 0x02000181 RID: 385
 public class Gorillanalytics : MonoBehaviour
 {
-	// Token: 0x060009A9 RID: 2473 RVA: 0x0003B1CF File Offset: 0x000393CF
+	// Token: 0x060009AD RID: 2477 RVA: 0x0003B187 File Offset: 0x00039387
 	private IEnumerator Start()
 	{
 		PlayFabTitleDataCache.Instance.GetTitleData("GorillanalyticsChance", delegate(string s)
@@ -37,7 +37,7 @@ public class Gorillanalytics : MonoBehaviour
 		yield break;
 	}
 
-	// Token: 0x060009AA RID: 2474 RVA: 0x0003B1E0 File Offset: 0x000393E0
+	// Token: 0x060009AE RID: 2478 RVA: 0x0003B198 File Offset: 0x00039398
 	private void UploadGorillanalytics()
 	{
 		try
@@ -87,7 +87,7 @@ public class Gorillanalytics : MonoBehaviour
 		}
 	}
 
-	// Token: 0x060009AB RID: 2475 RVA: 0x0003B43C File Offset: 0x0003963C
+	// Token: 0x060009AF RID: 2479 RVA: 0x0003B3F4 File Offset: 0x000395F4
 	private void GetMapModeQueue(out string map, out string mode, out string queue)
 	{
 		if (!PhotonNetwork.InRoom)
@@ -109,70 +109,70 @@ public class Gorillanalytics : MonoBehaviour
 		queue = (this.queues.FirstOrDefault((string s) => gameMode.Contains(s)) ?? "unknown");
 	}
 
-	// Token: 0x04000BDB RID: 3035
+	// Token: 0x04000BDF RID: 3039
 	public float interval = 60f;
 
-	// Token: 0x04000BDC RID: 3036
+	// Token: 0x04000BE0 RID: 3040
 	public double oneOverChance = 4320.0;
 
-	// Token: 0x04000BDD RID: 3037
+	// Token: 0x04000BE1 RID: 3041
 	public PhotonNetworkController photonNetworkController;
 
-	// Token: 0x04000BDE RID: 3038
+	// Token: 0x04000BE2 RID: 3042
 	public List<string> maps;
 
-	// Token: 0x04000BDF RID: 3039
+	// Token: 0x04000BE3 RID: 3043
 	public List<string> modes;
 
-	// Token: 0x04000BE0 RID: 3040
+	// Token: 0x04000BE4 RID: 3044
 	public List<string> queues;
 
-	// Token: 0x04000BE1 RID: 3041
+	// Token: 0x04000BE5 RID: 3045
 	private readonly Gorillanalytics.UploadData uploadData = new Gorillanalytics.UploadData();
 
-	// Token: 0x0200042A RID: 1066
+	// Token: 0x0200042C RID: 1068
 	private class UploadData
 	{
-		// Token: 0x04001D3F RID: 7487
+		// Token: 0x04001D4C RID: 7500
 		public string version;
 
-		// Token: 0x04001D40 RID: 7488
+		// Token: 0x04001D4D RID: 7501
 		public double upload_chance;
 
-		// Token: 0x04001D41 RID: 7489
+		// Token: 0x04001D4E RID: 7502
 		public string map;
 
-		// Token: 0x04001D42 RID: 7490
+		// Token: 0x04001D4F RID: 7503
 		public string mode;
 
-		// Token: 0x04001D43 RID: 7491
+		// Token: 0x04001D50 RID: 7504
 		public string queue;
 
-		// Token: 0x04001D44 RID: 7492
+		// Token: 0x04001D51 RID: 7505
 		public int player_count;
 
-		// Token: 0x04001D45 RID: 7493
+		// Token: 0x04001D52 RID: 7506
 		public float pos_x;
 
-		// Token: 0x04001D46 RID: 7494
+		// Token: 0x04001D53 RID: 7507
 		public float pos_y;
 
-		// Token: 0x04001D47 RID: 7495
+		// Token: 0x04001D54 RID: 7508
 		public float pos_z;
 
-		// Token: 0x04001D48 RID: 7496
+		// Token: 0x04001D55 RID: 7509
 		public float vel_x;
 
-		// Token: 0x04001D49 RID: 7497
+		// Token: 0x04001D56 RID: 7510
 		public float vel_y;
 
-		// Token: 0x04001D4A RID: 7498
+		// Token: 0x04001D57 RID: 7511
 		public float vel_z;
 
-		// Token: 0x04001D4B RID: 7499
+		// Token: 0x04001D58 RID: 7512
 		public string cosmetics_owned;
 
-		// Token: 0x04001D4C RID: 7500
+		// Token: 0x04001D59 RID: 7513
 		public string cosmetics_worn;
 	}
 }

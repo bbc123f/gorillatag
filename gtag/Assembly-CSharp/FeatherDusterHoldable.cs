@@ -4,7 +4,7 @@ using UnityEngine;
 // Token: 0x0200003B RID: 59
 public class FeatherDusterHoldable : MonoBehaviour
 {
-	// Token: 0x0600014D RID: 333 RVA: 0x0000B1C7 File Offset: 0x000093C7
+	// Token: 0x0600014D RID: 333 RVA: 0x0000B20F File Offset: 0x0000940F
 	protected void Awake()
 	{
 		this.timeSinceLastSound = this.soundCooldown;
@@ -12,14 +12,14 @@ public class FeatherDusterHoldable : MonoBehaviour
 		this.initialRateOverTime = this.emissionModule.rateOverTimeMultiplier;
 	}
 
-	// Token: 0x0600014E RID: 334 RVA: 0x0000B1F7 File Offset: 0x000093F7
+	// Token: 0x0600014E RID: 334 RVA: 0x0000B23F File Offset: 0x0000943F
 	protected void OnEnable()
 	{
 		this.lastWorldPos = base.transform.position;
 		this.emissionModule.rateOverTimeMultiplier = 0f;
 	}
 
-	// Token: 0x0600014F RID: 335 RVA: 0x0000B21C File Offset: 0x0000941C
+	// Token: 0x0600014F RID: 335 RVA: 0x0000B264 File Offset: 0x00009464
 	protected void Update()
 	{
 		this.timeSinceLastSound += Time.deltaTime;

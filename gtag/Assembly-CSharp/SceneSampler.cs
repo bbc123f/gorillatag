@@ -5,13 +5,13 @@ using UnityEngine.SceneManagement;
 // Token: 0x020000B9 RID: 185
 public class SceneSampler : MonoBehaviour
 {
-	// Token: 0x06000417 RID: 1047 RVA: 0x0001B147 File Offset: 0x00019347
+	// Token: 0x06000417 RID: 1047 RVA: 0x0001AF23 File Offset: 0x00019123
 	private void Awake()
 	{
 		Object.DontDestroyOnLoad(base.gameObject);
 	}
 
-	// Token: 0x06000418 RID: 1048 RVA: 0x0001B154 File Offset: 0x00019354
+	// Token: 0x06000418 RID: 1048 RVA: 0x0001AF30 File Offset: 0x00019130
 	private void Update()
 	{
 		bool active = OVRInput.GetActiveController() == OVRInput.Controller.Touch || OVRInput.GetActiveController() == OVRInput.Controller.LTouch || OVRInput.GetActiveController() == OVRInput.Controller.RTouch;

@@ -4,7 +4,7 @@ using UnityEngine;
 // Token: 0x020000BA RID: 186
 public class SelectivePassthroughExperience : MonoBehaviour
 {
-	// Token: 0x0600041A RID: 1050 RVA: 0x0001B228 File Offset: 0x00019428
+	// Token: 0x0600041A RID: 1050 RVA: 0x0001B004 File Offset: 0x00019204
 	private void Update()
 	{
 		Camera.main.depthTextureMode = DepthTextureMode.Depth;

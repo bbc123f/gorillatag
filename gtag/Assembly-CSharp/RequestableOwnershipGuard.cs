@@ -13,14 +13,14 @@ using UnityEngine.Serialization;
 [RequireComponent(typeof(PhotonView))]
 public class RequestableOwnershipGuard : MonoBehaviourPunCallbacks, ISelfValidator
 {
-	// Token: 0x0600020C RID: 524 RVA: 0x0000E16C File Offset: 0x0000C36C
+	// Token: 0x0600020C RID: 524 RVA: 0x0000E1B4 File Offset: 0x0000C3B4
 	private void SetViewToRequest()
 	{
 		base.GetComponent<PhotonView>().OwnershipTransfer = OwnershipOption.Request;
 	}
 
 	// Token: 0x17000017 RID: 23
-	// (get) Token: 0x0600020D RID: 525 RVA: 0x0000E17A File Offset: 0x0000C37A
+	// (get) Token: 0x0600020D RID: 525 RVA: 0x0000E1C2 File Offset: 0x0000C3C2
 	private new PhotonView photonView
 	{
 		get
@@ -38,7 +38,7 @@ public class RequestableOwnershipGuard : MonoBehaviourPunCallbacks, ISelfValidat
 	}
 
 	// Token: 0x17000018 RID: 24
-	// (get) Token: 0x0600020E RID: 526 RVA: 0x0000E199 File Offset: 0x0000C399
+	// (get) Token: 0x0600020E RID: 526 RVA: 0x0000E1E1 File Offset: 0x0000C3E1
 	[DevInspectorShow]
 	public bool isTrulyMine
 	{
@@ -49,7 +49,7 @@ public class RequestableOwnershipGuard : MonoBehaviourPunCallbacks, ISelfValidat
 	}
 
 	// Token: 0x17000019 RID: 25
-	// (get) Token: 0x0600020F RID: 527 RVA: 0x0000E1AB File Offset: 0x0000C3AB
+	// (get) Token: 0x0600020F RID: 527 RVA: 0x0000E1F3 File Offset: 0x0000C3F3
 	public bool isMine
 	{
 		get
@@ -58,13 +58,13 @@ public class RequestableOwnershipGuard : MonoBehaviourPunCallbacks, ISelfValidat
 		}
 	}
 
-	// Token: 0x06000210 RID: 528 RVA: 0x0000E1BD File Offset: 0x0000C3BD
+	// Token: 0x06000210 RID: 528 RVA: 0x0000E205 File Offset: 0x0000C405
 	private void BindPhotonViews()
 	{
 		this.photonViews = base.GetComponents<PhotonView>();
 	}
 
-	// Token: 0x06000211 RID: 529 RVA: 0x0000E1CB File Offset: 0x0000C3CB
+	// Token: 0x06000211 RID: 529 RVA: 0x0000E213 File Offset: 0x0000C413
 	public override void OnDisable()
 	{
 		base.OnDisable();
@@ -76,7 +76,7 @@ public class RequestableOwnershipGuard : MonoBehaviourPunCallbacks, ISelfValidat
 		this.currentState = NetworkingState.IsOwner;
 	}
 
-	// Token: 0x06000212 RID: 530 RVA: 0x0000E208 File Offset: 0x0000C408
+	// Token: 0x06000212 RID: 530 RVA: 0x0000E250 File Offset: 0x0000C450
 	public override void OnEnable()
 	{
 		base.OnEnable();
@@ -114,19 +114,17 @@ public class RequestableOwnershipGuard : MonoBehaviourPunCallbacks, ISelfValidat
 		this.RequestTheCurrentOwnerFromAuthority();
 	}
 
-	// Token: 0x06000213 RID: 531 RVA: 0x0000E2D0 File Offset: 0x0000C4D0
+	// Token: 0x06000213 RID: 531 RVA: 0x0000E318 File Offset: 0x0000C518
 	public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
 	{
 		throw new NotImplementedException();
 	}
 
-	// Token: 0x06000214 RID: 532 RVA: 0x0000E2D8 File Offset: 0x0000C4D8
+	// Token: 0x06000214 RID: 532 RVA: 0x0000E31F File Offset: 0x0000C51F
 	public override void OnPlayerEnteredRoom(Player newPlayer)
 	{
-		Debug.Log(string.Format("Seeing if i can send Ownership to new player {0} {1}", PhotonNetwork.InRoom, PhotonNetwork.LocalPlayer.IsMasterClient));
 		if (PhotonNetwork.InRoom && this.PlayerHasAuthority(PhotonNetwork.LocalPlayer))
 		{
-			Debug.Log("Sending Ownership to new player");
 			this.photonView.RPC("SetOwnershipFromMasterClient", newPlayer, new object[]
 			{
 				this.currentOwner
@@ -134,14 +132,13 @@ public class RequestableOwnershipGuard : MonoBehaviourPunCallbacks, ISelfValidat
 		}
 	}
 
-	// Token: 0x06000215 RID: 533 RVA: 0x0000E34C File Offset: 0x0000C54C
+	// Token: 0x06000215 RID: 533 RVA: 0x0000E358 File Offset: 0x0000C558
 	public override void OnPreLeavingRoom()
 	{
 		if (!PhotonNetwork.InRoom)
 		{
 			return;
 		}
-		Debug.Log("Pre leaving room", this);
 		switch (this.currentState)
 		{
 		case NetworkingState.IsOwner:
@@ -163,10 +160,9 @@ public class RequestableOwnershipGuard : MonoBehaviourPunCallbacks, ISelfValidat
 		this.SetOwnership(PhotonNetwork.LocalPlayer, false, false);
 	}
 
-	// Token: 0x06000216 RID: 534 RVA: 0x0000E3D8 File Offset: 0x0000C5D8
+	// Token: 0x06000216 RID: 534 RVA: 0x0000E3D7 File Offset: 0x0000C5D7
 	public override void OnJoinedRoom()
 	{
-		Debug.Log("Joined room, Setting self to blind client");
 		this.currentMasterClient = PhotonNetwork.MasterClient;
 		if (this.PlayerHasAuthority(PhotonNetwork.LocalPlayer))
 		{
@@ -178,7 +174,7 @@ public class RequestableOwnershipGuard : MonoBehaviourPunCallbacks, ISelfValidat
 		this.SetOwnership(null, false, false);
 	}
 
-	// Token: 0x06000217 RID: 535 RVA: 0x0000E42C File Offset: 0x0000C62C
+	// Token: 0x06000217 RID: 535 RVA: 0x0000E418 File Offset: 0x0000C618
 	public override void OnPlayerLeftRoom(Player otherPlayer)
 	{
 		base.OnPlayerLeftRoom(otherPlayer);
@@ -288,7 +284,7 @@ public class RequestableOwnershipGuard : MonoBehaviourPunCallbacks, ISelfValidat
 		}
 	}
 
-	// Token: 0x06000218 RID: 536 RVA: 0x0000E648 File Offset: 0x0000C848
+	// Token: 0x06000218 RID: 536 RVA: 0x0000E634 File Offset: 0x0000C834
 	public override void OnMasterClientSwitched(Player newMasterClient)
 	{
 		switch (this.currentState)
@@ -321,13 +317,13 @@ public class RequestableOwnershipGuard : MonoBehaviourPunCallbacks, ISelfValidat
 		this.currentMasterClient = newMasterClient;
 	}
 
-	// Token: 0x06000219 RID: 537 RVA: 0x0000E6CC File Offset: 0x0000C8CC
+	// Token: 0x06000219 RID: 537 RVA: 0x0000E6B8 File Offset: 0x0000C8B8
 	[PunRPC]
 	public void RequestCurrentOwnerFromAuthorityRPC(PhotonMessageInfo info)
 	{
+		GorillaNot.IncrementRPCCall(info, "RequestCurrentOwnerFromAuthorityRPC");
 		if (!this.PlayerHasAuthority(PhotonNetwork.LocalPlayer))
 		{
-			Debug.LogError("Got an assurance request but we arent the master client");
 			return;
 		}
 		this.photonView.RPC("SetOwnershipFromMasterClient", info.Sender, new object[]
@@ -336,17 +332,11 @@ public class RequestableOwnershipGuard : MonoBehaviourPunCallbacks, ISelfValidat
 		});
 	}
 
-	// Token: 0x0600021A RID: 538 RVA: 0x0000E70C File Offset: 0x0000C90C
+	// Token: 0x0600021A RID: 538 RVA: 0x0000E6F8 File Offset: 0x0000C8F8
 	[PunRPC]
 	public void TransferOwnershipFromToRPC([CanBeNull] Player player, string nonce, PhotonMessageInfo info)
 	{
-		Debug.Log(string.Format("TransferOwnershipFromToRPC player: {0}, nonce: {1}, sender: {2}", player.ActorNumber, nonce, info.Sender.ActorNumber));
-		Debug.LogFormat("TransferOwnershipFromToRPC player: {0}, nonce: {1}, sender: {2}", new object[]
-		{
-			player.ActorNumber,
-			nonce,
-			info.Sender.ActorNumber
-		});
+		GorillaNot.IncrementRPCCall(info, "TransferOwnershipFromToRPC");
 		if (!this.PlayerHasAuthority(PhotonNetwork.LocalPlayer) && this.photonView.OwnerActorNr != info.Sender.ActorNumber)
 		{
 			Player player2 = this.currentOwner;
@@ -359,25 +349,21 @@ public class RequestableOwnershipGuard : MonoBehaviourPunCallbacks, ISelfValidat
 				actorNumber = info.Sender.ActorNumber;
 				if (!(num.GetValueOrDefault() == actorNumber & num != null))
 				{
-					Debug.LogError("Got transfer request but the sender does not match the current owner");
 					return;
 				}
 			}
 		}
 		if (this.currentOwner == null)
 		{
-			Debug.LogError("Tried to transfer ownership when the currentOwner is null. This happens if we just loaded in and haven't been told the current owner by the master client yet.");
 			this.RequestTheCurrentOwnerFromAuthority();
 			return;
 		}
 		if (this.currentOwner.ActorNumber != this.photonView.OwnerActorNr)
 		{
-			Debug.LogError("The stored actor number does not match the current actor number. Possible Attacker attempt or desync?");
 			return;
 		}
 		if (this.actualOwner.ActorNumber == player.ActorNumber)
 		{
-			Debug.LogError("Tried to set the new owner to ourselves? This shouldn't happen.");
 			return;
 		}
 		switch (this.currentState)
@@ -403,23 +389,17 @@ public class RequestableOwnershipGuard : MonoBehaviourPunCallbacks, ISelfValidat
 		throw new ArgumentOutOfRangeException();
 	}
 
-	// Token: 0x0600021B RID: 539 RVA: 0x0000E8FC File Offset: 0x0000CAFC
+	// Token: 0x0600021B RID: 539 RVA: 0x0000E868 File Offset: 0x0000CA68
 	[PunRPC]
 	public void SetOwnershipFromMasterClient([CanBeNull] Player player, PhotonMessageInfo info)
 	{
+		GorillaNot.IncrementRPCCall(info, "SetOwnershipFromMasterClient");
 		if (player == null)
 		{
-			Debug.LogError("SetOwnershipFromMasterClient: Player that was requested to be set is null");
 			return;
 		}
-		Debug.LogFormat("SetOwnershipFromMasterClient player: {0}, sender: {1}", new object[]
-		{
-			player.ActorNumber,
-			info.Sender.ActorNumber
-		});
 		if (!this.PlayerHasAuthority(info.Sender))
 		{
-			Debug.LogError("Got Master client only request from a non masterclient, Ignoring.");
 			GorillaNot.instance.SendReport("Sent an SetOwnershipFromMasterClient when they weren't the master client", info.Sender.UserId, info.Sender.NickName);
 			return;
 		}
@@ -431,23 +411,6 @@ public class RequestableOwnershipGuard : MonoBehaviourPunCallbacks, ISelfValidat
 			{
 				int num = networkingState - NetworkingState.RequestingOwnershipWaitingForSight;
 			}
-		}
-		if (this.currentOwner != null)
-		{
-			Player player2 = this.currentOwner;
-			int? num2 = (player2 != null) ? new int?(player2.ActorNumber) : null;
-			int ownerActorNr = this.photonView.OwnerActorNr;
-			if (!(num2.GetValueOrDefault() == ownerActorNr & num2 != null))
-			{
-				string str = "The stored actor number does not match the current actor number. Possible Attacker attempt or desync? Continuing regardless.\ncurrentOwner?.ActorNumber != photonView.OwnerActorNr\n";
-				string format = "{0} != {1}";
-				Player player3 = this.currentOwner;
-				Debug.LogError(str + string.Format(format, (player3 != null) ? new int?(player3.ActorNumber) : null, this.photonView.OwnerActorNr), this);
-			}
-		}
-		if (object.Equals(this.actualOwner, player))
-		{
-			Debug.LogWarning("Tried to set the new owner to what it is already set too? This shouldn't happen. Continuing regardless", this);
 		}
 		networkingState = this.currentState;
 		if (networkingState - NetworkingState.ForcefullyTakingOver <= 3 && object.Equals(player, PhotonNetwork.LocalPlayer))
@@ -498,13 +461,11 @@ public class RequestableOwnershipGuard : MonoBehaviourPunCallbacks, ISelfValidat
 		}
 	}
 
-	// Token: 0x0600021C RID: 540 RVA: 0x0000EB8C File Offset: 0x0000CD8C
+	// Token: 0x0600021C RID: 540 RVA: 0x0000EA0C File Offset: 0x0000CC0C
 	[PunRPC]
 	public void OnMasterClientAssistedTakeoverRequest(string nonce, PhotonMessageInfo info)
 	{
-		string format = "OnMasterClientAssistedTakeoverRequest id: {0} nonce: {1}";
-		Player sender = info.Sender;
-		Debug.Log(string.Format(format, (sender != null) ? new int?(sender.ActorNumber) : null, nonce));
+		GorillaNot.IncrementRPCCall(info, "OnMasterClientAssistedTakeoverRequest");
 		bool flag = true;
 		using (List<IRequestableOwnershipGuardCallbacks>.Enumerator enumerator = this.callbacksList.GetEnumerator())
 		{
@@ -525,16 +486,13 @@ public class RequestableOwnershipGuard : MonoBehaviourPunCallbacks, ISelfValidat
 			return;
 		}
 		this.TransferOwnership(info.Sender, nonce);
-		Debug.Log(string.Format("OnMasterClientAssistedTakeover: actualOwner: {0} refused to give up ownership, We are stealing ownership and giving it to {1}", this.actualOwner, info.Sender), this);
 	}
 
-	// Token: 0x0600021D RID: 541 RVA: 0x0000EC70 File Offset: 0x0000CE70
+	// Token: 0x0600021D RID: 541 RVA: 0x0000EAAC File Offset: 0x0000CCAC
 	[PunRPC]
 	public void OwnershipRequested(string nonce, PhotonMessageInfo info)
 	{
-		string format = "OwnershipRequested id: {0} nonce: {1}";
-		Player sender = info.Sender;
-		Debug.Log(string.Format(format, (sender != null) ? new int?(sender.ActorNumber) : null, nonce));
+		GorillaNot.IncrementRPCCall(info, "OwnershipRequested");
 		bool flag = true;
 		using (List<IRequestableOwnershipGuardCallbacks>.Enumerator enumerator = this.callbacksList.GetEnumerator())
 		{
@@ -557,13 +515,13 @@ public class RequestableOwnershipGuard : MonoBehaviourPunCallbacks, ISelfValidat
 		this.TransferOwnership(info.Sender, nonce);
 	}
 
-	// Token: 0x0600021E RID: 542 RVA: 0x0000ED34 File Offset: 0x0000CF34
+	// Token: 0x0600021E RID: 542 RVA: 0x0000EB44 File Offset: 0x0000CD44
 	private void TransferOwnershipWithID(int id)
 	{
 		this.TransferOwnership(PhotonNetwork.CurrentRoom.GetPlayer(id, false), "");
 	}
 
-	// Token: 0x0600021F RID: 543 RVA: 0x0000ED50 File Offset: 0x0000CF50
+	// Token: 0x0600021F RID: 543 RVA: 0x0000EB60 File Offset: 0x0000CD60
 	public void TransferOwnership(Player player, string Nonce = "")
 	{
 		if (this.photonView.IsMine)
@@ -588,13 +546,13 @@ public class RequestableOwnershipGuard : MonoBehaviourPunCallbacks, ISelfValidat
 		Debug.LogError("Tried to transfer ownership when im not the owner or a master client");
 	}
 
-	// Token: 0x06000220 RID: 544 RVA: 0x0000EDCF File Offset: 0x0000CFCF
+	// Token: 0x06000220 RID: 544 RVA: 0x0000EBDF File Offset: 0x0000CDDF
 	public void RequestTheCurrentOwnerFromAuthority()
 	{
 		this.photonView.RPC("RequestCurrentOwnerFromAuthorityRPC", this.GetAuthoritativePlayer(), Array.Empty<object>());
 	}
 
-	// Token: 0x06000221 RID: 545 RVA: 0x0000EDEC File Offset: 0x0000CFEC
+	// Token: 0x06000221 RID: 545 RVA: 0x0000EBFC File Offset: 0x0000CDFC
 	protected void SetCurrentOwner(Player player)
 	{
 		if (player == null)
@@ -620,7 +578,7 @@ public class RequestableOwnershipGuard : MonoBehaviourPunCallbacks, ISelfValidat
 		}
 	}
 
-	// Token: 0x06000222 RID: 546 RVA: 0x0000EE50 File Offset: 0x0000D050
+	// Token: 0x06000222 RID: 546 RVA: 0x0000EC60 File Offset: 0x0000CE60
 	protected internal void SetOwnership(Player player, bool isLocalOnly = false, bool dontPropigate = false)
 	{
 		if (!object.Equals(player, this.currentOwner) && !dontPropigate)
@@ -648,7 +606,7 @@ public class RequestableOwnershipGuard : MonoBehaviourPunCallbacks, ISelfValidat
 		this.currentState = NetworkingState.IsClient;
 	}
 
-	// Token: 0x06000223 RID: 547 RVA: 0x0000EEE9 File Offset: 0x0000D0E9
+	// Token: 0x06000223 RID: 547 RVA: 0x0000ECF9 File Offset: 0x0000CEF9
 	public Player GetAuthoritativePlayer()
 	{
 		if (this.giveCreatorAbsoluteAuthority)
@@ -658,27 +616,24 @@ public class RequestableOwnershipGuard : MonoBehaviourPunCallbacks, ISelfValidat
 		return PhotonNetwork.MasterClient;
 	}
 
-	// Token: 0x06000224 RID: 548 RVA: 0x0000EEFF File Offset: 0x0000D0FF
+	// Token: 0x06000224 RID: 548 RVA: 0x0000ED0F File Offset: 0x0000CF0F
 	public bool PlayerHasAuthority(Player player)
 	{
 		return object.Equals(this.GetAuthoritativePlayer(), player);
 	}
 
-	// Token: 0x06000225 RID: 549 RVA: 0x0000EF10 File Offset: 0x0000D110
+	// Token: 0x06000225 RID: 549 RVA: 0x0000ED20 File Offset: 0x0000CF20
 	[PunRPC]
 	public void OwnershipRequestDenied(string nonce, PhotonMessageInfo info)
 	{
+		GorillaNot.IncrementRPCCall(info, "OwnershipRequestDenied");
 		int actorNumber = info.Sender.ActorNumber;
 		Player player = this.actualOwner;
 		int? num = (player != null) ? new int?(player.ActorNumber) : null;
 		if (!(actorNumber == num.GetValueOrDefault() & num != null) && !this.PlayerHasAuthority(info.Sender))
 		{
-			Debug.LogError("OwnershipRequestDenied came from not the current owner and not the master client");
 			return;
 		}
-		string format = "OwnershipRequestDenied id: {0} nonce: {1}";
-		Player sender = info.Sender;
-		Debug.Log(string.Format(format, (sender != null) ? new int?(sender.ActorNumber) : null, nonce));
 		if (this.attemptMasterAssistedTakeoverOnDeny)
 		{
 			this.ownershipRequestNonce = Guid.NewGuid().ToString();
@@ -718,7 +673,7 @@ public class RequestableOwnershipGuard : MonoBehaviourPunCallbacks, ISelfValidat
 		}
 	}
 
-	// Token: 0x06000226 RID: 550 RVA: 0x0000F076 File Offset: 0x0000D276
+	// Token: 0x06000226 RID: 550 RVA: 0x0000EE53 File Offset: 0x0000D053
 	public IEnumerator RequestTimeout()
 	{
 		Debug.Log(string.Format("Timeout request started...  {0} ", this.currentState));
@@ -748,7 +703,7 @@ public class RequestableOwnershipGuard : MonoBehaviourPunCallbacks, ISelfValidat
 		yield break;
 	}
 
-	// Token: 0x06000227 RID: 551 RVA: 0x0000F088 File Offset: 0x0000D288
+	// Token: 0x06000227 RID: 551 RVA: 0x0000EE64 File Offset: 0x0000D064
 	public void RequestOwnership(Action onRequestSuccess, Action onRequestFailed)
 	{
 		switch (this.currentState)
@@ -782,7 +737,7 @@ public class RequestableOwnershipGuard : MonoBehaviourPunCallbacks, ISelfValidat
 		}
 	}
 
-	// Token: 0x06000228 RID: 552 RVA: 0x0000F184 File Offset: 0x0000D384
+	// Token: 0x06000228 RID: 552 RVA: 0x0000EF60 File Offset: 0x0000D160
 	public void RequestOwnershipImmediately(Action onRequestFailed)
 	{
 		Debug.Log("WorldShareable RequestOwnershipImmediately");
@@ -826,7 +781,7 @@ public class RequestableOwnershipGuard : MonoBehaviourPunCallbacks, ISelfValidat
 		}
 	}
 
-	// Token: 0x06000229 RID: 553 RVA: 0x0000F2B4 File Offset: 0x0000D4B4
+	// Token: 0x06000229 RID: 553 RVA: 0x0000F090 File Offset: 0x0000D290
 	public void RequestOwnershipImmediatelyWithGuaranteedAuthority()
 	{
 		Debug.Log("WorldShareable RequestOwnershipImmediatelyWithGuaranteedAuthority");
@@ -862,12 +817,12 @@ public class RequestableOwnershipGuard : MonoBehaviourPunCallbacks, ISelfValidat
 		}
 	}
 
-	// Token: 0x0600022A RID: 554 RVA: 0x0000F37A File Offset: 0x0000D57A
+	// Token: 0x0600022A RID: 554 RVA: 0x0000F156 File Offset: 0x0000D356
 	public void Validate(SelfValidationResult result)
 	{
 	}
 
-	// Token: 0x0600022B RID: 555 RVA: 0x0000F37C File Offset: 0x0000D57C
+	// Token: 0x0600022B RID: 555 RVA: 0x0000F158 File Offset: 0x0000D358
 	public void AddCallbackTarget(IRequestableOwnershipGuardCallbacks callbackObject)
 	{
 		if (!this.callbacksList.Contains(callbackObject))
@@ -880,7 +835,7 @@ public class RequestableOwnershipGuard : MonoBehaviourPunCallbacks, ISelfValidat
 		}
 	}
 
-	// Token: 0x0600022C RID: 556 RVA: 0x0000F3AD File Offset: 0x0000D5AD
+	// Token: 0x0600022C RID: 556 RVA: 0x0000F189 File Offset: 0x0000D389
 	public void RemoveCallbackTarget(IRequestableOwnershipGuardCallbacks callbackObject)
 	{
 		if (this.callbacksList.Contains(callbackObject))
@@ -893,14 +848,14 @@ public class RequestableOwnershipGuard : MonoBehaviourPunCallbacks, ISelfValidat
 		}
 	}
 
-	// Token: 0x0600022D RID: 557 RVA: 0x0000F3DF File Offset: 0x0000D5DF
+	// Token: 0x0600022D RID: 557 RVA: 0x0000F1BB File Offset: 0x0000D3BB
 	public void SetCreator(Player player)
 	{
 		this.creator = player;
 	}
 
 	// Token: 0x1700001A RID: 26
-	// (get) Token: 0x0600022E RID: 558 RVA: 0x0000F3E8 File Offset: 0x0000D5E8
+	// (get) Token: 0x0600022E RID: 558 RVA: 0x0000F1C4 File Offset: 0x0000D3C4
 	private NetworkingState EdCurrentState
 	{
 		get

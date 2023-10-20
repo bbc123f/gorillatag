@@ -3,35 +3,35 @@ using UnityEngine;
 
 namespace BoingKit
 {
-	// Token: 0x0200037B RID: 891
+	// Token: 0x0200037D RID: 893
 	public class MathUtil
 	{
-		// Token: 0x06001A4C RID: 6732 RVA: 0x00092574 File Offset: 0x00090774
+		// Token: 0x06001A55 RID: 6741 RVA: 0x00092A5C File Offset: 0x00090C5C
 		public static float AsinSafe(float x)
 		{
 			return Mathf.Asin(Mathf.Clamp(x, -1f, 1f));
 		}
 
-		// Token: 0x06001A4D RID: 6733 RVA: 0x0009258B File Offset: 0x0009078B
+		// Token: 0x06001A56 RID: 6742 RVA: 0x00092A73 File Offset: 0x00090C73
 		public static float AcosSafe(float x)
 		{
 			return Mathf.Acos(Mathf.Clamp(x, -1f, 1f));
 		}
 
-		// Token: 0x06001A4E RID: 6734 RVA: 0x000925A2 File Offset: 0x000907A2
+		// Token: 0x06001A57 RID: 6743 RVA: 0x00092A8A File Offset: 0x00090C8A
 		public static float InvSafe(float x)
 		{
 			return 1f / Mathf.Max(MathUtil.Epsilon, x);
 		}
 
-		// Token: 0x06001A4F RID: 6735 RVA: 0x000925B8 File Offset: 0x000907B8
+		// Token: 0x06001A58 RID: 6744 RVA: 0x00092AA0 File Offset: 0x00090CA0
 		public static float PointLineDist(Vector2 point, Vector2 linePos, Vector2 lineDir)
 		{
 			Vector2 vector = point - linePos;
 			return (vector - Vector2.Dot(vector, lineDir) * lineDir).magnitude;
 		}
 
-		// Token: 0x06001A50 RID: 6736 RVA: 0x000925E8 File Offset: 0x000907E8
+		// Token: 0x06001A59 RID: 6745 RVA: 0x00092AD0 File Offset: 0x00090CD0
 		public static float PointSegmentDist(Vector2 point, Vector2 segmentPosA, Vector2 segmentPosB)
 		{
 			Vector2 a = segmentPosB - segmentPosA;
@@ -41,7 +41,7 @@ namespace BoingKit
 			return (segmentPosA + Mathf.Clamp(value, 0f, 1f) * a - point).magnitude;
 		}
 
-		// Token: 0x06001A51 RID: 6737 RVA: 0x00092650 File Offset: 0x00090850
+		// Token: 0x06001A5A RID: 6746 RVA: 0x00092B38 File Offset: 0x00090D38
 		public static float Seek(float current, float target, float maxDelta)
 		{
 			float num = target - current;
@@ -49,7 +49,7 @@ namespace BoingKit
 			return current + num;
 		}
 
-		// Token: 0x06001A52 RID: 6738 RVA: 0x00092678 File Offset: 0x00090878
+		// Token: 0x06001A5B RID: 6747 RVA: 0x00092B60 File Offset: 0x00090D60
 		public static Vector2 Seek(Vector2 current, Vector2 target, float maxDelta)
 		{
 			Vector2 b = target - current;
@@ -62,25 +62,25 @@ namespace BoingKit
 			return current + b;
 		}
 
-		// Token: 0x06001A53 RID: 6739 RVA: 0x000926BA File Offset: 0x000908BA
+		// Token: 0x06001A5C RID: 6748 RVA: 0x00092BA2 File Offset: 0x00090DA2
 		public static float Remainder(float a, float b)
 		{
 			return a - a / b * b;
 		}
 
-		// Token: 0x06001A54 RID: 6740 RVA: 0x000926C3 File Offset: 0x000908C3
+		// Token: 0x06001A5D RID: 6749 RVA: 0x00092BAB File Offset: 0x00090DAB
 		public static int Remainder(int a, int b)
 		{
 			return a - a / b * b;
 		}
 
-		// Token: 0x06001A55 RID: 6741 RVA: 0x000926CC File Offset: 0x000908CC
+		// Token: 0x06001A5E RID: 6750 RVA: 0x00092BB4 File Offset: 0x00090DB4
 		public static float Modulo(float a, float b)
 		{
 			return Mathf.Repeat(a, b);
 		}
 
-		// Token: 0x06001A56 RID: 6742 RVA: 0x000926D8 File Offset: 0x000908D8
+		// Token: 0x06001A5F RID: 6751 RVA: 0x00092BC0 File Offset: 0x00090DC0
 		public static int Modulo(int a, int b)
 		{
 			int num = a % b;
@@ -91,40 +91,40 @@ namespace BoingKit
 			return num;
 		}
 
-		// Token: 0x04001AB3 RID: 6835
+		// Token: 0x04001AC0 RID: 6848
 		public static readonly float Pi = 3.1415927f;
 
-		// Token: 0x04001AB4 RID: 6836
+		// Token: 0x04001AC1 RID: 6849
 		public static readonly float TwoPi = 6.2831855f;
 
-		// Token: 0x04001AB5 RID: 6837
+		// Token: 0x04001AC2 RID: 6850
 		public static readonly float HalfPi = 1.5707964f;
 
-		// Token: 0x04001AB6 RID: 6838
+		// Token: 0x04001AC3 RID: 6851
 		public static readonly float QuaterPi = 0.7853982f;
 
-		// Token: 0x04001AB7 RID: 6839
+		// Token: 0x04001AC4 RID: 6852
 		public static readonly float SixthPi = 0.5235988f;
 
-		// Token: 0x04001AB8 RID: 6840
+		// Token: 0x04001AC5 RID: 6853
 		public static readonly float Sqrt2 = Mathf.Sqrt(2f);
 
-		// Token: 0x04001AB9 RID: 6841
+		// Token: 0x04001AC6 RID: 6854
 		public static readonly float Sqrt2Inv = 1f / Mathf.Sqrt(2f);
 
-		// Token: 0x04001ABA RID: 6842
+		// Token: 0x04001AC7 RID: 6855
 		public static readonly float Sqrt3 = Mathf.Sqrt(3f);
 
-		// Token: 0x04001ABB RID: 6843
+		// Token: 0x04001AC8 RID: 6856
 		public static readonly float Sqrt3Inv = 1f / Mathf.Sqrt(3f);
 
-		// Token: 0x04001ABC RID: 6844
+		// Token: 0x04001AC9 RID: 6857
 		public static readonly float Epsilon = 1E-06f;
 
-		// Token: 0x04001ABD RID: 6845
+		// Token: 0x04001ACA RID: 6858
 		public static readonly float Rad2Deg = 57.295776f;
 
-		// Token: 0x04001ABE RID: 6846
+		// Token: 0x04001ACB RID: 6859
 		public static readonly float Deg2Rad = 0.017453292f;
 	}
 }

@@ -3,12 +3,12 @@ using UnityEngine;
 
 namespace BuildSafe
 {
-	// Token: 0x020002C0 RID: 704
+	// Token: 0x020002C2 RID: 706
 	public static class ObjectFactory
 	{
 		// Token: 0x14000020 RID: 32
-		// (add) Token: 0x06001305 RID: 4869 RVA: 0x0006E628 File Offset: 0x0006C828
-		// (remove) Token: 0x06001306 RID: 4870 RVA: 0x0006E62A File Offset: 0x0006C82A
+		// (add) Token: 0x0600130C RID: 4876 RVA: 0x0006EAF4 File Offset: 0x0006CCF4
+		// (remove) Token: 0x0600130D RID: 4877 RVA: 0x0006EAF6 File Offset: 0x0006CCF6
 		public static event Action<Component> componentWasAdded
 		{
 			add

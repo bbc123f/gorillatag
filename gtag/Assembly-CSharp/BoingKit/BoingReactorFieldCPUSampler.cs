@@ -3,22 +3,22 @@ using UnityEngine;
 
 namespace BoingKit
 {
-	// Token: 0x0200036D RID: 877
+	// Token: 0x0200036F RID: 879
 	public class BoingReactorFieldCPUSampler : MonoBehaviour
 	{
-		// Token: 0x060019DC RID: 6620 RVA: 0x00090936 File Offset: 0x0008EB36
+		// Token: 0x060019E5 RID: 6629 RVA: 0x00090E1E File Offset: 0x0008F01E
 		public void OnEnable()
 		{
 			BoingManager.Register(this);
 		}
 
-		// Token: 0x060019DD RID: 6621 RVA: 0x0009093E File Offset: 0x0008EB3E
+		// Token: 0x060019E6 RID: 6630 RVA: 0x00090E26 File Offset: 0x0008F026
 		public void OnDisable()
 		{
 			BoingManager.Unregister(this);
 		}
 
-		// Token: 0x060019DE RID: 6622 RVA: 0x00090948 File Offset: 0x0008EB48
+		// Token: 0x060019E7 RID: 6631 RVA: 0x00090E30 File Offset: 0x0008F030
 		public void SampleFromField()
 		{
 			this.m_objPosition = base.transform.position;
@@ -46,34 +46,34 @@ namespace BoingKit
 			base.transform.rotation = QuaternionUtil.Pow(QuaternionUtil.FromVector4(v, true), this.RotationSampleMultiplier) * this.m_objRotation;
 		}
 
-		// Token: 0x060019DF RID: 6623 RVA: 0x00090A07 File Offset: 0x0008EC07
+		// Token: 0x060019E8 RID: 6632 RVA: 0x00090EEF File Offset: 0x0008F0EF
 		public void Restore()
 		{
 			base.transform.position = this.m_objPosition;
 			base.transform.rotation = this.m_objRotation;
 		}
 
-		// Token: 0x04001A85 RID: 6789
+		// Token: 0x04001A92 RID: 6802
 		public BoingReactorField ReactorField;
 
-		// Token: 0x04001A86 RID: 6790
+		// Token: 0x04001A93 RID: 6803
 		[Tooltip("Match this mode with how you update your object's transform.\n\nUpdate - Use this mode if you update your object's transform in Update(). This uses variable Time.detalTime. Use FixedUpdate if physics simulation becomes unstable.\n\nFixed Update - Use this mode if you update your object's transform in FixedUpdate(). This uses fixed Time.fixedDeltaTime. Also, use this mode if the game object is affected by Unity physics (i.e. has a rigid body component), which uses fixed updates.")]
 		public BoingManager.UpdateMode UpdateMode = BoingManager.UpdateMode.LateUpdate;
 
-		// Token: 0x04001A87 RID: 6791
+		// Token: 0x04001A94 RID: 6804
 		[Range(0f, 10f)]
 		[Tooltip("Multiplier on positional samples from reactor field.\n1.0 means 100%.")]
 		public float PositionSampleMultiplier = 1f;
 
-		// Token: 0x04001A88 RID: 6792
+		// Token: 0x04001A95 RID: 6805
 		[Range(0f, 10f)]
 		[Tooltip("Multiplier on rotational samples from reactor field.\n1.0 means 100%.")]
 		public float RotationSampleMultiplier = 1f;
 
-		// Token: 0x04001A89 RID: 6793
+		// Token: 0x04001A96 RID: 6806
 		private Vector3 m_objPosition;
 
-		// Token: 0x04001A8A RID: 6794
+		// Token: 0x04001A97 RID: 6807
 		private Quaternion m_objRotation;
 	}
 }

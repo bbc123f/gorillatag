@@ -47,12 +47,12 @@ public class RotationStepper : MonoBehaviour
 	// Token: 0x04000082 RID: 130
 	private float m_phase;
 
-	// Token: 0x02000385 RID: 901
+	// Token: 0x02000387 RID: 903
 	public enum ModeEnum
 	{
-		// Token: 0x04001AEC RID: 6892
+		// Token: 0x04001AF9 RID: 6905
 		Fixed,
-		// Token: 0x04001AED RID: 6893
+		// Token: 0x04001AFA RID: 6906
 		Random
 	}
 }

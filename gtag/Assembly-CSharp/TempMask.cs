@@ -6,7 +6,7 @@ using UnityEngine;
 // Token: 0x0200002A RID: 42
 public class TempMask : MonoBehaviour
 {
-	// Token: 0x060000F1 RID: 241 RVA: 0x00009370 File Offset: 0x00007570
+	// Token: 0x060000F1 RID: 241 RVA: 0x000093B8 File Offset: 0x000075B8
 	private void Awake()
 	{
 		this.dayOn = new DateTime(this.year, this.month, this.day);
@@ -17,19 +17,19 @@ public class TempMask : MonoBehaviour
 		}
 	}
 
-	// Token: 0x060000F2 RID: 242 RVA: 0x000093DE File Offset: 0x000075DE
+	// Token: 0x060000F2 RID: 242 RVA: 0x00009426 File Offset: 0x00007626
 	private void OnEnable()
 	{
 		base.StartCoroutine(this.MaskOnDuringDate());
 	}
 
-	// Token: 0x060000F3 RID: 243 RVA: 0x000093ED File Offset: 0x000075ED
+	// Token: 0x060000F3 RID: 243 RVA: 0x00009435 File Offset: 0x00007635
 	private void OnDisable()
 	{
 		base.StopAllCoroutines();
 	}
 
-	// Token: 0x060000F4 RID: 244 RVA: 0x000093F5 File Offset: 0x000075F5
+	// Token: 0x060000F4 RID: 244 RVA: 0x0000943D File Offset: 0x0000763D
 	private IEnumerator MaskOnDuringDate()
 	{
 		for (;;)

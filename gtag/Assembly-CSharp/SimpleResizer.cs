@@ -4,7 +4,7 @@ using UnityEngine;
 // Token: 0x020000C3 RID: 195
 public class SimpleResizer
 {
-	// Token: 0x06000442 RID: 1090 RVA: 0x0001BAFC File Offset: 0x00019CFC
+	// Token: 0x06000442 RID: 1090 RVA: 0x0001B8D8 File Offset: 0x00019AD8
 	public void CreateResizedObject(Vector3 newSize, GameObject parent, SimpleResizable sourcePrefab)
 	{
 		GameObject gameObject = Object.Instantiate<GameObject>(sourcePrefab.gameObject, Vector3.zero, Quaternion.identity);
@@ -26,7 +26,7 @@ public class SimpleResizer
 		Object.Destroy(component);
 	}
 
-	// Token: 0x06000443 RID: 1091 RVA: 0x0001BBA4 File Offset: 0x00019DA4
+	// Token: 0x06000443 RID: 1091 RVA: 0x0001B980 File Offset: 0x00019B80
 	private Mesh ProcessVertices(SimpleResizable resizable, Vector3 newSize)
 	{
 		Mesh mesh = resizable.Mesh;
@@ -51,7 +51,7 @@ public class SimpleResizer
 		return mesh2;
 	}
 
-	// Token: 0x06000444 RID: 1092 RVA: 0x0001BD44 File Offset: 0x00019F44
+	// Token: 0x06000444 RID: 1092 RVA: 0x0001BB20 File Offset: 0x00019D20
 	private float CalculateNewVertexPosition(SimpleResizable.Method resizeMethod, float currentPosition, float currentSize, float newSize, float padding, float paddingMax, float pivot)
 	{
 		float num = currentSize / 2f * (newSize / 2f * (1f / (currentSize / 2f))) - currentSize / 2f;

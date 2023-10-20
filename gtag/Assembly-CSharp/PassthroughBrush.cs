@@ -5,13 +5,13 @@ using UnityEngine;
 // Token: 0x020000B4 RID: 180
 public class PassthroughBrush : MonoBehaviour
 {
-	// Token: 0x060003FA RID: 1018 RVA: 0x0001A7DC File Offset: 0x000189DC
+	// Token: 0x060003FA RID: 1018 RVA: 0x0001A5B8 File Offset: 0x000187B8
 	private void OnDisable()
 	{
 		this.brushStatus = PassthroughBrush.BrushState.Idle;
 	}
 
-	// Token: 0x060003FB RID: 1019 RVA: 0x0001A7E8 File Offset: 0x000189E8
+	// Token: 0x060003FB RID: 1019 RVA: 0x0001A5C4 File Offset: 0x000187C4
 	private void LateUpdate()
 	{
 		base.transform.rotation = Quaternion.LookRotation(base.transform.position - Camera.main.transform.position);
@@ -48,7 +48,7 @@ public class PassthroughBrush : MonoBehaviour
 		}
 	}
 
-	// Token: 0x060003FC RID: 1020 RVA: 0x0001A8A8 File Offset: 0x00018AA8
+	// Token: 0x060003FC RID: 1020 RVA: 0x0001A684 File Offset: 0x00018884
 	private void StartLine(Vector3 inkPos)
 	{
 		GameObject gameObject = Object.Instantiate<GameObject>(this.lineSegmentPrefab, inkPos, Quaternion.identity);
@@ -62,7 +62,7 @@ public class PassthroughBrush : MonoBehaviour
 		gameObject.transform.parent = this.lineContainer.transform;
 	}
 
-	// Token: 0x060003FD RID: 1021 RVA: 0x0001A938 File Offset: 0x00018B38
+	// Token: 0x060003FD RID: 1021 RVA: 0x0001A714 File Offset: 0x00018914
 	private void UpdateLine(Vector3 inkPos)
 	{
 		float magnitude = (inkPos - this.inkPositions[this.inkPositions.Count - 1]).magnitude;
@@ -76,7 +76,7 @@ public class PassthroughBrush : MonoBehaviour
 		}
 	}
 
-	// Token: 0x060003FE RID: 1022 RVA: 0x0001A9E0 File Offset: 0x00018BE0
+	// Token: 0x060003FE RID: 1022 RVA: 0x0001A7BC File Offset: 0x000189BC
 	public void ClearLines()
 	{
 		for (int i = 0; i < this.lineContainer.transform.childCount; i++)
@@ -85,7 +85,7 @@ public class PassthroughBrush : MonoBehaviour
 		}
 	}
 
-	// Token: 0x060003FF RID: 1023 RVA: 0x0001AA24 File Offset: 0x00018C24
+	// Token: 0x060003FF RID: 1023 RVA: 0x0001A800 File Offset: 0x00018A00
 	public void UndoInkLine()
 	{
 		if (this.lineContainer.transform.childCount >= 1)
@@ -124,12 +124,12 @@ public class PassthroughBrush : MonoBehaviour
 	// Token: 0x040004B0 RID: 1200
 	private PassthroughBrush.BrushState brushStatus;
 
-	// Token: 0x020003D4 RID: 980
+	// Token: 0x020003D6 RID: 982
 	public enum BrushState
 	{
-		// Token: 0x04001C1A RID: 7194
+		// Token: 0x04001C27 RID: 7207
 		Idle,
-		// Token: 0x04001C1B RID: 7195
+		// Token: 0x04001C28 RID: 7208
 		Inking
 	}
 }

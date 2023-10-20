@@ -3,10 +3,10 @@ using UnityEngine;
 
 namespace GorillaTag.Sports
 {
-	// Token: 0x0200031F RID: 799
+	// Token: 0x02000321 RID: 801
 	public class SportGoalExitTrigger : MonoBehaviour
 	{
-		// Token: 0x06001657 RID: 5719 RVA: 0x0007C480 File Offset: 0x0007A680
+		// Token: 0x06001660 RID: 5728 RVA: 0x0007C968 File Offset: 0x0007AB68
 		private void OnTriggerExit(Collider other)
 		{
 			SportBall componentInParent = other.GetComponentInParent<SportBall>();
@@ -16,7 +16,7 @@ namespace GorillaTag.Sports
 			}
 		}
 
-		// Token: 0x0400186A RID: 6250
+		// Token: 0x04001877 RID: 6263
 		[SerializeField]
 		private SportGoalTrigger goalTrigger;
 	}

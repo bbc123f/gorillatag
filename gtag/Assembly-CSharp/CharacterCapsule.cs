@@ -6,7 +6,7 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class CharacterCapsule : MonoBehaviour
 {
-	// Token: 0x0600039E RID: 926 RVA: 0x0001603C File Offset: 0x0001423C
+	// Token: 0x0600039E RID: 926 RVA: 0x00015E18 File Offset: 0x00014018
 	private void Update()
 	{
 		if (this._character == null)

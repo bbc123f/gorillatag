@@ -1,14 +1,14 @@
 ﻿using System;
 using UnityEngine;
 
-// Token: 0x0200018D RID: 397
+// Token: 0x0200018E RID: 398
 public class GorillaZone : MonoBehaviour
 {
-	// Token: 0x06000A2A RID: 2602 RVA: 0x0003EE55 File Offset: 0x0003D055
+	// Token: 0x06000A2F RID: 2607 RVA: 0x0003EF85 File Offset: 0x0003D185
 	private void OnTriggerEnter(Collider other)
 	{
 	}
 
-	// Token: 0x04000C94 RID: 3220
+	// Token: 0x04000C98 RID: 3224
 	public string myZone;
 }

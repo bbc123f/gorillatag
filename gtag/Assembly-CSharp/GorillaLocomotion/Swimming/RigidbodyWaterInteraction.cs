@@ -5,30 +5,30 @@ using UnityEngine;
 
 namespace GorillaLocomotion.Swimming
 {
-	// Token: 0x0200028B RID: 651
+	// Token: 0x0200028D RID: 653
 	[RequireComponent(typeof(Rigidbody))]
 	public class RigidbodyWaterInteraction : MonoBehaviour
 	{
-		// Token: 0x060010F9 RID: 4345 RVA: 0x0005DA26 File Offset: 0x0005BC26
+		// Token: 0x06001100 RID: 4352 RVA: 0x0005DE02 File Offset: 0x0005C002
 		protected void Awake()
 		{
 			this.rb = base.GetComponent<Rigidbody>();
 			this.baseAngularDrag = this.rb.angularDrag;
 		}
 
-		// Token: 0x060010FA RID: 4346 RVA: 0x0005DA45 File Offset: 0x0005BC45
+		// Token: 0x06001101 RID: 4353 RVA: 0x0005DE21 File Offset: 0x0005C021
 		protected void OnEnable()
 		{
 			this.overlappingWaterVolumes.Clear();
 		}
 
-		// Token: 0x060010FB RID: 4347 RVA: 0x0005DA52 File Offset: 0x0005BC52
+		// Token: 0x06001102 RID: 4354 RVA: 0x0005DE2E File Offset: 0x0005C02E
 		protected void OnDisable()
 		{
 			this.overlappingWaterVolumes.Clear();
 		}
 
-		// Token: 0x060010FC RID: 4348 RVA: 0x0005DA60 File Offset: 0x0005BC60
+		// Token: 0x06001103 RID: 4355 RVA: 0x0005DE3C File Offset: 0x0005C03C
 		protected void FixedUpdate()
 		{
 			bool flag = this.overlappingWaterVolumes.Count > 0;
@@ -163,7 +163,7 @@ namespace GorillaLocomotion.Swimming
 			this.rb.angularDrag = this.baseAngularDrag;
 		}
 
-		// Token: 0x060010FD RID: 4349 RVA: 0x0005DF80 File Offset: 0x0005C180
+		// Token: 0x06001104 RID: 4356 RVA: 0x0005E35C File Offset: 0x0005C55C
 		protected void OnTriggerEnter(Collider other)
 		{
 			WaterVolume component = other.GetComponent<WaterVolume>();
@@ -173,7 +173,7 @@ namespace GorillaLocomotion.Swimming
 			}
 		}
 
-		// Token: 0x060010FE RID: 4350 RVA: 0x0005DFB8 File Offset: 0x0005C1B8
+		// Token: 0x06001105 RID: 4357 RVA: 0x0005E394 File Offset: 0x0005C594
 		protected void OnTriggerExit(Collider other)
 		{
 			WaterVolume component = other.GetComponent<WaterVolume>();
@@ -183,56 +183,56 @@ namespace GorillaLocomotion.Swimming
 			}
 		}
 
-		// Token: 0x0400133F RID: 4927
+		// Token: 0x0400134C RID: 4940
 		public bool applyDamping = true;
 
-		// Token: 0x04001340 RID: 4928
+		// Token: 0x0400134D RID: 4941
 		public bool applyBuoyancyForce = true;
 
-		// Token: 0x04001341 RID: 4929
+		// Token: 0x0400134E RID: 4942
 		public bool applyAngularDrag = true;
 
-		// Token: 0x04001342 RID: 4930
+		// Token: 0x0400134F RID: 4943
 		public bool applyWaterCurrents = true;
 
-		// Token: 0x04001343 RID: 4931
+		// Token: 0x04001350 RID: 4944
 		public bool applySurfaceTorque = true;
 
-		// Token: 0x04001344 RID: 4932
+		// Token: 0x04001351 RID: 4945
 		public float underWaterDampingHalfLife = 0.25f;
 
-		// Token: 0x04001345 RID: 4933
+		// Token: 0x04001352 RID: 4946
 		public float waterSurfaceDampingHalfLife = 1f;
 
-		// Token: 0x04001346 RID: 4934
+		// Token: 0x04001353 RID: 4947
 		public float underWaterBuoyancyFactor = 0.5f;
 
-		// Token: 0x04001347 RID: 4935
+		// Token: 0x04001354 RID: 4948
 		public float angularDrag = 0.5f;
 
-		// Token: 0x04001348 RID: 4936
+		// Token: 0x04001355 RID: 4949
 		public float surfaceTorqueAmount = 0.5f;
 
-		// Token: 0x04001349 RID: 4937
+		// Token: 0x04001356 RID: 4950
 		public bool enablePreciseWaterCollision;
 
-		// Token: 0x0400134A RID: 4938
+		// Token: 0x04001357 RID: 4951
 		public float objectRadiusForWaterCollision = 0.25f;
 
-		// Token: 0x0400134B RID: 4939
+		// Token: 0x04001358 RID: 4952
 		[Range(0f, 1f)]
 		public float buoyancyEquilibrium = 0.8f;
 
-		// Token: 0x0400134C RID: 4940
+		// Token: 0x04001359 RID: 4953
 		private Rigidbody rb;
 
-		// Token: 0x0400134D RID: 4941
+		// Token: 0x0400135A RID: 4954
 		private List<WaterVolume> overlappingWaterVolumes = new List<WaterVolume>();
 
-		// Token: 0x0400134E RID: 4942
+		// Token: 0x0400135B RID: 4955
 		private List<WaterCurrent> activeWaterCurrents = new List<WaterCurrent>(16);
 
-		// Token: 0x0400134F RID: 4943
+		// Token: 0x0400135C RID: 4956
 		private float baseAngularDrag = 0.05f;
 	}
 }

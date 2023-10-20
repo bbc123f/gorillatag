@@ -1,18 +1,18 @@
 ﻿using System;
 
-// Token: 0x02000239 RID: 569
+// Token: 0x0200023A RID: 570
 public enum GTShaderTransparencyMode
 {
-	// Token: 0x04001128 RID: 4392
+	// Token: 0x0400112E RID: 4398
 	Opaque,
-	// Token: 0x04001129 RID: 4393
+	// Token: 0x0400112F RID: 4399
 	AlphaTest,
-	// Token: 0x0400112A RID: 4394
+	// Token: 0x04001130 RID: 4400
 	Transparent,
-	// Token: 0x0400112B RID: 4395
+	// Token: 0x04001131 RID: 4401
 	Premultiplied,
-	// Token: 0x0400112C RID: 4396
+	// Token: 0x04001132 RID: 4402
 	Add,
-	// Token: 0x0400112D RID: 4397
+	// Token: 0x04001133 RID: 4403
 	Multiply
 }

@@ -7,7 +7,7 @@ using UnityEngine;
 public class LegacyWorldShareableItem : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback, IOnPhotonViewOwnerChange, IPhotonViewCallback, IPunObservable
 {
 	// Token: 0x1700003D RID: 61
-	// (get) Token: 0x0600052E RID: 1326 RVA: 0x0002131F File Offset: 0x0001F51F
+	// (get) Token: 0x0600052E RID: 1326 RVA: 0x00021113 File Offset: 0x0001F313
 	public LegacyWorldTargetItem Target
 	{
 		get
@@ -16,27 +16,27 @@ public class LegacyWorldShareableItem : MonoBehaviourPunCallbacks, IPunInstantia
 		}
 	}
 
-	// Token: 0x0600052F RID: 1327 RVA: 0x00021327 File Offset: 0x0001F527
+	// Token: 0x0600052F RID: 1327 RVA: 0x0002111B File Offset: 0x0001F31B
 	private void Start()
 	{
 		this.view = base.GetComponent<PhotonView>();
 	}
 
-	// Token: 0x06000530 RID: 1328 RVA: 0x00021335 File Offset: 0x0001F535
+	// Token: 0x06000530 RID: 1328 RVA: 0x00021129 File Offset: 0x0001F329
 	public override void OnEnable()
 	{
 		base.OnEnable();
 		this.target.Invalidate();
 	}
 
-	// Token: 0x06000531 RID: 1329 RVA: 0x00021348 File Offset: 0x0001F548
+	// Token: 0x06000531 RID: 1329 RVA: 0x0002113C File Offset: 0x0001F33C
 	public override void OnDisable()
 	{
 		base.OnDisable();
 		this.target.Invalidate();
 	}
 
-	// Token: 0x06000532 RID: 1330 RVA: 0x0002135B File Offset: 0x0001F55B
+	// Token: 0x06000532 RID: 1330 RVA: 0x0002114F File Offset: 0x0001F34F
 	public override void OnLeftRoom()
 	{
 		base.OnLeftRoom();
@@ -45,7 +45,7 @@ public class LegacyWorldShareableItem : MonoBehaviourPunCallbacks, IPunInstantia
 		this.target.Invalidate();
 	}
 
-	// Token: 0x06000533 RID: 1331 RVA: 0x0002137C File Offset: 0x0001F57C
+	// Token: 0x06000533 RID: 1331 RVA: 0x00021170 File Offset: 0x0001F370
 	public void OnPhotonInstantiate(PhotonMessageInfo info)
 	{
 		object[] instantiationData = info.photonView.InstantiationData;
@@ -62,7 +62,7 @@ public class LegacyWorldShareableItem : MonoBehaviourPunCallbacks, IPunInstantia
 		PhotonView.Get(this).AddCallbackTarget(this);
 	}
 
-	// Token: 0x06000534 RID: 1332 RVA: 0x0002140D File Offset: 0x0001F60D
+	// Token: 0x06000534 RID: 1332 RVA: 0x00021201 File Offset: 0x0001F401
 	void IOnPhotonViewOwnerChange.OnOwnerChange(Player newOwner, Player previousOwner)
 	{
 		if (this.onOwnerChangeCb != null)
@@ -72,8 +72,8 @@ public class LegacyWorldShareableItem : MonoBehaviourPunCallbacks, IPunInstantia
 	}
 
 	// Token: 0x1700003E RID: 62
-	// (get) Token: 0x06000535 RID: 1333 RVA: 0x00021424 File Offset: 0x0001F624
-	// (set) Token: 0x06000536 RID: 1334 RVA: 0x0002142C File Offset: 0x0001F62C
+	// (get) Token: 0x06000535 RID: 1333 RVA: 0x00021218 File Offset: 0x0001F418
+	// (set) Token: 0x06000536 RID: 1334 RVA: 0x00021220 File Offset: 0x0001F420
 	public bool EnableRemoteSync
 	{
 		get
@@ -86,7 +86,7 @@ public class LegacyWorldShareableItem : MonoBehaviourPunCallbacks, IPunInstantia
 		}
 	}
 
-	// Token: 0x06000537 RID: 1335 RVA: 0x00021438 File Offset: 0x0001F638
+	// Token: 0x06000537 RID: 1335 RVA: 0x0002122C File Offset: 0x0001F42C
 	private void Update()
 	{
 		if (!this.target.IsValid())
@@ -106,7 +106,7 @@ public class LegacyWorldShareableItem : MonoBehaviourPunCallbacks, IPunInstantia
 		}
 	}
 
-	// Token: 0x06000538 RID: 1336 RVA: 0x000214DC File Offset: 0x0001F6DC
+	// Token: 0x06000538 RID: 1336 RVA: 0x000212D0 File Offset: 0x0001F4D0
 	private bool ReadTargetFromStream(PhotonStream stream)
 	{
 		this.prevTarget.owner = this.target.owner;
@@ -116,7 +116,7 @@ public class LegacyWorldShareableItem : MonoBehaviourPunCallbacks, IPunInstantia
 		return this.target.owner == this.prevTarget.owner && this.target.itemIdx == this.prevTarget.itemIdx;
 	}
 
-	// Token: 0x06000539 RID: 1337 RVA: 0x00021574 File Offset: 0x0001F774
+	// Token: 0x06000539 RID: 1337 RVA: 0x00021368 File Offset: 0x0001F568
 	private void SyncToTarget()
 	{
 		VRRig vrrig;
@@ -151,12 +151,12 @@ public class LegacyWorldShareableItem : MonoBehaviourPunCallbacks, IPunInstantia
 		legacyTransferrableObject.SetWorldShareableItem(base.gameObject);
 	}
 
-	// Token: 0x0600053A RID: 1338 RVA: 0x00021640 File Offset: 0x0001F840
+	// Token: 0x0600053A RID: 1338 RVA: 0x00021434 File Offset: 0x0001F634
 	void IPunObservable.OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
 	{
 	}
 
-	// Token: 0x0600053B RID: 1339 RVA: 0x00021642 File Offset: 0x0001F842
+	// Token: 0x0600053B RID: 1339 RVA: 0x00021436 File Offset: 0x0001F636
 	[PunRPC]
 	private void RPCWorldShareable(PhotonMessageInfo info)
 	{
@@ -188,11 +188,11 @@ public class LegacyWorldShareableItem : MonoBehaviourPunCallbacks, IPunInstantia
 	// Token: 0x04000628 RID: 1576
 	private bool enableRemoteSync = true;
 
-	// Token: 0x020003E7 RID: 999
-	// (Invoke) Token: 0x06001BBF RID: 7103
+	// Token: 0x020003E9 RID: 1001
+	// (Invoke) Token: 0x06001BC8 RID: 7112
 	public delegate void Delegate();
 
-	// Token: 0x020003E8 RID: 1000
-	// (Invoke) Token: 0x06001BC3 RID: 7107
+	// Token: 0x020003EA RID: 1002
+	// (Invoke) Token: 0x06001BCC RID: 7116
 	public delegate void OnOwnerChangeDelegate(Player newOwner, Player prevOwner);
 }

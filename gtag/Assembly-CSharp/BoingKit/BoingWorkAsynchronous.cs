@@ -6,10 +6,10 @@ using UnityEngine;
 
 namespace BoingKit
 {
-	// Token: 0x02000370 RID: 880
+	// Token: 0x02000372 RID: 882
 	public static class BoingWorkAsynchronous
 	{
-		// Token: 0x060019E6 RID: 6630 RVA: 0x00090C20 File Offset: 0x0008EE20
+		// Token: 0x060019EF RID: 6639 RVA: 0x00091108 File Offset: 0x0008F308
 		internal static void PostUnregisterBehaviorCleanUp()
 		{
 			if (BoingWorkAsynchronous.s_behaviorJobNeedsGather)
@@ -21,7 +21,7 @@ namespace BoingKit
 			}
 		}
 
-		// Token: 0x060019E7 RID: 6631 RVA: 0x00090C4D File Offset: 0x0008EE4D
+		// Token: 0x060019F0 RID: 6640 RVA: 0x00091135 File Offset: 0x0008F335
 		internal static void PostUnregisterEffectorReactorCleanUp()
 		{
 			if (BoingWorkAsynchronous.s_reactorJobNeedsGather)
@@ -34,7 +34,7 @@ namespace BoingKit
 			}
 		}
 
-		// Token: 0x060019E8 RID: 6632 RVA: 0x00090C84 File Offset: 0x0008EE84
+		// Token: 0x060019F1 RID: 6641 RVA: 0x0009116C File Offset: 0x0008F36C
 		internal static void ExecuteBehaviors(Dictionary<int, BoingBehavior> behaviorMap, BoingManager.UpdateMode updateMode)
 		{
 			int num = 0;
@@ -79,7 +79,7 @@ namespace BoingKit
 			}
 		}
 
-		// Token: 0x060019E9 RID: 6633 RVA: 0x00090DE4 File Offset: 0x0008EFE4
+		// Token: 0x060019F2 RID: 6642 RVA: 0x000912CC File Offset: 0x0008F4CC
 		internal static void ExecuteReactors(Dictionary<int, BoingEffector> effectorMap, Dictionary<int, BoingReactor> reactorMap, Dictionary<int, BoingReactorField> fieldMap, Dictionary<int, BoingReactorFieldCPUSampler> cpuSamplerMap, BoingManager.UpdateMode updateMode)
 		{
 			int num = 0;
@@ -148,7 +148,7 @@ namespace BoingKit
 			}
 		}
 
-		// Token: 0x060019EA RID: 6634 RVA: 0x00091064 File Offset: 0x0008F264
+		// Token: 0x060019F3 RID: 6643 RVA: 0x0009154C File Offset: 0x0008F74C
 		internal static void ExecuteBones(BoingEffector.Params[] aEffectorParams, Dictionary<int, BoingBones> bonesMap, BoingManager.UpdateMode updateMode)
 		{
 			float deltaTime = BoingManager.DeltaTime;
@@ -182,7 +182,7 @@ namespace BoingKit
 			}
 		}
 
-		// Token: 0x060019EB RID: 6635 RVA: 0x00091130 File Offset: 0x0008F330
+		// Token: 0x060019F4 RID: 6644 RVA: 0x00091618 File Offset: 0x0008F818
 		internal static void PullBonesResults(BoingEffector.Params[] aEffectorParams, Dictionary<int, BoingBones> bonesMap, BoingManager.UpdateMode updateMode)
 		{
 			foreach (KeyValuePair<int, BoingBones> keyValuePair in bonesMap)
@@ -195,37 +195,37 @@ namespace BoingKit
 			}
 		}
 
-		// Token: 0x04001A90 RID: 6800
+		// Token: 0x04001A9D RID: 6813
 		private static bool s_behaviorJobNeedsGather;
 
-		// Token: 0x04001A91 RID: 6801
+		// Token: 0x04001A9E RID: 6814
 		private static JobHandle s_hBehaviorJob;
 
-		// Token: 0x04001A92 RID: 6802
+		// Token: 0x04001A9F RID: 6815
 		private static NativeArray<BoingWork.Params> s_aBehaviorParams;
 
-		// Token: 0x04001A93 RID: 6803
+		// Token: 0x04001AA0 RID: 6816
 		private static NativeArray<BoingWork.Output> s_aBehaviorOutput;
 
-		// Token: 0x04001A94 RID: 6804
+		// Token: 0x04001AA1 RID: 6817
 		private static bool s_reactorJobNeedsGather;
 
-		// Token: 0x04001A95 RID: 6805
+		// Token: 0x04001AA2 RID: 6818
 		private static JobHandle s_hReactorJob;
 
-		// Token: 0x04001A96 RID: 6806
+		// Token: 0x04001AA3 RID: 6819
 		private static NativeArray<BoingEffector.Params> s_aEffectors;
 
-		// Token: 0x04001A97 RID: 6807
+		// Token: 0x04001AA4 RID: 6820
 		private static NativeArray<BoingWork.Params> s_aReactorExecParams;
 
-		// Token: 0x04001A98 RID: 6808
+		// Token: 0x04001AA5 RID: 6821
 		private static NativeArray<BoingWork.Output> s_aReactorExecOutput;
 
-		// Token: 0x0200053B RID: 1339
+		// Token: 0x0200053D RID: 1341
 		private struct BehaviorJob : IJobParallelFor
 		{
-			// Token: 0x06001FB9 RID: 8121 RVA: 0x000A30EC File Offset: 0x000A12EC
+			// Token: 0x06001FC2 RID: 8130 RVA: 0x000A33F8 File Offset: 0x000A15F8
 			public void Execute(int index)
 			{
 				BoingWork.Params @params = this.Params[index];
@@ -240,23 +240,23 @@ namespace BoingKit
 				this.Output[index] = new BoingWork.Output(@params.InstanceID, ref @params.Instance.PositionSpring, ref @params.Instance.RotationSpring, ref @params.Instance.ScaleSpring);
 			}
 
-			// Token: 0x04002210 RID: 8720
+			// Token: 0x0400221D RID: 8733
 			public NativeArray<BoingWork.Params> Params;
 
-			// Token: 0x04002211 RID: 8721
+			// Token: 0x0400221E RID: 8734
 			public NativeArray<BoingWork.Output> Output;
 
-			// Token: 0x04002212 RID: 8722
+			// Token: 0x0400221F RID: 8735
 			public float DeltaTime;
 
-			// Token: 0x04002213 RID: 8723
+			// Token: 0x04002220 RID: 8736
 			public float FixedDeltaTime;
 		}
 
-		// Token: 0x0200053C RID: 1340
+		// Token: 0x0200053E RID: 1342
 		private struct ReactorJob : IJobParallelFor
 		{
-			// Token: 0x06001FBA RID: 8122 RVA: 0x000A3170 File Offset: 0x000A1370
+			// Token: 0x06001FC3 RID: 8131 RVA: 0x000A347C File Offset: 0x000A167C
 			public void Execute(int index)
 			{
 				BoingWork.Params @params = this.Params[index];
@@ -280,20 +280,20 @@ namespace BoingKit
 				this.Output[index] = new BoingWork.Output(@params.InstanceID, ref @params.Instance.PositionSpring, ref @params.Instance.RotationSpring, ref @params.Instance.ScaleSpring);
 			}
 
-			// Token: 0x04002214 RID: 8724
+			// Token: 0x04002221 RID: 8737
 			[ReadOnly]
 			public NativeArray<BoingEffector.Params> Effectors;
 
-			// Token: 0x04002215 RID: 8725
+			// Token: 0x04002222 RID: 8738
 			public NativeArray<BoingWork.Params> Params;
 
-			// Token: 0x04002216 RID: 8726
+			// Token: 0x04002223 RID: 8739
 			public NativeArray<BoingWork.Output> Output;
 
-			// Token: 0x04002217 RID: 8727
+			// Token: 0x04002224 RID: 8740
 			public float DeltaTime;
 
-			// Token: 0x04002218 RID: 8728
+			// Token: 0x04002225 RID: 8741
 			public float FixedDeltaTime;
 		}
 	}

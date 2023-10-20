@@ -4,7 +4,7 @@ using UnityEngine;
 // Token: 0x0200002C RID: 44
 public class SpiderDangler : MonoBehaviour
 {
-	// Token: 0x060000F9 RID: 249 RVA: 0x00009418 File Offset: 0x00007618
+	// Token: 0x060000F9 RID: 249 RVA: 0x00009460 File Offset: 0x00007660
 	protected void Awake()
 	{
 		this.lineRenderer = base.GetComponent<LineRenderer>();
@@ -19,13 +19,13 @@ public class SpiderDangler : MonoBehaviour
 		}
 	}
 
-	// Token: 0x060000FA RID: 250 RVA: 0x0000949F File Offset: 0x0000769F
+	// Token: 0x060000FA RID: 250 RVA: 0x000094E7 File Offset: 0x000076E7
 	protected void FixedUpdate()
 	{
 		this.Simulate();
 	}
 
-	// Token: 0x060000FB RID: 251 RVA: 0x000094A8 File Offset: 0x000076A8
+	// Token: 0x060000FB RID: 251 RVA: 0x000094F0 File Offset: 0x000076F0
 	protected void LateUpdate()
 	{
 		this.DrawRope();
@@ -38,7 +38,7 @@ public class SpiderDangler : MonoBehaviour
 		this.endTransform.Rotate(Vector3.up, vector.x + vector.y + vector.z + vector.w);
 	}
 
-	// Token: 0x060000FC RID: 252 RVA: 0x000095AC File Offset: 0x000077AC
+	// Token: 0x060000FC RID: 252 RVA: 0x000095F4 File Offset: 0x000077F4
 	private void Simulate()
 	{
 		this.ropeSegLenScaled = this.ropeSegLen * base.transform.lossyScale.x;
@@ -60,7 +60,7 @@ public class SpiderDangler : MonoBehaviour
 		}
 	}
 
-	// Token: 0x060000FD RID: 253 RVA: 0x000096B4 File Offset: 0x000078B4
+	// Token: 0x060000FD RID: 253 RVA: 0x000096FC File Offset: 0x000078FC
 	private void ApplyConstraint()
 	{
 		this.ropeSegs[0].pos = base.transform.position;
@@ -71,7 +71,7 @@ public class SpiderDangler : MonoBehaviour
 		}
 	}
 
-	// Token: 0x060000FE RID: 254 RVA: 0x0000973C File Offset: 0x0000793C
+	// Token: 0x060000FE RID: 254 RVA: 0x00009784 File Offset: 0x00007984
 	private void ApplyConstraintSegment(ref SpiderDangler.RopeSegment segA, ref SpiderDangler.RopeSegment segB, float dampenA, float dampenB)
 	{
 		float d = (segA.pos - segB.pos).magnitude - this.ropeSegLenScaled;
@@ -80,7 +80,7 @@ public class SpiderDangler : MonoBehaviour
 		segB.pos += a * dampenB;
 	}
 
-	// Token: 0x060000FF RID: 255 RVA: 0x000097C8 File Offset: 0x000079C8
+	// Token: 0x060000FF RID: 255 RVA: 0x00009810 File Offset: 0x00007A10
 	private void DrawRope()
 	{
 		Vector3[] array = new Vector3[6];
@@ -122,20 +122,20 @@ public class SpiderDangler : MonoBehaviour
 	// Token: 0x0400015E RID: 350
 	private const int kConstraintCalculationIterations = 8;
 
-	// Token: 0x0200038B RID: 907
+	// Token: 0x0200038D RID: 909
 	public struct RopeSegment
 	{
-		// Token: 0x06001AB9 RID: 6841 RVA: 0x0009462B File Offset: 0x0009282B
+		// Token: 0x06001AC2 RID: 6850 RVA: 0x00094B13 File Offset: 0x00092D13
 		public RopeSegment(Vector3 pos)
 		{
 			this.pos = pos;
 			this.posOld = pos;
 		}
 
-		// Token: 0x04001B08 RID: 6920
+		// Token: 0x04001B15 RID: 6933
 		public Vector3 pos;
 
-		// Token: 0x04001B09 RID: 6921
+		// Token: 0x04001B16 RID: 6934
 		public Vector3 posOld;
 	}
 }

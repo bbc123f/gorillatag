@@ -5,13 +5,13 @@ using UnityEngine;
 // Token: 0x02000078 RID: 120
 public class WaterSplashEffect : MonoBehaviour
 {
-	// Token: 0x0600025B RID: 603 RVA: 0x0000FD77 File Offset: 0x0000DF77
+	// Token: 0x0600025B RID: 603 RVA: 0x0000FB53 File Offset: 0x0000DD53
 	private void OnEnable()
 	{
 		this.startTime = Time.time;
 	}
 
-	// Token: 0x0600025C RID: 604 RVA: 0x0000FD84 File Offset: 0x0000DF84
+	// Token: 0x0600025C RID: 604 RVA: 0x0000FB60 File Offset: 0x0000DD60
 	public void Destroy()
 	{
 		this.DeactivateParticleSystems(this.bigSplashParticleSystems);
@@ -20,7 +20,7 @@ public class WaterSplashEffect : MonoBehaviour
 		ObjectPools.instance.Destroy(base.gameObject);
 	}
 
-	// Token: 0x0600025D RID: 605 RVA: 0x0000FDB8 File Offset: 0x0000DFB8
+	// Token: 0x0600025D RID: 605 RVA: 0x0000FB94 File Offset: 0x0000DD94
 	public void PlayEffect(bool isBigSplash, bool isEntry, float scale, WaterVolume volume = null)
 	{
 		this.waterVolume = volume;
@@ -46,7 +46,7 @@ public class WaterSplashEffect : MonoBehaviour
 		this.PlayRandomAudioClipWithoutRepeats(this.smallSplashExitAudioClips, ref WaterSplashEffect.lastPlayedSmallSplashExitAudioClipIndex);
 	}
 
-	// Token: 0x0600025E RID: 606 RVA: 0x0000FEC0 File Offset: 0x0000E0C0
+	// Token: 0x0600025E RID: 606 RVA: 0x0000FC9C File Offset: 0x0000DE9C
 	private void Update()
 	{
 		if (this.waterVolume != null && !this.waterVolume.isStationary && this.waterVolume.surfacePlane != null)
@@ -61,7 +61,7 @@ public class WaterSplashEffect : MonoBehaviour
 		}
 	}
 
-	// Token: 0x0600025F RID: 607 RVA: 0x0000FF88 File Offset: 0x0000E188
+	// Token: 0x0600025F RID: 607 RVA: 0x0000FD64 File Offset: 0x0000DF64
 	private void DeactivateParticleSystems(ParticleSystem[] particleSystems)
 	{
 		if (particleSystems != null)
@@ -73,7 +73,7 @@ public class WaterSplashEffect : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000260 RID: 608 RVA: 0x0000FFB4 File Offset: 0x0000E1B4
+	// Token: 0x06000260 RID: 608 RVA: 0x0000FD90 File Offset: 0x0000DF90
 	private void PlayParticleEffects(ParticleSystem[] particleSystems)
 	{
 		if (particleSystems != null)
@@ -86,7 +86,7 @@ public class WaterSplashEffect : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000261 RID: 609 RVA: 0x0000FFE8 File Offset: 0x0000E1E8
+	// Token: 0x06000261 RID: 609 RVA: 0x0000FDC4 File Offset: 0x0000DFC4
 	private void SetParticleEffectParameters(ParticleSystem[] particleSystems, float scale, float baseGravMultiplier, float baseStartSpeed, float baseSimulationSpeed, WaterVolume waterVolume = null)
 	{
 		if (particleSystems != null)
@@ -109,7 +109,7 @@ public class WaterSplashEffect : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000262 RID: 610 RVA: 0x000100A0 File Offset: 0x0000E2A0
+	// Token: 0x06000262 RID: 610 RVA: 0x0000FE7C File Offset: 0x0000E07C
 	private void PlayRandomAudioClipWithoutRepeats(AudioClip[] audioClips, ref int lastPlayedAudioClipIndex)
 	{
 		if (this.audioSource != null && audioClips != null && audioClips.Length != 0)

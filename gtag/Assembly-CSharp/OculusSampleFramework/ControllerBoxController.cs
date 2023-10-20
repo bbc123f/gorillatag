@@ -3,15 +3,15 @@ using UnityEngine;
 
 namespace OculusSampleFramework
 {
-	// Token: 0x020002E4 RID: 740
+	// Token: 0x020002E6 RID: 742
 	public class ControllerBoxController : MonoBehaviour
 	{
-		// Token: 0x06001404 RID: 5124 RVA: 0x00071A31 File Offset: 0x0006FC31
+		// Token: 0x0600140B RID: 5131 RVA: 0x00071EFD File Offset: 0x000700FD
 		private void Awake()
 		{
 		}
 
-		// Token: 0x06001405 RID: 5125 RVA: 0x00071A33 File Offset: 0x0006FC33
+		// Token: 0x0600140C RID: 5132 RVA: 0x00071EFF File Offset: 0x000700FF
 		public void StartStopStateChanged(InteractableStateArgs obj)
 		{
 			if (obj.NewInteractableState == InteractableState.ActionState)
@@ -20,7 +20,7 @@ namespace OculusSampleFramework
 			}
 		}
 
-		// Token: 0x06001406 RID: 5126 RVA: 0x00071A49 File Offset: 0x0006FC49
+		// Token: 0x0600140D RID: 5133 RVA: 0x00071F15 File Offset: 0x00070115
 		public void DecreaseSpeedStateChanged(InteractableStateArgs obj)
 		{
 			if (obj.NewInteractableState == InteractableState.ActionState)
@@ -29,7 +29,7 @@ namespace OculusSampleFramework
 			}
 		}
 
-		// Token: 0x06001407 RID: 5127 RVA: 0x00071A5F File Offset: 0x0006FC5F
+		// Token: 0x0600140E RID: 5134 RVA: 0x00071F2B File Offset: 0x0007012B
 		public void IncreaseSpeedStateChanged(InteractableStateArgs obj)
 		{
 			if (obj.NewInteractableState == InteractableState.ActionState)
@@ -38,7 +38,7 @@ namespace OculusSampleFramework
 			}
 		}
 
-		// Token: 0x06001408 RID: 5128 RVA: 0x00071A75 File Offset: 0x0006FC75
+		// Token: 0x0600140F RID: 5135 RVA: 0x00071F41 File Offset: 0x00070141
 		public void SmokeButtonStateChanged(InteractableStateArgs obj)
 		{
 			if (obj.NewInteractableState == InteractableState.ActionState)
@@ -47,7 +47,7 @@ namespace OculusSampleFramework
 			}
 		}
 
-		// Token: 0x06001409 RID: 5129 RVA: 0x00071A8B File Offset: 0x0006FC8B
+		// Token: 0x06001410 RID: 5136 RVA: 0x00071F57 File Offset: 0x00070157
 		public void WhistleButtonStateChanged(InteractableStateArgs obj)
 		{
 			if (obj.NewInteractableState == InteractableState.ActionState)
@@ -56,7 +56,7 @@ namespace OculusSampleFramework
 			}
 		}
 
-		// Token: 0x0600140A RID: 5130 RVA: 0x00071AA1 File Offset: 0x0006FCA1
+		// Token: 0x06001411 RID: 5137 RVA: 0x00071F6D File Offset: 0x0007016D
 		public void ReverseButtonStateChanged(InteractableStateArgs obj)
 		{
 			if (obj.NewInteractableState == InteractableState.ActionState)
@@ -65,7 +65,7 @@ namespace OculusSampleFramework
 			}
 		}
 
-		// Token: 0x0600140B RID: 5131 RVA: 0x00071AB7 File Offset: 0x0006FCB7
+		// Token: 0x06001412 RID: 5138 RVA: 0x00071F83 File Offset: 0x00070183
 		public void SwitchVisualization(InteractableStateArgs obj)
 		{
 			if (obj.NewInteractableState == InteractableState.ActionState)
@@ -74,7 +74,7 @@ namespace OculusSampleFramework
 			}
 		}
 
-		// Token: 0x0600140C RID: 5132 RVA: 0x00071ACC File Offset: 0x0006FCCC
+		// Token: 0x06001413 RID: 5139 RVA: 0x00071F98 File Offset: 0x00070198
 		public void GoMoo(InteractableStateArgs obj)
 		{
 			if (obj.NewInteractableState == InteractableState.ActionState)
@@ -83,11 +83,11 @@ namespace OculusSampleFramework
 			}
 		}
 
-		// Token: 0x040016B1 RID: 5809
+		// Token: 0x040016BE RID: 5822
 		[SerializeField]
 		private TrainLocomotive _locomotive;
 
-		// Token: 0x040016B2 RID: 5810
+		// Token: 0x040016BF RID: 5823
 		[SerializeField]
 		private CowController _cowController;
 	}

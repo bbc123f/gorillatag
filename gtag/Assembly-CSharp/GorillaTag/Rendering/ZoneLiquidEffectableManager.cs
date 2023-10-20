@@ -4,20 +4,20 @@ using UnityEngine;
 
 namespace GorillaTag.Rendering
 {
-	// Token: 0x0200032B RID: 811
+	// Token: 0x0200032D RID: 813
 	public class ZoneLiquidEffectableManager : MonoBehaviour
 	{
-		// Token: 0x17000187 RID: 391
-		// (get) Token: 0x06001684 RID: 5764 RVA: 0x0007D53D File Offset: 0x0007B73D
-		// (set) Token: 0x06001685 RID: 5765 RVA: 0x0007D544 File Offset: 0x0007B744
+		// Token: 0x17000189 RID: 393
+		// (get) Token: 0x0600168D RID: 5773 RVA: 0x0007DA25 File Offset: 0x0007BC25
+		// (set) Token: 0x0600168E RID: 5774 RVA: 0x0007DA2C File Offset: 0x0007BC2C
 		public static ZoneLiquidEffectableManager instance { get; private set; }
 
-		// Token: 0x17000188 RID: 392
-		// (get) Token: 0x06001686 RID: 5766 RVA: 0x0007D54C File Offset: 0x0007B74C
-		// (set) Token: 0x06001687 RID: 5767 RVA: 0x0007D553 File Offset: 0x0007B753
+		// Token: 0x1700018A RID: 394
+		// (get) Token: 0x0600168F RID: 5775 RVA: 0x0007DA34 File Offset: 0x0007BC34
+		// (set) Token: 0x06001690 RID: 5776 RVA: 0x0007DA3B File Offset: 0x0007BC3B
 		public static bool hasInstance { get; private set; }
 
-		// Token: 0x06001688 RID: 5768 RVA: 0x0007D55B File Offset: 0x0007B75B
+		// Token: 0x06001691 RID: 5777 RVA: 0x0007DA43 File Offset: 0x0007BC43
 		protected void Awake()
 		{
 			if (ZoneLiquidEffectableManager.hasInstance && ZoneLiquidEffectableManager.instance != this)
@@ -28,7 +28,7 @@ namespace GorillaTag.Rendering
 			ZoneLiquidEffectableManager.SetInstance(this);
 		}
 
-		// Token: 0x06001689 RID: 5769 RVA: 0x0007D583 File Offset: 0x0007B783
+		// Token: 0x06001692 RID: 5778 RVA: 0x0007DA6B File Offset: 0x0007BC6B
 		protected void OnDestroy()
 		{
 			if (ZoneLiquidEffectableManager.instance == this)
@@ -38,7 +38,7 @@ namespace GorillaTag.Rendering
 			}
 		}
 
-		// Token: 0x0600168A RID: 5770 RVA: 0x0007D5A0 File Offset: 0x0007B7A0
+		// Token: 0x06001693 RID: 5779 RVA: 0x0007DA88 File Offset: 0x0007BC88
 		protected void LateUpdate()
 		{
 			int layerMask = 1 << LayerMask.NameToLayer("Water");
@@ -66,13 +66,13 @@ namespace GorillaTag.Rendering
 			}
 		}
 
-		// Token: 0x0600168B RID: 5771 RVA: 0x0007D6CC File Offset: 0x0007B8CC
+		// Token: 0x06001694 RID: 5780 RVA: 0x0007DBB4 File Offset: 0x0007BDB4
 		private static void CreateManager()
 		{
 			ZoneLiquidEffectableManager.SetInstance(new GameObject("ZoneLiquidEffectableManager").AddComponent<ZoneLiquidEffectableManager>());
 		}
 
-		// Token: 0x0600168C RID: 5772 RVA: 0x0007D6E2 File Offset: 0x0007B8E2
+		// Token: 0x06001695 RID: 5781 RVA: 0x0007DBCA File Offset: 0x0007BDCA
 		private static void SetInstance(ZoneLiquidEffectableManager manager)
 		{
 			ZoneLiquidEffectableManager.instance = manager;
@@ -83,7 +83,7 @@ namespace GorillaTag.Rendering
 			}
 		}
 
-		// Token: 0x0600168D RID: 5773 RVA: 0x0007D700 File Offset: 0x0007B900
+		// Token: 0x06001696 RID: 5782 RVA: 0x0007DBE8 File Offset: 0x0007BDE8
 		public static void Register(ZoneLiquidEffectable effect)
 		{
 			if (!ZoneLiquidEffectableManager.hasInstance)
@@ -114,13 +114,13 @@ namespace GorillaTag.Rendering
 			}
 		}
 
-		// Token: 0x0600168E RID: 5774 RVA: 0x0007D7CB File Offset: 0x0007B9CB
+		// Token: 0x06001697 RID: 5783 RVA: 0x0007DCB3 File Offset: 0x0007BEB3
 		public static void Unregister(ZoneLiquidEffectable effect)
 		{
 			ZoneLiquidEffectableManager.instance.zoneLiquidEffectables.Remove(effect);
 		}
 
-		// Token: 0x04001899 RID: 6297
+		// Token: 0x040018A6 RID: 6310
 		private readonly List<ZoneLiquidEffectable> zoneLiquidEffectables = new List<ZoneLiquidEffectable>(32);
 	}
 }

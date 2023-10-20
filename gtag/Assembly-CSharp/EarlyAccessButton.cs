@@ -6,12 +6,12 @@ using UnityEngine;
 // Token: 0x02000104 RID: 260
 public class EarlyAccessButton : GorillaPressableButton
 {
-	// Token: 0x06000646 RID: 1606 RVA: 0x000278FC File Offset: 0x00025AFC
+	// Token: 0x06000647 RID: 1607 RVA: 0x0002773C File Offset: 0x0002593C
 	private void Awake()
 	{
 	}
 
-	// Token: 0x06000647 RID: 1607 RVA: 0x00027900 File Offset: 0x00025B00
+	// Token: 0x06000648 RID: 1608 RVA: 0x00027740 File Offset: 0x00025940
 	public void Update()
 	{
 		if (PhotonNetworkController.Instance != null && PhotonNetworkController.Instance.wrongVersion)
@@ -23,7 +23,7 @@ public class EarlyAccessButton : GorillaPressableButton
 		}
 	}
 
-	// Token: 0x06000648 RID: 1608 RVA: 0x0002795E File Offset: 0x00025B5E
+	// Token: 0x06000649 RID: 1609 RVA: 0x0002779E File Offset: 0x0002599E
 	public override void ButtonActivation()
 	{
 		base.ButtonActivation();
@@ -31,7 +31,7 @@ public class EarlyAccessButton : GorillaPressableButton
 		base.StartCoroutine(this.ButtonColorUpdate());
 	}
 
-	// Token: 0x06000649 RID: 1609 RVA: 0x0002797F File Offset: 0x00025B7F
+	// Token: 0x0600064A RID: 1610 RVA: 0x000277BF File Offset: 0x000259BF
 	public void AlreadyOwn()
 	{
 		base.enabled = false;
@@ -40,7 +40,7 @@ public class EarlyAccessButton : GorillaPressableButton
 		this.myText.text = "YOU OWN THE BUNDLE ALREADY! THANK YOU!";
 	}
 
-	// Token: 0x0600064A RID: 1610 RVA: 0x000279B5 File Offset: 0x00025BB5
+	// Token: 0x0600064B RID: 1611 RVA: 0x000277F5 File Offset: 0x000259F5
 	private IEnumerator ButtonColorUpdate()
 	{
 		Debug.Log("did this happen?");

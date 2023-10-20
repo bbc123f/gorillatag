@@ -3,12 +3,12 @@ using UnityEngine;
 
 namespace OculusSampleFramework
 {
-	// Token: 0x020002E2 RID: 738
+	// Token: 0x020002E4 RID: 740
 	public class RayToolView : MonoBehaviour, InteractableToolView
 	{
-		// Token: 0x1700015C RID: 348
-		// (get) Token: 0x060013F1 RID: 5105 RVA: 0x00071603 File Offset: 0x0006F803
-		// (set) Token: 0x060013F2 RID: 5106 RVA: 0x00071610 File Offset: 0x0006F810
+		// Token: 0x1700015E RID: 350
+		// (get) Token: 0x060013F8 RID: 5112 RVA: 0x00071ACF File Offset: 0x0006FCCF
+		// (set) Token: 0x060013F9 RID: 5113 RVA: 0x00071ADC File Offset: 0x0006FCDC
 		public bool EnableState
 		{
 			get
@@ -22,9 +22,9 @@ namespace OculusSampleFramework
 			}
 		}
 
-		// Token: 0x1700015D RID: 349
-		// (get) Token: 0x060013F3 RID: 5107 RVA: 0x0007162F File Offset: 0x0006F82F
-		// (set) Token: 0x060013F4 RID: 5108 RVA: 0x00071637 File Offset: 0x0006F837
+		// Token: 0x1700015F RID: 351
+		// (get) Token: 0x060013FA RID: 5114 RVA: 0x00071AFB File Offset: 0x0006FCFB
+		// (set) Token: 0x060013FB RID: 5115 RVA: 0x00071B03 File Offset: 0x0006FD03
 		public bool ToolActivateState
 		{
 			get
@@ -38,7 +38,7 @@ namespace OculusSampleFramework
 			}
 		}
 
-		// Token: 0x060013F5 RID: 5109 RVA: 0x00071664 File Offset: 0x0006F864
+		// Token: 0x060013FC RID: 5116 RVA: 0x00071B30 File Offset: 0x0006FD30
 		private void Awake()
 		{
 			this._lineRenderer.positionCount = 25;
@@ -55,12 +55,12 @@ namespace OculusSampleFramework
 			});
 		}
 
-		// Token: 0x1700015E RID: 350
-		// (get) Token: 0x060013F6 RID: 5110 RVA: 0x00071727 File Offset: 0x0006F927
-		// (set) Token: 0x060013F7 RID: 5111 RVA: 0x0007172F File Offset: 0x0006F92F
+		// Token: 0x17000160 RID: 352
+		// (get) Token: 0x060013FD RID: 5117 RVA: 0x00071BF3 File Offset: 0x0006FDF3
+		// (set) Token: 0x060013FE RID: 5118 RVA: 0x00071BFB File Offset: 0x0006FDFB
 		public InteractableTool InteractableTool { get; set; }
 
-		// Token: 0x060013F8 RID: 5112 RVA: 0x00071738 File Offset: 0x0006F938
+		// Token: 0x060013FF RID: 5119 RVA: 0x00071C04 File Offset: 0x0006FE04
 		public void SetFocusedInteractable(Interactable interactable)
 		{
 			if (interactable == null)
@@ -71,7 +71,7 @@ namespace OculusSampleFramework
 			this._focusedTransform = interactable.transform;
 		}
 
-		// Token: 0x060013F9 RID: 5113 RVA: 0x00071758 File Offset: 0x0006F958
+		// Token: 0x06001400 RID: 5120 RVA: 0x00071C24 File Offset: 0x0006FE24
 		private void Update()
 		{
 			Vector3 position = this.InteractableTool.ToolTransform.position;
@@ -90,7 +90,7 @@ namespace OculusSampleFramework
 			this._targetTransform.position = vector;
 		}
 
-		// Token: 0x060013FA RID: 5114 RVA: 0x00071850 File Offset: 0x0006FA50
+		// Token: 0x06001401 RID: 5121 RVA: 0x00071D1C File Offset: 0x0006FF1C
 		public static Vector3 GetPointOnBezierCurve(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, float t)
 		{
 			t = Mathf.Clamp01(t);
@@ -100,33 +100,33 @@ namespace OculusSampleFramework
 			return num * num2 * p0 + 3f * num2 * t * p1 + 3f * num * num3 * p2 + t * num3 * p3;
 		}
 
-		// Token: 0x040016A4 RID: 5796
+		// Token: 0x040016B1 RID: 5809
 		private const int NUM_RAY_LINE_POSITIONS = 25;
 
-		// Token: 0x040016A5 RID: 5797
+		// Token: 0x040016B2 RID: 5810
 		private const float DEFAULT_RAY_CAST_DISTANCE = 3f;
 
-		// Token: 0x040016A6 RID: 5798
+		// Token: 0x040016B3 RID: 5811
 		[SerializeField]
 		private Transform _targetTransform;
 
-		// Token: 0x040016A7 RID: 5799
+		// Token: 0x040016B4 RID: 5812
 		[SerializeField]
 		private LineRenderer _lineRenderer;
 
-		// Token: 0x040016A8 RID: 5800
+		// Token: 0x040016B5 RID: 5813
 		private bool _toolActivateState;
 
-		// Token: 0x040016A9 RID: 5801
+		// Token: 0x040016B6 RID: 5814
 		private Transform _focusedTransform;
 
-		// Token: 0x040016AA RID: 5802
+		// Token: 0x040016B7 RID: 5815
 		private Vector3[] linePositions = new Vector3[25];
 
-		// Token: 0x040016AB RID: 5803
+		// Token: 0x040016B8 RID: 5816
 		private Gradient _oldColorGradient;
 
-		// Token: 0x040016AC RID: 5804
+		// Token: 0x040016B9 RID: 5817
 		private Gradient _highLightColorGradient;
 	}
 }

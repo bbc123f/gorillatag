@@ -5,11 +5,11 @@ using UnityEngine;
 
 namespace OculusSampleFramework
 {
-	// Token: 0x020002D9 RID: 729
+	// Token: 0x020002DB RID: 731
 	public class FingerTipPokeTool : InteractableTool
 	{
-		// Token: 0x17000142 RID: 322
-		// (get) Token: 0x060013A5 RID: 5029 RVA: 0x000707B4 File Offset: 0x0006E9B4
+		// Token: 0x17000144 RID: 324
+		// (get) Token: 0x060013AC RID: 5036 RVA: 0x00070C80 File Offset: 0x0006EE80
 		public override InteractableToolTags ToolTags
 		{
 			get
@@ -18,8 +18,8 @@ namespace OculusSampleFramework
 			}
 		}
 
-		// Token: 0x17000143 RID: 323
-		// (get) Token: 0x060013A6 RID: 5030 RVA: 0x000707B7 File Offset: 0x0006E9B7
+		// Token: 0x17000145 RID: 325
+		// (get) Token: 0x060013AD RID: 5037 RVA: 0x00070C83 File Offset: 0x0006EE83
 		public override ToolInputState ToolInputState
 		{
 			get
@@ -28,8 +28,8 @@ namespace OculusSampleFramework
 			}
 		}
 
-		// Token: 0x17000144 RID: 324
-		// (get) Token: 0x060013A7 RID: 5031 RVA: 0x000707BA File Offset: 0x0006E9BA
+		// Token: 0x17000146 RID: 326
+		// (get) Token: 0x060013AE RID: 5038 RVA: 0x00070C86 File Offset: 0x0006EE86
 		public override bool IsFarFieldTool
 		{
 			get
@@ -38,9 +38,9 @@ namespace OculusSampleFramework
 			}
 		}
 
-		// Token: 0x17000145 RID: 325
-		// (get) Token: 0x060013A8 RID: 5032 RVA: 0x000707BD File Offset: 0x0006E9BD
-		// (set) Token: 0x060013A9 RID: 5033 RVA: 0x000707CF File Offset: 0x0006E9CF
+		// Token: 0x17000147 RID: 327
+		// (get) Token: 0x060013AF RID: 5039 RVA: 0x00070C89 File Offset: 0x0006EE89
+		// (set) Token: 0x060013B0 RID: 5040 RVA: 0x00070C9B File Offset: 0x0006EE9B
 		public override bool EnableState
 		{
 			get
@@ -53,7 +53,7 @@ namespace OculusSampleFramework
 			}
 		}
 
-		// Token: 0x060013AA RID: 5034 RVA: 0x000707E4 File Offset: 0x0006E9E4
+		// Token: 0x060013B1 RID: 5041 RVA: 0x00070CB0 File Offset: 0x0006EEB0
 		public override void Initialize()
 		{
 			InteractableToolsInputRouter.Instance.RegisterInteractableTool(this);
@@ -63,7 +63,7 @@ namespace OculusSampleFramework
 			base.StartCoroutine(this.AttachTriggerLogic());
 		}
 
-		// Token: 0x060013AB RID: 5035 RVA: 0x00070830 File Offset: 0x0006EA30
+		// Token: 0x060013B2 RID: 5042 RVA: 0x00070CFC File Offset: 0x0006EEFC
 		private IEnumerator AttachTriggerLogic()
 		{
 			while (!HandsManager.Instance || !HandsManager.Instance.IsInitialized())
@@ -108,7 +108,7 @@ namespace OculusSampleFramework
 			yield break;
 		}
 
-		// Token: 0x060013AC RID: 5036 RVA: 0x00070840 File Offset: 0x0006EA40
+		// Token: 0x060013B3 RID: 5043 RVA: 0x00070D0C File Offset: 0x0006EF0C
 		private void Update()
 		{
 			if (!HandsManager.Instance || !HandsManager.Instance.IsInitialized() || !this._isInitialized || this._capsuleToTrack == null)
@@ -128,7 +128,7 @@ namespace OculusSampleFramework
 			this.CheckAndUpdateScale();
 		}
 
-		// Token: 0x060013AD RID: 5037 RVA: 0x00070928 File Offset: 0x0006EB28
+		// Token: 0x060013B4 RID: 5044 RVA: 0x00070DF4 File Offset: 0x0006EFF4
 		private void UpdateAverageVelocity()
 		{
 			Vector3 position = this._position;
@@ -150,7 +150,7 @@ namespace OculusSampleFramework
 			base.Velocity /= (float)num;
 		}
 
-		// Token: 0x060013AE RID: 5038 RVA: 0x00070A00 File Offset: 0x0006EC00
+		// Token: 0x060013B5 RID: 5045 RVA: 0x00070ECC File Offset: 0x0006F0CC
 		private void CheckAndUpdateScale()
 		{
 			float num = base.IsRightHandedTool ? HandsManager.Instance.RightHand.HandScale : HandsManager.Instance.LeftHand.HandScale;
@@ -161,7 +161,7 @@ namespace OculusSampleFramework
 			}
 		}
 
-		// Token: 0x060013AF RID: 5039 RVA: 0x00070A64 File Offset: 0x0006EC64
+		// Token: 0x060013B6 RID: 5046 RVA: 0x00070F30 File Offset: 0x0006F130
 		public override List<InteractableCollisionInfo> GetNextIntersectingObjects()
 		{
 			this._currentIntersectingObjects.Clear();
@@ -176,49 +176,49 @@ namespace OculusSampleFramework
 			return this._currentIntersectingObjects;
 		}
 
-		// Token: 0x060013B0 RID: 5040 RVA: 0x00070AF0 File Offset: 0x0006ECF0
+		// Token: 0x060013B7 RID: 5047 RVA: 0x00070FBC File Offset: 0x0006F1BC
 		public override void FocusOnInteractable(Interactable focusedInteractable, ColliderZone colliderZone)
 		{
 		}
 
-		// Token: 0x060013B1 RID: 5041 RVA: 0x00070AF2 File Offset: 0x0006ECF2
+		// Token: 0x060013B8 RID: 5048 RVA: 0x00070FBE File Offset: 0x0006F1BE
 		public override void DeFocus()
 		{
 		}
 
-		// Token: 0x0400166C RID: 5740
+		// Token: 0x04001679 RID: 5753
 		private const int NUM_VELOCITY_FRAMES = 10;
 
-		// Token: 0x0400166D RID: 5741
+		// Token: 0x0400167A RID: 5754
 		[SerializeField]
 		private FingerTipPokeToolView _fingerTipPokeToolView;
 
-		// Token: 0x0400166E RID: 5742
+		// Token: 0x0400167B RID: 5755
 		[SerializeField]
 		private OVRPlugin.HandFinger _fingerToFollow = OVRPlugin.HandFinger.Index;
 
-		// Token: 0x0400166F RID: 5743
+		// Token: 0x0400167C RID: 5756
 		private Vector3[] _velocityFrames;
 
-		// Token: 0x04001670 RID: 5744
+		// Token: 0x0400167D RID: 5757
 		private int _currVelocityFrame;
 
-		// Token: 0x04001671 RID: 5745
+		// Token: 0x0400167E RID: 5758
 		private bool _sampledMaxFramesAlready;
 
-		// Token: 0x04001672 RID: 5746
+		// Token: 0x0400167F RID: 5759
 		private Vector3 _position;
 
-		// Token: 0x04001673 RID: 5747
+		// Token: 0x04001680 RID: 5760
 		private BoneCapsuleTriggerLogic[] _boneCapsuleTriggerLogic;
 
-		// Token: 0x04001674 RID: 5748
+		// Token: 0x04001681 RID: 5761
 		private float _lastScale = 1f;
 
-		// Token: 0x04001675 RID: 5749
+		// Token: 0x04001682 RID: 5762
 		private bool _isInitialized;
 
-		// Token: 0x04001676 RID: 5750
+		// Token: 0x04001683 RID: 5763
 		private OVRBoneCapsule _capsuleToTrack;
 	}
 }

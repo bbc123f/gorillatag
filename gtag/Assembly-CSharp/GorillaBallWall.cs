@@ -1,10 +1,10 @@
 ﻿using System;
 using UnityEngine;
 
-// Token: 0x02000166 RID: 358
+// Token: 0x02000167 RID: 359
 public class GorillaBallWall : MonoBehaviour
 {
-	// Token: 0x060008E0 RID: 2272 RVA: 0x00035F4F File Offset: 0x0003414F
+	// Token: 0x060008E4 RID: 2276 RVA: 0x00035E50 File Offset: 0x00034050
 	private void Awake()
 	{
 		if (GorillaBallWall.instance == null)
@@ -18,11 +18,11 @@ public class GorillaBallWall : MonoBehaviour
 		}
 	}
 
-	// Token: 0x060008E1 RID: 2273 RVA: 0x00035F83 File Offset: 0x00034183
+	// Token: 0x060008E5 RID: 2277 RVA: 0x00035E84 File Offset: 0x00034084
 	private void Update()
 	{
 	}
 
-	// Token: 0x04000AEC RID: 2796
+	// Token: 0x04000AF0 RID: 2800
 	public static volatile GorillaBallWall instance;
 }

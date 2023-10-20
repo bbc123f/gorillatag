@@ -2,10 +2,10 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-// Token: 0x020001D4 RID: 468
+// Token: 0x020001D5 RID: 469
 public class SubEmitterListener : MonoBehaviour
 {
-	// Token: 0x06000C1A RID: 3098 RVA: 0x00049FE8 File Offset: 0x000481E8
+	// Token: 0x06000C20 RID: 3104 RVA: 0x0004A250 File Offset: 0x00048450
 	private void OnEnable()
 	{
 		if (this.target == null)
@@ -29,14 +29,14 @@ public class SubEmitterListener : MonoBehaviour
 		this.interval = main.startLifetime.constantMax * main.startLifetimeMultiplier;
 	}
 
-	// Token: 0x06000C1B RID: 3099 RVA: 0x0004A0A4 File Offset: 0x000482A4
+	// Token: 0x06000C21 RID: 3105 RVA: 0x0004A30C File Offset: 0x0004850C
 	private void OnDisable()
 	{
 		this._listenOnce = false;
 		this._listening = false;
 	}
 
-	// Token: 0x06000C1C RID: 3100 RVA: 0x0004A0B4 File Offset: 0x000482B4
+	// Token: 0x06000C22 RID: 3106 RVA: 0x0004A31C File Offset: 0x0004851C
 	public void ListenStart()
 	{
 		if (this._listening)
@@ -50,13 +50,13 @@ public class SubEmitterListener : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000C1D RID: 3101 RVA: 0x0004A0D4 File Offset: 0x000482D4
+	// Token: 0x06000C23 RID: 3107 RVA: 0x0004A33C File Offset: 0x0004853C
 	public void ListenStop()
 	{
 		this.Disable();
 	}
 
-	// Token: 0x06000C1E RID: 3102 RVA: 0x0004A0DC File Offset: 0x000482DC
+	// Token: 0x06000C24 RID: 3108 RVA: 0x0004A344 File Offset: 0x00048544
 	public void ListenOnce()
 	{
 		if (this._listening)
@@ -72,7 +72,7 @@ public class SubEmitterListener : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000C1F RID: 3103 RVA: 0x0004A10C File Offset: 0x0004830C
+	// Token: 0x06000C25 RID: 3109 RVA: 0x0004A374 File Offset: 0x00048574
 	private void Update()
 	{
 		if (!this._canListen)
@@ -94,7 +94,7 @@ public class SubEmitterListener : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000C20 RID: 3104 RVA: 0x0004A177 File Offset: 0x00048377
+	// Token: 0x06000C26 RID: 3110 RVA: 0x0004A3DF File Offset: 0x000485DF
 	protected virtual void OnSubEmit()
 	{
 		UnityEvent unityEvent = this.onSubEmit;
@@ -105,7 +105,7 @@ public class SubEmitterListener : MonoBehaviour
 		unityEvent.Invoke();
 	}
 
-	// Token: 0x06000C21 RID: 3105 RVA: 0x0004A189 File Offset: 0x00048389
+	// Token: 0x06000C27 RID: 3111 RVA: 0x0004A3F1 File Offset: 0x000485F1
 	public void Enable()
 	{
 		if (!base.enabled)
@@ -114,7 +114,7 @@ public class SubEmitterListener : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000C22 RID: 3106 RVA: 0x0004A19A File Offset: 0x0004839A
+	// Token: 0x06000C28 RID: 3112 RVA: 0x0004A402 File Offset: 0x00048602
 	public void Disable()
 	{
 		if (base.enabled)
@@ -123,37 +123,37 @@ public class SubEmitterListener : MonoBehaviour
 		}
 	}
 
-	// Token: 0x04000F78 RID: 3960
+	// Token: 0x04000F7C RID: 3964
 	public ParticleSystem target;
 
-	// Token: 0x04000F79 RID: 3961
+	// Token: 0x04000F7D RID: 3965
 	public ParticleSystem subEmitter;
 
-	// Token: 0x04000F7A RID: 3962
+	// Token: 0x04000F7E RID: 3966
 	public int subEmitterIndex;
 
-	// Token: 0x04000F7B RID: 3963
+	// Token: 0x04000F7F RID: 3967
 	public UnityEvent onSubEmit;
 
-	// Token: 0x04000F7C RID: 3964
+	// Token: 0x04000F80 RID: 3968
 	public float intervalScale = 1f;
 
-	// Token: 0x04000F7D RID: 3965
+	// Token: 0x04000F81 RID: 3969
 	public float interval;
 
-	// Token: 0x04000F7E RID: 3966
+	// Token: 0x04000F82 RID: 3970
 	[NonSerialized]
 	private bool _canListen;
 
-	// Token: 0x04000F7F RID: 3967
+	// Token: 0x04000F83 RID: 3971
 	[NonSerialized]
 	private bool _listening;
 
-	// Token: 0x04000F80 RID: 3968
+	// Token: 0x04000F84 RID: 3972
 	[NonSerialized]
 	private bool _listenOnce;
 
-	// Token: 0x04000F81 RID: 3969
+	// Token: 0x04000F85 RID: 3973
 	[NonSerialized]
 	private TimeSince _sinceLastEmit;
 }

@@ -4,14 +4,14 @@ using UnityEngine;
 // Token: 0x02000034 RID: 52
 public class PinwheelAnimator : MonoBehaviour
 {
-	// Token: 0x0600012F RID: 303 RVA: 0x0000A962 File Offset: 0x00008B62
+	// Token: 0x0600012F RID: 303 RVA: 0x0000A9AA File Offset: 0x00008BAA
 	protected void OnEnable()
 	{
 		this.oldPos = this.spinnerTransform.position;
 		this.spinSpeed = 0f;
 	}
 
-	// Token: 0x06000130 RID: 304 RVA: 0x0000A980 File Offset: 0x00008B80
+	// Token: 0x06000130 RID: 304 RVA: 0x0000A9C8 File Offset: 0x00008BC8
 	protected void LateUpdate()
 	{
 		Vector3 position = this.spinnerTransform.position;

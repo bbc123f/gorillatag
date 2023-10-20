@@ -8,7 +8,7 @@ using UnityEngine.Events;
 // Token: 0x02000033 RID: 51
 public class PartyHornTransferableObject : TransferrableObject
 {
-	// Token: 0x06000128 RID: 296 RVA: 0x0000A60A File Offset: 0x0000880A
+	// Token: 0x06000128 RID: 296 RVA: 0x0000A652 File Offset: 0x00008852
 	public override void OnEnable()
 	{
 		base.OnEnable();
@@ -16,14 +16,14 @@ public class PartyHornTransferableObject : TransferrableObject
 		this.InitToDefault();
 	}
 
-	// Token: 0x06000129 RID: 297 RVA: 0x0000A637 File Offset: 0x00008837
+	// Token: 0x06000129 RID: 297 RVA: 0x0000A67F File Offset: 0x0000887F
 	public override void ResetToDefaultState()
 	{
 		base.ResetToDefaultState();
 		this.InitToDefault();
 	}
 
-	// Token: 0x0600012A RID: 298 RVA: 0x0000A648 File Offset: 0x00008848
+	// Token: 0x0600012A RID: 298 RVA: 0x0000A690 File Offset: 0x00008890
 	protected Vector3 CalcMouthPiecePos()
 	{
 		Transform transform = base.transform;
@@ -39,7 +39,7 @@ public class PartyHornTransferableObject : TransferrableObject
 		return vector;
 	}
 
-	// Token: 0x0600012B RID: 299 RVA: 0x0000A6A4 File Offset: 0x000088A4
+	// Token: 0x0600012B RID: 299 RVA: 0x0000A6EC File Offset: 0x000088EC
 	protected override void LateUpdateLocal()
 	{
 		base.LateUpdateLocal();
@@ -119,7 +119,7 @@ public class PartyHornTransferableObject : TransferrableObject
 		this.itemState = (flag ? TransferrableObject.ItemStates.State1 : this.itemState);
 	}
 
-	// Token: 0x0600012C RID: 300 RVA: 0x0000A860 File Offset: 0x00008A60
+	// Token: 0x0600012C RID: 300 RVA: 0x0000A8A8 File Offset: 0x00008AA8
 	protected override void LateUpdateShared()
 	{
 		base.LateUpdateShared();
@@ -145,7 +145,7 @@ public class PartyHornTransferableObject : TransferrableObject
 		}
 	}
 
-	// Token: 0x0600012D RID: 301 RVA: 0x0000A8DA File Offset: 0x00008ADA
+	// Token: 0x0600012D RID: 301 RVA: 0x0000A922 File Offset: 0x00008B22
 	private void InitToDefault()
 	{
 		this.itemState = TransferrableObject.ItemStates.State0;
@@ -200,12 +200,12 @@ public class PartyHornTransferableObject : TransferrableObject
 	// Token: 0x0400019E RID: 414
 	private bool localWasActivated;
 
-	// Token: 0x0200038E RID: 910
+	// Token: 0x02000390 RID: 912
 	private enum PartyHornState
 	{
-		// Token: 0x04001B0D RID: 6925
+		// Token: 0x04001B1A RID: 6938
 		None = 1,
-		// Token: 0x04001B0E RID: 6926
+		// Token: 0x04001B1B RID: 6939
 		CoolingDown
 	}
 }

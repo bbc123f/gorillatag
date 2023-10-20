@@ -2,16 +2,16 @@
 
 namespace emotitron.Compression
 {
-	// Token: 0x02000339 RID: 825
+	// Token: 0x0200033B RID: 827
 	public enum PackedBitsSize
 	{
-		// Token: 0x04001903 RID: 6403
+		// Token: 0x04001910 RID: 6416
 		UInt8 = 4,
-		// Token: 0x04001904 RID: 6404
+		// Token: 0x04001911 RID: 6417
 		UInt16,
-		// Token: 0x04001905 RID: 6405
+		// Token: 0x04001912 RID: 6418
 		UInt32,
-		// Token: 0x04001906 RID: 6406
+		// Token: 0x04001913 RID: 6419
 		UInt64
 	}
 }

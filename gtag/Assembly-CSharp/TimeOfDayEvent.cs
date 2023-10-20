@@ -2,11 +2,11 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-// Token: 0x02000234 RID: 564
+// Token: 0x02000235 RID: 565
 public class TimeOfDayEvent : MonoBehaviour
 {
-	// Token: 0x170000A4 RID: 164
-	// (get) Token: 0x06000DEF RID: 3567 RVA: 0x00050F01 File Offset: 0x0004F101
+	// Token: 0x170000A6 RID: 166
+	// (get) Token: 0x06000DF6 RID: 3574 RVA: 0x000512DD File Offset: 0x0004F4DD
 	public float currentTime
 	{
 		get
@@ -15,9 +15,9 @@ public class TimeOfDayEvent : MonoBehaviour
 		}
 	}
 
-	// Token: 0x170000A5 RID: 165
-	// (get) Token: 0x06000DF0 RID: 3568 RVA: 0x00050F09 File Offset: 0x0004F109
-	// (set) Token: 0x06000DF1 RID: 3569 RVA: 0x00050F11 File Offset: 0x0004F111
+	// Token: 0x170000A7 RID: 167
+	// (get) Token: 0x06000DF7 RID: 3575 RVA: 0x000512E5 File Offset: 0x0004F4E5
+	// (set) Token: 0x06000DF8 RID: 3576 RVA: 0x000512ED File Offset: 0x0004F4ED
 	public float timeStart
 	{
 		get
@@ -30,9 +30,9 @@ public class TimeOfDayEvent : MonoBehaviour
 		}
 	}
 
-	// Token: 0x170000A6 RID: 166
-	// (get) Token: 0x06000DF2 RID: 3570 RVA: 0x00050F1F File Offset: 0x0004F11F
-	// (set) Token: 0x06000DF3 RID: 3571 RVA: 0x00050F27 File Offset: 0x0004F127
+	// Token: 0x170000A8 RID: 168
+	// (get) Token: 0x06000DF9 RID: 3577 RVA: 0x000512FB File Offset: 0x0004F4FB
+	// (set) Token: 0x06000DFA RID: 3578 RVA: 0x00051303 File Offset: 0x0004F503
 	public float timeEnd
 	{
 		get
@@ -45,8 +45,8 @@ public class TimeOfDayEvent : MonoBehaviour
 		}
 	}
 
-	// Token: 0x170000A7 RID: 167
-	// (get) Token: 0x06000DF4 RID: 3572 RVA: 0x00050F35 File Offset: 0x0004F135
+	// Token: 0x170000A9 RID: 169
+	// (get) Token: 0x06000DFB RID: 3579 RVA: 0x00051311 File Offset: 0x0004F511
 	public bool isOngoing
 	{
 		get
@@ -55,7 +55,7 @@ public class TimeOfDayEvent : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000DF5 RID: 3573 RVA: 0x00050F40 File Offset: 0x0004F140
+	// Token: 0x06000DFC RID: 3580 RVA: 0x0005131C File Offset: 0x0004F51C
 	private void Start()
 	{
 		if (!this._dayNightManager)
@@ -73,7 +73,7 @@ public class TimeOfDayEvent : MonoBehaviour
 		this._totalSecondsInRange = Math.Floor(this._totalSecondsInRange);
 	}
 
-	// Token: 0x06000DF6 RID: 3574 RVA: 0x00050FC2 File Offset: 0x0004F1C2
+	// Token: 0x06000DFD RID: 3581 RVA: 0x0005139E File Offset: 0x0004F59E
 	private void Update()
 	{
 		this._elapsed += Time.deltaTime;
@@ -85,7 +85,7 @@ public class TimeOfDayEvent : MonoBehaviour
 		this.UpdateTime();
 	}
 
-	// Token: 0x06000DF7 RID: 3575 RVA: 0x00050FF8 File Offset: 0x0004F1F8
+	// Token: 0x06000DFE RID: 3582 RVA: 0x000513D4 File Offset: 0x0004F5D4
 	private void UpdateTime()
 	{
 		this._currentSeconds = ((ITimeOfDaySystem)this._dayNightManager).currentTimeInSeconds;
@@ -102,7 +102,7 @@ public class TimeOfDayEvent : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000DF8 RID: 3576 RVA: 0x0005108F File Offset: 0x0004F28F
+	// Token: 0x06000DFF RID: 3583 RVA: 0x0005146B File Offset: 0x0004F66B
 	private void StartEvent()
 	{
 		this._ongoing = true;
@@ -114,7 +114,7 @@ public class TimeOfDayEvent : MonoBehaviour
 		unityEvent.Invoke();
 	}
 
-	// Token: 0x06000DF9 RID: 3577 RVA: 0x000510A8 File Offset: 0x0004F2A8
+	// Token: 0x06000E00 RID: 3584 RVA: 0x00051484 File Offset: 0x0004F684
 	private void StopEvent()
 	{
 		this._ongoing = false;
@@ -126,51 +126,51 @@ public class TimeOfDayEvent : MonoBehaviour
 		unityEvent.Invoke();
 	}
 
-	// Token: 0x06000DFA RID: 3578 RVA: 0x000510C1 File Offset: 0x0004F2C1
+	// Token: 0x06000E01 RID: 3585 RVA: 0x0005149D File Offset: 0x0004F69D
 	public static implicit operator bool(TimeOfDayEvent ev)
 	{
 		return ev && ev.isOngoing;
 	}
 
-	// Token: 0x040010E5 RID: 4325
+	// Token: 0x040010EB RID: 4331
 	[SerializeField]
 	[Range(0f, 1f)]
 	private float _timeStart;
 
-	// Token: 0x040010E6 RID: 4326
+	// Token: 0x040010EC RID: 4332
 	[SerializeField]
 	[Range(0f, 1f)]
 	private float _timeEnd = 1f;
 
-	// Token: 0x040010E7 RID: 4327
+	// Token: 0x040010ED RID: 4333
 	[SerializeField]
 	private float _currentTime = -1f;
 
-	// Token: 0x040010E8 RID: 4328
+	// Token: 0x040010EE RID: 4334
 	[SerializeField]
 	private bool _ongoing;
 
-	// Token: 0x040010E9 RID: 4329
+	// Token: 0x040010EF RID: 4335
 	[Space]
 	public UnityEvent onEventStart;
 
-	// Token: 0x040010EA RID: 4330
+	// Token: 0x040010F0 RID: 4336
 	public UnityEvent onEventStop;
 
-	// Token: 0x040010EB RID: 4331
+	// Token: 0x040010F1 RID: 4337
 	[Space]
 	[SerializeField]
 	private double _currentSeconds = -1.0;
 
-	// Token: 0x040010EC RID: 4332
+	// Token: 0x040010F2 RID: 4338
 	[SerializeField]
 	private double _totalSecondsInRange = -1.0;
 
-	// Token: 0x040010ED RID: 4333
+	// Token: 0x040010F3 RID: 4339
 	[NonSerialized]
 	private float _elapsed = -1f;
 
-	// Token: 0x040010EE RID: 4334
+	// Token: 0x040010F4 RID: 4340
 	[SerializeField]
 	private BetterDayNightManager _dayNightManager;
 }

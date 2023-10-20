@@ -5,10 +5,10 @@ using UnityEngine;
 
 namespace emotitron.CompressionTests
 {
-	// Token: 0x02000349 RID: 841
+	// Token: 0x0200034B RID: 843
 	public class BenchmarkTests : MonoBehaviour
 	{
-		// Token: 0x0600185E RID: 6238 RVA: 0x00082A0D File Offset: 0x00080C0D
+		// Token: 0x06001867 RID: 6247 RVA: 0x00082EF5 File Offset: 0x000810F5
 		private void Start()
 		{
 			BenchmarkTests.TestWriterIntegrity();
@@ -16,7 +16,7 @@ namespace emotitron.CompressionTests
 			BenchmarkTests.ArrayCopySafe();
 		}
 
-		// Token: 0x0600185F RID: 6239 RVA: 0x00082A20 File Offset: 0x00080C20
+		// Token: 0x06001868 RID: 6248 RVA: 0x00082F08 File Offset: 0x00081108
 		public static void TestWriterIntegrity()
 		{
 			int num = 1;
@@ -116,7 +116,7 @@ namespace emotitron.CompressionTests
 			Debug.Log("Integrity check complete.");
 		}
 
-		// Token: 0x06001860 RID: 6240 RVA: 0x00082D40 File Offset: 0x00080F40
+		// Token: 0x06001869 RID: 6249 RVA: 0x00083228 File Offset: 0x00081428
 		private static void TestLog2()
 		{
 			Stopwatch stopwatch = Stopwatch.StartNew();
@@ -136,7 +136,7 @@ namespace emotitron.CompressionTests
 			Debug.Log("Log2 nifty: time=" + stopwatch.ElapsedMilliseconds.ToString() + " ms");
 		}
 
-		// Token: 0x06001861 RID: 6241 RVA: 0x00082DB8 File Offset: 0x00080FB8
+		// Token: 0x0600186A RID: 6250 RVA: 0x000832A0 File Offset: 0x000814A0
 		private static void ArrayCopy()
 		{
 			Stopwatch stopwatch = Stopwatch.StartNew();
@@ -149,7 +149,7 @@ namespace emotitron.CompressionTests
 			Debug.Log("Array Copy Unsafe: time=" + stopwatch.ElapsedMilliseconds.ToString() + " ms");
 		}
 
-		// Token: 0x06001862 RID: 6242 RVA: 0x00082E1C File Offset: 0x0008101C
+		// Token: 0x0600186B RID: 6251 RVA: 0x00083304 File Offset: 0x00081504
 		private static void ArrayCopySafe()
 		{
 			Stopwatch stopwatch = Stopwatch.StartNew();
@@ -162,7 +162,7 @@ namespace emotitron.CompressionTests
 			Debug.Log("Array Copy Safe: time=" + stopwatch.ElapsedMilliseconds.ToString() + " ms");
 		}
 
-		// Token: 0x06001863 RID: 6243 RVA: 0x00082E80 File Offset: 0x00081080
+		// Token: 0x0600186C RID: 6252 RVA: 0x00083368 File Offset: 0x00081568
 		public static void ByteForByteWrite()
 		{
 			Stopwatch stopwatch = Stopwatch.StartNew();
@@ -183,7 +183,7 @@ namespace emotitron.CompressionTests
 			Debug.Log("Byte For Byte: time=" + stopwatch.ElapsedMilliseconds.ToString() + " ms");
 		}
 
-		// Token: 0x06001864 RID: 6244 RVA: 0x00082F14 File Offset: 0x00081114
+		// Token: 0x0600186D RID: 6253 RVA: 0x000833FC File Offset: 0x000815FC
 		public static void BitpackBytesEven()
 		{
 			Stopwatch stopwatch = Stopwatch.StartNew();
@@ -204,7 +204,7 @@ namespace emotitron.CompressionTests
 			Debug.Log("Even Bitpack byte: time=" + stopwatch.ElapsedMilliseconds.ToString() + " ms");
 		}
 
-		// Token: 0x06001865 RID: 6245 RVA: 0x00082FA8 File Offset: 0x000811A8
+		// Token: 0x0600186E RID: 6254 RVA: 0x00083490 File Offset: 0x00081690
 		public static void BitpackBytesToULongUneven()
 		{
 			Stopwatch stopwatch = Stopwatch.StartNew();
@@ -227,7 +227,7 @@ namespace emotitron.CompressionTests
 			Debug.Log("Uneven Bitpack ulong[]: time=" + stopwatch.ElapsedMilliseconds.ToString() + " ms");
 		}
 
-		// Token: 0x06001866 RID: 6246 RVA: 0x00083058 File Offset: 0x00081258
+		// Token: 0x0600186F RID: 6255 RVA: 0x00083540 File Offset: 0x00081740
 		public static void BitpackBytesUnEven()
 		{
 			Stopwatch stopwatch = Stopwatch.StartNew();
@@ -250,22 +250,22 @@ namespace emotitron.CompressionTests
 			Debug.Log("Uneven Bitpack byte: time=" + stopwatch.ElapsedMilliseconds.ToString() + " ms");
 		}
 
-		// Token: 0x04001955 RID: 6485
+		// Token: 0x04001962 RID: 6498
 		public const int BYTE_CNT = 128;
 
-		// Token: 0x04001956 RID: 6486
+		// Token: 0x04001963 RID: 6499
 		public const int LOOP = 1000000;
 
-		// Token: 0x04001957 RID: 6487
+		// Token: 0x04001964 RID: 6500
 		public static byte[] buffer = new byte[4800];
 
-		// Token: 0x04001958 RID: 6488
+		// Token: 0x04001965 RID: 6501
 		public static uint[] ibuffer = new uint[128];
 
-		// Token: 0x04001959 RID: 6489
+		// Token: 0x04001966 RID: 6502
 		public static ulong[] ubuffer = new ulong[128];
 
-		// Token: 0x0400195A RID: 6490
+		// Token: 0x04001967 RID: 6503
 		public static ulong[] ubuffer2 = new ulong[128];
 	}
 }

@@ -5,31 +5,31 @@ using UnityEngine.UI;
 
 namespace GorillaTag
 {
-	// Token: 0x02000315 RID: 789
+	// Token: 0x02000317 RID: 791
 	[DefaultExecutionOrder(2000)]
 	public class StaticLodManager : MonoBehaviour
 	{
-		// Token: 0x060015BF RID: 5567 RVA: 0x00077E1D File Offset: 0x0007601D
+		// Token: 0x060015C8 RID: 5576 RVA: 0x00078305 File Offset: 0x00076505
 		private void Awake()
 		{
 			StaticLodManager.gorillaInteractableLayerMask = LayerMask.NameToLayer("GorillaInteractable");
 			Application.quitting += this.HandleApplicationQuitting;
 		}
 
-		// Token: 0x060015C0 RID: 5568 RVA: 0x00077E44 File Offset: 0x00076044
+		// Token: 0x060015C9 RID: 5577 RVA: 0x0007832C File Offset: 0x0007652C
 		private void OnEnable()
 		{
 			this.mainCamera = Camera.main;
 			this.hasMainCamera = (this.mainCamera != null);
 		}
 
-		// Token: 0x060015C1 RID: 5569 RVA: 0x00077E63 File Offset: 0x00076063
+		// Token: 0x060015CA RID: 5578 RVA: 0x0007834B File Offset: 0x0007654B
 		private void HandleApplicationQuitting()
 		{
 			StaticLodManager.isApplicationQuitting = true;
 		}
 
-		// Token: 0x060015C2 RID: 5570 RVA: 0x00077E6C File Offset: 0x0007606C
+		// Token: 0x060015CB RID: 5579 RVA: 0x00078354 File Offset: 0x00076554
 		public static int Register(StaticLodGroup lodGroup)
 		{
 			StaticLodManager.groupMonoBehaviours.Add(lodGroup);
@@ -94,7 +94,7 @@ namespace GorillaTag
 			return StaticLodManager.groupMonoBehaviours.Count - 1;
 		}
 
-		// Token: 0x060015C3 RID: 5571 RVA: 0x000780F0 File Offset: 0x000762F0
+		// Token: 0x060015CC RID: 5580 RVA: 0x000785D8 File Offset: 0x000767D8
 		public static void SetEnabled(int index, bool enable)
 		{
 			if (!StaticLodManager.isApplicationQuitting)
@@ -106,7 +106,7 @@ namespace GorillaTag
 			StaticLodManager.groupInfos[index] = value;
 		}
 
-		// Token: 0x060015C4 RID: 5572 RVA: 0x00078128 File Offset: 0x00076328
+		// Token: 0x060015CD RID: 5581 RVA: 0x00078610 File Offset: 0x00076810
 		protected void LateUpdate()
 		{
 			if (!this.hasMainCamera)
@@ -152,53 +152,53 @@ namespace GorillaTag
 			}
 		}
 
-		// Token: 0x040017C2 RID: 6082
+		// Token: 0x040017CF RID: 6095
 		private static readonly List<StaticLodGroup> groupMonoBehaviours = new List<StaticLodGroup>(32);
 
-		// Token: 0x040017C3 RID: 6083
+		// Token: 0x040017D0 RID: 6096
 		[DebugReadout]
 		private static readonly List<StaticLodManager.GroupInfo> groupInfos = new List<StaticLodManager.GroupInfo>(32);
 
-		// Token: 0x040017C4 RID: 6084
+		// Token: 0x040017D1 RID: 6097
 		private static LayerMask gorillaInteractableLayerMask;
 
-		// Token: 0x040017C5 RID: 6085
+		// Token: 0x040017D2 RID: 6098
 		private static bool isApplicationQuitting;
 
-		// Token: 0x040017C6 RID: 6086
+		// Token: 0x040017D3 RID: 6099
 		private Camera mainCamera;
 
-		// Token: 0x040017C7 RID: 6087
+		// Token: 0x040017D4 RID: 6100
 		private bool hasMainCamera;
 
-		// Token: 0x02000500 RID: 1280
+		// Token: 0x02000502 RID: 1282
 		private struct GroupInfo
 		{
-			// Token: 0x040020CF RID: 8399
+			// Token: 0x040020DC RID: 8412
 			public bool componentEnabled;
 
-			// Token: 0x040020D0 RID: 8400
+			// Token: 0x040020DD RID: 8413
 			public Vector3 center;
 
-			// Token: 0x040020D1 RID: 8401
+			// Token: 0x040020DE RID: 8414
 			public float radiusSq;
 
-			// Token: 0x040020D2 RID: 8402
+			// Token: 0x040020DF RID: 8415
 			public bool uiEnabled;
 
-			// Token: 0x040020D3 RID: 8403
+			// Token: 0x040020E0 RID: 8416
 			public float uiEnableDistanceSq;
 
-			// Token: 0x040020D4 RID: 8404
+			// Token: 0x040020E1 RID: 8417
 			public Text[] uiTexts;
 
-			// Token: 0x040020D5 RID: 8405
+			// Token: 0x040020E2 RID: 8418
 			public bool collidersEnabled;
 
-			// Token: 0x040020D6 RID: 8406
+			// Token: 0x040020E3 RID: 8419
 			public float collisionEnableDistanceSq;
 
-			// Token: 0x040020D7 RID: 8407
+			// Token: 0x040020E4 RID: 8420
 			public Collider[] interactableColliders;
 		}
 	}

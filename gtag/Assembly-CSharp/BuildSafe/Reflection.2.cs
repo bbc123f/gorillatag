@@ -4,11 +4,11 @@ using System.Reflection;
 
 namespace BuildSafe
 {
-	// Token: 0x020002C2 RID: 706
+	// Token: 0x020002C4 RID: 708
 	public static class Reflection
 	{
-		// Token: 0x17000121 RID: 289
-		// (get) Token: 0x06001311 RID: 4881 RVA: 0x0006E6F0 File Offset: 0x0006C8F0
+		// Token: 0x17000123 RID: 291
+		// (get) Token: 0x06001318 RID: 4888 RVA: 0x0006EBBC File Offset: 0x0006CDBC
 		public static Assembly[] AllAssemblies
 		{
 			get
@@ -17,8 +17,8 @@ namespace BuildSafe
 			}
 		}
 
-		// Token: 0x17000122 RID: 290
-		// (get) Token: 0x06001312 RID: 4882 RVA: 0x0006E6F7 File Offset: 0x0006C8F7
+		// Token: 0x17000124 RID: 292
+		// (get) Token: 0x06001319 RID: 4889 RVA: 0x0006EBC3 File Offset: 0x0006CDC3
 		public static Type[] AllTypes
 		{
 			get
@@ -27,14 +27,14 @@ namespace BuildSafe
 			}
 		}
 
-		// Token: 0x06001313 RID: 4883 RVA: 0x0006E6FE File Offset: 0x0006C8FE
+		// Token: 0x0600131A RID: 4890 RVA: 0x0006EBCA File Offset: 0x0006CDCA
 		static Reflection()
 		{
 			Reflection.PreFetchAllAssemblies();
 			Reflection.PreFetchAllTypes();
 		}
 
-		// Token: 0x06001314 RID: 4884 RVA: 0x0006E70C File Offset: 0x0006C90C
+		// Token: 0x0600131B RID: 4891 RVA: 0x0006EBD8 File Offset: 0x0006CDD8
 		private static Assembly[] PreFetchAllAssemblies()
 		{
 			if (Reflection.gAssemblyCache != null)
@@ -46,7 +46,7 @@ namespace BuildSafe
 			select a).ToArray<Assembly>();
 		}
 
-		// Token: 0x06001315 RID: 4885 RVA: 0x0006E760 File Offset: 0x0006C960
+		// Token: 0x0600131C RID: 4892 RVA: 0x0006EC2C File Offset: 0x0006CE2C
 		private static Type[] PreFetchAllTypes()
 		{
 			if (Reflection.gTypeCache != null)
@@ -58,7 +58,7 @@ namespace BuildSafe
 			select t).ToArray<Type>();
 		}
 
-		// Token: 0x06001316 RID: 4886 RVA: 0x0006E7D4 File Offset: 0x0006C9D4
+		// Token: 0x0600131D RID: 4893 RVA: 0x0006ECA0 File Offset: 0x0006CEA0
 		public static MethodInfo[] GetMethodsWithAttribute<T>() where T : Attribute
 		{
 			return (from m in Reflection.AllTypes.SelectMany((Type t) => t.GetRuntimeMethods())
@@ -66,10 +66,10 @@ namespace BuildSafe
 			select m).ToArray<MethodInfo>();
 		}
 
-		// Token: 0x040015FC RID: 5628
+		// Token: 0x04001609 RID: 5641
 		private static Assembly[] gAssemblyCache;
 
-		// Token: 0x040015FD RID: 5629
+		// Token: 0x0400160A RID: 5642
 		private static Type[] gTypeCache;
 	}
 }

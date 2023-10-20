@@ -5,7 +5,7 @@ using UnityEngine;
 // Token: 0x0200012F RID: 303
 public class MonkeCandle : RubberDuck
 {
-	// Token: 0x060007E9 RID: 2025 RVA: 0x00031ED8 File Offset: 0x000300D8
+	// Token: 0x060007EA RID: 2026 RVA: 0x00031D18 File Offset: 0x0002FF18
 	protected override void Start()
 	{
 		base.Start();
@@ -16,7 +16,7 @@ public class MonkeCandle : RubberDuck
 		}
 	}
 
-	// Token: 0x060007EA RID: 2026 RVA: 0x00031F2C File Offset: 0x0003012C
+	// Token: 0x060007EB RID: 2027 RVA: 0x00031D6C File Offset: 0x0002FF6C
 	protected override void LateUpdate()
 	{
 		base.LateUpdate();

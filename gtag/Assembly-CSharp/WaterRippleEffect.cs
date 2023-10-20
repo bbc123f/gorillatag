@@ -7,7 +7,7 @@ using UnityEngine;
 [RequireComponent(typeof(SpriteRenderer))]
 public class WaterRippleEffect : MonoBehaviour
 {
-	// Token: 0x06000256 RID: 598 RVA: 0x0000FB59 File Offset: 0x0000DD59
+	// Token: 0x06000256 RID: 598 RVA: 0x0000F935 File Offset: 0x0000DB35
 	private void Awake()
 	{
 		this.animator = base.GetComponent<Animator>();
@@ -15,14 +15,14 @@ public class WaterRippleEffect : MonoBehaviour
 		this.ripplePlaybackSpeedHash = Animator.StringToHash(this.ripplePlaybackSpeedName);
 	}
 
-	// Token: 0x06000257 RID: 599 RVA: 0x0000FB84 File Offset: 0x0000DD84
+	// Token: 0x06000257 RID: 599 RVA: 0x0000F960 File Offset: 0x0000DB60
 	public void Destroy()
 	{
 		this.waterVolume = null;
 		ObjectPools.instance.Destroy(base.gameObject);
 	}
 
-	// Token: 0x06000258 RID: 600 RVA: 0x0000FBA0 File Offset: 0x0000DDA0
+	// Token: 0x06000258 RID: 600 RVA: 0x0000F97C File Offset: 0x0000DB7C
 	public void PlayEffect(WaterVolume volume = null)
 	{
 		this.waterVolume = volume;
@@ -37,7 +37,7 @@ public class WaterRippleEffect : MonoBehaviour
 		this.renderer.color = color;
 	}
 
-	// Token: 0x06000259 RID: 601 RVA: 0x0000FC38 File Offset: 0x0000DE38
+	// Token: 0x06000259 RID: 601 RVA: 0x0000FA14 File Offset: 0x0000DC14
 	private void Update()
 	{
 		if (this.waterVolume != null && !this.waterVolume.isStationary && this.waterVolume.surfacePlane != null)

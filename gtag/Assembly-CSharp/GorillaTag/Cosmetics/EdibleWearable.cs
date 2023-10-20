@@ -4,10 +4,10 @@ using UnityEngine;
 
 namespace GorillaTag.Cosmetics
 {
-	// Token: 0x02000333 RID: 819
+	// Token: 0x02000335 RID: 821
 	public class EdibleWearable : MonoBehaviour
 	{
-		// Token: 0x060016BA RID: 5818 RVA: 0x0007E718 File Offset: 0x0007C918
+		// Token: 0x060016C3 RID: 5827 RVA: 0x0007EC00 File Offset: 0x0007CE00
 		protected void Awake()
 		{
 			this.edibleState = 0;
@@ -19,7 +19,7 @@ namespace GorillaTag.Cosmetics
 			this.stateBitsWriteInfo = VRRig.WearablePackedStatesBitWriteInfos[(int)this.wearablePackedStateSlot];
 		}
 
-		// Token: 0x060016BB RID: 5819 RVA: 0x0007E7A4 File Offset: 0x0007C9A4
+		// Token: 0x060016C4 RID: 5828 RVA: 0x0007EC8C File Offset: 0x0007CE8C
 		protected void OnEnable()
 		{
 			if (this.ownerRig == null)
@@ -34,7 +34,7 @@ namespace GorillaTag.Cosmetics
 			}
 		}
 
-		// Token: 0x060016BC RID: 5820 RVA: 0x0007E81E File Offset: 0x0007CA1E
+		// Token: 0x060016C5 RID: 5829 RVA: 0x0007ED06 File Offset: 0x0007CF06
 		protected virtual void LateUpdate()
 		{
 			if (this.isLocal)
@@ -48,7 +48,7 @@ namespace GorillaTag.Cosmetics
 			this.LateUpdateShared();
 		}
 
-		// Token: 0x060016BD RID: 5821 RVA: 0x0007E83C File Offset: 0x0007CA3C
+		// Token: 0x060016C6 RID: 5830 RVA: 0x0007ED24 File Offset: 0x0007CF24
 		protected virtual void LateUpdateLocal()
 		{
 			if (this.edibleState == this.edibleStateInfos.Length - 1)
@@ -102,13 +102,13 @@ namespace GorillaTag.Cosmetics
 			this.ownerRig.WearablePackedStates = GTBitOps.WriteBits(this.ownerRig.WearablePackedStates, this.stateBitsWriteInfo, this.edibleState);
 		}
 
-		// Token: 0x060016BE RID: 5822 RVA: 0x0007EA08 File Offset: 0x0007CC08
+		// Token: 0x060016C7 RID: 5831 RVA: 0x0007EEF0 File Offset: 0x0007D0F0
 		protected virtual void LateUpdateReplicated()
 		{
 			this.edibleState = GTBitOps.ReadBits(this.ownerRig.WearablePackedStates, this.stateBitsWriteInfo.index, this.stateBitsWriteInfo.valueMask);
 		}
 
-		// Token: 0x060016BF RID: 5823 RVA: 0x0007EA38 File Offset: 0x0007CC38
+		// Token: 0x060016C8 RID: 5832 RVA: 0x0007EF20 File Offset: 0x0007D120
 		protected virtual void LateUpdateShared()
 		{
 			int num = this.edibleState;
@@ -119,7 +119,7 @@ namespace GorillaTag.Cosmetics
 			this.previousEdibleState = num;
 		}
 
-		// Token: 0x060016C0 RID: 5824 RVA: 0x0007EA64 File Offset: 0x0007CC64
+		// Token: 0x060016C9 RID: 5833 RVA: 0x0007EF4C File Offset: 0x0007D14C
 		protected virtual void OnEdibleHoldableStateChange()
 		{
 			if (this.previousEdibleState >= 0 && this.previousEdibleState < this.edibleStateInfos.Length)
@@ -140,80 +140,80 @@ namespace GorillaTag.Cosmetics
 			}
 		}
 
-		// Token: 0x040018ED RID: 6381
+		// Token: 0x040018FA RID: 6394
 		[Tooltip("Eating sounds are played through this AudioSource using PlayOneShot.")]
 		public AudioSource audioSource;
 
-		// Token: 0x040018EE RID: 6382
+		// Token: 0x040018FB RID: 6395
 		[Tooltip("Volume each bite should play at.")]
 		public float volume = 0.08f;
 
-		// Token: 0x040018EF RID: 6383
+		// Token: 0x040018FC RID: 6396
 		[Tooltip("The slot this cosmetic resides.")]
 		public VRRig.WearablePackedStateSlots wearablePackedStateSlot = VRRig.WearablePackedStateSlots.LeftHand;
 
-		// Token: 0x040018F0 RID: 6384
+		// Token: 0x040018FD RID: 6397
 		[Tooltip("Time between bites.")]
 		public float biteCooldown = 1f;
 
-		// Token: 0x040018F1 RID: 6385
+		// Token: 0x040018FE RID: 6398
 		[Tooltip("How long it takes to pop back to the uneaten state after being fully eaten.")]
 		public float respawnTime = 7f;
 
-		// Token: 0x040018F2 RID: 6386
+		// Token: 0x040018FF RID: 6399
 		[Tooltip("Distance from mouth to item required to trigger a bite.")]
 		public float biteDistance = 0.5f;
 
-		// Token: 0x040018F3 RID: 6387
+		// Token: 0x04001900 RID: 6400
 		[Tooltip("Offset from Gorilla's head to mouth.")]
 		public Vector3 gorillaHeadMouthOffset = new Vector3(0f, 0.0208f, 0.171f);
 
-		// Token: 0x040018F4 RID: 6388
+		// Token: 0x04001901 RID: 6401
 		[Tooltip("Offset from edible's transform to the bite point.")]
 		public Vector3 edibleBiteOffset = new Vector3(0f, 0f, 0f);
 
-		// Token: 0x040018F5 RID: 6389
+		// Token: 0x04001902 RID: 6402
 		public EdibleWearable.EdibleStateInfo[] edibleStateInfos;
 
-		// Token: 0x040018F6 RID: 6390
+		// Token: 0x04001903 RID: 6403
 		private VRRig ownerRig;
 
-		// Token: 0x040018F7 RID: 6391
+		// Token: 0x04001904 RID: 6404
 		private bool isLocal;
 
-		// Token: 0x040018F8 RID: 6392
+		// Token: 0x04001905 RID: 6405
 		private bool isHandSlot;
 
-		// Token: 0x040018F9 RID: 6393
+		// Token: 0x04001906 RID: 6406
 		private bool isLeftHand;
 
-		// Token: 0x040018FA RID: 6394
+		// Token: 0x04001907 RID: 6407
 		private GTBitOps.BitWriteInfo stateBitsWriteInfo;
 
-		// Token: 0x040018FB RID: 6395
+		// Token: 0x04001908 RID: 6408
 		private int edibleState;
 
-		// Token: 0x040018FC RID: 6396
+		// Token: 0x04001909 RID: 6409
 		private int previousEdibleState;
 
-		// Token: 0x040018FD RID: 6397
+		// Token: 0x0400190A RID: 6410
 		private float lastEatTime;
 
-		// Token: 0x040018FE RID: 6398
+		// Token: 0x0400190B RID: 6411
 		private float lastFullyEatenTime;
 
-		// Token: 0x040018FF RID: 6399
+		// Token: 0x0400190C RID: 6412
 		private bool wasInBiteZoneLastFrame;
 
-		// Token: 0x02000513 RID: 1299
+		// Token: 0x02000515 RID: 1301
 		[Serializable]
 		public struct EdibleStateInfo
 		{
-			// Token: 0x04002135 RID: 8501
+			// Token: 0x04002142 RID: 8514
 			[Tooltip("Will be activated when this stage is reached.")]
 			public GameObject gameObject;
 
-			// Token: 0x04002136 RID: 8502
+			// Token: 0x04002143 RID: 8515
 			[Tooltip("Will be played when this stage is reached.")]
 			public AudioClip sound;
 		}

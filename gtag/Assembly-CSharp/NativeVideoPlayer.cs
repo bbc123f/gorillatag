@@ -5,7 +5,7 @@ using UnityEngine;
 public static class NativeVideoPlayer
 {
 	// Token: 0x17000025 RID: 37
-	// (get) Token: 0x06000345 RID: 837 RVA: 0x00013898 File Offset: 0x00011A98
+	// (get) Token: 0x06000345 RID: 837 RVA: 0x00013674 File Offset: 0x00011874
 	private static IntPtr VideoPlayerClass
 	{
 		get
@@ -38,7 +38,7 @@ public static class NativeVideoPlayer
 	}
 
 	// Token: 0x17000026 RID: 38
-	// (get) Token: 0x06000346 RID: 838 RVA: 0x00013938 File Offset: 0x00011B38
+	// (get) Token: 0x06000346 RID: 838 RVA: 0x00013714 File Offset: 0x00011914
 	private static IntPtr Activity
 	{
 		get
@@ -65,7 +65,7 @@ public static class NativeVideoPlayer
 	}
 
 	// Token: 0x17000027 RID: 39
-	// (get) Token: 0x06000347 RID: 839 RVA: 0x000139C4 File Offset: 0x00011BC4
+	// (get) Token: 0x06000347 RID: 839 RVA: 0x000137A0 File Offset: 0x000119A0
 	public static bool IsAvailable
 	{
 		get
@@ -75,7 +75,7 @@ public static class NativeVideoPlayer
 	}
 
 	// Token: 0x17000028 RID: 40
-	// (get) Token: 0x06000348 RID: 840 RVA: 0x000139C7 File Offset: 0x00011BC7
+	// (get) Token: 0x06000348 RID: 840 RVA: 0x000137A3 File Offset: 0x000119A3
 	public static bool IsPlaying
 	{
 		get
@@ -89,7 +89,7 @@ public static class NativeVideoPlayer
 	}
 
 	// Token: 0x17000029 RID: 41
-	// (get) Token: 0x06000349 RID: 841 RVA: 0x00013A07 File Offset: 0x00011C07
+	// (get) Token: 0x06000349 RID: 841 RVA: 0x000137E3 File Offset: 0x000119E3
 	public static NativeVideoPlayer.PlabackState CurrentPlaybackState
 	{
 		get
@@ -103,7 +103,7 @@ public static class NativeVideoPlayer
 	}
 
 	// Token: 0x1700002A RID: 42
-	// (get) Token: 0x0600034A RID: 842 RVA: 0x00013A47 File Offset: 0x00011C47
+	// (get) Token: 0x0600034A RID: 842 RVA: 0x00013823 File Offset: 0x00011A23
 	public static long Duration
 	{
 		get
@@ -117,7 +117,7 @@ public static class NativeVideoPlayer
 	}
 
 	// Token: 0x1700002B RID: 43
-	// (get) Token: 0x0600034B RID: 843 RVA: 0x00013A87 File Offset: 0x00011C87
+	// (get) Token: 0x0600034B RID: 843 RVA: 0x00013863 File Offset: 0x00011A63
 	public static NativeVideoPlayer.StereoMode VideoStereoMode
 	{
 		get
@@ -131,7 +131,7 @@ public static class NativeVideoPlayer
 	}
 
 	// Token: 0x1700002C RID: 44
-	// (get) Token: 0x0600034C RID: 844 RVA: 0x00013AC7 File Offset: 0x00011CC7
+	// (get) Token: 0x0600034C RID: 844 RVA: 0x000138A3 File Offset: 0x00011AA3
 	public static int VideoWidth
 	{
 		get
@@ -145,7 +145,7 @@ public static class NativeVideoPlayer
 	}
 
 	// Token: 0x1700002D RID: 45
-	// (get) Token: 0x0600034D RID: 845 RVA: 0x00013B07 File Offset: 0x00011D07
+	// (get) Token: 0x0600034D RID: 845 RVA: 0x000138E3 File Offset: 0x00011AE3
 	public static int VideoHeight
 	{
 		get
@@ -159,8 +159,8 @@ public static class NativeVideoPlayer
 	}
 
 	// Token: 0x1700002E RID: 46
-	// (get) Token: 0x0600034E RID: 846 RVA: 0x00013B47 File Offset: 0x00011D47
-	// (set) Token: 0x0600034F RID: 847 RVA: 0x00013B88 File Offset: 0x00011D88
+	// (get) Token: 0x0600034E RID: 846 RVA: 0x00013923 File Offset: 0x00011B23
+	// (set) Token: 0x0600034F RID: 847 RVA: 0x00013964 File Offset: 0x00011B64
 	public static long PlaybackPosition
 	{
 		get
@@ -183,7 +183,7 @@ public static class NativeVideoPlayer
 		}
 	}
 
-	// Token: 0x06000350 RID: 848 RVA: 0x00013BF0 File Offset: 0x00011DF0
+	// Token: 0x06000350 RID: 848 RVA: 0x000139CC File Offset: 0x00011BCC
 	public static void PlayVideo(string path, string drmLicenseUrl, IntPtr surfaceObj)
 	{
 		if (NativeVideoPlayer.playVideoMethodId == IntPtr.Zero)
@@ -202,7 +202,7 @@ public static class NativeVideoPlayer
 		AndroidJNI.DeleteLocalRef(intPtr2);
 	}
 
-	// Token: 0x06000351 RID: 849 RVA: 0x00013CA8 File Offset: 0x00011EA8
+	// Token: 0x06000351 RID: 849 RVA: 0x00013A84 File Offset: 0x00011C84
 	public static void Stop()
 	{
 		if (NativeVideoPlayer.stopMethodId == IntPtr.Zero)
@@ -212,7 +212,7 @@ public static class NativeVideoPlayer
 		AndroidJNI.CallStaticVoidMethod(NativeVideoPlayer.VideoPlayerClass, NativeVideoPlayer.stopMethodId, NativeVideoPlayer.EmptyParams);
 	}
 
-	// Token: 0x06000352 RID: 850 RVA: 0x00013CE8 File Offset: 0x00011EE8
+	// Token: 0x06000352 RID: 850 RVA: 0x00013AC4 File Offset: 0x00011CC4
 	public static void Play()
 	{
 		if (NativeVideoPlayer.resumeMethodId == IntPtr.Zero)
@@ -222,7 +222,7 @@ public static class NativeVideoPlayer
 		AndroidJNI.CallStaticVoidMethod(NativeVideoPlayer.VideoPlayerClass, NativeVideoPlayer.resumeMethodId, NativeVideoPlayer.EmptyParams);
 	}
 
-	// Token: 0x06000353 RID: 851 RVA: 0x00013D28 File Offset: 0x00011F28
+	// Token: 0x06000353 RID: 851 RVA: 0x00013B04 File Offset: 0x00011D04
 	public static void Pause()
 	{
 		if (NativeVideoPlayer.pauseMethodId == IntPtr.Zero)
@@ -232,7 +232,7 @@ public static class NativeVideoPlayer
 		AndroidJNI.CallStaticVoidMethod(NativeVideoPlayer.VideoPlayerClass, NativeVideoPlayer.pauseMethodId, NativeVideoPlayer.EmptyParams);
 	}
 
-	// Token: 0x06000354 RID: 852 RVA: 0x00013D68 File Offset: 0x00011F68
+	// Token: 0x06000354 RID: 852 RVA: 0x00013B44 File Offset: 0x00011D44
 	public static void SetPlaybackSpeed(float speed)
 	{
 		if (NativeVideoPlayer.setPlaybackSpeedMethodId == IntPtr.Zero)
@@ -244,7 +244,7 @@ public static class NativeVideoPlayer
 		AndroidJNI.CallStaticVoidMethod(NativeVideoPlayer.VideoPlayerClass, NativeVideoPlayer.setPlaybackSpeedMethodId, NativeVideoPlayer.setPlaybackSpeedParams);
 	}
 
-	// Token: 0x06000355 RID: 853 RVA: 0x00013DD0 File Offset: 0x00011FD0
+	// Token: 0x06000355 RID: 853 RVA: 0x00013BAC File Offset: 0x00011DAC
 	public static void SetLooping(bool looping)
 	{
 		if (NativeVideoPlayer.setLoopingMethodId == IntPtr.Zero)
@@ -256,7 +256,7 @@ public static class NativeVideoPlayer
 		AndroidJNI.CallStaticVoidMethod(NativeVideoPlayer.VideoPlayerClass, NativeVideoPlayer.setLoopingMethodId, NativeVideoPlayer.setLoopingParams);
 	}
 
-	// Token: 0x06000356 RID: 854 RVA: 0x00013E38 File Offset: 0x00012038
+	// Token: 0x06000356 RID: 854 RVA: 0x00013C14 File Offset: 0x00011E14
 	public static void SetListenerRotation(Quaternion rotation)
 	{
 		if (NativeVideoPlayer.setListenerRotationQuaternionMethodId == IntPtr.Zero)
@@ -340,33 +340,33 @@ public static class NativeVideoPlayer
 	// Token: 0x040003FF RID: 1023
 	private static jvalue[] setListenerRotationQuaternionParams;
 
-	// Token: 0x020003C2 RID: 962
+	// Token: 0x020003C4 RID: 964
 	public enum PlabackState
 	{
-		// Token: 0x04001BC6 RID: 7110
+		// Token: 0x04001BD3 RID: 7123
 		Idle = 1,
-		// Token: 0x04001BC7 RID: 7111
+		// Token: 0x04001BD4 RID: 7124
 		Preparing,
-		// Token: 0x04001BC8 RID: 7112
+		// Token: 0x04001BD5 RID: 7125
 		Buffering,
-		// Token: 0x04001BC9 RID: 7113
+		// Token: 0x04001BD6 RID: 7126
 		Ready,
-		// Token: 0x04001BCA RID: 7114
+		// Token: 0x04001BD7 RID: 7127
 		Ended
 	}
 
-	// Token: 0x020003C3 RID: 963
+	// Token: 0x020003C5 RID: 965
 	public enum StereoMode
 	{
-		// Token: 0x04001BCC RID: 7116
+		// Token: 0x04001BD9 RID: 7129
 		Unknown = -1,
-		// Token: 0x04001BCD RID: 7117
+		// Token: 0x04001BDA RID: 7130
 		Mono,
-		// Token: 0x04001BCE RID: 7118
+		// Token: 0x04001BDB RID: 7131
 		TopBottom,
-		// Token: 0x04001BCF RID: 7119
+		// Token: 0x04001BDC RID: 7132
 		LeftRight,
-		// Token: 0x04001BD0 RID: 7120
+		// Token: 0x04001BDD RID: 7133
 		Mesh
 	}
 }

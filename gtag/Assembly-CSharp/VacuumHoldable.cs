@@ -4,14 +4,14 @@ using UnityEngine;
 // Token: 0x0200003D RID: 61
 public class VacuumHoldable : TransferrableObject
 {
-	// Token: 0x06000154 RID: 340 RVA: 0x0000B523 File Offset: 0x00009723
+	// Token: 0x06000154 RID: 340 RVA: 0x0000B56B File Offset: 0x0000976B
 	protected override void Awake()
 	{
 		base.Awake();
 		this.itemState = TransferrableObject.ItemStates.State0;
 	}
 
-	// Token: 0x06000155 RID: 341 RVA: 0x0000B532 File Offset: 0x00009732
+	// Token: 0x06000155 RID: 341 RVA: 0x0000B57A File Offset: 0x0000977A
 	public override void OnEnable()
 	{
 		base.OnEnable();
@@ -19,7 +19,7 @@ public class VacuumHoldable : TransferrableObject
 		this.hasAudioSource = (this.audioSource != null && this.audioSource.clip != null);
 	}
 
-	// Token: 0x06000156 RID: 342 RVA: 0x0000B56C File Offset: 0x0000976C
+	// Token: 0x06000156 RID: 342 RVA: 0x0000B5B4 File Offset: 0x000097B4
 	public override void OnDisable()
 	{
 		base.OnDisable();
@@ -34,7 +34,7 @@ public class VacuumHoldable : TransferrableObject
 		}
 	}
 
-	// Token: 0x06000157 RID: 343 RVA: 0x0000B5C0 File Offset: 0x000097C0
+	// Token: 0x06000157 RID: 343 RVA: 0x0000B608 File Offset: 0x00009808
 	private void InitToDefault()
 	{
 		this.itemState = TransferrableObject.ItemStates.State0;
@@ -48,14 +48,14 @@ public class VacuumHoldable : TransferrableObject
 		}
 	}
 
-	// Token: 0x06000158 RID: 344 RVA: 0x0000B60C File Offset: 0x0000980C
+	// Token: 0x06000158 RID: 344 RVA: 0x0000B654 File Offset: 0x00009854
 	public override void ResetToDefaultState()
 	{
 		base.ResetToDefaultState();
 		this.InitToDefault();
 	}
 
-	// Token: 0x06000159 RID: 345 RVA: 0x0000B61C File Offset: 0x0000981C
+	// Token: 0x06000159 RID: 345 RVA: 0x0000B664 File Offset: 0x00009864
 	protected override void LateUpdateShared()
 	{
 		base.LateUpdateShared();
@@ -92,7 +92,7 @@ public class VacuumHoldable : TransferrableObject
 		}
 	}
 
-	// Token: 0x0600015A RID: 346 RVA: 0x0000B710 File Offset: 0x00009910
+	// Token: 0x0600015A RID: 346 RVA: 0x0000B758 File Offset: 0x00009958
 	public override void OnActivate()
 	{
 		base.OnActivate();
@@ -104,7 +104,7 @@ public class VacuumHoldable : TransferrableObject
 		}
 	}
 
-	// Token: 0x0600015B RID: 347 RVA: 0x0000B75C File Offset: 0x0000995C
+	// Token: 0x0600015B RID: 347 RVA: 0x0000B7A4 File Offset: 0x000099A4
 	public override void OnDeactivate()
 	{
 		base.OnDeactivate();
@@ -134,12 +134,12 @@ public class VacuumHoldable : TransferrableObject
 	// Token: 0x040001EB RID: 491
 	private bool hasAudioSource;
 
-	// Token: 0x02000392 RID: 914
+	// Token: 0x02000394 RID: 916
 	private enum VacuumState
 	{
-		// Token: 0x04001B18 RID: 6936
+		// Token: 0x04001B25 RID: 6949
 		None = 1,
-		// Token: 0x04001B19 RID: 6937
+		// Token: 0x04001B26 RID: 6950
 		Active
 	}
 }

@@ -2,16 +2,16 @@
 
 namespace Viveport.Internal
 {
-	// Token: 0x02000257 RID: 599
+	// Token: 0x02000258 RID: 600
 	internal enum ELeaderboardDataTimeRange
 	{
-		// Token: 0x0400119B RID: 4507
+		// Token: 0x040011A1 RID: 4513
 		k_ELeaderboardDataScropeAllTime,
-		// Token: 0x0400119C RID: 4508
+		// Token: 0x040011A2 RID: 4514
 		k_ELeaderboardDataScropeDaily,
-		// Token: 0x0400119D RID: 4509
+		// Token: 0x040011A3 RID: 4515
 		k_ELeaderboardDataScropeWeekly,
-		// Token: 0x0400119E RID: 4510
+		// Token: 0x040011A4 RID: 4516
 		k_ELeaderboardDataScropeMonthly
 	}
 }

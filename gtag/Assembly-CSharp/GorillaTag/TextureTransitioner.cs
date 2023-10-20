@@ -4,11 +4,11 @@ using UnityEngine;
 
 namespace GorillaTag
 {
-	// Token: 0x02000316 RID: 790
+	// Token: 0x02000318 RID: 792
 	[ExecuteAlways]
 	public class TextureTransitioner : MonoBehaviour, IResettableItem
 	{
-		// Token: 0x060015C7 RID: 5575 RVA: 0x000782B1 File Offset: 0x000764B1
+		// Token: 0x060015D0 RID: 5584 RVA: 0x00078799 File Offset: 0x00076999
 		protected void Awake()
 		{
 			if (Application.isPlaying || this.editorPreview)
@@ -20,7 +20,7 @@ namespace GorillaTag
 			this.ResetToDefaultState();
 		}
 
-		// Token: 0x060015C8 RID: 5576 RVA: 0x000782E4 File Offset: 0x000764E4
+		// Token: 0x060015D1 RID: 5585 RVA: 0x000787CC File Offset: 0x000769CC
 		protected void OnEnable()
 		{
 			TextureTransitionerManager.Register(this);
@@ -49,13 +49,13 @@ namespace GorillaTag
 			}
 		}
 
-		// Token: 0x060015C9 RID: 5577 RVA: 0x000783D2 File Offset: 0x000765D2
+		// Token: 0x060015D2 RID: 5586 RVA: 0x000788BA File Offset: 0x00076ABA
 		protected void OnDisable()
 		{
 			TextureTransitionerManager.Unregister(this);
 		}
 
-		// Token: 0x060015CA RID: 5578 RVA: 0x000783DA File Offset: 0x000765DA
+		// Token: 0x060015D3 RID: 5587 RVA: 0x000788C2 File Offset: 0x00076AC2
 		private void RefreshShaderParams()
 		{
 			this.texTransitionShaderParam = Shader.PropertyToID(this.texTransitionShaderParamName);
@@ -63,7 +63,7 @@ namespace GorillaTag
 			this.tex2ShaderParam = Shader.PropertyToID(this.tex2ShaderParamName);
 		}
 
-		// Token: 0x060015CB RID: 5579 RVA: 0x0007840F File Offset: 0x0007660F
+		// Token: 0x060015D4 RID: 5588 RVA: 0x000788F7 File Offset: 0x00076AF7
 		public void ResetToDefaultState()
 		{
 			this.wasReset = true;
@@ -73,83 +73,83 @@ namespace GorillaTag
 			this.tex2Index = 0;
 		}
 
-		// Token: 0x040017C8 RID: 6088
+		// Token: 0x040017D5 RID: 6101
 		public bool editorPreview;
 
-		// Token: 0x040017C9 RID: 6089
+		// Token: 0x040017D6 RID: 6102
 		[Tooltip("The component that will drive the texture transitions.")]
 		public MonoBehaviour dynamicFloatComponent;
 
-		// Token: 0x040017CA RID: 6090
+		// Token: 0x040017D7 RID: 6103
 		[Tooltip("Set these values so that after remap 0 is the first texture in the textures list and 1 is the last.")]
 		public GorillaMath.RemapFloatInfo remapInfo;
 
-		// Token: 0x040017CB RID: 6091
+		// Token: 0x040017D8 RID: 6104
 		public TextureTransitioner.DirectionRetentionMode directionRetentionMode;
 
-		// Token: 0x040017CC RID: 6092
+		// Token: 0x040017D9 RID: 6105
 		public string texTransitionShaderParamName = "_TexTransition";
 
-		// Token: 0x040017CD RID: 6093
+		// Token: 0x040017DA RID: 6106
 		public string tex1ShaderParamName = "_MainTex";
 
-		// Token: 0x040017CE RID: 6094
+		// Token: 0x040017DB RID: 6107
 		public string tex2ShaderParamName = "_Tex2";
 
-		// Token: 0x040017CF RID: 6095
+		// Token: 0x040017DC RID: 6108
 		public Texture[] textures;
 
-		// Token: 0x040017D0 RID: 6096
+		// Token: 0x040017DD RID: 6109
 		public Renderer[] renderers;
 
-		// Token: 0x040017D1 RID: 6097
+		// Token: 0x040017DE RID: 6110
 		[NonSerialized]
 		private bool wasReset;
 
-		// Token: 0x040017D2 RID: 6098
+		// Token: 0x040017DF RID: 6111
 		[NonSerialized]
 		public IDynamicFloat iDynamicFloat;
 
-		// Token: 0x040017D3 RID: 6099
+		// Token: 0x040017E0 RID: 6112
 		[NonSerialized]
 		public int texTransitionShaderParam;
 
-		// Token: 0x040017D4 RID: 6100
+		// Token: 0x040017E1 RID: 6113
 		[NonSerialized]
 		public int tex1ShaderParam;
 
-		// Token: 0x040017D5 RID: 6101
+		// Token: 0x040017E2 RID: 6114
 		[NonSerialized]
 		public int tex2ShaderParam;
 
-		// Token: 0x040017D6 RID: 6102
+		// Token: 0x040017E3 RID: 6115
 		[DebugReadout]
 		[NonSerialized]
 		public float normalizedValue;
 
-		// Token: 0x040017D7 RID: 6103
+		// Token: 0x040017E4 RID: 6116
 		[DebugReadout]
 		[NonSerialized]
 		public int transitionPercent;
 
-		// Token: 0x040017D8 RID: 6104
+		// Token: 0x040017E5 RID: 6117
 		[DebugReadout]
 		[NonSerialized]
 		public int tex1Index;
 
-		// Token: 0x040017D9 RID: 6105
+		// Token: 0x040017E6 RID: 6118
 		[DebugReadout]
 		[NonSerialized]
 		public int tex2Index;
 
-		// Token: 0x02000501 RID: 1281
+		// Token: 0x02000503 RID: 1283
 		public enum DirectionRetentionMode
 		{
-			// Token: 0x040020D9 RID: 8409
+			// Token: 0x040020E6 RID: 8422
 			None,
-			// Token: 0x040020DA RID: 8410
+			// Token: 0x040020E7 RID: 8423
 			IncreaseOnly,
-			// Token: 0x040020DB RID: 8411
+			// Token: 0x040020E8 RID: 8424
 			DecreaseOnly
 		}
 	}

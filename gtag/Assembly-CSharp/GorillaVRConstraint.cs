@@ -3,10 +3,10 @@ using GorillaLocomotion;
 using GorillaNetworking;
 using UnityEngine;
 
-// Token: 0x0200018C RID: 396
+// Token: 0x0200018D RID: 397
 public class GorillaVRConstraint : MonoBehaviour
 {
-	// Token: 0x06000A28 RID: 2600 RVA: 0x0003EDD4 File Offset: 0x0003CFD4
+	// Token: 0x06000A2D RID: 2605 RVA: 0x0003EF04 File Offset: 0x0003D104
 	private void Update()
 	{
 		if (PhotonNetworkController.Instance.wrongVersion)
@@ -26,9 +26,9 @@ public class GorillaVRConstraint : MonoBehaviour
 		}
 	}
 
-	// Token: 0x04000C92 RID: 3218
+	// Token: 0x04000C96 RID: 3222
 	public bool isConstrained;
 
-	// Token: 0x04000C93 RID: 3219
+	// Token: 0x04000C97 RID: 3223
 	public float angle = 3600f;
 }

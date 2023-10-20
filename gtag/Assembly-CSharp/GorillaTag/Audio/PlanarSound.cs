@@ -3,10 +3,10 @@ using UnityEngine;
 
 namespace GorillaTag.Audio
 {
-	// Token: 0x02000324 RID: 804
+	// Token: 0x02000326 RID: 806
 	public class PlanarSound : MonoBehaviour
 	{
-		// Token: 0x0600166D RID: 5741 RVA: 0x0007CF06 File Offset: 0x0007B106
+		// Token: 0x06001676 RID: 5750 RVA: 0x0007D3EE File Offset: 0x0007B5EE
 		protected void OnEnable()
 		{
 			if (Camera.main != null)
@@ -16,7 +16,7 @@ namespace GorillaTag.Audio
 			}
 		}
 
-		// Token: 0x0600166E RID: 5742 RVA: 0x0007CF2C File Offset: 0x0007B12C
+		// Token: 0x06001677 RID: 5751 RVA: 0x0007D414 File Offset: 0x0007B614
 		protected void LateUpdate()
 		{
 			if (!this.hasCamera)
@@ -29,10 +29,10 @@ namespace GorillaTag.Audio
 			transform.localPosition = localPosition;
 		}
 
-		// Token: 0x04001881 RID: 6273
+		// Token: 0x0400188E RID: 6286
 		private Transform cameraXform;
 
-		// Token: 0x04001882 RID: 6274
+		// Token: 0x0400188F RID: 6287
 		private bool hasCamera;
 	}
 }

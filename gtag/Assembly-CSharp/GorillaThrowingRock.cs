@@ -2,15 +2,15 @@
 using Photon.Pun;
 using UnityEngine;
 
-// Token: 0x020001C0 RID: 448
+// Token: 0x020001C1 RID: 449
 public class GorillaThrowingRock : GorillaThrowable, IPunInstantiateMagicCallback
 {
-	// Token: 0x06000B69 RID: 2921 RVA: 0x000464D5 File Offset: 0x000446D5
+	// Token: 0x06000B6F RID: 2927 RVA: 0x0004673D File Offset: 0x0004493D
 	public void OnPhotonInstantiate(PhotonMessageInfo info)
 	{
 	}
 
-	// Token: 0x06000B6A RID: 2922 RVA: 0x000464D8 File Offset: 0x000446D8
+	// Token: 0x06000B70 RID: 2928 RVA: 0x00046740 File Offset: 0x00044940
 	public override void OnCollisionEnter(Collision collision)
 	{
 		base.OnCollisionEnter(collision);
@@ -25,7 +25,7 @@ public class GorillaThrowingRock : GorillaThrowable, IPunInstantiateMagicCallbac
 		}
 	}
 
-	// Token: 0x06000B6B RID: 2923 RVA: 0x00046558 File Offset: 0x00044758
+	// Token: 0x06000B71 RID: 2929 RVA: 0x000467C0 File Offset: 0x000449C0
 	public void OnTriggerEnter(Collider other)
 	{
 		Debug.Log("did a trigger enter");
@@ -53,12 +53,12 @@ public class GorillaThrowingRock : GorillaThrowable, IPunInstantiateMagicCallbac
 		}
 	}
 
-	// Token: 0x04000EE8 RID: 3816
+	// Token: 0x04000EEC RID: 3820
 	public float bonkSpeedMin = 1f;
 
-	// Token: 0x04000EE9 RID: 3817
+	// Token: 0x04000EED RID: 3821
 	public float bonkSpeedMax = 5f;
 
-	// Token: 0x04000EEA RID: 3818
+	// Token: 0x04000EEE RID: 3822
 	public VRRig hitRig;
 }

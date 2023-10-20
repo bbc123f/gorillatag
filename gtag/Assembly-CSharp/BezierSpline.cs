@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-// Token: 0x02000222 RID: 546
+// Token: 0x02000223 RID: 547
 public class BezierSpline : MonoBehaviour
 {
-	// Token: 0x170000A1 RID: 161
-	// (get) Token: 0x06000D7D RID: 3453 RVA: 0x0004EB55 File Offset: 0x0004CD55
-	// (set) Token: 0x06000D7E RID: 3454 RVA: 0x0004EB5D File Offset: 0x0004CD5D
+	// Token: 0x170000A3 RID: 163
+	// (get) Token: 0x06000D83 RID: 3459 RVA: 0x0004EDB5 File Offset: 0x0004CFB5
+	// (set) Token: 0x06000D84 RID: 3460 RVA: 0x0004EDBD File Offset: 0x0004CFBD
 	public bool Loop
 	{
 		get
@@ -26,8 +26,8 @@ public class BezierSpline : MonoBehaviour
 		}
 	}
 
-	// Token: 0x170000A2 RID: 162
-	// (get) Token: 0x06000D7F RID: 3455 RVA: 0x0004EB95 File Offset: 0x0004CD95
+	// Token: 0x170000A4 RID: 164
+	// (get) Token: 0x06000D85 RID: 3461 RVA: 0x0004EDF5 File Offset: 0x0004CFF5
 	public int ControlPointCount
 	{
 		get
@@ -36,13 +36,13 @@ public class BezierSpline : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000D80 RID: 3456 RVA: 0x0004EB9F File Offset: 0x0004CD9F
+	// Token: 0x06000D86 RID: 3462 RVA: 0x0004EDFF File Offset: 0x0004CFFF
 	public Vector3 GetControlPoint(int index)
 	{
 		return this.points[index];
 	}
 
-	// Token: 0x06000D81 RID: 3457 RVA: 0x0004EBB0 File Offset: 0x0004CDB0
+	// Token: 0x06000D87 RID: 3463 RVA: 0x0004EE10 File Offset: 0x0004D010
 	public void SetControlPoint(int index, Vector3 point)
 	{
 		if (index % 3 == 0)
@@ -84,13 +84,13 @@ public class BezierSpline : MonoBehaviour
 		this.EnforceMode(index);
 	}
 
-	// Token: 0x06000D82 RID: 3458 RVA: 0x0004ED42 File Offset: 0x0004CF42
+	// Token: 0x06000D88 RID: 3464 RVA: 0x0004EFA2 File Offset: 0x0004D1A2
 	public BezierControlPointMode GetControlPointMode(int index)
 	{
 		return this.modes[(index + 1) / 3];
 	}
 
-	// Token: 0x06000D83 RID: 3459 RVA: 0x0004ED50 File Offset: 0x0004CF50
+	// Token: 0x06000D89 RID: 3465 RVA: 0x0004EFB0 File Offset: 0x0004D1B0
 	public void SetControlPointMode(int index, BezierControlPointMode mode)
 	{
 		int num = (index + 1) / 3;
@@ -109,7 +109,7 @@ public class BezierSpline : MonoBehaviour
 		this.EnforceMode(index);
 	}
 
-	// Token: 0x06000D84 RID: 3460 RVA: 0x0004EDA8 File Offset: 0x0004CFA8
+	// Token: 0x06000D8A RID: 3466 RVA: 0x0004F008 File Offset: 0x0004D208
 	private void EnforceMode(int index)
 	{
 		int num = (index + 1) / 3;
@@ -156,8 +156,8 @@ public class BezierSpline : MonoBehaviour
 		this.points[num4] = a + b;
 	}
 
-	// Token: 0x170000A3 RID: 163
-	// (get) Token: 0x06000D85 RID: 3461 RVA: 0x0004EE97 File Offset: 0x0004D097
+	// Token: 0x170000A5 RID: 165
+	// (get) Token: 0x06000D8B RID: 3467 RVA: 0x0004F0F7 File Offset: 0x0004D2F7
 	public int CurveCount
 	{
 		get
@@ -166,7 +166,7 @@ public class BezierSpline : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000D86 RID: 3462 RVA: 0x0004EEA8 File Offset: 0x0004D0A8
+	// Token: 0x06000D8C RID: 3468 RVA: 0x0004F108 File Offset: 0x0004D308
 	public Vector3 GetPoint(float t)
 	{
 		int num;
@@ -185,7 +185,7 @@ public class BezierSpline : MonoBehaviour
 		return base.transform.TransformPoint(Bezier.GetPoint(this.points[num], this.points[num + 1], this.points[num + 2], this.points[num + 3], t));
 	}
 
-	// Token: 0x06000D87 RID: 3463 RVA: 0x0004EF38 File Offset: 0x0004D138
+	// Token: 0x06000D8D RID: 3469 RVA: 0x0004F198 File Offset: 0x0004D398
 	public Vector3 GetPointLocal(float t)
 	{
 		int num;
@@ -204,7 +204,7 @@ public class BezierSpline : MonoBehaviour
 		return Bezier.GetPoint(this.points[num], this.points[num + 1], this.points[num + 2], this.points[num + 3], t);
 	}
 
-	// Token: 0x06000D88 RID: 3464 RVA: 0x0004EFBC File Offset: 0x0004D1BC
+	// Token: 0x06000D8E RID: 3470 RVA: 0x0004F21C File Offset: 0x0004D41C
 	public Vector3 GetVelocity(float t)
 	{
 		int num;
@@ -223,13 +223,13 @@ public class BezierSpline : MonoBehaviour
 		return base.transform.TransformPoint(Bezier.GetFirstDerivative(this.points[num], this.points[num + 1], this.points[num + 2], this.points[num + 3], t)) - base.transform.position;
 	}
 
-	// Token: 0x06000D89 RID: 3465 RVA: 0x0004F05C File Offset: 0x0004D25C
+	// Token: 0x06000D8F RID: 3471 RVA: 0x0004F2BC File Offset: 0x0004D4BC
 	public Vector3 GetDirection(float t)
 	{
 		return this.GetVelocity(t).normalized;
 	}
 
-	// Token: 0x06000D8A RID: 3466 RVA: 0x0004F078 File Offset: 0x0004D278
+	// Token: 0x06000D90 RID: 3472 RVA: 0x0004F2D8 File Offset: 0x0004D4D8
 	public void AddCurve()
 	{
 		Vector3 vector = this.points[this.points.Length - 1];
@@ -251,7 +251,7 @@ public class BezierSpline : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000D8B RID: 3467 RVA: 0x0004F1B2 File Offset: 0x0004D3B2
+	// Token: 0x06000D91 RID: 3473 RVA: 0x0004F412 File Offset: 0x0004D612
 	public void RemoveLastCurve()
 	{
 		if (this.points.Length <= 4)
@@ -262,7 +262,7 @@ public class BezierSpline : MonoBehaviour
 		Array.Resize<BezierControlPointMode>(ref this.modes, this.modes.Length - 1);
 	}
 
-	// Token: 0x06000D8C RID: 3468 RVA: 0x0004F1EC File Offset: 0x0004D3EC
+	// Token: 0x06000D92 RID: 3474 RVA: 0x0004F44C File Offset: 0x0004D64C
 	public void RemoveCurve(int index)
 	{
 		if (this.points.Length <= 4)
@@ -286,7 +286,7 @@ public class BezierSpline : MonoBehaviour
 		this.modes = list2.ToArray();
 	}
 
-	// Token: 0x06000D8D RID: 3469 RVA: 0x0004F274 File Offset: 0x0004D474
+	// Token: 0x06000D93 RID: 3475 RVA: 0x0004F4D4 File Offset: 0x0004D6D4
 	public void Reset()
 	{
 		this.points = new Vector3[]
@@ -299,15 +299,15 @@ public class BezierSpline : MonoBehaviour
 		this.modes = new BezierControlPointMode[2];
 	}
 
-	// Token: 0x040010A6 RID: 4262
+	// Token: 0x040010AB RID: 4267
 	[SerializeField]
 	private Vector3[] points;
 
-	// Token: 0x040010A7 RID: 4263
+	// Token: 0x040010AC RID: 4268
 	[SerializeField]
 	private BezierControlPointMode[] modes;
 
-	// Token: 0x040010A8 RID: 4264
+	// Token: 0x040010AD RID: 4269
 	[SerializeField]
 	private bool loop;
 }

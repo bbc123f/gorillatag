@@ -4,10 +4,10 @@ using UnityEngine;
 
 namespace GorillaNetworking
 {
-	// Token: 0x020002B4 RID: 692
+	// Token: 0x020002B6 RID: 694
 	public class GorillaNetworkDisconnectTrigger : GorillaTriggerBox
 	{
-		// Token: 0x06001289 RID: 4745 RVA: 0x0006B9B4 File Offset: 0x00069BB4
+		// Token: 0x06001290 RID: 4752 RVA: 0x0006BE80 File Offset: 0x0006A080
 		public override void OnBoxTriggered()
 		{
 			base.OnBoxTriggered();
@@ -36,22 +36,22 @@ namespace GorillaNetworking
 			}
 		}
 
-		// Token: 0x0400157D RID: 5501
+		// Token: 0x0400158A RID: 5514
 		public PhotonNetworkController photonNetworkController;
 
-		// Token: 0x0400157E RID: 5502
+		// Token: 0x0400158B RID: 5515
 		public GameObject offlineVRRig;
 
-		// Token: 0x0400157F RID: 5503
+		// Token: 0x0400158C RID: 5516
 		public GameObject makeSureThisIsEnabled;
 
-		// Token: 0x04001580 RID: 5504
+		// Token: 0x0400158D RID: 5517
 		public GameObject[] makeSureTheseAreEnabled;
 
-		// Token: 0x04001581 RID: 5505
+		// Token: 0x0400158E RID: 5518
 		public string componentTypeToRemove;
 
-		// Token: 0x04001582 RID: 5506
+		// Token: 0x0400158F RID: 5519
 		public GameObject componentTarget;
 	}
 }

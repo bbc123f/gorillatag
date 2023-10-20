@@ -2,7 +2,7 @@
 
 namespace LitJson
 {
-	// Token: 0x02000276 RID: 630
-	// (Invoke) Token: 0x06001004 RID: 4100
+	// Token: 0x02000277 RID: 631
+	// (Invoke) Token: 0x0600100B RID: 4107
 	internal delegate void ExporterFunc(object obj, JsonWriter writer);
 }

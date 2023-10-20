@@ -1,10 +1,10 @@
 ﻿using System;
 using UnityEngine;
 
-// Token: 0x02000235 RID: 565
+// Token: 0x02000236 RID: 566
 public class SurfaceImpactFX : MonoBehaviour
 {
-	// Token: 0x06000DFC RID: 3580 RVA: 0x00051128 File Offset: 0x0004F328
+	// Token: 0x06000E03 RID: 3587 RVA: 0x00051504 File Offset: 0x0004F704
 	public void Awake()
 	{
 		if (this.particleFX == null)
@@ -20,22 +20,22 @@ public class SurfaceImpactFX : MonoBehaviour
 		this.fxMainModule = this.particleFX.main;
 	}
 
-	// Token: 0x06000DFD RID: 3581 RVA: 0x00051181 File Offset: 0x0004F381
+	// Token: 0x06000E04 RID: 3588 RVA: 0x0005155D File Offset: 0x0004F75D
 	public void SetScale(float scale)
 	{
 		this.fxMainModule.gravityModifierMultiplier = this.startingGravityModifier * scale;
 		base.transform.localScale = this.startingScale * scale;
 	}
 
-	// Token: 0x040010EF RID: 4335
+	// Token: 0x040010F5 RID: 4341
 	public ParticleSystem particleFX;
 
-	// Token: 0x040010F0 RID: 4336
+	// Token: 0x040010F6 RID: 4342
 	public float startingGravityModifier;
 
-	// Token: 0x040010F1 RID: 4337
+	// Token: 0x040010F7 RID: 4343
 	public Vector3 startingScale = Vector3.one;
 
-	// Token: 0x040010F2 RID: 4338
+	// Token: 0x040010F8 RID: 4344
 	private ParticleSystem.MainModule fxMainModule;
 }

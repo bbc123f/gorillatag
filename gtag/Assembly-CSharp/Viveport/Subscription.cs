@@ -4,17 +4,17 @@ using Viveport.Internal;
 
 namespace Viveport
 {
-	// Token: 0x0200024F RID: 591
+	// Token: 0x02000250 RID: 592
 	public class Subscription
 	{
-		// Token: 0x06000EA7 RID: 3751 RVA: 0x00053495 File Offset: 0x00051695
+		// Token: 0x06000EAE RID: 3758 RVA: 0x00053871 File Offset: 0x00051A71
 		[MonoPInvokeCallback(typeof(StatusCallback2))]
 		private static void IsReadyIl2cppCallback(int errorCode, string message)
 		{
 			Subscription.isReadyIl2cppCallback(errorCode, message);
 		}
 
-		// Token: 0x06000EA8 RID: 3752 RVA: 0x000534A4 File Offset: 0x000516A4
+		// Token: 0x06000EAF RID: 3759 RVA: 0x00053880 File Offset: 0x00051A80
 		public static void IsReady(StatusCallback2 callback)
 		{
 			if (callback == null)
@@ -31,7 +31,7 @@ namespace Viveport
 			Subscription.IsReady(new StatusCallback2(Subscription.IsReadyIl2cppCallback));
 		}
 
-		// Token: 0x06000EA9 RID: 3753 RVA: 0x00053514 File Offset: 0x00051714
+		// Token: 0x06000EB0 RID: 3760 RVA: 0x000538F0 File Offset: 0x00051AF0
 		public static SubscriptionStatus GetUserStatus()
 		{
 			SubscriptionStatus subscriptionStatus = new SubscriptionStatus();
@@ -96,7 +96,7 @@ namespace Viveport
 			return subscriptionStatus;
 		}
 
-		// Token: 0x0400118C RID: 4492
+		// Token: 0x04001192 RID: 4498
 		private static StatusCallback2 isReadyIl2cppCallback;
 	}
 }

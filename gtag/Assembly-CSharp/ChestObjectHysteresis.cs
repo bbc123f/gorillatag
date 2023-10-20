@@ -4,14 +4,14 @@ using UnityEngine;
 // Token: 0x02000108 RID: 264
 public class ChestObjectHysteresis : MonoBehaviour
 {
-	// Token: 0x0600067D RID: 1661 RVA: 0x00028B87 File Offset: 0x00026D87
+	// Token: 0x0600067E RID: 1662 RVA: 0x000289C7 File Offset: 0x00026BC7
 	private void Start()
 	{
 		this.lastAngleQuat = base.transform.rotation;
 		this.currentAngleQuat = base.transform.rotation;
 	}
 
-	// Token: 0x0600067E RID: 1662 RVA: 0x00028BAC File Offset: 0x00026DAC
+	// Token: 0x0600067F RID: 1663 RVA: 0x000289EC File Offset: 0x00026BEC
 	private void LateUpdate()
 	{
 		this.currentAngleQuat = this.angleFollower.rotation;

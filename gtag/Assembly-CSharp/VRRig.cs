@@ -18,19 +18,19 @@ using UnityEngine.UI;
 // Token: 0x020000F8 RID: 248
 public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCosmeticsCallback, IGuidedRefTarget, IGuidedRefMonoBehaviour, IGuidedRefObject
 {
-	// Token: 0x060005BE RID: 1470 RVA: 0x00023F87 File Offset: 0x00022187
+	// Token: 0x060005BE RID: 1470 RVA: 0x00023D7B File Offset: 0x00021F7B
 	public int ActiveTransferrableObjectIndex(int idx)
 	{
 		return this.reliableState.activeTransferrableObjectIndex[idx];
 	}
 
-	// Token: 0x060005BF RID: 1471 RVA: 0x00023F96 File Offset: 0x00022196
+	// Token: 0x060005BF RID: 1471 RVA: 0x00023D8A File Offset: 0x00021F8A
 	public int ActiveTransferrableObjectIndexLength()
 	{
 		return this.reliableState.activeTransferrableObjectIndex.Length;
 	}
 
-	// Token: 0x060005C0 RID: 1472 RVA: 0x00023FA5 File Offset: 0x000221A5
+	// Token: 0x060005C0 RID: 1472 RVA: 0x00023D99 File Offset: 0x00021F99
 	public void SetActiveTransferrableObjectIndex(int idx, int v)
 	{
 		if (this.reliableState.activeTransferrableObjectIndex[idx] != v)
@@ -40,13 +40,13 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		}
 	}
 
-	// Token: 0x060005C1 RID: 1473 RVA: 0x00023FD0 File Offset: 0x000221D0
+	// Token: 0x060005C1 RID: 1473 RVA: 0x00023DC4 File Offset: 0x00021FC4
 	public TransferrableObject.PositionState TransferrablePosStates(int idx)
 	{
 		return this.reliableState.transferrablePosStates[idx];
 	}
 
-	// Token: 0x060005C2 RID: 1474 RVA: 0x00023FDF File Offset: 0x000221DF
+	// Token: 0x060005C2 RID: 1474 RVA: 0x00023DD3 File Offset: 0x00021FD3
 	public void SetTransferrablePosStates(int idx, TransferrableObject.PositionState v)
 	{
 		if (this.reliableState.transferrablePosStates[idx] != v)
@@ -56,13 +56,13 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		}
 	}
 
-	// Token: 0x060005C3 RID: 1475 RVA: 0x0002400A File Offset: 0x0002220A
+	// Token: 0x060005C3 RID: 1475 RVA: 0x00023DFE File Offset: 0x00021FFE
 	public TransferrableObject.ItemStates TransferrableItemStates(int idx)
 	{
 		return this.reliableState.transferrableItemStates[idx];
 	}
 
-	// Token: 0x060005C4 RID: 1476 RVA: 0x00024019 File Offset: 0x00022219
+	// Token: 0x060005C4 RID: 1476 RVA: 0x00023E0D File Offset: 0x0002200D
 	public void SetTransferrableItemStates(int idx, TransferrableObject.ItemStates v)
 	{
 		if (this.reliableState.transferrableItemStates[idx] != v)
@@ -72,7 +72,7 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		}
 	}
 
-	// Token: 0x060005C5 RID: 1477 RVA: 0x00024044 File Offset: 0x00022244
+	// Token: 0x060005C5 RID: 1477 RVA: 0x00023E38 File Offset: 0x00022038
 	public void SetTransferrableDockPosition(int idx, BodyDockPositions.DropPositions v)
 	{
 		if (this.reliableState.transferableDockPositions[idx] != v)
@@ -82,15 +82,15 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		}
 	}
 
-	// Token: 0x060005C6 RID: 1478 RVA: 0x0002406F File Offset: 0x0002226F
+	// Token: 0x060005C6 RID: 1478 RVA: 0x00023E63 File Offset: 0x00022063
 	public BodyDockPositions.DropPositions TransferrableDockPosition(int idx)
 	{
 		return this.reliableState.transferableDockPositions[idx];
 	}
 
 	// Token: 0x17000043 RID: 67
-	// (get) Token: 0x060005C7 RID: 1479 RVA: 0x0002407E File Offset: 0x0002227E
-	// (set) Token: 0x060005C8 RID: 1480 RVA: 0x0002408B File Offset: 0x0002228B
+	// (get) Token: 0x060005C7 RID: 1479 RVA: 0x00023E72 File Offset: 0x00022072
+	// (set) Token: 0x060005C8 RID: 1480 RVA: 0x00023E7F File Offset: 0x0002207F
 	public int WearablePackedStates
 	{
 		get
@@ -108,8 +108,8 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 	}
 
 	// Token: 0x17000044 RID: 68
-	// (get) Token: 0x060005C9 RID: 1481 RVA: 0x000240B2 File Offset: 0x000222B2
-	// (set) Token: 0x060005CA RID: 1482 RVA: 0x000240BF File Offset: 0x000222BF
+	// (get) Token: 0x060005C9 RID: 1481 RVA: 0x00023EA6 File Offset: 0x000220A6
+	// (set) Token: 0x060005CA RID: 1482 RVA: 0x00023EB3 File Offset: 0x000220B3
 	public int LeftThrowableProjectileIndex
 	{
 		get
@@ -127,8 +127,8 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 	}
 
 	// Token: 0x17000045 RID: 69
-	// (get) Token: 0x060005CB RID: 1483 RVA: 0x000240E6 File Offset: 0x000222E6
-	// (set) Token: 0x060005CC RID: 1484 RVA: 0x000240F3 File Offset: 0x000222F3
+	// (get) Token: 0x060005CB RID: 1483 RVA: 0x00023EDA File Offset: 0x000220DA
+	// (set) Token: 0x060005CC RID: 1484 RVA: 0x00023EE7 File Offset: 0x000220E7
 	public int RightThrowableProjectileIndex
 	{
 		get
@@ -146,8 +146,8 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 	}
 
 	// Token: 0x17000046 RID: 70
-	// (get) Token: 0x060005CD RID: 1485 RVA: 0x0002411A File Offset: 0x0002231A
-	// (set) Token: 0x060005CE RID: 1486 RVA: 0x00024127 File Offset: 0x00022327
+	// (get) Token: 0x060005CD RID: 1485 RVA: 0x00023F0E File Offset: 0x0002210E
+	// (set) Token: 0x060005CE RID: 1486 RVA: 0x00023F1B File Offset: 0x0002211B
 	public Color LeftThrowableProjectileColor
 	{
 		get
@@ -165,8 +165,8 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 	}
 
 	// Token: 0x17000047 RID: 71
-	// (get) Token: 0x060005CF RID: 1487 RVA: 0x00024153 File Offset: 0x00022353
-	// (set) Token: 0x060005D0 RID: 1488 RVA: 0x00024160 File Offset: 0x00022360
+	// (get) Token: 0x060005CF RID: 1487 RVA: 0x00023F47 File Offset: 0x00022147
+	// (set) Token: 0x060005D0 RID: 1488 RVA: 0x00023F54 File Offset: 0x00022154
 	public Color RightThrowableProjectileColor
 	{
 		get
@@ -183,7 +183,7 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		}
 	}
 
-	// Token: 0x060005D1 RID: 1489 RVA: 0x0002418C File Offset: 0x0002238C
+	// Token: 0x060005D1 RID: 1489 RVA: 0x00023F80 File Offset: 0x00022180
 	public Color GetThrowableProjectileColor(bool isLeftHand)
 	{
 		if (!isLeftHand)
@@ -193,7 +193,7 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		return this.LeftThrowableProjectileColor;
 	}
 
-	// Token: 0x060005D2 RID: 1490 RVA: 0x0002419E File Offset: 0x0002239E
+	// Token: 0x060005D2 RID: 1490 RVA: 0x00023F92 File Offset: 0x00022192
 	public void SetThrowableProjectileColor(bool isLeftHand, Color color)
 	{
 		if (isLeftHand)
@@ -205,8 +205,8 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 	}
 
 	// Token: 0x17000048 RID: 72
-	// (get) Token: 0x060005D3 RID: 1491 RVA: 0x000241B2 File Offset: 0x000223B2
-	// (set) Token: 0x060005D4 RID: 1492 RVA: 0x000241BF File Offset: 0x000223BF
+	// (get) Token: 0x060005D3 RID: 1491 RVA: 0x00023FA6 File Offset: 0x000221A6
+	// (set) Token: 0x060005D4 RID: 1492 RVA: 0x00023FB3 File Offset: 0x000221B3
 	public int SizeLayerMask
 	{
 		get
@@ -223,7 +223,17 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		}
 	}
 
-	// Token: 0x060005D5 RID: 1493 RVA: 0x000241E8 File Offset: 0x000223E8
+	// Token: 0x17000049 RID: 73
+	// (get) Token: 0x060005D5 RID: 1493 RVA: 0x00023FDA File Offset: 0x000221DA
+	internal bool Initialized
+	{
+		get
+		{
+			return this.initialized;
+		}
+	}
+
+	// Token: 0x060005D6 RID: 1494 RVA: 0x00023FE4 File Offset: 0x000221E4
 	private void Awake()
 	{
 		this.GuidedRefInitialize();
@@ -252,12 +262,12 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		this.SharedStart();
 	}
 
-	// Token: 0x060005D6 RID: 1494 RVA: 0x000242EB File Offset: 0x000224EB
+	// Token: 0x060005D7 RID: 1495 RVA: 0x000240E7 File Offset: 0x000222E7
 	private void Start()
 	{
 	}
 
-	// Token: 0x060005D7 RID: 1495 RVA: 0x000242ED File Offset: 0x000224ED
+	// Token: 0x060005D8 RID: 1496 RVA: 0x000240E9 File Offset: 0x000222E9
 	private void EnsureInstantiatedMaterial()
 	{
 		if (this.didInstantiateMaterial)
@@ -268,7 +278,7 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		this.didInstantiateMaterial = true;
 	}
 
-	// Token: 0x060005D8 RID: 1496 RVA: 0x00024314 File Offset: 0x00022514
+	// Token: 0x060005D9 RID: 1497 RVA: 0x00024110 File Offset: 0x00022310
 	private void SharedStart()
 	{
 		if (this.isInitialized)
@@ -311,7 +321,7 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		base.StartCoroutine(this.OccasionalUpdate());
 	}
 
-	// Token: 0x060005D9 RID: 1497 RVA: 0x00024491 File Offset: 0x00022691
+	// Token: 0x060005DA RID: 1498 RVA: 0x0002428D File Offset: 0x0002248D
 	private IEnumerator OccasionalUpdate()
 	{
 		for (;;)
@@ -357,7 +367,7 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		yield break;
 	}
 
-	// Token: 0x060005DA RID: 1498 RVA: 0x000244A0 File Offset: 0x000226A0
+	// Token: 0x060005DB RID: 1499 RVA: 0x0002429C File Offset: 0x0002249C
 	public bool IsItemAllowed(string itemName)
 	{
 		if (itemName == "Slingshot")
@@ -376,7 +386,7 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		return this.inTryOnRoom && canTryOn;
 	}
 
-	// Token: 0x060005DB RID: 1499 RVA: 0x00024510 File Offset: 0x00022710
+	// Token: 0x060005DC RID: 1500 RVA: 0x0002430C File Offset: 0x0002250C
 	private void LateUpdate()
 	{
 		base.transform.localScale = Vector3.one * this.scaleFactor;
@@ -506,24 +516,24 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		}
 	}
 
-	// Token: 0x060005DC RID: 1500 RVA: 0x00024BCC File Offset: 0x00022DCC
+	// Token: 0x060005DD RID: 1501 RVA: 0x000249C8 File Offset: 0x00022BC8
 	public void SetHeadBodyOffset()
 	{
 	}
 
-	// Token: 0x060005DD RID: 1501 RVA: 0x00024BCE File Offset: 0x00022DCE
+	// Token: 0x060005DE RID: 1502 RVA: 0x000249CA File Offset: 0x00022BCA
 	public void VRRigResize(float ratioVar)
 	{
 		this.ratio *= ratioVar;
 	}
 
-	// Token: 0x060005DE RID: 1502 RVA: 0x00024BE0 File Offset: 0x00022DE0
+	// Token: 0x060005DF RID: 1503 RVA: 0x000249DC File Offset: 0x00022BDC
 	public int ReturnHandPosition()
 	{
 		return 0 + Mathf.FloorToInt(this.rightIndex.calcT * 9.99f) + Mathf.FloorToInt(this.rightMiddle.calcT * 9.99f) * 10 + Mathf.FloorToInt(this.rightThumb.calcT * 9.99f) * 100 + Mathf.FloorToInt(this.leftIndex.calcT * 9.99f) * 1000 + Mathf.FloorToInt(this.leftMiddle.calcT * 9.99f) * 10000 + Mathf.FloorToInt(this.leftThumb.calcT * 9.99f) * 100000 + this.leftHandHoldableStatus * 1000000 + this.rightHandHoldableStatus * 10000000;
 	}
 
-	// Token: 0x060005DF RID: 1503 RVA: 0x00024CAA File Offset: 0x00022EAA
+	// Token: 0x060005E0 RID: 1504 RVA: 0x00024AA6 File Offset: 0x00022CA6
 	public void OnDestroy()
 	{
 		if (this.currentRopeSwingTarget && this.currentRopeSwingTarget.gameObject)
@@ -537,7 +547,7 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		this.ClearRopeData();
 	}
 
-	// Token: 0x060005E0 RID: 1504 RVA: 0x00024CEC File Offset: 0x00022EEC
+	// Token: 0x060005E1 RID: 1505 RVA: 0x00024AE8 File Offset: 0x00022CE8
 	void IGorillaSerializeable.OnSerializeWrite(PhotonStream stream, PhotonMessageInfo info)
 	{
 		stream.SendNext(this.head.rigTarget.localRotation);
@@ -558,7 +568,7 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		}
 	}
 
-	// Token: 0x060005E1 RID: 1505 RVA: 0x00024E30 File Offset: 0x00023030
+	// Token: 0x060005E2 RID: 1506 RVA: 0x00024C2C File Offset: 0x00022E2C
 	void IGorillaSerializeable.OnSerializeRead(PhotonStream stream, PhotonMessageInfo info)
 	{
 		this.head.syncRotation = this.SanitizeQuaternion((Quaternion)stream.ReceiveNext());
@@ -582,7 +592,7 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		this.AddVelocityToQueue(this.syncPos, info);
 	}
 
-	// Token: 0x060005E2 RID: 1506 RVA: 0x00024FA0 File Offset: 0x000231A0
+	// Token: 0x060005E3 RID: 1507 RVA: 0x00024D9C File Offset: 0x00022F9C
 	private void UpdateRopeData()
 	{
 		if (this.previousGrabbedRope == this.grabbedRopeIndex && this.previousGrabbedRopeBoneIndex == this.grabbedRopeBoneIndex && this.previousGrabbedRopeWasLeft == this.grabbedRopeIsLeft)
@@ -613,7 +623,7 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		this.previousGrabbedRopeWasLeft = this.grabbedRopeIsLeft;
 	}
 
-	// Token: 0x060005E3 RID: 1507 RVA: 0x000250A0 File Offset: 0x000232A0
+	// Token: 0x060005E4 RID: 1508 RVA: 0x00024E9C File Offset: 0x0002309C
 	private void ClearRopeData()
 	{
 		if (this.currentRopeSwing)
@@ -627,7 +637,7 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		this.currentRopeSwing = null;
 	}
 
-	// Token: 0x060005E4 RID: 1508 RVA: 0x000250F0 File Offset: 0x000232F0
+	// Token: 0x060005E5 RID: 1509 RVA: 0x00024EEC File Offset: 0x000230EC
 	public void ChangeMaterial(int materialIndex, PhotonMessageInfo info)
 	{
 		if (info.Sender == PhotonNetwork.MasterClient)
@@ -636,7 +646,7 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		}
 	}
 
-	// Token: 0x060005E5 RID: 1509 RVA: 0x00025108 File Offset: 0x00023308
+	// Token: 0x060005E6 RID: 1510 RVA: 0x00024F04 File Offset: 0x00023104
 	public void ChangeMaterialLocal(int materialIndex)
 	{
 		this.setMatIndex = materialIndex;
@@ -680,7 +690,7 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		}
 	}
 
-	// Token: 0x060005E6 RID: 1510 RVA: 0x00025248 File Offset: 0x00023448
+	// Token: 0x060005E7 RID: 1511 RVA: 0x00025044 File Offset: 0x00023244
 	[PunRPC]
 	public void InitializeNoobMaterial(float red, float green, float blue, bool leftHanded, PhotonMessageInfo info)
 	{
@@ -700,7 +710,7 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		this.playerLeftHanded = leftHanded;
 	}
 
-	// Token: 0x060005E7 RID: 1511 RVA: 0x00025328 File Offset: 0x00023528
+	// Token: 0x060005E8 RID: 1512 RVA: 0x00025124 File Offset: 0x00023324
 	public void InitializeNoobMaterialLocal(float red, float green, float blue, bool leftHanded)
 	{
 		Color color = new Color(red, green, blue);
@@ -717,7 +727,7 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		this.SetColor(color);
 	}
 
-	// Token: 0x060005E8 RID: 1512 RVA: 0x000253AC File Offset: 0x000235AC
+	// Token: 0x060005E9 RID: 1513 RVA: 0x000251A8 File Offset: 0x000233A8
 	public string NormalizeName(bool doIt, string text)
 	{
 		if (doIt)
@@ -739,19 +749,19 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		return text;
 	}
 
-	// Token: 0x060005E9 RID: 1513 RVA: 0x00025423 File Offset: 0x00023623
+	// Token: 0x060005EA RID: 1514 RVA: 0x0002521F File Offset: 0x0002341F
 	public void SetJumpLimitLocal(float maxJumpSpeed)
 	{
 		GorillaLocomotion.Player.Instance.maxJumpSpeed = maxJumpSpeed;
 	}
 
-	// Token: 0x060005EA RID: 1514 RVA: 0x00025430 File Offset: 0x00023630
+	// Token: 0x060005EB RID: 1515 RVA: 0x0002522C File Offset: 0x0002342C
 	public void SetJumpMultiplierLocal(float jumpMultiplier)
 	{
 		GorillaLocomotion.Player.Instance.jumpMultiplier = jumpMultiplier;
 	}
 
-	// Token: 0x060005EB RID: 1515 RVA: 0x00025440 File Offset: 0x00023640
+	// Token: 0x060005EC RID: 1516 RVA: 0x0002523C File Offset: 0x0002343C
 	[PunRPC]
 	public void SetTaggedTime(PhotonMessageInfo info)
 	{
@@ -769,7 +779,7 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		}
 	}
 
-	// Token: 0x060005EC RID: 1516 RVA: 0x000254F4 File Offset: 0x000236F4
+	// Token: 0x060005ED RID: 1517 RVA: 0x000252F0 File Offset: 0x000234F0
 	[PunRPC]
 	public void SetSlowedTime(PhotonMessageInfo info)
 	{
@@ -790,7 +800,7 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		}
 	}
 
-	// Token: 0x060005ED RID: 1517 RVA: 0x000255B4 File Offset: 0x000237B4
+	// Token: 0x060005EE RID: 1518 RVA: 0x000253B0 File Offset: 0x000235B0
 	[PunRPC]
 	public void SetJoinTaggedTime(PhotonMessageInfo info)
 	{
@@ -804,7 +814,7 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		GorillaNot.instance.SendReport("inappropriate tag data being sent set join tagged time", info.Sender.UserId, info.Sender.NickName);
 	}
 
-	// Token: 0x060005EE RID: 1518 RVA: 0x00025640 File Offset: 0x00023840
+	// Token: 0x060005EF RID: 1519 RVA: 0x0002543C File Offset: 0x0002363C
 	[PunRPC]
 	public void RequestMaterialColor(Photon.Realtime.Player askingPlayer, bool noneBool, PhotonMessageInfo info)
 	{
@@ -821,7 +831,7 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		}
 	}
 
-	// Token: 0x060005EF RID: 1519 RVA: 0x000256E4 File Offset: 0x000238E4
+	// Token: 0x060005F0 RID: 1520 RVA: 0x000254E0 File Offset: 0x000236E0
 	[PunRPC]
 	public void RequestCosmetics(PhotonMessageInfo info)
 	{
@@ -838,7 +848,7 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		}
 	}
 
-	// Token: 0x060005F0 RID: 1520 RVA: 0x00025764 File Offset: 0x00023964
+	// Token: 0x060005F1 RID: 1521 RVA: 0x00025560 File Offset: 0x00023760
 	[PunRPC]
 	public void PlayTagSound(int soundIndex, float soundVolume, PhotonMessageInfo info)
 	{
@@ -852,7 +862,7 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		GorillaNot.instance.SendReport("inappropriate tag data being sent play tag sound", info.Sender.UserId, info.Sender.NickName);
 	}
 
-	// Token: 0x060005F1 RID: 1521 RVA: 0x000257DC File Offset: 0x000239DC
+	// Token: 0x060005F2 RID: 1522 RVA: 0x000255D8 File Offset: 0x000237D8
 	public void Bonk(int soundIndex, float bonkPercent, PhotonMessageInfo info)
 	{
 		if (info.Sender == this.photonView.Owner)
@@ -876,7 +886,7 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		}
 	}
 
-	// Token: 0x060005F2 RID: 1522 RVA: 0x000258BC File Offset: 0x00023ABC
+	// Token: 0x060005F3 RID: 1523 RVA: 0x000256B8 File Offset: 0x000238B8
 	[PunRPC]
 	public void PlayDrum(int drumIndex, float drumVolume, PhotonMessageInfo info)
 	{
@@ -902,7 +912,7 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		audioSource.Play();
 	}
 
-	// Token: 0x060005F3 RID: 1523 RVA: 0x000259D8 File Offset: 0x00023BD8
+	// Token: 0x060005F4 RID: 1524 RVA: 0x000257D4 File Offset: 0x000239D4
 	[PunRPC]
 	public void PlaySelfOnlyInstrument(int selfOnlyIndex, int noteIndex, float instrumentVol, PhotonMessageInfo info)
 	{
@@ -924,7 +934,7 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		}
 	}
 
-	// Token: 0x060005F4 RID: 1524 RVA: 0x00025AB4 File Offset: 0x00023CB4
+	// Token: 0x060005F5 RID: 1525 RVA: 0x000258B0 File Offset: 0x00023AB0
 	[PunRPC]
 	public void PlayHandTap(int soundIndex, bool isLeftHand, float tapVolume, PhotonMessageInfo info)
 	{
@@ -937,7 +947,7 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		GorillaNot.instance.SendReport("inappropriate tag data being sent hand tap", info.Sender.UserId, info.Sender.NickName);
 	}
 
-	// Token: 0x060005F5 RID: 1525 RVA: 0x00025B20 File Offset: 0x00023D20
+	// Token: 0x060005F6 RID: 1526 RVA: 0x0002591C File Offset: 0x00023B1C
 	public void PlayHandTapLocal(int soundIndex, bool isLeftHand, float tapVolume)
 	{
 		if (soundIndex > -1 && soundIndex < GorillaLocomotion.Player.Instance.materialData.Count)
@@ -955,12 +965,12 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		}
 	}
 
-	// Token: 0x060005F6 RID: 1526 RVA: 0x00025C30 File Offset: 0x00023E30
+	// Token: 0x060005F7 RID: 1527 RVA: 0x00025A2C File Offset: 0x00023C2C
 	[PunRPC]
 	public void PlaySplashEffect(Vector3 splashPosition, Quaternion splashRotation, float splashScale, float boundingRadius, bool bigSplash, bool enteringWater, PhotonMessageInfo info)
 	{
 		this.IncrementRPC(info, "PlaySplashEffect");
-		if (info.Sender == this.photonView.Owner)
+		if (info.Sender == this.photonView.Owner && splashPosition.IsValid() && splashRotation.IsValid() && float.IsFinite(splashScale) && float.IsFinite(boundingRadius))
 		{
 			if ((base.transform.position - splashPosition).sqrMagnitude < 9f)
 			{
@@ -992,7 +1002,7 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		}
 	}
 
-	// Token: 0x060005F7 RID: 1527 RVA: 0x00025D8C File Offset: 0x00023F8C
+	// Token: 0x060005F8 RID: 1528 RVA: 0x00025BB4 File Offset: 0x00023DB4
 	[PunRPC]
 	public void PlayGeodeEffect(Vector3 hitPosition, PhotonMessageInfo info)
 	{
@@ -1011,7 +1021,7 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		}
 	}
 
-	// Token: 0x060005F8 RID: 1528 RVA: 0x00025E18 File Offset: 0x00024018
+	// Token: 0x060005F9 RID: 1529 RVA: 0x00025C40 File Offset: 0x00023E40
 	public void PlayClimbSound(AudioClip clip, bool isLeftHand)
 	{
 		if (isLeftHand)
@@ -1026,7 +1036,7 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		this.rightHandPlayer.PlayOneShot(this.rightHandPlayer.clip);
 	}
 
-	// Token: 0x060005F9 RID: 1529 RVA: 0x00025E90 File Offset: 0x00024090
+	// Token: 0x060005FA RID: 1530 RVA: 0x00025CB8 File Offset: 0x00023EB8
 	[PunRPC]
 	public void UpdateCosmetics(string[] currentItems, PhotonMessageInfo info)
 	{
@@ -1040,7 +1050,7 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		GorillaNot.instance.SendReport("inappropriate tag data being sent update cosmetics", info.Sender.UserId, info.Sender.NickName);
 	}
 
-	// Token: 0x060005FA RID: 1530 RVA: 0x00025EFC File Offset: 0x000240FC
+	// Token: 0x060005FB RID: 1531 RVA: 0x00025D24 File Offset: 0x00023F24
 	[PunRPC]
 	public void UpdateCosmeticsWithTryon(string[] currentItems, string[] tryOnItems, PhotonMessageInfo info)
 	{
@@ -1055,7 +1065,7 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		GorillaNot.instance.SendReport("inappropriate tag data being sent update cosmetics with tryon", info.Sender.UserId, info.Sender.NickName);
 	}
 
-	// Token: 0x060005FB RID: 1531 RVA: 0x00025F74 File Offset: 0x00024174
+	// Token: 0x060005FC RID: 1532 RVA: 0x00025D9C File Offset: 0x00023F9C
 	public void UpdateAllowedCosmetics()
 	{
 		if (GorillaGameManager.instance != null && GorillaGameManager.instance.playerCosmeticsLookup.TryGetValue(this.photonView.Owner.ActorNumber, out this.tempString))
@@ -1065,7 +1075,7 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		}
 	}
 
-	// Token: 0x060005FC RID: 1532 RVA: 0x00025FCB File Offset: 0x000241CB
+	// Token: 0x060005FD RID: 1533 RVA: 0x00025DF3 File Offset: 0x00023FF3
 	public void LocalUpdateCosmetics(CosmeticsController.CosmeticSet newSet)
 	{
 		this.cosmeticSet = newSet;
@@ -1075,7 +1085,7 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		}
 	}
 
-	// Token: 0x060005FD RID: 1533 RVA: 0x00025FE2 File Offset: 0x000241E2
+	// Token: 0x060005FE RID: 1534 RVA: 0x00025E0A File Offset: 0x0002400A
 	public void LocalUpdateCosmeticsWithTryon(CosmeticsController.CosmeticSet newSet, CosmeticsController.CosmeticSet newTryOnSet)
 	{
 		this.cosmeticSet = newSet;
@@ -1086,7 +1096,7 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		}
 	}
 
-	// Token: 0x060005FE RID: 1534 RVA: 0x00026000 File Offset: 0x00024200
+	// Token: 0x060005FF RID: 1535 RVA: 0x00025E28 File Offset: 0x00024028
 	private void CheckForEarlyAccess()
 	{
 		if (this.concatStringOfCosmeticsAllowed.Contains("Early Access Supporter Pack"))
@@ -1096,7 +1106,7 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		this.initializedCosmetics = true;
 	}
 
-	// Token: 0x060005FF RID: 1535 RVA: 0x00026034 File Offset: 0x00024234
+	// Token: 0x06000600 RID: 1536 RVA: 0x00025E5C File Offset: 0x0002405C
 	public void SetCosmeticsActive()
 	{
 		if (CosmeticsController.instance == null)
@@ -1109,7 +1119,7 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		this.mergedSet.ActivateCosmetics(this.prevSet, this, component, CosmeticsController.instance.nullItem, this.cosmeticsObjectRegistry);
 	}
 
-	// Token: 0x06000600 RID: 1536 RVA: 0x000260B0 File Offset: 0x000242B0
+	// Token: 0x06000601 RID: 1537 RVA: 0x00025ED8 File Offset: 0x000240D8
 	public void GetUserCosmeticsAllowed()
 	{
 		if (CosmeticsController.instance != null)
@@ -1137,13 +1147,13 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		this.concatStringOfCosmeticsAllowed += "Slingshot";
 	}
 
-	// Token: 0x06000601 RID: 1537 RVA: 0x00026106 File Offset: 0x00024306
+	// Token: 0x06000602 RID: 1538 RVA: 0x00025F2E File Offset: 0x0002412E
 	private void Quitting()
 	{
 		this.isQuitting = true;
 	}
 
-	// Token: 0x06000602 RID: 1538 RVA: 0x00026110 File Offset: 0x00024310
+	// Token: 0x06000603 RID: 1539 RVA: 0x00025F38 File Offset: 0x00024138
 	public void GenerateFingerAngleLookupTables()
 	{
 		this.GenerateTableIndex(ref this.leftIndex);
@@ -1154,7 +1164,7 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		this.GenerateTableThumb(ref this.rightThumb);
 	}
 
-	// Token: 0x06000603 RID: 1539 RVA: 0x00026168 File Offset: 0x00024368
+	// Token: 0x06000604 RID: 1540 RVA: 0x00025F90 File Offset: 0x00024190
 	private void GenerateTableThumb(ref VRMapThumb thumb)
 	{
 		thumb.angle1Table = new Quaternion[11];
@@ -1167,7 +1177,7 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		}
 	}
 
-	// Token: 0x06000604 RID: 1540 RVA: 0x00026220 File Offset: 0x00024420
+	// Token: 0x06000605 RID: 1541 RVA: 0x00026048 File Offset: 0x00024248
 	private void GenerateTableIndex(ref VRMapIndex index)
 	{
 		index.angle1Table = new Quaternion[11];
@@ -1181,7 +1191,7 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		}
 	}
 
-	// Token: 0x06000605 RID: 1541 RVA: 0x00026308 File Offset: 0x00024508
+	// Token: 0x06000606 RID: 1542 RVA: 0x00026130 File Offset: 0x00024330
 	private void GenerateTableMiddle(ref VRMapMiddle middle)
 	{
 		middle.angle1Table = new Quaternion[11];
@@ -1195,7 +1205,7 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		}
 	}
 
-	// Token: 0x06000606 RID: 1542 RVA: 0x000263F0 File Offset: 0x000245F0
+	// Token: 0x06000607 RID: 1543 RVA: 0x00026218 File Offset: 0x00024418
 	private Quaternion SanitizeQuaternion(Quaternion quat)
 	{
 		if (float.IsNaN(quat.w) || float.IsNaN(quat.x) || float.IsNaN(quat.y) || float.IsNaN(quat.z) || float.IsInfinity(quat.w) || float.IsInfinity(quat.x) || float.IsInfinity(quat.y) || float.IsInfinity(quat.z))
@@ -1205,7 +1215,7 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		return quat;
 	}
 
-	// Token: 0x06000607 RID: 1543 RVA: 0x0002646C File Offset: 0x0002466C
+	// Token: 0x06000608 RID: 1544 RVA: 0x00026294 File Offset: 0x00024494
 	private Vector3 SanitizeVector3(Vector3 vec)
 	{
 		if (float.IsNaN(vec.x) || float.IsNaN(vec.y) || float.IsNaN(vec.z) || float.IsInfinity(vec.x) || float.IsInfinity(vec.y) || float.IsInfinity(vec.z))
@@ -1215,7 +1225,7 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		return Vector3.ClampMagnitude(vec, 1000f);
 	}
 
-	// Token: 0x06000608 RID: 1544 RVA: 0x000264D8 File Offset: 0x000246D8
+	// Token: 0x06000609 RID: 1545 RVA: 0x00026300 File Offset: 0x00024500
 	private void IncrementRPC(PhotonMessageInfo info, string sourceCall)
 	{
 		if (GorillaGameManager.instance != null)
@@ -1224,7 +1234,7 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		}
 	}
 
-	// Token: 0x06000609 RID: 1545 RVA: 0x000264F0 File Offset: 0x000246F0
+	// Token: 0x0600060A RID: 1546 RVA: 0x00026318 File Offset: 0x00024518
 	private void AddVelocityToQueue(Vector3 position, PhotonMessageInfo info)
 	{
 		Vector3 velocity;
@@ -1244,7 +1254,7 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		}
 	}
 
-	// Token: 0x0600060A RID: 1546 RVA: 0x00026594 File Offset: 0x00024794
+	// Token: 0x0600060B RID: 1547 RVA: 0x000263BC File Offset: 0x000245BC
 	private Vector3 ReturnVelocityAtTime(double timeToReturn)
 	{
 		if (this.velocityHistoryList.Count <= 1)
@@ -1282,7 +1292,7 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		return Vector3.Lerp(this.velocityHistoryList[num].vel, this.velocityHistoryList[num2].vel, num5);
 	}
 
-	// Token: 0x0600060B RID: 1547 RVA: 0x000266A8 File Offset: 0x000248A8
+	// Token: 0x0600060C RID: 1548 RVA: 0x000264D0 File Offset: 0x000246D0
 	public void SetColor(Color color)
 	{
 		Action<Color> action = this.onColorInitialized;
@@ -1297,7 +1307,7 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		this.playerColor = color;
 	}
 
-	// Token: 0x0600060C RID: 1548 RVA: 0x000266FA File Offset: 0x000248FA
+	// Token: 0x0600060D RID: 1549 RVA: 0x00026522 File Offset: 0x00024722
 	public void OnColorInitialized(Action<Color> action)
 	{
 		if (this.colorInitialized)
@@ -1308,7 +1318,7 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		this.onColorInitialized = (Action<Color>)Delegate.Combine(this.onColorInitialized, action);
 	}
 
-	// Token: 0x0600060D RID: 1549 RVA: 0x00026728 File Offset: 0x00024928
+	// Token: 0x0600060E RID: 1550 RVA: 0x00026550 File Offset: 0x00024750
 	private void OnEnable()
 	{
 		if (this.currentRopeSwingTarget != null)
@@ -1321,7 +1331,7 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		}
 	}
 
-	// Token: 0x0600060E RID: 1550 RVA: 0x00026760 File Offset: 0x00024960
+	// Token: 0x0600060F RID: 1551 RVA: 0x00026588 File Offset: 0x00024788
 	void IPreDisable.PreDisable()
 	{
 		this.ClearRopeData();
@@ -1348,7 +1358,7 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		}
 	}
 
-	// Token: 0x0600060F RID: 1551 RVA: 0x0002685C File Offset: 0x00024A5C
+	// Token: 0x06000610 RID: 1552 RVA: 0x00026684 File Offset: 0x00024884
 	private void OnDisable()
 	{
 		this.initialized = false;
@@ -1367,6 +1377,7 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		try
 		{
 			this.fxSettings.callSettings[1].CallLimitSettings.Reset();
+			this.fxSettings.callSettings[2].CallLimitSettings.Reset();
 		}
 		catch
 		{
@@ -1374,7 +1385,7 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		}
 	}
 
-	// Token: 0x06000610 RID: 1552 RVA: 0x00026908 File Offset: 0x00024B08
+	// Token: 0x06000611 RID: 1553 RVA: 0x00026748 File Offset: 0x00024948
 	public void NetInitialize()
 	{
 		this.timeSpawned = Time.time;
@@ -1425,21 +1436,21 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		}
 	}
 
-	// Token: 0x06000611 RID: 1553 RVA: 0x00026A44 File Offset: 0x00024C44
+	// Token: 0x06000612 RID: 1554 RVA: 0x00026884 File Offset: 0x00024A84
 	public void EnableHuntWatch(bool on)
 	{
 		this.huntComputer.SetActive(on);
 	}
 
-	// Token: 0x06000612 RID: 1554 RVA: 0x00026A52 File Offset: 0x00024C52
+	// Token: 0x06000613 RID: 1555 RVA: 0x00026892 File Offset: 0x00024A92
 	public void EnableBattleCosmetics(bool on)
 	{
 		this.battleBalloons.gameObject.SetActive(on);
 	}
 
-	// Token: 0x17000049 RID: 73
-	// (get) Token: 0x06000613 RID: 1555 RVA: 0x00026A65 File Offset: 0x00024C65
-	// (set) Token: 0x06000614 RID: 1556 RVA: 0x00026A6D File Offset: 0x00024C6D
+	// Token: 0x1700004A RID: 74
+	// (get) Token: 0x06000614 RID: 1556 RVA: 0x000268A5 File Offset: 0x00024AA5
+	// (set) Token: 0x06000615 RID: 1557 RVA: 0x000268AD File Offset: 0x00024AAD
 	bool IUserCosmeticsCallback.PendingUpdate
 	{
 		get
@@ -1452,7 +1463,7 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		}
 	}
 
-	// Token: 0x06000615 RID: 1557 RVA: 0x00026A78 File Offset: 0x00024C78
+	// Token: 0x06000616 RID: 1558 RVA: 0x000268B8 File Offset: 0x00024AB8
 	bool IUserCosmeticsCallback.OnGetUserCosmetics(string cosmetics)
 	{
 		if (cosmetics == this.rawCosmeticString && this.currentCosmeticTries < this.cosmeticRetries)
@@ -1475,8 +1486,8 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		return true;
 	}
 
-	// Token: 0x1700004A RID: 74
-	// (get) Token: 0x06000616 RID: 1558 RVA: 0x00026B19 File Offset: 0x00024D19
+	// Token: 0x1700004B RID: 75
+	// (get) Token: 0x06000617 RID: 1559 RVA: 0x00026959 File Offset: 0x00024B59
 	GuidedRefTargetIdSO IGuidedRefTarget.GuidedRefTargetId
 	{
 		get
@@ -1486,8 +1497,8 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		}
 	}
 
-	// Token: 0x1700004B RID: 75
-	// (get) Token: 0x06000617 RID: 1559 RVA: 0x00026B38 File Offset: 0x00024D38
+	// Token: 0x1700004C RID: 76
+	// (get) Token: 0x06000618 RID: 1560 RVA: 0x00026978 File Offset: 0x00024B78
 	Object IGuidedRefTarget.GuidedRefTargetObject
 	{
 		get
@@ -1496,19 +1507,19 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		}
 	}
 
-	// Token: 0x06000618 RID: 1560 RVA: 0x00026B3B File Offset: 0x00024D3B
+	// Token: 0x06000619 RID: 1561 RVA: 0x0002697B File Offset: 0x00024B7B
 	public void GuidedRefInitialize()
 	{
 		GuidedRefRelayHub.RegisterTargetWithParentRelays(this, this.guidedRefTargetInfo.hubIds, this);
 	}
 
-	// Token: 0x0600061B RID: 1563 RVA: 0x00026C51 File Offset: 0x00024E51
+	// Token: 0x0600061C RID: 1564 RVA: 0x00026A91 File Offset: 0x00024C91
 	Transform IGuidedRefMonoBehaviour.get_transform()
 	{
 		return base.transform;
 	}
 
-	// Token: 0x0600061C RID: 1564 RVA: 0x00026C59 File Offset: 0x00024E59
+	// Token: 0x0600061D RID: 1565 RVA: 0x00026A99 File Offset: 0x00024C99
 	int IGuidedRefObject.GetInstanceID()
 	{
 		return base.GetInstanceID();
@@ -1939,31 +1950,31 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 	// Token: 0x04000774 RID: 1908
 	private string rawCosmeticString = "";
 
-	// Token: 0x020003F1 RID: 1009
+	// Token: 0x020003F3 RID: 1011
 	public enum WearablePackedStateSlots
 	{
-		// Token: 0x04001C75 RID: 7285
+		// Token: 0x04001C82 RID: 7298
 		Hat,
-		// Token: 0x04001C76 RID: 7286
+		// Token: 0x04001C83 RID: 7299
 		LeftHand,
-		// Token: 0x04001C77 RID: 7287
+		// Token: 0x04001C84 RID: 7300
 		RightHand
 	}
 
-	// Token: 0x020003F2 RID: 1010
+	// Token: 0x020003F4 RID: 1012
 	public struct VelocityTime
 	{
-		// Token: 0x06001BDD RID: 7133 RVA: 0x00096568 File Offset: 0x00094768
+		// Token: 0x06001BE6 RID: 7142 RVA: 0x00096A50 File Offset: 0x00094C50
 		public VelocityTime(Vector3 velocity, double velTime)
 		{
 			this.vel = velocity;
 			this.time = velTime;
 		}
 
-		// Token: 0x04001C78 RID: 7288
+		// Token: 0x04001C85 RID: 7301
 		public Vector3 vel;
 
-		// Token: 0x04001C79 RID: 7289
+		// Token: 0x04001C86 RID: 7302
 		public double time;
 	}
 }

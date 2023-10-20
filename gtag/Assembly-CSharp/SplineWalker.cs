@@ -2,16 +2,16 @@
 using Photon.Pun;
 using UnityEngine;
 
-// Token: 0x02000226 RID: 550
+// Token: 0x02000227 RID: 551
 public class SplineWalker : MonoBehaviour, IPunObservable
 {
-	// Token: 0x06000D9F RID: 3487 RVA: 0x0004FB58 File Offset: 0x0004DD58
+	// Token: 0x06000DA5 RID: 3493 RVA: 0x0004FDB8 File Offset: 0x0004DFB8
 	private void Awake()
 	{
 		this._view = base.GetComponent<PhotonView>();
 	}
 
-	// Token: 0x06000DA0 RID: 3488 RVA: 0x0004FB68 File Offset: 0x0004DD68
+	// Token: 0x06000DA6 RID: 3494 RVA: 0x0004FDC8 File Offset: 0x0004DFC8
 	private void Update()
 	{
 		if (this.goingForward)
@@ -51,33 +51,33 @@ public class SplineWalker : MonoBehaviour, IPunObservable
 		}
 	}
 
-	// Token: 0x06000DA1 RID: 3489 RVA: 0x0004FC75 File Offset: 0x0004DE75
+	// Token: 0x06000DA7 RID: 3495 RVA: 0x0004FED5 File Offset: 0x0004E0D5
 	public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
 	{
 		stream.Serialize(ref this.progress);
 	}
 
-	// Token: 0x040010B4 RID: 4276
+	// Token: 0x040010B9 RID: 4281
 	public BezierSpline spline;
 
-	// Token: 0x040010B5 RID: 4277
+	// Token: 0x040010BA RID: 4282
 	public float duration;
 
-	// Token: 0x040010B6 RID: 4278
+	// Token: 0x040010BB RID: 4283
 	public bool lookForward;
 
-	// Token: 0x040010B7 RID: 4279
+	// Token: 0x040010BC RID: 4284
 	public SplineWalkerMode mode;
 
-	// Token: 0x040010B8 RID: 4280
+	// Token: 0x040010BD RID: 4285
 	private float progress;
 
-	// Token: 0x040010B9 RID: 4281
+	// Token: 0x040010BE RID: 4286
 	private bool goingForward = true;
 
-	// Token: 0x040010BA RID: 4282
+	// Token: 0x040010BF RID: 4287
 	public bool DoNetworkSync = true;
 
-	// Token: 0x040010BB RID: 4283
+	// Token: 0x040010C0 RID: 4288
 	private PhotonView _view;
 }

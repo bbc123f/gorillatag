@@ -3,12 +3,12 @@ using UnityEngine;
 
 namespace OculusSampleFramework
 {
-	// Token: 0x020002C6 RID: 710
+	// Token: 0x020002C8 RID: 712
 	public class DistanceGrabbable : OVRGrabbable
 	{
-		// Token: 0x17000125 RID: 293
-		// (get) Token: 0x06001328 RID: 4904 RVA: 0x0006EA13 File Offset: 0x0006CC13
-		// (set) Token: 0x06001329 RID: 4905 RVA: 0x0006EA1B File Offset: 0x0006CC1B
+		// Token: 0x17000127 RID: 295
+		// (get) Token: 0x0600132F RID: 4911 RVA: 0x0006EEDF File Offset: 0x0006D0DF
+		// (set) Token: 0x06001330 RID: 4912 RVA: 0x0006EEE7 File Offset: 0x0006D0E7
 		public bool InRange
 		{
 			get
@@ -22,9 +22,9 @@ namespace OculusSampleFramework
 			}
 		}
 
-		// Token: 0x17000126 RID: 294
-		// (get) Token: 0x0600132A RID: 4906 RVA: 0x0006EA2A File Offset: 0x0006CC2A
-		// (set) Token: 0x0600132B RID: 4907 RVA: 0x0006EA32 File Offset: 0x0006CC32
+		// Token: 0x17000128 RID: 296
+		// (get) Token: 0x06001331 RID: 4913 RVA: 0x0006EEF6 File Offset: 0x0006D0F6
+		// (set) Token: 0x06001332 RID: 4914 RVA: 0x0006EEFE File Offset: 0x0006D0FE
 		public bool Targeted
 		{
 			get
@@ -38,7 +38,7 @@ namespace OculusSampleFramework
 			}
 		}
 
-		// Token: 0x0600132C RID: 4908 RVA: 0x0006EA44 File Offset: 0x0006CC44
+		// Token: 0x06001333 RID: 4915 RVA: 0x0006EF10 File Offset: 0x0006D110
 		protected override void Start()
 		{
 			base.Start();
@@ -50,7 +50,7 @@ namespace OculusSampleFramework
 			this.m_renderer.SetPropertyBlock(this.m_mpb);
 		}
 
-		// Token: 0x0600132D RID: 4909 RVA: 0x0006EAA8 File Offset: 0x0006CCA8
+		// Token: 0x06001334 RID: 4916 RVA: 0x0006EF74 File Offset: 0x0006D174
 		private void RefreshCrosshair()
 		{
 			if (this.m_crosshair)
@@ -87,25 +87,25 @@ namespace OculusSampleFramework
 			}
 		}
 
-		// Token: 0x04001604 RID: 5636
+		// Token: 0x04001611 RID: 5649
 		public string m_materialColorField;
 
-		// Token: 0x04001605 RID: 5637
+		// Token: 0x04001612 RID: 5650
 		private GrabbableCrosshair m_crosshair;
 
-		// Token: 0x04001606 RID: 5638
+		// Token: 0x04001613 RID: 5651
 		private GrabManager m_crosshairManager;
 
-		// Token: 0x04001607 RID: 5639
+		// Token: 0x04001614 RID: 5652
 		private Renderer m_renderer;
 
-		// Token: 0x04001608 RID: 5640
+		// Token: 0x04001615 RID: 5653
 		private MaterialPropertyBlock m_mpb;
 
-		// Token: 0x04001609 RID: 5641
+		// Token: 0x04001616 RID: 5654
 		private bool m_inRange;
 
-		// Token: 0x0400160A RID: 5642
+		// Token: 0x04001617 RID: 5655
 		private bool m_targeted;
 	}
 }

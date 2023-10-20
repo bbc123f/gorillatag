@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// Token: 0x02000199 RID: 409
+// Token: 0x0200019A RID: 410
 public class SizeChanger : GorillaTriggerBox
 {
-	// Token: 0x17000079 RID: 121
-	// (get) Token: 0x06000A90 RID: 2704 RVA: 0x00041720 File Offset: 0x0003F920
+	// Token: 0x1700007B RID: 123
+	// (get) Token: 0x06000A95 RID: 2709 RVA: 0x00041858 File Offset: 0x0003FA58
 	public int SizeLayerMask
 	{
 		get
@@ -32,14 +32,14 @@ public class SizeChanger : GorillaTriggerBox
 		}
 	}
 
-	// Token: 0x06000A91 RID: 2705 RVA: 0x00041760 File Offset: 0x0003F960
+	// Token: 0x06000A96 RID: 2710 RVA: 0x00041898 File Offset: 0x0003FA98
 	private void Awake()
 	{
 		this.minScale = Mathf.Max(this.minScale, 0.01f);
 		this.myCollider = base.GetComponent<Collider>();
 	}
 
-	// Token: 0x06000A92 RID: 2706 RVA: 0x00041784 File Offset: 0x0003F984
+	// Token: 0x06000A97 RID: 2711 RVA: 0x000418BC File Offset: 0x0003FABC
 	public void OnTriggerEnter(Collider other)
 	{
 		if (!other.GetComponent<SphereCollider>())
@@ -57,7 +57,7 @@ public class SizeChanger : GorillaTriggerBox
 		}
 	}
 
-	// Token: 0x06000A93 RID: 2707 RVA: 0x000417E0 File Offset: 0x0003F9E0
+	// Token: 0x06000A98 RID: 2712 RVA: 0x00041918 File Offset: 0x0003FB18
 	public void OnTriggerExit(Collider other)
 	{
 		if (!other.GetComponent<SphereCollider>())
@@ -75,71 +75,71 @@ public class SizeChanger : GorillaTriggerBox
 		}
 	}
 
-	// Token: 0x04000D56 RID: 3414
+	// Token: 0x04000D5A RID: 3418
 	public VRRig rigRef;
 
-	// Token: 0x04000D57 RID: 3415
+	// Token: 0x04000D5B RID: 3419
 	public SizeChanger.ChangerType myType;
 
-	// Token: 0x04000D58 RID: 3416
+	// Token: 0x04000D5C RID: 3420
 	public float maxScale;
 
-	// Token: 0x04000D59 RID: 3417
+	// Token: 0x04000D5D RID: 3421
 	public float minScale;
 
-	// Token: 0x04000D5A RID: 3418
+	// Token: 0x04000D5E RID: 3422
 	public Collider myCollider;
 
-	// Token: 0x04000D5B RID: 3419
+	// Token: 0x04000D5F RID: 3423
 	public float insideThreshold = 0.01f;
 
-	// Token: 0x04000D5C RID: 3420
+	// Token: 0x04000D60 RID: 3424
 	public List<VRRig> insideRigs;
 
-	// Token: 0x04000D5D RID: 3421
+	// Token: 0x04000D61 RID: 3425
 	public List<VRRig> leftRigs;
 
-	// Token: 0x04000D5E RID: 3422
+	// Token: 0x04000D62 RID: 3426
 	public float scaleLerp;
 
-	// Token: 0x04000D5F RID: 3423
+	// Token: 0x04000D63 RID: 3427
 	public Transform startPos;
 
-	// Token: 0x04000D60 RID: 3424
+	// Token: 0x04000D64 RID: 3428
 	public Transform endPos;
 
-	// Token: 0x04000D61 RID: 3425
+	// Token: 0x04000D65 RID: 3429
 	public int priority;
 
-	// Token: 0x04000D62 RID: 3426
+	// Token: 0x04000D66 RID: 3430
 	public bool aprilFoolsEnabled;
 
-	// Token: 0x04000D63 RID: 3427
+	// Token: 0x04000D67 RID: 3431
 	public float startRadius;
 
-	// Token: 0x04000D64 RID: 3428
+	// Token: 0x04000D68 RID: 3432
 	public float endRadius;
 
-	// Token: 0x04000D65 RID: 3429
+	// Token: 0x04000D69 RID: 3433
 	public bool affectLayerA = true;
 
-	// Token: 0x04000D66 RID: 3430
+	// Token: 0x04000D6A RID: 3434
 	public bool affectLayerB = true;
 
-	// Token: 0x04000D67 RID: 3431
+	// Token: 0x04000D6B RID: 3435
 	public bool affectLayerC = true;
 
-	// Token: 0x04000D68 RID: 3432
+	// Token: 0x04000D6C RID: 3436
 	public bool affectLayerD = true;
 
-	// Token: 0x02000443 RID: 1091
+	// Token: 0x02000445 RID: 1093
 	public enum ChangerType
 	{
-		// Token: 0x04001DA7 RID: 7591
+		// Token: 0x04001DB4 RID: 7604
 		Static,
-		// Token: 0x04001DA8 RID: 7592
+		// Token: 0x04001DB5 RID: 7605
 		Continuous,
-		// Token: 0x04001DA9 RID: 7593
+		// Token: 0x04001DB6 RID: 7606
 		Radius
 	}
 }

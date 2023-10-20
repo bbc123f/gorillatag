@@ -12,70 +12,70 @@ using UnityEngine;
 // Token: 0x0200005B RID: 91
 public static class GTDev
 {
-	// Token: 0x060001AA RID: 426 RVA: 0x0000C3F7 File Offset: 0x0000A5F7
+	// Token: 0x060001AA RID: 426 RVA: 0x0000C43F File Offset: 0x0000A63F
 	[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSplashScreen)]
 	private static void InitializeOnLoad()
 	{
 		GTDev.FetchDevID();
 	}
 
-	// Token: 0x060001AB RID: 427 RVA: 0x0000C3FF File Offset: 0x0000A5FF
+	// Token: 0x060001AB RID: 427 RVA: 0x0000C447 File Offset: 0x0000A647
 	[GTDev.HideInCallStackAttribute]
 	public static void Log(string msg, string channel = null)
 	{
 		GTDev._Log(new Action<object>(Debug.Log), msg, null, channel, "Log");
 	}
 
-	// Token: 0x060001AC RID: 428 RVA: 0x0000C41A File Offset: 0x0000A61A
+	// Token: 0x060001AC RID: 428 RVA: 0x0000C462 File Offset: 0x0000A662
 	[GTDev.HideInCallStackAttribute]
 	public static void Log(string msg, Object context, string channel = null)
 	{
 		GTDev._Log(new Action<object>(Debug.Log), msg, context, channel, "Log");
 	}
 
-	// Token: 0x060001AD RID: 429 RVA: 0x0000C435 File Offset: 0x0000A635
+	// Token: 0x060001AD RID: 429 RVA: 0x0000C47D File Offset: 0x0000A67D
 	[GTDev.HideInCallStackAttribute]
 	public static void LogError(string msg, string channel = null)
 	{
 		GTDev._Log(new Action<object>(Debug.LogError), msg, null, channel, "LogError");
 	}
 
-	// Token: 0x060001AE RID: 430 RVA: 0x0000C450 File Offset: 0x0000A650
+	// Token: 0x060001AE RID: 430 RVA: 0x0000C498 File Offset: 0x0000A698
 	[GTDev.HideInCallStackAttribute]
 	public static void LogError(string msg, Object context, string channel = null)
 	{
 		GTDev._Log(new Action<object>(Debug.LogError), msg, context, channel, "LogError");
 	}
 
-	// Token: 0x060001AF RID: 431 RVA: 0x0000C46B File Offset: 0x0000A66B
+	// Token: 0x060001AF RID: 431 RVA: 0x0000C4B3 File Offset: 0x0000A6B3
 	[GTDev.HideInCallStackAttribute]
 	public static void LogWarning(string msg, string channel = null)
 	{
 		GTDev._Log(new Action<object>(Debug.LogWarning), msg, null, channel, "LogWarning");
 	}
 
-	// Token: 0x060001B0 RID: 432 RVA: 0x0000C486 File Offset: 0x0000A686
+	// Token: 0x060001B0 RID: 432 RVA: 0x0000C4CE File Offset: 0x0000A6CE
 	[GTDev.HideInCallStackAttribute]
 	public static void LogWarning(string msg, Object context, string channel = null)
 	{
 		GTDev._Log(new Action<object>(Debug.LogWarning), msg, context, channel, "LogWarning");
 	}
 
-	// Token: 0x060001B1 RID: 433 RVA: 0x0000C4A1 File Offset: 0x0000A6A1
+	// Token: 0x060001B1 RID: 433 RVA: 0x0000C4E9 File Offset: 0x0000A6E9
 	[GTDev.HideInCallStackAttribute]
 	public static void LogSilent(string msg, string channel = null)
 	{
 		GTDev._Log(null, msg, null, channel, "LogSilent");
 	}
 
-	// Token: 0x060001B2 RID: 434 RVA: 0x0000C4B1 File Offset: 0x0000A6B1
+	// Token: 0x060001B2 RID: 434 RVA: 0x0000C4F9 File Offset: 0x0000A6F9
 	[GTDev.HideInCallStackAttribute]
 	public static void LogSilent(string msg, Object context, string channel = null)
 	{
 		GTDev._Log(null, msg, context, channel, "LogSilent");
 	}
 
-	// Token: 0x060001B3 RID: 435 RVA: 0x0000C4C1 File Offset: 0x0000A6C1
+	// Token: 0x060001B3 RID: 435 RVA: 0x0000C509 File Offset: 0x0000A709
 	[GTDev.HideInCallStackAttribute]
 	[Conditional("UNITY_EDITOR")]
 	public static void LogEditorOnly(string msg, string channel = null)
@@ -83,7 +83,7 @@ public static class GTDev
 		GTDev._Log(new Action<object>(Debug.Log), msg, null, channel, "LogEditorOnly");
 	}
 
-	// Token: 0x060001B4 RID: 436 RVA: 0x0000C4DC File Offset: 0x0000A6DC
+	// Token: 0x060001B4 RID: 436 RVA: 0x0000C524 File Offset: 0x0000A724
 	[GTDev.HideInCallStackAttribute]
 	[Conditional("UNITY_EDITOR")]
 	public static void LogEditorOnly(string msg, Object context, string channel = null)
@@ -91,7 +91,7 @@ public static class GTDev
 		GTDev._Log(new Action<object>(Debug.Log), msg, context, channel, "LogEditorOnly");
 	}
 
-	// Token: 0x060001B5 RID: 437 RVA: 0x0000C4F7 File Offset: 0x0000A6F7
+	// Token: 0x060001B5 RID: 437 RVA: 0x0000C53F File Offset: 0x0000A73F
 	[GTDev.HideInCallStackAttribute]
 	[Conditional("UNITY_EDITOR")]
 	public static void CallEditorOnly(Action call)
@@ -103,12 +103,12 @@ public static class GTDev
 	}
 
 	// Token: 0x14000002 RID: 2
-	// (add) Token: 0x060001B6 RID: 438 RVA: 0x0000C504 File Offset: 0x0000A704
-	// (remove) Token: 0x060001B7 RID: 439 RVA: 0x0000C538 File Offset: 0x0000A738
+	// (add) Token: 0x060001B6 RID: 438 RVA: 0x0000C54C File Offset: 0x0000A74C
+	// (remove) Token: 0x060001B7 RID: 439 RVA: 0x0000C580 File Offset: 0x0000A780
 	public static event Action<GTDev.LogEntry> OnLogEntry;
 
 	// Token: 0x17000012 RID: 18
-	// (get) Token: 0x060001B8 RID: 440 RVA: 0x0000C56B File Offset: 0x0000A76B
+	// (get) Token: 0x060001B8 RID: 440 RVA: 0x0000C5B3 File Offset: 0x0000A7B3
 	public static int DevID
 	{
 		get
@@ -117,7 +117,7 @@ public static class GTDev
 		}
 	}
 
-	// Token: 0x060001B9 RID: 441 RVA: 0x0000C574 File Offset: 0x0000A774
+	// Token: 0x060001B9 RID: 441 RVA: 0x0000C5BC File Offset: 0x0000A7BC
 	private static int FetchDevID()
 	{
 		if (GTDev.gHasDevID)
@@ -133,7 +133,7 @@ public static class GTDev
 		return GTDev.gDevID;
 	}
 
-	// Token: 0x060001BA RID: 442 RVA: 0x0000C5D4 File Offset: 0x0000A7D4
+	// Token: 0x060001BA RID: 442 RVA: 0x0000C61C File Offset: 0x0000A81C
 	private static void _Log(Action<object> call, string msg, Object ctx, string chl, [CallerMemberName] string clr = null)
 	{
 		string channel = string.IsNullOrWhiteSpace(chl) ? clr : (chl + "//" + clr);
@@ -159,7 +159,7 @@ public static class GTDev
 	}
 
 	// Token: 0x17000013 RID: 19
-	// (get) Token: 0x060001BB RID: 443 RVA: 0x0000C661 File Offset: 0x0000A861
+	// (get) Token: 0x060001BB RID: 443 RVA: 0x0000C6A9 File Offset: 0x0000A8A9
 	private static string projectFolder
 	{
 		get
@@ -172,7 +172,7 @@ public static class GTDev
 		}
 	}
 
-	// Token: 0x060001BC RID: 444 RVA: 0x0000C674 File Offset: 0x0000A874
+	// Token: 0x060001BC RID: 444 RVA: 0x0000C6BC File Offset: 0x0000A8BC
 	private static void CacheProjectFolder()
 	{
 		if (GTDev.gFetchProjectFolder == null)
@@ -184,7 +184,7 @@ public static class GTDev
 		GTDev.gProjectFolderSet = true;
 	}
 
-	// Token: 0x060001BD RID: 445 RVA: 0x0000C6E8 File Offset: 0x0000A8E8
+	// Token: 0x060001BD RID: 445 RVA: 0x0000C730 File Offset: 0x0000A930
 	private static bool IsIgnoredMethod(MethodBase method)
 	{
 		if (GTDev.gIgnoreMethods != null)
@@ -195,7 +195,7 @@ public static class GTDev
 		return GTDev.gIgnoreMethods.Contains(method);
 	}
 
-	// Token: 0x060001BE RID: 446 RVA: 0x0000C718 File Offset: 0x0000A918
+	// Token: 0x060001BE RID: 446 RVA: 0x0000C760 File Offset: 0x0000A960
 	[SecuritySafeCritical]
 	private static string ExtractFormattedStackTrace(StackTrace stackTrace)
 	{
@@ -275,22 +275,22 @@ public static class GTDev
 	// Token: 0x04000287 RID: 647
 	public static readonly SessionState SessionState = SessionState.Shared;
 
-	// Token: 0x0200039B RID: 923
+	// Token: 0x0200039D RID: 925
 	public class HideInCallStackAttribute : Attribute
 	{
 	}
 
-	// Token: 0x0200039C RID: 924
+	// Token: 0x0200039E RID: 926
 	[Serializable]
 	public struct LogEntry
 	{
-		// Token: 0x04001B49 RID: 6985
+		// Token: 0x04001B56 RID: 6998
 		public string channel;
 
-		// Token: 0x04001B4A RID: 6986
+		// Token: 0x04001B57 RID: 6999
 		public DateTime time;
 
-		// Token: 0x04001B4B RID: 6987
+		// Token: 0x04001B58 RID: 7000
 		public string message;
 	}
 }

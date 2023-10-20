@@ -5,7 +5,7 @@ using UnityEngine;
 // Token: 0x020000B7 RID: 183
 public class PassthroughStyler : MonoBehaviour
 {
-	// Token: 0x06000407 RID: 1031 RVA: 0x0001ACE8 File Offset: 0x00018EE8
+	// Token: 0x06000407 RID: 1031 RVA: 0x0001AAC4 File Offset: 0x00018CC4
 	private void Start()
 	{
 		if (base.GetComponent<GrabObject>())
@@ -23,7 +23,7 @@ public class PassthroughStyler : MonoBehaviour
 		this.passthroughLayer.colorMapEditorType = OVRPassthroughLayer.ColorMapEditorType.ColorAdjustment;
 	}
 
-	// Token: 0x06000408 RID: 1032 RVA: 0x0001ADB5 File Offset: 0x00018FB5
+	// Token: 0x06000408 RID: 1032 RVA: 0x0001AB91 File Offset: 0x00018D91
 	private void Update()
 	{
 		if (this.controllerHand == OVRInput.Controller.None)
@@ -36,7 +36,7 @@ public class PassthroughStyler : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000409 RID: 1033 RVA: 0x0001ADD0 File Offset: 0x00018FD0
+	// Token: 0x06000409 RID: 1033 RVA: 0x0001ABAC File Offset: 0x00018DAC
 	public void Grab(OVRInput.Controller grabHand)
 	{
 		this.controllerHand = grabHand;
@@ -57,7 +57,7 @@ public class PassthroughStyler : MonoBehaviour
 		base.StartCoroutine(this.fadeIn);
 	}
 
-	// Token: 0x0600040A RID: 1034 RVA: 0x0001AE4C File Offset: 0x0001904C
+	// Token: 0x0600040A RID: 1034 RVA: 0x0001AC28 File Offset: 0x00018E28
 	public void Release()
 	{
 		this.controllerHand = OVRInput.Controller.None;
@@ -78,7 +78,7 @@ public class PassthroughStyler : MonoBehaviour
 		base.StartCoroutine(this.fadeOut);
 	}
 
-	// Token: 0x0600040B RID: 1035 RVA: 0x0001AEC6 File Offset: 0x000190C6
+	// Token: 0x0600040B RID: 1035 RVA: 0x0001ACA2 File Offset: 0x00018EA2
 	private IEnumerator FadeToCurrentStyle(float fadeTime)
 	{
 		float timer = 0f;
@@ -98,7 +98,7 @@ public class PassthroughStyler : MonoBehaviour
 		yield break;
 	}
 
-	// Token: 0x0600040C RID: 1036 RVA: 0x0001AEDC File Offset: 0x000190DC
+	// Token: 0x0600040C RID: 1036 RVA: 0x0001ACB8 File Offset: 0x00018EB8
 	private IEnumerator FadeToDefaultPassthrough(float fadeTime)
 	{
 		float timer = 0f;
@@ -121,28 +121,28 @@ public class PassthroughStyler : MonoBehaviour
 		yield break;
 	}
 
-	// Token: 0x0600040D RID: 1037 RVA: 0x0001AEF2 File Offset: 0x000190F2
+	// Token: 0x0600040D RID: 1037 RVA: 0x0001ACCE File Offset: 0x00018ECE
 	public void OnBrightnessChanged(float newValue)
 	{
 		this.savedBrightness = newValue;
 		this.passthroughLayer.colorMapEditorBrightness = this.savedBrightness;
 	}
 
-	// Token: 0x0600040E RID: 1038 RVA: 0x0001AF0C File Offset: 0x0001910C
+	// Token: 0x0600040E RID: 1038 RVA: 0x0001ACE8 File Offset: 0x00018EE8
 	public void OnContrastChanged(float newValue)
 	{
 		this.savedContrast = newValue;
 		this.passthroughLayer.colorMapEditorContrast = this.savedContrast;
 	}
 
-	// Token: 0x0600040F RID: 1039 RVA: 0x0001AF26 File Offset: 0x00019126
+	// Token: 0x0600040F RID: 1039 RVA: 0x0001AD02 File Offset: 0x00018F02
 	public void OnAlphaChanged(float newValue)
 	{
 		this.savedColor = new Color(this.savedColor.r, this.savedColor.g, this.savedColor.b, newValue);
 		this.passthroughLayer.edgeColor = this.savedColor;
 	}
 
-	// Token: 0x06000410 RID: 1040 RVA: 0x0001AF68 File Offset: 0x00019168
+	// Token: 0x06000410 RID: 1040 RVA: 0x0001AD44 File Offset: 0x00018F44
 	private void ShowFullMenu(bool doShow)
 	{
 		GameObject[] array = this.compactObjects;
@@ -152,19 +152,19 @@ public class PassthroughStyler : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000411 RID: 1041 RVA: 0x0001AF93 File Offset: 0x00019193
+	// Token: 0x06000411 RID: 1041 RVA: 0x0001AD6F File Offset: 0x00018F6F
 	public void Cursor(Vector3 cP)
 	{
 		this.cursorPosition = cP;
 	}
 
-	// Token: 0x06000412 RID: 1042 RVA: 0x0001AF9C File Offset: 0x0001919C
+	// Token: 0x06000412 RID: 1042 RVA: 0x0001AD78 File Offset: 0x00018F78
 	public void DoColorDrag(bool doDrag)
 	{
 		this.settingColor = doDrag;
 	}
 
-	// Token: 0x06000413 RID: 1043 RVA: 0x0001AFA8 File Offset: 0x000191A8
+	// Token: 0x06000413 RID: 1043 RVA: 0x0001AD84 File Offset: 0x00018F84
 	public void GetColorFromWheel()
 	{
 		Vector3 vector = this.colorWheel.transform.InverseTransformPoint(this.cursorPosition);

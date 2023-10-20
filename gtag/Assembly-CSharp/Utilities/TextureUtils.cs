@@ -3,10 +3,10 @@ using UnityEngine;
 
 namespace Utilities
 {
-	// Token: 0x02000287 RID: 647
+	// Token: 0x02000289 RID: 649
 	public static class TextureUtils
 	{
-		// Token: 0x060010B4 RID: 4276 RVA: 0x00058EE4 File Offset: 0x000570E4
+		// Token: 0x060010BB RID: 4283 RVA: 0x000592C0 File Offset: 0x000574C0
 		public static Color CalcAverageColor(Texture2D tex)
 		{
 			if (tex == null)
@@ -27,7 +27,7 @@ namespace Utilities
 			return new Color32((byte)(num2 / num), (byte)(num3 / num), (byte)(num4 / num), byte.MaxValue);
 		}
 
-		// Token: 0x060010B5 RID: 4277 RVA: 0x00058F78 File Offset: 0x00057178
+		// Token: 0x060010BC RID: 4284 RVA: 0x00059354 File Offset: 0x00057554
 		public static Texture2D CreateCopy(Texture2D tex)
 		{
 			if (tex == null)

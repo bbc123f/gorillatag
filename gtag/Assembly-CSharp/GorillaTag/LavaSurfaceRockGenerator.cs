@@ -5,10 +5,10 @@ using UnityEngine;
 
 namespace GorillaTag
 {
-	// Token: 0x0200031B RID: 795
+	// Token: 0x0200031D RID: 797
 	public class LavaSurfaceRockGenerator : MonoBehaviourPun
 	{
-		// Token: 0x06001602 RID: 5634 RVA: 0x00079B74 File Offset: 0x00077D74
+		// Token: 0x0600160B RID: 5643 RVA: 0x0007A05C File Offset: 0x0007825C
 		private void Update()
 		{
 			double currentTime = PhotonNetwork.InRoom ? PhotonNetwork.Time : ((double)Time.time);
@@ -17,7 +17,7 @@ namespace GorillaTag
 			this.UpdateActiveRocks(currentTime);
 		}
 
-		// Token: 0x06001603 RID: 5635 RVA: 0x00079BAC File Offset: 0x00077DAC
+		// Token: 0x0600160C RID: 5644 RVA: 0x0007A094 File Offset: 0x00078294
 		private void RemoveExpiredRocks(double currentTime)
 		{
 			float lifetimeMultiplier = this.rockLifetimeMultiplierVsLavaProgress.Evaluate(this.lavaManager.LavaProgressLinear);
@@ -31,7 +31,7 @@ namespace GorillaTag
 			}
 		}
 
-		// Token: 0x06001604 RID: 5636 RVA: 0x00079C34 File Offset: 0x00077E34
+		// Token: 0x0600160D RID: 5645 RVA: 0x0007A11C File Offset: 0x0007831C
 		private void SpawnNewRocks(double currentTime)
 		{
 			if (base.photonView.IsMine && this.lavaManager.GameState == RisingLavaManager.RisingLavaState.Rising)
@@ -44,7 +44,7 @@ namespace GorillaTag
 			}
 		}
 
-		// Token: 0x06001605 RID: 5637 RVA: 0x00079CA0 File Offset: 0x00077EA0
+		// Token: 0x0600160E RID: 5646 RVA: 0x0007A188 File Offset: 0x00078388
 		private void UpdateActiveRocks(double currentTime)
 		{
 			float y = this.lavaSurfacePlane.transform.position.y;
@@ -61,7 +61,7 @@ namespace GorillaTag
 			}
 		}
 
-		// Token: 0x06001606 RID: 5638 RVA: 0x00079D9C File Offset: 0x00077F9C
+		// Token: 0x0600160F RID: 5647 RVA: 0x0007A284 File Offset: 0x00078484
 		private void SpawnRockAuthority(double currentTime, float lavaProgress)
 		{
 			if (base.photonView.IsMine)
@@ -84,7 +84,7 @@ namespace GorillaTag
 			}
 		}
 
-		// Token: 0x06001607 RID: 5639 RVA: 0x00079EF8 File Offset: 0x000780F8
+		// Token: 0x06001610 RID: 5648 RVA: 0x0007A3E0 File Offset: 0x000785E0
 		private void SpawnRockLocal(Vector2 surfacePosLocal, Quaternion rotation, float spawnSize, float lifetime, double spawnTime)
 		{
 			Vector3 position = this.lavaSurfacePlane.transform.position + new Vector3(surfacePosLocal.x, 0f, surfacePosLocal.y);
@@ -100,7 +100,7 @@ namespace GorillaTag
 			this.activeRocks.Add(lavaRock);
 		}
 
-		// Token: 0x06001608 RID: 5640 RVA: 0x00079F9E File Offset: 0x0007819E
+		// Token: 0x06001611 RID: 5649 RVA: 0x0007A486 File Offset: 0x00078686
 		[PunRPC]
 		public void SpawnRockRPC(Vector2 surfacePosLocal, Quaternion rotation, float spawnSize, float lifetime, double spawnTime, PhotonMessageInfo info)
 		{
@@ -108,7 +108,7 @@ namespace GorillaTag
 			this.SpawnRockLocal(surfacePosLocal, rotation, spawnSize, lifetime, spawnTime);
 		}
 
-		// Token: 0x06001609 RID: 5641 RVA: 0x00079FBC File Offset: 0x000781BC
+		// Token: 0x06001612 RID: 5650 RVA: 0x0007A4A4 File Offset: 0x000786A4
 		private Vector2 GetSpawnPositionWithClearance(Vector2 inputPosition, float inputSize, float maxDistance, Vector3 lavaSurfaceOrigin)
 		{
 			Vector2 vector = inputPosition;
@@ -135,82 +135,82 @@ namespace GorillaTag
 			return vector;
 		}
 
-		// Token: 0x04001811 RID: 6161
+		// Token: 0x0400181E RID: 6174
 		[SerializeField]
 		private RisingLavaManager lavaManager;
 
-		// Token: 0x04001812 RID: 6162
+		// Token: 0x0400181F RID: 6175
 		[SerializeField]
 		private Transform lavaSurfacePlane;
 
-		// Token: 0x04001813 RID: 6163
+		// Token: 0x04001820 RID: 6176
 		[SerializeField]
 		private GameObject rockPrefab;
 
-		// Token: 0x04001814 RID: 6164
+		// Token: 0x04001821 RID: 6177
 		[SerializeField]
 		private float scaleFactor = 0.03f;
 
-		// Token: 0x04001815 RID: 6165
+		// Token: 0x04001822 RID: 6178
 		[SerializeField]
 		private Vector2 surfaceRadiusSpawnRange = new Vector2(0.1f, 0.7f);
 
-		// Token: 0x04001816 RID: 6166
+		// Token: 0x04001823 RID: 6179
 		[SerializeField]
 		private Vector2 rockLifetimeRange = new Vector2(5f, 10f);
 
-		// Token: 0x04001817 RID: 6167
+		// Token: 0x04001824 RID: 6180
 		[SerializeField]
 		private Vector2 rockSizeRange = new Vector2(0.5f, 2f);
 
-		// Token: 0x04001818 RID: 6168
+		// Token: 0x04001825 RID: 6181
 		[SerializeField]
 		private AnimationCurve rockCountVsLavaProgress = AnimationCurve.Linear(0f, 0f, 1f, 1f);
 
-		// Token: 0x04001819 RID: 6169
+		// Token: 0x04001826 RID: 6182
 		[SerializeField]
 		private AnimationCurve rockLifetimeMultiplierVsLavaProgress = AnimationCurve.Linear(0f, 1f, 1f, 1f);
 
-		// Token: 0x0400181A RID: 6170
+		// Token: 0x04001827 RID: 6183
 		[SerializeField]
 		private AnimationCurve rockMaxSizeMultiplierVsLavaProgress = AnimationCurve.Linear(0f, 1f, 1f, 1f);
 
-		// Token: 0x0400181B RID: 6171
+		// Token: 0x04001828 RID: 6184
 		[SerializeField]
 		private AnimationCurve rockSizeVsLifetime = AnimationCurve.Linear(0f, 0f, 1f, 1f);
 
-		// Token: 0x0400181C RID: 6172
+		// Token: 0x04001829 RID: 6185
 		[SerializeField]
 		private AnimationCurve rockSurfaceOffsetVsLifetime = AnimationCurve.Linear(0f, 0f, 1f, 1f);
 
-		// Token: 0x0400181D RID: 6173
+		// Token: 0x0400182A RID: 6186
 		private List<LavaSurfaceRockGenerator.LavaRock> activeRocks = new List<LavaSurfaceRockGenerator.LavaRock>();
 
-		// Token: 0x02000504 RID: 1284
+		// Token: 0x02000506 RID: 1286
 		private struct LavaRock
 		{
-			// Token: 0x06001F4B RID: 8011 RVA: 0x000A1CA2 File Offset: 0x0009FEA2
+			// Token: 0x06001F54 RID: 8020 RVA: 0x000A1FAE File Offset: 0x000A01AE
 			public float GetLifetimeProgress(double currentTime, float lifetimeMultiplier)
 			{
 				return Mathf.Clamp01((float)(currentTime - this.spawnTime) / (this.lifetime * lifetimeMultiplier));
 			}
 
-			// Token: 0x040020E5 RID: 8421
+			// Token: 0x040020F2 RID: 8434
 			public Vector3 position;
 
-			// Token: 0x040020E6 RID: 8422
+			// Token: 0x040020F3 RID: 8435
 			public Quaternion rotation;
 
-			// Token: 0x040020E7 RID: 8423
+			// Token: 0x040020F4 RID: 8436
 			public float spawnSize;
 
-			// Token: 0x040020E8 RID: 8424
+			// Token: 0x040020F5 RID: 8437
 			public float lifetime;
 
-			// Token: 0x040020E9 RID: 8425
+			// Token: 0x040020F6 RID: 8438
 			public double spawnTime;
 
-			// Token: 0x040020EA RID: 8426
+			// Token: 0x040020F7 RID: 8439
 			public Rigidbody rigidbody;
 		}
 	}

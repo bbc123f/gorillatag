@@ -4,7 +4,7 @@ using UnityEngine;
 // Token: 0x020000AD RID: 173
 public class Flashlight : MonoBehaviour
 {
-	// Token: 0x060003CE RID: 974 RVA: 0x000179D0 File Offset: 0x00015BD0
+	// Token: 0x060003CE RID: 974 RVA: 0x000177AC File Offset: 0x000159AC
 	private void LateUpdate()
 	{
 		for (int i = 0; i < this.lightVolume.transform.childCount; i++)
@@ -13,7 +13,7 @@ public class Flashlight : MonoBehaviour
 		}
 	}
 
-	// Token: 0x060003CF RID: 975 RVA: 0x00017A48 File Offset: 0x00015C48
+	// Token: 0x060003CF RID: 975 RVA: 0x00017824 File Offset: 0x00015A24
 	public void ToggleFlashlight()
 	{
 		this.lightVolume.SetActive(!this.lightVolume.activeSelf);
@@ -21,7 +21,7 @@ public class Flashlight : MonoBehaviour
 		this.bulbGlow.SetActive(this.lightVolume.activeSelf);
 	}
 
-	// Token: 0x060003D0 RID: 976 RVA: 0x00017A9D File Offset: 0x00015C9D
+	// Token: 0x060003D0 RID: 976 RVA: 0x00017879 File Offset: 0x00015A79
 	public void EnableFlashlight(bool doEnable)
 	{
 		this.lightVolume.SetActive(doEnable);

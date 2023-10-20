@@ -8,11 +8,11 @@ using UnityEngine;
 public class SlingshotProjectile : MonoBehaviour
 {
 	// Token: 0x14000012 RID: 18
-	// (add) Token: 0x06000557 RID: 1367 RVA: 0x0002226C File Offset: 0x0002046C
-	// (remove) Token: 0x06000558 RID: 1368 RVA: 0x000222A4 File Offset: 0x000204A4
+	// (add) Token: 0x06000557 RID: 1367 RVA: 0x00022060 File Offset: 0x00020260
+	// (remove) Token: 0x06000558 RID: 1368 RVA: 0x00022098 File Offset: 0x00020298
 	public event SlingshotProjectile.ProjectileHitEvent OnHitPlayer;
 
-	// Token: 0x06000559 RID: 1369 RVA: 0x000222DC File Offset: 0x000204DC
+	// Token: 0x06000559 RID: 1369 RVA: 0x000220D0 File Offset: 0x000202D0
 	public void Launch(Vector3 position, Vector3 velocity, Player player, bool blueTeam, bool orangeTeam, int projectileCount, float scale, bool shouldOverrideColor = false, Color overrideColor = default(Color))
 	{
 		this.particleLaunched = true;
@@ -38,7 +38,7 @@ public class SlingshotProjectile : MonoBehaviour
 		this.ApplyTeamModelAndColor(blueTeam, orangeTeam, shouldOverrideColor, overrideColor);
 	}
 
-	// Token: 0x0600055A RID: 1370 RVA: 0x000223BB File Offset: 0x000205BB
+	// Token: 0x0600055A RID: 1370 RVA: 0x000221AF File Offset: 0x000203AF
 	protected void Awake()
 	{
 		this.projectileRigidbody = base.GetComponent<Rigidbody>();
@@ -47,7 +47,7 @@ public class SlingshotProjectile : MonoBehaviour
 		this.matPropBlock = new MaterialPropertyBlock();
 	}
 
-	// Token: 0x0600055B RID: 1371 RVA: 0x000223F6 File Offset: 0x000205F6
+	// Token: 0x0600055B RID: 1371 RVA: 0x000221EA File Offset: 0x000203EA
 	public void Deactivate()
 	{
 		base.transform.localScale = Vector3.one * this.initialScale;
@@ -55,7 +55,7 @@ public class SlingshotProjectile : MonoBehaviour
 		ObjectPools.instance.Destroy(base.gameObject);
 	}
 
-	// Token: 0x0600055C RID: 1372 RVA: 0x0002242C File Offset: 0x0002062C
+	// Token: 0x0600055C RID: 1372 RVA: 0x00022220 File Offset: 0x00020420
 	private void SpawnImpactEffect(GameObject prefab, Vector3 position, Vector3 normal)
 	{
 		Vector3 position2 = position + normal * this.impactEffectOffset;
@@ -75,7 +75,7 @@ public class SlingshotProjectile : MonoBehaviour
 		}
 	}
 
-	// Token: 0x0600055D RID: 1373 RVA: 0x000224B4 File Offset: 0x000206B4
+	// Token: 0x0600055D RID: 1373 RVA: 0x000222A8 File Offset: 0x000204A8
 	public void ApplyTeamModelAndColor(bool blueTeam, bool orangeTeam, bool shouldOverrideColor = false, Color overrideColor = default(Color))
 	{
 		if (shouldOverrideColor)
@@ -93,20 +93,20 @@ public class SlingshotProjectile : MonoBehaviour
 		this.ApplyColor(this.teamRenderer, (this.colorizeBalls || shouldOverrideColor) ? this.teamColor : Color.white);
 	}
 
-	// Token: 0x0600055E RID: 1374 RVA: 0x00022562 File Offset: 0x00020762
+	// Token: 0x0600055E RID: 1374 RVA: 0x00022356 File Offset: 0x00020556
 	protected void OnEnable()
 	{
 		this.timeCreated = 0f;
 		this.particleLaunched = false;
 	}
 
-	// Token: 0x0600055F RID: 1375 RVA: 0x00022576 File Offset: 0x00020776
+	// Token: 0x0600055F RID: 1375 RVA: 0x0002236A File Offset: 0x0002056A
 	protected void OnDisable()
 	{
 		this.particleLaunched = false;
 	}
 
-	// Token: 0x06000560 RID: 1376 RVA: 0x00022580 File Offset: 0x00020780
+	// Token: 0x06000560 RID: 1376 RVA: 0x00022374 File Offset: 0x00020574
 	protected void Update()
 	{
 		if (this.particleLaunched)
@@ -123,7 +123,7 @@ public class SlingshotProjectile : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000561 RID: 1377 RVA: 0x000225F4 File Offset: 0x000207F4
+	// Token: 0x06000561 RID: 1377 RVA: 0x000223E8 File Offset: 0x000205E8
 	protected void OnCollisionEnter(Collision collision)
 	{
 		if (!this.particleLaunched)
@@ -140,7 +140,7 @@ public class SlingshotProjectile : MonoBehaviour
 		this.Deactivate();
 	}
 
-	// Token: 0x06000562 RID: 1378 RVA: 0x00022650 File Offset: 0x00020850
+	// Token: 0x06000562 RID: 1378 RVA: 0x00022444 File Offset: 0x00020644
 	protected void OnCollisionStay(Collision collision)
 	{
 		if (!this.particleLaunched)
@@ -157,7 +157,7 @@ public class SlingshotProjectile : MonoBehaviour
 		this.Deactivate();
 	}
 
-	// Token: 0x06000563 RID: 1379 RVA: 0x000226A8 File Offset: 0x000208A8
+	// Token: 0x06000563 RID: 1379 RVA: 0x0002249C File Offset: 0x0002069C
 	protected void OnTriggerEnter(Collider other)
 	{
 		if (!this.particleLaunched)
@@ -216,7 +216,7 @@ public class SlingshotProjectile : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000564 RID: 1380 RVA: 0x00022844 File Offset: 0x00020A44
+	// Token: 0x06000564 RID: 1380 RVA: 0x00022638 File Offset: 0x00020838
 	private void ApplyColor(Renderer rend, Color color)
 	{
 		if (!rend)
@@ -319,7 +319,7 @@ public class SlingshotProjectile : MonoBehaviour
 	// Token: 0x04000664 RID: 1636
 	private static readonly int colorShaderProp = Shader.PropertyToID("_Color");
 
-	// Token: 0x020003EB RID: 1003
-	// (Invoke) Token: 0x06001BC7 RID: 7111
+	// Token: 0x020003ED RID: 1005
+	// (Invoke) Token: 0x06001BD0 RID: 7120
 	public delegate void ProjectileHitEvent(Player hitPlayer);
 }

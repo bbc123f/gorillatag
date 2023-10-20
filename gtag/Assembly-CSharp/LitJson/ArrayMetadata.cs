@@ -2,12 +2,12 @@
 
 namespace LitJson
 {
-	// Token: 0x02000274 RID: 628
+	// Token: 0x02000275 RID: 629
 	internal struct ArrayMetadata
 	{
-		// Token: 0x170000D6 RID: 214
-		// (get) Token: 0x06000FF7 RID: 4087 RVA: 0x00054C34 File Offset: 0x00052E34
-		// (set) Token: 0x06000FF8 RID: 4088 RVA: 0x00054C55 File Offset: 0x00052E55
+		// Token: 0x170000D8 RID: 216
+		// (get) Token: 0x06000FFE RID: 4094 RVA: 0x00055010 File Offset: 0x00053210
+		// (set) Token: 0x06000FFF RID: 4095 RVA: 0x00055031 File Offset: 0x00053231
 		public Type ElementType
 		{
 			get
@@ -24,9 +24,9 @@ namespace LitJson
 			}
 		}
 
-		// Token: 0x170000D7 RID: 215
-		// (get) Token: 0x06000FF9 RID: 4089 RVA: 0x00054C5E File Offset: 0x00052E5E
-		// (set) Token: 0x06000FFA RID: 4090 RVA: 0x00054C66 File Offset: 0x00052E66
+		// Token: 0x170000D9 RID: 217
+		// (get) Token: 0x06001000 RID: 4096 RVA: 0x0005503A File Offset: 0x0005323A
+		// (set) Token: 0x06001001 RID: 4097 RVA: 0x00055042 File Offset: 0x00053242
 		public bool IsArray
 		{
 			get
@@ -39,9 +39,9 @@ namespace LitJson
 			}
 		}
 
-		// Token: 0x170000D8 RID: 216
-		// (get) Token: 0x06000FFB RID: 4091 RVA: 0x00054C6F File Offset: 0x00052E6F
-		// (set) Token: 0x06000FFC RID: 4092 RVA: 0x00054C77 File Offset: 0x00052E77
+		// Token: 0x170000DA RID: 218
+		// (get) Token: 0x06001002 RID: 4098 RVA: 0x0005504B File Offset: 0x0005324B
+		// (set) Token: 0x06001003 RID: 4099 RVA: 0x00055053 File Offset: 0x00053253
 		public bool IsList
 		{
 			get
@@ -54,13 +54,13 @@ namespace LitJson
 			}
 		}
 
-		// Token: 0x040011E1 RID: 4577
+		// Token: 0x040011E7 RID: 4583
 		private Type element_type;
 
-		// Token: 0x040011E2 RID: 4578
+		// Token: 0x040011E8 RID: 4584
 		private bool is_array;
 
-		// Token: 0x040011E3 RID: 4579
+		// Token: 0x040011E9 RID: 4585
 		private bool is_list;
 	}
 }

@@ -5,11 +5,11 @@ using UnityEngine;
 
 namespace OculusSampleFramework
 {
-	// Token: 0x020002DE RID: 734
+	// Token: 0x020002E0 RID: 736
 	public abstract class InteractableTool : MonoBehaviour
 	{
-		// Token: 0x1700014A RID: 330
-		// (get) Token: 0x060013BF RID: 5055 RVA: 0x00070BA6 File Offset: 0x0006EDA6
+		// Token: 0x1700014C RID: 332
+		// (get) Token: 0x060013C6 RID: 5062 RVA: 0x00071072 File Offset: 0x0006F272
 		public Transform ToolTransform
 		{
 			get
@@ -18,69 +18,69 @@ namespace OculusSampleFramework
 			}
 		}
 
-		// Token: 0x1700014B RID: 331
-		// (get) Token: 0x060013C0 RID: 5056 RVA: 0x00070BAE File Offset: 0x0006EDAE
-		// (set) Token: 0x060013C1 RID: 5057 RVA: 0x00070BB6 File Offset: 0x0006EDB6
+		// Token: 0x1700014D RID: 333
+		// (get) Token: 0x060013C7 RID: 5063 RVA: 0x0007107A File Offset: 0x0006F27A
+		// (set) Token: 0x060013C8 RID: 5064 RVA: 0x00071082 File Offset: 0x0006F282
 		public bool IsRightHandedTool { get; set; }
 
-		// Token: 0x1700014C RID: 332
-		// (get) Token: 0x060013C2 RID: 5058
+		// Token: 0x1700014E RID: 334
+		// (get) Token: 0x060013C9 RID: 5065
 		public abstract InteractableToolTags ToolTags { get; }
 
-		// Token: 0x1700014D RID: 333
-		// (get) Token: 0x060013C3 RID: 5059
+		// Token: 0x1700014F RID: 335
+		// (get) Token: 0x060013CA RID: 5066
 		public abstract ToolInputState ToolInputState { get; }
 
-		// Token: 0x1700014E RID: 334
-		// (get) Token: 0x060013C4 RID: 5060
+		// Token: 0x17000150 RID: 336
+		// (get) Token: 0x060013CB RID: 5067
 		public abstract bool IsFarFieldTool { get; }
 
-		// Token: 0x1700014F RID: 335
-		// (get) Token: 0x060013C5 RID: 5061 RVA: 0x00070BBF File Offset: 0x0006EDBF
-		// (set) Token: 0x060013C6 RID: 5062 RVA: 0x00070BC7 File Offset: 0x0006EDC7
+		// Token: 0x17000151 RID: 337
+		// (get) Token: 0x060013CC RID: 5068 RVA: 0x0007108B File Offset: 0x0006F28B
+		// (set) Token: 0x060013CD RID: 5069 RVA: 0x00071093 File Offset: 0x0006F293
 		public Vector3 Velocity { get; protected set; }
 
-		// Token: 0x17000150 RID: 336
-		// (get) Token: 0x060013C7 RID: 5063 RVA: 0x00070BD0 File Offset: 0x0006EDD0
-		// (set) Token: 0x060013C8 RID: 5064 RVA: 0x00070BD8 File Offset: 0x0006EDD8
+		// Token: 0x17000152 RID: 338
+		// (get) Token: 0x060013CE RID: 5070 RVA: 0x0007109C File Offset: 0x0006F29C
+		// (set) Token: 0x060013CF RID: 5071 RVA: 0x000710A4 File Offset: 0x0006F2A4
 		public Vector3 InteractionPosition { get; protected set; }
 
-		// Token: 0x060013C9 RID: 5065 RVA: 0x00070BE1 File Offset: 0x0006EDE1
+		// Token: 0x060013D0 RID: 5072 RVA: 0x000710AD File Offset: 0x0006F2AD
 		public List<InteractableCollisionInfo> GetCurrentIntersectingObjects()
 		{
 			return this._currentIntersectingObjects;
 		}
 
-		// Token: 0x060013CA RID: 5066
+		// Token: 0x060013D1 RID: 5073
 		public abstract List<InteractableCollisionInfo> GetNextIntersectingObjects();
 
-		// Token: 0x060013CB RID: 5067
+		// Token: 0x060013D2 RID: 5074
 		public abstract void FocusOnInteractable(Interactable focusedInteractable, ColliderZone colliderZone);
 
-		// Token: 0x060013CC RID: 5068
+		// Token: 0x060013D3 RID: 5075
 		public abstract void DeFocus();
 
-		// Token: 0x17000151 RID: 337
-		// (get) Token: 0x060013CD RID: 5069
-		// (set) Token: 0x060013CE RID: 5070
+		// Token: 0x17000153 RID: 339
+		// (get) Token: 0x060013D4 RID: 5076
+		// (set) Token: 0x060013D5 RID: 5077
 		public abstract bool EnableState { get; set; }
 
-		// Token: 0x060013CF RID: 5071
+		// Token: 0x060013D6 RID: 5078
 		public abstract void Initialize();
 
-		// Token: 0x060013D0 RID: 5072 RVA: 0x00070BE9 File Offset: 0x0006EDE9
+		// Token: 0x060013D7 RID: 5079 RVA: 0x000710B5 File Offset: 0x0006F2B5
 		public KeyValuePair<Interactable, InteractableCollisionInfo> GetFirstCurrentCollisionInfo()
 		{
 			return this._currInteractableToCollisionInfos.First<KeyValuePair<Interactable, InteractableCollisionInfo>>();
 		}
 
-		// Token: 0x060013D1 RID: 5073 RVA: 0x00070BF6 File Offset: 0x0006EDF6
+		// Token: 0x060013D8 RID: 5080 RVA: 0x000710C2 File Offset: 0x0006F2C2
 		public void ClearAllCurrentCollisionInfos()
 		{
 			this._currInteractableToCollisionInfos.Clear();
 		}
 
-		// Token: 0x060013D2 RID: 5074 RVA: 0x00070C04 File Offset: 0x0006EE04
+		// Token: 0x060013D9 RID: 5081 RVA: 0x000710D0 File Offset: 0x0006F2D0
 		public virtual void UpdateCurrentCollisionsBasedOnDepth()
 		{
 			this._currInteractableToCollisionInfos.Clear();
@@ -101,7 +101,7 @@ namespace OculusSampleFramework
 			}
 		}
 
-		// Token: 0x060013D3 RID: 5075 RVA: 0x00070CB0 File Offset: 0x0006EEB0
+		// Token: 0x060013DA RID: 5082 RVA: 0x0007117C File Offset: 0x0006F37C
 		public virtual void UpdateLatestCollisionData()
 		{
 			this._addedInteractables.Clear();
@@ -143,22 +143,22 @@ namespace OculusSampleFramework
 			this._prevInteractableToCollisionInfos = new Dictionary<Interactable, InteractableCollisionInfo>(this._currInteractableToCollisionInfos);
 		}
 
-		// Token: 0x0400168B RID: 5771
+		// Token: 0x04001698 RID: 5784
 		protected List<InteractableCollisionInfo> _currentIntersectingObjects = new List<InteractableCollisionInfo>();
 
-		// Token: 0x0400168C RID: 5772
+		// Token: 0x04001699 RID: 5785
 		private List<Interactable> _addedInteractables = new List<Interactable>();
 
-		// Token: 0x0400168D RID: 5773
+		// Token: 0x0400169A RID: 5786
 		private List<Interactable> _removedInteractables = new List<Interactable>();
 
-		// Token: 0x0400168E RID: 5774
+		// Token: 0x0400169B RID: 5787
 		private List<Interactable> _remainingInteractables = new List<Interactable>();
 
-		// Token: 0x0400168F RID: 5775
+		// Token: 0x0400169C RID: 5788
 		private Dictionary<Interactable, InteractableCollisionInfo> _currInteractableToCollisionInfos = new Dictionary<Interactable, InteractableCollisionInfo>();
 
-		// Token: 0x04001690 RID: 5776
+		// Token: 0x0400169D RID: 5789
 		private Dictionary<Interactable, InteractableCollisionInfo> _prevInteractableToCollisionInfos = new Dictionary<Interactable, InteractableCollisionInfo>();
 	}
 }

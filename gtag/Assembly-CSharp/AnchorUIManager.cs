@@ -9,7 +9,7 @@ using UnityEngine.UI;
 public class AnchorUIManager : MonoBehaviour
 {
 	// Token: 0x1700003A RID: 58
-	// (get) Token: 0x0600045F RID: 1119 RVA: 0x0001C6CC File Offset: 0x0001A8CC
+	// (get) Token: 0x0600045F RID: 1119 RVA: 0x0001C4A8 File Offset: 0x0001A6A8
 	public Anchor AnchorPrefab
 	{
 		get
@@ -18,7 +18,7 @@ public class AnchorUIManager : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000460 RID: 1120 RVA: 0x0001C6D4 File Offset: 0x0001A8D4
+	// Token: 0x06000460 RID: 1120 RVA: 0x0001C4B0 File Offset: 0x0001A6B0
 	private void Awake()
 	{
 		if (AnchorUIManager.Instance == null)
@@ -29,7 +29,7 @@ public class AnchorUIManager : MonoBehaviour
 		Object.Destroy(this);
 	}
 
-	// Token: 0x06000461 RID: 1121 RVA: 0x0001C6F0 File Offset: 0x0001A8F0
+	// Token: 0x06000461 RID: 1121 RVA: 0x0001C4CC File Offset: 0x0001A6CC
 	private void Start()
 	{
 		this._raycastOrigin = this._trackedDevice;
@@ -40,7 +40,7 @@ public class AnchorUIManager : MonoBehaviour
 		this.ToggleCreateMode();
 	}
 
-	// Token: 0x06000462 RID: 1122 RVA: 0x0001C754 File Offset: 0x0001A954
+	// Token: 0x06000462 RID: 1122 RVA: 0x0001C530 File Offset: 0x0001A730
 	private void Update()
 	{
 		if (this._drawRaycast)
@@ -64,7 +64,7 @@ public class AnchorUIManager : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000463 RID: 1123 RVA: 0x0001C7B3 File Offset: 0x0001A9B3
+	// Token: 0x06000463 RID: 1123 RVA: 0x0001C58F File Offset: 0x0001A78F
 	public void OnCreateModeButtonPressed()
 	{
 		this.ToggleCreateMode();
@@ -72,13 +72,13 @@ public class AnchorUIManager : MonoBehaviour
 		this._selectModeButton.SetActive(!this._selectModeButton.activeSelf);
 	}
 
-	// Token: 0x06000464 RID: 1124 RVA: 0x0001C7ED File Offset: 0x0001A9ED
+	// Token: 0x06000464 RID: 1124 RVA: 0x0001C5C9 File Offset: 0x0001A7C9
 	public void OnLoadAnchorsButtonPressed()
 	{
 		base.GetComponent<SpatialAnchorLoader>().LoadAnchorsByUuid();
 	}
 
-	// Token: 0x06000465 RID: 1125 RVA: 0x0001C7FA File Offset: 0x0001A9FA
+	// Token: 0x06000465 RID: 1125 RVA: 0x0001C5D6 File Offset: 0x0001A7D6
 	private void ToggleCreateMode()
 	{
 		if (this._mode == AnchorUIManager.AnchorMode.Select)
@@ -93,35 +93,35 @@ public class AnchorUIManager : MonoBehaviour
 		this.StartSelectMode();
 	}
 
-	// Token: 0x06000466 RID: 1126 RVA: 0x0001C82C File Offset: 0x0001AA2C
+	// Token: 0x06000466 RID: 1126 RVA: 0x0001C608 File Offset: 0x0001A808
 	private void StartPlacementMode()
 	{
 		this.ShowAnchorPreview();
 		this._primaryPressDelegate = new AnchorUIManager.PrimaryPressDelegate(this.PlaceAnchor);
 	}
 
-	// Token: 0x06000467 RID: 1127 RVA: 0x0001C846 File Offset: 0x0001AA46
+	// Token: 0x06000467 RID: 1127 RVA: 0x0001C622 File Offset: 0x0001A822
 	private void EndPlacementMode()
 	{
 		this.HideAnchorPreview();
 		this._primaryPressDelegate = null;
 	}
 
-	// Token: 0x06000468 RID: 1128 RVA: 0x0001C855 File Offset: 0x0001AA55
+	// Token: 0x06000468 RID: 1128 RVA: 0x0001C631 File Offset: 0x0001A831
 	private void StartSelectMode()
 	{
 		this.ShowRaycastLine();
 		this._primaryPressDelegate = new AnchorUIManager.PrimaryPressDelegate(this.SelectAnchor);
 	}
 
-	// Token: 0x06000469 RID: 1129 RVA: 0x0001C86F File Offset: 0x0001AA6F
+	// Token: 0x06000469 RID: 1129 RVA: 0x0001C64B File Offset: 0x0001A84B
 	private void EndSelectMode()
 	{
 		this.HideRaycastLine();
 		this._primaryPressDelegate = null;
 	}
 
-	// Token: 0x0600046A RID: 1130 RVA: 0x0001C880 File Offset: 0x0001AA80
+	// Token: 0x0600046A RID: 1130 RVA: 0x0001C65C File Offset: 0x0001A85C
 	private void HandleMenuNavigation()
 	{
 		if (!this._isFocused)
@@ -142,7 +142,7 @@ public class AnchorUIManager : MonoBehaviour
 		}
 	}
 
-	// Token: 0x0600046B RID: 1131 RVA: 0x0001C8E4 File Offset: 0x0001AAE4
+	// Token: 0x0600046B RID: 1131 RVA: 0x0001C6C0 File Offset: 0x0001A8C0
 	private void NavigateToIndexInMenu(bool moveNext)
 	{
 		if (moveNext)
@@ -166,39 +166,39 @@ public class AnchorUIManager : MonoBehaviour
 		this._selectedButton.OnSelect(null);
 	}
 
-	// Token: 0x0600046C RID: 1132 RVA: 0x0001C979 File Offset: 0x0001AB79
+	// Token: 0x0600046C RID: 1132 RVA: 0x0001C755 File Offset: 0x0001A955
 	private void ShowAnchorPreview()
 	{
 		this._placementPreview.SetActive(true);
 	}
 
-	// Token: 0x0600046D RID: 1133 RVA: 0x0001C987 File Offset: 0x0001AB87
+	// Token: 0x0600046D RID: 1133 RVA: 0x0001C763 File Offset: 0x0001A963
 	private void HideAnchorPreview()
 	{
 		this._placementPreview.SetActive(false);
 	}
 
-	// Token: 0x0600046E RID: 1134 RVA: 0x0001C995 File Offset: 0x0001AB95
+	// Token: 0x0600046E RID: 1134 RVA: 0x0001C771 File Offset: 0x0001A971
 	private void PlaceAnchor()
 	{
 		Object.Instantiate<Anchor>(this._anchorPrefab, this._anchorPlacementTransform.position, this._anchorPlacementTransform.rotation);
 	}
 
-	// Token: 0x0600046F RID: 1135 RVA: 0x0001C9B9 File Offset: 0x0001ABB9
+	// Token: 0x0600046F RID: 1135 RVA: 0x0001C795 File Offset: 0x0001A995
 	private void ShowRaycastLine()
 	{
 		this._drawRaycast = true;
 		this._lineRenderer.gameObject.SetActive(true);
 	}
 
-	// Token: 0x06000470 RID: 1136 RVA: 0x0001C9D3 File Offset: 0x0001ABD3
+	// Token: 0x06000470 RID: 1136 RVA: 0x0001C7AF File Offset: 0x0001A9AF
 	private void HideRaycastLine()
 	{
 		this._drawRaycast = false;
 		this._lineRenderer.gameObject.SetActive(false);
 	}
 
-	// Token: 0x06000471 RID: 1137 RVA: 0x0001C9F0 File Offset: 0x0001ABF0
+	// Token: 0x06000471 RID: 1137 RVA: 0x0001C7CC File Offset: 0x0001A9CC
 	private void ControllerRaycast()
 	{
 		Ray ray = new Ray(this._raycastOrigin.position, this._raycastOrigin.TransformDirection(Vector3.forward));
@@ -218,14 +218,14 @@ public class AnchorUIManager : MonoBehaviour
 		this.UnhoverAnchor();
 	}
 
-	// Token: 0x06000472 RID: 1138 RVA: 0x0001CAAF File Offset: 0x0001ACAF
+	// Token: 0x06000472 RID: 1138 RVA: 0x0001C88B File Offset: 0x0001AA8B
 	private void HoverAnchor(Anchor anchor)
 	{
 		this._hoveredAnchor = anchor;
 		this._hoveredAnchor.OnHoverStart();
 	}
 
-	// Token: 0x06000473 RID: 1139 RVA: 0x0001CAC3 File Offset: 0x0001ACC3
+	// Token: 0x06000473 RID: 1139 RVA: 0x0001C89F File Offset: 0x0001AA9F
 	private void UnhoverAnchor()
 	{
 		if (this._hoveredAnchor == null)
@@ -236,7 +236,7 @@ public class AnchorUIManager : MonoBehaviour
 		this._hoveredAnchor = null;
 	}
 
-	// Token: 0x06000474 RID: 1140 RVA: 0x0001CAE8 File Offset: 0x0001ACE8
+	// Token: 0x06000474 RID: 1140 RVA: 0x0001C8C4 File Offset: 0x0001AAC4
 	private void SelectAnchor()
 	{
 		if (this._hoveredAnchor != null)
@@ -330,16 +330,16 @@ public class AnchorUIManager : MonoBehaviour
 	// Token: 0x0400051E RID: 1310
 	private bool _isFocused = true;
 
-	// Token: 0x020003DD RID: 989
+	// Token: 0x020003DF RID: 991
 	public enum AnchorMode
 	{
-		// Token: 0x04001C41 RID: 7233
+		// Token: 0x04001C4E RID: 7246
 		Create,
-		// Token: 0x04001C42 RID: 7234
+		// Token: 0x04001C4F RID: 7247
 		Select
 	}
 
-	// Token: 0x020003DE RID: 990
-	// (Invoke) Token: 0x06001BA4 RID: 7076
+	// Token: 0x020003E0 RID: 992
+	// (Invoke) Token: 0x06001BAD RID: 7085
 	private delegate void PrimaryPressDelegate();
 }

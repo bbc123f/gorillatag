@@ -6,7 +6,7 @@ using UnityEngine.Events;
 // Token: 0x0200010C RID: 268
 public class EdibleHoldable : TransferrableObject
 {
-	// Token: 0x0600068E RID: 1678 RVA: 0x00029418 File Offset: 0x00027618
+	// Token: 0x0600068F RID: 1679 RVA: 0x00029258 File Offset: 0x00027458
 	protected override void Start()
 	{
 		base.Start();
@@ -16,45 +16,45 @@ public class EdibleHoldable : TransferrableObject
 		this.iResettableItems = base.GetComponentsInChildren<IResettableItem>(true);
 	}
 
-	// Token: 0x0600068F RID: 1679 RVA: 0x0002944D File Offset: 0x0002764D
+	// Token: 0x06000690 RID: 1680 RVA: 0x0002928D File Offset: 0x0002748D
 	public override void OnGrab(InteractionPoint pointGrabbed, GameObject grabbingHand)
 	{
 		base.OnGrab(pointGrabbed, grabbingHand);
 		this.lastEatTime = Time.time - this.eatMinimumCooldown;
 	}
 
-	// Token: 0x06000690 RID: 1680 RVA: 0x00029469 File Offset: 0x00027669
+	// Token: 0x06000691 RID: 1681 RVA: 0x000292A9 File Offset: 0x000274A9
 	public override void OnActivate()
 	{
 		base.OnActivate();
 	}
 
-	// Token: 0x06000691 RID: 1681 RVA: 0x00029471 File Offset: 0x00027671
+	// Token: 0x06000692 RID: 1682 RVA: 0x000292B1 File Offset: 0x000274B1
 	public override void OnEnable()
 	{
 		base.OnEnable();
 	}
 
-	// Token: 0x06000692 RID: 1682 RVA: 0x00029479 File Offset: 0x00027679
+	// Token: 0x06000693 RID: 1683 RVA: 0x000292B9 File Offset: 0x000274B9
 	public override void OnDisable()
 	{
 		base.OnDisable();
 	}
 
-	// Token: 0x06000693 RID: 1683 RVA: 0x00029481 File Offset: 0x00027681
+	// Token: 0x06000694 RID: 1684 RVA: 0x000292C1 File Offset: 0x000274C1
 	public override void ResetToDefaultState()
 	{
 		base.ResetToDefaultState();
 	}
 
-	// Token: 0x06000694 RID: 1684 RVA: 0x00029489 File Offset: 0x00027689
+	// Token: 0x06000695 RID: 1685 RVA: 0x000292C9 File Offset: 0x000274C9
 	public override void OnRelease(DropZone zoneReleased, GameObject releasingHand)
 	{
 		base.OnRelease(zoneReleased, releasingHand);
 		base.InHand();
 	}
 
-	// Token: 0x06000695 RID: 1685 RVA: 0x0002949C File Offset: 0x0002769C
+	// Token: 0x06000696 RID: 1686 RVA: 0x000292DC File Offset: 0x000274DC
 	protected override void LateUpdateLocal()
 	{
 		base.LateUpdateLocal();
@@ -141,7 +141,7 @@ public class EdibleHoldable : TransferrableObject
 		}
 	}
 
-	// Token: 0x06000696 RID: 1686 RVA: 0x000296D4 File Offset: 0x000278D4
+	// Token: 0x06000697 RID: 1687 RVA: 0x00029514 File Offset: 0x00027714
 	protected override void LateUpdateShared()
 	{
 		base.LateUpdateShared();
@@ -153,7 +153,7 @@ public class EdibleHoldable : TransferrableObject
 		this.previousEdibleState = itemState;
 	}
 
-	// Token: 0x06000697 RID: 1687 RVA: 0x00029704 File Offset: 0x00027904
+	// Token: 0x06000698 RID: 1688 RVA: 0x00029544 File Offset: 0x00027744
 	protected virtual void OnEdibleHoldableStateChange()
 	{
 		float amplitude = GorillaTagger.Instance.tapHapticStrength / 4f;
@@ -206,13 +206,13 @@ public class EdibleHoldable : TransferrableObject
 		}
 	}
 
-	// Token: 0x06000698 RID: 1688 RVA: 0x0002981B File Offset: 0x00027A1B
+	// Token: 0x06000699 RID: 1689 RVA: 0x0002965B File Offset: 0x0002785B
 	public override bool CanActivate()
 	{
 		return true;
 	}
 
-	// Token: 0x06000699 RID: 1689 RVA: 0x0002981E File Offset: 0x00027A1E
+	// Token: 0x0600069A RID: 1690 RVA: 0x0002965E File Offset: 0x0002785E
 	public override bool CanDeactivate()
 	{
 		return true;
@@ -265,20 +265,20 @@ public class EdibleHoldable : TransferrableObject
 	// Token: 0x040007FA RID: 2042
 	private IResettableItem[] iResettableItems;
 
-	// Token: 0x020003FB RID: 1019
+	// Token: 0x020003FD RID: 1021
 	private enum EdibleHoldableStates
 	{
-		// Token: 0x04001C94 RID: 7316
+		// Token: 0x04001CA1 RID: 7329
 		EatingState0 = 1,
-		// Token: 0x04001C95 RID: 7317
+		// Token: 0x04001CA2 RID: 7330
 		EatingState1,
-		// Token: 0x04001C96 RID: 7318
+		// Token: 0x04001CA3 RID: 7331
 		EatingState2 = 4,
-		// Token: 0x04001C97 RID: 7319
+		// Token: 0x04001CA4 RID: 7332
 		EatingState3 = 8
 	}
 
-	// Token: 0x020003FC RID: 1020
+	// Token: 0x020003FE RID: 1022
 	[Serializable]
 	public class BiteEvent : UnityEvent<VRRig, int>
 	{

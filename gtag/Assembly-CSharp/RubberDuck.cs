@@ -9,9 +9,9 @@ using UnityEngine.Serialization;
 // Token: 0x02000130 RID: 304
 public class RubberDuck : TransferrableObject
 {
-	// Token: 0x17000057 RID: 87
-	// (get) Token: 0x060007EC RID: 2028 RVA: 0x00032187 File Offset: 0x00030387
-	// (set) Token: 0x060007ED RID: 2029 RVA: 0x00032199 File Offset: 0x00030399
+	// Token: 0x17000058 RID: 88
+	// (get) Token: 0x060007ED RID: 2029 RVA: 0x00031FC7 File Offset: 0x000301C7
+	// (set) Token: 0x060007EE RID: 2030 RVA: 0x00031FD9 File Offset: 0x000301D9
 	public bool fxActive
 	{
 		get
@@ -29,7 +29,7 @@ public class RubberDuck : TransferrableObject
 		}
 	}
 
-	// Token: 0x060007EE RID: 2030 RVA: 0x000321B8 File Offset: 0x000303B8
+	// Token: 0x060007EF RID: 2031 RVA: 0x00031FF8 File Offset: 0x000301F8
 	protected override void Awake()
 	{
 		base.Awake();
@@ -49,7 +49,7 @@ public class RubberDuck : TransferrableObject
 		this.fxActive = false;
 	}
 
-	// Token: 0x060007EF RID: 2031 RVA: 0x00032258 File Offset: 0x00030458
+	// Token: 0x060007F0 RID: 2032 RVA: 0x00032098 File Offset: 0x00030298
 	public override void OnEnable()
 	{
 		base.OnEnable();
@@ -73,7 +73,7 @@ public class RubberDuck : TransferrableObject
 		}
 	}
 
-	// Token: 0x060007F0 RID: 2032 RVA: 0x0003230F File Offset: 0x0003050F
+	// Token: 0x060007F1 RID: 2033 RVA: 0x0003214F File Offset: 0x0003034F
 	public override void OnDisable()
 	{
 		base.OnDisable();
@@ -83,7 +83,7 @@ public class RubberDuck : TransferrableObject
 		}
 	}
 
-	// Token: 0x060007F1 RID: 2033 RVA: 0x00032330 File Offset: 0x00030530
+	// Token: 0x060007F2 RID: 2034 RVA: 0x00032170 File Offset: 0x00030370
 	private void OnSqueezeActivate(int sender, int target, object[] args)
 	{
 		if (sender != target)
@@ -98,7 +98,7 @@ public class RubberDuck : TransferrableObject
 		}
 	}
 
-	// Token: 0x060007F2 RID: 2034 RVA: 0x00032380 File Offset: 0x00030580
+	// Token: 0x060007F3 RID: 2035 RVA: 0x000321C0 File Offset: 0x000303C0
 	private void OnSqueezeDeactivate(int sender, int target, object[] args)
 	{
 		if (sender != target)
@@ -109,7 +109,7 @@ public class RubberDuck : TransferrableObject
 		this.PlayParticleFX(rate);
 	}
 
-	// Token: 0x060007F3 RID: 2035 RVA: 0x000323A0 File Offset: 0x000305A0
+	// Token: 0x060007F4 RID: 2036 RVA: 0x000321E0 File Offset: 0x000303E0
 	protected override void LateUpdate()
 	{
 		base.LateUpdate();
@@ -141,7 +141,7 @@ public class RubberDuck : TransferrableObject
 		}
 	}
 
-	// Token: 0x060007F4 RID: 2036 RVA: 0x000324BC File Offset: 0x000306BC
+	// Token: 0x060007F5 RID: 2037 RVA: 0x000322FC File Offset: 0x000304FC
 	public override void OnActivate()
 	{
 		base.OnActivate();
@@ -180,7 +180,7 @@ public class RubberDuck : TransferrableObject
 		}
 	}
 
-	// Token: 0x060007F5 RID: 2037 RVA: 0x0003259C File Offset: 0x0003079C
+	// Token: 0x060007F6 RID: 2038 RVA: 0x000323DC File Offset: 0x000305DC
 	public override void OnDeactivate()
 	{
 		base.OnDeactivate();
@@ -217,7 +217,7 @@ public class RubberDuck : TransferrableObject
 		}
 	}
 
-	// Token: 0x060007F6 RID: 2038 RVA: 0x00032664 File Offset: 0x00030864
+	// Token: 0x060007F7 RID: 2039 RVA: 0x000324A4 File Offset: 0x000306A4
 	public void PlayParticleFX(float rate)
 	{
 		if (!this.hasParticleFX)
@@ -236,13 +236,13 @@ public class RubberDuck : TransferrableObject
 		this.pFXEmissionModule.rateOverTime = rate;
 	}
 
-	// Token: 0x060007F7 RID: 2039 RVA: 0x000326B8 File Offset: 0x000308B8
+	// Token: 0x060007F8 RID: 2040 RVA: 0x000324F8 File Offset: 0x000306F8
 	public override bool CanActivate()
 	{
 		return !this.disableActivation;
 	}
 
-	// Token: 0x060007F8 RID: 2040 RVA: 0x000326C3 File Offset: 0x000308C3
+	// Token: 0x060007F9 RID: 2041 RVA: 0x00032503 File Offset: 0x00030703
 	public override bool CanDeactivate()
 	{
 		return !this.disableDeactivation;

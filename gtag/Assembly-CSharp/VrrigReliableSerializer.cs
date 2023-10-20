@@ -5,7 +5,7 @@ using UnityEngine;
 // Token: 0x02000162 RID: 354
 internal class VrrigReliableSerializer : GorillaSerializer
 {
-	// Token: 0x060008C6 RID: 2246 RVA: 0x00035B1C File Offset: 0x00033D1C
+	// Token: 0x060008C7 RID: 2247 RVA: 0x0003595C File Offset: 0x00033B5C
 	protected override bool OnInstantiateSetup(PhotonMessageInfo info, out GameObject outTargetObject, out Type outTargetType)
 	{
 		outTargetObject = null;

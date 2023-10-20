@@ -4,14 +4,14 @@ using UnityEngine;
 // Token: 0x02000032 RID: 50
 public class CloudUmbrellaCloud : MonoBehaviour
 {
-	// Token: 0x06000125 RID: 293 RVA: 0x0000A545 File Offset: 0x00008745
+	// Token: 0x06000125 RID: 293 RVA: 0x0000A58D File Offset: 0x0000878D
 	protected void Awake()
 	{
 		this.umbrellaXform = this.umbrella.transform;
 		this.cloudScaleXform = this.cloudRenderer.transform;
 	}
 
-	// Token: 0x06000126 RID: 294 RVA: 0x0000A56C File Offset: 0x0000876C
+	// Token: 0x06000126 RID: 294 RVA: 0x0000A5B4 File Offset: 0x000087B4
 	protected void LateUpdate()
 	{
 		float time = Vector3.Dot(this.umbrellaXform.up, Vector3.up);

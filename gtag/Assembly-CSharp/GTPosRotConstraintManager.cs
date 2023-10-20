@@ -7,7 +7,7 @@ using UnityEngine;
 [DefaultExecutionOrder(1300)]
 public class GTPosRotConstraintManager : MonoBehaviour
 {
-	// Token: 0x060001D1 RID: 465 RVA: 0x0000D168 File Offset: 0x0000B368
+	// Token: 0x060001D1 RID: 465 RVA: 0x0000D1B0 File Offset: 0x0000B3B0
 	protected void Awake()
 	{
 		if (GTPosRotConstraintManager.hasInstance && GTPosRotConstraintManager.instance != this)
@@ -18,7 +18,7 @@ public class GTPosRotConstraintManager : MonoBehaviour
 		GTPosRotConstraintManager.SetInstance(this);
 	}
 
-	// Token: 0x060001D2 RID: 466 RVA: 0x0000D18B File Offset: 0x0000B38B
+	// Token: 0x060001D2 RID: 466 RVA: 0x0000D1D3 File Offset: 0x0000B3D3
 	protected void OnDestroy()
 	{
 		if (GTPosRotConstraintManager.instance == this)
@@ -28,7 +28,7 @@ public class GTPosRotConstraintManager : MonoBehaviour
 		}
 	}
 
-	// Token: 0x060001D3 RID: 467 RVA: 0x0000D1A8 File Offset: 0x0000B3A8
+	// Token: 0x060001D3 RID: 467 RVA: 0x0000D1F0 File Offset: 0x0000B3F0
 	protected void LateUpdate()
 	{
 		for (int i = 0; i < GTPosRotConstraintManager.constraints.Count; i++)
@@ -38,13 +38,13 @@ public class GTPosRotConstraintManager : MonoBehaviour
 		}
 	}
 
-	// Token: 0x060001D4 RID: 468 RVA: 0x0000D1FC File Offset: 0x0000B3FC
+	// Token: 0x060001D4 RID: 468 RVA: 0x0000D244 File Offset: 0x0000B444
 	public static void CreateManager()
 	{
 		GTPosRotConstraintManager.SetInstance(new GameObject("GTPosRotConstraintManager").AddComponent<GTPosRotConstraintManager>());
 	}
 
-	// Token: 0x060001D5 RID: 469 RVA: 0x0000D212 File Offset: 0x0000B412
+	// Token: 0x060001D5 RID: 469 RVA: 0x0000D25A File Offset: 0x0000B45A
 	private static void SetInstance(GTPosRotConstraintManager manager)
 	{
 		GTPosRotConstraintManager.instance = manager;
@@ -55,7 +55,7 @@ public class GTPosRotConstraintManager : MonoBehaviour
 		}
 	}
 
-	// Token: 0x060001D6 RID: 470 RVA: 0x0000D230 File Offset: 0x0000B430
+	// Token: 0x060001D6 RID: 470 RVA: 0x0000D278 File Offset: 0x0000B478
 	public static void Register(GTPosRotConstraints component)
 	{
 		if (!GTPosRotConstraintManager.hasInstance)
@@ -76,7 +76,7 @@ public class GTPosRotConstraintManager : MonoBehaviour
 		GTPosRotConstraintManager.constraints.AddRange(component.constraints);
 	}
 
-	// Token: 0x060001D7 RID: 471 RVA: 0x0000D2B4 File Offset: 0x0000B4B4
+	// Token: 0x060001D7 RID: 471 RVA: 0x0000D2FC File Offset: 0x0000B4FC
 	public static void Unregister(GTPosRotConstraints component)
 	{
 		int instanceID = component.GetInstanceID();
@@ -113,13 +113,13 @@ public class GTPosRotConstraintManager : MonoBehaviour
 	// Token: 0x0400029F RID: 671
 	public static readonly Dictionary<int, GTPosRotConstraintManager.Range> componentRanges = new Dictionary<int, GTPosRotConstraintManager.Range>(256);
 
-	// Token: 0x0200039F RID: 927
+	// Token: 0x020003A1 RID: 929
 	public struct Range
 	{
-		// Token: 0x04001B57 RID: 6999
+		// Token: 0x04001B64 RID: 7012
 		public int start;
 
-		// Token: 0x04001B58 RID: 7000
+		// Token: 0x04001B65 RID: 7013
 		public int end;
 	}
 }

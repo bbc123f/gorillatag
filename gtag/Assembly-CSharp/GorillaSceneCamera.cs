@@ -4,7 +4,7 @@ using UnityEngine;
 // Token: 0x02000143 RID: 323
 public class GorillaSceneCamera : MonoBehaviour
 {
-	// Token: 0x06000831 RID: 2097 RVA: 0x000332AA File Offset: 0x000314AA
+	// Token: 0x06000832 RID: 2098 RVA: 0x000330EA File Offset: 0x000312EA
 	public void SetSceneCamera(int sceneIndex)
 	{
 		base.transform.position = this.sceneTransforms[sceneIndex].scenePosition;

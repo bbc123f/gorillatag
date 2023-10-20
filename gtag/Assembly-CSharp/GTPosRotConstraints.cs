@@ -4,13 +4,13 @@ using UnityEngine;
 // Token: 0x02000060 RID: 96
 public class GTPosRotConstraints : MonoBehaviour
 {
-	// Token: 0x060001DA RID: 474 RVA: 0x0000D3CA File Offset: 0x0000B5CA
+	// Token: 0x060001DA RID: 474 RVA: 0x0000D412 File Offset: 0x0000B612
 	protected void OnEnable()
 	{
 		GTPosRotConstraintManager.Register(this);
 	}
 
-	// Token: 0x060001DB RID: 475 RVA: 0x0000D3D2 File Offset: 0x0000B5D2
+	// Token: 0x060001DB RID: 475 RVA: 0x0000D41A File Offset: 0x0000B61A
 	protected void OnDisable()
 	{
 		GTPosRotConstraintManager.Unregister(this);

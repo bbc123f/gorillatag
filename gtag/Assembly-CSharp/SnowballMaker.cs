@@ -7,7 +7,7 @@ using UnityEngine;
 // Token: 0x02000030 RID: 48
 public class SnowballMaker : MonoBehaviour
 {
-	// Token: 0x06000110 RID: 272 RVA: 0x00009C60 File Offset: 0x00007E60
+	// Token: 0x06000110 RID: 272 RVA: 0x00009CA8 File Offset: 0x00007EA8
 	protected void Awake()
 	{
 		List<SnowballThrowable> list = new List<SnowballThrowable>(this.snowballs.Length);
@@ -34,7 +34,7 @@ public class SnowballMaker : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000111 RID: 273 RVA: 0x00009CFC File Offset: 0x00007EFC
+	// Token: 0x06000111 RID: 273 RVA: 0x00009D44 File Offset: 0x00007F44
 	protected void LateUpdate()
 	{
 		bool flag = false;

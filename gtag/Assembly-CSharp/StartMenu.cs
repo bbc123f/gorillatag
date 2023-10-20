@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 // Token: 0x020000C9 RID: 201
 public class StartMenu : MonoBehaviour
 {
-	// Token: 0x0600047D RID: 1149 RVA: 0x0001CD6C File Offset: 0x0001AF6C
+	// Token: 0x0600047D RID: 1149 RVA: 0x0001CB48 File Offset: 0x0001AD48
 	private void Start()
 	{
 		DebugUIBuilder.instance.AddLabel("Select Sample Scene", 0);
@@ -23,7 +23,7 @@ public class StartMenu : MonoBehaviour
 		DebugUIBuilder.instance.Show();
 	}
 
-	// Token: 0x0600047E RID: 1150 RVA: 0x0001CDE1 File Offset: 0x0001AFE1
+	// Token: 0x0600047E RID: 1150 RVA: 0x0001CBBD File Offset: 0x0001ADBD
 	private void LoadScene(int idx)
 	{
 		DebugUIBuilder.instance.Hide();

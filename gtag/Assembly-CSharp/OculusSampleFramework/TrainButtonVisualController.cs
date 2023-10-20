@@ -5,10 +5,10 @@ using UnityEngine.Events;
 
 namespace OculusSampleFramework
 {
-	// Token: 0x020002E9 RID: 745
+	// Token: 0x020002EB RID: 747
 	public class TrainButtonVisualController : MonoBehaviour
 	{
-		// Token: 0x06001430 RID: 5168 RVA: 0x00072510 File Offset: 0x00070710
+		// Token: 0x06001437 RID: 5175 RVA: 0x000729DC File Offset: 0x00070BDC
 		private void Awake()
 		{
 			this._materialColorId = Shader.PropertyToID("_Color");
@@ -17,7 +17,7 @@ namespace OculusSampleFramework
 			this._oldPosition = base.transform.localPosition;
 		}
 
-		// Token: 0x06001431 RID: 5169 RVA: 0x00072566 File Offset: 0x00070766
+		// Token: 0x06001438 RID: 5176 RVA: 0x00072A32 File Offset: 0x00070C32
 		private void OnDestroy()
 		{
 			if (this._buttonMaterial != null)
@@ -26,7 +26,7 @@ namespace OculusSampleFramework
 			}
 		}
 
-		// Token: 0x06001432 RID: 5170 RVA: 0x00072584 File Offset: 0x00070784
+		// Token: 0x06001439 RID: 5177 RVA: 0x00072A50 File Offset: 0x00070C50
 		private void OnEnable()
 		{
 			this._buttonController.InteractableStateChanged.AddListener(new UnityAction<InteractableStateArgs>(this.InteractableStateChanged));
@@ -35,7 +35,7 @@ namespace OculusSampleFramework
 			this._buttonInContactOrActionStates = false;
 		}
 
-		// Token: 0x06001433 RID: 5171 RVA: 0x000725E4 File Offset: 0x000707E4
+		// Token: 0x0600143A RID: 5178 RVA: 0x00072AB0 File Offset: 0x00070CB0
 		private void OnDisable()
 		{
 			if (this._buttonController != null)
@@ -46,7 +46,7 @@ namespace OculusSampleFramework
 			}
 		}
 
-		// Token: 0x06001434 RID: 5172 RVA: 0x0007264C File Offset: 0x0007084C
+		// Token: 0x0600143B RID: 5179 RVA: 0x00072B18 File Offset: 0x00070D18
 		private void ActionOrInContactZoneStayEvent(ColliderZoneArgs collisionArgs)
 		{
 			if (!this._buttonInContactOrActionStates || collisionArgs.CollidingTool.IsFarFieldTool)
@@ -62,7 +62,7 @@ namespace OculusSampleFramework
 			}
 		}
 
-		// Token: 0x06001435 RID: 5173 RVA: 0x000726FC File Offset: 0x000708FC
+		// Token: 0x0600143C RID: 5180 RVA: 0x00072BC8 File Offset: 0x00070DC8
 		private void InteractableStateChanged(InteractableStateArgs obj)
 		{
 			this._buttonInContactOrActionStates = false;
@@ -91,7 +91,7 @@ namespace OculusSampleFramework
 			}
 		}
 
-		// Token: 0x06001436 RID: 5174 RVA: 0x000727D7 File Offset: 0x000709D7
+		// Token: 0x0600143D RID: 5181 RVA: 0x00072CA3 File Offset: 0x00070EA3
 		private void PlaySound(AudioClip clip)
 		{
 			this._audioSource.timeSamples = 0;
@@ -99,7 +99,7 @@ namespace OculusSampleFramework
 			this._audioSource.Play();
 		}
 
-		// Token: 0x06001437 RID: 5175 RVA: 0x000727FC File Offset: 0x000709FC
+		// Token: 0x0600143E RID: 5182 RVA: 0x00072CC8 File Offset: 0x00070EC8
 		private void StopResetLerping()
 		{
 			if (this._lerpToOldPositionCr != null)
@@ -108,7 +108,7 @@ namespace OculusSampleFramework
 			}
 		}
 
-		// Token: 0x06001438 RID: 5176 RVA: 0x00072814 File Offset: 0x00070A14
+		// Token: 0x0600143F RID: 5183 RVA: 0x00072CE0 File Offset: 0x00070EE0
 		private void LerpToOldPosition()
 		{
 			if ((base.transform.localPosition - this._oldPosition).sqrMagnitude < Mathf.Epsilon)
@@ -119,7 +119,7 @@ namespace OculusSampleFramework
 			this._lerpToOldPositionCr = base.StartCoroutine(this.ResetPosition());
 		}
 
-		// Token: 0x06001439 RID: 5177 RVA: 0x0007285F File Offset: 0x00070A5F
+		// Token: 0x06001440 RID: 5184 RVA: 0x00072D2B File Offset: 0x00070F2B
 		private IEnumerator ResetPosition()
 		{
 			float startTime = Time.time;
@@ -134,64 +134,64 @@ namespace OculusSampleFramework
 			yield break;
 		}
 
-		// Token: 0x040016D2 RID: 5842
+		// Token: 0x040016DF RID: 5855
 		private const float LERP_TO_OLD_POS_DURATION = 1f;
 
-		// Token: 0x040016D3 RID: 5843
+		// Token: 0x040016E0 RID: 5856
 		private const float LOCAL_SIZE_HALVED = 0.5f;
 
-		// Token: 0x040016D4 RID: 5844
+		// Token: 0x040016E1 RID: 5857
 		[SerializeField]
 		private MeshRenderer _meshRenderer;
 
-		// Token: 0x040016D5 RID: 5845
+		// Token: 0x040016E2 RID: 5858
 		[SerializeField]
 		private MeshRenderer _glowRenderer;
 
-		// Token: 0x040016D6 RID: 5846
+		// Token: 0x040016E3 RID: 5859
 		[SerializeField]
 		private ButtonController _buttonController;
 
-		// Token: 0x040016D7 RID: 5847
+		// Token: 0x040016E4 RID: 5860
 		[SerializeField]
 		private Color _buttonContactColor = new Color(0.51f, 0.78f, 0.92f, 1f);
 
-		// Token: 0x040016D8 RID: 5848
+		// Token: 0x040016E5 RID: 5861
 		[SerializeField]
 		private Color _buttonActionColor = new Color(0.24f, 0.72f, 0.98f, 1f);
 
-		// Token: 0x040016D9 RID: 5849
+		// Token: 0x040016E6 RID: 5862
 		[SerializeField]
 		private AudioSource _audioSource;
 
-		// Token: 0x040016DA RID: 5850
+		// Token: 0x040016E7 RID: 5863
 		[SerializeField]
 		private AudioClip _actionSoundEffect;
 
-		// Token: 0x040016DB RID: 5851
+		// Token: 0x040016E8 RID: 5864
 		[SerializeField]
 		private Transform _buttonContactTransform;
 
-		// Token: 0x040016DC RID: 5852
+		// Token: 0x040016E9 RID: 5865
 		[SerializeField]
 		private float _contactMaxDisplacementDistance = 0.0141f;
 
-		// Token: 0x040016DD RID: 5853
+		// Token: 0x040016EA RID: 5866
 		private Material _buttonMaterial;
 
-		// Token: 0x040016DE RID: 5854
+		// Token: 0x040016EB RID: 5867
 		private Color _buttonDefaultColor;
 
-		// Token: 0x040016DF RID: 5855
+		// Token: 0x040016EC RID: 5868
 		private int _materialColorId;
 
-		// Token: 0x040016E0 RID: 5856
+		// Token: 0x040016ED RID: 5869
 		private bool _buttonInContactOrActionStates;
 
-		// Token: 0x040016E1 RID: 5857
+		// Token: 0x040016EE RID: 5870
 		private Coroutine _lerpToOldPositionCr;
 
-		// Token: 0x040016E2 RID: 5858
+		// Token: 0x040016EF RID: 5871
 		private Vector3 _oldPosition;
 	}
 }

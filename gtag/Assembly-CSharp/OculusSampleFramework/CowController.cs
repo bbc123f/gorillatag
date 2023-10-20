@@ -3,33 +3,33 @@ using UnityEngine;
 
 namespace OculusSampleFramework
 {
-	// Token: 0x020002E5 RID: 741
+	// Token: 0x020002E7 RID: 743
 	public class CowController : MonoBehaviour
 	{
-		// Token: 0x0600140E RID: 5134 RVA: 0x00071AEA File Offset: 0x0006FCEA
+		// Token: 0x06001415 RID: 5141 RVA: 0x00071FB6 File Offset: 0x000701B6
 		private void Start()
 		{
 		}
 
-		// Token: 0x0600140F RID: 5135 RVA: 0x00071AEC File Offset: 0x0006FCEC
+		// Token: 0x06001416 RID: 5142 RVA: 0x00071FB8 File Offset: 0x000701B8
 		public void PlayMooSound()
 		{
 			this._mooCowAudioSource.timeSamples = 0;
 			this._mooCowAudioSource.Play();
 		}
 
-		// Token: 0x06001410 RID: 5136 RVA: 0x00071B05 File Offset: 0x0006FD05
+		// Token: 0x06001417 RID: 5143 RVA: 0x00071FD1 File Offset: 0x000701D1
 		public void GoMooCowGo()
 		{
 			this._cowAnimation.Rewind();
 			this._cowAnimation.Play();
 		}
 
-		// Token: 0x040016B3 RID: 5811
+		// Token: 0x040016C0 RID: 5824
 		[SerializeField]
 		private Animation _cowAnimation;
 
-		// Token: 0x040016B4 RID: 5812
+		// Token: 0x040016C1 RID: 5825
 		[SerializeField]
 		private AudioSource _mooCowAudioSource;
 	}

@@ -4,7 +4,7 @@ using UnityEngine;
 // Token: 0x020000B1 RID: 177
 public class HandMeshUI : MonoBehaviour
 {
-	// Token: 0x060003E6 RID: 998 RVA: 0x00019518 File Offset: 0x00017718
+	// Token: 0x060003E6 RID: 998 RVA: 0x000192F4 File Offset: 0x000174F4
 	private void Start()
 	{
 		this.SetSliderValue(0, (float)this.rightMask.radialDivisions, false);
@@ -14,7 +14,7 @@ public class HandMeshUI : MonoBehaviour
 		this.SetSliderValue(4, this.rightMask.webOffset, false);
 	}
 
-	// Token: 0x060003E7 RID: 999 RVA: 0x00019588 File Offset: 0x00017788
+	// Token: 0x060003E7 RID: 999 RVA: 0x00019364 File Offset: 0x00017564
 	private void Update()
 	{
 		this.CheckForHands();
@@ -63,7 +63,7 @@ public class HandMeshUI : MonoBehaviour
 		}
 	}
 
-	// Token: 0x060003E8 RID: 1000 RVA: 0x0001971C File Offset: 0x0001791C
+	// Token: 0x060003E8 RID: 1000 RVA: 0x000194F8 File Offset: 0x000176F8
 	private void SetSliderValue(int sliderID, float value, bool isNormalized)
 	{
 		float num = 0f;
@@ -129,7 +129,7 @@ public class HandMeshUI : MonoBehaviour
 		}
 	}
 
-	// Token: 0x060003E9 RID: 1001 RVA: 0x000198C0 File Offset: 0x00017AC0
+	// Token: 0x060003E9 RID: 1001 RVA: 0x0001969C File Offset: 0x0001789C
 	private void CheckForHands()
 	{
 		bool flag = OVRInput.GetActiveController() == OVRInput.Controller.Hands || OVRInput.GetActiveController() == OVRInput.Controller.LHand || OVRInput.GetActiveController() == OVRInput.Controller.RHand;

@@ -7,7 +7,7 @@ using UnityEngine;
 [DefaultExecutionOrder(30)]
 public class FurnitureSpawner : MonoBehaviour
 {
-	// Token: 0x0600042A RID: 1066 RVA: 0x0001B6BF File Offset: 0x000198BF
+	// Token: 0x0600042A RID: 1066 RVA: 0x0001B49B File Offset: 0x0001969B
 	private void Start()
 	{
 		this._sceneAnchor = base.GetComponent<OVRSceneAnchor>();
@@ -16,7 +16,7 @@ public class FurnitureSpawner : MonoBehaviour
 		this.SpawnSpawnable();
 	}
 
-	// Token: 0x0600042B RID: 1067 RVA: 0x0001B6E8 File Offset: 0x000198E8
+	// Token: 0x0600042B RID: 1067 RVA: 0x0001B4C4 File Offset: 0x000196C4
 	private void SpawnSpawnable()
 	{
 		Spawnable spawnable;
@@ -51,7 +51,7 @@ public class FurnitureSpawner : MonoBehaviour
 		new SimpleResizer().CreateResizedObject(newSize, gameObject, spawnable.ResizablePrefab);
 	}
 
-	// Token: 0x0600042C RID: 1068 RVA: 0x0001B878 File Offset: 0x00019A78
+	// Token: 0x0600042C RID: 1068 RVA: 0x0001B654 File Offset: 0x00019854
 	private bool FindValidSpawnable(out Spawnable currentSpawnable)
 	{
 		currentSpawnable = null;
@@ -74,7 +74,7 @@ public class FurnitureSpawner : MonoBehaviour
 		return false;
 	}
 
-	// Token: 0x0600042D RID: 1069 RVA: 0x0001B904 File Offset: 0x00019B04
+	// Token: 0x0600042D RID: 1069 RVA: 0x0001B6E0 File Offset: 0x000198E0
 	private void AddRoomLight()
 	{
 		if (!this.RoomLightPrefab)
@@ -87,7 +87,7 @@ public class FurnitureSpawner : MonoBehaviour
 		}
 	}
 
-	// Token: 0x0600042E RID: 1070 RVA: 0x0001B968 File Offset: 0x00019B68
+	// Token: 0x0600042E RID: 1070 RVA: 0x0001B744 File Offset: 0x00019944
 	private void GetVolumeFromTopPlane(Transform plane, Vector2 dimensions, float height, out Vector3 position, out Quaternion rotation, out Vector3 localScale)
 	{
 		float num = height / 2f;

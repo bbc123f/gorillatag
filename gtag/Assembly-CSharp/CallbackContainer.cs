@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 
-// Token: 0x0200020D RID: 525
+// Token: 0x0200020E RID: 526
 internal class CallbackContainer<T>
 {
-	// Token: 0x06000D32 RID: 3378 RVA: 0x0004D6E0 File Offset: 0x0004B8E0
+	// Token: 0x06000D38 RID: 3384 RVA: 0x0004D940 File Offset: 0x0004BB40
 	public virtual void Add(T inCallback)
 	{
 		if (this.runningUpdate)
@@ -15,7 +15,7 @@ internal class CallbackContainer<T>
 		this.callbacks.Add(inCallback);
 	}
 
-	// Token: 0x06000D33 RID: 3379 RVA: 0x0004D704 File Offset: 0x0004B904
+	// Token: 0x06000D39 RID: 3385 RVA: 0x0004D964 File Offset: 0x0004BB64
 	public virtual void Remove(T inCallback)
 	{
 		if (this.runningUpdate)
@@ -26,13 +26,13 @@ internal class CallbackContainer<T>
 		this.callbacks.Remove(inCallback);
 	}
 
-	// Token: 0x06000D34 RID: 3380 RVA: 0x0004D728 File Offset: 0x0004B928
+	// Token: 0x06000D3A RID: 3386 RVA: 0x0004D988 File Offset: 0x0004BB88
 	public void SetRunUpdateCallback(CallbackContainer<T>.runCallbacksDelegate callback)
 	{
 		this.RunCallBack = callback;
 	}
 
-	// Token: 0x06000D35 RID: 3381 RVA: 0x0004D734 File Offset: 0x0004B934
+	// Token: 0x06000D3B RID: 3387 RVA: 0x0004D994 File Offset: 0x0004BB94
 	public virtual void UpdateCallbacks()
 	{
 		while (this.addQ.Count > 0)
@@ -45,7 +45,7 @@ internal class CallbackContainer<T>
 		}
 	}
 
-	// Token: 0x06000D36 RID: 3382 RVA: 0x0004D790 File Offset: 0x0004B990
+	// Token: 0x06000D3C RID: 3388 RVA: 0x0004D9F0 File Offset: 0x0004BBF0
 	public virtual void TryRunCallbacks()
 	{
 		this.runningUpdate = true;
@@ -64,7 +64,7 @@ internal class CallbackContainer<T>
 		this.runningUpdate = false;
 	}
 
-	// Token: 0x06000D37 RID: 3383 RVA: 0x0004D818 File Offset: 0x0004BA18
+	// Token: 0x06000D3D RID: 3389 RVA: 0x0004DA78 File Offset: 0x0004BC78
 	public virtual void TryRunCallbacks(CallbackContainer<T>.runCallbacksDelegate callbackDelegate)
 	{
 		this.runningUpdate = true;
@@ -83,24 +83,24 @@ internal class CallbackContainer<T>
 		this.runningUpdate = false;
 	}
 
-	// Token: 0x04001060 RID: 4192
+	// Token: 0x04001065 RID: 4197
 	protected bool runningUpdate;
 
-	// Token: 0x04001061 RID: 4193
+	// Token: 0x04001066 RID: 4198
 	protected Queue<T> addQ = new Queue<T>(20);
 
-	// Token: 0x04001062 RID: 4194
+	// Token: 0x04001067 RID: 4199
 	protected Queue<T> removeQ = new Queue<T>(20);
 
-	// Token: 0x04001063 RID: 4195
+	// Token: 0x04001068 RID: 4200
 	protected HashSet<T> callbacks = new HashSet<T>();
 
-	// Token: 0x04001064 RID: 4196
+	// Token: 0x04001069 RID: 4201
 	protected CallbackContainer<T>.runCallbacksDelegate RunCallBack = delegate(T t)
 	{
 	};
 
-	// Token: 0x02000476 RID: 1142
-	// (Invoke) Token: 0x06001D42 RID: 7490
+	// Token: 0x02000478 RID: 1144
+	// (Invoke) Token: 0x06001D4B RID: 7499
 	public delegate void runCallbacksDelegate(T callback);
 }

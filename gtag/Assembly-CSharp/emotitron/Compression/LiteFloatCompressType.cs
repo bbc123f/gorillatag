@@ -2,34 +2,34 @@
 
 namespace emotitron.Compression
 {
-	// Token: 0x02000341 RID: 833
+	// Token: 0x02000343 RID: 835
 	public enum LiteFloatCompressType
 	{
-		// Token: 0x04001911 RID: 6417
+		// Token: 0x0400191E RID: 6430
 		Bits2 = 2,
-		// Token: 0x04001912 RID: 6418
+		// Token: 0x0400191F RID: 6431
 		Bits3,
-		// Token: 0x04001913 RID: 6419
+		// Token: 0x04001920 RID: 6432
 		Bits4,
-		// Token: 0x04001914 RID: 6420
+		// Token: 0x04001921 RID: 6433
 		Bits5,
-		// Token: 0x04001915 RID: 6421
+		// Token: 0x04001922 RID: 6434
 		Bits6,
-		// Token: 0x04001916 RID: 6422
+		// Token: 0x04001923 RID: 6435
 		Bits7,
-		// Token: 0x04001917 RID: 6423
+		// Token: 0x04001924 RID: 6436
 		Bits8,
-		// Token: 0x04001918 RID: 6424
+		// Token: 0x04001925 RID: 6437
 		Bits9,
-		// Token: 0x04001919 RID: 6425
+		// Token: 0x04001926 RID: 6438
 		Bits10,
-		// Token: 0x0400191A RID: 6426
+		// Token: 0x04001927 RID: 6439
 		Bits12 = 12,
-		// Token: 0x0400191B RID: 6427
+		// Token: 0x04001928 RID: 6440
 		Bits14 = 14,
-		// Token: 0x0400191C RID: 6428
+		// Token: 0x04001929 RID: 6441
 		Half16 = 16,
-		// Token: 0x0400191D RID: 6429
+		// Token: 0x0400192A RID: 6442
 		Full32 = 32
 	}
 }

@@ -1,17 +1,17 @@
 ﻿using System;
 using UnityEngine;
 
-// Token: 0x0200022B RID: 555
+// Token: 0x0200022C RID: 556
 public class UIMatchRotation : MonoBehaviour
 {
-	// Token: 0x06000DCC RID: 3532 RVA: 0x00050522 File Offset: 0x0004E722
+	// Token: 0x06000DD2 RID: 3538 RVA: 0x00050782 File Offset: 0x0004E982
 	private void Start()
 	{
 		this.referenceTransform = Camera.main.transform;
 		base.transform.forward = this.x0z(this.referenceTransform.forward);
 	}
 
-	// Token: 0x06000DCD RID: 3533 RVA: 0x00050550 File Offset: 0x0004E750
+	// Token: 0x06000DD3 RID: 3539 RVA: 0x000507B0 File Offset: 0x0004E9B0
 	private void Update()
 	{
 		Vector3 lhs = this.x0z(base.transform.forward);
@@ -37,34 +37,34 @@ public class UIMatchRotation : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000DCE RID: 3534 RVA: 0x000505F4 File Offset: 0x0004E7F4
+	// Token: 0x06000DD4 RID: 3540 RVA: 0x00050854 File Offset: 0x0004EA54
 	private Vector3 x0z(Vector3 vector)
 	{
 		vector.y = 0f;
 		return vector.normalized;
 	}
 
-	// Token: 0x040010C1 RID: 4289
+	// Token: 0x040010C6 RID: 4294
 	[SerializeField]
 	private Transform referenceTransform;
 
-	// Token: 0x040010C2 RID: 4290
+	// Token: 0x040010C7 RID: 4295
 	[SerializeField]
 	private float threshold = 0.35f;
 
-	// Token: 0x040010C3 RID: 4291
+	// Token: 0x040010C8 RID: 4296
 	[SerializeField]
 	private float lerpSpeed = 5f;
 
-	// Token: 0x040010C4 RID: 4292
+	// Token: 0x040010C9 RID: 4297
 	private UIMatchRotation.State state;
 
-	// Token: 0x0200047D RID: 1149
+	// Token: 0x0200047F RID: 1151
 	private enum State
 	{
-		// Token: 0x04001EAE RID: 7854
+		// Token: 0x04001EBB RID: 7867
 		Ready,
-		// Token: 0x04001EAF RID: 7855
+		// Token: 0x04001EBC RID: 7868
 		Rotating
 	}
 }

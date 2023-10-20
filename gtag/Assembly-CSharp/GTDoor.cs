@@ -7,7 +7,7 @@ using UnityEngine;
 // Token: 0x0200005D RID: 93
 public class GTDoor : MonoBehaviourPun
 {
-	// Token: 0x060001C2 RID: 450 RVA: 0x0000C9EC File Offset: 0x0000ABEC
+	// Token: 0x060001C2 RID: 450 RVA: 0x0000CA34 File Offset: 0x0000AC34
 	private void Start()
 	{
 		Collider[] array = this.doorColliders;
@@ -18,7 +18,7 @@ public class GTDoor : MonoBehaviourPun
 		this.tLastOpened = 0f;
 	}
 
-	// Token: 0x060001C3 RID: 451 RVA: 0x0000CA24 File Offset: 0x0000AC24
+	// Token: 0x060001C3 RID: 451 RVA: 0x0000CA6C File Offset: 0x0000AC6C
 	private void Update()
 	{
 		this.UpdateDoorState();
@@ -40,7 +40,7 @@ public class GTDoor : MonoBehaviourPun
 		}
 	}
 
-	// Token: 0x060001C4 RID: 452 RVA: 0x0000CA84 File Offset: 0x0000AC84
+	// Token: 0x060001C4 RID: 452 RVA: 0x0000CACC File Offset: 0x0000ACCC
 	private void UpdateDoorState()
 	{
 		this.peopleInHoldOpenVolume = false;
@@ -174,7 +174,7 @@ public class GTDoor : MonoBehaviourPun
 		}
 	}
 
-	// Token: 0x060001C5 RID: 453 RVA: 0x0000CD40 File Offset: 0x0000AF40
+	// Token: 0x060001C5 RID: 453 RVA: 0x0000CD88 File Offset: 0x0000AF88
 	private void OpenDoor()
 	{
 		switch (this.currentState)
@@ -197,7 +197,7 @@ public class GTDoor : MonoBehaviourPun
 		}
 	}
 
-	// Token: 0x060001C6 RID: 454 RVA: 0x0000CDA4 File Offset: 0x0000AFA4
+	// Token: 0x060001C6 RID: 454 RVA: 0x0000CDEC File Offset: 0x0000AFEC
 	private void CloseDoor()
 	{
 		switch (this.currentState)
@@ -219,7 +219,7 @@ public class GTDoor : MonoBehaviourPun
 		}
 	}
 
-	// Token: 0x060001C7 RID: 455 RVA: 0x0000CE00 File Offset: 0x0000B000
+	// Token: 0x060001C7 RID: 455 RVA: 0x0000CE48 File Offset: 0x0000B048
 	private void UpdateDoorAnimation()
 	{
 		switch (this.currentState)
@@ -237,13 +237,13 @@ public class GTDoor : MonoBehaviourPun
 		this.doorTransform.localRotation = Quaternion.Euler(new Vector3(0f, this.doorSpring.Value, 0f));
 	}
 
-	// Token: 0x060001C8 RID: 456 RVA: 0x0000CEDF File Offset: 0x0000B0DF
+	// Token: 0x060001C8 RID: 456 RVA: 0x0000CF27 File Offset: 0x0000B127
 	public void ResetDoorOpenedTime()
 	{
 		this.tLastOpened = Time.time;
 	}
 
-	// Token: 0x060001C9 RID: 457 RVA: 0x0000CEEC File Offset: 0x0000B0EC
+	// Token: 0x060001C9 RID: 457 RVA: 0x0000CF34 File Offset: 0x0000B134
 	[PunRPC]
 	public void ChangeDoorState(GTDoor.DoorState shouldOpenState)
 	{
@@ -383,24 +383,24 @@ public class GTDoor : MonoBehaviourPun
 	[DebugOption]
 	private bool buttonTriggeredThisFrame;
 
-	// Token: 0x0200039E RID: 926
+	// Token: 0x020003A0 RID: 928
 	public enum DoorState
 	{
-		// Token: 0x04001B4F RID: 6991
+		// Token: 0x04001B5C RID: 7004
 		Closed,
-		// Token: 0x04001B50 RID: 6992
+		// Token: 0x04001B5D RID: 7005
 		ClosingWaitingOnRPC,
-		// Token: 0x04001B51 RID: 6993
+		// Token: 0x04001B5E RID: 7006
 		Closing,
-		// Token: 0x04001B52 RID: 6994
+		// Token: 0x04001B5F RID: 7007
 		Open,
-		// Token: 0x04001B53 RID: 6995
+		// Token: 0x04001B60 RID: 7008
 		OpeningWaitingOnRPC,
-		// Token: 0x04001B54 RID: 6996
+		// Token: 0x04001B61 RID: 7009
 		Opening,
-		// Token: 0x04001B55 RID: 6997
+		// Token: 0x04001B62 RID: 7010
 		HeldOpen,
-		// Token: 0x04001B56 RID: 6998
+		// Token: 0x04001B63 RID: 7011
 		HeldOpenLocally
 	}
 }

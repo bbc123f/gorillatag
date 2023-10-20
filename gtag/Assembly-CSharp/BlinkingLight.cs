@@ -4,14 +4,14 @@ using UnityEngine;
 // Token: 0x0200014D RID: 333
 public class BlinkingLight : MonoBehaviour
 {
-	// Token: 0x0600084B RID: 2123 RVA: 0x000338A7 File Offset: 0x00031AA7
+	// Token: 0x0600084C RID: 2124 RVA: 0x000336E7 File Offset: 0x000318E7
 	private void Awake()
 	{
 		this.nextChange = Random.Range(0f, this.maxTime);
 		this.meshRenderer = base.GetComponent<MeshRenderer>();
 	}
 
-	// Token: 0x0600084C RID: 2124 RVA: 0x000338CC File Offset: 0x00031ACC
+	// Token: 0x0600084D RID: 2125 RVA: 0x0003370C File Offset: 0x0003190C
 	private void Update()
 	{
 		if (Time.time > this.nextChange)

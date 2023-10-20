@@ -6,14 +6,14 @@ using UnityEngine.UI;
 // Token: 0x02000103 RID: 259
 public class CosmeticStand : GorillaPressableButton
 {
-	// Token: 0x06000642 RID: 1602 RVA: 0x0002785C File Offset: 0x00025A5C
+	// Token: 0x06000643 RID: 1603 RVA: 0x0002769C File Offset: 0x0002589C
 	public void InitializeCosmetic()
 	{
 		this.thisCosmeticItem = CosmeticsController.instance.allCosmetics.Find((CosmeticsController.CosmeticItem x) => this.thisCosmeticName == x.displayName);
 		this.slotPriceText.text = this.thisCosmeticItem.itemCategory.ToString().ToUpper() + " " + this.thisCosmeticItem.cost.ToString();
 	}
 
-	// Token: 0x06000643 RID: 1603 RVA: 0x000278CC File Offset: 0x00025ACC
+	// Token: 0x06000644 RID: 1604 RVA: 0x0002770C File Offset: 0x0002590C
 	public override void ButtonActivation()
 	{
 		base.ButtonActivation();

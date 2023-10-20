@@ -3,10 +3,10 @@ using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
 
-// Token: 0x02000177 RID: 375
+// Token: 0x02000178 RID: 376
 public class GorillaHatButtonParent : MonoBehaviourPunCallbacks, IInRoomCallbacks
 {
-	// Token: 0x0600096A RID: 2410 RVA: 0x00038CFC File Offset: 0x00036EFC
+	// Token: 0x0600096E RID: 2414 RVA: 0x00038CB4 File Offset: 0x00036EB4
 	public void Start()
 	{
 		this.hat = PlayerPrefs.GetString("hatCosmetic", "none");
@@ -16,7 +16,7 @@ public class GorillaHatButtonParent : MonoBehaviourPunCallbacks, IInRoomCallback
 		this.rightHandHold = PlayerPrefs.GetString("rightHandHoldCosmetic", "none");
 	}
 
-	// Token: 0x0600096B RID: 2411 RVA: 0x00038D74 File Offset: 0x00036F74
+	// Token: 0x0600096F RID: 2415 RVA: 0x00038D2C File Offset: 0x00036F2C
 	public void LateUpdate()
 	{
 		if (!this.initialized && GorillaTagger.Instance.offlineVRRig.initializedCosmetics)
@@ -38,7 +38,7 @@ public class GorillaHatButtonParent : MonoBehaviourPunCallbacks, IInRoomCallback
 		}
 	}
 
-	// Token: 0x0600096C RID: 2412 RVA: 0x00038E1C File Offset: 0x0003701C
+	// Token: 0x06000970 RID: 2416 RVA: 0x00038DD4 File Offset: 0x00036FD4
 	public void PressButton(bool isOn, GorillaHatButton.HatButtonType buttonType, string buttonValue)
 	{
 		if (this.initialized && GorillaTagger.Instance.offlineVRRig.concatStringOfCosmeticsAllowed.Contains("earlyaccess"))
@@ -87,7 +87,7 @@ public class GorillaHatButtonParent : MonoBehaviourPunCallbacks, IInRoomCallback
 		}
 	}
 
-	// Token: 0x0600096D RID: 2413 RVA: 0x00038F30 File Offset: 0x00037130
+	// Token: 0x06000971 RID: 2417 RVA: 0x00038EE8 File Offset: 0x000370E8
 	private void UpdateButtonState()
 	{
 		foreach (GorillaHatButton gorillaHatButton in this.hatButtons)
@@ -108,30 +108,30 @@ public class GorillaHatButtonParent : MonoBehaviourPunCallbacks, IInRoomCallback
 		}
 	}
 
-	// Token: 0x04000B86 RID: 2950
+	// Token: 0x04000B8A RID: 2954
 	public GorillaHatButton[] hatButtons;
 
-	// Token: 0x04000B87 RID: 2951
+	// Token: 0x04000B8B RID: 2955
 	public GameObject[] adminObjects;
 
-	// Token: 0x04000B88 RID: 2952
+	// Token: 0x04000B8C RID: 2956
 	public string hat;
 
-	// Token: 0x04000B89 RID: 2953
+	// Token: 0x04000B8D RID: 2957
 	public string face;
 
-	// Token: 0x04000B8A RID: 2954
+	// Token: 0x04000B8E RID: 2958
 	public string badge;
 
-	// Token: 0x04000B8B RID: 2955
+	// Token: 0x04000B8F RID: 2959
 	public string leftHandHold;
 
-	// Token: 0x04000B8C RID: 2956
+	// Token: 0x04000B90 RID: 2960
 	public string rightHandHold;
 
-	// Token: 0x04000B8D RID: 2957
+	// Token: 0x04000B91 RID: 2961
 	public bool initialized;
 
-	// Token: 0x04000B8E RID: 2958
+	// Token: 0x04000B92 RID: 2962
 	public GorillaLevelScreen screen;
 }

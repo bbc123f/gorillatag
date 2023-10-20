@@ -3,10 +3,10 @@ using UnityEngine;
 
 namespace OVRTouchSample
 {
-	// Token: 0x020002F7 RID: 759
+	// Token: 0x020002F9 RID: 761
 	public class TouchController : MonoBehaviour
 	{
-		// Token: 0x0600149A RID: 5274 RVA: 0x00074198 File Offset: 0x00072398
+		// Token: 0x060014A1 RID: 5281 RVA: 0x00074664 File Offset: 0x00072864
 		private void Update()
 		{
 			this.m_animator.SetFloat("Button 1", OVRInput.Get(OVRInput.Button.One, this.m_controller) ? 1f : 0f);
@@ -19,7 +19,7 @@ namespace OVRTouchSample
 			OVRManager.InputFocusLost += this.OnInputFocusLost;
 		}
 
-		// Token: 0x0600149B RID: 5275 RVA: 0x00074295 File Offset: 0x00072495
+		// Token: 0x060014A2 RID: 5282 RVA: 0x00074761 File Offset: 0x00072961
 		private void OnInputFocusLost()
 		{
 			if (base.gameObject.activeInHierarchy)
@@ -29,7 +29,7 @@ namespace OVRTouchSample
 			}
 		}
 
-		// Token: 0x0600149C RID: 5276 RVA: 0x000742B7 File Offset: 0x000724B7
+		// Token: 0x060014A3 RID: 5283 RVA: 0x00074783 File Offset: 0x00072983
 		private void OnInputFocusAcquired()
 		{
 			if (this.m_restoreOnInputAcquired)
@@ -39,15 +39,15 @@ namespace OVRTouchSample
 			}
 		}
 
-		// Token: 0x04001771 RID: 6001
+		// Token: 0x0400177E RID: 6014
 		[SerializeField]
 		private OVRInput.Controller m_controller;
 
-		// Token: 0x04001772 RID: 6002
+		// Token: 0x0400177F RID: 6015
 		[SerializeField]
 		private Animator m_animator;
 
-		// Token: 0x04001773 RID: 6003
+		// Token: 0x04001780 RID: 6016
 		private bool m_restoreOnInputAcquired;
 	}
 }

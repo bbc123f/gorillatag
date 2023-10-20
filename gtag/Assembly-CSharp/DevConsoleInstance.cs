@@ -5,7 +5,7 @@ using UnityEngine;
 // Token: 0x0200004B RID: 75
 public class DevConsoleInstance : MonoBehaviour
 {
-	// Token: 0x06000180 RID: 384 RVA: 0x0000C03C File Offset: 0x0000A23C
+	// Token: 0x06000180 RID: 384 RVA: 0x0000C084 File Offset: 0x0000A284
 	private void OnEnable()
 	{
 		base.gameObject.SetActive(false);

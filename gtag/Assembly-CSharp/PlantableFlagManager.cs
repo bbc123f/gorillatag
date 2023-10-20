@@ -5,7 +5,7 @@ using UnityEngine;
 // Token: 0x02000067 RID: 103
 public class PlantableFlagManager : MonoBehaviourPun, IPunObservable
 {
-	// Token: 0x060001EB RID: 491 RVA: 0x0000D9F0 File Offset: 0x0000BBF0
+	// Token: 0x060001EB RID: 491 RVA: 0x0000DA38 File Offset: 0x0000BC38
 	public void ResetMyFlags()
 	{
 		foreach (PlantableObject plantableObject in this.flags)
@@ -21,7 +21,7 @@ public class PlantableFlagManager : MonoBehaviourPun, IPunObservable
 		}
 	}
 
-	// Token: 0x060001EC RID: 492 RVA: 0x0000DA38 File Offset: 0x0000BC38
+	// Token: 0x060001EC RID: 492 RVA: 0x0000DA80 File Offset: 0x0000BC80
 	public void ResetAllFlags()
 	{
 		foreach (PlantableObject plantableObject in this.flags)
@@ -40,7 +40,7 @@ public class PlantableFlagManager : MonoBehaviourPun, IPunObservable
 		}
 	}
 
-	// Token: 0x060001ED RID: 493 RVA: 0x0000DAB0 File Offset: 0x0000BCB0
+	// Token: 0x060001ED RID: 493 RVA: 0x0000DAF8 File Offset: 0x0000BCF8
 	public void RainbowifyAllFlags(float saturation = 1f, float value = 1f)
 	{
 		Color red = Color.red;
@@ -56,7 +56,7 @@ public class PlantableFlagManager : MonoBehaviourPun, IPunObservable
 		}
 	}
 
-	// Token: 0x060001EE RID: 494 RVA: 0x0000DB10 File Offset: 0x0000BD10
+	// Token: 0x060001EE RID: 494 RVA: 0x0000DB58 File Offset: 0x0000BD58
 	public void Awake()
 	{
 		this.mode = new FlagCauldronColorer.ColorMode[this.flags.Length];
@@ -67,7 +67,7 @@ public class PlantableFlagManager : MonoBehaviourPun, IPunObservable
 		}
 	}
 
-	// Token: 0x060001EF RID: 495 RVA: 0x0000DB68 File Offset: 0x0000BD68
+	// Token: 0x060001EF RID: 495 RVA: 0x0000DBB0 File Offset: 0x0000BDB0
 	public void Update()
 	{
 		if (this.mode == null)
@@ -155,7 +155,7 @@ public class PlantableFlagManager : MonoBehaviourPun, IPunObservable
 		}
 	}
 
-	// Token: 0x060001F0 RID: 496 RVA: 0x0000DD54 File Offset: 0x0000BF54
+	// Token: 0x060001F0 RID: 496 RVA: 0x0000DD9C File Offset: 0x0000BF9C
 	[PunRPC]
 	public void UpdateFlagColorRPC(int flagIndex, int colorIndex, PhotonMessageInfo info)
 	{
@@ -168,7 +168,7 @@ public class PlantableFlagManager : MonoBehaviourPun, IPunObservable
 		plantableObject.AddColor((PlantableObject.AppliedColors)colorIndex);
 	}
 
-	// Token: 0x060001F1 RID: 497 RVA: 0x0000DD80 File Offset: 0x0000BF80
+	// Token: 0x060001F1 RID: 497 RVA: 0x0000DDC8 File Offset: 0x0000BFC8
 	public void UpdateFlagColors()
 	{
 		for (int i = 0; i < this.flagColors.Length; i++)
@@ -183,7 +183,7 @@ public class PlantableFlagManager : MonoBehaviourPun, IPunObservable
 		}
 	}
 
-	// Token: 0x060001F2 RID: 498 RVA: 0x0000DDD0 File Offset: 0x0000BFD0
+	// Token: 0x060001F2 RID: 498 RVA: 0x0000DE18 File Offset: 0x0000C018
 	public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
 	{
 		if (stream.IsWriting)

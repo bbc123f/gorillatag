@@ -3,10 +3,10 @@ using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
 
-// Token: 0x02000237 RID: 567
+// Token: 0x02000238 RID: 568
 public class ThrowableBugReliableState : MonoBehaviour, IRequestableOwnershipGuardCallbacks, IPunObservable
 {
-	// Token: 0x06000E08 RID: 3592 RVA: 0x00051A9D File Offset: 0x0004FC9D
+	// Token: 0x06000E0F RID: 3599 RVA: 0x00051E79 File Offset: 0x00050079
 	public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
 	{
 		if (stream.IsWriting)
@@ -17,36 +17,36 @@ public class ThrowableBugReliableState : MonoBehaviour, IRequestableOwnershipGua
 		this.travelingDirection = (Vector3)stream.ReceiveNext();
 	}
 
-	// Token: 0x06000E09 RID: 3593 RVA: 0x00051ACA File Offset: 0x0004FCCA
+	// Token: 0x06000E10 RID: 3600 RVA: 0x00051EA6 File Offset: 0x000500A6
 	public void OnOwnershipTransferred(Player toPlayer, Player fromPlayer)
 	{
 		throw new NotImplementedException();
 	}
 
-	// Token: 0x06000E0A RID: 3594 RVA: 0x00051AD1 File Offset: 0x0004FCD1
+	// Token: 0x06000E11 RID: 3601 RVA: 0x00051EAD File Offset: 0x000500AD
 	public bool OnOwnershipRequest(Player fromPlayer)
 	{
 		throw new NotImplementedException();
 	}
 
-	// Token: 0x06000E0B RID: 3595 RVA: 0x00051AD8 File Offset: 0x0004FCD8
+	// Token: 0x06000E12 RID: 3602 RVA: 0x00051EB4 File Offset: 0x000500B4
 	public void OnMyOwnerLeft()
 	{
 		throw new NotImplementedException();
 	}
 
-	// Token: 0x06000E0C RID: 3596 RVA: 0x00051ADF File Offset: 0x0004FCDF
+	// Token: 0x06000E13 RID: 3603 RVA: 0x00051EBB File Offset: 0x000500BB
 	public bool OnMasterClientAssistedTakeoverRequest(Player fromPlayer, Player toPlayer)
 	{
 		throw new NotImplementedException();
 	}
 
-	// Token: 0x06000E0D RID: 3597 RVA: 0x00051AE6 File Offset: 0x0004FCE6
+	// Token: 0x06000E14 RID: 3604 RVA: 0x00051EC2 File Offset: 0x000500C2
 	public void OnMyCreatorLeft()
 	{
 		throw new NotImplementedException();
 	}
 
-	// Token: 0x0400111E RID: 4382
+	// Token: 0x04001124 RID: 4388
 	public Vector3 travelingDirection = Vector3.zero;
 }

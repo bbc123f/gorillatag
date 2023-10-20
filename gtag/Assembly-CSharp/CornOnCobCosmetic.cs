@@ -4,14 +4,14 @@ using UnityEngine;
 // Token: 0x0200002D RID: 45
 public class CornOnCobCosmetic : MonoBehaviour
 {
-	// Token: 0x06000101 RID: 257 RVA: 0x00009870 File Offset: 0x00007A70
+	// Token: 0x06000101 RID: 257 RVA: 0x000098B8 File Offset: 0x00007AB8
 	protected void Awake()
 	{
 		this.emissionModule = this.particleSys.emission;
 		this.maxBurstProbability = ((this.emissionModule.burstCount > 0) ? this.emissionModule.GetBurst(0).probability : 0.2f);
 	}
 
-	// Token: 0x06000102 RID: 258 RVA: 0x000098C0 File Offset: 0x00007AC0
+	// Token: 0x06000102 RID: 258 RVA: 0x00009908 File Offset: 0x00007B08
 	protected void LateUpdate()
 	{
 		for (int i = 0; i < this.emissionModule.burstCount; i++)

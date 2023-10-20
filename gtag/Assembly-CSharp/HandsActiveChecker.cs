@@ -5,14 +5,14 @@ using UnityEngine;
 // Token: 0x020000A6 RID: 166
 public class HandsActiveChecker : MonoBehaviour
 {
-	// Token: 0x0600039A RID: 922 RVA: 0x00015F76 File Offset: 0x00014176
+	// Token: 0x0600039A RID: 922 RVA: 0x00015D52 File Offset: 0x00013F52
 	private void Awake()
 	{
 		this._notification = Object.Instantiate<GameObject>(this._notificationPrefab);
 		base.StartCoroutine(this.GetCenterEye());
 	}
 
-	// Token: 0x0600039B RID: 923 RVA: 0x00015F98 File Offset: 0x00014198
+	// Token: 0x0600039B RID: 923 RVA: 0x00015D74 File Offset: 0x00013F74
 	private void Update()
 	{
 		if (OVRPlugin.GetHandTrackingEnabled())
@@ -28,7 +28,7 @@ public class HandsActiveChecker : MonoBehaviour
 		}
 	}
 
-	// Token: 0x0600039C RID: 924 RVA: 0x00016022 File Offset: 0x00014222
+	// Token: 0x0600039C RID: 924 RVA: 0x00015DFE File Offset: 0x00013FFE
 	private IEnumerator GetCenterEye()
 	{
 		if ((this._cameraRig = Object.FindObjectOfType<OVRCameraRig>()) != null)

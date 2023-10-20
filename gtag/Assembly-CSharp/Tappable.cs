@@ -3,28 +3,28 @@ using System.Diagnostics;
 using Photon.Pun;
 using UnityEngine;
 
-// Token: 0x0200019C RID: 412
+// Token: 0x0200019D RID: 413
 public class Tappable : MonoBehaviour
 {
-	// Token: 0x06000AA5 RID: 2725 RVA: 0x00041E33 File Offset: 0x00040033
+	// Token: 0x06000AAA RID: 2730 RVA: 0x00041F6B File Offset: 0x0004016B
 	public void Validate()
 	{
 		TappableManager.CalculateId(this, true);
 	}
 
-	// Token: 0x06000AA6 RID: 2726 RVA: 0x00041E3C File Offset: 0x0004003C
+	// Token: 0x06000AAB RID: 2731 RVA: 0x00041F74 File Offset: 0x00040174
 	protected virtual void OnEnable()
 	{
 		TappableManager.Register(this);
 	}
 
-	// Token: 0x06000AA7 RID: 2727 RVA: 0x00041E44 File Offset: 0x00040044
+	// Token: 0x06000AAC RID: 2732 RVA: 0x00041F7C File Offset: 0x0004017C
 	protected virtual void OnDisable()
 	{
 		TappableManager.Unregister(this);
 	}
 
-	// Token: 0x06000AA8 RID: 2728 RVA: 0x00041E4C File Offset: 0x0004004C
+	// Token: 0x06000AAD RID: 2733 RVA: 0x00041F84 File Offset: 0x00040184
 	public void OnTap(float tapStrength, float tapTime)
 	{
 		this.OnTapLocal(tapStrength, tapTime);
@@ -43,34 +43,34 @@ public class Tappable : MonoBehaviour
 		});
 	}
 
-	// Token: 0x06000AA9 RID: 2729 RVA: 0x00041EAA File Offset: 0x000400AA
+	// Token: 0x06000AAE RID: 2734 RVA: 0x00041FE2 File Offset: 0x000401E2
 	public virtual void OnTapLocal(float tapStrength, float tapTime)
 	{
 	}
 
-	// Token: 0x06000AAA RID: 2730 RVA: 0x00041EAC File Offset: 0x000400AC
+	// Token: 0x06000AAF RID: 2735 RVA: 0x00041FE4 File Offset: 0x000401E4
 	private void RecalculateId()
 	{
 		TappableManager.CalculateId(this, true);
 	}
 
-	// Token: 0x06000AAB RID: 2731 RVA: 0x00041EB5 File Offset: 0x000400B5
+	// Token: 0x06000AB0 RID: 2736 RVA: 0x00041FED File Offset: 0x000401ED
 	[Conditional("UNITY_EDITOR")]
 	private void OnValidate()
 	{
 		TappableManager.CalculateId(this, false);
 	}
 
-	// Token: 0x04000D7B RID: 3451
+	// Token: 0x04000D7F RID: 3455
 	public int tappableId;
 
-	// Token: 0x04000D7C RID: 3452
+	// Token: 0x04000D80 RID: 3456
 	public string staticId;
 
-	// Token: 0x04000D7D RID: 3453
+	// Token: 0x04000D81 RID: 3457
 	public bool useStaticId;
 
-	// Token: 0x04000D7E RID: 3454
+	// Token: 0x04000D82 RID: 3458
 	[Space]
 	public TappableManager manager;
 }

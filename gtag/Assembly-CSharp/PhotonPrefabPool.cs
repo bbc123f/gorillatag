@@ -10,7 +10,7 @@ using UnityEngine;
 // Token: 0x0200015F RID: 351
 public class PhotonPrefabPool : MonoBehaviour, IPunPrefabPool
 {
-	// Token: 0x06000899 RID: 2201 RVA: 0x000350C0 File Offset: 0x000332C0
+	// Token: 0x0600089A RID: 2202 RVA: 0x00034F00 File Offset: 0x00033100
 	private void Start()
 	{
 		PhotonNetwork.PrefabPool = this;
@@ -30,7 +30,7 @@ public class PhotonPrefabPool : MonoBehaviour, IPunPrefabPool
 		}
 	}
 
-	// Token: 0x0600089A RID: 2202 RVA: 0x00035158 File Offset: 0x00033358
+	// Token: 0x0600089B RID: 2203 RVA: 0x00034F98 File Offset: 0x00033198
 	GameObject IPunPrefabPool.Instantiate(string prefabId, Vector3 position, Quaternion rotation)
 	{
 		GameObject gameObject;
@@ -52,7 +52,7 @@ public class PhotonPrefabPool : MonoBehaviour, IPunPrefabPool
 		return gameObject2;
 	}
 
-	// Token: 0x0600089B RID: 2203 RVA: 0x000351A8 File Offset: 0x000333A8
+	// Token: 0x0600089C RID: 2204 RVA: 0x00034FE8 File Offset: 0x000331E8
 	void IPunPrefabPool.Destroy(GameObject gameObject)
 	{
 		if (this.netInstantiedObjects.Contains(gameObject))
@@ -69,7 +69,7 @@ public class PhotonPrefabPool : MonoBehaviour, IPunPrefabPool
 		}
 	}
 
-	// Token: 0x0600089C RID: 2204 RVA: 0x00035204 File Offset: 0x00033404
+	// Token: 0x0600089D RID: 2205 RVA: 0x00035044 File Offset: 0x00033244
 	private IEnumerator WaitOneFrame()
 	{
 		yield return null;
@@ -88,7 +88,7 @@ public class PhotonPrefabPool : MonoBehaviour, IPunPrefabPool
 		yield break;
 	}
 
-	// Token: 0x0600089D RID: 2205 RVA: 0x00035214 File Offset: 0x00033414
+	// Token: 0x0600089E RID: 2206 RVA: 0x00035054 File Offset: 0x00033254
 	private void CheckVOIPSettings(RemoteVoiceLink voiceLink)
 	{
 		try

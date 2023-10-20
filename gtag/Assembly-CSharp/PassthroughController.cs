@@ -4,7 +4,7 @@ using UnityEngine;
 // Token: 0x020000B5 RID: 181
 public class PassthroughController : MonoBehaviour
 {
-	// Token: 0x06000401 RID: 1025 RVA: 0x0001AAA0 File Offset: 0x00018CA0
+	// Token: 0x06000401 RID: 1025 RVA: 0x0001A87C File Offset: 0x00018A7C
 	private void Start()
 	{
 		GameObject gameObject = GameObject.Find("OVRCameraRig");
@@ -20,7 +20,7 @@ public class PassthroughController : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000402 RID: 1026 RVA: 0x0001AAF0 File Offset: 0x00018CF0
+	// Token: 0x06000402 RID: 1026 RVA: 0x0001A8CC File Offset: 0x00018ACC
 	private void Update()
 	{
 		Color edgeColor = Color.HSVToRGB(Time.time * 0.1f % 1f, 1f, 1f);

@@ -5,7 +5,7 @@ using UnityEngine;
 // Token: 0x020000FD RID: 253
 public class CosmeticBoundaryTrigger : GorillaTriggerBox
 {
-	// Token: 0x06000634 RID: 1588 RVA: 0x000272C8 File Offset: 0x000254C8
+	// Token: 0x06000635 RID: 1589 RVA: 0x00027108 File Offset: 0x00025308
 	public void OnTriggerEnter(Collider other)
 	{
 		if (other.attachedRigidbody == null)
@@ -22,7 +22,7 @@ public class CosmeticBoundaryTrigger : GorillaTriggerBox
 		this.rigRef.myBodyDockPositions.RefreshTransferrableItems();
 	}
 
-	// Token: 0x06000635 RID: 1589 RVA: 0x00027348 File Offset: 0x00025548
+	// Token: 0x06000636 RID: 1590 RVA: 0x00027188 File Offset: 0x00025388
 	public void OnTriggerExit(Collider other)
 	{
 		if (other.attachedRigidbody == null)

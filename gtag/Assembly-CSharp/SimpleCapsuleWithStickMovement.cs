@@ -5,16 +5,16 @@ using UnityEngine;
 public class SimpleCapsuleWithStickMovement : MonoBehaviour
 {
 	// Token: 0x1400000E RID: 14
-	// (add) Token: 0x060002D2 RID: 722 RVA: 0x000120BC File Offset: 0x000102BC
-	// (remove) Token: 0x060002D3 RID: 723 RVA: 0x000120F4 File Offset: 0x000102F4
+	// (add) Token: 0x060002D2 RID: 722 RVA: 0x00011E98 File Offset: 0x00010098
+	// (remove) Token: 0x060002D3 RID: 723 RVA: 0x00011ED0 File Offset: 0x000100D0
 	public event Action CameraUpdated;
 
 	// Token: 0x1400000F RID: 15
-	// (add) Token: 0x060002D4 RID: 724 RVA: 0x0001212C File Offset: 0x0001032C
-	// (remove) Token: 0x060002D5 RID: 725 RVA: 0x00012164 File Offset: 0x00010364
+	// (add) Token: 0x060002D4 RID: 724 RVA: 0x00011F08 File Offset: 0x00010108
+	// (remove) Token: 0x060002D5 RID: 725 RVA: 0x00011F40 File Offset: 0x00010140
 	public event Action PreCharacterMove;
 
-	// Token: 0x060002D6 RID: 726 RVA: 0x00012199 File Offset: 0x00010399
+	// Token: 0x060002D6 RID: 726 RVA: 0x00011F75 File Offset: 0x00010175
 	private void Awake()
 	{
 		this._rigidbody = base.GetComponent<Rigidbody>();
@@ -24,12 +24,12 @@ public class SimpleCapsuleWithStickMovement : MonoBehaviour
 		}
 	}
 
-	// Token: 0x060002D7 RID: 727 RVA: 0x000121C1 File Offset: 0x000103C1
+	// Token: 0x060002D7 RID: 727 RVA: 0x00011F9D File Offset: 0x0001019D
 	private void Start()
 	{
 	}
 
-	// Token: 0x060002D8 RID: 728 RVA: 0x000121C4 File Offset: 0x000103C4
+	// Token: 0x060002D8 RID: 728 RVA: 0x00011FA0 File Offset: 0x000101A0
 	private void FixedUpdate()
 	{
 		if (this.CameraUpdated != null)
@@ -54,7 +54,7 @@ public class SimpleCapsuleWithStickMovement : MonoBehaviour
 		}
 	}
 
-	// Token: 0x060002D9 RID: 729 RVA: 0x00012224 File Offset: 0x00010424
+	// Token: 0x060002D9 RID: 729 RVA: 0x00012000 File Offset: 0x00010200
 	private void RotatePlayerToHMD()
 	{
 		Transform trackingSpace = this.CameraRig.trackingSpace;
@@ -66,7 +66,7 @@ public class SimpleCapsuleWithStickMovement : MonoBehaviour
 		trackingSpace.rotation = rotation;
 	}
 
-	// Token: 0x060002DA RID: 730 RVA: 0x00012290 File Offset: 0x00010490
+	// Token: 0x060002DA RID: 730 RVA: 0x0001206C File Offset: 0x0001026C
 	private void StickMovement()
 	{
 		Vector3 eulerAngles = this.CameraRig.centerEyeAnchor.rotation.eulerAngles;
@@ -79,7 +79,7 @@ public class SimpleCapsuleWithStickMovement : MonoBehaviour
 		this._rigidbody.MovePosition(this._rigidbody.position + a * this.Speed * Time.fixedDeltaTime);
 	}
 
-	// Token: 0x060002DB RID: 731 RVA: 0x00012354 File Offset: 0x00010554
+	// Token: 0x060002DB RID: 731 RVA: 0x00012130 File Offset: 0x00010330
 	private void SnapTurn()
 	{
 		if (OVRInput.Get(OVRInput.Button.SecondaryThumbstickLeft, OVRInput.Controller.Active) || (this.RotationEitherThumbstick && OVRInput.Get(OVRInput.Button.PrimaryThumbstickLeft, OVRInput.Controller.Active)))

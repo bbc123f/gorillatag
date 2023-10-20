@@ -4,7 +4,7 @@ using UnityEngine;
 // Token: 0x0200012E RID: 302
 public class KinematicWhenTargetInactive : MonoBehaviour
 {
-	// Token: 0x060007E7 RID: 2023 RVA: 0x00031E64 File Offset: 0x00030064
+	// Token: 0x060007E8 RID: 2024 RVA: 0x00031CA4 File Offset: 0x0002FEA4
 	private void LateUpdate()
 	{
 		if (!this.target.activeSelf)

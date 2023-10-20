@@ -3,11 +3,11 @@ using System.Runtime.InteropServices;
 
 namespace emotitron.Compression.Utilities
 {
-	// Token: 0x02000346 RID: 838
+	// Token: 0x02000348 RID: 840
 	[StructLayout(LayoutKind.Explicit)]
 	public struct ByteConverter
 	{
-		// Token: 0x1700018F RID: 399
+		// Token: 0x17000191 RID: 401
 		public byte this[int index]
 		{
 			get
@@ -36,7 +36,7 @@ namespace emotitron.Compression.Utilities
 			}
 		}
 
-		// Token: 0x06001818 RID: 6168 RVA: 0x00081F18 File Offset: 0x00080118
+		// Token: 0x06001821 RID: 6177 RVA: 0x00082400 File Offset: 0x00080600
 		public static implicit operator ByteConverter(byte[] bytes)
 		{
 			ByteConverter result = default(ByteConverter);
@@ -73,7 +73,7 @@ namespace emotitron.Compression.Utilities
 			return result;
 		}
 
-		// Token: 0x06001819 RID: 6169 RVA: 0x00081F9C File Offset: 0x0008019C
+		// Token: 0x06001822 RID: 6178 RVA: 0x00082484 File Offset: 0x00080684
 		public static implicit operator ByteConverter(byte val)
 		{
 			return new ByteConverter
@@ -82,7 +82,7 @@ namespace emotitron.Compression.Utilities
 			};
 		}
 
-		// Token: 0x0600181A RID: 6170 RVA: 0x00081FBC File Offset: 0x000801BC
+		// Token: 0x06001823 RID: 6179 RVA: 0x000824A4 File Offset: 0x000806A4
 		public static implicit operator ByteConverter(sbyte val)
 		{
 			return new ByteConverter
@@ -91,7 +91,7 @@ namespace emotitron.Compression.Utilities
 			};
 		}
 
-		// Token: 0x0600181B RID: 6171 RVA: 0x00081FDC File Offset: 0x000801DC
+		// Token: 0x06001824 RID: 6180 RVA: 0x000824C4 File Offset: 0x000806C4
 		public static implicit operator ByteConverter(char val)
 		{
 			return new ByteConverter
@@ -100,7 +100,7 @@ namespace emotitron.Compression.Utilities
 			};
 		}
 
-		// Token: 0x0600181C RID: 6172 RVA: 0x00081FFC File Offset: 0x000801FC
+		// Token: 0x06001825 RID: 6181 RVA: 0x000824E4 File Offset: 0x000806E4
 		public static implicit operator ByteConverter(uint val)
 		{
 			return new ByteConverter
@@ -109,7 +109,7 @@ namespace emotitron.Compression.Utilities
 			};
 		}
 
-		// Token: 0x0600181D RID: 6173 RVA: 0x0008201C File Offset: 0x0008021C
+		// Token: 0x06001826 RID: 6182 RVA: 0x00082504 File Offset: 0x00080704
 		public static implicit operator ByteConverter(int val)
 		{
 			return new ByteConverter
@@ -118,7 +118,7 @@ namespace emotitron.Compression.Utilities
 			};
 		}
 
-		// Token: 0x0600181E RID: 6174 RVA: 0x0008203C File Offset: 0x0008023C
+		// Token: 0x06001827 RID: 6183 RVA: 0x00082524 File Offset: 0x00080724
 		public static implicit operator ByteConverter(ulong val)
 		{
 			return new ByteConverter
@@ -127,7 +127,7 @@ namespace emotitron.Compression.Utilities
 			};
 		}
 
-		// Token: 0x0600181F RID: 6175 RVA: 0x0008205C File Offset: 0x0008025C
+		// Token: 0x06001828 RID: 6184 RVA: 0x00082544 File Offset: 0x00080744
 		public static implicit operator ByteConverter(long val)
 		{
 			return new ByteConverter
@@ -136,7 +136,7 @@ namespace emotitron.Compression.Utilities
 			};
 		}
 
-		// Token: 0x06001820 RID: 6176 RVA: 0x0008207C File Offset: 0x0008027C
+		// Token: 0x06001829 RID: 6185 RVA: 0x00082564 File Offset: 0x00080764
 		public static implicit operator ByteConverter(float val)
 		{
 			return new ByteConverter
@@ -145,7 +145,7 @@ namespace emotitron.Compression.Utilities
 			};
 		}
 
-		// Token: 0x06001821 RID: 6177 RVA: 0x0008209C File Offset: 0x0008029C
+		// Token: 0x0600182A RID: 6186 RVA: 0x00082584 File Offset: 0x00080784
 		public static implicit operator ByteConverter(double val)
 		{
 			return new ByteConverter
@@ -154,7 +154,7 @@ namespace emotitron.Compression.Utilities
 			};
 		}
 
-		// Token: 0x06001822 RID: 6178 RVA: 0x000820BC File Offset: 0x000802BC
+		// Token: 0x0600182B RID: 6187 RVA: 0x000825A4 File Offset: 0x000807A4
 		public static implicit operator ByteConverter(bool val)
 		{
 			return new ByteConverter
@@ -163,7 +163,7 @@ namespace emotitron.Compression.Utilities
 			};
 		}
 
-		// Token: 0x06001823 RID: 6179 RVA: 0x000820E0 File Offset: 0x000802E0
+		// Token: 0x0600182C RID: 6188 RVA: 0x000825C8 File Offset: 0x000807C8
 		public void ExtractByteArray(byte[] targetArray)
 		{
 			int num = targetArray.Length;
@@ -198,151 +198,151 @@ namespace emotitron.Compression.Utilities
 			}
 		}
 
-		// Token: 0x06001824 RID: 6180 RVA: 0x00082153 File Offset: 0x00080353
+		// Token: 0x0600182D RID: 6189 RVA: 0x0008263B File Offset: 0x0008083B
 		public static implicit operator byte(ByteConverter bc)
 		{
 			return bc.byte0;
 		}
 
-		// Token: 0x06001825 RID: 6181 RVA: 0x0008215B File Offset: 0x0008035B
+		// Token: 0x0600182E RID: 6190 RVA: 0x00082643 File Offset: 0x00080843
 		public static implicit operator sbyte(ByteConverter bc)
 		{
 			return bc.int8;
 		}
 
-		// Token: 0x06001826 RID: 6182 RVA: 0x00082163 File Offset: 0x00080363
+		// Token: 0x0600182F RID: 6191 RVA: 0x0008264B File Offset: 0x0008084B
 		public static implicit operator char(ByteConverter bc)
 		{
 			return bc.character;
 		}
 
-		// Token: 0x06001827 RID: 6183 RVA: 0x0008216B File Offset: 0x0008036B
+		// Token: 0x06001830 RID: 6192 RVA: 0x00082653 File Offset: 0x00080853
 		public static implicit operator ushort(ByteConverter bc)
 		{
 			return bc.uint16;
 		}
 
-		// Token: 0x06001828 RID: 6184 RVA: 0x00082173 File Offset: 0x00080373
+		// Token: 0x06001831 RID: 6193 RVA: 0x0008265B File Offset: 0x0008085B
 		public static implicit operator short(ByteConverter bc)
 		{
 			return bc.int16;
 		}
 
-		// Token: 0x06001829 RID: 6185 RVA: 0x0008217B File Offset: 0x0008037B
+		// Token: 0x06001832 RID: 6194 RVA: 0x00082663 File Offset: 0x00080863
 		public static implicit operator uint(ByteConverter bc)
 		{
 			return bc.uint32;
 		}
 
-		// Token: 0x0600182A RID: 6186 RVA: 0x00082183 File Offset: 0x00080383
+		// Token: 0x06001833 RID: 6195 RVA: 0x0008266B File Offset: 0x0008086B
 		public static implicit operator int(ByteConverter bc)
 		{
 			return bc.int32;
 		}
 
-		// Token: 0x0600182B RID: 6187 RVA: 0x0008218B File Offset: 0x0008038B
+		// Token: 0x06001834 RID: 6196 RVA: 0x00082673 File Offset: 0x00080873
 		public static implicit operator ulong(ByteConverter bc)
 		{
 			return bc.uint64;
 		}
 
-		// Token: 0x0600182C RID: 6188 RVA: 0x00082193 File Offset: 0x00080393
+		// Token: 0x06001835 RID: 6197 RVA: 0x0008267B File Offset: 0x0008087B
 		public static implicit operator long(ByteConverter bc)
 		{
 			return bc.int64;
 		}
 
-		// Token: 0x0600182D RID: 6189 RVA: 0x0008219B File Offset: 0x0008039B
+		// Token: 0x06001836 RID: 6198 RVA: 0x00082683 File Offset: 0x00080883
 		public static implicit operator float(ByteConverter bc)
 		{
 			return bc.float32;
 		}
 
-		// Token: 0x0600182E RID: 6190 RVA: 0x000821A3 File Offset: 0x000803A3
+		// Token: 0x06001837 RID: 6199 RVA: 0x0008268B File Offset: 0x0008088B
 		public static implicit operator double(ByteConverter bc)
 		{
 			return bc.float64;
 		}
 
-		// Token: 0x0600182F RID: 6191 RVA: 0x000821AB File Offset: 0x000803AB
+		// Token: 0x06001838 RID: 6200 RVA: 0x00082693 File Offset: 0x00080893
 		public static implicit operator bool(ByteConverter bc)
 		{
 			return bc.int32 != 0;
 		}
 
-		// Token: 0x0400192E RID: 6446
+		// Token: 0x0400193B RID: 6459
 		[FieldOffset(0)]
 		public float float32;
 
-		// Token: 0x0400192F RID: 6447
+		// Token: 0x0400193C RID: 6460
 		[FieldOffset(0)]
 		public double float64;
 
-		// Token: 0x04001930 RID: 6448
+		// Token: 0x0400193D RID: 6461
 		[FieldOffset(0)]
 		public sbyte int8;
 
-		// Token: 0x04001931 RID: 6449
+		// Token: 0x0400193E RID: 6462
 		[FieldOffset(0)]
 		public short int16;
 
-		// Token: 0x04001932 RID: 6450
+		// Token: 0x0400193F RID: 6463
 		[FieldOffset(0)]
 		public ushort uint16;
 
-		// Token: 0x04001933 RID: 6451
+		// Token: 0x04001940 RID: 6464
 		[FieldOffset(0)]
 		public char character;
 
-		// Token: 0x04001934 RID: 6452
+		// Token: 0x04001941 RID: 6465
 		[FieldOffset(0)]
 		public int int32;
 
-		// Token: 0x04001935 RID: 6453
+		// Token: 0x04001942 RID: 6466
 		[FieldOffset(0)]
 		public uint uint32;
 
-		// Token: 0x04001936 RID: 6454
+		// Token: 0x04001943 RID: 6467
 		[FieldOffset(0)]
 		public long int64;
 
-		// Token: 0x04001937 RID: 6455
+		// Token: 0x04001944 RID: 6468
 		[FieldOffset(0)]
 		public ulong uint64;
 
-		// Token: 0x04001938 RID: 6456
+		// Token: 0x04001945 RID: 6469
 		[FieldOffset(0)]
 		public byte byte0;
 
-		// Token: 0x04001939 RID: 6457
+		// Token: 0x04001946 RID: 6470
 		[FieldOffset(1)]
 		public byte byte1;
 
-		// Token: 0x0400193A RID: 6458
+		// Token: 0x04001947 RID: 6471
 		[FieldOffset(2)]
 		public byte byte2;
 
-		// Token: 0x0400193B RID: 6459
+		// Token: 0x04001948 RID: 6472
 		[FieldOffset(3)]
 		public byte byte3;
 
-		// Token: 0x0400193C RID: 6460
+		// Token: 0x04001949 RID: 6473
 		[FieldOffset(4)]
 		public byte byte4;
 
-		// Token: 0x0400193D RID: 6461
+		// Token: 0x0400194A RID: 6474
 		[FieldOffset(5)]
 		public byte byte5;
 
-		// Token: 0x0400193E RID: 6462
+		// Token: 0x0400194B RID: 6475
 		[FieldOffset(6)]
 		public byte byte6;
 
-		// Token: 0x0400193F RID: 6463
+		// Token: 0x0400194C RID: 6476
 		[FieldOffset(7)]
 		public byte byte7;
 
-		// Token: 0x04001940 RID: 6464
+		// Token: 0x0400194D RID: 6477
 		[FieldOffset(4)]
 		public uint uint16_B;
 	}

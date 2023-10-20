@@ -3,10 +3,10 @@ using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
 
-// Token: 0x02000165 RID: 357
+// Token: 0x02000166 RID: 358
 public class GorillaBallManager : GorillaGameManager, IInRoomCallbacks, IMatchmakingCallbacks
 {
-	// Token: 0x060008DE RID: 2270 RVA: 0x00035F0B File Offset: 0x0003410B
+	// Token: 0x060008E2 RID: 2274 RVA: 0x00035E0C File Offset: 0x0003400C
 	public override void Awake()
 	{
 		base.Awake();
@@ -17,6 +17,6 @@ public class GorillaBallManager : GorillaGameManager, IInRoomCallbacks, IMatchma
 		Debug.Log(PhotonNetwork.CurrentRoom.ToStringFull());
 	}
 
-	// Token: 0x04000AEB RID: 2795
+	// Token: 0x04000AEF RID: 2799
 	public Vector3 ballAnchor;
 }

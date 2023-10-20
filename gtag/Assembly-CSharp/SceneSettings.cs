@@ -4,7 +4,7 @@ using UnityEngine;
 // Token: 0x020000CB RID: 203
 public class SceneSettings : MonoBehaviour
 {
-	// Token: 0x06000483 RID: 1155 RVA: 0x0001CEDB File Offset: 0x0001B0DB
+	// Token: 0x06000483 RID: 1155 RVA: 0x0001CCB7 File Offset: 0x0001AEB7
 	private void Awake()
 	{
 		Time.fixedDeltaTime = this.m_fixedTimeStep;
@@ -12,13 +12,13 @@ public class SceneSettings : MonoBehaviour
 		Physics.defaultContactOffset = this.m_defaultContactOffset;
 	}
 
-	// Token: 0x06000484 RID: 1156 RVA: 0x0001CF12 File Offset: 0x0001B112
+	// Token: 0x06000484 RID: 1156 RVA: 0x0001CCEE File Offset: 0x0001AEEE
 	private void Start()
 	{
 		SceneSettings.CollidersSetContactOffset(this.m_defaultContactOffset);
 	}
 
-	// Token: 0x06000485 RID: 1157 RVA: 0x0001CF20 File Offset: 0x0001B120
+	// Token: 0x06000485 RID: 1157 RVA: 0x0001CCFC File Offset: 0x0001AEFC
 	private static void CollidersSetContactOffset(float contactOffset)
 	{
 		Collider[] array = Object.FindObjectsOfType<Collider>();

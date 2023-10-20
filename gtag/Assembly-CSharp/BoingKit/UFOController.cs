@@ -3,10 +3,10 @@ using UnityEngine;
 
 namespace BoingKit
 {
-	// Token: 0x02000360 RID: 864
+	// Token: 0x02000362 RID: 866
 	public class UFOController : MonoBehaviour
 	{
-		// Token: 0x0600192B RID: 6443 RVA: 0x0008ADAC File Offset: 0x00088FAC
+		// Token: 0x06001934 RID: 6452 RVA: 0x0008B294 File Offset: 0x00089494
 		private void Start()
 		{
 			this.m_linearVelocity = Vector3.zero;
@@ -26,13 +26,13 @@ namespace BoingKit
 			}
 		}
 
-		// Token: 0x0600192C RID: 6444 RVA: 0x0008AE8F File Offset: 0x0008908F
+		// Token: 0x06001935 RID: 6453 RVA: 0x0008B377 File Offset: 0x00089577
 		private void OnEnable()
 		{
 			this.Start();
 		}
 
-		// Token: 0x0600192D RID: 6445 RVA: 0x0008AE98 File Offset: 0x00089098
+		// Token: 0x06001936 RID: 6454 RVA: 0x0008B380 File Offset: 0x00089580
 		private void FixedUpdate()
 		{
 			float fixedDeltaTime = Time.fixedDeltaTime;
@@ -141,89 +141,89 @@ namespace BoingKit
 			}
 		}
 
-		// Token: 0x040019D4 RID: 6612
+		// Token: 0x040019E1 RID: 6625
 		public float LinearThrust = 3f;
 
-		// Token: 0x040019D5 RID: 6613
+		// Token: 0x040019E2 RID: 6626
 		public float MaxLinearSpeed = 2.5f;
 
-		// Token: 0x040019D6 RID: 6614
+		// Token: 0x040019E3 RID: 6627
 		public float LinearDrag = 4f;
 
-		// Token: 0x040019D7 RID: 6615
+		// Token: 0x040019E4 RID: 6628
 		public float Tilt = 15f;
 
-		// Token: 0x040019D8 RID: 6616
+		// Token: 0x040019E5 RID: 6629
 		public float AngularThrust = 30f;
 
-		// Token: 0x040019D9 RID: 6617
+		// Token: 0x040019E6 RID: 6630
 		public float MaxAngularSpeed = 30f;
 
-		// Token: 0x040019DA RID: 6618
+		// Token: 0x040019E7 RID: 6631
 		public float AngularDrag = 30f;
 
-		// Token: 0x040019DB RID: 6619
+		// Token: 0x040019E8 RID: 6632
 		[Range(0f, 1f)]
 		public float Hover = 1f;
 
-		// Token: 0x040019DC RID: 6620
+		// Token: 0x040019E9 RID: 6633
 		public Transform Eyes;
 
-		// Token: 0x040019DD RID: 6621
+		// Token: 0x040019EA RID: 6634
 		public float BlinkInterval = 5f;
 
-		// Token: 0x040019DE RID: 6622
+		// Token: 0x040019EB RID: 6635
 		private float m_blinkTimer;
 
-		// Token: 0x040019DF RID: 6623
+		// Token: 0x040019EC RID: 6636
 		private bool m_lastBlinkWasDouble;
 
-		// Token: 0x040019E0 RID: 6624
+		// Token: 0x040019ED RID: 6637
 		private Vector3 m_eyeInitScale;
 
-		// Token: 0x040019E1 RID: 6625
+		// Token: 0x040019EE RID: 6638
 		private Vector3 m_eyeInitPositionLs;
 
-		// Token: 0x040019E2 RID: 6626
+		// Token: 0x040019EF RID: 6639
 		private Vector3Spring m_eyeScaleSpring;
 
-		// Token: 0x040019E3 RID: 6627
+		// Token: 0x040019F0 RID: 6640
 		private Vector3Spring m_eyePositionLsSpring;
 
-		// Token: 0x040019E4 RID: 6628
+		// Token: 0x040019F1 RID: 6641
 		public Transform Motor;
 
-		// Token: 0x040019E5 RID: 6629
+		// Token: 0x040019F2 RID: 6642
 		public float MotorBaseAngularSpeed = 10f;
 
-		// Token: 0x040019E6 RID: 6630
+		// Token: 0x040019F3 RID: 6643
 		public float MotorMaxAngularSpeed = 10f;
 
-		// Token: 0x040019E7 RID: 6631
+		// Token: 0x040019F4 RID: 6644
 		public ParticleSystem BubbleEmitter;
 
-		// Token: 0x040019E8 RID: 6632
+		// Token: 0x040019F5 RID: 6645
 		public float BubbleBaseEmissionRate = 10f;
 
-		// Token: 0x040019E9 RID: 6633
+		// Token: 0x040019F6 RID: 6646
 		public float BubbleMaxEmissionRate = 10f;
 
-		// Token: 0x040019EA RID: 6634
+		// Token: 0x040019F7 RID: 6647
 		private Vector3 m_linearVelocity;
 
-		// Token: 0x040019EB RID: 6635
+		// Token: 0x040019F8 RID: 6648
 		private float m_angularVelocity;
 
-		// Token: 0x040019EC RID: 6636
+		// Token: 0x040019F9 RID: 6649
 		private float m_yawAngle;
 
-		// Token: 0x040019ED RID: 6637
+		// Token: 0x040019FA RID: 6650
 		private Vector3 m_hoverCenter;
 
-		// Token: 0x040019EE RID: 6638
+		// Token: 0x040019FB RID: 6651
 		private float m_hoverPhase;
 
-		// Token: 0x040019EF RID: 6639
+		// Token: 0x040019FC RID: 6652
 		private float m_motorAngle;
 	}
 }

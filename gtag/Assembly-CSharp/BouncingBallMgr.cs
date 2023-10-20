@@ -4,7 +4,7 @@ using UnityEngine;
 // Token: 0x020000BD RID: 189
 public class BouncingBallMgr : MonoBehaviour
 {
-	// Token: 0x06000428 RID: 1064 RVA: 0x0001B5D4 File Offset: 0x000197D4
+	// Token: 0x06000428 RID: 1064 RVA: 0x0001B3B0 File Offset: 0x000195B0
 	private void Update()
 	{
 		if (!this.ballGrabbed && OVRInput.GetDown(this.actionBtn, OVRInput.Controller.Active))

@@ -6,7 +6,7 @@ using UnityEngine;
 [RequireComponent(typeof(OVRSceneAnchor))]
 public class VolumeAndPlaneSwitcher : MonoBehaviour
 {
-	// Token: 0x0600044A RID: 1098 RVA: 0x0001BEB8 File Offset: 0x0001A0B8
+	// Token: 0x0600044A RID: 1098 RVA: 0x0001BC94 File Offset: 0x00019E94
 	private void ReplaceAnchor(OVRSceneAnchor prefab, Vector3 position, Quaternion rotation, Vector3 localScale)
 	{
 		OVRSceneAnchor ovrsceneAnchor = Object.Instantiate<OVRSceneAnchor>(prefab, base.transform.parent);
@@ -20,7 +20,7 @@ public class VolumeAndPlaneSwitcher : MonoBehaviour
 		Object.Destroy(base.gameObject);
 	}
 
-	// Token: 0x0600044B RID: 1099 RVA: 0x0001BF4C File Offset: 0x0001A14C
+	// Token: 0x0600044B RID: 1099 RVA: 0x0001BD28 File Offset: 0x00019F28
 	private void Start()
 	{
 		OVRSemanticClassification component = base.GetComponent<OVRSemanticClassification>();
@@ -74,7 +74,7 @@ public class VolumeAndPlaneSwitcher : MonoBehaviour
 		Object.Destroy(this);
 	}
 
-	// Token: 0x0600044C RID: 1100 RVA: 0x0001C158 File Offset: 0x0001A358
+	// Token: 0x0600044C RID: 1100 RVA: 0x0001BF34 File Offset: 0x0001A134
 	private void GetVolumeFromTopPlane(Transform plane, Vector2 dimensions, float height, out Vector3 position, out Quaternion rotation, out Vector3 localScale)
 	{
 		position = plane.position;
@@ -82,7 +82,7 @@ public class VolumeAndPlaneSwitcher : MonoBehaviour
 		localScale = new Vector3(dimensions.x, dimensions.y, height);
 	}
 
-	// Token: 0x0600044D RID: 1101 RVA: 0x0001C190 File Offset: 0x0001A390
+	// Token: 0x0600044D RID: 1101 RVA: 0x0001BF6C File Offset: 0x0001A16C
 	private void GetTopPlaneFromVolume(Transform volume, Vector3 dimensions, out Vector3 position, out Quaternion rotation, out Vector3 localScale)
 	{
 		float d = dimensions.y / 2f;
@@ -100,23 +100,23 @@ public class VolumeAndPlaneSwitcher : MonoBehaviour
 	// Token: 0x040004F9 RID: 1273
 	public List<VolumeAndPlaneSwitcher.LabelGeometryPair> desiredSwitches;
 
-	// Token: 0x020003DA RID: 986
+	// Token: 0x020003DC RID: 988
 	public enum GeometryType
 	{
-		// Token: 0x04001C39 RID: 7225
+		// Token: 0x04001C46 RID: 7238
 		Plane,
-		// Token: 0x04001C3A RID: 7226
+		// Token: 0x04001C47 RID: 7239
 		Volume
 	}
 
-	// Token: 0x020003DB RID: 987
+	// Token: 0x020003DD RID: 989
 	[Serializable]
 	public struct LabelGeometryPair
 	{
-		// Token: 0x04001C3B RID: 7227
+		// Token: 0x04001C48 RID: 7240
 		public string label;
 
-		// Token: 0x04001C3C RID: 7228
+		// Token: 0x04001C49 RID: 7241
 		public VolumeAndPlaneSwitcher.GeometryType desiredGeometryType;
 	}
 }

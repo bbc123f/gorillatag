@@ -5,13 +5,13 @@ using UnityEngine.Serialization;
 // Token: 0x02000071 RID: 113
 public class SpinParametricAnimation : MonoBehaviour
 {
-	// Token: 0x0600023A RID: 570 RVA: 0x0000F4EB File Offset: 0x0000D6EB
+	// Token: 0x0600023A RID: 570 RVA: 0x0000F2C7 File Offset: 0x0000D4C7
 	protected void OnEnable()
 	{
 		this.axis = this.axis.normalized;
 	}
 
-	// Token: 0x0600023B RID: 571 RVA: 0x0000F500 File Offset: 0x0000D700
+	// Token: 0x0600023B RID: 571 RVA: 0x0000F2DC File Offset: 0x0000D4DC
 	protected void LateUpdate()
 	{
 		Transform transform = base.transform;

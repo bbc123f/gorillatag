@@ -3,17 +3,17 @@ using UnityEngine;
 
 namespace GorillaTag.Cosmetics
 {
-	// Token: 0x02000331 RID: 817
+	// Token: 0x02000333 RID: 819
 	public class CompassNeedleRotator : MonoBehaviour
 	{
-		// Token: 0x060016B0 RID: 5808 RVA: 0x0007E35E File Offset: 0x0007C55E
+		// Token: 0x060016B9 RID: 5817 RVA: 0x0007E846 File Offset: 0x0007CA46
 		protected void OnEnable()
 		{
 			this.currentVelocity = 0f;
 			base.transform.localRotation = Quaternion.identity;
 		}
 
-		// Token: 0x060016B1 RID: 5809 RVA: 0x0007E37C File Offset: 0x0007C57C
+		// Token: 0x060016BA RID: 5818 RVA: 0x0007E864 File Offset: 0x0007CA64
 		protected void LateUpdate()
 		{
 			Transform transform = base.transform;
@@ -24,10 +24,10 @@ namespace GorillaTag.Cosmetics
 			transform.Rotate(transform.up, angle, Space.World);
 		}
 
-		// Token: 0x040018D8 RID: 6360
+		// Token: 0x040018E5 RID: 6373
 		private const float smoothTime = 0.005f;
 
-		// Token: 0x040018D9 RID: 6361
+		// Token: 0x040018E6 RID: 6374
 		private float currentVelocity;
 	}
 }

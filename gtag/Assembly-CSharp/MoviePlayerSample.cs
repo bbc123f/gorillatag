@@ -7,21 +7,21 @@ using UnityEngine.Video;
 public class MoviePlayerSample : MonoBehaviour
 {
 	// Token: 0x17000030 RID: 48
-	// (get) Token: 0x06000360 RID: 864 RVA: 0x00014AE6 File Offset: 0x00012CE6
-	// (set) Token: 0x06000361 RID: 865 RVA: 0x00014AEE File Offset: 0x00012CEE
+	// (get) Token: 0x06000360 RID: 864 RVA: 0x000148C2 File Offset: 0x00012AC2
+	// (set) Token: 0x06000361 RID: 865 RVA: 0x000148CA File Offset: 0x00012ACA
 	public bool IsPlaying { get; private set; }
 
 	// Token: 0x17000031 RID: 49
-	// (get) Token: 0x06000362 RID: 866 RVA: 0x00014AF7 File Offset: 0x00012CF7
-	// (set) Token: 0x06000363 RID: 867 RVA: 0x00014AFF File Offset: 0x00012CFF
+	// (get) Token: 0x06000362 RID: 866 RVA: 0x000148D3 File Offset: 0x00012AD3
+	// (set) Token: 0x06000363 RID: 867 RVA: 0x000148DB File Offset: 0x00012ADB
 	public long Duration { get; private set; }
 
 	// Token: 0x17000032 RID: 50
-	// (get) Token: 0x06000364 RID: 868 RVA: 0x00014B08 File Offset: 0x00012D08
-	// (set) Token: 0x06000365 RID: 869 RVA: 0x00014B10 File Offset: 0x00012D10
+	// (get) Token: 0x06000364 RID: 868 RVA: 0x000148E4 File Offset: 0x00012AE4
+	// (set) Token: 0x06000365 RID: 869 RVA: 0x000148EC File Offset: 0x00012AEC
 	public long PlaybackPosition { get; private set; }
 
-	// Token: 0x06000366 RID: 870 RVA: 0x00014B1C File Offset: 0x00012D1C
+	// Token: 0x06000366 RID: 870 RVA: 0x000148F8 File Offset: 0x00012AF8
 	private void Awake()
 	{
 		Debug.Log("MovieSample Awake");
@@ -42,13 +42,13 @@ public class MoviePlayerSample : MonoBehaviour
 		this.overlay.enabled = (this.overlay.currentOverlayShape != OVROverlay.OverlayShape.Equirect || Application.platform == RuntimePlatform.Android);
 	}
 
-	// Token: 0x06000367 RID: 871 RVA: 0x00014BE7 File Offset: 0x00012DE7
+	// Token: 0x06000367 RID: 871 RVA: 0x000149C3 File Offset: 0x00012BC3
 	private bool IsLocalVideo(string movieName)
 	{
 		return !movieName.Contains("://");
 	}
 
-	// Token: 0x06000368 RID: 872 RVA: 0x00014BF8 File Offset: 0x00012DF8
+	// Token: 0x06000368 RID: 872 RVA: 0x000149D4 File Offset: 0x00012BD4
 	private void UpdateShapeAndStereo()
 	{
 		if (this.AutoDetectStereoLayout && this.overlay.isExternalSurface)
@@ -119,7 +119,7 @@ public class MoviePlayerSample : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000369 RID: 873 RVA: 0x00014E74 File Offset: 0x00013074
+	// Token: 0x06000369 RID: 873 RVA: 0x00014C50 File Offset: 0x00012E50
 	private IEnumerator Start()
 	{
 		if (this.mediaRenderer.material == null)
@@ -142,7 +142,7 @@ public class MoviePlayerSample : MonoBehaviour
 		yield break;
 	}
 
-	// Token: 0x0600036A RID: 874 RVA: 0x00014E84 File Offset: 0x00013084
+	// Token: 0x0600036A RID: 874 RVA: 0x00014C60 File Offset: 0x00012E60
 	public void Play(string moviePath, string drmLicencesUrl)
 	{
 		if (moviePath != string.Empty)
@@ -179,7 +179,7 @@ public class MoviePlayerSample : MonoBehaviour
 		Debug.LogError("No media file name provided");
 	}
 
-	// Token: 0x0600036B RID: 875 RVA: 0x00014F6A File Offset: 0x0001316A
+	// Token: 0x0600036B RID: 875 RVA: 0x00014D46 File Offset: 0x00012F46
 	public void Play()
 	{
 		if (this.overlay.isExternalSurface)
@@ -193,7 +193,7 @@ public class MoviePlayerSample : MonoBehaviour
 		this.IsPlaying = true;
 	}
 
-	// Token: 0x0600036C RID: 876 RVA: 0x00014F92 File Offset: 0x00013192
+	// Token: 0x0600036C RID: 876 RVA: 0x00014D6E File Offset: 0x00012F6E
 	public void Pause()
 	{
 		if (this.overlay.isExternalSurface)
@@ -207,7 +207,7 @@ public class MoviePlayerSample : MonoBehaviour
 		this.IsPlaying = false;
 	}
 
-	// Token: 0x0600036D RID: 877 RVA: 0x00014FBC File Offset: 0x000131BC
+	// Token: 0x0600036D RID: 877 RVA: 0x00014D98 File Offset: 0x00012F98
 	public void SeekTo(long position)
 	{
 		long num = Math.Max(0L, Math.Min(this.Duration, position));
@@ -219,7 +219,7 @@ public class MoviePlayerSample : MonoBehaviour
 		this.videoPlayer.time = (double)num / 1000.0;
 	}
 
-	// Token: 0x0600036E RID: 878 RVA: 0x00015008 File Offset: 0x00013208
+	// Token: 0x0600036E RID: 878 RVA: 0x00014DE4 File Offset: 0x00012FE4
 	private void Update()
 	{
 		this.UpdateShapeAndStereo();
@@ -261,7 +261,7 @@ public class MoviePlayerSample : MonoBehaviour
 		}
 	}
 
-	// Token: 0x0600036F RID: 879 RVA: 0x000151C5 File Offset: 0x000133C5
+	// Token: 0x0600036F RID: 879 RVA: 0x00014FA1 File Offset: 0x000131A1
 	public void SetPlaybackSpeed(float speed)
 	{
 		speed = Mathf.Max(0f, speed);
@@ -273,7 +273,7 @@ public class MoviePlayerSample : MonoBehaviour
 		this.videoPlayer.playbackSpeed = speed;
 	}
 
-	// Token: 0x06000370 RID: 880 RVA: 0x000151F4 File Offset: 0x000133F4
+	// Token: 0x06000370 RID: 880 RVA: 0x00014FD0 File Offset: 0x000131D0
 	public void Stop()
 	{
 		if (this.overlay.isExternalSurface)
@@ -287,7 +287,7 @@ public class MoviePlayerSample : MonoBehaviour
 		this.IsPlaying = false;
 	}
 
-	// Token: 0x06000371 RID: 881 RVA: 0x0001521C File Offset: 0x0001341C
+	// Token: 0x06000371 RID: 881 RVA: 0x00014FF8 File Offset: 0x000131F8
 	private void OnApplicationPause(bool appWasPaused)
 	{
 		Debug.Log("OnApplicationPause: " + appWasPaused.ToString());
@@ -354,27 +354,27 @@ public class MoviePlayerSample : MonoBehaviour
 	// Token: 0x04000414 RID: 1044
 	private bool _LastDisplayMono;
 
-	// Token: 0x020003C5 RID: 965
+	// Token: 0x020003C7 RID: 967
 	public enum VideoShape
 	{
-		// Token: 0x04001BDA RID: 7130
+		// Token: 0x04001BE7 RID: 7143
 		_360,
-		// Token: 0x04001BDB RID: 7131
+		// Token: 0x04001BE8 RID: 7144
 		_180,
-		// Token: 0x04001BDC RID: 7132
+		// Token: 0x04001BE9 RID: 7145
 		Quad
 	}
 
-	// Token: 0x020003C6 RID: 966
+	// Token: 0x020003C8 RID: 968
 	public enum VideoStereo
 	{
-		// Token: 0x04001BDE RID: 7134
+		// Token: 0x04001BEB RID: 7147
 		Mono,
-		// Token: 0x04001BDF RID: 7135
+		// Token: 0x04001BEC RID: 7148
 		TopBottom,
-		// Token: 0x04001BE0 RID: 7136
+		// Token: 0x04001BED RID: 7149
 		LeftRight,
-		// Token: 0x04001BE1 RID: 7137
+		// Token: 0x04001BEE RID: 7150
 		BottomTop
 	}
 }

@@ -5,7 +5,7 @@ using UnityEngine;
 // Token: 0x02000125 RID: 293
 public class SmoothLoop : MonoBehaviour
 {
-	// Token: 0x060007B6 RID: 1974 RVA: 0x00031144 File Offset: 0x0002F344
+	// Token: 0x060007B7 RID: 1975 RVA: 0x00030F84 File Offset: 0x0002F184
 	private void Start()
 	{
 		if (this.delay != 0f && !this.randomStart)
@@ -24,7 +24,7 @@ public class SmoothLoop : MonoBehaviour
 		}
 	}
 
-	// Token: 0x060007B7 RID: 1975 RVA: 0x000311C4 File Offset: 0x0002F3C4
+	// Token: 0x060007B8 RID: 1976 RVA: 0x00031004 File Offset: 0x0002F204
 	private void Update()
 	{
 		if (this.source.time > this.source.clip.length * 0.95f)
@@ -33,7 +33,7 @@ public class SmoothLoop : MonoBehaviour
 		}
 	}
 
-	// Token: 0x060007B8 RID: 1976 RVA: 0x000311FC File Offset: 0x0002F3FC
+	// Token: 0x060007B9 RID: 1977 RVA: 0x0003103C File Offset: 0x0002F23C
 	private void OnEnable()
 	{
 		if (this.randomStart)
@@ -46,7 +46,7 @@ public class SmoothLoop : MonoBehaviour
 		}
 	}
 
-	// Token: 0x060007B9 RID: 1977 RVA: 0x0003124E File Offset: 0x0002F44E
+	// Token: 0x060007BA RID: 1978 RVA: 0x0003108E File Offset: 0x0002F28E
 	public IEnumerator DelayedStart()
 	{
 		yield return new WaitForSeconds(this.delay);

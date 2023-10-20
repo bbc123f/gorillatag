@@ -1,40 +1,40 @@
 ﻿using System;
 
-// Token: 0x0200023A RID: 570
+// Token: 0x0200023B RID: 571
 public enum GTBlendMode
 {
-	// Token: 0x0400112F RID: 4399
-	Normal,
-	// Token: 0x04001130 RID: 4400
-	Darken,
-	// Token: 0x04001131 RID: 4401
-	Multiply,
-	// Token: 0x04001132 RID: 4402
-	ColorBurn,
-	// Token: 0x04001133 RID: 4403
-	LinearBurn,
-	// Token: 0x04001134 RID: 4404
-	Lighten,
 	// Token: 0x04001135 RID: 4405
-	Screen,
+	Normal,
 	// Token: 0x04001136 RID: 4406
-	ColorDodge,
+	Darken,
 	// Token: 0x04001137 RID: 4407
-	LinearDodge,
+	Multiply,
 	// Token: 0x04001138 RID: 4408
-	Overlay,
+	ColorBurn,
 	// Token: 0x04001139 RID: 4409
-	SoftLight,
+	LinearBurn,
 	// Token: 0x0400113A RID: 4410
-	HardLight,
+	Lighten,
 	// Token: 0x0400113B RID: 4411
-	VividLight,
+	Screen,
 	// Token: 0x0400113C RID: 4412
-	LinearLight,
+	ColorDodge,
 	// Token: 0x0400113D RID: 4413
-	PinLight,
+	LinearDodge,
 	// Token: 0x0400113E RID: 4414
-	Difference,
+	Overlay,
 	// Token: 0x0400113F RID: 4415
+	SoftLight,
+	// Token: 0x04001140 RID: 4416
+	HardLight,
+	// Token: 0x04001141 RID: 4417
+	VividLight,
+	// Token: 0x04001142 RID: 4418
+	LinearLight,
+	// Token: 0x04001143 RID: 4419
+	PinLight,
+	// Token: 0x04001144 RID: 4420
+	Difference,
+	// Token: 0x04001145 RID: 4421
 	Exclusion
 }

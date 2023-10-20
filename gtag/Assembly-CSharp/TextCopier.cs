@@ -2,16 +2,16 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-// Token: 0x020001A5 RID: 421
+// Token: 0x020001A6 RID: 422
 public class TextCopier : MonoBehaviour
 {
-	// Token: 0x06000AD7 RID: 2775 RVA: 0x000432DB File Offset: 0x000414DB
+	// Token: 0x06000ADC RID: 2780 RVA: 0x00043413 File Offset: 0x00041613
 	private void Start()
 	{
 		this.myText = base.GetComponent<Text>();
 	}
 
-	// Token: 0x06000AD8 RID: 2776 RVA: 0x000432E9 File Offset: 0x000414E9
+	// Token: 0x06000ADD RID: 2781 RVA: 0x00043421 File Offset: 0x00041621
 	private void Update()
 	{
 		if (this.myText.text != this.textToCopy.text)
@@ -20,9 +20,9 @@ public class TextCopier : MonoBehaviour
 		}
 	}
 
-	// Token: 0x04000DA9 RID: 3497
+	// Token: 0x04000DAD RID: 3501
 	public Text textToCopy;
 
-	// Token: 0x04000DAA RID: 3498
+	// Token: 0x04000DAE RID: 3502
 	private Text myText;
 }

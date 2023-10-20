@@ -2,11 +2,11 @@
 using UnityEngine;
 using UnityEngine.Audio;
 
-// Token: 0x0200021D RID: 541
+// Token: 0x0200021E RID: 542
 public class SoundBankPlayer : MonoBehaviour
 {
-	// Token: 0x170000A0 RID: 160
-	// (get) Token: 0x06000D6E RID: 3438 RVA: 0x0004E3FB File Offset: 0x0004C5FB
+	// Token: 0x170000A2 RID: 162
+	// (get) Token: 0x06000D74 RID: 3444 RVA: 0x0004E65B File Offset: 0x0004C85B
 	public bool isPlaying
 	{
 		get
@@ -15,7 +15,7 @@ public class SoundBankPlayer : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000D6F RID: 3439 RVA: 0x0004E40C File Offset: 0x0004C60C
+	// Token: 0x06000D75 RID: 3445 RVA: 0x0004E66C File Offset: 0x0004C86C
 	protected void Awake()
 	{
 		if (this.audioSource == null)
@@ -78,7 +78,7 @@ public class SoundBankPlayer : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000D70 RID: 3440 RVA: 0x0004E708 File Offset: 0x0004C908
+	// Token: 0x06000D76 RID: 3446 RVA: 0x0004E968 File Offset: 0x0004CB68
 	protected void OnEnable()
 	{
 		if (this.playOnEnable)
@@ -87,7 +87,7 @@ public class SoundBankPlayer : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000D71 RID: 3441 RVA: 0x0004E738 File Offset: 0x0004C938
+	// Token: 0x06000D77 RID: 3447 RVA: 0x0004E998 File Offset: 0x0004CB98
 	public void Play(float? volumeOverride = null, float? pitchOverride = null)
 	{
 		if (this.soundBank.sounds.Length == 0)
@@ -102,84 +102,84 @@ public class SoundBankPlayer : MonoBehaviour
 		this.nextIndex = (this.nextIndex + 1) % this.playlist.Length;
 	}
 
-	// Token: 0x04001088 RID: 4232
+	// Token: 0x0400108D RID: 4237
 	[Tooltip("Optional. AudioSource Settings will be used if this is not defined.")]
 	public AudioSource audioSource;
 
-	// Token: 0x04001089 RID: 4233
+	// Token: 0x0400108E RID: 4238
 	public bool playOnEnable = true;
 
-	// Token: 0x0400108A RID: 4234
+	// Token: 0x0400108F RID: 4239
 	public bool shuffleOrder = true;
 
-	// Token: 0x0400108B RID: 4235
+	// Token: 0x04001090 RID: 4240
 	public SoundBankSO soundBank;
 
-	// Token: 0x0400108C RID: 4236
+	// Token: 0x04001091 RID: 4241
 	public AudioMixerGroup outputAudioMixerGroup;
 
-	// Token: 0x0400108D RID: 4237
+	// Token: 0x04001092 RID: 4242
 	public bool spatialize;
 
-	// Token: 0x0400108E RID: 4238
+	// Token: 0x04001093 RID: 4243
 	public bool spatializePostEffects;
 
-	// Token: 0x0400108F RID: 4239
+	// Token: 0x04001094 RID: 4244
 	public bool bypassEffects;
 
-	// Token: 0x04001090 RID: 4240
+	// Token: 0x04001095 RID: 4245
 	public bool bypassListenerEffects;
 
-	// Token: 0x04001091 RID: 4241
+	// Token: 0x04001096 RID: 4246
 	public bool bypassReverbZones;
 
-	// Token: 0x04001092 RID: 4242
+	// Token: 0x04001097 RID: 4247
 	public int priority = 128;
 
-	// Token: 0x04001093 RID: 4243
+	// Token: 0x04001098 RID: 4248
 	[Range(0f, 1f)]
 	public float spatialBlend = 1f;
 
-	// Token: 0x04001094 RID: 4244
+	// Token: 0x04001099 RID: 4249
 	public float reverbZoneMix = 1f;
 
-	// Token: 0x04001095 RID: 4245
+	// Token: 0x0400109A RID: 4250
 	public float dopplerLevel = 1f;
 
-	// Token: 0x04001096 RID: 4246
+	// Token: 0x0400109B RID: 4251
 	public float spread;
 
-	// Token: 0x04001097 RID: 4247
+	// Token: 0x0400109C RID: 4252
 	public AudioRolloffMode rolloffMode;
 
-	// Token: 0x04001098 RID: 4248
+	// Token: 0x0400109D RID: 4253
 	public float minDistance = 1f;
 
-	// Token: 0x04001099 RID: 4249
+	// Token: 0x0400109E RID: 4254
 	public float maxDistance = 100f;
 
-	// Token: 0x0400109A RID: 4250
+	// Token: 0x0400109F RID: 4255
 	public AnimationCurve customRolloffCurve = AnimationCurve.Linear(0f, 1f, 1f, 0f);
 
-	// Token: 0x0400109B RID: 4251
+	// Token: 0x040010A0 RID: 4256
 	private int nextIndex;
 
-	// Token: 0x0400109C RID: 4252
+	// Token: 0x040010A1 RID: 4257
 	private float playEndTime;
 
-	// Token: 0x0400109D RID: 4253
+	// Token: 0x040010A2 RID: 4258
 	private SoundBankPlayer.PlaylistEntry[] playlist;
 
-	// Token: 0x0200047A RID: 1146
+	// Token: 0x0200047C RID: 1148
 	private struct PlaylistEntry
 	{
-		// Token: 0x04001EA6 RID: 7846
+		// Token: 0x04001EB3 RID: 7859
 		public int index;
 
-		// Token: 0x04001EA7 RID: 7847
+		// Token: 0x04001EB4 RID: 7860
 		public float volume;
 
-		// Token: 0x04001EA8 RID: 7848
+		// Token: 0x04001EB5 RID: 7861
 		public float pitch;
 	}
 }

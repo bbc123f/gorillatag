@@ -4,7 +4,7 @@ using UnityEngine;
 // Token: 0x0200003E RID: 62
 public class HorseStickNoiseMaker : MonoBehaviour
 {
-	// Token: 0x0600015D RID: 349 RVA: 0x0000B794 File Offset: 0x00009994
+	// Token: 0x0600015D RID: 349 RVA: 0x0000B7DC File Offset: 0x000099DC
 	protected void OnEnable()
 	{
 		if (this.gorillaPlayerXform == null)
@@ -17,7 +17,7 @@ public class HorseStickNoiseMaker : MonoBehaviour
 		this.timeSincePlay = 0f;
 	}
 
-	// Token: 0x0600015E RID: 350 RVA: 0x0000B7E4 File Offset: 0x000099E4
+	// Token: 0x0600015E RID: 350 RVA: 0x0000B82C File Offset: 0x00009A2C
 	protected void LateUpdate()
 	{
 		Vector3 position = this.gorillaPlayerXform.position;

@@ -6,13 +6,13 @@ using UnityEngine.XR;
 // Token: 0x02000029 RID: 41
 public class FingerFlagWearable : MonoBehaviour
 {
-	// Token: 0x060000E5 RID: 229 RVA: 0x00008F55 File Offset: 0x00007155
+	// Token: 0x060000E5 RID: 229 RVA: 0x00008F9D File Offset: 0x0000719D
 	protected void Awake()
 	{
 		this.myRig = base.GetComponentInParent<VRRig>();
 	}
 
-	// Token: 0x060000E6 RID: 230 RVA: 0x00008F64 File Offset: 0x00007164
+	// Token: 0x060000E6 RID: 230 RVA: 0x00008FAC File Offset: 0x000071AC
 	protected void OnEnable()
 	{
 		int num = this.attachedToLeftHand ? 1 : 2;
@@ -28,7 +28,7 @@ public class FingerFlagWearable : MonoBehaviour
 		this.OnExtendStateChanged(false);
 	}
 
-	// Token: 0x060000E7 RID: 231 RVA: 0x00008FD9 File Offset: 0x000071D9
+	// Token: 0x060000E7 RID: 231 RVA: 0x00009021 File Offset: 0x00007221
 	protected void OnDisable()
 	{
 		if (this.pinkyRingAttachPoint != null)
@@ -41,7 +41,7 @@ public class FingerFlagWearable : MonoBehaviour
 		}
 	}
 
-	// Token: 0x060000E8 RID: 232 RVA: 0x0000901C File Offset: 0x0000721C
+	// Token: 0x060000E8 RID: 232 RVA: 0x00009064 File Offset: 0x00007264
 	private void UpdateLocal()
 	{
 		int node = this.attachedToLeftHand ? 4 : 5;
@@ -56,7 +56,7 @@ public class FingerFlagWearable : MonoBehaviour
 		}
 	}
 
-	// Token: 0x060000E9 RID: 233 RVA: 0x0000909C File Offset: 0x0000729C
+	// Token: 0x060000E9 RID: 233 RVA: 0x000090E4 File Offset: 0x000072E4
 	private void UpdateShared()
 	{
 		if (this.extended != this.networkedExtended)
@@ -78,7 +78,7 @@ public class FingerFlagWearable : MonoBehaviour
 		this.UpdateBones();
 	}
 
-	// Token: 0x060000EA RID: 234 RVA: 0x00009130 File Offset: 0x00007330
+	// Token: 0x060000EA RID: 234 RVA: 0x00009178 File Offset: 0x00007378
 	private void UpdateReplicated()
 	{
 		if (this.myRig != null && !this.myRig.isOfflineVRRig)
@@ -87,13 +87,13 @@ public class FingerFlagWearable : MonoBehaviour
 		}
 	}
 
-	// Token: 0x060000EB RID: 235 RVA: 0x00009169 File Offset: 0x00007369
+	// Token: 0x060000EB RID: 235 RVA: 0x000091B1 File Offset: 0x000073B1
 	public bool IsMyItem()
 	{
 		return this.myRig != null && this.myRig.isOfflineVRRig;
 	}
 
-	// Token: 0x060000EC RID: 236 RVA: 0x00009186 File Offset: 0x00007386
+	// Token: 0x060000EC RID: 236 RVA: 0x000091CE File Offset: 0x000073CE
 	protected void LateUpdate()
 	{
 		if (this.IsMyItem())
@@ -107,7 +107,7 @@ public class FingerFlagWearable : MonoBehaviour
 		this.UpdateShared();
 	}
 
-	// Token: 0x060000ED RID: 237 RVA: 0x000091A4 File Offset: 0x000073A4
+	// Token: 0x060000ED RID: 237 RVA: 0x000091EC File Offset: 0x000073EC
 	private void UpdateAnimation()
 	{
 		float num = this.extended ? this.extendSpeed : (-this.retractSpeed);
@@ -115,7 +115,7 @@ public class FingerFlagWearable : MonoBehaviour
 		this.animator.SetFloat(this.retractExtendTimeAnimParam, this.retractExtendTime);
 	}
 
-	// Token: 0x060000EE RID: 238 RVA: 0x000091FC File Offset: 0x000073FC
+	// Token: 0x060000EE RID: 238 RVA: 0x00009244 File Offset: 0x00007444
 	private void UpdateBones()
 	{
 		for (int i = 0; i < this.clothBones.Length; i++)
@@ -126,7 +126,7 @@ public class FingerFlagWearable : MonoBehaviour
 		this.thumbRingBone.SetPositionAndRotation(this.thumbRingAttachPoint.position, this.thumbRingAttachPoint.rotation);
 	}
 
-	// Token: 0x060000EF RID: 239 RVA: 0x00009278 File Offset: 0x00007478
+	// Token: 0x060000EF RID: 239 RVA: 0x000092C0 File Offset: 0x000074C0
 	private void OnExtendStateChanged(bool playAudio)
 	{
 		this.audioSource.clip = (this.extended ? this.extendAudioClip : this.retractAudioClip);

@@ -6,20 +6,20 @@ using UnityEngine.UI;
 // Token: 0x020000CE RID: 206
 public class UiAxis2dInspector : MonoBehaviour
 {
-	// Token: 0x0600048F RID: 1167 RVA: 0x0001D2E3 File Offset: 0x0001B4E3
+	// Token: 0x0600048F RID: 1167 RVA: 0x0001D0BF File Offset: 0x0001B2BF
 	public void SetExtents(Vector2 xExtent, Vector2 yExtent)
 	{
 		this.m_xExtent = xExtent;
 		this.m_yExtent = yExtent;
 	}
 
-	// Token: 0x06000490 RID: 1168 RVA: 0x0001D2F3 File Offset: 0x0001B4F3
+	// Token: 0x06000490 RID: 1168 RVA: 0x0001D0CF File Offset: 0x0001B2CF
 	public void SetName(string name)
 	{
 		this.m_nameLabel.text = name;
 	}
 
-	// Token: 0x06000491 RID: 1169 RVA: 0x0001D304 File Offset: 0x0001B504
+	// Token: 0x06000491 RID: 1169 RVA: 0x0001D0E0 File Offset: 0x0001B2E0
 	public void SetValue(bool isTouching, Vector2 value)
 	{
 		this.m_handle.color = (isTouching ? Color.white : new Color(0.2f, 0.2f, 0.2f));

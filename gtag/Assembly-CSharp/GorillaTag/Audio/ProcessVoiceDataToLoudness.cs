@@ -4,16 +4,16 @@ using UnityEngine;
 
 namespace GorillaTag.Audio
 {
-	// Token: 0x02000326 RID: 806
+	// Token: 0x02000328 RID: 808
 	internal class ProcessVoiceDataToLoudness : IProcessor<float>, IDisposable
 	{
-		// Token: 0x06001673 RID: 5747 RVA: 0x0007CFCD File Offset: 0x0007B1CD
+		// Token: 0x0600167C RID: 5756 RVA: 0x0007D4B5 File Offset: 0x0007B6B5
 		public ProcessVoiceDataToLoudness(VoiceToLoudness voiceToLoudness)
 		{
 			this._voiceToLoudness = voiceToLoudness;
 		}
 
-		// Token: 0x06001674 RID: 5748 RVA: 0x0007CFDC File Offset: 0x0007B1DC
+		// Token: 0x0600167D RID: 5757 RVA: 0x0007D4C4 File Offset: 0x0007B6C4
 		public float[] Process(float[] buf)
 		{
 			float num = 0f;
@@ -25,12 +25,12 @@ namespace GorillaTag.Audio
 			return buf;
 		}
 
-		// Token: 0x06001675 RID: 5749 RVA: 0x0007D01A File Offset: 0x0007B21A
+		// Token: 0x0600167E RID: 5758 RVA: 0x0007D502 File Offset: 0x0007B702
 		public void Dispose()
 		{
 		}
 
-		// Token: 0x04001885 RID: 6277
+		// Token: 0x04001892 RID: 6290
 		private VoiceToLoudness _voiceToLoudness;
 	}
 }

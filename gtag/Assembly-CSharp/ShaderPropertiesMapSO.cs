@@ -6,11 +6,11 @@ using UnityEngine;
 public class ShaderPropertiesMapSO : ScriptableObject
 {
 	// Token: 0x17000016 RID: 22
-	// (get) Token: 0x060001FA RID: 506 RVA: 0x0000DED8 File Offset: 0x0000C0D8
-	// (set) Token: 0x060001FB RID: 507 RVA: 0x0000DEDF File Offset: 0x0000C0DF
+	// (get) Token: 0x060001FA RID: 506 RVA: 0x0000DF20 File Offset: 0x0000C120
+	// (set) Token: 0x060001FB RID: 507 RVA: 0x0000DF27 File Offset: 0x0000C127
 	public static bool hasInstance { get; private set; }
 
-	// Token: 0x060001FC RID: 508 RVA: 0x0000DEE8 File Offset: 0x0000C0E8
+	// Token: 0x060001FC RID: 508 RVA: 0x0000DF30 File Offset: 0x0000C130
 	public static ShaderPropertiesMapSO GetInstance()
 	{
 		if (ShaderPropertiesMapSO.hasInstance)

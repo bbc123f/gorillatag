@@ -5,7 +5,7 @@ using UnityEngine;
 // Token: 0x0200003C RID: 60
 public class RotationSoundPlayer : MonoBehaviour
 {
-	// Token: 0x06000151 RID: 337 RVA: 0x0000B32C File Offset: 0x0000952C
+	// Token: 0x06000151 RID: 337 RVA: 0x0000B374 File Offset: 0x00009574
 	private void Awake()
 	{
 		List<Transform> list = new List<Transform>(this.transforms);
@@ -22,7 +22,7 @@ public class RotationSoundPlayer : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000152 RID: 338 RVA: 0x0000B40C File Offset: 0x0000960C
+	// Token: 0x06000152 RID: 338 RVA: 0x0000B454 File Offset: 0x00009654
 	private void Update()
 	{
 		this.cooldownTimer -= Time.deltaTime;

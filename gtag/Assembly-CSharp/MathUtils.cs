@@ -2,10 +2,10 @@
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
-// Token: 0x02000218 RID: 536
+// Token: 0x02000219 RID: 537
 public static class MathUtils
 {
-	// Token: 0x06000D4E RID: 3406 RVA: 0x0004DE78 File Offset: 0x0004C078
+	// Token: 0x06000D54 RID: 3412 RVA: 0x0004E0D8 File Offset: 0x0004C2D8
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool Approx(float a, float b, float epsilon = 1E-06f)
 	{
@@ -16,7 +16,7 @@ public static class MathUtils
 		return Math.Abs(num - num2) < num4;
 	}
 
-	// Token: 0x06000D4F RID: 3407 RVA: 0x0004DEC0 File Offset: 0x0004C0C0
+	// Token: 0x06000D55 RID: 3413 RVA: 0x0004E120 File Offset: 0x0004C320
 	public static float Linear(float value, float min, float max, float newMin, float newMax)
 	{
 		float num = (value - min) / (max - min) * (newMax - newMin) + newMin;
@@ -31,13 +31,13 @@ public static class MathUtils
 		return num;
 	}
 
-	// Token: 0x06000D50 RID: 3408 RVA: 0x0004DEEB File Offset: 0x0004C0EB
+	// Token: 0x06000D56 RID: 3414 RVA: 0x0004E14B File Offset: 0x0004C34B
 	public static float LinearUnclamped(float value, float min, float max, float newMin, float newMax)
 	{
 		return (value - min) / (max - min) * (newMax - newMin) + newMin;
 	}
 
-	// Token: 0x06000D51 RID: 3409 RVA: 0x0004DEFC File Offset: 0x0004C0FC
+	// Token: 0x06000D57 RID: 3415 RVA: 0x0004E15C File Offset: 0x0004C35C
 	public static float GetCircleValue(float degrees)
 	{
 		if (degrees > 90f)
@@ -59,7 +59,7 @@ public static class MathUtils
 		return degrees / 90f;
 	}
 
-	// Token: 0x06000D52 RID: 3410 RVA: 0x0004DF58 File Offset: 0x0004C158
+	// Token: 0x06000D58 RID: 3416 RVA: 0x0004E1B8 File Offset: 0x0004C3B8
 	public static Vector3 WeightedMaxVector(Vector3 a, Vector3 b, float eps = 0.0001f)
 	{
 		float magnitude = a.magnitude;
@@ -75,7 +75,7 @@ public static class MathUtils
 		return a2 * d;
 	}
 
-	// Token: 0x06000D53 RID: 3411 RVA: 0x0004DFBC File Offset: 0x0004C1BC
+	// Token: 0x06000D59 RID: 3417 RVA: 0x0004E21C File Offset: 0x0004C41C
 	public static Vector3 MatchMagnitudeInDirection(Vector3 input, Vector3 target, float eps = 0.0001f)
 	{
 		Vector3 result = input;
@@ -93,6 +93,6 @@ public static class MathUtils
 		return result;
 	}
 
-	// Token: 0x0400107A RID: 4218
+	// Token: 0x0400107F RID: 4223
 	public static readonly double UnityEpsilon = (double)Mathf.Epsilon;
 }

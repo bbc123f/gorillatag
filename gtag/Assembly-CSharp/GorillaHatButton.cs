@@ -2,10 +2,10 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-// Token: 0x02000176 RID: 374
+// Token: 0x02000177 RID: 375
 public class GorillaHatButton : MonoBehaviour
 {
-	// Token: 0x06000966 RID: 2406 RVA: 0x00038B84 File Offset: 0x00036D84
+	// Token: 0x0600096A RID: 2410 RVA: 0x00038B3C File Offset: 0x00036D3C
 	public void Update()
 	{
 		if (this.testPress)
@@ -20,7 +20,7 @@ public class GorillaHatButton : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000967 RID: 2407 RVA: 0x00038BEC File Offset: 0x00036DEC
+	// Token: 0x0600096B RID: 2411 RVA: 0x00038BA4 File Offset: 0x00036DA4
 	private void OnTriggerEnter(Collider collider)
 	{
 		if (this.touchTime + this.debounceTime < Time.time && collider.GetComponentInParent<GorillaTriggerColliderHandIndicator>() != null)
@@ -36,7 +36,7 @@ public class GorillaHatButton : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000968 RID: 2408 RVA: 0x00038C8C File Offset: 0x00036E8C
+	// Token: 0x0600096C RID: 2412 RVA: 0x00038C44 File Offset: 0x00036E44
 	public void UpdateColor()
 	{
 		if (this.isOn)
@@ -49,50 +49,50 @@ public class GorillaHatButton : MonoBehaviour
 		this.myText.text = this.offText;
 	}
 
-	// Token: 0x04000B7A RID: 2938
+	// Token: 0x04000B7E RID: 2942
 	public GorillaHatButtonParent buttonParent;
 
-	// Token: 0x04000B7B RID: 2939
+	// Token: 0x04000B7F RID: 2943
 	public GorillaHatButton.HatButtonType buttonType;
 
-	// Token: 0x04000B7C RID: 2940
+	// Token: 0x04000B80 RID: 2944
 	public bool isOn;
 
-	// Token: 0x04000B7D RID: 2941
+	// Token: 0x04000B81 RID: 2945
 	public Material offMaterial;
 
-	// Token: 0x04000B7E RID: 2942
+	// Token: 0x04000B82 RID: 2946
 	public Material onMaterial;
 
-	// Token: 0x04000B7F RID: 2943
+	// Token: 0x04000B83 RID: 2947
 	public string offText;
 
-	// Token: 0x04000B80 RID: 2944
+	// Token: 0x04000B84 RID: 2948
 	public string onText;
 
-	// Token: 0x04000B81 RID: 2945
+	// Token: 0x04000B85 RID: 2949
 	public Text myText;
 
-	// Token: 0x04000B82 RID: 2946
+	// Token: 0x04000B86 RID: 2950
 	public float debounceTime = 0.25f;
 
-	// Token: 0x04000B83 RID: 2947
+	// Token: 0x04000B87 RID: 2951
 	public float touchTime;
 
-	// Token: 0x04000B84 RID: 2948
+	// Token: 0x04000B88 RID: 2952
 	public string cosmeticName;
 
-	// Token: 0x04000B85 RID: 2949
+	// Token: 0x04000B89 RID: 2953
 	public bool testPress;
 
-	// Token: 0x02000423 RID: 1059
+	// Token: 0x02000425 RID: 1061
 	public enum HatButtonType
 	{
-		// Token: 0x04001D25 RID: 7461
+		// Token: 0x04001D32 RID: 7474
 		Hat,
-		// Token: 0x04001D26 RID: 7462
+		// Token: 0x04001D33 RID: 7475
 		Face,
-		// Token: 0x04001D27 RID: 7463
+		// Token: 0x04001D34 RID: 7476
 		Badge
 	}
 }

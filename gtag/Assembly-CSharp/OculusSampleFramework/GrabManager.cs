@@ -3,10 +3,10 @@ using UnityEngine;
 
 namespace OculusSampleFramework
 {
-	// Token: 0x020002C9 RID: 713
+	// Token: 0x020002CB RID: 715
 	public class GrabManager : MonoBehaviour
 	{
-		// Token: 0x0600133F RID: 4927 RVA: 0x0006F4A4 File Offset: 0x0006D6A4
+		// Token: 0x06001346 RID: 4934 RVA: 0x0006F970 File Offset: 0x0006DB70
 		private void OnTriggerEnter(Collider otherCollider)
 		{
 			DistanceGrabbable componentInChildren = otherCollider.GetComponentInChildren<DistanceGrabbable>();
@@ -16,7 +16,7 @@ namespace OculusSampleFramework
 			}
 		}
 
-		// Token: 0x06001340 RID: 4928 RVA: 0x0006F4C8 File Offset: 0x0006D6C8
+		// Token: 0x06001347 RID: 4935 RVA: 0x0006F994 File Offset: 0x0006DB94
 		private void OnTriggerExit(Collider otherCollider)
 		{
 			DistanceGrabbable componentInChildren = otherCollider.GetComponentInChildren<DistanceGrabbable>();
@@ -26,16 +26,16 @@ namespace OculusSampleFramework
 			}
 		}
 
-		// Token: 0x0400161C RID: 5660
+		// Token: 0x04001629 RID: 5673
 		private Collider m_grabVolume;
 
-		// Token: 0x0400161D RID: 5661
+		// Token: 0x0400162A RID: 5674
 		public Color OutlineColorInRange;
 
-		// Token: 0x0400161E RID: 5662
+		// Token: 0x0400162B RID: 5675
 		public Color OutlineColorHighlighted;
 
-		// Token: 0x0400161F RID: 5663
+		// Token: 0x0400162C RID: 5676
 		public Color OutlineColorOutOfRange;
 	}
 }

@@ -4,13 +4,13 @@ using UnityEngine;
 // Token: 0x020000CA RID: 202
 public class LocalizedHaptics : MonoBehaviour
 {
-	// Token: 0x06000480 RID: 1152 RVA: 0x0001CE11 File Offset: 0x0001B011
+	// Token: 0x06000480 RID: 1152 RVA: 0x0001CBED File Offset: 0x0001ADED
 	private void Start()
 	{
 		this.m_controller = ((this.m_handedness == OVRInput.Handedness.LeftHanded) ? OVRInput.Controller.LTouch : OVRInput.Controller.RTouch);
 	}
 
-	// Token: 0x06000481 RID: 1153 RVA: 0x0001CE28 File Offset: 0x0001B028
+	// Token: 0x06000481 RID: 1153 RVA: 0x0001CC04 File Offset: 0x0001AE04
 	private void Update()
 	{
 		float amplitude = (OVRInput.Get(OVRInput.Axis1D.PrimaryThumbRestForce, this.m_controller) > 0.5f) ? 1f : 0f;

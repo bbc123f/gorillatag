@@ -5,10 +5,10 @@ using UnityEngine.InputSystem;
 
 namespace UnityChan
 {
-	// Token: 0x0200035F RID: 863
+	// Token: 0x02000361 RID: 865
 	public class IdleChanger : MonoBehaviour
 	{
-		// Token: 0x06001926 RID: 6438 RVA: 0x0008AB0D File Offset: 0x00088D0D
+		// Token: 0x0600192F RID: 6447 RVA: 0x0008AFF5 File Offset: 0x000891F5
 		private void Start()
 		{
 			this.currentState = this.UnityChanA.GetCurrentAnimatorStateInfo(0);
@@ -17,7 +17,7 @@ namespace UnityChan
 			this.kb = Keyboard.current;
 		}
 
-		// Token: 0x06001927 RID: 6439 RVA: 0x0008AB44 File Offset: 0x00088D44
+		// Token: 0x06001930 RID: 6448 RVA: 0x0008B02C File Offset: 0x0008922C
 		private void Update()
 		{
 			if (this.kb.upArrowKey.wasPressedThisFrame || this.kb.spaceKey.wasPressedThisFrame)
@@ -52,7 +52,7 @@ namespace UnityChan
 			}
 		}
 
-		// Token: 0x06001928 RID: 6440 RVA: 0x0008ACA0 File Offset: 0x00088EA0
+		// Token: 0x06001931 RID: 6449 RVA: 0x0008B188 File Offset: 0x00089388
 		private void OnGUI()
 		{
 			if (this.isGUI)
@@ -71,7 +71,7 @@ namespace UnityChan
 			}
 		}
 
-		// Token: 0x06001929 RID: 6441 RVA: 0x0008AD75 File Offset: 0x00088F75
+		// Token: 0x06001932 RID: 6450 RVA: 0x0008B25D File Offset: 0x0008945D
 		private IEnumerator RandomChange()
 		{
 			for (;;)
@@ -95,31 +95,31 @@ namespace UnityChan
 			yield break;
 		}
 
-		// Token: 0x040019CB RID: 6603
+		// Token: 0x040019D8 RID: 6616
 		private AnimatorStateInfo currentState;
 
-		// Token: 0x040019CC RID: 6604
+		// Token: 0x040019D9 RID: 6617
 		private AnimatorStateInfo previousState;
 
-		// Token: 0x040019CD RID: 6605
+		// Token: 0x040019DA RID: 6618
 		public bool _random;
 
-		// Token: 0x040019CE RID: 6606
+		// Token: 0x040019DB RID: 6619
 		public float _threshold = 0.5f;
 
-		// Token: 0x040019CF RID: 6607
+		// Token: 0x040019DC RID: 6620
 		public float _interval = 10f;
 
-		// Token: 0x040019D0 RID: 6608
+		// Token: 0x040019DD RID: 6621
 		public bool isGUI = true;
 
-		// Token: 0x040019D1 RID: 6609
+		// Token: 0x040019DE RID: 6622
 		public Animator UnityChanA;
 
-		// Token: 0x040019D2 RID: 6610
+		// Token: 0x040019DF RID: 6623
 		public Animator UnityChanB;
 
-		// Token: 0x040019D3 RID: 6611
+		// Token: 0x040019E0 RID: 6624
 		private Keyboard kb;
 	}
 }

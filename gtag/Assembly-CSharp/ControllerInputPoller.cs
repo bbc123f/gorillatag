@@ -6,12 +6,12 @@ using Valve.VR;
 // Token: 0x02000154 RID: 340
 public class ControllerInputPoller : MonoBehaviour
 {
-	// Token: 0x1700005D RID: 93
-	// (get) Token: 0x0600086A RID: 2154 RVA: 0x00034377 File Offset: 0x00032577
-	// (set) Token: 0x0600086B RID: 2155 RVA: 0x0003437F File Offset: 0x0003257F
+	// Token: 0x1700005E RID: 94
+	// (get) Token: 0x0600086B RID: 2155 RVA: 0x000341B7 File Offset: 0x000323B7
+	// (set) Token: 0x0600086C RID: 2156 RVA: 0x000341BF File Offset: 0x000323BF
 	public GorillaControllerType controllerType { get; private set; }
 
-	// Token: 0x0600086C RID: 2156 RVA: 0x00034388 File Offset: 0x00032588
+	// Token: 0x0600086D RID: 2157 RVA: 0x000341C8 File Offset: 0x000323C8
 	private void Awake()
 	{
 		if (ControllerInputPoller.instance == null)
@@ -25,7 +25,7 @@ public class ControllerInputPoller : MonoBehaviour
 		}
 	}
 
-	// Token: 0x0600086D RID: 2157 RVA: 0x000343BC File Offset: 0x000325BC
+	// Token: 0x0600086E RID: 2158 RVA: 0x000341FC File Offset: 0x000323FC
 	private void Update()
 	{
 		InputDevice inputDevice = this.leftControllerDevice;
@@ -100,14 +100,14 @@ public class ControllerInputPoller : MonoBehaviour
 		}
 	}
 
-	// Token: 0x0600086E RID: 2158 RVA: 0x000347C6 File Offset: 0x000329C6
+	// Token: 0x0600086F RID: 2159 RVA: 0x00034606 File Offset: 0x00032806
 	private void CalculateGrabState(float grabValue, ref bool grab, ref bool grabRelease, float grabThreshold, float grabReleaseThreshold)
 	{
 		grab = (grabValue >= grabThreshold);
 		grabRelease = (grabValue <= grabReleaseThreshold);
 	}
 
-	// Token: 0x0600086F RID: 2159 RVA: 0x000347DC File Offset: 0x000329DC
+	// Token: 0x06000870 RID: 2160 RVA: 0x0003461C File Offset: 0x0003281C
 	public static bool GetGrab(XRNode node)
 	{
 		if (node == XRNode.LeftHand)
@@ -117,7 +117,7 @@ public class ControllerInputPoller : MonoBehaviour
 		return node == XRNode.RightHand && ControllerInputPoller.instance.rightGrab;
 	}
 
-	// Token: 0x06000870 RID: 2160 RVA: 0x00034801 File Offset: 0x00032A01
+	// Token: 0x06000871 RID: 2161 RVA: 0x00034641 File Offset: 0x00032841
 	public static bool GetGrabRelease(XRNode node)
 	{
 		if (node == XRNode.LeftHand)
@@ -127,13 +127,13 @@ public class ControllerInputPoller : MonoBehaviour
 		return node == XRNode.RightHand && ControllerInputPoller.instance.rightGrabRelease;
 	}
 
-	// Token: 0x06000871 RID: 2161 RVA: 0x00034826 File Offset: 0x00032A26
+	// Token: 0x06000872 RID: 2162 RVA: 0x00034666 File Offset: 0x00032866
 	public static Vector2 Primary2DAxis(XRNode node)
 	{
 		return ControllerInputPoller.instance.rightControllerPrimary2DAxis;
 	}
 
-	// Token: 0x06000872 RID: 2162 RVA: 0x00034834 File Offset: 0x00032A34
+	// Token: 0x06000873 RID: 2163 RVA: 0x00034674 File Offset: 0x00032874
 	public static bool PrimaryButtonPress(XRNode node)
 	{
 		if (node == XRNode.LeftHand)
@@ -143,7 +143,7 @@ public class ControllerInputPoller : MonoBehaviour
 		return node == XRNode.RightHand && ControllerInputPoller.instance.rightControllerPrimaryButton;
 	}
 
-	// Token: 0x06000873 RID: 2163 RVA: 0x00034859 File Offset: 0x00032A59
+	// Token: 0x06000874 RID: 2164 RVA: 0x00034699 File Offset: 0x00032899
 	public static bool SecondaryButtonPress(XRNode node)
 	{
 		if (node == XRNode.LeftHand)
@@ -153,7 +153,7 @@ public class ControllerInputPoller : MonoBehaviour
 		return node == XRNode.RightHand && ControllerInputPoller.instance.rightControllerSecondaryButton;
 	}
 
-	// Token: 0x06000874 RID: 2164 RVA: 0x0003487E File Offset: 0x00032A7E
+	// Token: 0x06000875 RID: 2165 RVA: 0x000346BE File Offset: 0x000328BE
 	public static bool PrimaryButtonTouch(XRNode node)
 	{
 		if (node == XRNode.LeftHand)
@@ -163,7 +163,7 @@ public class ControllerInputPoller : MonoBehaviour
 		return node == XRNode.RightHand && ControllerInputPoller.instance.rightControllerPrimaryButtonTouch;
 	}
 
-	// Token: 0x06000875 RID: 2165 RVA: 0x000348A3 File Offset: 0x00032AA3
+	// Token: 0x06000876 RID: 2166 RVA: 0x000346E3 File Offset: 0x000328E3
 	public static bool SecondaryButtonTouch(XRNode node)
 	{
 		if (node == XRNode.LeftHand)
@@ -173,7 +173,7 @@ public class ControllerInputPoller : MonoBehaviour
 		return node == XRNode.RightHand && ControllerInputPoller.instance.rightControllerSecondaryButtonTouch;
 	}
 
-	// Token: 0x06000876 RID: 2166 RVA: 0x000348C8 File Offset: 0x00032AC8
+	// Token: 0x06000877 RID: 2167 RVA: 0x00034708 File Offset: 0x00032908
 	public static float GripFloat(XRNode node)
 	{
 		if (node == XRNode.LeftHand)
@@ -187,7 +187,7 @@ public class ControllerInputPoller : MonoBehaviour
 		return 0f;
 	}
 
-	// Token: 0x06000877 RID: 2167 RVA: 0x000348F1 File Offset: 0x00032AF1
+	// Token: 0x06000878 RID: 2168 RVA: 0x00034731 File Offset: 0x00032931
 	public static float TriggerFloat(XRNode node)
 	{
 		if (node == XRNode.LeftHand)
@@ -201,7 +201,7 @@ public class ControllerInputPoller : MonoBehaviour
 		return 0f;
 	}
 
-	// Token: 0x06000878 RID: 2168 RVA: 0x0003491A File Offset: 0x00032B1A
+	// Token: 0x06000879 RID: 2169 RVA: 0x0003475A File Offset: 0x0003295A
 	public static float TriggerTouch(XRNode node)
 	{
 		if (node == XRNode.LeftHand)
@@ -215,7 +215,7 @@ public class ControllerInputPoller : MonoBehaviour
 		return 0f;
 	}
 
-	// Token: 0x06000879 RID: 2169 RVA: 0x00034943 File Offset: 0x00032B43
+	// Token: 0x0600087A RID: 2170 RVA: 0x00034783 File Offset: 0x00032983
 	public static Vector3 DevicePosition(XRNode node)
 	{
 		if (node == XRNode.Head)
@@ -233,7 +233,7 @@ public class ControllerInputPoller : MonoBehaviour
 		return Vector3.zero;
 	}
 
-	// Token: 0x0600087A RID: 2170 RVA: 0x0003497D File Offset: 0x00032B7D
+	// Token: 0x0600087B RID: 2171 RVA: 0x000347BD File Offset: 0x000329BD
 	public static Quaternion DeviceRotation(XRNode node)
 	{
 		if (node == XRNode.Head)
@@ -251,7 +251,7 @@ public class ControllerInputPoller : MonoBehaviour
 		return Quaternion.identity;
 	}
 
-	// Token: 0x0600087B RID: 2171 RVA: 0x000349B8 File Offset: 0x00032BB8
+	// Token: 0x0600087C RID: 2172 RVA: 0x000347F8 File Offset: 0x000329F8
 	public static bool PositionValid(XRNode node)
 	{
 		if (node == XRNode.Head)

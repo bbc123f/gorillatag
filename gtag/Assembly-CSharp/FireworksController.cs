@@ -3,17 +3,17 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-// Token: 0x02000233 RID: 563
+// Token: 0x02000234 RID: 564
 public class FireworksController : MonoBehaviour
 {
-	// Token: 0x06000DE5 RID: 3557 RVA: 0x000509A9 File Offset: 0x0004EBA9
+	// Token: 0x06000DEC RID: 3564 RVA: 0x00050D85 File Offset: 0x0004EF85
 	private void Awake()
 	{
 		this._launchOrder = this.fireworks.ToArray<Firework>();
 		this._rnd = new SRand(this.seed);
 	}
 
-	// Token: 0x06000DE6 RID: 3558 RVA: 0x000509D0 File Offset: 0x0004EBD0
+	// Token: 0x06000DED RID: 3565 RVA: 0x00050DAC File Offset: 0x0004EFAC
 	public void LaunchVolley()
 	{
 		if (!Application.isPlaying)
@@ -29,7 +29,7 @@ public class FireworksController : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000DE7 RID: 3559 RVA: 0x00050A34 File Offset: 0x0004EC34
+	// Token: 0x06000DEE RID: 3566 RVA: 0x00050E10 File Offset: 0x0004F010
 	public void LaunchVolleyRound()
 	{
 		int num = 0;
@@ -45,7 +45,7 @@ public class FireworksController : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000DE8 RID: 3560 RVA: 0x00050A98 File Offset: 0x0004EC98
+	// Token: 0x06000DEF RID: 3567 RVA: 0x00050E74 File Offset: 0x0004F074
 	public void Launch(Firework fw)
 	{
 		if (!fw)
@@ -103,7 +103,7 @@ public class FireworksController : MonoBehaviour
 		particleSystem.transform.position = position2;
 	}
 
-	// Token: 0x06000DE9 RID: 3561 RVA: 0x00050CC8 File Offset: 0x0004EEC8
+	// Token: 0x06000DF0 RID: 3568 RVA: 0x000510A4 File Offset: 0x0004F2A4
 	private void PostExplosionEvent(FireworksController.ExplosionEvent ev)
 	{
 		for (int i = 0; i < this._explosionQueue.Length; i++)
@@ -116,13 +116,13 @@ public class FireworksController : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000DEA RID: 3562 RVA: 0x00050D09 File Offset: 0x0004EF09
+	// Token: 0x06000DF1 RID: 3569 RVA: 0x000510E5 File Offset: 0x0004F2E5
 	private void Update()
 	{
 		this.ProcessEvents();
 	}
 
-	// Token: 0x06000DEB RID: 3563 RVA: 0x00050D14 File Offset: 0x0004EF14
+	// Token: 0x06000DF2 RID: 3570 RVA: 0x000510F0 File Offset: 0x0004F2F0
 	private void ProcessEvents()
 	{
 		if (this._explosionQueue == null || this._explosionQueue.Length == 0)
@@ -140,7 +140,7 @@ public class FireworksController : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000DEC RID: 3564 RVA: 0x00050D88 File Offset: 0x0004EF88
+	// Token: 0x06000DF3 RID: 3571 RVA: 0x00051164 File Offset: 0x0004F364
 	private void DoExplosion(FireworksController.ExplosionEvent ev)
 	{
 		Firework firework = ev.firework;
@@ -156,7 +156,7 @@ public class FireworksController : MonoBehaviour
 		firework.sourceTarget.PlayOneShot(this.bursts[ev.burstIndex]);
 	}
 
-	// Token: 0x06000DED RID: 3565 RVA: 0x00050E18 File Offset: 0x0004F018
+	// Token: 0x06000DF4 RID: 3572 RVA: 0x000511F4 File Offset: 0x0004F3F4
 	public void RenderGizmo(Firework fw, Color c)
 	{
 		if (!fw)
@@ -175,90 +175,90 @@ public class FireworksController : MonoBehaviour
 		Gizmos.DrawWireCube(position2, Vector3.one * 0.5f);
 	}
 
-	// Token: 0x040010D5 RID: 4309
+	// Token: 0x040010DB RID: 4315
 	public Firework[] fireworks;
 
-	// Token: 0x040010D6 RID: 4310
+	// Token: 0x040010DC RID: 4316
 	public AudioClip[] whistles;
 
-	// Token: 0x040010D7 RID: 4311
+	// Token: 0x040010DD RID: 4317
 	public AudioClip[] bursts;
 
-	// Token: 0x040010D8 RID: 4312
+	// Token: 0x040010DE RID: 4318
 	[Space]
 	[Range(0f, 1f)]
 	public float whistleVolumeMin = 0.1f;
 
-	// Token: 0x040010D9 RID: 4313
+	// Token: 0x040010DF RID: 4319
 	[Range(0f, 1f)]
 	public float whistleVolumeMax = 0.15f;
 
-	// Token: 0x040010DA RID: 4314
+	// Token: 0x040010E0 RID: 4320
 	public float minWhistleDelay = 1f;
 
-	// Token: 0x040010DB RID: 4315
+	// Token: 0x040010E1 RID: 4321
 	[Space]
 	[NonSerialized]
 	private AudioClip _lastWhistle;
 
-	// Token: 0x040010DC RID: 4316
+	// Token: 0x040010E2 RID: 4322
 	[NonSerialized]
 	private AudioClip _lastBurst;
 
-	// Token: 0x040010DD RID: 4317
+	// Token: 0x040010E3 RID: 4323
 	[NonSerialized]
 	private Firework[] _launchOrder;
 
-	// Token: 0x040010DE RID: 4318
+	// Token: 0x040010E4 RID: 4324
 	[NonSerialized]
 	private SRand _rnd;
 
-	// Token: 0x040010DF RID: 4319
+	// Token: 0x040010E5 RID: 4325
 	[NonSerialized]
 	private FireworksController.ExplosionEvent[] _explosionQueue = new FireworksController.ExplosionEvent[8];
 
-	// Token: 0x040010E0 RID: 4320
+	// Token: 0x040010E6 RID: 4326
 	[NonSerialized]
 	private TimeSince _timeSinceLastWhistle = 10f;
 
-	// Token: 0x040010E1 RID: 4321
+	// Token: 0x040010E7 RID: 4327
 	[Space]
 	public string seed = "Fireworks.Summer23";
 
-	// Token: 0x040010E2 RID: 4322
+	// Token: 0x040010E8 RID: 4328
 	[Space]
 	public uint roundNumVolleys = 6U;
 
-	// Token: 0x040010E3 RID: 4323
+	// Token: 0x040010E9 RID: 4329
 	public uint roundLength = 6U;
 
-	// Token: 0x040010E4 RID: 4324
+	// Token: 0x040010EA RID: 4330
 	[FormerlySerializedAs("_timeOfDayEvent")]
 	[FormerlySerializedAs("_timeOfDay")]
 	[Space]
 	[SerializeField]
 	private TimeOfDayEvent _fireworksEvent;
 
-	// Token: 0x0200047F RID: 1151
+	// Token: 0x02000481 RID: 1153
 	[Serializable]
 	public struct ExplosionEvent
 	{
-		// Token: 0x04001EB2 RID: 7858
+		// Token: 0x04001EBF RID: 7871
 		public TimeSince timeSince;
 
-		// Token: 0x04001EB3 RID: 7859
+		// Token: 0x04001EC0 RID: 7872
 		public double delay;
 
-		// Token: 0x04001EB4 RID: 7860
+		// Token: 0x04001EC1 RID: 7873
 		public int explosionIndex;
 
-		// Token: 0x04001EB5 RID: 7861
+		// Token: 0x04001EC2 RID: 7874
 		public int burstIndex;
 
-		// Token: 0x04001EB6 RID: 7862
+		// Token: 0x04001EC3 RID: 7875
 		public bool active;
 
-		// Token: 0x04001EB7 RID: 7863
+		// Token: 0x04001EC4 RID: 7876
 		public Firework firework;
 	}
 }

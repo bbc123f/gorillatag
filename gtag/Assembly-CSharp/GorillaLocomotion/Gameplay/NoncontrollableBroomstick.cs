@@ -4,16 +4,16 @@ using UnityEngine;
 
 namespace GorillaLocomotion.Gameplay
 {
-	// Token: 0x0200029D RID: 669
+	// Token: 0x0200029F RID: 671
 	public class NoncontrollableBroomstick : MonoBehaviour, IPunObservable
 	{
-		// Token: 0x0600116B RID: 4459 RVA: 0x000621B7 File Offset: 0x000603B7
+		// Token: 0x06001172 RID: 4466 RVA: 0x000625E7 File Offset: 0x000607E7
 		private void Awake()
 		{
 			this._view = base.GetComponent<PhotonView>();
 		}
 
-		// Token: 0x0600116C RID: 4460 RVA: 0x000621C8 File Offset: 0x000603C8
+		// Token: 0x06001173 RID: 4467 RVA: 0x000625F8 File Offset: 0x000607F8
 		private void Update()
 		{
 			if (!this._view.IsMine && this.progressLerpStartTime + 1f > Time.time)
@@ -41,7 +41,7 @@ namespace GorillaLocomotion.Gameplay
 						}
 						else if (this.mode == SplineWalkerMode.Loop)
 						{
-							this.progress -= 1f;
+							this.progress %= 1f;
 						}
 						else
 						{
@@ -72,7 +72,7 @@ namespace GorillaLocomotion.Gameplay
 			}
 		}
 
-		// Token: 0x0600116D RID: 4461 RVA: 0x000623CC File Offset: 0x000605CC
+		// Token: 0x06001174 RID: 4468 RVA: 0x000627FC File Offset: 0x000609FC
 		public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
 		{
 			if (stream.IsWriting)
@@ -85,73 +85,81 @@ namespace GorillaLocomotion.Gameplay
 			{
 				this.progressLerpEnd = 1f;
 			}
+			else
+			{
+				this.progressLerpEnd = Mathf.Abs(this.progressLerpEnd);
+				if (this.progressLerpEnd > 1f)
+				{
+					this.progressLerpEnd = (float)((double)this.progressLerpEnd % 1.0);
+				}
+			}
 			this.progressLerpStart = ((Mathf.Abs(this.progressLerpEnd - this.progress) > Mathf.Abs(this.progressLerpEnd - (this.progress - 1f))) ? (this.progress - 1f) : this.progress);
 			this.progressLerpStartTime = Time.time;
 		}
 
-		// Token: 0x0600116E RID: 4462 RVA: 0x0006248E File Offset: 0x0006068E
+		// Token: 0x06001175 RID: 4469 RVA: 0x000628F6 File Offset: 0x00060AF6
 		public void OnGrabbed()
 		{
 			this._view.TransferOwnership(PhotonNetwork.LocalPlayer);
 			this.isHeldByLocalPlayer = true;
 		}
 
-		// Token: 0x0600116F RID: 4463 RVA: 0x000624A7 File Offset: 0x000606A7
+		// Token: 0x06001176 RID: 4470 RVA: 0x0006290F File Offset: 0x00060B0F
 		public void OnGrabReleased()
 		{
 			this.isHeldByLocalPlayer = false;
 		}
 
-		// Token: 0x04001401 RID: 5121
+		// Token: 0x0400140E RID: 5134
 		public BezierSpline spline;
 
-		// Token: 0x04001402 RID: 5122
+		// Token: 0x0400140F RID: 5135
 		public float duration = 30f;
 
-		// Token: 0x04001403 RID: 5123
+		// Token: 0x04001410 RID: 5136
 		public float speedMultiplierWhileHeld = 2f;
 
-		// Token: 0x04001404 RID: 5124
+		// Token: 0x04001411 RID: 5137
 		private float currentSpeedMultiplier;
 
-		// Token: 0x04001405 RID: 5125
+		// Token: 0x04001412 RID: 5138
 		public float acceleration = 1f;
 
-		// Token: 0x04001406 RID: 5126
+		// Token: 0x04001413 RID: 5139
 		public float deceleration = 1f;
 
-		// Token: 0x04001407 RID: 5127
+		// Token: 0x04001414 RID: 5140
 		private bool isHeldByLocalPlayer;
 
-		// Token: 0x04001408 RID: 5128
+		// Token: 0x04001415 RID: 5141
 		public bool lookForward = true;
 
-		// Token: 0x04001409 RID: 5129
+		// Token: 0x04001416 RID: 5142
 		public SplineWalkerMode mode;
 
-		// Token: 0x0400140A RID: 5130
+		// Token: 0x04001417 RID: 5143
 		private float progress;
 
-		// Token: 0x0400140B RID: 5131
+		// Token: 0x04001418 RID: 5144
 		private float progressLerpStart;
 
-		// Token: 0x0400140C RID: 5132
+		// Token: 0x04001419 RID: 5145
 		private float progressLerpEnd;
 
-		// Token: 0x0400140D RID: 5133
+		// Token: 0x0400141A RID: 5146
 		private const float progressLerpDuration = 1f;
 
-		// Token: 0x0400140E RID: 5134
+		// Token: 0x0400141B RID: 5147
 		private float progressLerpStartTime;
 
-		// Token: 0x0400140F RID: 5135
+		// Token: 0x0400141C RID: 5148
 		private bool goingForward = true;
 
-		// Token: 0x04001410 RID: 5136
+		// Token: 0x0400141D RID: 5149
 		[SerializeField]
 		private AudioSource audioSource;
 
-		// Token: 0x04001411 RID: 5137
+		// Token: 0x0400141E RID: 5150
 		private PhotonView _view;
 	}
 }

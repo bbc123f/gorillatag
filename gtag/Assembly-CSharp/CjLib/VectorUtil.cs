@@ -3,10 +3,10 @@ using UnityEngine;
 
 namespace CjLib
 {
-	// Token: 0x0200035D RID: 861
+	// Token: 0x0200035F RID: 863
 	public class VectorUtil
 	{
-		// Token: 0x06001914 RID: 6420 RVA: 0x0008A704 File Offset: 0x00088904
+		// Token: 0x0600191D RID: 6429 RVA: 0x0008ABEC File Offset: 0x00088DEC
 		public static Vector3 Rotate2D(Vector3 v, float deg)
 		{
 			Vector3 result = v;
@@ -17,7 +17,7 @@ namespace CjLib
 			return result;
 		}
 
-		// Token: 0x06001915 RID: 6421 RVA: 0x0008A75E File Offset: 0x0008895E
+		// Token: 0x0600191E RID: 6430 RVA: 0x0008AC46 File Offset: 0x00088E46
 		public static Vector3 NormalizeSafe(Vector3 v, Vector3 fallback)
 		{
 			if (v.sqrMagnitude <= MathUtil.Epsilon)
@@ -27,7 +27,7 @@ namespace CjLib
 			return v.normalized;
 		}
 
-		// Token: 0x06001916 RID: 6422 RVA: 0x0008A778 File Offset: 0x00088978
+		// Token: 0x0600191F RID: 6431 RVA: 0x0008AC60 File Offset: 0x00088E60
 		public static Vector3 FindOrthogonal(Vector3 v)
 		{
 			if (Mathf.Abs(v.x) >= MathUtil.Sqrt3Inv)
@@ -37,20 +37,20 @@ namespace CjLib
 			return Vector3.Normalize(new Vector3(0f, v.z, -v.y));
 		}
 
-		// Token: 0x06001917 RID: 6423 RVA: 0x0008A7D0 File Offset: 0x000889D0
+		// Token: 0x06001920 RID: 6432 RVA: 0x0008ACB8 File Offset: 0x00088EB8
 		public static void FormOrthogonalBasis(Vector3 v, out Vector3 a, out Vector3 b)
 		{
 			a = VectorUtil.FindOrthogonal(v);
 			b = Vector3.Cross(a, v);
 		}
 
-		// Token: 0x06001918 RID: 6424 RVA: 0x0008A7F0 File Offset: 0x000889F0
+		// Token: 0x06001921 RID: 6433 RVA: 0x0008ACD8 File Offset: 0x00088ED8
 		public static Vector3 Integrate(Vector3 x, Vector3 v, float dt)
 		{
 			return x + v * dt;
 		}
 
-		// Token: 0x06001919 RID: 6425 RVA: 0x0008A800 File Offset: 0x00088A00
+		// Token: 0x06001922 RID: 6434 RVA: 0x0008ACE8 File Offset: 0x00088EE8
 		public static Vector3 Slerp(Vector3 a, Vector3 b, float t)
 		{
 			float num = Vector3.Dot(a, b);
@@ -67,7 +67,7 @@ namespace CjLib
 			return (Mathf.Sin((1f - t) * num2) * a + Mathf.Sin(t * num2) * b) / Mathf.Sin(num2);
 		}
 
-		// Token: 0x0600191A RID: 6426 RVA: 0x0008A884 File Offset: 0x00088A84
+		// Token: 0x06001923 RID: 6435 RVA: 0x0008AD6C File Offset: 0x00088F6C
 		public static Vector3 CatmullRom(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, float t)
 		{
 			float d = t * t;

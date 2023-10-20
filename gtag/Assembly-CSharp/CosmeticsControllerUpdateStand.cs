@@ -6,7 +6,7 @@ using UnityEngine;
 // Token: 0x02000102 RID: 258
 public class CosmeticsControllerUpdateStand : MonoBehaviour
 {
-	// Token: 0x0600063F RID: 1599 RVA: 0x0002766C File Offset: 0x0002586C
+	// Token: 0x06000640 RID: 1600 RVA: 0x000274AC File Offset: 0x000256AC
 	public GameObject ReturnChildWithCosmeticNameMatch(Transform parentTransform)
 	{
 		GameObject gameObject = null;
@@ -29,7 +29,7 @@ public class CosmeticsControllerUpdateStand : MonoBehaviour
 		return gameObject;
 	}
 
-	// Token: 0x06000640 RID: 1600 RVA: 0x00027728 File Offset: 0x00025928
+	// Token: 0x06000641 RID: 1601 RVA: 0x00027568 File Offset: 0x00025768
 	public void UpdateInventoryHeadModels()
 	{
 		foreach (HeadModel headModel in this.inventoryHeadModels)

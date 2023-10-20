@@ -3,11 +3,11 @@ using UnityEngine;
 
 namespace GorillaTag
 {
-	// Token: 0x0200030C RID: 780
+	// Token: 0x0200030E RID: 782
 	public class GuidedRefTargetGameObject : MonoBehaviour, IGuidedRefTarget, IGuidedRefMonoBehaviour, IGuidedRefObject
 	{
-		// Token: 0x17000179 RID: 377
-		// (get) Token: 0x060015AB RID: 5547 RVA: 0x00077D3D File Offset: 0x00075F3D
+		// Token: 0x1700017B RID: 379
+		// (get) Token: 0x060015B4 RID: 5556 RVA: 0x00078225 File Offset: 0x00076425
 		public GuidedRefTargetIdSO GuidedRefTargetId
 		{
 			get
@@ -16,8 +16,8 @@ namespace GorillaTag
 			}
 		}
 
-		// Token: 0x1700017A RID: 378
-		// (get) Token: 0x060015AC RID: 5548 RVA: 0x00077D4A File Offset: 0x00075F4A
+		// Token: 0x1700017C RID: 380
+		// (get) Token: 0x060015B5 RID: 5557 RVA: 0x00078232 File Offset: 0x00076432
 		public Object GuidedRefTargetObject
 		{
 			get
@@ -26,31 +26,31 @@ namespace GorillaTag
 			}
 		}
 
-		// Token: 0x060015AD RID: 5549 RVA: 0x00077D52 File Offset: 0x00075F52
+		// Token: 0x060015B6 RID: 5558 RVA: 0x0007823A File Offset: 0x0007643A
 		protected void Awake()
 		{
 			this.GuidedRefInitialize();
 		}
 
-		// Token: 0x060015AE RID: 5550 RVA: 0x00077D5A File Offset: 0x00075F5A
+		// Token: 0x060015B7 RID: 5559 RVA: 0x00078242 File Offset: 0x00076442
 		public void GuidedRefInitialize()
 		{
 			GuidedRefRelayHub.RegisterTargetWithParentRelays(this, this.guidedRefTargetInfo.hubIds, this);
 		}
 
-		// Token: 0x060015B0 RID: 5552 RVA: 0x00077D76 File Offset: 0x00075F76
+		// Token: 0x060015B9 RID: 5561 RVA: 0x0007825E File Offset: 0x0007645E
 		Transform IGuidedRefMonoBehaviour.get_transform()
 		{
 			return base.transform;
 		}
 
-		// Token: 0x060015B1 RID: 5553 RVA: 0x00077D7E File Offset: 0x00075F7E
+		// Token: 0x060015BA RID: 5562 RVA: 0x00078266 File Offset: 0x00076466
 		int IGuidedRefObject.GetInstanceID()
 		{
 			return base.GetInstanceID();
 		}
 
-		// Token: 0x040017BC RID: 6076
+		// Token: 0x040017C9 RID: 6089
 		[SerializeField]
 		private GuidedRefBasicTargetInfo guidedRefTargetInfo;
 	}

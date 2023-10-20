@@ -9,7 +9,7 @@ using UnityEngine.XR;
 // Token: 0x02000114 RID: 276
 public class TransferrableBall : TransferrableObject
 {
-	// Token: 0x06000709 RID: 1801 RVA: 0x0002BDE0 File Offset: 0x00029FE0
+	// Token: 0x0600070A RID: 1802 RVA: 0x0002BC20 File Offset: 0x00029E20
 	protected override void LateUpdate()
 	{
 		base.LateUpdate();
@@ -187,7 +187,7 @@ public class TransferrableBall : TransferrableObject
 		}
 	}
 
-	// Token: 0x0600070A RID: 1802 RVA: 0x0002C738 File Offset: 0x0002A938
+	// Token: 0x0600070B RID: 1803 RVA: 0x0002C578 File Offset: 0x0002A778
 	private void TakeOwnershipAndEnablePhysics()
 	{
 		this.currentState = TransferrableObject.PositionState.Dropped;
@@ -204,7 +204,7 @@ public class TransferrableBall : TransferrableObject
 		}
 	}
 
-	// Token: 0x0600070B RID: 1803 RVA: 0x0002C7BC File Offset: 0x0002A9BC
+	// Token: 0x0600070C RID: 1804 RVA: 0x0002C5FC File Offset: 0x0002A7FC
 	private bool CheckCollisionWithHand(Vector3 handCenter, Quaternion handRotation, Vector3 palmForward, out Vector3 hitPoint, out Vector3 hitNormal, out float penetrationDist)
 	{
 		Vector3 position = base.transform.position;
@@ -235,7 +235,7 @@ public class TransferrableBall : TransferrableObject
 		return flag;
 	}
 
-	// Token: 0x0600070C RID: 1804 RVA: 0x0002C92C File Offset: 0x0002AB2C
+	// Token: 0x0600070D RID: 1805 RVA: 0x0002C76C File Offset: 0x0002A96C
 	private bool CheckCollisionWithHead(SphereCollider headCollider, out Vector3 hitPoint, out Vector3 hitNormal, out float penetrationDist)
 	{
 		Vector3 a = base.transform.position - headCollider.transform.position;
@@ -255,7 +255,7 @@ public class TransferrableBall : TransferrableObject
 		return false;
 	}
 
-	// Token: 0x0600070D RID: 1805 RVA: 0x0002C9D4 File Offset: 0x0002ABD4
+	// Token: 0x0600070E RID: 1806 RVA: 0x0002C814 File Offset: 0x0002AA14
 	private bool ApplyHit(Vector3 hitPoint, Vector3 hitDir, float hitSpeed)
 	{
 		bool result = false;
@@ -309,7 +309,7 @@ public class TransferrableBall : TransferrableObject
 		return result;
 	}
 
-	// Token: 0x0600070E RID: 1806 RVA: 0x0002CC28 File Offset: 0x0002AE28
+	// Token: 0x0600070F RID: 1807 RVA: 0x0002CA68 File Offset: 0x0002AC68
 	private void PlayHitSound(float hitSpeed)
 	{
 		float t = Mathf.InverseLerp(this.hitSpeedToAudioMinMax.x, this.hitSpeedToAudioMinMax.y, hitSpeed);
@@ -323,7 +323,7 @@ public class TransferrableBall : TransferrableObject
 		}
 	}
 
-	// Token: 0x0600070F RID: 1807 RVA: 0x0002CCD8 File Offset: 0x0002AED8
+	// Token: 0x06000710 RID: 1808 RVA: 0x0002CB18 File Offset: 0x0002AD18
 	private void FixedUpdate()
 	{
 		this.collisionContactsCount = 0;
@@ -331,7 +331,7 @@ public class TransferrableBall : TransferrableObject
 		this.rigidbodyInstance.AddForce(-Physics.gravity * this.gravityCounterAmount, ForceMode.Acceleration);
 	}
 
-	// Token: 0x06000710 RID: 1808 RVA: 0x0002CD0C File Offset: 0x0002AF0C
+	// Token: 0x06000711 RID: 1809 RVA: 0x0002CB4C File Offset: 0x0002AD4C
 	private void OnTriggerEnter(Collider other)
 	{
 		GorillaHandClimber component = other.GetComponent<GorillaHandClimber>();
@@ -352,7 +352,7 @@ public class TransferrableBall : TransferrableObject
 		this.handClimberMap.Add(component, 1);
 	}
 
-	// Token: 0x06000711 RID: 1809 RVA: 0x0002CD78 File Offset: 0x0002AF78
+	// Token: 0x06000712 RID: 1810 RVA: 0x0002CBB8 File Offset: 0x0002ADB8
 	private void OnTriggerExit(Collider other)
 	{
 		GorillaHandClimber component = other.GetComponent<GorillaHandClimber>();
@@ -371,13 +371,13 @@ public class TransferrableBall : TransferrableObject
 		}
 	}
 
-	// Token: 0x06000712 RID: 1810 RVA: 0x0002CDD0 File Offset: 0x0002AFD0
+	// Token: 0x06000713 RID: 1811 RVA: 0x0002CC10 File Offset: 0x0002AE10
 	private void OnCollisionEnter(Collision collision)
 	{
 		this.PlayHitSound(collision.relativeVelocity.magnitude);
 	}
 
-	// Token: 0x06000713 RID: 1811 RVA: 0x0002CDF4 File Offset: 0x0002AFF4
+	// Token: 0x06000714 RID: 1812 RVA: 0x0002CC34 File Offset: 0x0002AE34
 	private void OnCollisionStay(Collision collision)
 	{
 		this.collisionContactsCount = collision.GetContacts(this.collisionContacts);

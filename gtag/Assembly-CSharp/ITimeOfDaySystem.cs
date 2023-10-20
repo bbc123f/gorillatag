@@ -1,13 +1,13 @@
 ﻿using System;
 
-// Token: 0x020001A9 RID: 425
+// Token: 0x020001AA RID: 426
 public interface ITimeOfDaySystem
 {
-	// Token: 0x17000080 RID: 128
-	// (get) Token: 0x06000AF4 RID: 2804
+	// Token: 0x17000082 RID: 130
+	// (get) Token: 0x06000AF9 RID: 2809
 	double currentTimeInSeconds { get; }
 
-	// Token: 0x17000081 RID: 129
-	// (get) Token: 0x06000AF5 RID: 2805
+	// Token: 0x17000083 RID: 131
+	// (get) Token: 0x06000AFA RID: 2810
 	double totalTimeInSeconds { get; }
 }

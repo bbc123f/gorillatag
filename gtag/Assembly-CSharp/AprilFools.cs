@@ -4,13 +4,13 @@ using UnityEngine;
 // Token: 0x0200003A RID: 58
 public static class AprilFools
 {
-	// Token: 0x06000148 RID: 328 RVA: 0x0000AF8D File Offset: 0x0000918D
+	// Token: 0x06000148 RID: 328 RVA: 0x0000AFD5 File Offset: 0x000091D5
 	public static int mod(int x, int m)
 	{
 		return (x % m + m) % m;
 	}
 
-	// Token: 0x06000149 RID: 329 RVA: 0x0000AF98 File Offset: 0x00009198
+	// Token: 0x06000149 RID: 329 RVA: 0x0000AFE0 File Offset: 0x000091E0
 	public static float GenerateTarget(string username, string roomName, string areaName, int startTime)
 	{
 		float num = (float)AprilFools.mod(string.Format("{0}-{1}-{2}-{3}", new object[]
@@ -37,7 +37,7 @@ public static class AprilFools
 		return num;
 	}
 
-	// Token: 0x0600014A RID: 330 RVA: 0x0000B028 File Offset: 0x00009228
+	// Token: 0x0600014A RID: 330 RVA: 0x0000B070 File Offset: 0x00009270
 	public static float Slerp(float a, float b, float t)
 	{
 		float num = Mathf.Acos(Mathf.Clamp(Vector2.Dot(new Vector2(a, b).normalized, Vector2.right), -1f, 1f)) * t;
@@ -47,7 +47,7 @@ public static class AprilFools
 		return a * num3 + b * num4;
 	}
 
-	// Token: 0x0600014B RID: 331 RVA: 0x0000B090 File Offset: 0x00009290
+	// Token: 0x0600014B RID: 331 RVA: 0x0000B0D8 File Offset: 0x000092D8
 	public static float SmoothSlerp(float a, float b, float t)
 	{
 		t = Mathf.Clamp01(t);
@@ -59,7 +59,7 @@ public static class AprilFools
 		return AprilFools.Slerp(a, b, Mathf.Lerp(a2, b2, (t - num2) / (num3 - num2)));
 	}
 
-	// Token: 0x0600014C RID: 332 RVA: 0x0000B104 File Offset: 0x00009304
+	// Token: 0x0600014C RID: 332 RVA: 0x0000B14C File Offset: 0x0000934C
 	public static float GenerateSmoothTarget(string username, string roomName, string areaName)
 	{
 		float num = (float)DateTime.UtcNow.Subtract(new DateTime(2023, 3, 30)).TotalSeconds;

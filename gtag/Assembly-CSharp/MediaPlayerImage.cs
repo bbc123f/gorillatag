@@ -6,8 +6,8 @@ using UnityEngine.UI;
 public class MediaPlayerImage : Image
 {
 	// Token: 0x1700002F RID: 47
-	// (get) Token: 0x0600035C RID: 860 RVA: 0x00013F7E File Offset: 0x0001217E
-	// (set) Token: 0x0600035D RID: 861 RVA: 0x00013F86 File Offset: 0x00012186
+	// (get) Token: 0x0600035C RID: 860 RVA: 0x00013D5A File Offset: 0x00011F5A
+	// (set) Token: 0x0600035D RID: 861 RVA: 0x00013D62 File Offset: 0x00011F62
 	public MediaPlayerImage.ButtonType buttonType
 	{
 		get
@@ -24,7 +24,7 @@ public class MediaPlayerImage : Image
 		}
 	}
 
-	// Token: 0x0600035E RID: 862 RVA: 0x00013FA0 File Offset: 0x000121A0
+	// Token: 0x0600035E RID: 862 RVA: 0x00013D7C File Offset: 0x00011F7C
 	protected override void OnPopulateMesh(VertexHelper toFill)
 	{
 		Rect pixelAdjustedRect = base.GetPixelAdjustedRect();
@@ -118,22 +118,22 @@ public class MediaPlayerImage : Image
 	[SerializeField]
 	private MediaPlayerImage.ButtonType m_ButtonType;
 
-	// Token: 0x020003C4 RID: 964
+	// Token: 0x020003C6 RID: 966
 	public enum ButtonType
 	{
-		// Token: 0x04001BD2 RID: 7122
+		// Token: 0x04001BDF RID: 7135
 		Play,
-		// Token: 0x04001BD3 RID: 7123
+		// Token: 0x04001BE0 RID: 7136
 		Pause,
-		// Token: 0x04001BD4 RID: 7124
+		// Token: 0x04001BE1 RID: 7137
 		FastForward,
-		// Token: 0x04001BD5 RID: 7125
+		// Token: 0x04001BE2 RID: 7138
 		Rewind,
-		// Token: 0x04001BD6 RID: 7126
+		// Token: 0x04001BE3 RID: 7139
 		SkipForward,
-		// Token: 0x04001BD7 RID: 7127
+		// Token: 0x04001BE4 RID: 7140
 		SkipBack,
-		// Token: 0x04001BD8 RID: 7128
+		// Token: 0x04001BE5 RID: 7141
 		Stop
 	}
 }

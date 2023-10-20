@@ -7,12 +7,12 @@ using UnityEngine;
 [Serializable]
 public class Spawnable : ISerializationCallbackReceiver
 {
-	// Token: 0x06000446 RID: 1094 RVA: 0x0001BDE9 File Offset: 0x00019FE9
+	// Token: 0x06000446 RID: 1094 RVA: 0x0001BBC5 File Offset: 0x00019DC5
 	public void OnBeforeSerialize()
 	{
 	}
 
-	// Token: 0x06000447 RID: 1095 RVA: 0x0001BDEC File Offset: 0x00019FEC
+	// Token: 0x06000447 RID: 1095 RVA: 0x0001BBC8 File Offset: 0x00019DC8
 	public void OnAfterDeserialize()
 	{
 		if (this.ClassificationLabel != "")
@@ -30,7 +30,7 @@ public class Spawnable : ISerializationCallbackReceiver
 		}
 	}
 
-	// Token: 0x06000449 RID: 1097 RVA: 0x0001BE60 File Offset: 0x0001A060
+	// Token: 0x06000449 RID: 1097 RVA: 0x0001BC3C File Offset: 0x00019E3C
 	[CompilerGenerated]
 	internal static int <OnAfterDeserialize>g__IndexOf|4_0(string label, IEnumerable<string> collection)
 	{

@@ -6,13 +6,13 @@ using UnityEngine;
 [Serializable]
 public class AdvancedItemState
 {
-	// Token: 0x06000715 RID: 1813 RVA: 0x0002CFAE File Offset: 0x0002B1AE
+	// Token: 0x06000716 RID: 1814 RVA: 0x0002CDEE File Offset: 0x0002AFEE
 	public void Encode()
 	{
 		this._encodedValue = this.EncodeData();
 	}
 
-	// Token: 0x06000716 RID: 1814 RVA: 0x0002CFBC File Offset: 0x0002B1BC
+	// Token: 0x06000717 RID: 1815 RVA: 0x0002CDFC File Offset: 0x0002AFFC
 	public void Decode()
 	{
 		AdvancedItemState advancedItemState = this.DecodeData(this._encodedValue);
@@ -23,7 +23,7 @@ public class AdvancedItemState
 		this.angle = advancedItemState.angle;
 	}
 
-	// Token: 0x06000717 RID: 1815 RVA: 0x0002D014 File Offset: 0x0002B214
+	// Token: 0x06000718 RID: 1816 RVA: 0x0002CE54 File Offset: 0x0002B054
 	public Quaternion GetQuaternion()
 	{
 		Vector3 one = Vector3.one;
@@ -45,7 +45,7 @@ public class AdvancedItemState
 		return Quaternion.identity;
 	}
 
-	// Token: 0x06000718 RID: 1816 RVA: 0x0002D068 File Offset: 0x0002B268
+	// Token: 0x06000719 RID: 1817 RVA: 0x0002CEA8 File Offset: 0x0002B0A8
 	[return: TupleElementNames(new string[]
 	{
 		"grabPointIndex",
@@ -62,8 +62,8 @@ public class AdvancedItemState
 		return new ValueTuple<int, float, float, float>(item, item2, item3, item4);
 	}
 
-	// Token: 0x17000050 RID: 80
-	// (get) Token: 0x06000719 RID: 1817 RVA: 0x0002D0C2 File Offset: 0x0002B2C2
+	// Token: 0x17000051 RID: 81
+	// (get) Token: 0x0600071A RID: 1818 RVA: 0x0002CF02 File Offset: 0x0002B102
 	private float EncodedDeltaRotation
 	{
 		get
@@ -72,13 +72,13 @@ public class AdvancedItemState
 		}
 	}
 
-	// Token: 0x0600071A RID: 1818 RVA: 0x0002D0CA File Offset: 0x0002B2CA
+	// Token: 0x0600071B RID: 1819 RVA: 0x0002CF0A File Offset: 0x0002B10A
 	public float GetEncodedDeltaRotation()
 	{
 		return Mathf.Abs(Mathf.Atan2(this.angleVectorWhereUpIsStandard.x, this.angleVectorWhereUpIsStandard.y)) / 3.1415927f;
 	}
 
-	// Token: 0x0600071B RID: 1819 RVA: 0x0002D0F4 File Offset: 0x0002B2F4
+	// Token: 0x0600071C RID: 1820 RVA: 0x0002CF34 File Offset: 0x0002B134
 	public void DecodeDeltaRotation(float encodedDelta, bool isFlipped)
 	{
 		float f = encodedDelta * 3.1415927f;
@@ -108,7 +108,7 @@ public class AdvancedItemState
 		}
 	}
 
-	// Token: 0x0600071C RID: 1820 RVA: 0x0002D1A8 File Offset: 0x0002B3A8
+	// Token: 0x0600071D RID: 1821 RVA: 0x0002CFE8 File Offset: 0x0002B1E8
 	public int EncodeData()
 	{
 		int num = 0;
@@ -143,7 +143,7 @@ public class AdvancedItemState
 		return num;
 	}
 
-	// Token: 0x0600071D RID: 1821 RVA: 0x0002D2C4 File Offset: 0x0002B4C4
+	// Token: 0x0600071E RID: 1822 RVA: 0x0002D104 File Offset: 0x0002B304
 	public AdvancedItemState DecodeData(int encoded)
 	{
 		AdvancedItemState advancedItemState = new AdvancedItemState();
@@ -199,23 +199,23 @@ public class AdvancedItemState
 	// Token: 0x040008B5 RID: 2229
 	public float angle;
 
-	// Token: 0x02000402 RID: 1026
+	// Token: 0x02000404 RID: 1028
 	[Serializable]
 	public class PreData
 	{
-		// Token: 0x04001CAA RID: 7338
+		// Token: 0x04001CB7 RID: 7351
 		public float distAlongLine;
 
-		// Token: 0x04001CAB RID: 7339
+		// Token: 0x04001CB8 RID: 7352
 		public AdvancedItemState.PointType pointType;
 	}
 
-	// Token: 0x02000403 RID: 1027
+	// Token: 0x02000405 RID: 1029
 	public enum PointType
 	{
-		// Token: 0x04001CAD RID: 7341
+		// Token: 0x04001CBA RID: 7354
 		Standard,
-		// Token: 0x04001CAE RID: 7342
+		// Token: 0x04001CBB RID: 7355
 		DistanceBased
 	}
 }

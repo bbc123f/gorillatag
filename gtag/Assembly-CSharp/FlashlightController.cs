@@ -5,7 +5,7 @@ using UnityEngine;
 // Token: 0x020000AE RID: 174
 public class FlashlightController : MonoBehaviour
 {
-	// Token: 0x060003D2 RID: 978 RVA: 0x00017ACC File Offset: 0x00015CCC
+	// Token: 0x060003D2 RID: 978 RVA: 0x000178A8 File Offset: 0x00015AA8
 	private void Start()
 	{
 		this.localRotation = this.flashlightRoot.localRotation;
@@ -26,7 +26,7 @@ public class FlashlightController : MonoBehaviour
 		}
 	}
 
-	// Token: 0x060003D3 RID: 979 RVA: 0x00017B94 File Offset: 0x00015D94
+	// Token: 0x060003D3 RID: 979 RVA: 0x00017970 File Offset: 0x00015B70
 	private void LateUpdate()
 	{
 		if (!this.externalController)
@@ -59,7 +59,7 @@ public class FlashlightController : MonoBehaviour
 		}
 	}
 
-	// Token: 0x060003D4 RID: 980 RVA: 0x00017C64 File Offset: 0x00015E64
+	// Token: 0x060003D4 RID: 980 RVA: 0x00017A40 File Offset: 0x00015C40
 	private void FindHands()
 	{
 		if (this.skeletons[0] == null || this.skeletons[1] == null)
@@ -93,7 +93,7 @@ public class FlashlightController : MonoBehaviour
 		}
 	}
 
-	// Token: 0x060003D5 RID: 981 RVA: 0x00017D34 File Offset: 0x00015F34
+	// Token: 0x060003D5 RID: 981 RVA: 0x00017B10 File Offset: 0x00015D10
 	private void AlignWithHand(OVRHand hand, OVRSkeleton skeleton)
 	{
 		if (this.pinching)
@@ -115,7 +115,7 @@ public class FlashlightController : MonoBehaviour
 		this.flashlightRoot.rotation = Quaternion.LookRotation(skeleton.Bones[6].Transform.position - skeleton.Bones[0].Transform.position);
 	}
 
-	// Token: 0x060003D6 RID: 982 RVA: 0x00017DEC File Offset: 0x00015FEC
+	// Token: 0x060003D6 RID: 982 RVA: 0x00017BC8 File Offset: 0x00015DC8
 	private void AlignWithController(OVRInput.Controller controller)
 	{
 		base.transform.position = OVRInput.GetLocalControllerPosition(controller);
@@ -124,7 +124,7 @@ public class FlashlightController : MonoBehaviour
 		this.flashlightRoot.localPosition = this.localPosition;
 	}
 
-	// Token: 0x060003D7 RID: 983 RVA: 0x00017E40 File Offset: 0x00016040
+	// Token: 0x060003D7 RID: 983 RVA: 0x00017C1C File Offset: 0x00015E1C
 	public void Grab(OVRInput.Controller grabHand)
 	{
 		if (base.GetComponent<Flashlight>())
@@ -135,7 +135,7 @@ public class FlashlightController : MonoBehaviour
 		base.StartCoroutine(this.FadeLighting(new Color(0f, 0f, 0f, 0.95f), 0f, 0.25f));
 	}
 
-	// Token: 0x060003D8 RID: 984 RVA: 0x00017E9C File Offset: 0x0001609C
+	// Token: 0x060003D8 RID: 984 RVA: 0x00017C78 File Offset: 0x00015E78
 	public void Release()
 	{
 		if (base.GetComponent<Flashlight>())
@@ -146,7 +146,7 @@ public class FlashlightController : MonoBehaviour
 		base.StartCoroutine(this.FadeLighting(Color.clear, 1f, 0.25f));
 	}
 
-	// Token: 0x060003D9 RID: 985 RVA: 0x00017ED9 File Offset: 0x000160D9
+	// Token: 0x060003D9 RID: 985 RVA: 0x00017CB5 File Offset: 0x00015EB5
 	private IEnumerator FadeLighting(Color newColor, float sceneLightIntensity, float fadeTime)
 	{
 		float timer = 0f;

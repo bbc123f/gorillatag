@@ -1,9 +1,9 @@
 ﻿using System;
 using UnityEngine;
 
-// Token: 0x02000215 RID: 533
+// Token: 0x02000216 RID: 534
 public class FlagForReflectionProbe : MonoBehaviour
 {
-	// Token: 0x04001075 RID: 4213
+	// Token: 0x0400107A RID: 4218
 	public bool enableSimpleReflectionProbe;
 }

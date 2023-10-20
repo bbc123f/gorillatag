@@ -4,7 +4,7 @@ using UnityEngine;
 // Token: 0x02000028 RID: 40
 public class FingerFlagTwirlTest : MonoBehaviour
 {
-	// Token: 0x060000E3 RID: 227 RVA: 0x00008E28 File Offset: 0x00007028
+	// Token: 0x060000E3 RID: 227 RVA: 0x00008E70 File Offset: 0x00007070
 	protected void FixedUpdate()
 	{
 		this.animTimes += Time.deltaTime * this.rotAnimDurations;

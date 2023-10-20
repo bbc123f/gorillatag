@@ -5,10 +5,10 @@ using GorillaExtensions;
 using GorillaTagScripts;
 using UnityEngine;
 
-// Token: 0x0200016A RID: 362
+// Token: 0x0200016B RID: 363
 public class GorillaCaveCrystal : Tappable
 {
-	// Token: 0x06000915 RID: 2325 RVA: 0x00037310 File Offset: 0x00035510
+	// Token: 0x06000919 RID: 2329 RVA: 0x00037210 File Offset: 0x00035410
 	private void Awake()
 	{
 		if (this.visuals == null)
@@ -22,7 +22,7 @@ public class GorillaCaveCrystal : Tappable
 		this.visuals.enabled = false;
 	}
 
-	// Token: 0x06000916 RID: 2326 RVA: 0x00037370 File Offset: 0x00035570
+	// Token: 0x0600091A RID: 2330 RVA: 0x00037270 File Offset: 0x00035470
 	[Conditional("UNITY_EDITOR")]
 	private void SetUnderwaterVisuals()
 	{
@@ -39,7 +39,7 @@ public class GorillaCaveCrystal : Tappable
 		this.visuals.ForceUpdate();
 	}
 
-	// Token: 0x06000917 RID: 2327 RVA: 0x000373F8 File Offset: 0x000355F8
+	// Token: 0x0600091B RID: 2331 RVA: 0x000372F8 File Offset: 0x000354F8
 	[Conditional("UNITY_EDITOR")]
 	public void AddVisuals()
 	{
@@ -80,14 +80,14 @@ public class GorillaCaveCrystal : Tappable
 		}
 	}
 
-	// Token: 0x06000918 RID: 2328 RVA: 0x00037538 File Offset: 0x00035738
+	// Token: 0x0600091C RID: 2332 RVA: 0x00037438 File Offset: 0x00035638
 	public override void OnTapLocal(float tapStrength, float tapTime)
 	{
 		this._tapStrength = tapStrength;
 		this.AnimateCrystal();
 	}
 
-	// Token: 0x06000919 RID: 2329 RVA: 0x00037548 File Offset: 0x00035748
+	// Token: 0x0600091D RID: 2333 RVA: 0x00037448 File Offset: 0x00035648
 	private void AnimateCrystal()
 	{
 		if (!Application.isPlaying)
@@ -107,7 +107,7 @@ public class GorillaCaveCrystal : Tappable
 		this.visuals.enabled = true;
 	}
 
-	// Token: 0x0600091A RID: 2330 RVA: 0x00037598 File Offset: 0x00035798
+	// Token: 0x0600091E RID: 2334 RVA: 0x00037498 File Offset: 0x00035698
 	private void Update()
 	{
 		if (!this._animating)
@@ -140,49 +140,49 @@ public class GorillaCaveCrystal : Tappable
 		this.visuals.lerp = lerp;
 	}
 
-	// Token: 0x04000B15 RID: 2837
+	// Token: 0x04000B19 RID: 2841
 	public bool overrideSoundAndMaterial;
 
-	// Token: 0x04000B16 RID: 2838
+	// Token: 0x04000B1A RID: 2842
 	public CrystalOctave octave;
 
-	// Token: 0x04000B17 RID: 2839
-	public CrystalNote note;
-
-	// Token: 0x04000B18 RID: 2840
-	[SerializeField]
-	private MeshRenderer _crystalRenderer;
-
-	// Token: 0x04000B19 RID: 2841
-	public GorillaCaveCrystalVisuals visuals;
-
-	// Token: 0x04000B1A RID: 2842
-	[SerializeField]
-	private float _tapAnimLength = 0.5f;
-
 	// Token: 0x04000B1B RID: 2843
-	[SerializeField]
-	[Range(0f, 1f)]
-	private float _lerpMidpoint = 0.1f;
+	public CrystalNote note;
 
 	// Token: 0x04000B1C RID: 2844
 	[SerializeField]
-	private AnimationCurve _lerpInCurve = AnimationCurve.Constant(0f, 1f, 1f);
+	private MeshRenderer _crystalRenderer;
 
 	// Token: 0x04000B1D RID: 2845
-	[SerializeField]
-	private AnimationCurve _lerpOutCurve = AnimationCurve.Constant(0f, 1f, 1f);
+	public GorillaCaveCrystalVisuals visuals;
 
 	// Token: 0x04000B1E RID: 2846
 	[SerializeField]
-	private bool _animating;
+	private float _tapAnimLength = 0.5f;
 
 	// Token: 0x04000B1F RID: 2847
 	[SerializeField]
 	[Range(0f, 1f)]
-	private float _tapStrength = 1f;
+	private float _lerpMidpoint = 0.1f;
 
 	// Token: 0x04000B20 RID: 2848
+	[SerializeField]
+	private AnimationCurve _lerpInCurve = AnimationCurve.Constant(0f, 1f, 1f);
+
+	// Token: 0x04000B21 RID: 2849
+	[SerializeField]
+	private AnimationCurve _lerpOutCurve = AnimationCurve.Constant(0f, 1f, 1f);
+
+	// Token: 0x04000B22 RID: 2850
+	[SerializeField]
+	private bool _animating;
+
+	// Token: 0x04000B23 RID: 2851
+	[SerializeField]
+	[Range(0f, 1f)]
+	private float _tapStrength = 1f;
+
+	// Token: 0x04000B24 RID: 2852
 	[NonSerialized]
 	private TimeSince _timeSinceLastTap;
 }

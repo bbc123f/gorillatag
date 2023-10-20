@@ -1,10 +1,10 @@
 ﻿using System;
 using UnityEngine;
 
-// Token: 0x020001C5 RID: 453
+// Token: 0x020001C6 RID: 454
 public class ZoneBasedObject : MonoBehaviour
 {
-	// Token: 0x06000B83 RID: 2947 RVA: 0x00046F08 File Offset: 0x00045108
+	// Token: 0x06000B89 RID: 2953 RVA: 0x00047170 File Offset: 0x00045370
 	public bool IsLocalPlayerInZone()
 	{
 		GTZone[] array = this.zones;
@@ -18,7 +18,7 @@ public class ZoneBasedObject : MonoBehaviour
 		return false;
 	}
 
-	// Token: 0x06000B84 RID: 2948 RVA: 0x00046F38 File Offset: 0x00045138
+	// Token: 0x06000B8A RID: 2954 RVA: 0x000471A0 File Offset: 0x000453A0
 	public static ZoneBasedObject SelectRandomEligible(ZoneBasedObject[] objects, string overrideChoice = "")
 	{
 		if (overrideChoice != "")
@@ -55,6 +55,6 @@ public class ZoneBasedObject : MonoBehaviour
 		return result;
 	}
 
-	// Token: 0x04000F13 RID: 3859
+	// Token: 0x04000F17 RID: 3863
 	public GTZone[] zones;
 }

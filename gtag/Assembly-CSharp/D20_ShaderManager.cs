@@ -5,7 +5,7 @@ using UnityEngine;
 // Token: 0x02000037 RID: 55
 public class D20_ShaderManager : MonoBehaviour
 {
-	// Token: 0x0600013A RID: 314 RVA: 0x0000AB40 File Offset: 0x00008D40
+	// Token: 0x0600013A RID: 314 RVA: 0x0000AB88 File Offset: 0x00008D88
 	private void Start()
 	{
 		this.rb = base.GetComponent<Rigidbody>();
@@ -16,7 +16,7 @@ public class D20_ShaderManager : MonoBehaviour
 		base.StartCoroutine(this.UpdateVelocityCoroutine());
 	}
 
-	// Token: 0x0600013B RID: 315 RVA: 0x0000ABA5 File Offset: 0x00008DA5
+	// Token: 0x0600013B RID: 315 RVA: 0x0000ABED File Offset: 0x00008DED
 	private IEnumerator UpdateVelocityCoroutine()
 	{
 		for (;;)

@@ -14,16 +14,16 @@ using UnityEngine.Networking;
 
 namespace GorillaNetworking
 {
-	// Token: 0x020002BA RID: 698
+	// Token: 0x020002BC RID: 700
 	public class PlayFabTitleDataCache : MonoBehaviour
 	{
-		// Token: 0x1700011A RID: 282
-		// (get) Token: 0x060012E8 RID: 4840 RVA: 0x0006E30C File Offset: 0x0006C50C
-		// (set) Token: 0x060012E9 RID: 4841 RVA: 0x0006E313 File Offset: 0x0006C513
+		// Token: 0x1700011C RID: 284
+		// (get) Token: 0x060012EF RID: 4847 RVA: 0x0006E7D8 File Offset: 0x0006C9D8
+		// (set) Token: 0x060012F0 RID: 4848 RVA: 0x0006E7DF File Offset: 0x0006C9DF
 		public static PlayFabTitleDataCache Instance { get; private set; }
 
-		// Token: 0x1700011B RID: 283
-		// (get) Token: 0x060012EA RID: 4842 RVA: 0x0006E31B File Offset: 0x0006C51B
+		// Token: 0x1700011D RID: 285
+		// (get) Token: 0x060012F1 RID: 4849 RVA: 0x0006E7E7 File Offset: 0x0006C9E7
 		private static string FilePath
 		{
 			get
@@ -32,7 +32,7 @@ namespace GorillaNetworking
 			}
 		}
 
-		// Token: 0x060012EB RID: 4843 RVA: 0x0006E32C File Offset: 0x0006C52C
+		// Token: 0x060012F2 RID: 4850 RVA: 0x0006E7F8 File Offset: 0x0006C9F8
 		public void GetTitleData(string name, Action<string> callback, Action<PlayFabError> errorCallback)
 		{
 			if (this.isDataUpToDate && this.titleData.ContainsKey(name))
@@ -49,7 +49,7 @@ namespace GorillaNetworking
 			this.requests.Add(item);
 		}
 
-		// Token: 0x060012EC RID: 4844 RVA: 0x0006E389 File Offset: 0x0006C589
+		// Token: 0x060012F3 RID: 4851 RVA: 0x0006E855 File Offset: 0x0006CA55
 		private void Awake()
 		{
 			if (PlayFabTitleDataCache.Instance != null)
@@ -60,13 +60,13 @@ namespace GorillaNetworking
 			PlayFabTitleDataCache.Instance = this;
 		}
 
-		// Token: 0x060012ED RID: 4845 RVA: 0x0006E3A5 File Offset: 0x0006C5A5
+		// Token: 0x060012F4 RID: 4852 RVA: 0x0006E871 File Offset: 0x0006CA71
 		private void Start()
 		{
 			this.UpdateData();
 		}
 
-		// Token: 0x060012EE RID: 4846 RVA: 0x0006E3B0 File Offset: 0x0006C5B0
+		// Token: 0x060012F5 RID: 4853 RVA: 0x0006E87C File Offset: 0x0006CA7C
 		public void LoadDataFromFile()
 		{
 			try
@@ -87,7 +87,7 @@ namespace GorillaNetworking
 			}
 		}
 
-		// Token: 0x060012EF RID: 4847 RVA: 0x0006E420 File Offset: 0x0006C620
+		// Token: 0x060012F6 RID: 4854 RVA: 0x0006E8EC File Offset: 0x0006CAEC
 		private void SaveDataToFile(string filepath)
 		{
 			try
@@ -101,13 +101,13 @@ namespace GorillaNetworking
 			}
 		}
 
-		// Token: 0x060012F0 RID: 4848 RVA: 0x0006E468 File Offset: 0x0006C668
+		// Token: 0x060012F7 RID: 4855 RVA: 0x0006E934 File Offset: 0x0006CB34
 		public void UpdateData()
 		{
 			base.StartCoroutine(this.UpdateDataCo());
 		}
 
-		// Token: 0x060012F1 RID: 4849 RVA: 0x0006E477 File Offset: 0x0006C677
+		// Token: 0x060012F8 RID: 4856 RVA: 0x0006E943 File Offset: 0x0006CB43
 		private IEnumerator UpdateDataCo()
 		{
 			this.LoadDataFromFile();
@@ -183,14 +183,14 @@ namespace GorillaNetworking
 			yield break;
 		}
 
-		// Token: 0x060012F2 RID: 4850 RVA: 0x0006E488 File Offset: 0x0006C688
+		// Token: 0x060012F9 RID: 4857 RVA: 0x0006E954 File Offset: 0x0006CB54
 		private void LoadKey()
 		{
 			TextAsset textAsset = Resources.Load<TextAsset>("title_data_key");
 			this.titleDataKey = textAsset.text;
 		}
 
-		// Token: 0x060012F3 RID: 4851 RVA: 0x0006E4AC File Offset: 0x0006C6AC
+		// Token: 0x060012FA RID: 4858 RVA: 0x0006E978 File Offset: 0x0006CB78
 		private static string MD5(string value)
 		{
 			HashAlgorithm hashAlgorithm = new MD5CryptoServiceProvider();
@@ -204,7 +204,7 @@ namespace GorillaNetworking
 			return stringBuilder.ToString();
 		}
 
-		// Token: 0x060012F4 RID: 4852 RVA: 0x0006E504 File Offset: 0x0006C704
+		// Token: 0x060012FB RID: 4859 RVA: 0x0006E9D0 File Offset: 0x0006CBD0
 		private void ClearRequestWithError(PlayFabError e = null)
 		{
 			if (e == null)
@@ -218,49 +218,49 @@ namespace GorillaNetworking
 			this.requests.Clear();
 		}
 
-		// Token: 0x040015EF RID: 5615
+		// Token: 0x040015FC RID: 5628
 		public PlayFabTitleDataCache.DataUpdate OnTitleDataUpdate;
 
-		// Token: 0x040015F0 RID: 5616
+		// Token: 0x040015FD RID: 5629
 		private const string FileName = "TitleDataCache.json";
 
-		// Token: 0x040015F1 RID: 5617
+		// Token: 0x040015FE RID: 5630
 		private readonly List<PlayFabTitleDataCache.DataRequest> requests = new List<PlayFabTitleDataCache.DataRequest>();
 
-		// Token: 0x040015F2 RID: 5618
+		// Token: 0x040015FF RID: 5631
 		private Dictionary<string, string> titleData = new Dictionary<string, string>();
 
-		// Token: 0x040015F3 RID: 5619
+		// Token: 0x04001600 RID: 5632
 		private string titleDataKey;
 
-		// Token: 0x040015F4 RID: 5620
+		// Token: 0x04001601 RID: 5633
 		private const string titleDataUrl = "https://title-data.gtag-cf.com";
 
-		// Token: 0x040015F5 RID: 5621
+		// Token: 0x04001602 RID: 5634
 		private bool isDataUpToDate;
 
-		// Token: 0x020004DD RID: 1245
+		// Token: 0x020004DF RID: 1247
 		[Serializable]
 		public sealed class DataUpdate : UnityEvent<string>
 		{
 		}
 
-		// Token: 0x020004DE RID: 1246
+		// Token: 0x020004E0 RID: 1248
 		private class DataRequest
 		{
-			// Token: 0x170002A0 RID: 672
-			// (get) Token: 0x06001EE3 RID: 7907 RVA: 0x000A09D1 File Offset: 0x0009EBD1
-			// (set) Token: 0x06001EE4 RID: 7908 RVA: 0x000A09D9 File Offset: 0x0009EBD9
+			// Token: 0x170002A2 RID: 674
+			// (get) Token: 0x06001EEC RID: 7916 RVA: 0x000A0CDD File Offset: 0x0009EEDD
+			// (set) Token: 0x06001EED RID: 7917 RVA: 0x000A0CE5 File Offset: 0x0009EEE5
 			public string Name { get; set; }
 
-			// Token: 0x170002A1 RID: 673
-			// (get) Token: 0x06001EE5 RID: 7909 RVA: 0x000A09E2 File Offset: 0x0009EBE2
-			// (set) Token: 0x06001EE6 RID: 7910 RVA: 0x000A09EA File Offset: 0x0009EBEA
+			// Token: 0x170002A3 RID: 675
+			// (get) Token: 0x06001EEE RID: 7918 RVA: 0x000A0CEE File Offset: 0x0009EEEE
+			// (set) Token: 0x06001EEF RID: 7919 RVA: 0x000A0CF6 File Offset: 0x0009EEF6
 			public Action<string> Callback { get; set; }
 
-			// Token: 0x170002A2 RID: 674
-			// (get) Token: 0x06001EE7 RID: 7911 RVA: 0x000A09F3 File Offset: 0x0009EBF3
-			// (set) Token: 0x06001EE8 RID: 7912 RVA: 0x000A09FB File Offset: 0x0009EBFB
+			// Token: 0x170002A4 RID: 676
+			// (get) Token: 0x06001EF0 RID: 7920 RVA: 0x000A0CFF File Offset: 0x0009EEFF
+			// (set) Token: 0x06001EF1 RID: 7921 RVA: 0x000A0D07 File Offset: 0x0009EF07
 			public Action<PlayFabError> ErrorCallback { get; set; }
 		}
 	}

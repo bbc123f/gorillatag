@@ -1,10 +1,10 @@
 ﻿using System;
 using UnityEngine;
 
-// Token: 0x020001E9 RID: 489
+// Token: 0x020001EA RID: 490
 public class CopyMaterialScript : MonoBehaviour
 {
-	// Token: 0x06000CB5 RID: 3253 RVA: 0x0004BF68 File Offset: 0x0004A168
+	// Token: 0x06000CBB RID: 3259 RVA: 0x0004C1D0 File Offset: 0x0004A3D0
 	private void Start()
 	{
 		if (Application.platform == RuntimePlatform.Android)
@@ -13,7 +13,7 @@ public class CopyMaterialScript : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000CB6 RID: 3254 RVA: 0x0004BF7F File Offset: 0x0004A17F
+	// Token: 0x06000CBC RID: 3260 RVA: 0x0004C1E7 File Offset: 0x0004A3E7
 	private void Update()
 	{
 		if (this.sourceToCopyMaterialFrom.material != this.mySkinnedMeshRenderer.material)
@@ -22,9 +22,9 @@ public class CopyMaterialScript : MonoBehaviour
 		}
 	}
 
-	// Token: 0x04001005 RID: 4101
+	// Token: 0x04001009 RID: 4105
 	public SkinnedMeshRenderer sourceToCopyMaterialFrom;
 
-	// Token: 0x04001006 RID: 4102
+	// Token: 0x0400100A RID: 4106
 	public SkinnedMeshRenderer mySkinnedMeshRenderer;
 }

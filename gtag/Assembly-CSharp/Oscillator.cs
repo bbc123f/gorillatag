@@ -85,14 +85,14 @@ public class Oscillator : MonoBehaviour
 	// Token: 0x0400007E RID: 126
 	public Vector3 Phase;
 
-	// Token: 0x02000384 RID: 900
+	// Token: 0x02000386 RID: 902
 	public enum WaveTypeEnum
 	{
-		// Token: 0x04001AE8 RID: 6888
+		// Token: 0x04001AF5 RID: 6901
 		Sine,
-		// Token: 0x04001AE9 RID: 6889
+		// Token: 0x04001AF6 RID: 6902
 		Square,
-		// Token: 0x04001AEA RID: 6890
+		// Token: 0x04001AF7 RID: 6903
 		Triangle
 	}
 }

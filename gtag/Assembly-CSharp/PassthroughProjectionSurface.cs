@@ -4,7 +4,7 @@ using UnityEngine;
 // Token: 0x020000B6 RID: 182
 public class PassthroughProjectionSurface : MonoBehaviour
 {
-	// Token: 0x06000404 RID: 1028 RVA: 0x0001ABBC File Offset: 0x00018DBC
+	// Token: 0x06000404 RID: 1028 RVA: 0x0001A998 File Offset: 0x00018B98
 	private void Start()
 	{
 		GameObject gameObject = GameObject.Find("OVRCameraRig");
@@ -23,7 +23,7 @@ public class PassthroughProjectionSurface : MonoBehaviour
 		this.quadOutline.enabled = false;
 	}
 
-	// Token: 0x06000405 RID: 1029 RVA: 0x0001AC40 File Offset: 0x00018E40
+	// Token: 0x06000405 RID: 1029 RVA: 0x0001AA1C File Offset: 0x00018C1C
 	private void Update()
 	{
 		if (OVRInput.GetDown(OVRInput.Button.One, OVRInput.Controller.Active))

@@ -4,7 +4,7 @@ using UnityEngine;
 // Token: 0x020000DE RID: 222
 public class InteractionPoint : MonoBehaviour
 {
-	// Token: 0x06000511 RID: 1297 RVA: 0x000206F0 File Offset: 0x0001E8F0
+	// Token: 0x06000511 RID: 1297 RVA: 0x000204E4 File Offset: 0x0001E6E4
 	private void Awake()
 	{
 		this.interactor = EquipmentInteractor.instance;
@@ -21,14 +21,14 @@ public class InteractionPoint : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000512 RID: 1298 RVA: 0x00020753 File Offset: 0x0001E953
+	// Token: 0x06000512 RID: 1298 RVA: 0x00020547 File Offset: 0x0001E747
 	private void OnEnable()
 	{
 		this.wasInLeft = false;
 		this.wasInRight = false;
 	}
 
-	// Token: 0x06000513 RID: 1299 RVA: 0x00020764 File Offset: 0x0001E964
+	// Token: 0x06000513 RID: 1299 RVA: 0x00020558 File Offset: 0x0001E758
 	public void OnDisable()
 	{
 		if (!this.forLocalPlayer || this.interactor == null)
@@ -45,7 +45,7 @@ public class InteractionPoint : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000514 RID: 1300 RVA: 0x000207C8 File Offset: 0x0001E9C8
+	// Token: 0x06000514 RID: 1300 RVA: 0x000205BC File Offset: 0x0001E7BC
 	public void LateUpdate()
 	{
 		if (!this.forLocalPlayer)

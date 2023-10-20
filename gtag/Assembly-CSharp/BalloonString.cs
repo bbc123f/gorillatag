@@ -5,7 +5,7 @@ using UnityEngine;
 // Token: 0x020000D9 RID: 217
 public class BalloonString : MonoBehaviour
 {
-	// Token: 0x060004EC RID: 1260 RVA: 0x0001F568 File Offset: 0x0001D768
+	// Token: 0x060004EC RID: 1260 RVA: 0x0001F35C File Offset: 0x0001D55C
 	private void Awake()
 	{
 		this.lineRenderer = base.GetComponent<LineRenderer>();
@@ -24,21 +24,21 @@ public class BalloonString : MonoBehaviour
 		}
 	}
 
-	// Token: 0x060004ED RID: 1261 RVA: 0x0001F638 File Offset: 0x0001D838
+	// Token: 0x060004ED RID: 1261 RVA: 0x0001F42C File Offset: 0x0001D62C
 	private void UpdateDynamics()
 	{
 		this.vertices[0] = this.startPositionXf.position;
 		this.vertices[this.vertices.Count - 1] = this.endPositionXf.position;
 	}
 
-	// Token: 0x060004EE RID: 1262 RVA: 0x0001F674 File Offset: 0x0001D874
+	// Token: 0x060004EE RID: 1262 RVA: 0x0001F468 File Offset: 0x0001D668
 	private void UpdateRenderPositions()
 	{
 		this.lineRenderer.SetPosition(0, this.startPositionXf.transform.position);
 		this.lineRenderer.SetPosition(1, this.endPositionXf.transform.position);
 	}
 
-	// Token: 0x060004EF RID: 1263 RVA: 0x0001F6AE File Offset: 0x0001D8AE
+	// Token: 0x060004EF RID: 1263 RVA: 0x0001F4A2 File Offset: 0x0001D6A2
 	private void LateUpdate()
 	{
 		if (this.startPositionXf != null && this.endPositionXf != null)

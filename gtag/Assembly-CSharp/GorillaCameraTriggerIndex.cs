@@ -4,13 +4,13 @@ using UnityEngine;
 // Token: 0x0200013B RID: 315
 public class GorillaCameraTriggerIndex : MonoBehaviour
 {
-	// Token: 0x06000819 RID: 2073 RVA: 0x00033016 File Offset: 0x00031216
+	// Token: 0x0600081A RID: 2074 RVA: 0x00032E56 File Offset: 0x00031056
 	private void Start()
 	{
 		this.parentTrigger = base.GetComponentInParent<GorillaCameraSceneTrigger>();
 	}
 
-	// Token: 0x0600081A RID: 2074 RVA: 0x00033024 File Offset: 0x00031224
+	// Token: 0x0600081B RID: 2075 RVA: 0x00032E64 File Offset: 0x00031064
 	private void OnTriggerEnter(Collider other)
 	{
 		if (other.gameObject.CompareTag("SceneChanger"))
@@ -20,7 +20,7 @@ public class GorillaCameraTriggerIndex : MonoBehaviour
 		}
 	}
 
-	// Token: 0x0600081B RID: 2075 RVA: 0x00033050 File Offset: 0x00031250
+	// Token: 0x0600081C RID: 2076 RVA: 0x00032E90 File Offset: 0x00031090
 	private void OnTriggerExit(Collider other)
 	{
 		if (other.gameObject.CompareTag("SceneChanger"))

@@ -5,11 +5,11 @@ using UnityEngine;
 public class TeleportInputHandlerHMD : TeleportInputHandler
 {
 	// Token: 0x17000023 RID: 35
-	// (get) Token: 0x06000300 RID: 768 RVA: 0x00012A68 File Offset: 0x00010C68
-	// (set) Token: 0x06000301 RID: 769 RVA: 0x00012A70 File Offset: 0x00010C70
+	// (get) Token: 0x06000300 RID: 768 RVA: 0x00012844 File Offset: 0x00010A44
+	// (set) Token: 0x06000301 RID: 769 RVA: 0x0001284C File Offset: 0x00010A4C
 	public Transform Pointer { get; private set; }
 
-	// Token: 0x06000302 RID: 770 RVA: 0x00012A7C File Offset: 0x00010C7C
+	// Token: 0x06000302 RID: 770 RVA: 0x00012858 File Offset: 0x00010A58
 	public override LocomotionTeleport.TeleportIntentions GetIntention()
 	{
 		if (!base.isActiveAndEnabled)
@@ -46,7 +46,7 @@ public class TeleportInputHandlerHMD : TeleportInputHandler
 		}
 	}
 
-	// Token: 0x06000303 RID: 771 RVA: 0x00012B08 File Offset: 0x00010D08
+	// Token: 0x06000303 RID: 771 RVA: 0x000128E4 File Offset: 0x00010AE4
 	public override void GetAimData(out Ray aimRay)
 	{
 		Transform centerEyeAnchor = base.LocomotionTeleport.LocomotionController.CameraRig.centerEyeAnchor;

@@ -7,7 +7,7 @@ using UnityEngine;
 // Token: 0x020000DD RID: 221
 public class HitTargetWithScoreCounter : MonoBehaviourPunCallbacks, IPunObservable
 {
-	// Token: 0x06000504 RID: 1284 RVA: 0x0001FFC8 File Offset: 0x0001E1C8
+	// Token: 0x06000504 RID: 1284 RVA: 0x0001FDBC File Offset: 0x0001DFBC
 	protected void Awake()
 	{
 		this.rotateTimeTotal = 180f / (float)this.rotateSpeed;
@@ -23,7 +23,7 @@ public class HitTargetWithScoreCounter : MonoBehaviourPunCallbacks, IPunObservab
 		Debug.LogError("Needs SlingshotProjectileHitNotifier added to this GameObject to increment score");
 	}
 
-	// Token: 0x06000505 RID: 1285 RVA: 0x00020040 File Offset: 0x0001E240
+	// Token: 0x06000505 RID: 1285 RVA: 0x0001FE34 File Offset: 0x0001E034
 	private void SetInitialState()
 	{
 		this.networkedScore = 0;
@@ -42,20 +42,20 @@ public class HitTargetWithScoreCounter : MonoBehaviourPunCallbacks, IPunObservab
 		this.hundredsRend.SetPropertyBlock(this.matPropBlock);
 	}
 
-	// Token: 0x06000506 RID: 1286 RVA: 0x000200EA File Offset: 0x0001E2EA
+	// Token: 0x06000506 RID: 1286 RVA: 0x0001FEDE File Offset: 0x0001E0DE
 	public override void OnDisconnected(DisconnectCause cause)
 	{
 		this.OnLeftRoom();
 	}
 
-	// Token: 0x06000507 RID: 1287 RVA: 0x000200F2 File Offset: 0x0001E2F2
+	// Token: 0x06000507 RID: 1287 RVA: 0x0001FEE6 File Offset: 0x0001E0E6
 	public override void OnLeftRoom()
 	{
 		base.OnLeftRoom();
 		this.SetInitialState();
 	}
 
-	// Token: 0x06000508 RID: 1288 RVA: 0x00020100 File Offset: 0x0001E300
+	// Token: 0x06000508 RID: 1288 RVA: 0x0001FEF4 File Offset: 0x0001E0F4
 	public override void OnEnable()
 	{
 		base.OnEnable();
@@ -66,7 +66,7 @@ public class HitTargetWithScoreCounter : MonoBehaviourPunCallbacks, IPunObservab
 		this.SetInitialState();
 	}
 
-	// Token: 0x06000509 RID: 1289 RVA: 0x00020122 File Offset: 0x0001E322
+	// Token: 0x06000509 RID: 1289 RVA: 0x0001FF16 File Offset: 0x0001E116
 	private IEnumerator TestPressCheck()
 	{
 		for (;;)
@@ -81,7 +81,7 @@ public class HitTargetWithScoreCounter : MonoBehaviourPunCallbacks, IPunObservab
 		yield break;
 	}
 
-	// Token: 0x0600050A RID: 1290 RVA: 0x00020134 File Offset: 0x0001E334
+	// Token: 0x0600050A RID: 1290 RVA: 0x0001FF28 File Offset: 0x0001E128
 	private void ResetRotation()
 	{
 		Quaternion rotation = base.transform.rotation;
@@ -94,7 +94,7 @@ public class HitTargetWithScoreCounter : MonoBehaviourPunCallbacks, IPunObservab
 		this.isRotating = false;
 	}
 
-	// Token: 0x0600050B RID: 1291 RVA: 0x000201C8 File Offset: 0x0001E3C8
+	// Token: 0x0600050B RID: 1291 RVA: 0x0001FFBC File Offset: 0x0001E1BC
 	protected void Update()
 	{
 		this.timeElapsedSinceHit += Time.deltaTime;
@@ -144,13 +144,13 @@ public class HitTargetWithScoreCounter : MonoBehaviourPunCallbacks, IPunObservab
 		}
 	}
 
-	// Token: 0x0600050C RID: 1292 RVA: 0x000203F2 File Offset: 0x0001E5F2
+	// Token: 0x0600050C RID: 1292 RVA: 0x000201E6 File Offset: 0x0001E3E6
 	private void ProjectileHitReciever(SlingshotProjectile projectile, Collision collision)
 	{
 		this.TargetHit();
 	}
 
-	// Token: 0x0600050D RID: 1293 RVA: 0x000203FA File Offset: 0x0001E5FA
+	// Token: 0x0600050D RID: 1293 RVA: 0x000201EE File Offset: 0x0001E3EE
 	public void TargetHit()
 	{
 		if (PhotonNetwork.IsMasterClient && this.timeElapsedSinceHit >= (float)this.hitCooldownTime)
@@ -164,7 +164,7 @@ public class HitTargetWithScoreCounter : MonoBehaviourPunCallbacks, IPunObservab
 		this.UpdateTargetState();
 	}
 
-	// Token: 0x0600050E RID: 1294 RVA: 0x0002043C File Offset: 0x0001E63C
+	// Token: 0x0600050E RID: 1294 RVA: 0x00020230 File Offset: 0x0001E430
 	private void UpdateTargetState()
 	{
 		if (this.networkedScore != this.currentScore)
@@ -191,7 +191,7 @@ public class HitTargetWithScoreCounter : MonoBehaviourPunCallbacks, IPunObservab
 		}
 	}
 
-	// Token: 0x0600050F RID: 1295 RVA: 0x0002052E File Offset: 0x0001E72E
+	// Token: 0x0600050F RID: 1295 RVA: 0x00020322 File Offset: 0x0001E522
 	public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
 	{
 		if (stream.IsWriting)

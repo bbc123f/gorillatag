@@ -1,10 +1,10 @@
 ﻿using System;
 using UnityEngine;
 
-// Token: 0x0200017A RID: 378
+// Token: 0x0200017B RID: 379
 public class GorillaIK : MonoBehaviour
 {
-	// Token: 0x06000991 RID: 2449 RVA: 0x0003A688 File Offset: 0x00038888
+	// Token: 0x06000995 RID: 2453 RVA: 0x0003A640 File Offset: 0x00038840
 	private void Awake()
 	{
 		if (Application.isPlaying && !this.testInEditor)
@@ -19,19 +19,19 @@ public class GorillaIK : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000992 RID: 2450 RVA: 0x0003A75A File Offset: 0x0003895A
+	// Token: 0x06000996 RID: 2454 RVA: 0x0003A712 File Offset: 0x00038912
 	private void OnEnable()
 	{
 		GorillaIKMgr.Instance.RegisterIK(this);
 	}
 
-	// Token: 0x06000993 RID: 2451 RVA: 0x0003A767 File Offset: 0x00038967
+	// Token: 0x06000997 RID: 2455 RVA: 0x0003A71F File Offset: 0x0003891F
 	private void OnDisable()
 	{
 		GorillaIKMgr.Instance.DeregisterIK(this);
 	}
 
-	// Token: 0x06000994 RID: 2452 RVA: 0x0003A774 File Offset: 0x00038974
+	// Token: 0x06000998 RID: 2456 RVA: 0x0003A72C File Offset: 0x0003892C
 	private void ArmIK(ref Transform upperArm, ref Transform lowerArm, ref Transform hand, Quaternion initRotUpper, Quaternion initRotLower, Transform target)
 	{
 		upperArm.localRotation = initRotUpper;
@@ -54,81 +54,81 @@ public class GorillaIK : MonoBehaviour
 		hand.rotation = target.rotation;
 	}
 
-	// Token: 0x04000BAF RID: 2991
+	// Token: 0x04000BB3 RID: 2995
 	public Transform headBone;
 
-	// Token: 0x04000BB0 RID: 2992
+	// Token: 0x04000BB4 RID: 2996
 	public Transform leftUpperArm;
 
-	// Token: 0x04000BB1 RID: 2993
+	// Token: 0x04000BB5 RID: 2997
 	public Transform leftLowerArm;
 
-	// Token: 0x04000BB2 RID: 2994
+	// Token: 0x04000BB6 RID: 2998
 	public Transform leftHand;
 
-	// Token: 0x04000BB3 RID: 2995
+	// Token: 0x04000BB7 RID: 2999
 	public Transform rightUpperArm;
 
-	// Token: 0x04000BB4 RID: 2996
+	// Token: 0x04000BB8 RID: 3000
 	public Transform rightLowerArm;
 
-	// Token: 0x04000BB5 RID: 2997
+	// Token: 0x04000BB9 RID: 3001
 	public Transform rightHand;
 
-	// Token: 0x04000BB6 RID: 2998
+	// Token: 0x04000BBA RID: 3002
 	public Transform targetLeft;
 
-	// Token: 0x04000BB7 RID: 2999
+	// Token: 0x04000BBB RID: 3003
 	public Transform targetRight;
 
-	// Token: 0x04000BB8 RID: 3000
+	// Token: 0x04000BBC RID: 3004
 	public Transform targetHead;
 
-	// Token: 0x04000BB9 RID: 3001
+	// Token: 0x04000BBD RID: 3005
 	public Quaternion initialUpperLeft;
 
-	// Token: 0x04000BBA RID: 3002
+	// Token: 0x04000BBE RID: 3006
 	public Quaternion initialLowerLeft;
 
-	// Token: 0x04000BBB RID: 3003
+	// Token: 0x04000BBF RID: 3007
 	public Quaternion initialUpperRight;
 
-	// Token: 0x04000BBC RID: 3004
+	// Token: 0x04000BC0 RID: 3008
 	public Quaternion initialLowerRight;
 
-	// Token: 0x04000BBD RID: 3005
+	// Token: 0x04000BC1 RID: 3009
 	public Quaternion newRotationUpper;
 
-	// Token: 0x04000BBE RID: 3006
+	// Token: 0x04000BC2 RID: 3010
 	public Quaternion newRotationLower;
 
-	// Token: 0x04000BBF RID: 3007
+	// Token: 0x04000BC3 RID: 3011
 	public float dU;
 
-	// Token: 0x04000BC0 RID: 3008
+	// Token: 0x04000BC4 RID: 3012
 	public float dL;
 
-	// Token: 0x04000BC1 RID: 3009
+	// Token: 0x04000BC5 RID: 3013
 	public float dMax;
 
-	// Token: 0x04000BC2 RID: 3010
+	// Token: 0x04000BC6 RID: 3014
 	public bool testInEditor;
 
-	// Token: 0x04000BC3 RID: 3011
+	// Token: 0x04000BC7 RID: 3015
 	public bool reset;
 
-	// Token: 0x04000BC4 RID: 3012
+	// Token: 0x04000BC8 RID: 3016
 	public bool testDefineRot;
 
-	// Token: 0x04000BC5 RID: 3013
+	// Token: 0x04000BC9 RID: 3017
 	public bool moveOnce;
 
-	// Token: 0x04000BC6 RID: 3014
+	// Token: 0x04000BCA RID: 3018
 	public float eps;
 
-	// Token: 0x04000BC7 RID: 3015
+	// Token: 0x04000BCB RID: 3019
 	public float upperArmAngle;
 
-	// Token: 0x04000BC8 RID: 3016
+	// Token: 0x04000BCC RID: 3020
 	public float elbowAngle;
 }

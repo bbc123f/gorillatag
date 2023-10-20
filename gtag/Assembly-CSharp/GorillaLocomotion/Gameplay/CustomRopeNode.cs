@@ -3,10 +3,10 @@ using UnityEngine;
 
 namespace GorillaLocomotion.Gameplay
 {
-	// Token: 0x02000293 RID: 659
+	// Token: 0x02000295 RID: 661
 	public class CustomRopeNode : MonoBehaviour
 	{
-		// Token: 0x040013BD RID: 5053
+		// Token: 0x040013CA RID: 5066
 		public Vector3 previousPos;
 	}
 }

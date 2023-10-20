@@ -4,7 +4,7 @@ using UnityEngine;
 // Token: 0x02000081 RID: 129
 public class LocomotionController : MonoBehaviour
 {
-	// Token: 0x0600029C RID: 668 RVA: 0x00011734 File Offset: 0x0000F934
+	// Token: 0x0600029C RID: 668 RVA: 0x00011510 File Offset: 0x0000F710
 	private void Start()
 	{
 		if (this.CameraRig == null)

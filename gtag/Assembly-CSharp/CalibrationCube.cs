@@ -8,13 +8,13 @@ using UnityEngine.Animations.Rigging;
 // Token: 0x020000F1 RID: 241
 public class CalibrationCube : MonoBehaviour
 {
-	// Token: 0x060005A0 RID: 1440 RVA: 0x000232A7 File Offset: 0x000214A7
+	// Token: 0x060005A0 RID: 1440 RVA: 0x0002309B File Offset: 0x0002129B
 	private void Awake()
 	{
 		this.calibratedLength = this.baseLength;
 	}
 
-	// Token: 0x060005A1 RID: 1441 RVA: 0x000232B8 File Offset: 0x000214B8
+	// Token: 0x060005A1 RID: 1441 RVA: 0x000230AC File Offset: 0x000212AC
 	private void Start()
 	{
 		try
@@ -26,17 +26,17 @@ public class CalibrationCube : MonoBehaviour
 		}
 	}
 
-	// Token: 0x060005A2 RID: 1442 RVA: 0x000232E4 File Offset: 0x000214E4
+	// Token: 0x060005A2 RID: 1442 RVA: 0x000230D8 File Offset: 0x000212D8
 	private void OnTriggerEnter(Collider other)
 	{
 	}
 
-	// Token: 0x060005A3 RID: 1443 RVA: 0x000232E6 File Offset: 0x000214E6
+	// Token: 0x060005A3 RID: 1443 RVA: 0x000230DA File Offset: 0x000212DA
 	private void OnTriggerExit(Collider other)
 	{
 	}
 
-	// Token: 0x060005A4 RID: 1444 RVA: 0x000232E8 File Offset: 0x000214E8
+	// Token: 0x060005A4 RID: 1444 RVA: 0x000230DC File Offset: 0x000212DC
 	public void RecalibrateSize(bool pressed)
 	{
 		this.lastCalibratedLength = this.calibratedLength;
@@ -54,12 +54,12 @@ public class CalibrationCube : MonoBehaviour
 		GorillaPlaySpace.Instance.bodyCollider.gameObject.transform.localScale *= d;
 	}
 
-	// Token: 0x060005A5 RID: 1445 RVA: 0x00023442 File Offset: 0x00021642
+	// Token: 0x060005A5 RID: 1445 RVA: 0x00023236 File Offset: 0x00021436
 	private void OnCollisionEnter(Collision collision)
 	{
 	}
 
-	// Token: 0x060005A6 RID: 1446 RVA: 0x00023444 File Offset: 0x00021644
+	// Token: 0x060005A6 RID: 1446 RVA: 0x00023238 File Offset: 0x00021438
 	private void OnCollisionExit(Collision collision)
 	{
 		try

@@ -5,13 +5,13 @@ using UnityEngine;
 // Token: 0x020000BC RID: 188
 public class BouncingBallLogic : MonoBehaviour
 {
-	// Token: 0x06000420 RID: 1056 RVA: 0x0001B3DE File Offset: 0x000195DE
+	// Token: 0x06000420 RID: 1056 RVA: 0x0001B1BA File Offset: 0x000193BA
 	private void OnCollisionEnter()
 	{
 		this.audioSource.PlayOneShot(this.bounce);
 	}
 
-	// Token: 0x06000421 RID: 1057 RVA: 0x0001B3F1 File Offset: 0x000195F1
+	// Token: 0x06000421 RID: 1057 RVA: 0x0001B1CD File Offset: 0x000193CD
 	private void Start()
 	{
 		this.audioSource = base.GetComponent<AudioSource>();
@@ -19,7 +19,7 @@ public class BouncingBallLogic : MonoBehaviour
 		this.centerEyeCamera = OVRManager.instance.GetComponentInChildren<OVRCameraRig>().centerEyeAnchor;
 	}
 
-	// Token: 0x06000422 RID: 1058 RVA: 0x0001B428 File Offset: 0x00019628
+	// Token: 0x06000422 RID: 1058 RVA: 0x0001B204 File Offset: 0x00019404
 	private void Update()
 	{
 		if (!this.isReleased)
@@ -37,7 +37,7 @@ public class BouncingBallLogic : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000423 RID: 1059 RVA: 0x0001B4A0 File Offset: 0x000196A0
+	// Token: 0x06000423 RID: 1059 RVA: 0x0001B27C File Offset: 0x0001947C
 	private void UpdateVisibility()
 	{
 		Vector3 direction = this.centerEyeCamera.position - base.transform.position;
@@ -56,7 +56,7 @@ public class BouncingBallLogic : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000424 RID: 1060 RVA: 0x0001B514 File Offset: 0x00019714
+	// Token: 0x06000424 RID: 1060 RVA: 0x0001B2F0 File Offset: 0x000194F0
 	private void SetVisible(bool setVisible)
 	{
 		if (this.isVisible && !setVisible)
@@ -71,7 +71,7 @@ public class BouncingBallLogic : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000425 RID: 1061 RVA: 0x0001B569 File Offset: 0x00019769
+	// Token: 0x06000425 RID: 1061 RVA: 0x0001B345 File Offset: 0x00019545
 	public void Release(Vector3 pos, Vector3 vel, Vector3 angVel)
 	{
 		this.isReleased = true;
@@ -81,7 +81,7 @@ public class BouncingBallLogic : MonoBehaviour
 		base.GetComponent<Rigidbody>().angularVelocity = angVel;
 	}
 
-	// Token: 0x06000426 RID: 1062 RVA: 0x0001B5A2 File Offset: 0x000197A2
+	// Token: 0x06000426 RID: 1062 RVA: 0x0001B37E File Offset: 0x0001957E
 	private IEnumerator PlayPopCallback(float clipLength)
 	{
 		yield return new WaitForSeconds(clipLength);

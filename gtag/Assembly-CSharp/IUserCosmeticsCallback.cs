@@ -1,13 +1,13 @@
 ﻿using System;
 
-// Token: 0x020001F6 RID: 502
+// Token: 0x020001F7 RID: 503
 internal interface IUserCosmeticsCallback
 {
-	// Token: 0x06000CD5 RID: 3285
+	// Token: 0x06000CDB RID: 3291
 	bool OnGetUserCosmetics(string cosmetics);
 
-	// Token: 0x17000098 RID: 152
-	// (get) Token: 0x06000CD6 RID: 3286
-	// (set) Token: 0x06000CD7 RID: 3287
+	// Token: 0x1700009A RID: 154
+	// (get) Token: 0x06000CDC RID: 3292
+	// (set) Token: 0x06000CDD RID: 3293
 	bool PendingUpdate { get; set; }
 }

@@ -4,14 +4,14 @@ using UnityEngine;
 // Token: 0x02000038 RID: 56
 public class MagicRingCosmetic : MonoBehaviour
 {
-	// Token: 0x0600013D RID: 317 RVA: 0x0000ABC7 File Offset: 0x00008DC7
+	// Token: 0x0600013D RID: 317 RVA: 0x0000AC0F File Offset: 0x00008E0F
 	protected void Awake()
 	{
 		this.materialPropertyBlock = new MaterialPropertyBlock();
 		this.defaultEmissiveColor = this.ringRenderer.sharedMaterial.GetColor(this.emissionColorShaderPropID);
 	}
 
-	// Token: 0x0600013E RID: 318 RVA: 0x0000ABF0 File Offset: 0x00008DF0
+	// Token: 0x0600013E RID: 318 RVA: 0x0000AC38 File Offset: 0x00008E38
 	protected void LateUpdate()
 	{
 		float celsius = this.thermalReceiver.celsius;
@@ -68,12 +68,12 @@ public class MagicRingCosmetic : MonoBehaviour
 	// Token: 0x040001BD RID: 445
 	private MaterialPropertyBlock materialPropertyBlock;
 
-	// Token: 0x02000390 RID: 912
+	// Token: 0x02000392 RID: 914
 	private enum FadeState
 	{
-		// Token: 0x04001B13 RID: 6931
+		// Token: 0x04001B20 RID: 6944
 		FadedOut,
-		// Token: 0x04001B14 RID: 6932
+		// Token: 0x04001B21 RID: 6945
 		FadedIn
 	}
 }

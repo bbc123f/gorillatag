@@ -6,13 +6,13 @@ using UnityEngine.AI;
 // Token: 0x02000093 RID: 147
 public class TeleportTargetHandlerNavMesh : TeleportTargetHandler
 {
-	// Token: 0x06000330 RID: 816 RVA: 0x000134FE File Offset: 0x000116FE
+	// Token: 0x06000330 RID: 816 RVA: 0x000132DA File Offset: 0x000114DA
 	private void Awake()
 	{
 		this._path = new NavMeshPath();
 	}
 
-	// Token: 0x06000331 RID: 817 RVA: 0x0001350C File Offset: 0x0001170C
+	// Token: 0x06000331 RID: 817 RVA: 0x000132E8 File Offset: 0x000114E8
 	protected override bool ConsiderTeleport(Vector3 start, ref Vector3 end)
 	{
 		if (base.LocomotionTeleport.AimCollisionTest(start, end, this.AimCollisionLayerMask, out this.AimData.TargetHitInfo))
@@ -24,7 +24,7 @@ public class TeleportTargetHandlerNavMesh : TeleportTargetHandler
 		return false;
 	}
 
-	// Token: 0x06000332 RID: 818 RVA: 0x00013578 File Offset: 0x00011778
+	// Token: 0x06000332 RID: 818 RVA: 0x00013354 File Offset: 0x00011554
 	public override Vector3? ConsiderDestination(Vector3 location)
 	{
 		Vector3? result = base.ConsiderDestination(location);
@@ -41,7 +41,7 @@ public class TeleportTargetHandlerNavMesh : TeleportTargetHandler
 		return null;
 	}
 
-	// Token: 0x06000333 RID: 819 RVA: 0x000135D4 File Offset: 0x000117D4
+	// Token: 0x06000333 RID: 819 RVA: 0x000133B0 File Offset: 0x000115B0
 	[Conditional("SHOW_PATH_RESULT")]
 	private void OnDrawGizmos()
 	{

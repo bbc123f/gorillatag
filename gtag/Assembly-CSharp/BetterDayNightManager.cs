@@ -4,16 +4,16 @@ using System.Collections.Generic;
 using GorillaNetworking;
 using UnityEngine;
 
-// Token: 0x020001A7 RID: 423
+// Token: 0x020001A8 RID: 424
 public class BetterDayNightManager : MonoBehaviour, ITimeOfDaySystem
 {
-	// Token: 0x1700007D RID: 125
-	// (get) Token: 0x06000ADD RID: 2781 RVA: 0x000433A9 File Offset: 0x000415A9
-	// (set) Token: 0x06000ADE RID: 2782 RVA: 0x000433B1 File Offset: 0x000415B1
+	// Token: 0x1700007F RID: 127
+	// (get) Token: 0x06000AE2 RID: 2786 RVA: 0x000434E1 File Offset: 0x000416E1
+	// (set) Token: 0x06000AE3 RID: 2787 RVA: 0x000434E9 File Offset: 0x000416E9
 	public string currentTimeOfDay { get; private set; }
 
-	// Token: 0x1700007E RID: 126
-	// (get) Token: 0x06000ADF RID: 2783 RVA: 0x000433BA File Offset: 0x000415BA
+	// Token: 0x17000080 RID: 128
+	// (get) Token: 0x06000AE4 RID: 2788 RVA: 0x000434F2 File Offset: 0x000416F2
 	double ITimeOfDaySystem.currentTimeInSeconds
 	{
 		get
@@ -22,8 +22,8 @@ public class BetterDayNightManager : MonoBehaviour, ITimeOfDaySystem
 		}
 	}
 
-	// Token: 0x1700007F RID: 127
-	// (get) Token: 0x06000AE0 RID: 2784 RVA: 0x000433C2 File Offset: 0x000415C2
+	// Token: 0x17000081 RID: 129
+	// (get) Token: 0x06000AE5 RID: 2789 RVA: 0x000434FA File Offset: 0x000416FA
 	double ITimeOfDaySystem.totalTimeInSeconds
 	{
 		get
@@ -32,7 +32,7 @@ public class BetterDayNightManager : MonoBehaviour, ITimeOfDaySystem
 		}
 	}
 
-	// Token: 0x06000AE1 RID: 2785 RVA: 0x000433CC File Offset: 0x000415CC
+	// Token: 0x06000AE6 RID: 2790 RVA: 0x00043504 File Offset: 0x00041704
 	private void OnEnable()
 	{
 		if (BetterDayNightManager.instance == null)
@@ -59,18 +59,18 @@ public class BetterDayNightManager : MonoBehaviour, ITimeOfDaySystem
 		base.StartCoroutine(this.UpdateTimeOfDay());
 	}
 
-	// Token: 0x06000AE2 RID: 2786 RVA: 0x000434B7 File Offset: 0x000416B7
+	// Token: 0x06000AE7 RID: 2791 RVA: 0x000435EF File Offset: 0x000417EF
 	private void OnDisable()
 	{
 		base.StopAllCoroutines();
 	}
 
-	// Token: 0x06000AE3 RID: 2787 RVA: 0x000434BF File Offset: 0x000416BF
+	// Token: 0x06000AE8 RID: 2792 RVA: 0x000435F7 File Offset: 0x000417F7
 	protected void OnDestroy()
 	{
 	}
 
-	// Token: 0x06000AE4 RID: 2788 RVA: 0x000434C4 File Offset: 0x000416C4
+	// Token: 0x06000AE9 RID: 2793 RVA: 0x000435FC File Offset: 0x000417FC
 	private Vector4 MaterialColorCorrection(Vector4 color)
 	{
 		if (color.x < 0.5f)
@@ -92,7 +92,7 @@ public class BetterDayNightManager : MonoBehaviour, ITimeOfDaySystem
 		return color;
 	}
 
-	// Token: 0x06000AE5 RID: 2789 RVA: 0x00043546 File Offset: 0x00041746
+	// Token: 0x06000AEA RID: 2794 RVA: 0x0004367E File Offset: 0x0004187E
 	private IEnumerator UpdateTimeOfDay()
 	{
 		yield return 0;
@@ -189,7 +189,7 @@ public class BetterDayNightManager : MonoBehaviour, ITimeOfDaySystem
 		yield break;
 	}
 
-	// Token: 0x06000AE6 RID: 2790 RVA: 0x00043558 File Offset: 0x00041758
+	// Token: 0x06000AEB RID: 2795 RVA: 0x00043690 File Offset: 0x00041890
 	private void ChangeLerps(float newLerp)
 	{
 		Shader.SetGlobalFloat(this._GlobalDayNightLerpValue, newLerp);
@@ -206,7 +206,7 @@ public class BetterDayNightManager : MonoBehaviour, ITimeOfDaySystem
 		}
 	}
 
-	// Token: 0x06000AE7 RID: 2791 RVA: 0x00043638 File Offset: 0x00041838
+	// Token: 0x06000AEC RID: 2796 RVA: 0x00043770 File Offset: 0x00041970
 	private void ChangeMaps(int fromIndex, int toIndex)
 	{
 		this.fromWeatherIndex = this.currentWeatherIndex;
@@ -249,25 +249,25 @@ public class BetterDayNightManager : MonoBehaviour, ITimeOfDaySystem
 		this.colorToDarker = this.standardUnlitColorWithPremadeColorDarker[toIndex];
 	}
 
-	// Token: 0x06000AE8 RID: 2792 RVA: 0x0004381C File Offset: 0x00041A1C
+	// Token: 0x06000AED RID: 2797 RVA: 0x00043954 File Offset: 0x00041B54
 	public BetterDayNightManager.WeatherType CurrentWeather()
 	{
 		return this.weatherCycle[this.currentWeatherIndex];
 	}
 
-	// Token: 0x06000AE9 RID: 2793 RVA: 0x0004382B File Offset: 0x00041A2B
+	// Token: 0x06000AEE RID: 2798 RVA: 0x00043963 File Offset: 0x00041B63
 	public BetterDayNightManager.WeatherType NextWeather()
 	{
 		return this.weatherCycle[(this.currentWeatherIndex + 1) % this.weatherCycle.Length];
 	}
 
-	// Token: 0x06000AEA RID: 2794 RVA: 0x00043845 File Offset: 0x00041A45
+	// Token: 0x06000AEF RID: 2799 RVA: 0x0004397D File Offset: 0x00041B7D
 	public BetterDayNightManager.WeatherType LastWeather()
 	{
 		return this.weatherCycle[(this.currentWeatherIndex - 1) % this.weatherCycle.Length];
 	}
 
-	// Token: 0x06000AEB RID: 2795 RVA: 0x00043860 File Offset: 0x00041A60
+	// Token: 0x06000AF0 RID: 2800 RVA: 0x00043998 File Offset: 0x00041B98
 	private void GenerateWeatherEventTimes()
 	{
 		this.weatherCycle = new BetterDayNightManager.WeatherType[100 * this.dayNightLightmaps.Length];
@@ -290,7 +290,7 @@ public class BetterDayNightManager : MonoBehaviour, ITimeOfDaySystem
 		}
 	}
 
-	// Token: 0x06000AEC RID: 2796 RVA: 0x00043938 File Offset: 0x00041B38
+	// Token: 0x06000AF1 RID: 2801 RVA: 0x00043A70 File Offset: 0x00041C70
 	public static int RegisterScheduledEvent(int hour, Action action)
 	{
 		int num = (int)(DateTime.Now.Ticks % 2147483647L);
@@ -307,13 +307,13 @@ public class BetterDayNightManager : MonoBehaviour, ITimeOfDaySystem
 		return num;
 	}
 
-	// Token: 0x06000AED RID: 2797 RVA: 0x00043995 File Offset: 0x00041B95
+	// Token: 0x06000AF2 RID: 2802 RVA: 0x00043ACD File Offset: 0x00041CCD
 	public static void UnregisterScheduledEvent(int id)
 	{
 		BetterDayNightManager.scheduledEvents.Remove(id);
 	}
 
-	// Token: 0x06000AEE RID: 2798 RVA: 0x000439A4 File Offset: 0x00041BA4
+	// Token: 0x06000AF3 RID: 2803 RVA: 0x00043ADC File Offset: 0x00041CDC
 	public void SetOverrideIndex(int index)
 	{
 		this.overrideIndex = index;
@@ -323,7 +323,7 @@ public class BetterDayNightManager : MonoBehaviour, ITimeOfDaySystem
 		this.ChangeMaps(this.currentTimeIndex, (this.currentTimeIndex + 1) % this.timeOfDayRange.Length);
 	}
 
-	// Token: 0x06000AEF RID: 2799 RVA: 0x00043A05 File Offset: 0x00041C05
+	// Token: 0x06000AF4 RID: 2804 RVA: 0x00043B3D File Offset: 0x00041D3D
 	public void AnimateLightFlash(int index, float fadeInDuration, float holdDuration, float fadeOutDuration)
 	{
 		if (this.animatingLightFlash != null)
@@ -333,7 +333,7 @@ public class BetterDayNightManager : MonoBehaviour, ITimeOfDaySystem
 		this.animatingLightFlash = base.StartCoroutine(this.AnimateLightFlashCo(index, fadeInDuration, holdDuration, fadeOutDuration));
 	}
 
-	// Token: 0x06000AF0 RID: 2800 RVA: 0x00043A32 File Offset: 0x00041C32
+	// Token: 0x06000AF5 RID: 2805 RVA: 0x00043B6A File Offset: 0x00041D6A
 	private IEnumerator AnimateLightFlashCo(int index, float fadeInDuration, float holdDuration, float fadeOutDuration)
 	{
 		int startMap = (this.currentLerp < 0.5f) ? this.currentTimeIndex : ((this.currentTimeIndex + 1) % this.timeOfDayRange.Length);
@@ -364,7 +364,7 @@ public class BetterDayNightManager : MonoBehaviour, ITimeOfDaySystem
 		yield break;
 	}
 
-	// Token: 0x06000AF1 RID: 2801 RVA: 0x00043A58 File Offset: 0x00041C58
+	// Token: 0x06000AF6 RID: 2806 RVA: 0x00043B90 File Offset: 0x00041D90
 	public void SetTimeOfDay(int timeIndex)
 	{
 		double num = 0.0;
@@ -376,252 +376,252 @@ public class BetterDayNightManager : MonoBehaviour, ITimeOfDaySystem
 		this.currentSetting = TimeSettings.Static;
 	}
 
-	// Token: 0x04000DAE RID: 3502
+	// Token: 0x04000DB2 RID: 3506
 	public static volatile BetterDayNightManager instance;
 
-	// Token: 0x04000DAF RID: 3503
+	// Token: 0x04000DB3 RID: 3507
 	public Shader standard;
 
-	// Token: 0x04000DB0 RID: 3504
+	// Token: 0x04000DB4 RID: 3508
 	public Shader standardCutout;
 
-	// Token: 0x04000DB1 RID: 3505
+	// Token: 0x04000DB5 RID: 3509
 	public Shader gorillaUnlit;
 
-	// Token: 0x04000DB2 RID: 3506
+	// Token: 0x04000DB6 RID: 3510
 	public Shader gorillaUnlitCutout;
 
-	// Token: 0x04000DB3 RID: 3507
+	// Token: 0x04000DB7 RID: 3511
 	public Material[] standardMaterialsUnlit;
 
-	// Token: 0x04000DB4 RID: 3508
+	// Token: 0x04000DB8 RID: 3512
 	public Material[] standardMaterialsUnlitDarker;
 
-	// Token: 0x04000DB5 RID: 3509
+	// Token: 0x04000DB9 RID: 3513
 	public Material[] dayNightSupportedMaterials;
 
-	// Token: 0x04000DB6 RID: 3510
+	// Token: 0x04000DBA RID: 3514
 	public Material[] dayNightSupportedMaterialsCutout;
 
-	// Token: 0x04000DB7 RID: 3511
+	// Token: 0x04000DBB RID: 3515
 	public Texture2D[] dayNightLightmaps;
 
-	// Token: 0x04000DB8 RID: 3512
+	// Token: 0x04000DBC RID: 3516
 	public Texture2D[] dayNightWeatherLightmaps;
 
-	// Token: 0x04000DB9 RID: 3513
+	// Token: 0x04000DBD RID: 3517
 	public Texture2D[] dayNightSkyboxTextures;
 
-	// Token: 0x04000DBA RID: 3514
+	// Token: 0x04000DBE RID: 3518
 	public Texture2D[] cloudsDayNightSkyboxTextures;
 
-	// Token: 0x04000DBB RID: 3515
+	// Token: 0x04000DBF RID: 3519
 	public Texture2D[] beachDayNightSkyboxTextures;
 
-	// Token: 0x04000DBC RID: 3516
+	// Token: 0x04000DC0 RID: 3520
 	public Texture2D[] dayNightWeatherSkyboxTextures;
 
-	// Token: 0x04000DBD RID: 3517
+	// Token: 0x04000DC1 RID: 3521
 	public float[] standardUnlitColor;
 
-	// Token: 0x04000DBE RID: 3518
+	// Token: 0x04000DC2 RID: 3522
 	public float[] standardUnlitColorWithPremadeColorDarker;
 
-	// Token: 0x04000DBF RID: 3519
+	// Token: 0x04000DC3 RID: 3523
 	public float currentLerp;
 
-	// Token: 0x04000DC0 RID: 3520
+	// Token: 0x04000DC4 RID: 3524
 	public float currentTimestep;
 
-	// Token: 0x04000DC1 RID: 3521
+	// Token: 0x04000DC5 RID: 3525
 	public double[] timeOfDayRange;
 
-	// Token: 0x04000DC2 RID: 3522
+	// Token: 0x04000DC6 RID: 3526
 	public double timeMultiplier;
 
-	// Token: 0x04000DC3 RID: 3523
+	// Token: 0x04000DC7 RID: 3527
 	private float lastTime;
 
-	// Token: 0x04000DC4 RID: 3524
+	// Token: 0x04000DC8 RID: 3528
 	private double currentTime;
 
-	// Token: 0x04000DC5 RID: 3525
+	// Token: 0x04000DC9 RID: 3529
 	private double totalHours;
 
-	// Token: 0x04000DC6 RID: 3526
+	// Token: 0x04000DCA RID: 3530
 	private double totalSeconds;
 
-	// Token: 0x04000DC7 RID: 3527
+	// Token: 0x04000DCB RID: 3531
 	private float colorFrom;
 
-	// Token: 0x04000DC8 RID: 3528
+	// Token: 0x04000DCC RID: 3532
 	private float colorTo;
 
-	// Token: 0x04000DC9 RID: 3529
+	// Token: 0x04000DCD RID: 3533
 	private float colorFromDarker;
 
-	// Token: 0x04000DCA RID: 3530
+	// Token: 0x04000DCE RID: 3534
 	private float colorToDarker;
 
-	// Token: 0x04000DCB RID: 3531
+	// Token: 0x04000DCF RID: 3535
 	public int currentTimeIndex;
 
-	// Token: 0x04000DCC RID: 3532
+	// Token: 0x04000DD0 RID: 3536
 	public int currentWeatherIndex;
 
-	// Token: 0x04000DCD RID: 3533
+	// Token: 0x04000DD1 RID: 3537
 	private int lastIndex;
 
-	// Token: 0x04000DCE RID: 3534
+	// Token: 0x04000DD2 RID: 3538
 	private double currentIndexSeconds;
 
-	// Token: 0x04000DCF RID: 3535
+	// Token: 0x04000DD3 RID: 3539
 	private float tempLerp;
 
-	// Token: 0x04000DD0 RID: 3536
+	// Token: 0x04000DD4 RID: 3540
 	private double baseSeconds;
 
-	// Token: 0x04000DD1 RID: 3537
+	// Token: 0x04000DD5 RID: 3541
 	private bool computerInit;
 
-	// Token: 0x04000DD2 RID: 3538
+	// Token: 0x04000DD6 RID: 3542
 	private float h;
 
-	// Token: 0x04000DD3 RID: 3539
+	// Token: 0x04000DD7 RID: 3543
 	private float s;
 
-	// Token: 0x04000DD4 RID: 3540
+	// Token: 0x04000DD8 RID: 3544
 	private float v;
 
-	// Token: 0x04000DD5 RID: 3541
+	// Token: 0x04000DD9 RID: 3545
 	public int mySeed;
 
-	// Token: 0x04000DD6 RID: 3542
+	// Token: 0x04000DDA RID: 3546
 	public Random randomNumberGenerator = new Random();
 
-	// Token: 0x04000DD7 RID: 3543
+	// Token: 0x04000DDB RID: 3547
 	public BetterDayNightManager.WeatherType[] weatherCycle;
 
-	// Token: 0x04000DD9 RID: 3545
+	// Token: 0x04000DDD RID: 3549
 	public float rainChance = 0.3f;
 
-	// Token: 0x04000DDA RID: 3546
+	// Token: 0x04000DDE RID: 3550
 	public int maxRainDuration = 5;
 
-	// Token: 0x04000DDB RID: 3547
+	// Token: 0x04000DDF RID: 3551
 	private int rainDuration;
 
-	// Token: 0x04000DDC RID: 3548
+	// Token: 0x04000DE0 RID: 3552
 	private float remainingSeconds;
 
-	// Token: 0x04000DDD RID: 3549
+	// Token: 0x04000DE1 RID: 3553
 	private long initialDayCycles;
 
-	// Token: 0x04000DDE RID: 3550
+	// Token: 0x04000DE2 RID: 3554
 	private long gameEpochDay;
 
-	// Token: 0x04000DDF RID: 3551
+	// Token: 0x04000DE3 RID: 3555
 	private int currentWeatherCycle;
 
-	// Token: 0x04000DE0 RID: 3552
+	// Token: 0x04000DE4 RID: 3556
 	private int fromWeatherIndex;
 
-	// Token: 0x04000DE1 RID: 3553
+	// Token: 0x04000DE5 RID: 3557
 	private int toWeatherIndex;
 
-	// Token: 0x04000DE2 RID: 3554
+	// Token: 0x04000DE6 RID: 3558
 	private Texture2D fromMap;
 
-	// Token: 0x04000DE3 RID: 3555
+	// Token: 0x04000DE7 RID: 3559
 	private Texture2D fromSky;
 
-	// Token: 0x04000DE4 RID: 3556
+	// Token: 0x04000DE8 RID: 3560
 	private Texture2D fromSky2;
 
-	// Token: 0x04000DE5 RID: 3557
+	// Token: 0x04000DE9 RID: 3561
 	private Texture2D fromSky3;
 
-	// Token: 0x04000DE6 RID: 3558
+	// Token: 0x04000DEA RID: 3562
 	private Texture2D toMap;
 
-	// Token: 0x04000DE7 RID: 3559
+	// Token: 0x04000DEB RID: 3563
 	private Texture2D toSky;
 
-	// Token: 0x04000DE8 RID: 3560
+	// Token: 0x04000DEC RID: 3564
 	private Texture2D toSky2;
 
-	// Token: 0x04000DE9 RID: 3561
+	// Token: 0x04000DED RID: 3565
 	private Texture2D toSky3;
 
-	// Token: 0x04000DEA RID: 3562
+	// Token: 0x04000DEE RID: 3566
 	public AddCollidersToParticleSystemTriggers[] weatherSystems;
 
-	// Token: 0x04000DEB RID: 3563
+	// Token: 0x04000DEF RID: 3567
 	public List<Collider> collidersToAddToWeatherSystems = new List<Collider>();
 
-	// Token: 0x04000DEC RID: 3564
+	// Token: 0x04000DF0 RID: 3568
 	public int overrideIndex = -1;
 
-	// Token: 0x04000DED RID: 3565
+	// Token: 0x04000DF1 RID: 3569
 	private static readonly Dictionary<int, BetterDayNightManager.ScheduledEvent> scheduledEvents = new Dictionary<int, BetterDayNightManager.ScheduledEvent>(256);
 
-	// Token: 0x04000DEE RID: 3566
+	// Token: 0x04000DF2 RID: 3570
 	public TimeSettings currentSetting;
 
-	// Token: 0x04000DEF RID: 3567
+	// Token: 0x04000DF3 RID: 3571
 	private ShaderHashId _Color = "_Color";
 
-	// Token: 0x04000DF0 RID: 3568
+	// Token: 0x04000DF4 RID: 3572
 	private ShaderHashId _GlobalDayNightLerpValue = "_GlobalDayNightLerpValue";
 
-	// Token: 0x04000DF1 RID: 3569
+	// Token: 0x04000DF5 RID: 3573
 	private ShaderHashId _GlobalDayNightLightmap1 = "_GlobalDayNightLightmap1";
 
-	// Token: 0x04000DF2 RID: 3570
+	// Token: 0x04000DF6 RID: 3574
 	private ShaderHashId _GlobalDayNightLightmap2 = "_GlobalDayNightLightmap2";
 
-	// Token: 0x04000DF3 RID: 3571
+	// Token: 0x04000DF7 RID: 3575
 	private ShaderHashId _GlobalDayNightSkyTex1 = "_GlobalDayNightSkyTex1";
 
-	// Token: 0x04000DF4 RID: 3572
+	// Token: 0x04000DF8 RID: 3576
 	private ShaderHashId _GlobalDayNightSkyTex2 = "_GlobalDayNightSkyTex2";
 
-	// Token: 0x04000DF5 RID: 3573
+	// Token: 0x04000DF9 RID: 3577
 	private ShaderHashId _GlobalDayNightSky2Tex1 = "_GlobalDayNightSky2Tex1";
 
-	// Token: 0x04000DF6 RID: 3574
+	// Token: 0x04000DFA RID: 3578
 	private ShaderHashId _GlobalDayNightSky2Tex2 = "_GlobalDayNightSky2Tex2";
 
-	// Token: 0x04000DF7 RID: 3575
+	// Token: 0x04000DFB RID: 3579
 	private ShaderHashId _GlobalDayNightSky3Tex1 = "_GlobalDayNightSky3Tex1";
 
-	// Token: 0x04000DF8 RID: 3576
+	// Token: 0x04000DFC RID: 3580
 	private ShaderHashId _GlobalDayNightSky3Tex2 = "_GlobalDayNightSky3Tex2";
 
-	// Token: 0x04000DF9 RID: 3577
+	// Token: 0x04000DFD RID: 3581
 	private Coroutine animatingLightFlash;
 
-	// Token: 0x02000449 RID: 1097
+	// Token: 0x0200044B RID: 1099
 	public enum WeatherType
 	{
-		// Token: 0x04001DBA RID: 7610
+		// Token: 0x04001DC7 RID: 7623
 		None,
-		// Token: 0x04001DBB RID: 7611
+		// Token: 0x04001DC8 RID: 7624
 		Raining,
-		// Token: 0x04001DBC RID: 7612
+		// Token: 0x04001DC9 RID: 7625
 		All
 	}
 
-	// Token: 0x0200044A RID: 1098
+	// Token: 0x0200044C RID: 1100
 	private class ScheduledEvent
 	{
-		// Token: 0x04001DBD RID: 7613
+		// Token: 0x04001DCA RID: 7626
 		public long lastDayCalled;
 
-		// Token: 0x04001DBE RID: 7614
+		// Token: 0x04001DCB RID: 7627
 		public int hour;
 
-		// Token: 0x04001DBF RID: 7615
+		// Token: 0x04001DCC RID: 7628
 		public Action action;
 	}
 }

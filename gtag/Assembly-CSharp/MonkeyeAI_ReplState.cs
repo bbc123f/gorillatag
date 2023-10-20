@@ -5,7 +5,7 @@ using UnityEngine;
 // Token: 0x02000026 RID: 38
 public class MonkeyeAI_ReplState : MonoBehaviour, IPunObservable
 {
-	// Token: 0x060000DC RID: 220 RVA: 0x00008BD0 File Offset: 0x00006DD0
+	// Token: 0x060000DC RID: 220 RVA: 0x00008C18 File Offset: 0x00006E18
 	void IPunObservable.OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
 	{
 		if (stream.IsWriting)
@@ -62,26 +62,26 @@ public class MonkeyeAI_ReplState : MonoBehaviour, IPunObservable
 	// Token: 0x0400012B RID: 299
 	public float alpha;
 
-	// Token: 0x02000389 RID: 905
+	// Token: 0x0200038B RID: 907
 	public enum EStates
 	{
-		// Token: 0x04001AFC RID: 6908
+		// Token: 0x04001B09 RID: 6921
 		Sleeping,
-		// Token: 0x04001AFD RID: 6909
+		// Token: 0x04001B0A RID: 6922
 		Patrolling,
-		// Token: 0x04001AFE RID: 6910
+		// Token: 0x04001B0B RID: 6923
 		Chasing,
-		// Token: 0x04001AFF RID: 6911
+		// Token: 0x04001B0C RID: 6924
 		ReturnToSleepPt,
-		// Token: 0x04001B00 RID: 6912
+		// Token: 0x04001B0D RID: 6925
 		GoToSleep,
-		// Token: 0x04001B01 RID: 6913
+		// Token: 0x04001B0E RID: 6926
 		BeginAttack,
-		// Token: 0x04001B02 RID: 6914
+		// Token: 0x04001B0F RID: 6927
 		OpenFloor,
-		// Token: 0x04001B03 RID: 6915
+		// Token: 0x04001B10 RID: 6928
 		DropPlayer,
-		// Token: 0x04001B04 RID: 6916
+		// Token: 0x04001B11 RID: 6929
 		CloseFloor
 	}
 }

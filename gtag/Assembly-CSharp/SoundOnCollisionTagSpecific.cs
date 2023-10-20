@@ -4,7 +4,7 @@ using UnityEngine;
 // Token: 0x02000070 RID: 112
 public class SoundOnCollisionTagSpecific : MonoBehaviour
 {
-	// Token: 0x06000238 RID: 568 RVA: 0x0000F474 File Offset: 0x0000D674
+	// Token: 0x06000238 RID: 568 RVA: 0x0000F250 File Offset: 0x0000D450
 	private void OnTriggerEnter(Collider collider)
 	{
 		if (Time.time > this.nextSound && collider.gameObject.CompareTag(this.tagName))

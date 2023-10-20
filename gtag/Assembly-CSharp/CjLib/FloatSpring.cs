@@ -3,31 +3,31 @@ using UnityEngine;
 
 namespace CjLib
 {
-	// Token: 0x02000357 RID: 855
+	// Token: 0x02000359 RID: 857
 	public struct FloatSpring
 	{
-		// Token: 0x060018D9 RID: 6361 RVA: 0x000898F9 File Offset: 0x00087AF9
+		// Token: 0x060018E2 RID: 6370 RVA: 0x00089DE1 File Offset: 0x00087FE1
 		public void Reset()
 		{
 			this.Value = 0f;
 			this.Velocity = 0f;
 		}
 
-		// Token: 0x060018DA RID: 6362 RVA: 0x00089911 File Offset: 0x00087B11
+		// Token: 0x060018E3 RID: 6371 RVA: 0x00089DF9 File Offset: 0x00087FF9
 		public void Reset(float initValue)
 		{
 			this.Value = initValue;
 			this.Velocity = 0f;
 		}
 
-		// Token: 0x060018DB RID: 6363 RVA: 0x00089925 File Offset: 0x00087B25
+		// Token: 0x060018E4 RID: 6372 RVA: 0x00089E0D File Offset: 0x0008800D
 		public void Reset(float initValue, float initVelocity)
 		{
 			this.Value = initValue;
 			this.Velocity = initVelocity;
 		}
 
-		// Token: 0x060018DC RID: 6364 RVA: 0x00089938 File Offset: 0x00087B38
+		// Token: 0x060018E5 RID: 6373 RVA: 0x00089E20 File Offset: 0x00088020
 		public float TrackDampingRatio(float targetValue, float angularFrequency, float dampingRatio, float deltaTime)
 		{
 			if (angularFrequency < MathUtil.Epsilon)
@@ -53,7 +53,7 @@ namespace CjLib
 			return this.Value;
 		}
 
-		// Token: 0x060018DD RID: 6365 RVA: 0x00089A08 File Offset: 0x00087C08
+		// Token: 0x060018E6 RID: 6374 RVA: 0x00089EF0 File Offset: 0x000880F0
 		public float TrackHalfLife(float targetValue, float frequencyHz, float halfLife, float deltaTime)
 		{
 			if (halfLife < MathUtil.Epsilon)
@@ -67,7 +67,7 @@ namespace CjLib
 			return this.TrackDampingRatio(targetValue, num, dampingRatio, deltaTime);
 		}
 
-		// Token: 0x060018DE RID: 6366 RVA: 0x00089A54 File Offset: 0x00087C54
+		// Token: 0x060018E7 RID: 6375 RVA: 0x00089F3C File Offset: 0x0008813C
 		public float TrackExponential(float targetValue, float halfLife, float deltaTime)
 		{
 			if (halfLife < MathUtil.Epsilon)
@@ -81,13 +81,13 @@ namespace CjLib
 			return this.TrackDampingRatio(targetValue, angularFrequency, dampingRatio, deltaTime);
 		}
 
-		// Token: 0x040019AD RID: 6573
+		// Token: 0x040019BA RID: 6586
 		public static readonly int Stride = 8;
 
-		// Token: 0x040019AE RID: 6574
+		// Token: 0x040019BB RID: 6587
 		public float Value;
 
-		// Token: 0x040019AF RID: 6575
+		// Token: 0x040019BC RID: 6588
 		public float Velocity;
 	}
 }

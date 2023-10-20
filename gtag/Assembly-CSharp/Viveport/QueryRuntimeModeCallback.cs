@@ -2,7 +2,7 @@
 
 namespace Viveport
 {
-	// Token: 0x02000246 RID: 582
-	// (Invoke) Token: 0x06000E40 RID: 3648
+	// Token: 0x02000247 RID: 583
+	// (Invoke) Token: 0x06000E47 RID: 3655
 	public delegate void QueryRuntimeModeCallback(int nResult, int emu);
 }

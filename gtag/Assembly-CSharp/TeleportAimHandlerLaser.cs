@@ -5,7 +5,7 @@ using UnityEngine;
 // Token: 0x02000085 RID: 133
 public class TeleportAimHandlerLaser : TeleportAimHandler
 {
-	// Token: 0x060002E1 RID: 737 RVA: 0x00012498 File Offset: 0x00010698
+	// Token: 0x060002E1 RID: 737 RVA: 0x00012274 File Offset: 0x00010474
 	public override void GetPoints(List<Vector3> points)
 	{
 		Ray ray;

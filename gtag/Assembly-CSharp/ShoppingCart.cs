@@ -4,7 +4,7 @@ using UnityEngine;
 // Token: 0x02000124 RID: 292
 public class ShoppingCart : MonoBehaviour
 {
-	// Token: 0x060007B2 RID: 1970 RVA: 0x00031103 File Offset: 0x0002F303
+	// Token: 0x060007B3 RID: 1971 RVA: 0x00030F43 File Offset: 0x0002F143
 	public void Awake()
 	{
 		if (ShoppingCart.instance == null)
@@ -18,12 +18,12 @@ public class ShoppingCart : MonoBehaviour
 		}
 	}
 
-	// Token: 0x060007B3 RID: 1971 RVA: 0x00031137 File Offset: 0x0002F337
+	// Token: 0x060007B4 RID: 1972 RVA: 0x00030F77 File Offset: 0x0002F177
 	private void Start()
 	{
 	}
 
-	// Token: 0x060007B4 RID: 1972 RVA: 0x00031139 File Offset: 0x0002F339
+	// Token: 0x060007B5 RID: 1973 RVA: 0x00030F79 File Offset: 0x0002F179
 	private void Update()
 	{
 	}

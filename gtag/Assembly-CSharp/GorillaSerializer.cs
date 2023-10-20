@@ -6,7 +6,7 @@ using UnityEngine;
 [RequireComponent(typeof(PhotonView))]
 internal class GorillaSerializer : MonoBehaviour, IPunObservable, IPunInstantiateMagicCallback
 {
-	// Token: 0x06000892 RID: 2194 RVA: 0x00034F68 File Offset: 0x00033168
+	// Token: 0x06000893 RID: 2195 RVA: 0x00034DA8 File Offset: 0x00032FA8
 	void IPunObservable.OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
 	{
 		if (!this.successfullInstantiate || info.Sender != info.photonView.Owner || this.serializeTarget == null)
@@ -21,7 +21,7 @@ internal class GorillaSerializer : MonoBehaviour, IPunObservable, IPunInstantiat
 		this.serializeTarget.OnSerializeWrite(stream, info);
 	}
 
-	// Token: 0x06000893 RID: 2195 RVA: 0x00034FBC File Offset: 0x000331BC
+	// Token: 0x06000894 RID: 2196 RVA: 0x00034DFC File Offset: 0x00032FFC
 	void IPunInstantiateMagicCallback.OnPhotonInstantiate(PhotonMessageInfo info)
 	{
 		if (this.photonView == null)
@@ -59,12 +59,12 @@ internal class GorillaSerializer : MonoBehaviour, IPunObservable, IPunInstantiat
 		this.photonView.ObservedComponents.Remove(this);
 	}
 
-	// Token: 0x06000894 RID: 2196 RVA: 0x0003509E File Offset: 0x0003329E
+	// Token: 0x06000895 RID: 2197 RVA: 0x00034EDE File Offset: 0x000330DE
 	protected virtual void OnSuccessfullInstantiate(PhotonMessageInfo info)
 	{
 	}
 
-	// Token: 0x06000895 RID: 2197 RVA: 0x000350A0 File Offset: 0x000332A0
+	// Token: 0x06000896 RID: 2198 RVA: 0x00034EE0 File Offset: 0x000330E0
 	protected virtual bool OnInstantiateSetup(PhotonMessageInfo info, out GameObject outTargetObject, out Type outTargetType)
 	{
 		outTargetType = typeof(IGorillaSerializeable);

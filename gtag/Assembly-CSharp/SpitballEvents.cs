@@ -4,7 +4,7 @@ using UnityEngine;
 // Token: 0x0200012C RID: 300
 public class SpitballEvents : SubEmitterListener
 {
-	// Token: 0x060007DA RID: 2010 RVA: 0x00031843 File Offset: 0x0002FA43
+	// Token: 0x060007DB RID: 2011 RVA: 0x00031683 File Offset: 0x0002F883
 	protected override void OnSubEmit()
 	{
 		base.OnSubEmit();

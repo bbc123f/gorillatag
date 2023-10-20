@@ -5,17 +5,17 @@ using UnityEngine;
 public class TeleportDestination : MonoBehaviour
 {
 	// Token: 0x17000022 RID: 34
-	// (get) Token: 0x060002EC RID: 748 RVA: 0x0001275D File Offset: 0x0001095D
-	// (set) Token: 0x060002ED RID: 749 RVA: 0x00012765 File Offset: 0x00010965
+	// (get) Token: 0x060002EC RID: 748 RVA: 0x00012539 File Offset: 0x00010739
+	// (set) Token: 0x060002ED RID: 749 RVA: 0x00012541 File Offset: 0x00010741
 	public bool IsValidDestination { get; private set; }
 
-	// Token: 0x060002EE RID: 750 RVA: 0x0001276E File Offset: 0x0001096E
+	// Token: 0x060002EE RID: 750 RVA: 0x0001254A File Offset: 0x0001074A
 	private TeleportDestination()
 	{
 		this._updateTeleportDestinationAction = new Action<bool, Vector3?, Quaternion?, Quaternion?>(this.UpdateTeleportDestination);
 	}
 
-	// Token: 0x060002EF RID: 751 RVA: 0x0001278C File Offset: 0x0001098C
+	// Token: 0x060002EF RID: 751 RVA: 0x00012568 File Offset: 0x00010768
 	public void OnEnable()
 	{
 		this.PositionIndicator.gameObject.SetActive(false);
@@ -27,7 +27,7 @@ public class TeleportDestination : MonoBehaviour
 		this._eventsActive = true;
 	}
 
-	// Token: 0x060002F0 RID: 752 RVA: 0x000127E1 File Offset: 0x000109E1
+	// Token: 0x060002F0 RID: 752 RVA: 0x000125BD File Offset: 0x000107BD
 	private void TryDisableEventHandlers()
 	{
 		if (!this._eventsActive)
@@ -38,18 +38,18 @@ public class TeleportDestination : MonoBehaviour
 		this._eventsActive = false;
 	}
 
-	// Token: 0x060002F1 RID: 753 RVA: 0x00012804 File Offset: 0x00010A04
+	// Token: 0x060002F1 RID: 753 RVA: 0x000125E0 File Offset: 0x000107E0
 	public void OnDisable()
 	{
 		this.TryDisableEventHandlers();
 	}
 
 	// Token: 0x14000010 RID: 16
-	// (add) Token: 0x060002F2 RID: 754 RVA: 0x0001280C File Offset: 0x00010A0C
-	// (remove) Token: 0x060002F3 RID: 755 RVA: 0x00012844 File Offset: 0x00010A44
+	// (add) Token: 0x060002F2 RID: 754 RVA: 0x000125E8 File Offset: 0x000107E8
+	// (remove) Token: 0x060002F3 RID: 755 RVA: 0x00012620 File Offset: 0x00010820
 	public event Action<TeleportDestination> Deactivated;
 
-	// Token: 0x060002F4 RID: 756 RVA: 0x00012879 File Offset: 0x00010A79
+	// Token: 0x060002F4 RID: 756 RVA: 0x00012655 File Offset: 0x00010855
 	public void OnDeactivated()
 	{
 		if (this.Deactivated != null)
@@ -60,13 +60,13 @@ public class TeleportDestination : MonoBehaviour
 		this.Recycle();
 	}
 
-	// Token: 0x060002F5 RID: 757 RVA: 0x00012896 File Offset: 0x00010A96
+	// Token: 0x060002F5 RID: 757 RVA: 0x00012672 File Offset: 0x00010872
 	public void Recycle()
 	{
 		this.LocomotionTeleport.RecycleTeleportDestination(this);
 	}
 
-	// Token: 0x060002F6 RID: 758 RVA: 0x000128A4 File Offset: 0x00010AA4
+	// Token: 0x060002F6 RID: 758 RVA: 0x00012680 File Offset: 0x00010880
 	public virtual void UpdateTeleportDestination(bool isValidDestination, Vector3? position, Quaternion? rotation, Quaternion? landingRotation)
 	{
 		this.IsValidDestination = isValidDestination;

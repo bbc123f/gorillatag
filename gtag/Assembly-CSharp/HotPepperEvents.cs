@@ -5,33 +5,33 @@ using UnityEngine.Events;
 // Token: 0x0200012A RID: 298
 public class HotPepperEvents : MonoBehaviour
 {
-	// Token: 0x060007D0 RID: 2000 RVA: 0x000316E7 File Offset: 0x0002F8E7
+	// Token: 0x060007D1 RID: 2001 RVA: 0x00031527 File Offset: 0x0002F727
 	private void OnEnable()
 	{
 		this._pepper.onBiteWorld.AddListener(new UnityAction<VRRig, int>(this.OnBiteWorld));
 		this._pepper.onBiteView.AddListener(new UnityAction<VRRig, int>(this.OnBiteView));
 	}
 
-	// Token: 0x060007D1 RID: 2001 RVA: 0x00031721 File Offset: 0x0002F921
+	// Token: 0x060007D2 RID: 2002 RVA: 0x00031561 File Offset: 0x0002F761
 	private void OnDisable()
 	{
 		this._pepper.onBiteWorld.RemoveListener(new UnityAction<VRRig, int>(this.OnBiteWorld));
 		this._pepper.onBiteView.RemoveListener(new UnityAction<VRRig, int>(this.OnBiteView));
 	}
 
-	// Token: 0x060007D2 RID: 2002 RVA: 0x0003175B File Offset: 0x0002F95B
+	// Token: 0x060007D3 RID: 2003 RVA: 0x0003159B File Offset: 0x0002F79B
 	public void OnBiteView(VRRig rig, int nextState)
 	{
 		this.OnBite(rig, nextState, true);
 	}
 
-	// Token: 0x060007D3 RID: 2003 RVA: 0x00031766 File Offset: 0x0002F966
+	// Token: 0x060007D4 RID: 2004 RVA: 0x000315A6 File Offset: 0x0002F7A6
 	public void OnBiteWorld(VRRig rig, int nextState)
 	{
 		this.OnBite(rig, nextState, false);
 	}
 
-	// Token: 0x060007D4 RID: 2004 RVA: 0x00031771 File Offset: 0x0002F971
+	// Token: 0x060007D5 RID: 2005 RVA: 0x000315B1 File Offset: 0x0002F7B1
 	public void OnBite(VRRig rig, int nextState, bool isViewRig)
 	{
 		if (nextState != 8)
@@ -45,16 +45,16 @@ public class HotPepperEvents : MonoBehaviour
 	[SerializeField]
 	private EdibleHoldable _pepper;
 
-	// Token: 0x02000410 RID: 1040
+	// Token: 0x02000412 RID: 1042
 	public enum EdibleState
 	{
-		// Token: 0x04001CE0 RID: 7392
+		// Token: 0x04001CED RID: 7405
 		A = 1,
-		// Token: 0x04001CE1 RID: 7393
+		// Token: 0x04001CEE RID: 7406
 		B,
-		// Token: 0x04001CE2 RID: 7394
+		// Token: 0x04001CEF RID: 7407
 		C = 4,
-		// Token: 0x04001CE3 RID: 7395
+		// Token: 0x04001CF0 RID: 7408
 		D = 8
 	}
 }

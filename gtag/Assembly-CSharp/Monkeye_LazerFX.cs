@@ -4,13 +4,13 @@ using UnityEngine;
 // Token: 0x02000027 RID: 39
 public class Monkeye_LazerFX : MonoBehaviour
 {
-	// Token: 0x060000DE RID: 222 RVA: 0x00008D28 File Offset: 0x00006F28
+	// Token: 0x060000DE RID: 222 RVA: 0x00008D70 File Offset: 0x00006F70
 	private void Awake()
 	{
 		base.enabled = false;
 	}
 
-	// Token: 0x060000DF RID: 223 RVA: 0x00008D34 File Offset: 0x00006F34
+	// Token: 0x060000DF RID: 223 RVA: 0x00008D7C File Offset: 0x00006F7C
 	public void EnableLazer(Transform[] eyes_, VRRig rig_)
 	{
 		if (rig_ == this.rig)
@@ -27,7 +27,7 @@ public class Monkeye_LazerFX : MonoBehaviour
 		}
 	}
 
-	// Token: 0x060000E0 RID: 224 RVA: 0x00008D84 File Offset: 0x00006F84
+	// Token: 0x060000E0 RID: 224 RVA: 0x00008DCC File Offset: 0x00006FCC
 	public void DisableLazer()
 	{
 		if (base.enabled)
@@ -41,7 +41,7 @@ public class Monkeye_LazerFX : MonoBehaviour
 		}
 	}
 
-	// Token: 0x060000E1 RID: 225 RVA: 0x00008DC0 File Offset: 0x00006FC0
+	// Token: 0x060000E1 RID: 225 RVA: 0x00008E08 File Offset: 0x00007008
 	private void Update()
 	{
 		for (int i = 0; i < this.lines.Length; i++)

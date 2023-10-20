@@ -5,16 +5,16 @@ using UnityEngine;
 
 namespace GorillaTag
 {
-	// Token: 0x0200030A RID: 778
+	// Token: 0x0200030C RID: 780
 	public class GuidedRefRelayHub : MonoBehaviour, IGuidedRefMonoBehaviour, IGuidedRefObject
 	{
-		// Token: 0x06001598 RID: 5528 RVA: 0x00077585 File Offset: 0x00075785
+		// Token: 0x060015A1 RID: 5537 RVA: 0x00077A6D File Offset: 0x00075C6D
 		protected void Awake()
 		{
 			this.GuidedRefInitialize();
 		}
 
-		// Token: 0x06001599 RID: 5529 RVA: 0x00077590 File Offset: 0x00075790
+		// Token: 0x060015A2 RID: 5538 RVA: 0x00077A78 File Offset: 0x00075C78
 		protected void OnDestroy()
 		{
 			if (GuidedRefRelayHub.isAppQuitting)
@@ -33,7 +33,7 @@ namespace GorillaTag
 			GuidedRefRelayHub.globalLookupRefInstIDsByHubInstId.Remove(base.GetInstanceID());
 		}
 
-		// Token: 0x0600159A RID: 5530 RVA: 0x00077628 File Offset: 0x00075828
+		// Token: 0x060015A3 RID: 5539 RVA: 0x00077B10 File Offset: 0x00075D10
 		public void GuidedRefInitialize()
 		{
 			if (this.isRootInstance)
@@ -61,7 +61,7 @@ namespace GorillaTag
 			};
 		}
 
-		// Token: 0x0600159B RID: 5531 RVA: 0x000776DC File Offset: 0x000758DC
+		// Token: 0x060015A4 RID: 5540 RVA: 0x00077BC4 File Offset: 0x00075DC4
 		private void RegisterTarget(IGuidedRefTarget target)
 		{
 			GuidedRefRelayHub.RelayInfo orAddRelayInfoByTargetId = this.GetOrAddRelayInfoByTargetId(target.GuidedRefTargetId);
@@ -81,7 +81,7 @@ namespace GorillaTag
 			GuidedRefRelayHub.ResolveReferences(orAddRelayInfoByTargetId);
 		}
 
-		// Token: 0x0600159C RID: 5532 RVA: 0x0007774C File Offset: 0x0007594C
+		// Token: 0x060015A5 RID: 5541 RVA: 0x00077C34 File Offset: 0x00075E34
 		public static void RegisterTargetWithParentRelays(IGuidedRefTarget target, GuidedRefRelayHubIdSO[] hubIds = null, Component debugCaller = null)
 		{
 			if (target == null)
@@ -111,7 +111,7 @@ namespace GorillaTag
 			}
 		}
 
-		// Token: 0x0600159D RID: 5533 RVA: 0x00077858 File Offset: 0x00075A58
+		// Token: 0x060015A6 RID: 5542 RVA: 0x00077D40 File Offset: 0x00075F40
 		public static void UnregisterTarget(IGuidedRefTarget target)
 		{
 			if (target == null)
@@ -138,7 +138,7 @@ namespace GorillaTag
 			GuidedRefRelayHub.globalLookupHubsByInstanceID.Remove(instanceID);
 		}
 
-		// Token: 0x0600159E RID: 5534 RVA: 0x00077914 File Offset: 0x00075B14
+		// Token: 0x060015A7 RID: 5543 RVA: 0x00077DFC File Offset: 0x00075FFC
 		private void RegisterReceiverField(GuidedRefRelayHub.ReceiverFieldInfo receiverFieldInfo, GuidedRefTargetIdSO targetId)
 		{
 			GuidedRefRelayHub.globalLookupRefInstIDsByHubInstId[base.GetInstanceID()].Add(receiverFieldInfo.receiver.GetInstanceID());
@@ -148,7 +148,7 @@ namespace GorillaTag
 			GuidedRefRelayHub.ResolveReferences(orAddRelayInfoByTargetId);
 		}
 
-		// Token: 0x0600159F RID: 5535 RVA: 0x00077970 File Offset: 0x00075B70
+		// Token: 0x060015A8 RID: 5544 RVA: 0x00077E58 File Offset: 0x00076058
 		private static void RegisterReceiverFieldWithParentHub(IGuidedRefReceiver receiver, int fieldId, GuidedRefTargetIdSO targetId, GuidedRefRelayHubIdSO hubId = null)
 		{
 			if (receiver == null)
@@ -183,7 +183,7 @@ namespace GorillaTag
 			}
 		}
 
-		// Token: 0x060015A0 RID: 5536 RVA: 0x00077A60 File Offset: 0x00075C60
+		// Token: 0x060015A9 RID: 5545 RVA: 0x00077F48 File Offset: 0x00076148
 		public static int RegisterReceiverFieldWithParentHub(IGuidedRefReceiver receiver, string fieldIdName, GuidedRefTargetIdSO targetId, GuidedRefRelayHubIdSO hubId = null)
 		{
 			int num = Shader.PropertyToID(fieldIdName);
@@ -191,7 +191,7 @@ namespace GorillaTag
 			return num;
 		}
 
-		// Token: 0x060015A1 RID: 5537 RVA: 0x00077A80 File Offset: 0x00075C80
+		// Token: 0x060015AA RID: 5546 RVA: 0x00077F68 File Offset: 0x00076168
 		public static void UnregisterReceiver(IGuidedRefReceiver receiver)
 		{
 			if (receiver == null)
@@ -224,7 +224,7 @@ namespace GorillaTag
 			GuidedRefRelayHub.globalLookupHubsByInstanceID.Remove(instanceID);
 		}
 
-		// Token: 0x060015A2 RID: 5538 RVA: 0x00077BA8 File Offset: 0x00075DA8
+		// Token: 0x060015AB RID: 5547 RVA: 0x00078090 File Offset: 0x00076290
 		private GuidedRefRelayHub.RelayInfo GetOrAddRelayInfoByTargetId(GuidedRefTargetIdSO targetId)
 		{
 			if (targetId == null)
@@ -245,7 +245,7 @@ namespace GorillaTag
 			return relayInfo;
 		}
 
-		// Token: 0x060015A3 RID: 5539 RVA: 0x00077C04 File Offset: 0x00075E04
+		// Token: 0x060015AC RID: 5548 RVA: 0x000780EC File Offset: 0x000762EC
 		public static List<GuidedRefRelayHub> GlobalGetOrAddHubsListByRefInstId(int instanceId)
 		{
 			List<GuidedRefRelayHub> list;
@@ -257,7 +257,7 @@ namespace GorillaTag
 			return list;
 		}
 
-		// Token: 0x060015A4 RID: 5540 RVA: 0x00077C34 File Offset: 0x00075E34
+		// Token: 0x060015AD RID: 5549 RVA: 0x0007811C File Offset: 0x0007631C
 		private static void ResolveReferences(GuidedRefRelayHub.RelayInfo relayInfo)
 		{
 			if (relayInfo.target == null)
@@ -274,7 +274,7 @@ namespace GorillaTag
 			}
 		}
 
-		// Token: 0x060015A5 RID: 5541 RVA: 0x00077C94 File Offset: 0x00075E94
+		// Token: 0x060015AE RID: 5550 RVA: 0x0007817C File Offset: 0x0007637C
 		public static bool ResolveReference<T>(int theirFieldIdCandidate, IGuidedRefTarget theirTargetCandidate, int ourFieldId, ref T ourObj) where T : Object
 		{
 			if (ourFieldId == theirFieldIdCandidate && ourObj == null)
@@ -285,69 +285,69 @@ namespace GorillaTag
 			return false;
 		}
 
-		// Token: 0x060015A8 RID: 5544 RVA: 0x00077D25 File Offset: 0x00075F25
+		// Token: 0x060015B1 RID: 5553 RVA: 0x0007820D File Offset: 0x0007640D
 		Transform IGuidedRefMonoBehaviour.get_transform()
 		{
 			return base.transform;
 		}
 
-		// Token: 0x060015A9 RID: 5545 RVA: 0x00077D2D File Offset: 0x00075F2D
+		// Token: 0x060015B2 RID: 5554 RVA: 0x00078215 File Offset: 0x00076415
 		int IGuidedRefObject.GetInstanceID()
 		{
 			return base.GetInstanceID();
 		}
 
-		// Token: 0x040017B2 RID: 6066
+		// Token: 0x040017BF RID: 6079
 		[SerializeField]
 		public bool isRootInstance;
 
-		// Token: 0x040017B3 RID: 6067
+		// Token: 0x040017C0 RID: 6080
 		public GuidedRefRelayHubIdSO hubId;
 
-		// Token: 0x040017B4 RID: 6068
+		// Token: 0x040017C1 RID: 6081
 		[NonSerialized]
 		public static GuidedRefRelayHub rootInstance;
 
-		// Token: 0x040017B5 RID: 6069
+		// Token: 0x040017C2 RID: 6082
 		[NonSerialized]
 		public static bool hasRootInstance;
 
-		// Token: 0x040017B6 RID: 6070
+		// Token: 0x040017C3 RID: 6083
 		private static bool isAppQuitting;
 
-		// Token: 0x040017B7 RID: 6071
+		// Token: 0x040017C4 RID: 6084
 		[DebugReadout]
 		private readonly Dictionary<GuidedRefTargetIdSO, GuidedRefRelayHub.RelayInfo> lookupRelayInfoByTargetId = new Dictionary<GuidedRefTargetIdSO, GuidedRefRelayHub.RelayInfo>(256);
 
-		// Token: 0x040017B8 RID: 6072
+		// Token: 0x040017C5 RID: 6085
 		private static readonly Dictionary<int, List<GuidedRefRelayHub>> globalLookupHubsByInstanceID = new Dictionary<int, List<GuidedRefRelayHub>>(256);
 
-		// Token: 0x040017B9 RID: 6073
+		// Token: 0x040017C6 RID: 6086
 		private static readonly Dictionary<int, List<int>> globalLookupRefInstIDsByHubInstId = new Dictionary<int, List<int>>(256);
 
-		// Token: 0x040017BA RID: 6074
+		// Token: 0x040017C7 RID: 6087
 		private static readonly List<GuidedRefRelayHub> hubsTransientList = new List<GuidedRefRelayHub>(32);
 
-		// Token: 0x040017BB RID: 6075
+		// Token: 0x040017C8 RID: 6088
 		private const string kUnsuppliedCallerName = "UNSUPPLIED_CALLER_NAME";
 
-		// Token: 0x020004FC RID: 1276
+		// Token: 0x020004FE RID: 1278
 		public class RelayInfo
 		{
-			// Token: 0x040020C7 RID: 8391
+			// Token: 0x040020D4 RID: 8404
 			public IGuidedRefTarget target;
 
-			// Token: 0x040020C8 RID: 8392
+			// Token: 0x040020D5 RID: 8405
 			public List<GuidedRefRelayHub.ReceiverFieldInfo> fieldInfos;
 		}
 
-		// Token: 0x020004FD RID: 1277
+		// Token: 0x020004FF RID: 1279
 		public struct ReceiverFieldInfo
 		{
-			// Token: 0x040020C9 RID: 8393
+			// Token: 0x040020D6 RID: 8406
 			public IGuidedRefReceiver receiver;
 
-			// Token: 0x040020CA RID: 8394
+			// Token: 0x040020D7 RID: 8407
 			public int fieldId;
 		}
 	}

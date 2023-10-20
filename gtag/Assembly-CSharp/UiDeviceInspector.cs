@@ -5,13 +5,13 @@ using UnityEngine;
 // Token: 0x020000D0 RID: 208
 public class UiDeviceInspector : MonoBehaviour
 {
-	// Token: 0x06000496 RID: 1174 RVA: 0x0001D4F3 File Offset: 0x0001B6F3
+	// Token: 0x06000496 RID: 1174 RVA: 0x0001D2CF File Offset: 0x0001B4CF
 	private void Start()
 	{
 		this.m_controller = ((this.m_handedness == OVRInput.Handedness.LeftHanded) ? OVRInput.Controller.LTouch : OVRInput.Controller.RTouch);
 	}
 
-	// Token: 0x06000497 RID: 1175 RVA: 0x0001D508 File Offset: 0x0001B708
+	// Token: 0x06000497 RID: 1175 RVA: 0x0001D2E4 File Offset: 0x0001B4E4
 	private void Update()
 	{
 		string sourceText = UiDeviceInspector.ToDeviceModel() + " [" + UiDeviceInspector.ToHandednessString(this.m_handedness) + "]";
@@ -41,13 +41,13 @@ public class UiDeviceInspector : MonoBehaviour
 		this.m_thumbstick.SetValue(OVRInput.Get(OVRInput.Touch.PrimaryThumbstick, this.m_controller), OVRInput.Get(OVRInput.Axis2D.PrimaryThumbstick, this.m_controller));
 	}
 
-	// Token: 0x06000498 RID: 1176 RVA: 0x0001D707 File Offset: 0x0001B907
+	// Token: 0x06000498 RID: 1176 RVA: 0x0001D4E3 File Offset: 0x0001B6E3
 	private static string ToDeviceModel()
 	{
 		return "Touch";
 	}
 
-	// Token: 0x06000499 RID: 1177 RVA: 0x0001D70E File Offset: 0x0001B90E
+	// Token: 0x06000499 RID: 1177 RVA: 0x0001D4EA File Offset: 0x0001B6EA
 	private static string ToHandednessString(OVRInput.Handedness handedness)
 	{
 		if (handedness == OVRInput.Handedness.LeftHanded)

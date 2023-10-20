@@ -5,17 +5,17 @@ using UnityEngine;
 
 namespace GorillaTag.Audio
 {
-	// Token: 0x02000325 RID: 805
+	// Token: 0x02000327 RID: 807
 	[RequireComponent(typeof(Recorder))]
 	public class VoiceToLoudness : MonoBehaviour
 	{
-		// Token: 0x06001670 RID: 5744 RVA: 0x0007CF79 File Offset: 0x0007B179
+		// Token: 0x06001679 RID: 5753 RVA: 0x0007D461 File Offset: 0x0007B661
 		protected void Awake()
 		{
 			this._recorder = base.GetComponent<Recorder>();
 		}
 
-		// Token: 0x06001671 RID: 5745 RVA: 0x0007CF88 File Offset: 0x0007B188
+		// Token: 0x0600167A RID: 5754 RVA: 0x0007D470 File Offset: 0x0007B670
 		protected void PhotonVoiceCreated(PhotonVoiceCreatedParams photonVoiceCreatedParams)
 		{
 			VoiceInfo info = photonVoiceCreatedParams.Voice.Info;
@@ -29,11 +29,11 @@ namespace GorillaTag.Audio
 			}
 		}
 
-		// Token: 0x04001883 RID: 6275
+		// Token: 0x04001890 RID: 6288
 		[NonSerialized]
 		public float loudness;
 
-		// Token: 0x04001884 RID: 6276
+		// Token: 0x04001891 RID: 6289
 		private Recorder _recorder;
 	}
 }

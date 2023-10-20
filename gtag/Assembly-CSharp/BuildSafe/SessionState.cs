@@ -2,10 +2,10 @@
 
 namespace BuildSafe
 {
-	// Token: 0x020002C4 RID: 708
+	// Token: 0x020002C6 RID: 710
 	public class SessionState
 	{
-		// Token: 0x17000123 RID: 291
+		// Token: 0x17000125 RID: 293
 		public string this[string key]
 		{
 			get
@@ -17,7 +17,7 @@ namespace BuildSafe
 			}
 		}
 
-		// Token: 0x040015FE RID: 5630
+		// Token: 0x0400160B RID: 5643
 		public static readonly SessionState Shared = new SessionState();
 	}
 }

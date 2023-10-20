@@ -3,12 +3,12 @@ using System.Collections.Generic;
 
 namespace LitJson
 {
-	// Token: 0x02000275 RID: 629
+	// Token: 0x02000276 RID: 630
 	internal struct ObjectMetadata
 	{
-		// Token: 0x170000D9 RID: 217
-		// (get) Token: 0x06000FFD RID: 4093 RVA: 0x00054C80 File Offset: 0x00052E80
-		// (set) Token: 0x06000FFE RID: 4094 RVA: 0x00054CA1 File Offset: 0x00052EA1
+		// Token: 0x170000DB RID: 219
+		// (get) Token: 0x06001004 RID: 4100 RVA: 0x0005505C File Offset: 0x0005325C
+		// (set) Token: 0x06001005 RID: 4101 RVA: 0x0005507D File Offset: 0x0005327D
 		public Type ElementType
 		{
 			get
@@ -25,9 +25,9 @@ namespace LitJson
 			}
 		}
 
-		// Token: 0x170000DA RID: 218
-		// (get) Token: 0x06000FFF RID: 4095 RVA: 0x00054CAA File Offset: 0x00052EAA
-		// (set) Token: 0x06001000 RID: 4096 RVA: 0x00054CB2 File Offset: 0x00052EB2
+		// Token: 0x170000DC RID: 220
+		// (get) Token: 0x06001006 RID: 4102 RVA: 0x00055086 File Offset: 0x00053286
+		// (set) Token: 0x06001007 RID: 4103 RVA: 0x0005508E File Offset: 0x0005328E
 		public bool IsDictionary
 		{
 			get
@@ -40,9 +40,9 @@ namespace LitJson
 			}
 		}
 
-		// Token: 0x170000DB RID: 219
-		// (get) Token: 0x06001001 RID: 4097 RVA: 0x00054CBB File Offset: 0x00052EBB
-		// (set) Token: 0x06001002 RID: 4098 RVA: 0x00054CC3 File Offset: 0x00052EC3
+		// Token: 0x170000DD RID: 221
+		// (get) Token: 0x06001008 RID: 4104 RVA: 0x00055097 File Offset: 0x00053297
+		// (set) Token: 0x06001009 RID: 4105 RVA: 0x0005509F File Offset: 0x0005329F
 		public IDictionary<string, PropertyMetadata> Properties
 		{
 			get
@@ -55,13 +55,13 @@ namespace LitJson
 			}
 		}
 
-		// Token: 0x040011E4 RID: 4580
+		// Token: 0x040011EA RID: 4586
 		private Type element_type;
 
-		// Token: 0x040011E5 RID: 4581
+		// Token: 0x040011EB RID: 4587
 		private bool is_dictionary;
 
-		// Token: 0x040011E6 RID: 4582
+		// Token: 0x040011EC RID: 4588
 		private IDictionary<string, PropertyMetadata> properties;
 	}
 }

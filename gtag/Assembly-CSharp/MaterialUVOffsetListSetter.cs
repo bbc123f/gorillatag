@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// Token: 0x02000217 RID: 535
+// Token: 0x02000218 RID: 536
 [RequireComponent(typeof(MeshRenderer))]
 public class MaterialUVOffsetListSetter : MonoBehaviour
 {
-	// Token: 0x06000D4B RID: 3403 RVA: 0x0004DDB3 File Offset: 0x0004BFB3
+	// Token: 0x06000D51 RID: 3409 RVA: 0x0004E013 File Offset: 0x0004C213
 	private void Awake()
 	{
 		this.matPropertyBlock = new MaterialPropertyBlock();
@@ -14,7 +14,7 @@ public class MaterialUVOffsetListSetter : MonoBehaviour
 		this.meshRenderer.GetPropertyBlock(this.matPropertyBlock);
 	}
 
-	// Token: 0x06000D4C RID: 3404 RVA: 0x0004DDE0 File Offset: 0x0004BFE0
+	// Token: 0x06000D52 RID: 3410 RVA: 0x0004E040 File Offset: 0x0004C240
 	public void SetUVOffset(int listIndex)
 	{
 		if (listIndex >= this.uvOffsetList.Count || listIndex < 0)
@@ -27,16 +27,16 @@ public class MaterialUVOffsetListSetter : MonoBehaviour
 		this.meshRenderer.SetPropertyBlock(this.matPropertyBlock);
 	}
 
-	// Token: 0x04001076 RID: 4214
+	// Token: 0x0400107B RID: 4219
 	[SerializeField]
 	private List<Vector2> uvOffsetList = new List<Vector2>();
 
-	// Token: 0x04001077 RID: 4215
+	// Token: 0x0400107C RID: 4220
 	private MeshRenderer meshRenderer;
 
-	// Token: 0x04001078 RID: 4216
+	// Token: 0x0400107D RID: 4221
 	private MaterialPropertyBlock matPropertyBlock;
 
-	// Token: 0x04001079 RID: 4217
+	// Token: 0x0400107E RID: 4222
 	private int shaderPropertyID = Shader.PropertyToID("_BaseMap_ST");
 }

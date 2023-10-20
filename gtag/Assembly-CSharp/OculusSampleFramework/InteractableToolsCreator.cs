@@ -5,10 +5,10 @@ using UnityEngine;
 
 namespace OculusSampleFramework
 {
-	// Token: 0x020002D7 RID: 727
+	// Token: 0x020002D9 RID: 729
 	public class InteractableToolsCreator : MonoBehaviour
 	{
-		// Token: 0x06001399 RID: 5017 RVA: 0x00070378 File Offset: 0x0006E578
+		// Token: 0x060013A0 RID: 5024 RVA: 0x00070844 File Offset: 0x0006EA44
 		private void Awake()
 		{
 			if (this.LeftHandTools != null && this.LeftHandTools.Length != 0)
@@ -21,7 +21,7 @@ namespace OculusSampleFramework
 			}
 		}
 
-		// Token: 0x0600139A RID: 5018 RVA: 0x000703CF File Offset: 0x0006E5CF
+		// Token: 0x060013A1 RID: 5025 RVA: 0x0007089B File Offset: 0x0006EA9B
 		private IEnumerator AttachToolsToHands(Transform[] toolObjects, bool isRightHand)
 		{
 			HandsManager handsManagerObj = null;
@@ -50,7 +50,7 @@ namespace OculusSampleFramework
 			yield break;
 		}
 
-		// Token: 0x0600139B RID: 5019 RVA: 0x000703EC File Offset: 0x0006E5EC
+		// Token: 0x060013A2 RID: 5026 RVA: 0x000708B8 File Offset: 0x0006EAB8
 		private void AttachToolToHandTransform(Transform tool, bool isRightHanded)
 		{
 			Transform transform = Object.Instantiate<Transform>(tool).transform;
@@ -60,11 +60,11 @@ namespace OculusSampleFramework
 			component.Initialize();
 		}
 
-		// Token: 0x04001663 RID: 5731
+		// Token: 0x04001670 RID: 5744
 		[SerializeField]
 		private Transform[] LeftHandTools;
 
-		// Token: 0x04001664 RID: 5732
+		// Token: 0x04001671 RID: 5745
 		[SerializeField]
 		private Transform[] RightHandTools;
 	}

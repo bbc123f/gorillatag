@@ -7,10 +7,10 @@ using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.UI;
 
-// Token: 0x02000178 RID: 376
+// Token: 0x02000179 RID: 377
 public class GorillaHuntComputer : MonoBehaviour
 {
-	// Token: 0x0600096F RID: 2415 RVA: 0x00038FC8 File Offset: 0x000371C8
+	// Token: 0x06000973 RID: 2419 RVA: 0x00038F80 File Offset: 0x00037180
 	private void Update()
 	{
 		if (PhotonNetwork.InRoom && GorillaGameManager.instance != null && GorillaGameManager.instance.gameObject.GetComponent<GorillaHuntManager>() != null)
@@ -96,7 +96,7 @@ public class GorillaHuntComputer : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000970 RID: 2416 RVA: 0x000394B8 File Offset: 0x000376B8
+	// Token: 0x06000974 RID: 2420 RVA: 0x00039470 File Offset: 0x00037670
 	private void SetImage(string itemDisplayName, ref Image image)
 	{
 		this.tempItem = CosmeticsController.instance.GetItemFromDict(CosmeticsController.instance.GetItemNameFromDisplayName(itemDisplayName));
@@ -109,7 +109,7 @@ public class GorillaHuntComputer : MonoBehaviour
 		image.gameObject.SetActive(false);
 	}
 
-	// Token: 0x06000971 RID: 2417 RVA: 0x00039550 File Offset: 0x00037750
+	// Token: 0x06000975 RID: 2421 RVA: 0x00039508 File Offset: 0x00037708
 	public string NormalizeName(bool doIt, string text)
 	{
 		if (doIt)
@@ -131,7 +131,7 @@ public class GorillaHuntComputer : MonoBehaviour
 		return text;
 	}
 
-	// Token: 0x06000972 RID: 2418 RVA: 0x000395C8 File Offset: 0x000377C8
+	// Token: 0x06000976 RID: 2422 RVA: 0x00039580 File Offset: 0x00037780
 	public CosmeticsController.CosmeticItem GetPrioritizedItemForHand(VRRig targetRig, bool forLeftHand)
 	{
 		if (forLeftHand)
@@ -164,40 +164,40 @@ public class GorillaHuntComputer : MonoBehaviour
 		}
 	}
 
-	// Token: 0x04000B8F RID: 2959
+	// Token: 0x04000B93 RID: 2963
 	public Text text;
 
-	// Token: 0x04000B90 RID: 2960
+	// Token: 0x04000B94 RID: 2964
 	public Image material;
 
-	// Token: 0x04000B91 RID: 2961
+	// Token: 0x04000B95 RID: 2965
 	public Image hat;
 
-	// Token: 0x04000B92 RID: 2962
+	// Token: 0x04000B96 RID: 2966
 	public Image face;
 
-	// Token: 0x04000B93 RID: 2963
+	// Token: 0x04000B97 RID: 2967
 	public Image badge;
 
-	// Token: 0x04000B94 RID: 2964
+	// Token: 0x04000B98 RID: 2968
 	public Image leftHand;
 
-	// Token: 0x04000B95 RID: 2965
+	// Token: 0x04000B99 RID: 2969
 	public Image rightHand;
 
-	// Token: 0x04000B96 RID: 2966
+	// Token: 0x04000B9A RID: 2970
 	public Photon.Realtime.Player myTarget;
 
-	// Token: 0x04000B97 RID: 2967
+	// Token: 0x04000B9B RID: 2971
 	public Photon.Realtime.Player tempTarget;
 
-	// Token: 0x04000B98 RID: 2968
+	// Token: 0x04000B9C RID: 2972
 	[DebugReadout]
 	public VRRig myRig;
 
-	// Token: 0x04000B99 RID: 2969
+	// Token: 0x04000B9D RID: 2973
 	public Sprite tempSprite;
 
-	// Token: 0x04000B9A RID: 2970
+	// Token: 0x04000B9E RID: 2974
 	public CosmeticsController.CosmeticItem tempItem;
 }

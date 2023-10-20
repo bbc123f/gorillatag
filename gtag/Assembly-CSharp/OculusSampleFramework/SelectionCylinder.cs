@@ -3,12 +3,12 @@ using UnityEngine;
 
 namespace OculusSampleFramework
 {
-	// Token: 0x020002E7 RID: 743
+	// Token: 0x020002E9 RID: 745
 	public class SelectionCylinder : MonoBehaviour
 	{
-		// Token: 0x17000161 RID: 353
-		// (get) Token: 0x06001417 RID: 5143 RVA: 0x00071CA1 File Offset: 0x0006FEA1
-		// (set) Token: 0x06001418 RID: 5144 RVA: 0x00071CAC File Offset: 0x0006FEAC
+		// Token: 0x17000163 RID: 355
+		// (get) Token: 0x0600141E RID: 5150 RVA: 0x0007216D File Offset: 0x0007036D
+		// (set) Token: 0x0600141F RID: 5151 RVA: 0x00072178 File Offset: 0x00070378
 		public SelectionCylinder.SelectionState CurrSelectionState
 		{
 			get
@@ -32,7 +32,7 @@ namespace OculusSampleFramework
 			}
 		}
 
-		// Token: 0x06001419 RID: 5145 RVA: 0x00071D10 File Offset: 0x0006FF10
+		// Token: 0x06001420 RID: 5152 RVA: 0x000721DC File Offset: 0x000703DC
 		private void Awake()
 		{
 			this._selectionMaterials = this._selectionMeshRenderer.materials;
@@ -47,7 +47,7 @@ namespace OculusSampleFramework
 			this.CurrSelectionState = SelectionCylinder.SelectionState.Off;
 		}
 
-		// Token: 0x0600141A RID: 5146 RVA: 0x00071DB4 File Offset: 0x0006FFB4
+		// Token: 0x06001421 RID: 5153 RVA: 0x00072280 File Offset: 0x00070480
 		private void OnDestroy()
 		{
 			if (this._selectionMaterials != null)
@@ -62,7 +62,7 @@ namespace OculusSampleFramework
 			}
 		}
 
-		// Token: 0x0600141B RID: 5147 RVA: 0x00071DF4 File Offset: 0x0006FFF4
+		// Token: 0x06001422 RID: 5154 RVA: 0x000722C0 File Offset: 0x000704C0
 		private void AffectSelectionColor(Color[] newColors)
 		{
 			int num = newColors.Length;
@@ -72,33 +72,33 @@ namespace OculusSampleFramework
 			}
 		}
 
-		// Token: 0x040016BF RID: 5823
+		// Token: 0x040016CC RID: 5836
 		[SerializeField]
 		private MeshRenderer _selectionMeshRenderer;
 
-		// Token: 0x040016C0 RID: 5824
+		// Token: 0x040016CD RID: 5837
 		private static int _colorId = Shader.PropertyToID("_Color");
 
-		// Token: 0x040016C1 RID: 5825
+		// Token: 0x040016CE RID: 5838
 		private Material[] _selectionMaterials;
 
-		// Token: 0x040016C2 RID: 5826
+		// Token: 0x040016CF RID: 5839
 		private Color[] _defaultSelectionColors;
 
-		// Token: 0x040016C3 RID: 5827
+		// Token: 0x040016D0 RID: 5840
 		private Color[] _highlightColors;
 
-		// Token: 0x040016C4 RID: 5828
+		// Token: 0x040016D1 RID: 5841
 		private SelectionCylinder.SelectionState _currSelectionState;
 
-		// Token: 0x020004ED RID: 1261
+		// Token: 0x020004EF RID: 1263
 		public enum SelectionState
 		{
-			// Token: 0x04002081 RID: 8321
+			// Token: 0x0400208E RID: 8334
 			Off,
-			// Token: 0x04002082 RID: 8322
+			// Token: 0x0400208F RID: 8335
 			Selected,
-			// Token: 0x04002083 RID: 8323
+			// Token: 0x04002090 RID: 8336
 			Highlighted
 		}
 	}

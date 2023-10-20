@@ -5,7 +5,7 @@ using UnityEngine.UI;
 // Token: 0x020000A2 RID: 162
 public class DebugUISample : MonoBehaviour
 {
-	// Token: 0x06000389 RID: 905 RVA: 0x00015C00 File Offset: 0x00013E00
+	// Token: 0x06000389 RID: 905 RVA: 0x000159DC File Offset: 0x00013BDC
 	private void Start()
 	{
 		DebugUIBuilder.instance.AddButton("Button Pressed", new DebugUIBuilder.OnClick(this.LogButtonPressed), -1, 0, false);
@@ -38,13 +38,13 @@ public class DebugUISample : MonoBehaviour
 		this.inMenu = true;
 	}
 
-	// Token: 0x0600038A RID: 906 RVA: 0x00015D74 File Offset: 0x00013F74
+	// Token: 0x0600038A RID: 906 RVA: 0x00015B50 File Offset: 0x00013D50
 	public void TogglePressed(Toggle t)
 	{
 		Debug.Log("Toggle pressed. Is on? " + t.isOn.ToString());
 	}
 
-	// Token: 0x0600038B RID: 907 RVA: 0x00015DA0 File Offset: 0x00013FA0
+	// Token: 0x0600038B RID: 907 RVA: 0x00015B7C File Offset: 0x00013D7C
 	public void RadioPressed(string radioLabel, string group, Toggle t)
 	{
 		Debug.Log(string.Concat(new string[]
@@ -58,14 +58,14 @@ public class DebugUISample : MonoBehaviour
 		}));
 	}
 
-	// Token: 0x0600038C RID: 908 RVA: 0x00015DEE File Offset: 0x00013FEE
+	// Token: 0x0600038C RID: 908 RVA: 0x00015BCA File Offset: 0x00013DCA
 	public void SliderPressed(float f)
 	{
 		Debug.Log("Slider: " + f.ToString());
 		this.sliderText.text = f.ToString();
 	}
 
-	// Token: 0x0600038D RID: 909 RVA: 0x00015E18 File Offset: 0x00014018
+	// Token: 0x0600038D RID: 909 RVA: 0x00015BF4 File Offset: 0x00013DF4
 	private void Update()
 	{
 		if (OVRInput.GetDown(OVRInput.Button.Two, OVRInput.Controller.Active) || OVRInput.GetDown(OVRInput.Button.Start, OVRInput.Controller.Active))
@@ -82,7 +82,7 @@ public class DebugUISample : MonoBehaviour
 		}
 	}
 
-	// Token: 0x0600038E RID: 910 RVA: 0x00015E70 File Offset: 0x00014070
+	// Token: 0x0600038E RID: 910 RVA: 0x00015C4C File Offset: 0x00013E4C
 	private void LogButtonPressed()
 	{
 		Debug.Log("Button pressed");

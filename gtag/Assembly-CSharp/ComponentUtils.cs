@@ -2,10 +2,10 @@
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
-// Token: 0x0200020F RID: 527
+// Token: 0x02000210 RID: 528
 public static class ComponentUtils
 {
-	// Token: 0x06000D3B RID: 3387 RVA: 0x0004DA7C File Offset: 0x0004BC7C
+	// Token: 0x06000D41 RID: 3393 RVA: 0x0004DCDC File Offset: 0x0004BEDC
 	public static T EnsureComponent<T>(this GameObject g) where T : Component
 	{
 		T component = g.GetComponent<T>();
@@ -16,7 +16,7 @@ public static class ComponentUtils
 		return g.AddComponent<T>();
 	}
 
-	// Token: 0x06000D3C RID: 3388 RVA: 0x0004DAA8 File Offset: 0x0004BCA8
+	// Token: 0x06000D42 RID: 3394 RVA: 0x0004DD08 File Offset: 0x0004BF08
 	public static T GetOrAdd<T>(this Component c, ref T instance) where T : Component
 	{
 		if (!ComponentUtils.IsNull<T>(instance))
@@ -32,7 +32,7 @@ public static class ComponentUtils
 		return instance = gameObject.AddComponent<T>();
 	}
 
-	// Token: 0x06000D3D RID: 3389 RVA: 0x0004DB08 File Offset: 0x0004BD08
+	// Token: 0x06000D43 RID: 3395 RVA: 0x0004DD68 File Offset: 0x0004BF68
 	public static T GetOrAdd<T>(this GameObject g, ref T instance) where T : Component
 	{
 		if (!ComponentUtils.IsNull<T>(instance))
@@ -47,7 +47,7 @@ public static class ComponentUtils
 		return instance = g.AddComponent<T>();
 	}
 
-	// Token: 0x06000D3E RID: 3390 RVA: 0x0004DB5E File Offset: 0x0004BD5E
+	// Token: 0x06000D44 RID: 3396 RVA: 0x0004DDBE File Offset: 0x0004BFBE
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	private static bool IsNull<T>(T unityObject) where T : Object
 	{

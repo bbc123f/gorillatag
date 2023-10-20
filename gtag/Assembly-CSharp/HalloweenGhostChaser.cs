@@ -5,10 +5,10 @@ using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.AI;
 
-// Token: 0x0200018F RID: 399
+// Token: 0x02000190 RID: 400
 public class HalloweenGhostChaser : MonoBehaviourPunCallbacks, IInRoomCallbacks, IPunObservable, IOnPhotonViewOwnerChange, IPhotonViewCallback
 {
-	// Token: 0x06000A2F RID: 2607 RVA: 0x0003EEBD File Offset: 0x0003D0BD
+	// Token: 0x06000A34 RID: 2612 RVA: 0x0003EFED File Offset: 0x0003D1ED
 	private void Awake()
 	{
 		this.spawnIndex = 0;
@@ -18,7 +18,7 @@ public class HalloweenGhostChaser : MonoBehaviourPunCallbacks, IInRoomCallbacks,
 		this.possibleTarget = new List<Player>();
 	}
 
-	// Token: 0x06000A30 RID: 2608 RVA: 0x0003EEEC File Offset: 0x0003D0EC
+	// Token: 0x06000A35 RID: 2613 RVA: 0x0003F01C File Offset: 0x0003D21C
 	private void InitializeGhost()
 	{
 		if (PhotonNetwork.InRoom && base.photonView.IsMine)
@@ -33,7 +33,7 @@ public class HalloweenGhostChaser : MonoBehaviourPunCallbacks, IInRoomCallbacks,
 		}
 	}
 
-	// Token: 0x06000A31 RID: 2609 RVA: 0x0003EF8C File Offset: 0x0003D18C
+	// Token: 0x06000A36 RID: 2614 RVA: 0x0003F0BC File Offset: 0x0003D2BC
 	private void LateUpdate()
 	{
 		if (!PhotonNetwork.InRoom)
@@ -144,7 +144,7 @@ public class HalloweenGhostChaser : MonoBehaviourPunCallbacks, IInRoomCallbacks,
 		this.UpdateState();
 	}
 
-	// Token: 0x06000A32 RID: 2610 RVA: 0x0003F224 File Offset: 0x0003D424
+	// Token: 0x06000A37 RID: 2615 RVA: 0x0003F354 File Offset: 0x0003D554
 	public void UpdateState()
 	{
 		HalloweenGhostChaser.ChaseState chaseState = this.currentState;
@@ -203,7 +203,7 @@ public class HalloweenGhostChaser : MonoBehaviourPunCallbacks, IInRoomCallbacks,
 		}
 	}
 
-	// Token: 0x06000A33 RID: 2611 RVA: 0x0003F2FC File Offset: 0x0003D4FC
+	// Token: 0x06000A38 RID: 2616 RVA: 0x0003F42C File Offset: 0x0003D62C
 	private void OnChangeState(HalloweenGhostChaser.ChaseState newState)
 	{
 		switch (newState)
@@ -322,7 +322,7 @@ public class HalloweenGhostChaser : MonoBehaviourPunCallbacks, IInRoomCallbacks,
 		}
 	}
 
-	// Token: 0x06000A34 RID: 2612 RVA: 0x0003F5F4 File Offset: 0x0003D7F4
+	// Token: 0x06000A39 RID: 2617 RVA: 0x0003F724 File Offset: 0x0003D924
 	private void SetInitialSpawnPoint()
 	{
 		float num = 1000f;
@@ -342,7 +342,7 @@ public class HalloweenGhostChaser : MonoBehaviourPunCallbacks, IInRoomCallbacks,
 		}
 	}
 
-	// Token: 0x06000A35 RID: 2613 RVA: 0x0003F664 File Offset: 0x0003D864
+	// Token: 0x06000A3A RID: 2618 RVA: 0x0003F794 File Offset: 0x0003D994
 	private void ChooseRandomTarget()
 	{
 		int num = -1;
@@ -369,7 +369,7 @@ public class HalloweenGhostChaser : MonoBehaviourPunCallbacks, IInRoomCallbacks,
 		this.followTarget = null;
 	}
 
-	// Token: 0x06000A36 RID: 2614 RVA: 0x0003F77C File Offset: 0x0003D97C
+	// Token: 0x06000A3B RID: 2619 RVA: 0x0003F8AC File Offset: 0x0003DAAC
 	private void SetInitialRotations()
 	{
 		this.leftArm.localEulerAngles = Vector3.zero;
@@ -380,7 +380,7 @@ public class HalloweenGhostChaser : MonoBehaviourPunCallbacks, IInRoomCallbacks,
 		this.ghostBody.transform.localEulerAngles = this.ghostStartingEulerRotation;
 	}
 
-	// Token: 0x06000A37 RID: 2615 RVA: 0x0003F7F8 File Offset: 0x0003D9F8
+	// Token: 0x06000A3C RID: 2620 RVA: 0x0003F928 File Offset: 0x0003DB28
 	private void MoveHead()
 	{
 		if (Time.time > this.nextHeadAngleTime)
@@ -391,7 +391,7 @@ public class HalloweenGhostChaser : MonoBehaviourPunCallbacks, IInRoomCallbacks,
 		}
 	}
 
-	// Token: 0x06000A38 RID: 2616 RVA: 0x0003F864 File Offset: 0x0003DA64
+	// Token: 0x06000A3D RID: 2621 RVA: 0x0003F994 File Offset: 0x0003DB94
 	private void RiseHost()
 	{
 		if (Time.time < this.timeRiseStarted + this.totalTimeToRise)
@@ -405,7 +405,7 @@ public class HalloweenGhostChaser : MonoBehaviourPunCallbacks, IInRoomCallbacks,
 		}
 	}
 
-	// Token: 0x06000A39 RID: 2617 RVA: 0x0003F900 File Offset: 0x0003DB00
+	// Token: 0x06000A3E RID: 2622 RVA: 0x0003FA30 File Offset: 0x0003DC30
 	private void RiseGrabbedLocalPlayer()
 	{
 		if (Time.time > this.grabTime + this.minGrabCooldown)
@@ -422,7 +422,7 @@ public class HalloweenGhostChaser : MonoBehaviourPunCallbacks, IInRoomCallbacks,
 		}
 	}
 
-	// Token: 0x06000A3A RID: 2618 RVA: 0x0003F9B0 File Offset: 0x0003DBB0
+	// Token: 0x06000A3F RID: 2623 RVA: 0x0003FAE0 File Offset: 0x0003DCE0
 	public void UpdateFollowPath(Vector3 destination, float currentSpeed)
 	{
 		if (this.path == null)
@@ -449,7 +449,7 @@ public class HalloweenGhostChaser : MonoBehaviourPunCallbacks, IInRoomCallbacks,
 		}
 	}
 
-	// Token: 0x06000A3B RID: 2619 RVA: 0x0003FAC0 File Offset: 0x0003DCC0
+	// Token: 0x06000A40 RID: 2624 RVA: 0x0003FBF0 File Offset: 0x0003DDF0
 	private void GetNewPath(Vector3 destination)
 	{
 		this.path = new NavMeshPath();
@@ -468,13 +468,13 @@ public class HalloweenGhostChaser : MonoBehaviourPunCallbacks, IInRoomCallbacks,
 		this.nextPathTimestamp = Time.time + 2f;
 	}
 
-	// Token: 0x06000A3C RID: 2620 RVA: 0x0003FB94 File Offset: 0x0003DD94
+	// Token: 0x06000A41 RID: 2625 RVA: 0x0003FCC4 File Offset: 0x0003DEC4
 	public void ResetPath()
 	{
 		this.path = null;
 	}
 
-	// Token: 0x06000A3D RID: 2621 RVA: 0x0003FBA0 File Offset: 0x0003DDA0
+	// Token: 0x06000A42 RID: 2626 RVA: 0x0003FCD0 File Offset: 0x0003DED0
 	private void ChaseHost()
 	{
 		if (this.followTarget != null)
@@ -494,7 +494,7 @@ public class HalloweenGhostChaser : MonoBehaviourPunCallbacks, IInRoomCallbacks,
 		}
 	}
 
-	// Token: 0x06000A3E RID: 2622 RVA: 0x0003FC74 File Offset: 0x0003DE74
+	// Token: 0x06000A43 RID: 2627 RVA: 0x0003FDA4 File Offset: 0x0003DFA4
 	private void MoveBodyShared()
 	{
 		this.noisyOffset = new Vector3(Mathf.PerlinNoise(Time.time, 0f) - 0.5f, Mathf.PerlinNoise(Time.time, 10f) - 0.5f, Mathf.PerlinNoise(Time.time, 20f) - 0.5f);
@@ -503,7 +503,7 @@ public class HalloweenGhostChaser : MonoBehaviourPunCallbacks, IInRoomCallbacks,
 		this.rightArm.localEulerAngles = this.noisyOffset * -20f;
 	}
 
-	// Token: 0x06000A3F RID: 2623 RVA: 0x0003FD12 File Offset: 0x0003DF12
+	// Token: 0x06000A44 RID: 2628 RVA: 0x0003FE42 File Offset: 0x0003E042
 	private void GrabBodyShared()
 	{
 		if (this.followTarget != null)
@@ -513,7 +513,7 @@ public class HalloweenGhostChaser : MonoBehaviourPunCallbacks, IInRoomCallbacks,
 		}
 	}
 
-	// Token: 0x06000A40 RID: 2624 RVA: 0x0003FD50 File Offset: 0x0003DF50
+	// Token: 0x06000A45 RID: 2629 RVA: 0x0003FE80 File Offset: 0x0003E080
 	void IPunObservable.OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
 	{
 		if (stream.IsWriting)
@@ -532,7 +532,7 @@ public class HalloweenGhostChaser : MonoBehaviourPunCallbacks, IInRoomCallbacks,
 		this.isSummoned = (bool)stream.ReceiveNext();
 	}
 
-	// Token: 0x06000A41 RID: 2625 RVA: 0x0003FE0B File Offset: 0x0003E00B
+	// Token: 0x06000A46 RID: 2630 RVA: 0x0003FF3B File Offset: 0x0003E13B
 	void IOnPhotonViewOwnerChange.OnOwnerChange(Player newOwner, Player previousOwner)
 	{
 		if (newOwner == PhotonNetwork.LocalPlayer)
@@ -541,7 +541,7 @@ public class HalloweenGhostChaser : MonoBehaviourPunCallbacks, IInRoomCallbacks,
 		}
 	}
 
-	// Token: 0x06000A42 RID: 2626 RVA: 0x0003FE21 File Offset: 0x0003E021
+	// Token: 0x06000A47 RID: 2631 RVA: 0x0003FF51 File Offset: 0x0003E151
 	public override void OnJoinedRoom()
 	{
 		base.OnJoinedRoom();
@@ -553,229 +553,229 @@ public class HalloweenGhostChaser : MonoBehaviourPunCallbacks, IInRoomCallbacks,
 		this.nextTimeToChasePlayer = Time.time + Random.Range(this.minGrabCooldown, this.maxNextTimeToChasePlayer);
 	}
 
-	// Token: 0x04000C98 RID: 3224
+	// Token: 0x04000C9C RID: 3228
 	public float heightAboveNavmesh = 0.5f;
 
-	// Token: 0x04000C99 RID: 3225
+	// Token: 0x04000C9D RID: 3229
 	public Transform followTarget;
 
-	// Token: 0x04000C9A RID: 3226
+	// Token: 0x04000C9E RID: 3230
 	public Transform childGhost;
 
-	// Token: 0x04000C9B RID: 3227
+	// Token: 0x04000C9F RID: 3231
 	public float velocityStep = 1f;
 
-	// Token: 0x04000C9C RID: 3228
+	// Token: 0x04000CA0 RID: 3232
 	public float currentSpeed;
 
-	// Token: 0x04000C9D RID: 3229
+	// Token: 0x04000CA1 RID: 3233
 	public float velocityIncreaseTime = 20f;
 
-	// Token: 0x04000C9E RID: 3230
+	// Token: 0x04000CA2 RID: 3234
 	public float riseDistance = 2f;
 
-	// Token: 0x04000C9F RID: 3231
+	// Token: 0x04000CA3 RID: 3235
 	public float summonDistance = 5f;
 
-	// Token: 0x04000CA0 RID: 3232
+	// Token: 0x04000CA4 RID: 3236
 	public float timeEncircled;
 
-	// Token: 0x04000CA1 RID: 3233
+	// Token: 0x04000CA5 RID: 3237
 	public float lastSummonCheck;
 
-	// Token: 0x04000CA2 RID: 3234
+	// Token: 0x04000CA6 RID: 3238
 	public float timeGongStarted;
 
-	// Token: 0x04000CA3 RID: 3235
+	// Token: 0x04000CA7 RID: 3239
 	public float summoningDuration = 30f;
 
-	// Token: 0x04000CA4 RID: 3236
+	// Token: 0x04000CA8 RID: 3240
 	public float summoningCheckCountdown = 5f;
 
-	// Token: 0x04000CA5 RID: 3237
+	// Token: 0x04000CA9 RID: 3241
 	public float gongDuration = 5f;
 
-	// Token: 0x04000CA6 RID: 3238
+	// Token: 0x04000CAA RID: 3242
 	public int summonCount = 5;
 
-	// Token: 0x04000CA7 RID: 3239
+	// Token: 0x04000CAB RID: 3243
 	public bool wasSurroundedLastCheck;
 
-	// Token: 0x04000CA8 RID: 3240
+	// Token: 0x04000CAC RID: 3244
 	public AudioSource laugh;
 
-	// Token: 0x04000CA9 RID: 3241
+	// Token: 0x04000CAD RID: 3245
 	public List<Player> possibleTarget;
 
-	// Token: 0x04000CAA RID: 3242
+	// Token: 0x04000CAE RID: 3246
 	public AudioClip defaultLaugh;
 
-	// Token: 0x04000CAB RID: 3243
+	// Token: 0x04000CAF RID: 3247
 	public AudioClip deepLaugh;
 
-	// Token: 0x04000CAC RID: 3244
+	// Token: 0x04000CB0 RID: 3248
 	public AudioClip gong;
 
-	// Token: 0x04000CAD RID: 3245
+	// Token: 0x04000CB1 RID: 3249
 	public Vector3 noisyOffset;
 
-	// Token: 0x04000CAE RID: 3246
+	// Token: 0x04000CB2 RID: 3250
 	public Vector3 leftArmGrabbingLocal;
 
-	// Token: 0x04000CAF RID: 3247
+	// Token: 0x04000CB3 RID: 3251
 	public Vector3 rightArmGrabbingLocal;
 
-	// Token: 0x04000CB0 RID: 3248
+	// Token: 0x04000CB4 RID: 3252
 	public Vector3 leftHandGrabbingLocal;
 
-	// Token: 0x04000CB1 RID: 3249
+	// Token: 0x04000CB5 RID: 3253
 	public Vector3 rightHandGrabbingLocal;
 
-	// Token: 0x04000CB2 RID: 3250
+	// Token: 0x04000CB6 RID: 3254
 	public Vector3 leftHandStartingLocal;
 
-	// Token: 0x04000CB3 RID: 3251
+	// Token: 0x04000CB7 RID: 3255
 	public Vector3 rightHandStartingLocal;
 
-	// Token: 0x04000CB4 RID: 3252
+	// Token: 0x04000CB8 RID: 3256
 	public Vector3 ghostOffsetGrabbingLocal;
 
-	// Token: 0x04000CB5 RID: 3253
+	// Token: 0x04000CB9 RID: 3257
 	public Vector3 ghostStartingEulerRotation;
 
-	// Token: 0x04000CB6 RID: 3254
+	// Token: 0x04000CBA RID: 3258
 	public Vector3 ghostGrabbingEulerRotation;
 
-	// Token: 0x04000CB7 RID: 3255
+	// Token: 0x04000CBB RID: 3259
 	public float maxTimeToNextHeadAngle;
 
-	// Token: 0x04000CB8 RID: 3256
+	// Token: 0x04000CBC RID: 3260
 	public float lastHeadAngleTime;
 
-	// Token: 0x04000CB9 RID: 3257
+	// Token: 0x04000CBD RID: 3261
 	public float nextHeadAngleTime;
 
-	// Token: 0x04000CBA RID: 3258
+	// Token: 0x04000CBE RID: 3262
 	public float nextTimeToChasePlayer;
 
-	// Token: 0x04000CBB RID: 3259
+	// Token: 0x04000CBF RID: 3263
 	public float maxNextTimeToChasePlayer;
 
-	// Token: 0x04000CBC RID: 3260
+	// Token: 0x04000CC0 RID: 3264
 	public float timeRiseStarted;
 
-	// Token: 0x04000CBD RID: 3261
+	// Token: 0x04000CC1 RID: 3265
 	public float totalTimeToRise;
 
-	// Token: 0x04000CBE RID: 3262
+	// Token: 0x04000CC2 RID: 3266
 	public float catchDistance;
 
-	// Token: 0x04000CBF RID: 3263
+	// Token: 0x04000CC3 RID: 3267
 	public float grabTime;
 
-	// Token: 0x04000CC0 RID: 3264
+	// Token: 0x04000CC4 RID: 3268
 	public float grabDuration;
 
-	// Token: 0x04000CC1 RID: 3265
+	// Token: 0x04000CC5 RID: 3269
 	public float grabSpeed = 1f;
 
-	// Token: 0x04000CC2 RID: 3266
+	// Token: 0x04000CC6 RID: 3270
 	public float minGrabCooldown;
 
-	// Token: 0x04000CC3 RID: 3267
+	// Token: 0x04000CC7 RID: 3271
 	public float lastSpeedIncreased;
 
-	// Token: 0x04000CC4 RID: 3268
+	// Token: 0x04000CC8 RID: 3272
 	public Vector3[] headEulerAngles;
 
-	// Token: 0x04000CC5 RID: 3269
+	// Token: 0x04000CC9 RID: 3273
 	public Transform skullTransform;
 
-	// Token: 0x04000CC6 RID: 3270
+	// Token: 0x04000CCA RID: 3274
 	public Transform leftArm;
 
-	// Token: 0x04000CC7 RID: 3271
+	// Token: 0x04000CCB RID: 3275
 	public Transform rightArm;
 
-	// Token: 0x04000CC8 RID: 3272
+	// Token: 0x04000CCC RID: 3276
 	public Transform leftHand;
 
-	// Token: 0x04000CC9 RID: 3273
+	// Token: 0x04000CCD RID: 3277
 	public Transform rightHand;
 
-	// Token: 0x04000CCA RID: 3274
+	// Token: 0x04000CCE RID: 3278
 	public Transform[] spawnTransforms;
 
-	// Token: 0x04000CCB RID: 3275
+	// Token: 0x04000CCF RID: 3279
 	public Transform[] spawnTransformOffsets;
 
-	// Token: 0x04000CCC RID: 3276
+	// Token: 0x04000CD0 RID: 3280
 	public Player targetPlayer;
 
-	// Token: 0x04000CCD RID: 3277
+	// Token: 0x04000CD1 RID: 3281
 	public GameObject ghostBody;
 
-	// Token: 0x04000CCE RID: 3278
+	// Token: 0x04000CD2 RID: 3282
 	public HalloweenGhostChaser.ChaseState currentState;
 
-	// Token: 0x04000CCF RID: 3279
+	// Token: 0x04000CD3 RID: 3283
 	public HalloweenGhostChaser.ChaseState lastState;
 
-	// Token: 0x04000CD0 RID: 3280
+	// Token: 0x04000CD4 RID: 3284
 	public int spawnIndex;
 
-	// Token: 0x04000CD1 RID: 3281
+	// Token: 0x04000CD5 RID: 3285
 	public Player grabbedPlayer;
 
-	// Token: 0x04000CD2 RID: 3282
+	// Token: 0x04000CD6 RID: 3286
 	public Material ghostMaterial;
 
-	// Token: 0x04000CD3 RID: 3283
+	// Token: 0x04000CD7 RID: 3287
 	public Color defaultColor;
 
-	// Token: 0x04000CD4 RID: 3284
+	// Token: 0x04000CD8 RID: 3288
 	public Color summonedColor;
 
-	// Token: 0x04000CD5 RID: 3285
+	// Token: 0x04000CD9 RID: 3289
 	public bool isSummoned;
 
-	// Token: 0x04000CD6 RID: 3286
+	// Token: 0x04000CDA RID: 3290
 	private bool targetIsOnNavMesh;
 
-	// Token: 0x04000CD7 RID: 3287
+	// Token: 0x04000CDB RID: 3291
 	private const float navMeshSampleRange = 5f;
 
-	// Token: 0x04000CD8 RID: 3288
+	// Token: 0x04000CDC RID: 3292
 	[Tooltip("Haptic vibration when chased by lucy")]
 	public float hapticStrength = 1f;
 
-	// Token: 0x04000CD9 RID: 3289
+	// Token: 0x04000CDD RID: 3293
 	public float hapticDuration = 1.5f;
 
-	// Token: 0x04000CDA RID: 3290
+	// Token: 0x04000CDE RID: 3294
 	private NavMeshPath path;
 
-	// Token: 0x04000CDB RID: 3291
+	// Token: 0x04000CDF RID: 3295
 	public List<Vector3> points;
 
-	// Token: 0x04000CDC RID: 3292
+	// Token: 0x04000CE0 RID: 3296
 	public int currentTargetIdx;
 
-	// Token: 0x04000CDD RID: 3293
+	// Token: 0x04000CE1 RID: 3297
 	private float nextPathTimestamp;
 
-	// Token: 0x02000437 RID: 1079
+	// Token: 0x02000439 RID: 1081
 	public enum ChaseState
 	{
-		// Token: 0x04001D7D RID: 7549
+		// Token: 0x04001D8A RID: 7562
 		Dormant = 1,
-		// Token: 0x04001D7E RID: 7550
+		// Token: 0x04001D8B RID: 7563
 		InitialRise,
-		// Token: 0x04001D7F RID: 7551
+		// Token: 0x04001D8C RID: 7564
 		Gong = 4,
-		// Token: 0x04001D80 RID: 7552
+		// Token: 0x04001D8D RID: 7565
 		Chasing = 8,
-		// Token: 0x04001D81 RID: 7553
+		// Token: 0x04001D8E RID: 7566
 		Grabbing = 16
 	}
 }

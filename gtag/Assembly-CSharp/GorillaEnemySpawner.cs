@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-// Token: 0x020001BB RID: 443
+// Token: 0x020001BC RID: 444
 public class GorillaEnemySpawner : MonoBehaviour
 {
 }

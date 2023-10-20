@@ -4,10 +4,10 @@ using Photon.Pun;
 using UnityEngine;
 using UnityEngine.UI;
 
-// Token: 0x020001B1 RID: 433
+// Token: 0x020001B2 RID: 434
 public class GorillaPlayerLineButton : MonoBehaviour
 {
-	// Token: 0x06000B09 RID: 2825 RVA: 0x00044339 File Offset: 0x00042539
+	// Token: 0x06000B0E RID: 2830 RVA: 0x00044471 File Offset: 0x00042671
 	private void OnEnable()
 	{
 		if (Application.isEditor)
@@ -16,7 +16,7 @@ public class GorillaPlayerLineButton : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000B0A RID: 2826 RVA: 0x0004434F File Offset: 0x0004254F
+	// Token: 0x06000B0F RID: 2831 RVA: 0x00044487 File Offset: 0x00042687
 	private void OnDisable()
 	{
 		if (Application.isEditor)
@@ -25,7 +25,7 @@ public class GorillaPlayerLineButton : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000B0B RID: 2827 RVA: 0x0004435E File Offset: 0x0004255E
+	// Token: 0x06000B10 RID: 2832 RVA: 0x00044496 File Offset: 0x00042696
 	private IEnumerator TestPressCheck()
 	{
 		for (;;)
@@ -44,7 +44,7 @@ public class GorillaPlayerLineButton : MonoBehaviour
 		yield break;
 	}
 
-	// Token: 0x06000B0C RID: 2828 RVA: 0x00044370 File Offset: 0x00042570
+	// Token: 0x06000B11 RID: 2833 RVA: 0x000444A8 File Offset: 0x000426A8
 	private void OnTriggerEnter(Collider collider)
 	{
 		if (base.enabled && this.touchTime + this.debounceTime < Time.time && collider.GetComponentInParent<GorillaTriggerColliderHandIndicator>() != null)
@@ -76,7 +76,7 @@ public class GorillaPlayerLineButton : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000B0D RID: 2829 RVA: 0x000444CF File Offset: 0x000426CF
+	// Token: 0x06000B12 RID: 2834 RVA: 0x00044607 File Offset: 0x00042807
 	private void OnTriggerExit(Collider other)
 	{
 		if (this.buttonType != GorillaPlayerLineButton.ButtonType.Mute && other.GetComponentInParent<GorillaTriggerColliderHandIndicator>() != null)
@@ -85,7 +85,7 @@ public class GorillaPlayerLineButton : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000B0E RID: 2830 RVA: 0x000444F4 File Offset: 0x000426F4
+	// Token: 0x06000B13 RID: 2835 RVA: 0x0004462C File Offset: 0x0004282C
 	public void UpdateColor()
 	{
 		if (this.isOn)
@@ -98,53 +98,53 @@ public class GorillaPlayerLineButton : MonoBehaviour
 		this.myText.text = this.offText;
 	}
 
-	// Token: 0x04000E45 RID: 3653
+	// Token: 0x04000E49 RID: 3657
 	public GorillaPlayerScoreboardLine parentLine;
 
-	// Token: 0x04000E46 RID: 3654
+	// Token: 0x04000E4A RID: 3658
 	public GorillaPlayerLineButton.ButtonType buttonType;
 
-	// Token: 0x04000E47 RID: 3655
+	// Token: 0x04000E4B RID: 3659
 	public bool isOn;
 
-	// Token: 0x04000E48 RID: 3656
+	// Token: 0x04000E4C RID: 3660
 	public Material offMaterial;
 
-	// Token: 0x04000E49 RID: 3657
+	// Token: 0x04000E4D RID: 3661
 	public Material onMaterial;
 
-	// Token: 0x04000E4A RID: 3658
+	// Token: 0x04000E4E RID: 3662
 	public string offText;
 
-	// Token: 0x04000E4B RID: 3659
+	// Token: 0x04000E4F RID: 3663
 	public string onText;
 
-	// Token: 0x04000E4C RID: 3660
+	// Token: 0x04000E50 RID: 3664
 	public Text myText;
 
-	// Token: 0x04000E4D RID: 3661
+	// Token: 0x04000E51 RID: 3665
 	public float debounceTime = 0.25f;
 
-	// Token: 0x04000E4E RID: 3662
+	// Token: 0x04000E52 RID: 3666
 	public float touchTime;
 
-	// Token: 0x04000E4F RID: 3663
+	// Token: 0x04000E53 RID: 3667
 	public bool testPress;
 
-	// Token: 0x0200044F RID: 1103
+	// Token: 0x02000451 RID: 1105
 	public enum ButtonType
 	{
-		// Token: 0x04001DD5 RID: 7637
+		// Token: 0x04001DE2 RID: 7650
 		HateSpeech,
-		// Token: 0x04001DD6 RID: 7638
+		// Token: 0x04001DE3 RID: 7651
 		Cheating,
-		// Token: 0x04001DD7 RID: 7639
+		// Token: 0x04001DE4 RID: 7652
 		Toxicity,
-		// Token: 0x04001DD8 RID: 7640
+		// Token: 0x04001DE5 RID: 7653
 		Mute,
-		// Token: 0x04001DD9 RID: 7641
+		// Token: 0x04001DE6 RID: 7654
 		Report,
-		// Token: 0x04001DDA RID: 7642
+		// Token: 0x04001DE7 RID: 7655
 		Cancel
 	}
 }

@@ -2,13 +2,13 @@
 
 namespace GorillaTag
 {
-	// Token: 0x02000304 RID: 772
+	// Token: 0x02000306 RID: 774
 	public interface IGuidedRefObject
 	{
-		// Token: 0x06001592 RID: 5522
+		// Token: 0x0600159B RID: 5531
 		int GetInstanceID();
 
-		// Token: 0x06001593 RID: 5523
+		// Token: 0x0600159C RID: 5532
 		void GuidedRefInitialize();
 	}
 }

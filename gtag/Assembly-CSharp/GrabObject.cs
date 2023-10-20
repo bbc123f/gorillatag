@@ -4,7 +4,7 @@ using UnityEngine;
 // Token: 0x020000AF RID: 175
 public class GrabObject : MonoBehaviour
 {
-	// Token: 0x060003DB RID: 987 RVA: 0x00017F22 File Offset: 0x00016122
+	// Token: 0x060003DB RID: 987 RVA: 0x00017CFE File Offset: 0x00015EFE
 	public void Grab(OVRInput.Controller grabHand)
 	{
 		this.grabbedRotation = base.transform.rotation;
@@ -16,7 +16,7 @@ public class GrabObject : MonoBehaviour
 		grabbedObjectDelegate(grabHand);
 	}
 
-	// Token: 0x060003DC RID: 988 RVA: 0x00017F46 File Offset: 0x00016146
+	// Token: 0x060003DC RID: 988 RVA: 0x00017D22 File Offset: 0x00015F22
 	public void Release()
 	{
 		GrabObject.ReleasedObject releasedObjectDelegate = this.ReleasedObjectDelegate;
@@ -27,7 +27,7 @@ public class GrabObject : MonoBehaviour
 		releasedObjectDelegate();
 	}
 
-	// Token: 0x060003DD RID: 989 RVA: 0x00017F58 File Offset: 0x00016158
+	// Token: 0x060003DD RID: 989 RVA: 0x00017D34 File Offset: 0x00015F34
 	public void CursorPos(Vector3 cursorPos)
 	{
 		GrabObject.SetCursorPosition cursorPositionDelegate = this.CursorPositionDelegate;
@@ -65,34 +65,34 @@ public class GrabObject : MonoBehaviour
 	// Token: 0x0400047A RID: 1146
 	public GrabObject.SetCursorPosition CursorPositionDelegate;
 
-	// Token: 0x020003CF RID: 975
+	// Token: 0x020003D1 RID: 977
 	public enum ManipulationType
 	{
-		// Token: 0x04001C0D RID: 7181
+		// Token: 0x04001C1A RID: 7194
 		Default,
-		// Token: 0x04001C0E RID: 7182
+		// Token: 0x04001C1B RID: 7195
 		ForcedHand,
-		// Token: 0x04001C0F RID: 7183
+		// Token: 0x04001C1C RID: 7196
 		DollyHand,
-		// Token: 0x04001C10 RID: 7184
+		// Token: 0x04001C1D RID: 7197
 		DollyAttached,
-		// Token: 0x04001C11 RID: 7185
+		// Token: 0x04001C1E RID: 7198
 		HorizontalScaled,
-		// Token: 0x04001C12 RID: 7186
+		// Token: 0x04001C1F RID: 7199
 		VerticalScaled,
-		// Token: 0x04001C13 RID: 7187
+		// Token: 0x04001C20 RID: 7200
 		Menu
 	}
 
-	// Token: 0x020003D0 RID: 976
-	// (Invoke) Token: 0x06001B74 RID: 7028
+	// Token: 0x020003D2 RID: 978
+	// (Invoke) Token: 0x06001B7D RID: 7037
 	public delegate void GrabbedObject(OVRInput.Controller grabHand);
 
-	// Token: 0x020003D1 RID: 977
-	// (Invoke) Token: 0x06001B78 RID: 7032
+	// Token: 0x020003D3 RID: 979
+	// (Invoke) Token: 0x06001B81 RID: 7041
 	public delegate void ReleasedObject();
 
-	// Token: 0x020003D2 RID: 978
-	// (Invoke) Token: 0x06001B7C RID: 7036
+	// Token: 0x020003D4 RID: 980
+	// (Invoke) Token: 0x06001B85 RID: 7045
 	public delegate void SetCursorPosition(Vector3 cursorPosition);
 }

@@ -10,7 +10,7 @@ using UnityEngine.UI;
 [RequireComponent(typeof(OVRSpatialAnchor))]
 public class Anchor : MonoBehaviour
 {
-	// Token: 0x0600044F RID: 1103 RVA: 0x0001C208 File Offset: 0x0001A408
+	// Token: 0x0600044F RID: 1103 RVA: 0x0001BFE4 File Offset: 0x0001A1E4
 	private void Awake()
 	{
 		this._anchorMenu.SetActive(false);
@@ -22,7 +22,7 @@ public class Anchor : MonoBehaviour
 		this._icon = base.GetComponent<Transform>().FindChildRecursive("Sphere").gameObject;
 	}
 
-	// Token: 0x06000450 RID: 1104 RVA: 0x0001C282 File Offset: 0x0001A482
+	// Token: 0x06000450 RID: 1104 RVA: 0x0001C05E File Offset: 0x0001A25E
 	private IEnumerator Start()
 	{
 		while (this._spatialAnchor && !this._spatialAnchor.Created)
@@ -40,7 +40,7 @@ public class Anchor : MonoBehaviour
 		yield break;
 	}
 
-	// Token: 0x06000451 RID: 1105 RVA: 0x0001C291 File Offset: 0x0001A491
+	// Token: 0x06000451 RID: 1105 RVA: 0x0001C06D File Offset: 0x0001A26D
 	private void Update()
 	{
 		this.BillboardPanel(this._canvas.transform);
@@ -49,7 +49,7 @@ public class Anchor : MonoBehaviour
 		this.BillboardPanel(this._icon.transform);
 	}
 
-	// Token: 0x06000452 RID: 1106 RVA: 0x0001C2C7 File Offset: 0x0001A4C7
+	// Token: 0x06000452 RID: 1106 RVA: 0x0001C0A3 File Offset: 0x0001A2A3
 	public void OnSaveLocalButtonPressed()
 	{
 		if (!this._spatialAnchor)
@@ -73,13 +73,13 @@ public class Anchor : MonoBehaviour
 		});
 	}
 
-	// Token: 0x06000453 RID: 1107 RVA: 0x0001C2EE File Offset: 0x0001A4EE
+	// Token: 0x06000453 RID: 1107 RVA: 0x0001C0CA File Offset: 0x0001A2CA
 	public void OnHideButtonPressed()
 	{
 		Object.Destroy(base.gameObject);
 	}
 
-	// Token: 0x06000454 RID: 1108 RVA: 0x0001C2FB File Offset: 0x0001A4FB
+	// Token: 0x06000454 RID: 1108 RVA: 0x0001C0D7 File Offset: 0x0001A2D7
 	public void OnEraseButtonPressed()
 	{
 		if (!this._spatialAnchor)
@@ -96,7 +96,7 @@ public class Anchor : MonoBehaviour
 	}
 
 	// Token: 0x17000039 RID: 57
-	// (set) Token: 0x06000455 RID: 1109 RVA: 0x0001C322 File Offset: 0x0001A522
+	// (set) Token: 0x06000455 RID: 1109 RVA: 0x0001C0FE File Offset: 0x0001A2FE
 	public bool ShowSaveIcon
 	{
 		set
@@ -105,7 +105,7 @@ public class Anchor : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000456 RID: 1110 RVA: 0x0001C330 File Offset: 0x0001A530
+	// Token: 0x06000456 RID: 1110 RVA: 0x0001C10C File Offset: 0x0001A30C
 	public void OnHoverStart()
 	{
 		if (this._isHovered)
@@ -121,7 +121,7 @@ public class Anchor : MonoBehaviour
 		this._labelImage.color = this._labelHighlightColor;
 	}
 
-	// Token: 0x06000457 RID: 1111 RVA: 0x0001C38C File Offset: 0x0001A58C
+	// Token: 0x06000457 RID: 1111 RVA: 0x0001C168 File Offset: 0x0001A368
 	public void OnHoverEnd()
 	{
 		if (!this._isHovered)
@@ -142,7 +142,7 @@ public class Anchor : MonoBehaviour
 		this._labelImage.color = this._labelBaseColor;
 	}
 
-	// Token: 0x06000458 RID: 1112 RVA: 0x0001C400 File Offset: 0x0001A600
+	// Token: 0x06000458 RID: 1112 RVA: 0x0001C1DC File Offset: 0x0001A3DC
 	public void OnSelect()
 	{
 		if (this._isSelected)
@@ -174,13 +174,13 @@ public class Anchor : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000459 RID: 1113 RVA: 0x0001C4A8 File Offset: 0x0001A6A8
+	// Token: 0x06000459 RID: 1113 RVA: 0x0001C284 File Offset: 0x0001A484
 	private void BillboardPanel(Transform panel)
 	{
 		panel.LookAt(new Vector3(panel.position.x * 2f - Camera.main.transform.position.x, panel.position.y * 2f - Camera.main.transform.position.y, panel.position.z * 2f - Camera.main.transform.position.z), Vector3.up);
 	}
 
-	// Token: 0x0600045A RID: 1114 RVA: 0x0001C538 File Offset: 0x0001A738
+	// Token: 0x0600045A RID: 1114 RVA: 0x0001C314 File Offset: 0x0001A514
 	private void HandleMenuNavigation()
 	{
 		if (!this._isSelected)
@@ -201,7 +201,7 @@ public class Anchor : MonoBehaviour
 		}
 	}
 
-	// Token: 0x0600045B RID: 1115 RVA: 0x0001C59C File Offset: 0x0001A79C
+	// Token: 0x0600045B RID: 1115 RVA: 0x0001C378 File Offset: 0x0001A578
 	private void NavigateToIndexInMenu(bool moveNext)
 	{
 		if (moveNext)

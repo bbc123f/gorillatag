@@ -6,7 +6,7 @@ using UnityEngine.XR.Interaction.Toolkit;
 // Token: 0x02000075 RID: 117
 public class ToggleableWearable : MonoBehaviour
 {
-	// Token: 0x0600024F RID: 591 RVA: 0x0000F7DC File Offset: 0x0000D9DC
+	// Token: 0x0600024F RID: 591 RVA: 0x0000F5B8 File Offset: 0x0000D7B8
 	protected void Awake()
 	{
 		this.ownerRig = base.GetComponentInParent<VRRig>();
@@ -39,7 +39,7 @@ public class ToggleableWearable : MonoBehaviour
 		this.assignedSlotBitIndex = (int)this.assignedSlot;
 	}
 
-	// Token: 0x06000250 RID: 592 RVA: 0x0000F8B0 File Offset: 0x0000DAB0
+	// Token: 0x06000250 RID: 592 RVA: 0x0000F68C File Offset: 0x0000D88C
 	protected void LateUpdate()
 	{
 		if (this.ownerIsLocal)
@@ -75,7 +75,7 @@ public class ToggleableWearable : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000251 RID: 593 RVA: 0x0000F9E4 File Offset: 0x0000DBE4
+	// Token: 0x06000251 RID: 593 RVA: 0x0000F7C0 File Offset: 0x0000D9C0
 	private void LocalToggle(bool isLeftHand)
 	{
 		this.ownerRig.WearablePackedStates ^= 1 << this.assignedSlotBitIndex;
@@ -86,7 +86,7 @@ public class ToggleableWearable : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000252 RID: 594 RVA: 0x0000FA74 File Offset: 0x0000DC74
+	// Token: 0x06000252 RID: 594 RVA: 0x0000F850 File Offset: 0x0000DA50
 	private void SharedSetState(bool state)
 	{
 		this.isOn = state;

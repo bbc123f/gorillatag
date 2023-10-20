@@ -4,11 +4,11 @@ using UnityEngine;
 
 namespace BoingKit
 {
-	// Token: 0x02000368 RID: 872
+	// Token: 0x0200036A RID: 874
 	public static class BoingManager
 	{
-		// Token: 0x170001A0 RID: 416
-		// (get) Token: 0x06001973 RID: 6515 RVA: 0x0008D280 File Offset: 0x0008B480
+		// Token: 0x170001A2 RID: 418
+		// (get) Token: 0x0600197C RID: 6524 RVA: 0x0008D768 File Offset: 0x0008B968
 		public static IEnumerable<BoingBehavior> Behaviors
 		{
 			get
@@ -17,8 +17,8 @@ namespace BoingKit
 			}
 		}
 
-		// Token: 0x170001A1 RID: 417
-		// (get) Token: 0x06001974 RID: 6516 RVA: 0x0008D28C File Offset: 0x0008B48C
+		// Token: 0x170001A3 RID: 419
+		// (get) Token: 0x0600197D RID: 6525 RVA: 0x0008D774 File Offset: 0x0008B974
 		public static IEnumerable<BoingReactor> Reactors
 		{
 			get
@@ -27,8 +27,8 @@ namespace BoingKit
 			}
 		}
 
-		// Token: 0x170001A2 RID: 418
-		// (get) Token: 0x06001975 RID: 6517 RVA: 0x0008D298 File Offset: 0x0008B498
+		// Token: 0x170001A4 RID: 420
+		// (get) Token: 0x0600197E RID: 6526 RVA: 0x0008D780 File Offset: 0x0008B980
 		public static IEnumerable<BoingEffector> Effectors
 		{
 			get
@@ -37,8 +37,8 @@ namespace BoingKit
 			}
 		}
 
-		// Token: 0x170001A3 RID: 419
-		// (get) Token: 0x06001976 RID: 6518 RVA: 0x0008D2A4 File Offset: 0x0008B4A4
+		// Token: 0x170001A5 RID: 421
+		// (get) Token: 0x0600197F RID: 6527 RVA: 0x0008D78C File Offset: 0x0008B98C
 		public static IEnumerable<BoingReactorField> ReactorFields
 		{
 			get
@@ -47,8 +47,8 @@ namespace BoingKit
 			}
 		}
 
-		// Token: 0x170001A4 RID: 420
-		// (get) Token: 0x06001977 RID: 6519 RVA: 0x0008D2B0 File Offset: 0x0008B4B0
+		// Token: 0x170001A6 RID: 422
+		// (get) Token: 0x06001980 RID: 6528 RVA: 0x0008D798 File Offset: 0x0008B998
 		public static IEnumerable<BoingReactorFieldCPUSampler> ReactorFieldCPUSamlers
 		{
 			get
@@ -57,8 +57,8 @@ namespace BoingKit
 			}
 		}
 
-		// Token: 0x170001A5 RID: 421
-		// (get) Token: 0x06001978 RID: 6520 RVA: 0x0008D2BC File Offset: 0x0008B4BC
+		// Token: 0x170001A7 RID: 423
+		// (get) Token: 0x06001981 RID: 6529 RVA: 0x0008D7A4 File Offset: 0x0008B9A4
 		public static IEnumerable<BoingReactorFieldGPUSampler> ReactorFieldGPUSampler
 		{
 			get
@@ -67,8 +67,8 @@ namespace BoingKit
 			}
 		}
 
-		// Token: 0x170001A6 RID: 422
-		// (get) Token: 0x06001979 RID: 6521 RVA: 0x0008D2C8 File Offset: 0x0008B4C8
+		// Token: 0x170001A8 RID: 424
+		// (get) Token: 0x06001982 RID: 6530 RVA: 0x0008D7B0 File Offset: 0x0008B9B0
 		public static float DeltaTime
 		{
 			get
@@ -77,8 +77,8 @@ namespace BoingKit
 			}
 		}
 
-		// Token: 0x170001A7 RID: 423
-		// (get) Token: 0x0600197A RID: 6522 RVA: 0x0008D2CF File Offset: 0x0008B4CF
+		// Token: 0x170001A9 RID: 425
+		// (get) Token: 0x06001983 RID: 6531 RVA: 0x0008D7B7 File Offset: 0x0008B9B7
 		public static float FixedDeltaTime
 		{
 			get
@@ -87,8 +87,8 @@ namespace BoingKit
 			}
 		}
 
-		// Token: 0x170001A8 RID: 424
-		// (get) Token: 0x0600197B RID: 6523 RVA: 0x0008D2D6 File Offset: 0x0008B4D6
+		// Token: 0x170001AA RID: 426
+		// (get) Token: 0x06001984 RID: 6532 RVA: 0x0008D7BE File Offset: 0x0008B9BE
 		internal static int NumBehaviors
 		{
 			get
@@ -97,8 +97,8 @@ namespace BoingKit
 			}
 		}
 
-		// Token: 0x170001A9 RID: 425
-		// (get) Token: 0x0600197C RID: 6524 RVA: 0x0008D2E2 File Offset: 0x0008B4E2
+		// Token: 0x170001AB RID: 427
+		// (get) Token: 0x06001985 RID: 6533 RVA: 0x0008D7CA File Offset: 0x0008B9CA
 		internal static int NumEffectors
 		{
 			get
@@ -107,8 +107,8 @@ namespace BoingKit
 			}
 		}
 
-		// Token: 0x170001AA RID: 426
-		// (get) Token: 0x0600197D RID: 6525 RVA: 0x0008D2EE File Offset: 0x0008B4EE
+		// Token: 0x170001AC RID: 428
+		// (get) Token: 0x06001986 RID: 6534 RVA: 0x0008D7D6 File Offset: 0x0008B9D6
 		internal static int NumReactors
 		{
 			get
@@ -117,8 +117,8 @@ namespace BoingKit
 			}
 		}
 
-		// Token: 0x170001AB RID: 427
-		// (get) Token: 0x0600197E RID: 6526 RVA: 0x0008D2FA File Offset: 0x0008B4FA
+		// Token: 0x170001AD RID: 429
+		// (get) Token: 0x06001987 RID: 6535 RVA: 0x0008D7E2 File Offset: 0x0008B9E2
 		internal static int NumFields
 		{
 			get
@@ -127,8 +127,8 @@ namespace BoingKit
 			}
 		}
 
-		// Token: 0x170001AC RID: 428
-		// (get) Token: 0x0600197F RID: 6527 RVA: 0x0008D306 File Offset: 0x0008B506
+		// Token: 0x170001AE RID: 430
+		// (get) Token: 0x06001988 RID: 6536 RVA: 0x0008D7EE File Offset: 0x0008B9EE
 		internal static int NumCPUFieldSamplers
 		{
 			get
@@ -137,8 +137,8 @@ namespace BoingKit
 			}
 		}
 
-		// Token: 0x170001AD RID: 429
-		// (get) Token: 0x06001980 RID: 6528 RVA: 0x0008D312 File Offset: 0x0008B512
+		// Token: 0x170001AF RID: 431
+		// (get) Token: 0x06001989 RID: 6537 RVA: 0x0008D7FA File Offset: 0x0008B9FA
 		internal static int NumGPUFieldSamplers
 		{
 			get
@@ -147,7 +147,7 @@ namespace BoingKit
 			}
 		}
 
-		// Token: 0x06001981 RID: 6529 RVA: 0x0008D320 File Offset: 0x0008B520
+		// Token: 0x0600198A RID: 6538 RVA: 0x0008D808 File Offset: 0x0008BA08
 		private static void ValidateManager()
 		{
 			if (BoingManager.s_managerGo != null)
@@ -161,8 +161,8 @@ namespace BoingKit
 			BoingManager.s_managerGo.AddComponent<SphereCollider>().enabled = false;
 		}
 
-		// Token: 0x170001AE RID: 430
-		// (get) Token: 0x06001982 RID: 6530 RVA: 0x0008D37A File Offset: 0x0008B57A
+		// Token: 0x170001B0 RID: 432
+		// (get) Token: 0x0600198B RID: 6539 RVA: 0x0008D862 File Offset: 0x0008BA62
 		internal static SphereCollider SharedSphereCollider
 		{
 			get
@@ -175,7 +175,7 @@ namespace BoingKit
 			}
 		}
 
-		// Token: 0x06001983 RID: 6531 RVA: 0x0008D395 File Offset: 0x0008B595
+		// Token: 0x0600198C RID: 6540 RVA: 0x0008D87D File Offset: 0x0008BA7D
 		internal static void Register(BoingBehavior behavior)
 		{
 			BoingManager.PreRegisterBehavior();
@@ -186,7 +186,7 @@ namespace BoingKit
 			}
 		}
 
-		// Token: 0x06001984 RID: 6532 RVA: 0x0008D3BF File Offset: 0x0008B5BF
+		// Token: 0x0600198D RID: 6541 RVA: 0x0008D8A7 File Offset: 0x0008BAA7
 		internal static void Unregister(BoingBehavior behavior)
 		{
 			if (BoingManager.OnBehaviorUnregister != null)
@@ -197,7 +197,7 @@ namespace BoingKit
 			BoingManager.PostUnregisterBehavior();
 		}
 
-		// Token: 0x06001985 RID: 6533 RVA: 0x0008D3E9 File Offset: 0x0008B5E9
+		// Token: 0x0600198E RID: 6542 RVA: 0x0008D8D1 File Offset: 0x0008BAD1
 		internal static void Register(BoingEffector effector)
 		{
 			BoingManager.PreRegisterEffectorReactor();
@@ -208,7 +208,7 @@ namespace BoingKit
 			}
 		}
 
-		// Token: 0x06001986 RID: 6534 RVA: 0x0008D413 File Offset: 0x0008B613
+		// Token: 0x0600198F RID: 6543 RVA: 0x0008D8FB File Offset: 0x0008BAFB
 		internal static void Unregister(BoingEffector effector)
 		{
 			if (BoingManager.OnEffectorUnregister != null)
@@ -219,7 +219,7 @@ namespace BoingKit
 			BoingManager.PostUnregisterEffectorReactor();
 		}
 
-		// Token: 0x06001987 RID: 6535 RVA: 0x0008D43D File Offset: 0x0008B63D
+		// Token: 0x06001990 RID: 6544 RVA: 0x0008D925 File Offset: 0x0008BB25
 		internal static void Register(BoingReactor reactor)
 		{
 			BoingManager.PreRegisterEffectorReactor();
@@ -230,7 +230,7 @@ namespace BoingKit
 			}
 		}
 
-		// Token: 0x06001988 RID: 6536 RVA: 0x0008D467 File Offset: 0x0008B667
+		// Token: 0x06001991 RID: 6545 RVA: 0x0008D94F File Offset: 0x0008BB4F
 		internal static void Unregister(BoingReactor reactor)
 		{
 			if (BoingManager.OnReactorUnregister != null)
@@ -241,7 +241,7 @@ namespace BoingKit
 			BoingManager.PostUnregisterEffectorReactor();
 		}
 
-		// Token: 0x06001989 RID: 6537 RVA: 0x0008D491 File Offset: 0x0008B691
+		// Token: 0x06001992 RID: 6546 RVA: 0x0008D979 File Offset: 0x0008BB79
 		internal static void Register(BoingReactorField field)
 		{
 			BoingManager.PreRegisterEffectorReactor();
@@ -252,7 +252,7 @@ namespace BoingKit
 			}
 		}
 
-		// Token: 0x0600198A RID: 6538 RVA: 0x0008D4BB File Offset: 0x0008B6BB
+		// Token: 0x06001993 RID: 6547 RVA: 0x0008D9A3 File Offset: 0x0008BBA3
 		internal static void Unregister(BoingReactorField field)
 		{
 			if (BoingManager.OnReactorFieldUnregister != null)
@@ -263,7 +263,7 @@ namespace BoingKit
 			BoingManager.PostUnregisterEffectorReactor();
 		}
 
-		// Token: 0x0600198B RID: 6539 RVA: 0x0008D4E5 File Offset: 0x0008B6E5
+		// Token: 0x06001994 RID: 6548 RVA: 0x0008D9CD File Offset: 0x0008BBCD
 		internal static void Register(BoingReactorFieldCPUSampler sampler)
 		{
 			BoingManager.PreRegisterEffectorReactor();
@@ -274,7 +274,7 @@ namespace BoingKit
 			}
 		}
 
-		// Token: 0x0600198C RID: 6540 RVA: 0x0008D50F File Offset: 0x0008B70F
+		// Token: 0x06001995 RID: 6549 RVA: 0x0008D9F7 File Offset: 0x0008BBF7
 		internal static void Unregister(BoingReactorFieldCPUSampler sampler)
 		{
 			if (BoingManager.OnReactorFieldCPUSamplerUnregister != null)
@@ -285,7 +285,7 @@ namespace BoingKit
 			BoingManager.PostUnregisterEffectorReactor();
 		}
 
-		// Token: 0x0600198D RID: 6541 RVA: 0x0008D539 File Offset: 0x0008B739
+		// Token: 0x06001996 RID: 6550 RVA: 0x0008DA21 File Offset: 0x0008BC21
 		internal static void Register(BoingReactorFieldGPUSampler sampler)
 		{
 			BoingManager.PreRegisterEffectorReactor();
@@ -296,7 +296,7 @@ namespace BoingKit
 			}
 		}
 
-		// Token: 0x0600198E RID: 6542 RVA: 0x0008D563 File Offset: 0x0008B763
+		// Token: 0x06001997 RID: 6551 RVA: 0x0008DA4B File Offset: 0x0008BC4B
 		internal static void Unregister(BoingReactorFieldGPUSampler sampler)
 		{
 			if (BoingManager.OnFieldGPUSamplerUnregister != null)
@@ -307,7 +307,7 @@ namespace BoingKit
 			BoingManager.PostUnregisterEffectorReactor();
 		}
 
-		// Token: 0x0600198F RID: 6543 RVA: 0x0008D58D File Offset: 0x0008B78D
+		// Token: 0x06001998 RID: 6552 RVA: 0x0008DA75 File Offset: 0x0008BC75
 		internal static void Register(BoingBones bones)
 		{
 			BoingManager.PreRegisterBones();
@@ -318,7 +318,7 @@ namespace BoingKit
 			}
 		}
 
-		// Token: 0x06001990 RID: 6544 RVA: 0x0008D5B7 File Offset: 0x0008B7B7
+		// Token: 0x06001999 RID: 6553 RVA: 0x0008DA9F File Offset: 0x0008BC9F
 		internal static void Unregister(BoingBones bones)
 		{
 			if (BoingManager.OnBonesUnregister != null)
@@ -329,13 +329,13 @@ namespace BoingKit
 			BoingManager.PostUnregisterBones();
 		}
 
-		// Token: 0x06001991 RID: 6545 RVA: 0x0008D5E1 File Offset: 0x0008B7E1
+		// Token: 0x0600199A RID: 6554 RVA: 0x0008DAC9 File Offset: 0x0008BCC9
 		private static void PreRegisterBehavior()
 		{
 			BoingManager.ValidateManager();
 		}
 
-		// Token: 0x06001992 RID: 6546 RVA: 0x0008D5E8 File Offset: 0x0008B7E8
+		// Token: 0x0600199B RID: 6555 RVA: 0x0008DAD0 File Offset: 0x0008BCD0
 		private static void PostUnregisterBehavior()
 		{
 			if (BoingManager.s_behaviorMap.Count > 0)
@@ -345,7 +345,7 @@ namespace BoingKit
 			BoingWorkAsynchronous.PostUnregisterBehaviorCleanUp();
 		}
 
-		// Token: 0x06001993 RID: 6547 RVA: 0x0008D600 File Offset: 0x0008B800
+		// Token: 0x0600199C RID: 6556 RVA: 0x0008DAE8 File Offset: 0x0008BCE8
 		private static void PreRegisterEffectorReactor()
 		{
 			BoingManager.ValidateManager();
@@ -362,7 +362,7 @@ namespace BoingKit
 			}
 		}
 
-		// Token: 0x06001994 RID: 6548 RVA: 0x0008D690 File Offset: 0x0008B890
+		// Token: 0x0600199D RID: 6557 RVA: 0x0008DB78 File Offset: 0x0008BD78
 		private static void PostUnregisterEffectorReactor()
 		{
 			if (BoingManager.s_effectorMap.Count > 0 || BoingManager.s_reactorMap.Count > 0 || BoingManager.s_fieldMap.Count > 0 || BoingManager.s_cpuSamplerMap.Count > 0 || BoingManager.s_gpuSamplerMap.Count > 0)
@@ -375,18 +375,18 @@ namespace BoingKit
 			BoingWorkAsynchronous.PostUnregisterEffectorReactorCleanUp();
 		}
 
-		// Token: 0x06001995 RID: 6549 RVA: 0x0008D6FA File Offset: 0x0008B8FA
+		// Token: 0x0600199E RID: 6558 RVA: 0x0008DBE2 File Offset: 0x0008BDE2
 		private static void PreRegisterBones()
 		{
 			BoingManager.ValidateManager();
 		}
 
-		// Token: 0x06001996 RID: 6550 RVA: 0x0008D701 File Offset: 0x0008B901
+		// Token: 0x0600199F RID: 6559 RVA: 0x0008DBE9 File Offset: 0x0008BDE9
 		private static void PostUnregisterBones()
 		{
 		}
 
-		// Token: 0x06001997 RID: 6551 RVA: 0x0008D703 File Offset: 0x0008B903
+		// Token: 0x060019A0 RID: 6560 RVA: 0x0008DBEB File Offset: 0x0008BDEB
 		internal static void Execute(BoingManager.UpdateMode updateMode)
 		{
 			if (updateMode == BoingManager.UpdateMode.EarlyUpdate)
@@ -399,7 +399,7 @@ namespace BoingKit
 			BoingManager.ExecuteReactors(updateMode);
 		}
 
-		// Token: 0x06001998 RID: 6552 RVA: 0x0008D72C File Offset: 0x0008B92C
+		// Token: 0x060019A1 RID: 6561 RVA: 0x0008DC14 File Offset: 0x0008BE14
 		internal static void ExecuteBehaviors(BoingManager.UpdateMode updateMode)
 		{
 			if (BoingManager.s_behaviorMap.Count == 0)
@@ -423,7 +423,7 @@ namespace BoingKit
 			BoingWorkSynchronous.ExecuteBehaviors(BoingManager.s_behaviorMap, updateMode);
 		}
 
-		// Token: 0x06001999 RID: 6553 RVA: 0x0008D7C0 File Offset: 0x0008B9C0
+		// Token: 0x060019A2 RID: 6562 RVA: 0x0008DCA8 File Offset: 0x0008BEA8
 		internal static void PullBehaviorResults(BoingManager.UpdateMode updateMode)
 		{
 			foreach (KeyValuePair<int, BoingBehavior> keyValuePair in BoingManager.s_behaviorMap)
@@ -435,7 +435,7 @@ namespace BoingKit
 			}
 		}
 
-		// Token: 0x0600199A RID: 6554 RVA: 0x0008D828 File Offset: 0x0008BA28
+		// Token: 0x060019A3 RID: 6563 RVA: 0x0008DD10 File Offset: 0x0008BF10
 		internal static void RestoreBehaviors()
 		{
 			foreach (KeyValuePair<int, BoingBehavior> keyValuePair in BoingManager.s_behaviorMap)
@@ -444,7 +444,7 @@ namespace BoingKit
 			}
 		}
 
-		// Token: 0x0600199B RID: 6555 RVA: 0x0008D880 File Offset: 0x0008BA80
+		// Token: 0x060019A4 RID: 6564 RVA: 0x0008DD68 File Offset: 0x0008BF68
 		internal static void RefreshEffectorParams()
 		{
 			if (BoingManager.s_effectorParamsList == null)
@@ -467,7 +467,7 @@ namespace BoingKit
 			BoingManager.s_effectorParamsList.CopyTo(BoingManager.s_aEffectorParams);
 		}
 
-		// Token: 0x0600199C RID: 6556 RVA: 0x0008D954 File Offset: 0x0008BB54
+		// Token: 0x060019A5 RID: 6565 RVA: 0x0008DE3C File Offset: 0x0008C03C
 		internal static void ExecuteReactors(BoingManager.UpdateMode updateMode)
 		{
 			if (BoingManager.s_effectorMap.Count == 0 && BoingManager.s_reactorMap.Count == 0 && BoingManager.s_fieldMap.Count == 0 && BoingManager.s_cpuSamplerMap.Count == 0)
@@ -491,7 +491,7 @@ namespace BoingKit
 			BoingWorkSynchronous.ExecuteReactors(BoingManager.s_aEffectorParams, BoingManager.s_reactorMap, BoingManager.s_fieldMap, BoingManager.s_cpuSamplerMap, updateMode);
 		}
 
-		// Token: 0x0600199D RID: 6557 RVA: 0x0008DA2C File Offset: 0x0008BC2C
+		// Token: 0x060019A6 RID: 6566 RVA: 0x0008DF14 File Offset: 0x0008C114
 		internal static void PullReactorResults(BoingManager.UpdateMode updateMode)
 		{
 			foreach (KeyValuePair<int, BoingReactor> keyValuePair in BoingManager.s_reactorMap)
@@ -510,7 +510,7 @@ namespace BoingKit
 			}
 		}
 
-		// Token: 0x0600199E RID: 6558 RVA: 0x0008DAE8 File Offset: 0x0008BCE8
+		// Token: 0x060019A7 RID: 6567 RVA: 0x0008DFD0 File Offset: 0x0008C1D0
 		internal static void RestoreReactors()
 		{
 			foreach (KeyValuePair<int, BoingReactor> keyValuePair in BoingManager.s_reactorMap)
@@ -523,7 +523,7 @@ namespace BoingKit
 			}
 		}
 
-		// Token: 0x0600199F RID: 6559 RVA: 0x0008DB88 File Offset: 0x0008BD88
+		// Token: 0x060019A8 RID: 6568 RVA: 0x0008E070 File Offset: 0x0008C270
 		internal static void DispatchReactorFieldCompute()
 		{
 			if (BoingManager.s_effectorParamsBuffer == null)
@@ -542,7 +542,7 @@ namespace BoingKit
 			}
 		}
 
-		// Token: 0x060019A0 RID: 6560 RVA: 0x0008DC14 File Offset: 0x0008BE14
+		// Token: 0x060019A9 RID: 6569 RVA: 0x0008E0FC File Offset: 0x0008C2FC
 		internal static void ExecuteBones(BoingManager.UpdateMode updateMode)
 		{
 			if (BoingManager.s_bonesMap.Count == 0)
@@ -566,7 +566,7 @@ namespace BoingKit
 			BoingWorkSynchronous.ExecuteBones(BoingManager.s_aEffectorParams, BoingManager.s_bonesMap, updateMode);
 		}
 
-		// Token: 0x060019A1 RID: 6561 RVA: 0x0008DCB4 File Offset: 0x0008BEB4
+		// Token: 0x060019AA RID: 6570 RVA: 0x0008E19C File Offset: 0x0008C39C
 		internal static void PullBonesResults(BoingManager.UpdateMode updateMode)
 		{
 			if (BoingManager.s_bonesMap.Count == 0)
@@ -581,7 +581,7 @@ namespace BoingKit
 			BoingWorkSynchronous.PullBonesResults(BoingManager.s_aEffectorParams, BoingManager.s_bonesMap, updateMode);
 		}
 
-		// Token: 0x060019A2 RID: 6562 RVA: 0x0008DCEC File Offset: 0x0008BEEC
+		// Token: 0x060019AB RID: 6571 RVA: 0x0008E1D4 File Offset: 0x0008C3D4
 		internal static void RestoreBones()
 		{
 			foreach (KeyValuePair<int, BoingBones> keyValuePair in BoingManager.s_bonesMap)
@@ -590,167 +590,167 @@ namespace BoingKit
 			}
 		}
 
-		// Token: 0x04001A34 RID: 6708
+		// Token: 0x04001A41 RID: 6721
 		public static BoingManager.BehaviorRegisterDelegate OnBehaviorRegister;
 
-		// Token: 0x04001A35 RID: 6709
+		// Token: 0x04001A42 RID: 6722
 		public static BoingManager.BehaviorUnregisterDelegate OnBehaviorUnregister;
 
-		// Token: 0x04001A36 RID: 6710
+		// Token: 0x04001A43 RID: 6723
 		public static BoingManager.EffectorRegisterDelegate OnEffectorRegister;
 
-		// Token: 0x04001A37 RID: 6711
+		// Token: 0x04001A44 RID: 6724
 		public static BoingManager.EffectorUnregisterDelegate OnEffectorUnregister;
 
-		// Token: 0x04001A38 RID: 6712
+		// Token: 0x04001A45 RID: 6725
 		public static BoingManager.ReactorRegisterDelegate OnReactorRegister;
 
-		// Token: 0x04001A39 RID: 6713
+		// Token: 0x04001A46 RID: 6726
 		public static BoingManager.ReactorUnregisterDelegate OnReactorUnregister;
 
-		// Token: 0x04001A3A RID: 6714
+		// Token: 0x04001A47 RID: 6727
 		public static BoingManager.ReactorFieldRegisterDelegate OnReactorFieldRegister;
 
-		// Token: 0x04001A3B RID: 6715
+		// Token: 0x04001A48 RID: 6728
 		public static BoingManager.ReactorFieldUnregisterDelegate OnReactorFieldUnregister;
 
-		// Token: 0x04001A3C RID: 6716
+		// Token: 0x04001A49 RID: 6729
 		public static BoingManager.ReactorFieldCPUSamplerRegisterDelegate OnReactorFieldCPUSamplerRegister;
 
-		// Token: 0x04001A3D RID: 6717
+		// Token: 0x04001A4A RID: 6730
 		public static BoingManager.ReactorFieldCPUSamplerUnregisterDelegate OnReactorFieldCPUSamplerUnregister;
 
-		// Token: 0x04001A3E RID: 6718
+		// Token: 0x04001A4B RID: 6731
 		public static BoingManager.ReactorFieldGPUSamplerRegisterDelegate OnReactorFieldGPUSamplerRegister;
 
-		// Token: 0x04001A3F RID: 6719
+		// Token: 0x04001A4C RID: 6732
 		public static BoingManager.ReactorFieldGPUSamplerUnregisterDelegate OnFieldGPUSamplerUnregister;
 
-		// Token: 0x04001A40 RID: 6720
+		// Token: 0x04001A4D RID: 6733
 		public static BoingManager.BonesRegisterDelegate OnBonesRegister;
 
-		// Token: 0x04001A41 RID: 6721
+		// Token: 0x04001A4E RID: 6734
 		public static BoingManager.BonesUnregisterDelegate OnBonesUnregister;
 
-		// Token: 0x04001A42 RID: 6722
+		// Token: 0x04001A4F RID: 6735
 		private static float s_deltaTime = 0f;
 
-		// Token: 0x04001A43 RID: 6723
+		// Token: 0x04001A50 RID: 6736
 		private static Dictionary<int, BoingBehavior> s_behaviorMap = new Dictionary<int, BoingBehavior>();
 
-		// Token: 0x04001A44 RID: 6724
+		// Token: 0x04001A51 RID: 6737
 		private static Dictionary<int, BoingEffector> s_effectorMap = new Dictionary<int, BoingEffector>();
 
-		// Token: 0x04001A45 RID: 6725
+		// Token: 0x04001A52 RID: 6738
 		private static Dictionary<int, BoingReactor> s_reactorMap = new Dictionary<int, BoingReactor>();
 
-		// Token: 0x04001A46 RID: 6726
+		// Token: 0x04001A53 RID: 6739
 		private static Dictionary<int, BoingReactorField> s_fieldMap = new Dictionary<int, BoingReactorField>();
 
-		// Token: 0x04001A47 RID: 6727
+		// Token: 0x04001A54 RID: 6740
 		private static Dictionary<int, BoingReactorFieldCPUSampler> s_cpuSamplerMap = new Dictionary<int, BoingReactorFieldCPUSampler>();
 
-		// Token: 0x04001A48 RID: 6728
+		// Token: 0x04001A55 RID: 6741
 		private static Dictionary<int, BoingReactorFieldGPUSampler> s_gpuSamplerMap = new Dictionary<int, BoingReactorFieldGPUSampler>();
 
-		// Token: 0x04001A49 RID: 6729
+		// Token: 0x04001A56 RID: 6742
 		private static Dictionary<int, BoingBones> s_bonesMap = new Dictionary<int, BoingBones>();
 
-		// Token: 0x04001A4A RID: 6730
+		// Token: 0x04001A57 RID: 6743
 		private static readonly int kEffectorParamsIncrement = 16;
 
-		// Token: 0x04001A4B RID: 6731
+		// Token: 0x04001A58 RID: 6744
 		private static List<BoingEffector.Params> s_effectorParamsList = new List<BoingEffector.Params>(BoingManager.kEffectorParamsIncrement);
 
-		// Token: 0x04001A4C RID: 6732
+		// Token: 0x04001A59 RID: 6745
 		private static BoingEffector.Params[] s_aEffectorParams;
 
-		// Token: 0x04001A4D RID: 6733
+		// Token: 0x04001A5A RID: 6746
 		private static ComputeBuffer s_effectorParamsBuffer;
 
-		// Token: 0x04001A4E RID: 6734
+		// Token: 0x04001A5B RID: 6747
 		private static Dictionary<int, int> s_effectorParamsIndexMap = new Dictionary<int, int>();
 
-		// Token: 0x04001A4F RID: 6735
+		// Token: 0x04001A5C RID: 6748
 		internal static readonly bool UseAsynchronousJobs = true;
 
-		// Token: 0x04001A50 RID: 6736
+		// Token: 0x04001A5D RID: 6749
 		internal static GameObject s_managerGo;
 
-		// Token: 0x02000520 RID: 1312
+		// Token: 0x02000522 RID: 1314
 		public enum UpdateMode
 		{
-			// Token: 0x0400219F RID: 8607
+			// Token: 0x040021AC RID: 8620
 			FixedUpdate,
-			// Token: 0x040021A0 RID: 8608
+			// Token: 0x040021AD RID: 8621
 			EarlyUpdate,
-			// Token: 0x040021A1 RID: 8609
+			// Token: 0x040021AE RID: 8622
 			LateUpdate
 		}
 
-		// Token: 0x02000521 RID: 1313
+		// Token: 0x02000523 RID: 1315
 		public enum TranslationLockSpace
 		{
-			// Token: 0x040021A3 RID: 8611
+			// Token: 0x040021B0 RID: 8624
 			Global,
-			// Token: 0x040021A4 RID: 8612
+			// Token: 0x040021B1 RID: 8625
 			Local
 		}
 
-		// Token: 0x02000522 RID: 1314
-		// (Invoke) Token: 0x06001F70 RID: 8048
+		// Token: 0x02000524 RID: 1316
+		// (Invoke) Token: 0x06001F79 RID: 8057
 		public delegate void BehaviorRegisterDelegate(BoingBehavior behavior);
 
-		// Token: 0x02000523 RID: 1315
-		// (Invoke) Token: 0x06001F74 RID: 8052
+		// Token: 0x02000525 RID: 1317
+		// (Invoke) Token: 0x06001F7D RID: 8061
 		public delegate void BehaviorUnregisterDelegate(BoingBehavior behavior);
 
-		// Token: 0x02000524 RID: 1316
-		// (Invoke) Token: 0x06001F78 RID: 8056
+		// Token: 0x02000526 RID: 1318
+		// (Invoke) Token: 0x06001F81 RID: 8065
 		public delegate void EffectorRegisterDelegate(BoingEffector effector);
 
-		// Token: 0x02000525 RID: 1317
-		// (Invoke) Token: 0x06001F7C RID: 8060
+		// Token: 0x02000527 RID: 1319
+		// (Invoke) Token: 0x06001F85 RID: 8069
 		public delegate void EffectorUnregisterDelegate(BoingEffector effector);
 
-		// Token: 0x02000526 RID: 1318
-		// (Invoke) Token: 0x06001F80 RID: 8064
+		// Token: 0x02000528 RID: 1320
+		// (Invoke) Token: 0x06001F89 RID: 8073
 		public delegate void ReactorRegisterDelegate(BoingReactor reactor);
 
-		// Token: 0x02000527 RID: 1319
-		// (Invoke) Token: 0x06001F84 RID: 8068
+		// Token: 0x02000529 RID: 1321
+		// (Invoke) Token: 0x06001F8D RID: 8077
 		public delegate void ReactorUnregisterDelegate(BoingReactor reactor);
 
-		// Token: 0x02000528 RID: 1320
-		// (Invoke) Token: 0x06001F88 RID: 8072
+		// Token: 0x0200052A RID: 1322
+		// (Invoke) Token: 0x06001F91 RID: 8081
 		public delegate void ReactorFieldRegisterDelegate(BoingReactorField field);
 
-		// Token: 0x02000529 RID: 1321
-		// (Invoke) Token: 0x06001F8C RID: 8076
+		// Token: 0x0200052B RID: 1323
+		// (Invoke) Token: 0x06001F95 RID: 8085
 		public delegate void ReactorFieldUnregisterDelegate(BoingReactorField field);
 
-		// Token: 0x0200052A RID: 1322
-		// (Invoke) Token: 0x06001F90 RID: 8080
+		// Token: 0x0200052C RID: 1324
+		// (Invoke) Token: 0x06001F99 RID: 8089
 		public delegate void ReactorFieldCPUSamplerRegisterDelegate(BoingReactorFieldCPUSampler sampler);
 
-		// Token: 0x0200052B RID: 1323
-		// (Invoke) Token: 0x06001F94 RID: 8084
+		// Token: 0x0200052D RID: 1325
+		// (Invoke) Token: 0x06001F9D RID: 8093
 		public delegate void ReactorFieldCPUSamplerUnregisterDelegate(BoingReactorFieldCPUSampler sampler);
 
-		// Token: 0x0200052C RID: 1324
-		// (Invoke) Token: 0x06001F98 RID: 8088
+		// Token: 0x0200052E RID: 1326
+		// (Invoke) Token: 0x06001FA1 RID: 8097
 		public delegate void ReactorFieldGPUSamplerRegisterDelegate(BoingReactorFieldGPUSampler sampler);
 
-		// Token: 0x0200052D RID: 1325
-		// (Invoke) Token: 0x06001F9C RID: 8092
+		// Token: 0x0200052F RID: 1327
+		// (Invoke) Token: 0x06001FA5 RID: 8101
 		public delegate void ReactorFieldGPUSamplerUnregisterDelegate(BoingReactorFieldGPUSampler sampler);
 
-		// Token: 0x0200052E RID: 1326
-		// (Invoke) Token: 0x06001FA0 RID: 8096
+		// Token: 0x02000530 RID: 1328
+		// (Invoke) Token: 0x06001FA9 RID: 8105
 		public delegate void BonesRegisterDelegate(BoingBones bones);
 
-		// Token: 0x0200052F RID: 1327
-		// (Invoke) Token: 0x06001FA4 RID: 8100
+		// Token: 0x02000531 RID: 1329
+		// (Invoke) Token: 0x06001FAD RID: 8109
 		public delegate void BonesUnregisterDelegate(BoingBones bones);
 	}
 }

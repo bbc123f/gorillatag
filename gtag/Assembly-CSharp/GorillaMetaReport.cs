@@ -13,7 +13,7 @@ using Valve.VR;
 // Token: 0x020000D4 RID: 212
 public class GorillaMetaReport : MonoBehaviour
 {
-	// Token: 0x060004AE RID: 1198 RVA: 0x0001DAB8 File Offset: 0x0001BCB8
+	// Token: 0x060004AE RID: 1198 RVA: 0x0001D894 File Offset: 0x0001BA94
 	private void Awake()
 	{
 		this.closeButton = this.closeButtonObject.GetComponent<GorillaReportButton>();
@@ -29,14 +29,14 @@ public class GorillaMetaReport : MonoBehaviour
 		});
 	}
 
-	// Token: 0x060004AF RID: 1199 RVA: 0x0001DB21 File Offset: 0x0001BD21
+	// Token: 0x060004AF RID: 1199 RVA: 0x0001D8FD File Offset: 0x0001BAFD
 	private void OnDisable()
 	{
 		this.localPlayer.inOverlay = false;
 		base.StopAllCoroutines();
 	}
 
-	// Token: 0x060004B0 RID: 1200 RVA: 0x0001DB38 File Offset: 0x0001BD38
+	// Token: 0x060004B0 RID: 1200 RVA: 0x0001D914 File Offset: 0x0001BB14
 	private void OnReportButtonIntentNotif(Message<string> message)
 	{
 		if (message.IsError)
@@ -58,7 +58,7 @@ public class GorillaMetaReport : MonoBehaviour
 		}
 	}
 
-	// Token: 0x060004B1 RID: 1201 RVA: 0x0001DB8B File Offset: 0x0001BD8B
+	// Token: 0x060004B1 RID: 1201 RVA: 0x0001D967 File Offset: 0x0001BB67
 	private IEnumerator Submitted()
 	{
 		yield return new WaitForSeconds(1.5f);
@@ -66,7 +66,7 @@ public class GorillaMetaReport : MonoBehaviour
 		yield break;
 	}
 
-	// Token: 0x060004B2 RID: 1202 RVA: 0x0001DB9A File Offset: 0x0001BD9A
+	// Token: 0x060004B2 RID: 1202 RVA: 0x0001D976 File Offset: 0x0001BB76
 	private IEnumerator LockoutButtonPress()
 	{
 		this.canPress = false;
@@ -75,7 +75,7 @@ public class GorillaMetaReport : MonoBehaviour
 		yield break;
 	}
 
-	// Token: 0x060004B3 RID: 1203 RVA: 0x0001DBAC File Offset: 0x0001BDAC
+	// Token: 0x060004B3 RID: 1203 RVA: 0x0001D988 File Offset: 0x0001BB88
 	private void DuplicateScoreboard(GameObject scoreboard)
 	{
 		this.newScoreboard = Object.Instantiate<GameObject>(scoreboard, base.transform.position, base.transform.rotation);
@@ -86,7 +86,7 @@ public class GorillaMetaReport : MonoBehaviour
 		this.reportScoreboard.transform.SetPositionAndRotation(base.transform.position, base.transform.rotation);
 	}
 
-	// Token: 0x060004B4 RID: 1204 RVA: 0x0001DC78 File Offset: 0x0001BE78
+	// Token: 0x060004B4 RID: 1204 RVA: 0x0001DA54 File Offset: 0x0001BC54
 	private void HandToggle(bool state)
 	{
 		this.leftHandObject.SetActive(state);
@@ -100,7 +100,7 @@ public class GorillaMetaReport : MonoBehaviour
 		}
 	}
 
-	// Token: 0x060004B5 RID: 1205 RVA: 0x0001DD04 File Offset: 0x0001BF04
+	// Token: 0x060004B5 RID: 1205 RVA: 0x0001DAE0 File Offset: 0x0001BCE0
 	private void ToggleLevelVisibility(bool state)
 	{
 		foreach (KeyValuePair<MeshRenderer, bool> keyValuePair in this.levelRenderers)
@@ -109,7 +109,7 @@ public class GorillaMetaReport : MonoBehaviour
 		}
 	}
 
-	// Token: 0x060004B6 RID: 1206 RVA: 0x0001DD60 File Offset: 0x0001BF60
+	// Token: 0x060004B6 RID: 1206 RVA: 0x0001DB3C File Offset: 0x0001BD3C
 	private void GetLevelVisibility()
 	{
 		foreach (MeshRenderer meshRenderer in this.tempLevel.GetComponentsInChildren<MeshRenderer>())
@@ -121,7 +121,7 @@ public class GorillaMetaReport : MonoBehaviour
 		}
 	}
 
-	// Token: 0x060004B7 RID: 1207 RVA: 0x0001DDA0 File Offset: 0x0001BFA0
+	// Token: 0x060004B7 RID: 1207 RVA: 0x0001DB7C File Offset: 0x0001BD7C
 	private void Teardown()
 	{
 		this.HandToggle(false);
@@ -154,7 +154,7 @@ public class GorillaMetaReport : MonoBehaviour
 		}
 	}
 
-	// Token: 0x060004B8 RID: 1208 RVA: 0x0001DF08 File Offset: 0x0001C108
+	// Token: 0x060004B8 RID: 1208 RVA: 0x0001DCE4 File Offset: 0x0001BEE4
 	private void CheckReportSubmit()
 	{
 		if (this.currentScoreboard == null)
@@ -173,7 +173,7 @@ public class GorillaMetaReport : MonoBehaviour
 		}
 	}
 
-	// Token: 0x060004B9 RID: 1209 RVA: 0x0001DFB8 File Offset: 0x0001C1B8
+	// Token: 0x060004B9 RID: 1209 RVA: 0x0001DD94 File Offset: 0x0001BF94
 	private void StartOverlay()
 	{
 		if (!PhotonNetwork.InRoom)
@@ -225,7 +225,7 @@ public class GorillaMetaReport : MonoBehaviour
 		}
 	}
 
-	// Token: 0x060004BA RID: 1210 RVA: 0x0001E280 File Offset: 0x0001C480
+	// Token: 0x060004BA RID: 1210 RVA: 0x0001E05C File Offset: 0x0001C25C
 	private void CheckDistance()
 	{
 		float num = Vector3.Distance(this.reportScoreboard.transform.position, base.transform.position);
@@ -252,7 +252,7 @@ public class GorillaMetaReport : MonoBehaviour
 		}
 	}
 
-	// Token: 0x060004BB RID: 1211 RVA: 0x0001E3CC File Offset: 0x0001C5CC
+	// Token: 0x060004BB RID: 1211 RVA: 0x0001E1A8 File Offset: 0x0001C3A8
 	private void Update()
 	{
 		if (!this.canPress)

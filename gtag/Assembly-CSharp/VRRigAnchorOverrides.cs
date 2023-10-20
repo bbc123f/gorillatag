@@ -4,8 +4,8 @@ using UnityEngine;
 // Token: 0x02000120 RID: 288
 public class VRRigAnchorOverrides : MonoBehaviour
 {
-	// Token: 0x17000053 RID: 83
-	// (get) Token: 0x0600079F RID: 1951 RVA: 0x00030BFB File Offset: 0x0002EDFB
+	// Token: 0x17000054 RID: 84
+	// (get) Token: 0x060007A0 RID: 1952 RVA: 0x00030A3B File Offset: 0x0002EC3B
 	public Transform NameDefaultAnchor
 	{
 		get
@@ -14,8 +14,8 @@ public class VRRigAnchorOverrides : MonoBehaviour
 		}
 	}
 
-	// Token: 0x17000054 RID: 84
-	// (get) Token: 0x060007A0 RID: 1952 RVA: 0x00030C03 File Offset: 0x0002EE03
+	// Token: 0x17000055 RID: 85
+	// (get) Token: 0x060007A1 RID: 1953 RVA: 0x00030A43 File Offset: 0x0002EC43
 	public Transform NameTransform
 	{
 		get
@@ -24,8 +24,8 @@ public class VRRigAnchorOverrides : MonoBehaviour
 		}
 	}
 
-	// Token: 0x17000055 RID: 85
-	// (get) Token: 0x060007A1 RID: 1953 RVA: 0x00030C0B File Offset: 0x0002EE0B
+	// Token: 0x17000056 RID: 86
+	// (get) Token: 0x060007A2 RID: 1954 RVA: 0x00030A4B File Offset: 0x0002EC4B
 	public Transform HuntDefaultAnchor
 	{
 		get
@@ -34,8 +34,8 @@ public class VRRigAnchorOverrides : MonoBehaviour
 		}
 	}
 
-	// Token: 0x17000056 RID: 86
-	// (get) Token: 0x060007A2 RID: 1954 RVA: 0x00030C13 File Offset: 0x0002EE13
+	// Token: 0x17000057 RID: 87
+	// (get) Token: 0x060007A3 RID: 1955 RVA: 0x00030A53 File Offset: 0x0002EC53
 	public Transform HuntComputer
 	{
 		get
@@ -44,7 +44,7 @@ public class VRRigAnchorOverrides : MonoBehaviour
 		}
 	}
 
-	// Token: 0x060007A3 RID: 1955 RVA: 0x00030C1C File Offset: 0x0002EE1C
+	// Token: 0x060007A4 RID: 1956 RVA: 0x00030A5C File Offset: 0x0002EC5C
 	private void Awake()
 	{
 		for (int i = 0; i < 8; i++)
@@ -54,7 +54,7 @@ public class VRRigAnchorOverrides : MonoBehaviour
 		this.huntDefaultTransform = this.huntComputer;
 	}
 
-	// Token: 0x060007A4 RID: 1956 RVA: 0x00030C4A File Offset: 0x0002EE4A
+	// Token: 0x060007A5 RID: 1957 RVA: 0x00030A8A File Offset: 0x0002EC8A
 	private void OnEnable()
 	{
 		this.nameTransform.parent = this.nameDefaultAnchor.parent;
@@ -62,7 +62,7 @@ public class VRRigAnchorOverrides : MonoBehaviour
 		this.huntComputer.parent = this.huntComputerDefaultAnchor.parent;
 	}
 
-	// Token: 0x060007A5 RID: 1957 RVA: 0x00030C84 File Offset: 0x0002EE84
+	// Token: 0x060007A6 RID: 1958 RVA: 0x00030AC4 File Offset: 0x0002ECC4
 	private int MapPositionToIndex(TransferrableObject.PositionState pos)
 	{
 		int num = (int)pos;
@@ -74,7 +74,7 @@ public class VRRigAnchorOverrides : MonoBehaviour
 		return num2;
 	}
 
-	// Token: 0x060007A6 RID: 1958 RVA: 0x00030CA4 File Offset: 0x0002EEA4
+	// Token: 0x060007A7 RID: 1959 RVA: 0x00030AE4 File Offset: 0x0002ECE4
 	public void OverrideAnchor(TransferrableObject.PositionState pos, Transform anchor)
 	{
 		int num = this.MapPositionToIndex(pos);
@@ -88,7 +88,7 @@ public class VRRigAnchorOverrides : MonoBehaviour
 		this.overrideAnchors[num] = anchor;
 	}
 
-	// Token: 0x060007A7 RID: 1959 RVA: 0x00030D20 File Offset: 0x0002EF20
+	// Token: 0x060007A8 RID: 1960 RVA: 0x00030B60 File Offset: 0x0002ED60
 	public Transform AnchorOverride(TransferrableObject.PositionState pos, Transform fallback)
 	{
 		int num = this.MapPositionToIndex(pos);

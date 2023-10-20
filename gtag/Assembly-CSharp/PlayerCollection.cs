@@ -8,7 +8,7 @@ using UnityEngine;
 // Token: 0x020000D3 RID: 211
 public class PlayerCollection : MonoBehaviourPunCallbacks
 {
-	// Token: 0x060004AA RID: 1194 RVA: 0x0001D958 File Offset: 0x0001BB58
+	// Token: 0x060004AA RID: 1194 RVA: 0x0001D734 File Offset: 0x0001B934
 	public void OnTriggerEnter(Collider other)
 	{
 		if (!other.GetComponent<SphereCollider>())
@@ -26,7 +26,7 @@ public class PlayerCollection : MonoBehaviourPunCallbacks
 		}
 	}
 
-	// Token: 0x060004AB RID: 1195 RVA: 0x0001D9A8 File Offset: 0x0001BBA8
+	// Token: 0x060004AB RID: 1195 RVA: 0x0001D784 File Offset: 0x0001B984
 	public void OnTriggerExit(Collider other)
 	{
 		SphereCollider component = other.GetComponent<SphereCollider>();
@@ -55,7 +55,7 @@ public class PlayerCollection : MonoBehaviourPunCallbacks
 		}
 	}
 
-	// Token: 0x060004AC RID: 1196 RVA: 0x0001DA4C File Offset: 0x0001BC4C
+	// Token: 0x060004AC RID: 1196 RVA: 0x0001D828 File Offset: 0x0001BA28
 	public override void OnPlayerLeftRoom(Player otherPlayer)
 	{
 		for (int i = this.containedRigs.Count - 1; i >= 0; i--)

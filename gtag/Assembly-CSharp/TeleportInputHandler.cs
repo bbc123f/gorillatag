@@ -5,7 +5,7 @@ using UnityEngine;
 // Token: 0x02000089 RID: 137
 public abstract class TeleportInputHandler : TeleportSupport
 {
-	// Token: 0x060002F7 RID: 759 RVA: 0x00012975 File Offset: 0x00010B75
+	// Token: 0x060002F7 RID: 759 RVA: 0x00012751 File Offset: 0x00010951
 	protected TeleportInputHandler()
 	{
 		this._startReadyAction = delegate()
@@ -18,7 +18,7 @@ public abstract class TeleportInputHandler : TeleportSupport
 		};
 	}
 
-	// Token: 0x060002F8 RID: 760 RVA: 0x000129A1 File Offset: 0x00010BA1
+	// Token: 0x060002F8 RID: 760 RVA: 0x0001277D File Offset: 0x0001097D
 	protected override void AddEventHandlers()
 	{
 		base.LocomotionTeleport.InputHandler = this;
@@ -27,7 +27,7 @@ public abstract class TeleportInputHandler : TeleportSupport
 		base.LocomotionTeleport.EnterStateAim += this._startAimAction;
 	}
 
-	// Token: 0x060002F9 RID: 761 RVA: 0x000129D8 File Offset: 0x00010BD8
+	// Token: 0x060002F9 RID: 761 RVA: 0x000127B4 File Offset: 0x000109B4
 	protected override void RemoveEventHandlers()
 	{
 		if (base.LocomotionTeleport.InputHandler == this)
@@ -39,7 +39,7 @@ public abstract class TeleportInputHandler : TeleportSupport
 		base.RemoveEventHandlers();
 	}
 
-	// Token: 0x060002FA RID: 762 RVA: 0x00012A2C File Offset: 0x00010C2C
+	// Token: 0x060002FA RID: 762 RVA: 0x00012808 File Offset: 0x00010A08
 	private IEnumerator TeleportReadyCoroutine()
 	{
 		while (this.GetIntention() != LocomotionTeleport.TeleportIntentions.Aim)
@@ -50,7 +50,7 @@ public abstract class TeleportInputHandler : TeleportSupport
 		yield break;
 	}
 
-	// Token: 0x060002FB RID: 763 RVA: 0x00012A3B File Offset: 0x00010C3B
+	// Token: 0x060002FB RID: 763 RVA: 0x00012817 File Offset: 0x00010A17
 	private IEnumerator TeleportAimCoroutine()
 	{
 		LocomotionTeleport.TeleportIntentions intention = this.GetIntention();

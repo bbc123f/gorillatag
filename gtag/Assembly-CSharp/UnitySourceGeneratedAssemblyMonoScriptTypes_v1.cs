@@ -3,13 +3,13 @@ using System.CodeDom.Compiler;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-// Token: 0x02000240 RID: 576
+// Token: 0x02000241 RID: 577
 [CompilerGenerated]
 [EditorBrowsable(EditorBrowsableState.Never)]
 [GeneratedCode("Unity.MonoScriptGenerator.MonoScriptInfoGenerator", null)]
 internal class UnitySourceGeneratedAssemblyMonoScriptTypes_v1
 {
-	// Token: 0x06000E1F RID: 3615 RVA: 0x00051C88 File Offset: 0x0004FE88
+	// Token: 0x06000E26 RID: 3622 RVA: 0x00052064 File Offset: 0x00050264
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	private static UnitySourceGeneratedAssemblyMonoScriptTypes_v1.MonoScriptData Get()
 	{
@@ -20018,30 +20018,30 @@ internal class UnitySourceGeneratedAssemblyMonoScriptTypes_v1
 			114,
 			116,
 			79,
-			"Not showing all elements because this array is too big (27359 elements)"
+			"Not showing all elements because this array is too big (27398 elements)"
 		};
 		result.TotalFiles = 717;
-		result.TotalTypes = 942;
+		result.TotalTypes = 944;
 		result.IsEditorOnly = false;
 		return result;
 	}
 
-	// Token: 0x02000482 RID: 1154
+	// Token: 0x02000484 RID: 1156
 	private struct MonoScriptData
 	{
-		// Token: 0x04001EC1 RID: 7873
+		// Token: 0x04001ECE RID: 7886
 		public byte[] FilePathsData;
 
-		// Token: 0x04001EC2 RID: 7874
+		// Token: 0x04001ECF RID: 7887
 		public byte[] TypesData;
 
-		// Token: 0x04001EC3 RID: 7875
+		// Token: 0x04001ED0 RID: 7888
 		public int TotalTypes;
 
-		// Token: 0x04001EC4 RID: 7876
+		// Token: 0x04001ED1 RID: 7889
 		public int TotalFiles;
 
-		// Token: 0x04001EC5 RID: 7877
+		// Token: 0x04001ED2 RID: 7890
 		public bool IsEditorOnly;
 	}
 }

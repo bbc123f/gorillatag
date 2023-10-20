@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 
-// Token: 0x02000216 RID: 534
+// Token: 0x02000217 RID: 535
 public static class LinqUtils
 {
-	// Token: 0x06000D49 RID: 3401 RVA: 0x0004DD3C File Offset: 0x0004BF3C
+	// Token: 0x06000D4F RID: 3407 RVA: 0x0004DF9C File Offset: 0x0004C19C
 	public static int IndexOfRef<T>(this IEnumerable<T> source, T value) where T : class
 	{
 		int num = -1;
@@ -23,7 +23,7 @@ public static class LinqUtils
 		return num;
 	}
 
-	// Token: 0x06000D4A RID: 3402 RVA: 0x0004DD9C File Offset: 0x0004BF9C
+	// Token: 0x06000D50 RID: 3408 RVA: 0x0004DFFC File Offset: 0x0004C1FC
 	public static IEnumerable<TSource> DistinctBy<TSource, TResult>(this IEnumerable<TSource> source, Func<TSource, TResult> selector)
 	{
 		HashSet<TResult> set = new HashSet<TResult>();

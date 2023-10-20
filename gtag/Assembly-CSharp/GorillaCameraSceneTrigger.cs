@@ -4,7 +4,7 @@ using UnityEngine;
 // Token: 0x0200013A RID: 314
 public class GorillaCameraSceneTrigger : MonoBehaviour
 {
-	// Token: 0x06000817 RID: 2071 RVA: 0x00032FA8 File Offset: 0x000311A8
+	// Token: 0x06000818 RID: 2072 RVA: 0x00032DE8 File Offset: 0x00030FE8
 	public void ChangeScene(GorillaCameraTriggerIndex triggerLeft)
 	{
 		if (triggerLeft == this.currentSceneTrigger || this.currentSceneTrigger == null)

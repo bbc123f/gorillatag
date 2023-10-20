@@ -5,7 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(OVRManager))]
 public class PassthroughPlayInEditor : MonoBehaviour
 {
-	// Token: 0x06000434 RID: 1076 RVA: 0x0001BA0F File Offset: 0x00019C0F
+	// Token: 0x06000434 RID: 1076 RVA: 0x0001B7EB File Offset: 0x000199EB
 	private void Awake()
 	{
 	}

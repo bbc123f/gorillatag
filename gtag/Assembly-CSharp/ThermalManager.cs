@@ -6,7 +6,7 @@ using UnityEngine;
 [DefaultExecutionOrder(-100)]
 public class ThermalManager : MonoBehaviour
 {
-	// Token: 0x0600023D RID: 573 RVA: 0x0000F5C3 File Offset: 0x0000D7C3
+	// Token: 0x0600023D RID: 573 RVA: 0x0000F39F File Offset: 0x0000D59F
 	protected void OnEnable()
 	{
 		if (ThermalManager.instance != null)
@@ -17,7 +17,7 @@ public class ThermalManager : MonoBehaviour
 		ThermalManager.instance = this;
 	}
 
-	// Token: 0x0600023E RID: 574 RVA: 0x0000F5E4 File Offset: 0x0000D7E4
+	// Token: 0x0600023E RID: 574 RVA: 0x0000F3C0 File Offset: 0x0000D5C0
 	protected void LateUpdate()
 	{
 		float deltaTime = Time.deltaTime;
@@ -41,25 +41,25 @@ public class ThermalManager : MonoBehaviour
 		}
 	}
 
-	// Token: 0x0600023F RID: 575 RVA: 0x0000F6DD File Offset: 0x0000D8DD
+	// Token: 0x0600023F RID: 575 RVA: 0x0000F4B9 File Offset: 0x0000D6B9
 	public static void Register(ThermalSourceVolume source)
 	{
 		ThermalManager.sources.Add(source);
 	}
 
-	// Token: 0x06000240 RID: 576 RVA: 0x0000F6EA File Offset: 0x0000D8EA
+	// Token: 0x06000240 RID: 576 RVA: 0x0000F4C6 File Offset: 0x0000D6C6
 	public static void Unregister(ThermalSourceVolume source)
 	{
 		ThermalManager.sources.Remove(source);
 	}
 
-	// Token: 0x06000241 RID: 577 RVA: 0x0000F6F8 File Offset: 0x0000D8F8
+	// Token: 0x06000241 RID: 577 RVA: 0x0000F4D4 File Offset: 0x0000D6D4
 	public static void Register(ThermalReceiver receiver)
 	{
 		ThermalManager.receivers.Add(receiver);
 	}
 
-	// Token: 0x06000242 RID: 578 RVA: 0x0000F705 File Offset: 0x0000D905
+	// Token: 0x06000242 RID: 578 RVA: 0x0000F4E1 File Offset: 0x0000D6E1
 	public static void Unregister(ThermalReceiver receiver)
 	{
 		ThermalManager.receivers.Remove(receiver);

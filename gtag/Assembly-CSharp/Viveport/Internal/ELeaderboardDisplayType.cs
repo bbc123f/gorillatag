@@ -2,16 +2,16 @@
 
 namespace Viveport.Internal
 {
-	// Token: 0x02000259 RID: 601
+	// Token: 0x0200025A RID: 602
 	internal enum ELeaderboardDisplayType
 	{
-		// Token: 0x040011A4 RID: 4516
+		// Token: 0x040011AA RID: 4522
 		k_ELeaderboardDisplayTypeNone,
-		// Token: 0x040011A5 RID: 4517
+		// Token: 0x040011AB RID: 4523
 		k_ELeaderboardDisplayTypeNumeric,
-		// Token: 0x040011A6 RID: 4518
+		// Token: 0x040011AC RID: 4524
 		k_ELeaderboardDisplayTypeTimeSeconds,
-		// Token: 0x040011A7 RID: 4519
+		// Token: 0x040011AD RID: 4525
 		k_ELeaderboardDisplayTypeTimeMilliSeconds
 	}
 }

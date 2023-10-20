@@ -3,10 +3,10 @@ using System.Reflection;
 
 namespace Viveport.Core
 {
-	// Token: 0x0200026D RID: 621
+	// Token: 0x0200026E RID: 622
 	public class Logger
 	{
-		// Token: 0x06000F71 RID: 3953 RVA: 0x00053BF2 File Offset: 0x00051DF2
+		// Token: 0x06000F78 RID: 3960 RVA: 0x00053FCE File Offset: 0x000521CE
 		public static void Log(string message)
 		{
 			if (!Logger._hasDetected || Logger._usingUnityLog)
@@ -17,14 +17,14 @@ namespace Viveport.Core
 			Logger.ConsoleLog(message);
 		}
 
-		// Token: 0x06000F72 RID: 3954 RVA: 0x00053C0F File Offset: 0x00051E0F
+		// Token: 0x06000F79 RID: 3961 RVA: 0x00053FEB File Offset: 0x000521EB
 		private static void ConsoleLog(string message)
 		{
 			Console.WriteLine(message);
 			Logger._hasDetected = true;
 		}
 
-		// Token: 0x06000F73 RID: 3955 RVA: 0x00053C20 File Offset: 0x00051E20
+		// Token: 0x06000F7A RID: 3962 RVA: 0x00053FFC File Offset: 0x000521FC
 		private static void UnityLog(string message)
 		{
 			try
@@ -50,7 +50,7 @@ namespace Viveport.Core
 			Logger._hasDetected = true;
 		}
 
-		// Token: 0x06000F74 RID: 3956 RVA: 0x00053CAC File Offset: 0x00051EAC
+		// Token: 0x06000F7B RID: 3963 RVA: 0x00054088 File Offset: 0x00052288
 		private static Type GetType(string typeName)
 		{
 			Type type = Type.GetType(typeName);
@@ -70,16 +70,16 @@ namespace Viveport.Core
 			return null;
 		}
 
-		// Token: 0x040011C6 RID: 4550
+		// Token: 0x040011CC RID: 4556
 		private const string LoggerTypeNameUnity = "UnityEngine.Debug";
 
-		// Token: 0x040011C7 RID: 4551
+		// Token: 0x040011CD RID: 4557
 		private static bool _hasDetected;
 
-		// Token: 0x040011C8 RID: 4552
+		// Token: 0x040011CE RID: 4558
 		private static bool _usingUnityLog = true;
 
-		// Token: 0x040011C9 RID: 4553
+		// Token: 0x040011CF RID: 4559
 		private static Type _unityLogType;
 	}
 }

@@ -4,19 +4,19 @@ using UnityEngine;
 // Token: 0x02000035 RID: 53
 public class WingsWearable : MonoBehaviour
 {
-	// Token: 0x06000132 RID: 306 RVA: 0x0000AA57 File Offset: 0x00008C57
+	// Token: 0x06000132 RID: 306 RVA: 0x0000AA9F File Offset: 0x00008C9F
 	private void Awake()
 	{
 		this.xform = this.animator.transform;
 	}
 
-	// Token: 0x06000133 RID: 307 RVA: 0x0000AA6A File Offset: 0x00008C6A
+	// Token: 0x06000133 RID: 307 RVA: 0x0000AAB2 File Offset: 0x00008CB2
 	private void OnEnable()
 	{
 		this.oldPos = this.xform.localPosition;
 	}
 
-	// Token: 0x06000134 RID: 308 RVA: 0x0000AA80 File Offset: 0x00008C80
+	// Token: 0x06000134 RID: 308 RVA: 0x0000AAC8 File Offset: 0x00008CC8
 	private void Update()
 	{
 		Vector3 position = this.xform.position;

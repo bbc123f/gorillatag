@@ -10,20 +10,20 @@ public class FlagCauldronColorer : MonoBehaviour
 	// Token: 0x04000278 RID: 632
 	public Transform colorPoint;
 
-	// Token: 0x02000399 RID: 921
+	// Token: 0x0200039B RID: 923
 	public enum ColorMode
 	{
-		// Token: 0x04001B40 RID: 6976
+		// Token: 0x04001B4D RID: 6989
 		None,
-		// Token: 0x04001B41 RID: 6977
+		// Token: 0x04001B4E RID: 6990
 		Red,
-		// Token: 0x04001B42 RID: 6978
+		// Token: 0x04001B4F RID: 6991
 		Green,
-		// Token: 0x04001B43 RID: 6979
+		// Token: 0x04001B50 RID: 6992
 		Blue,
-		// Token: 0x04001B44 RID: 6980
+		// Token: 0x04001B51 RID: 6993
 		Black,
-		// Token: 0x04001B45 RID: 6981
+		// Token: 0x04001B52 RID: 6994
 		Clear
 	}
 }

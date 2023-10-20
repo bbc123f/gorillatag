@@ -7,7 +7,7 @@ using UnityEngine.Playables;
 public class GTDoorTrigger : MonoBehaviour
 {
 	// Token: 0x17000014 RID: 20
-	// (get) Token: 0x060001CB RID: 459 RVA: 0x0000D038 File Offset: 0x0000B238
+	// (get) Token: 0x060001CB RID: 459 RVA: 0x0000D080 File Offset: 0x0000B280
 	public int overlapCount
 	{
 		get
@@ -17,7 +17,7 @@ public class GTDoorTrigger : MonoBehaviour
 	}
 
 	// Token: 0x17000015 RID: 21
-	// (get) Token: 0x060001CC RID: 460 RVA: 0x0000D045 File Offset: 0x0000B245
+	// (get) Token: 0x060001CC RID: 460 RVA: 0x0000D08D File Offset: 0x0000B28D
 	public bool TriggeredThisFrame
 	{
 		get
@@ -26,7 +26,7 @@ public class GTDoorTrigger : MonoBehaviour
 		}
 	}
 
-	// Token: 0x060001CD RID: 461 RVA: 0x0000D054 File Offset: 0x0000B254
+	// Token: 0x060001CD RID: 461 RVA: 0x0000D09C File Offset: 0x0000B29C
 	public void ValidateOverlappingColliders()
 	{
 		for (int i = this.overlappingColliders.Count - 1; i >= 0; i--)
@@ -38,7 +38,7 @@ public class GTDoorTrigger : MonoBehaviour
 		}
 	}
 
-	// Token: 0x060001CE RID: 462 RVA: 0x0000D0C4 File Offset: 0x0000B2C4
+	// Token: 0x060001CE RID: 462 RVA: 0x0000D10C File Offset: 0x0000B30C
 	private void OnTriggerEnter(Collider other)
 	{
 		if (!this.overlappingColliders.Contains(other))
@@ -52,7 +52,7 @@ public class GTDoorTrigger : MonoBehaviour
 		}
 	}
 
-	// Token: 0x060001CF RID: 463 RVA: 0x0000D13D File Offset: 0x0000B33D
+	// Token: 0x060001CF RID: 463 RVA: 0x0000D185 File Offset: 0x0000B385
 	private void OnTriggerExit(Collider other)
 	{
 		this.overlappingColliders.Remove(other);

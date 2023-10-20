@@ -3,10 +3,10 @@ using System.Runtime.InteropServices;
 
 namespace emotitron.Compression.HalfFloat
 {
-	// Token: 0x02000348 RID: 840
+	// Token: 0x0200034A RID: 842
 	public static class HalfUtilities
 	{
-		// Token: 0x0600185B RID: 6235 RVA: 0x00082688 File Offset: 0x00080888
+		// Token: 0x06001864 RID: 6244 RVA: 0x00082B70 File Offset: 0x00080D70
 		static HalfUtilities()
 		{
 			HalfUtilities.HalfToFloatMantissaTable[0] = 0U;
@@ -89,7 +89,7 @@ namespace emotitron.Compression.HalfFloat
 			}
 		}
 
-		// Token: 0x0600185C RID: 6236 RVA: 0x0008296C File Offset: 0x00080B6C
+		// Token: 0x06001865 RID: 6245 RVA: 0x00082E54 File Offset: 0x00081054
 		public static float Unpack(ushort value)
 		{
 			return new HalfUtilities.FloatToUint
@@ -98,7 +98,7 @@ namespace emotitron.Compression.HalfFloat
 			}.floatValue;
 		}
 
-		// Token: 0x0600185D RID: 6237 RVA: 0x000829B4 File Offset: 0x00080BB4
+		// Token: 0x06001866 RID: 6246 RVA: 0x00082E9C File Offset: 0x0008109C
 		public static ushort Pack(float value)
 		{
 			HalfUtilities.FloatToUint floatToUint = default(HalfUtilities.FloatToUint);
@@ -106,30 +106,30 @@ namespace emotitron.Compression.HalfFloat
 			return (ushort)((uint)HalfUtilities.FloatToHalfBaseTable[(int)(floatToUint.uintValue >> 23 & 511U)] + ((floatToUint.uintValue & 8388607U) >> (int)HalfUtilities.FloatToHalfShiftTable[(int)(floatToUint.uintValue >> 23 & 511U)]));
 		}
 
-		// Token: 0x04001950 RID: 6480
+		// Token: 0x0400195D RID: 6493
 		private static readonly uint[] HalfToFloatMantissaTable = new uint[2048];
 
-		// Token: 0x04001951 RID: 6481
+		// Token: 0x0400195E RID: 6494
 		private static readonly uint[] HalfToFloatExponentTable = new uint[64];
 
-		// Token: 0x04001952 RID: 6482
+		// Token: 0x0400195F RID: 6495
 		private static readonly uint[] HalfToFloatOffsetTable = new uint[64];
 
-		// Token: 0x04001953 RID: 6483
+		// Token: 0x04001960 RID: 6496
 		private static readonly ushort[] FloatToHalfBaseTable = new ushort[512];
 
-		// Token: 0x04001954 RID: 6484
+		// Token: 0x04001961 RID: 6497
 		private static readonly byte[] FloatToHalfShiftTable = new byte[512];
 
-		// Token: 0x02000514 RID: 1300
+		// Token: 0x02000516 RID: 1302
 		[StructLayout(LayoutKind.Explicit)]
 		private struct FloatToUint
 		{
-			// Token: 0x04002137 RID: 8503
+			// Token: 0x04002144 RID: 8516
 			[FieldOffset(0)]
 			public uint uintValue;
 
-			// Token: 0x04002138 RID: 8504
+			// Token: 0x04002145 RID: 8517
 			[FieldOffset(0)]
 			public float floatValue;
 		}

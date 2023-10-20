@@ -10,11 +10,11 @@ using UnityEngine.Serialization;
 public class SnowballThrowable : HoldableObject
 {
 	// Token: 0x14000001 RID: 1
-	// (add) Token: 0x06000113 RID: 275 RVA: 0x00009E54 File Offset: 0x00008054
-	// (remove) Token: 0x06000114 RID: 276 RVA: 0x00009E8C File Offset: 0x0000808C
+	// (add) Token: 0x06000113 RID: 275 RVA: 0x00009E9C File Offset: 0x0000809C
+	// (remove) Token: 0x06000114 RID: 276 RVA: 0x00009ED4 File Offset: 0x000080D4
 	public event SnowballThrowable.SnowballHitEvent OnSnowballHitPlayer;
 
-	// Token: 0x06000115 RID: 277 RVA: 0x00009EC4 File Offset: 0x000080C4
+	// Token: 0x06000115 RID: 277 RVA: 0x00009F0C File Offset: 0x0000810C
 	protected void Awake()
 	{
 		if (this.awakeHasBeenCalled)
@@ -28,13 +28,13 @@ public class SnowballThrowable : HoldableObject
 		this.matPropBlock = new MaterialPropertyBlock();
 	}
 
-	// Token: 0x06000116 RID: 278 RVA: 0x00009F26 File Offset: 0x00008126
+	// Token: 0x06000116 RID: 278 RVA: 0x00009F6E File Offset: 0x0000816E
 	public bool IsMine()
 	{
 		return this.targetRig != null && this.targetRig.isOfflineVRRig;
 	}
 
-	// Token: 0x06000117 RID: 279 RVA: 0x00009F44 File Offset: 0x00008144
+	// Token: 0x06000117 RID: 279 RVA: 0x00009F8C File Offset: 0x0000818C
 	public override void OnEnable()
 	{
 		base.OnEnable();
@@ -58,7 +58,7 @@ public class SnowballThrowable : HoldableObject
 		this.OnEnableHasBeenCalled = true;
 	}
 
-	// Token: 0x06000118 RID: 280 RVA: 0x00009FE4 File Offset: 0x000081E4
+	// Token: 0x06000118 RID: 280 RVA: 0x0000A02C File Offset: 0x0000822C
 	public void EnableSnowballLocal(bool enable)
 	{
 		if (!this.awakeHasBeenCalled)
@@ -87,28 +87,28 @@ public class SnowballThrowable : HoldableObject
 		}
 	}
 
-	// Token: 0x06000119 RID: 281 RVA: 0x0000A0A1 File Offset: 0x000082A1
+	// Token: 0x06000119 RID: 281 RVA: 0x0000A0E9 File Offset: 0x000082E9
 	protected void LateUpdateLocal()
 	{
 	}
 
-	// Token: 0x0600011A RID: 282 RVA: 0x0000A0A3 File Offset: 0x000082A3
+	// Token: 0x0600011A RID: 282 RVA: 0x0000A0EB File Offset: 0x000082EB
 	protected void LateUpdateReplicated()
 	{
 	}
 
-	// Token: 0x0600011B RID: 283 RVA: 0x0000A0A5 File Offset: 0x000082A5
+	// Token: 0x0600011B RID: 283 RVA: 0x0000A0ED File Offset: 0x000082ED
 	protected void LateUpdateShared()
 	{
 	}
 
-	// Token: 0x0600011C RID: 284 RVA: 0x0000A0A7 File Offset: 0x000082A7
+	// Token: 0x0600011C RID: 284 RVA: 0x0000A0EF File Offset: 0x000082EF
 	private Transform Anchor()
 	{
 		return base.transform.parent;
 	}
 
-	// Token: 0x0600011D RID: 285 RVA: 0x0000A0B4 File Offset: 0x000082B4
+	// Token: 0x0600011D RID: 285 RVA: 0x0000A0FC File Offset: 0x000082FC
 	private void AnchorToHand()
 	{
 		BodyDockPositions myBodyDockPositions = this.targetRig.myBodyDockPositions;
@@ -125,7 +125,7 @@ public class SnowballThrowable : HoldableObject
 		transform.localRotation = Quaternion.identity;
 	}
 
-	// Token: 0x0600011E RID: 286 RVA: 0x0000A10C File Offset: 0x0000830C
+	// Token: 0x0600011E RID: 286 RVA: 0x0000A154 File Offset: 0x00008354
 	protected void LateUpdate()
 	{
 		if (this.IsMine())
@@ -139,7 +139,7 @@ public class SnowballThrowable : HoldableObject
 		this.LateUpdateShared();
 	}
 
-	// Token: 0x0600011F RID: 287 RVA: 0x0000A12C File Offset: 0x0000832C
+	// Token: 0x0600011F RID: 287 RVA: 0x0000A174 File Offset: 0x00008374
 	public override void OnRelease(DropZone zoneReleased, GameObject releasingHand)
 	{
 		base.OnRelease(zoneReleased, releasingHand);
@@ -154,7 +154,7 @@ public class SnowballThrowable : HoldableObject
 		this.LaunchSnowball();
 	}
 
-	// Token: 0x06000120 RID: 288 RVA: 0x0000A184 File Offset: 0x00008384
+	// Token: 0x06000120 RID: 288 RVA: 0x0000A1CC File Offset: 0x000083CC
 	private void LaunchSnowball()
 	{
 		GameObject gameObject = ObjectPools.instance.Instantiate(this.projectilePrefab);
@@ -214,7 +214,7 @@ public class SnowballThrowable : HoldableObject
 		this.EnableSnowballLocal(false);
 	}
 
-	// Token: 0x06000121 RID: 289 RVA: 0x0000A3EC File Offset: 0x000085EC
+	// Token: 0x06000121 RID: 289 RVA: 0x0000A434 File Offset: 0x00008634
 	private void OnProjectileHitPlayer(Player hitPlayer)
 	{
 		RisingLavaManager instance = RisingLavaManager.instance;
@@ -224,7 +224,7 @@ public class SnowballThrowable : HoldableObject
 		}
 	}
 
-	// Token: 0x06000122 RID: 290 RVA: 0x0000A434 File Offset: 0x00008634
+	// Token: 0x06000122 RID: 290 RVA: 0x0000A47C File Offset: 0x0000867C
 	private void ApplyColor(Color newColor)
 	{
 		foreach (Renderer renderer in this.renderers)
@@ -309,7 +309,7 @@ public class SnowballThrowable : HoldableObject
 	// Token: 0x04000188 RID: 392
 	private Renderer[] renderers;
 
-	// Token: 0x0200038D RID: 909
-	// (Invoke) Token: 0x06001ABB RID: 6843
+	// Token: 0x0200038F RID: 911
+	// (Invoke) Token: 0x06001AC4 RID: 6852
 	public delegate void SnowballHitEvent(Player hitPlayer);
 }

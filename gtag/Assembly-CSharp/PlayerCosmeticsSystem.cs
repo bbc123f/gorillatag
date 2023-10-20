@@ -10,10 +10,10 @@ using PlayFab;
 using PlayFab.ClientModels;
 using UnityEngine;
 
-// Token: 0x020001F7 RID: 503
+// Token: 0x020001F8 RID: 504
 internal class PlayerCosmeticsSystem : MonoBehaviour, ITickSystemPre
 {
-	// Token: 0x06000CD8 RID: 3288 RVA: 0x0004C51A File Offset: 0x0004A71A
+	// Token: 0x06000CDE RID: 3294 RVA: 0x0004C76A File Offset: 0x0004A96A
 	private void Awake()
 	{
 		if (PlayerCosmeticsSystem.instance == null)
@@ -26,13 +26,13 @@ internal class PlayerCosmeticsSystem : MonoBehaviour, ITickSystemPre
 		Object.Destroy(this);
 	}
 
-	// Token: 0x06000CD9 RID: 3289 RVA: 0x0004C554 File Offset: 0x0004A754
+	// Token: 0x06000CDF RID: 3295 RVA: 0x0004C7A4 File Offset: 0x0004A9A4
 	private void Start()
 	{
 		this.playerLookUpCooldown = Mathf.Max(this.playerLookUpCooldown, 3f);
 	}
 
-	// Token: 0x06000CDA RID: 3290 RVA: 0x0004C56C File Offset: 0x0004A76C
+	// Token: 0x06000CE0 RID: 3296 RVA: 0x0004C7BC File Offset: 0x0004A9BC
 	private void OnDestroy()
 	{
 		if (PlayerCosmeticsSystem.instance == this)
@@ -41,7 +41,7 @@ internal class PlayerCosmeticsSystem : MonoBehaviour, ITickSystemPre
 		}
 	}
 
-	// Token: 0x06000CDB RID: 3291 RVA: 0x0004C581 File Offset: 0x0004A781
+	// Token: 0x06000CE1 RID: 3297 RVA: 0x0004C7D1 File Offset: 0x0004A9D1
 	private void LookUpPlayerCosmetics(bool wait = false)
 	{
 		if (!this.isLookingUp)
@@ -56,7 +56,7 @@ internal class PlayerCosmeticsSystem : MonoBehaviour, ITickSystemPre
 		}
 	}
 
-	// Token: 0x06000CDC RID: 3292 RVA: 0x0004C5AC File Offset: 0x0004A7AC
+	// Token: 0x06000CE2 RID: 3298 RVA: 0x0004C7FC File Offset: 0x0004A9FC
 	public void PreTick()
 	{
 		if (PlayerCosmeticsSystem.playersToLookUp.Count < 1)
@@ -115,7 +115,7 @@ internal class PlayerCosmeticsSystem : MonoBehaviour, ITickSystemPre
 		this.isLookingUp = false;
 	}
 
-	// Token: 0x06000CDD RID: 3293 RVA: 0x0004C724 File Offset: 0x0004A924
+	// Token: 0x06000CE3 RID: 3299 RVA: 0x0004C974 File Offset: 0x0004AB74
 	private void OnGetsharedGroupData(GetSharedGroupDataResult result)
 	{
 		if (!PhotonNetwork.InRoom)
@@ -163,7 +163,11 @@ internal class PlayerCosmeticsSystem : MonoBehaviour, ITickSystemPre
 			Debug.Log("didn't recieve player cosmetics");
 			foreach (int num2 in PlayerCosmeticsSystem.playersWaiting)
 			{
-				if (Utils.PlayerInRoom(num2))
+				if (!Utils.PlayerInRoom(num2))
+				{
+					PlayerCosmeticsSystem.playersWaiting.Remove(num2);
+				}
+				else
 				{
 					Debug.Log(num2);
 					PlayerCosmeticsSystem.playersToLookUp.Enqueue(PhotonNetwork.LocalPlayer.Get(num2));
@@ -177,7 +181,7 @@ internal class PlayerCosmeticsSystem : MonoBehaviour, ITickSystemPre
 		}
 	}
 
-	// Token: 0x06000CDE RID: 3294 RVA: 0x0004C8E4 File Offset: 0x0004AAE4
+	// Token: 0x06000CE4 RID: 3300 RVA: 0x0004CB44 File Offset: 0x0004AD44
 	private void OnEvent(EventData evData)
 	{
 		if (evData.Code != 199 || evData.Sender < 1)
@@ -188,8 +192,8 @@ internal class PlayerCosmeticsSystem : MonoBehaviour, ITickSystemPre
 		PlayerCosmeticsSystem.UpdatePlayerCosmetics(PhotonNetwork.LocalPlayer.Get(evData.Sender));
 	}
 
-	// Token: 0x17000099 RID: 153
-	// (get) Token: 0x06000CDF RID: 3295 RVA: 0x0004C942 File Offset: 0x0004AB42
+	// Token: 0x1700009B RID: 155
+	// (get) Token: 0x06000CE5 RID: 3301 RVA: 0x0004CBA2 File Offset: 0x0004ADA2
 	private static bool nullInstance
 	{
 		get
@@ -198,7 +202,7 @@ internal class PlayerCosmeticsSystem : MonoBehaviour, ITickSystemPre
 		}
 	}
 
-	// Token: 0x06000CE0 RID: 3296 RVA: 0x0004C95C File Offset: 0x0004AB5C
+	// Token: 0x06000CE6 RID: 3302 RVA: 0x0004CBBC File Offset: 0x0004ADBC
 	public static void RegisterCosmeticCallback(int playerID, IUserCosmeticsCallback callback)
 	{
 		PlayerCosmeticsSystem.userCosmeticCallback[playerID] = callback;
@@ -211,7 +215,7 @@ internal class PlayerCosmeticsSystem : MonoBehaviour, ITickSystemPre
 		}
 	}
 
-	// Token: 0x06000CE1 RID: 3297 RVA: 0x0004C99F File Offset: 0x0004AB9F
+	// Token: 0x06000CE7 RID: 3303 RVA: 0x0004CBFF File Offset: 0x0004ADFF
 	public static void RemoveCosmeticCallback(int playerID)
 	{
 		if (PlayerCosmeticsSystem.userCosmeticCallback.ContainsKey(playerID))
@@ -220,7 +224,7 @@ internal class PlayerCosmeticsSystem : MonoBehaviour, ITickSystemPre
 		}
 	}
 
-	// Token: 0x06000CE2 RID: 3298 RVA: 0x0004C9BC File Offset: 0x0004ABBC
+	// Token: 0x06000CE8 RID: 3304 RVA: 0x0004CC1C File Offset: 0x0004AE1C
 	public static void UpdatePlayerCosmetics(Photon.Realtime.Player player)
 	{
 		if (player == null || player.IsLocal)
@@ -239,7 +243,7 @@ internal class PlayerCosmeticsSystem : MonoBehaviour, ITickSystemPre
 		}
 	}
 
-	// Token: 0x06000CE3 RID: 3299 RVA: 0x0004CA10 File Offset: 0x0004AC10
+	// Token: 0x06000CE9 RID: 3305 RVA: 0x0004CC70 File Offset: 0x0004AE70
 	public static void UpdatePlayerCosmetics(List<Photon.Realtime.Player> players)
 	{
 		foreach (Photon.Realtime.Player player in players)
@@ -260,7 +264,7 @@ internal class PlayerCosmeticsSystem : MonoBehaviour, ITickSystemPre
 		}
 	}
 
-	// Token: 0x06000CE4 RID: 3300 RVA: 0x0004CA9C File Offset: 0x0004AC9C
+	// Token: 0x06000CEA RID: 3306 RVA: 0x0004CCFC File Offset: 0x0004AEFC
 	public static void StaticReset()
 	{
 		PlayerCosmeticsSystem.playersToLookUp.Clear();
@@ -270,39 +274,39 @@ internal class PlayerCosmeticsSystem : MonoBehaviour, ITickSystemPre
 		PlayerCosmeticsSystem.playersWaiting.Clear();
 	}
 
-	// Token: 0x0400101E RID: 4126
+	// Token: 0x04001023 RID: 4131
 	public float playerLookUpCooldown = 3f;
 
-	// Token: 0x0400101F RID: 4127
+	// Token: 0x04001024 RID: 4132
 	private float startSearchingTime = float.MinValue;
 
-	// Token: 0x04001020 RID: 4128
+	// Token: 0x04001025 RID: 4133
 	private bool isLookingUp;
 
-	// Token: 0x04001021 RID: 4129
+	// Token: 0x04001026 RID: 4134
 	private string tempCosmetics;
 
-	// Token: 0x04001022 RID: 4130
+	// Token: 0x04001027 RID: 4135
 	private Photon.Realtime.Player playerTemp;
 
-	// Token: 0x04001023 RID: 4131
+	// Token: 0x04001028 RID: 4136
 	private RigContainer tempRC;
 
-	// Token: 0x04001024 RID: 4132
+	// Token: 0x04001029 RID: 4137
 	private static PlayerCosmeticsSystem instance;
 
-	// Token: 0x04001025 RID: 4133
+	// Token: 0x0400102A RID: 4138
 	private static Queue<Photon.Realtime.Player> playersToLookUp = new Queue<Photon.Realtime.Player>(10);
 
-	// Token: 0x04001026 RID: 4134
+	// Token: 0x0400102B RID: 4139
 	private static Dictionary<int, IUserCosmeticsCallback> userCosmeticCallback = new Dictionary<int, IUserCosmeticsCallback>(10);
 
-	// Token: 0x04001027 RID: 4135
+	// Token: 0x0400102C RID: 4140
 	private static Dictionary<int, string> userCosmeticsWaiting = new Dictionary<int, string>(5);
 
-	// Token: 0x04001028 RID: 4136
+	// Token: 0x0400102D RID: 4141
 	private static List<string> playerIDsList = new List<string>(10);
 
-	// Token: 0x04001029 RID: 4137
+	// Token: 0x0400102E RID: 4142
 	private static HashSet<int> playersWaiting = new HashSet<int>();
 }

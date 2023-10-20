@@ -6,10 +6,10 @@ using UnityEngine;
 
 namespace GorillaLocomotion.Gameplay
 {
-	// Token: 0x02000294 RID: 660
+	// Token: 0x02000296 RID: 662
 	public class CustomRopeSimulation : MonoBehaviour
 	{
-		// Token: 0x06001140 RID: 4416 RVA: 0x00060F04 File Offset: 0x0005F104
+		// Token: 0x06001147 RID: 4423 RVA: 0x000612E0 File Offset: 0x0005F4E0
 		private void Start()
 		{
 			Vector3 position = base.transform.position;
@@ -25,13 +25,13 @@ namespace GorillaLocomotion.Gameplay
 			this.burstNodes = new NativeArray<BurstRopeNode>(this.nodes.Count, Allocator.Persistent, NativeArrayOptions.ClearMemory);
 		}
 
-		// Token: 0x06001141 RID: 4417 RVA: 0x00060FB4 File Offset: 0x0005F1B4
+		// Token: 0x06001148 RID: 4424 RVA: 0x00061390 File Offset: 0x0005F590
 		private void OnDestroy()
 		{
 			this.burstNodes.Dispose();
 		}
 
-		// Token: 0x06001142 RID: 4418 RVA: 0x00060FC4 File Offset: 0x0005F1C4
+		// Token: 0x06001149 RID: 4425 RVA: 0x000613A0 File Offset: 0x0005F5A0
 		private void Update()
 		{
 			new SolveRopeJob
@@ -53,34 +53,34 @@ namespace GorillaLocomotion.Gameplay
 			}
 		}
 
-		// Token: 0x040013BE RID: 5054
+		// Token: 0x040013CB RID: 5067
 		private List<Transform> nodes = new List<Transform>();
 
-		// Token: 0x040013BF RID: 5055
+		// Token: 0x040013CC RID: 5068
 		[SerializeField]
 		private GameObject ropeNodePrefab;
 
-		// Token: 0x040013C0 RID: 5056
+		// Token: 0x040013CD RID: 5069
 		[SerializeField]
 		private int nodeCount = 10;
 
-		// Token: 0x040013C1 RID: 5057
+		// Token: 0x040013CE RID: 5070
 		[SerializeField]
 		private float nodeDistance = 0.4f;
 
-		// Token: 0x040013C2 RID: 5058
+		// Token: 0x040013CF RID: 5071
 		[SerializeField]
 		private int applyConstraintIterations = 20;
 
-		// Token: 0x040013C3 RID: 5059
+		// Token: 0x040013D0 RID: 5072
 		[SerializeField]
 		private Vector3 gravity = new Vector3(0f, -9.81f, 0f);
 
-		// Token: 0x040013C4 RID: 5060
+		// Token: 0x040013D1 RID: 5073
 		[SerializeField]
 		private float friction = 0.1f;
 
-		// Token: 0x040013C5 RID: 5061
+		// Token: 0x040013D2 RID: 5074
 		private NativeArray<BurstRopeNode> burstNodes;
 	}
 }

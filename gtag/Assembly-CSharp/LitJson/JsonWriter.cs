@@ -6,12 +6,12 @@ using System.Text;
 
 namespace LitJson
 {
-	// Token: 0x02000280 RID: 640
+	// Token: 0x02000281 RID: 641
 	public class JsonWriter
 	{
-		// Token: 0x170000E2 RID: 226
-		// (get) Token: 0x06001046 RID: 4166 RVA: 0x00056A1C File Offset: 0x00054C1C
-		// (set) Token: 0x06001047 RID: 4167 RVA: 0x00056A24 File Offset: 0x00054C24
+		// Token: 0x170000E4 RID: 228
+		// (get) Token: 0x0600104D RID: 4173 RVA: 0x00056DF8 File Offset: 0x00054FF8
+		// (set) Token: 0x0600104E RID: 4174 RVA: 0x00056E00 File Offset: 0x00055000
 		public int IndentValue
 		{
 			get
@@ -25,9 +25,9 @@ namespace LitJson
 			}
 		}
 
-		// Token: 0x170000E3 RID: 227
-		// (get) Token: 0x06001048 RID: 4168 RVA: 0x00056A42 File Offset: 0x00054C42
-		// (set) Token: 0x06001049 RID: 4169 RVA: 0x00056A4A File Offset: 0x00054C4A
+		// Token: 0x170000E5 RID: 229
+		// (get) Token: 0x0600104F RID: 4175 RVA: 0x00056E1E File Offset: 0x0005501E
+		// (set) Token: 0x06001050 RID: 4176 RVA: 0x00056E26 File Offset: 0x00055026
 		public bool PrettyPrint
 		{
 			get
@@ -40,8 +40,8 @@ namespace LitJson
 			}
 		}
 
-		// Token: 0x170000E4 RID: 228
-		// (get) Token: 0x0600104A RID: 4170 RVA: 0x00056A53 File Offset: 0x00054C53
+		// Token: 0x170000E6 RID: 230
+		// (get) Token: 0x06001051 RID: 4177 RVA: 0x00056E2F File Offset: 0x0005502F
 		public TextWriter TextWriter
 		{
 			get
@@ -50,9 +50,9 @@ namespace LitJson
 			}
 		}
 
-		// Token: 0x170000E5 RID: 229
-		// (get) Token: 0x0600104B RID: 4171 RVA: 0x00056A5B File Offset: 0x00054C5B
-		// (set) Token: 0x0600104C RID: 4172 RVA: 0x00056A63 File Offset: 0x00054C63
+		// Token: 0x170000E7 RID: 231
+		// (get) Token: 0x06001052 RID: 4178 RVA: 0x00056E37 File Offset: 0x00055037
+		// (set) Token: 0x06001053 RID: 4179 RVA: 0x00056E3F File Offset: 0x0005503F
 		public bool Validate
 		{
 			get
@@ -65,7 +65,7 @@ namespace LitJson
 			}
 		}
 
-		// Token: 0x0600104E RID: 4174 RVA: 0x00056A78 File Offset: 0x00054C78
+		// Token: 0x06001055 RID: 4181 RVA: 0x00056E54 File Offset: 0x00055054
 		public JsonWriter()
 		{
 			this.inst_string_builder = new StringBuilder();
@@ -73,12 +73,12 @@ namespace LitJson
 			this.Init();
 		}
 
-		// Token: 0x0600104F RID: 4175 RVA: 0x00056AA2 File Offset: 0x00054CA2
+		// Token: 0x06001056 RID: 4182 RVA: 0x00056E7E File Offset: 0x0005507E
 		public JsonWriter(StringBuilder sb) : this(new StringWriter(sb))
 		{
 		}
 
-		// Token: 0x06001050 RID: 4176 RVA: 0x00056AB0 File Offset: 0x00054CB0
+		// Token: 0x06001057 RID: 4183 RVA: 0x00056E8C File Offset: 0x0005508C
 		public JsonWriter(TextWriter writer)
 		{
 			if (writer == null)
@@ -89,7 +89,7 @@ namespace LitJson
 			this.Init();
 		}
 
-		// Token: 0x06001051 RID: 4177 RVA: 0x00056AD4 File Offset: 0x00054CD4
+		// Token: 0x06001058 RID: 4184 RVA: 0x00056EB0 File Offset: 0x000550B0
 		private void DoValidation(Condition cond)
 		{
 			if (!this.context.ExpectingValue)
@@ -141,7 +141,7 @@ namespace LitJson
 			}
 		}
 
-		// Token: 0x06001052 RID: 4178 RVA: 0x00056BF8 File Offset: 0x00054DF8
+		// Token: 0x06001059 RID: 4185 RVA: 0x00056FD4 File Offset: 0x000551D4
 		private void Init()
 		{
 			this.has_reached_end = false;
@@ -155,7 +155,7 @@ namespace LitJson
 			this.ctx_stack.Push(this.context);
 		}
 
-		// Token: 0x06001053 RID: 4179 RVA: 0x00056C5C File Offset: 0x00054E5C
+		// Token: 0x0600105A RID: 4186 RVA: 0x00057038 File Offset: 0x00055238
 		private static void IntToHex(int n, char[] hex)
 		{
 			for (int i = 0; i < 4; i++)
@@ -173,7 +173,7 @@ namespace LitJson
 			}
 		}
 
-		// Token: 0x06001054 RID: 4180 RVA: 0x00056C9D File Offset: 0x00054E9D
+		// Token: 0x0600105B RID: 4187 RVA: 0x00057079 File Offset: 0x00055279
 		private void Indent()
 		{
 			if (this.pretty_print)
@@ -182,7 +182,7 @@ namespace LitJson
 			}
 		}
 
-		// Token: 0x06001055 RID: 4181 RVA: 0x00056CBC File Offset: 0x00054EBC
+		// Token: 0x0600105C RID: 4188 RVA: 0x00057098 File Offset: 0x00055298
 		private void Put(string str)
 		{
 			if (this.pretty_print && !this.context.ExpectingValue)
@@ -195,13 +195,13 @@ namespace LitJson
 			this.writer.Write(str);
 		}
 
-		// Token: 0x06001056 RID: 4182 RVA: 0x00056D08 File Offset: 0x00054F08
+		// Token: 0x0600105D RID: 4189 RVA: 0x000570E4 File Offset: 0x000552E4
 		private void PutNewline()
 		{
 			this.PutNewline(true);
 		}
 
-		// Token: 0x06001057 RID: 4183 RVA: 0x00056D14 File Offset: 0x00054F14
+		// Token: 0x0600105E RID: 4190 RVA: 0x000570F0 File Offset: 0x000552F0
 		private void PutNewline(bool add_comma)
 		{
 			if (add_comma && !this.context.ExpectingValue && this.context.Count > 1)
@@ -214,7 +214,7 @@ namespace LitJson
 			}
 		}
 
-		// Token: 0x06001058 RID: 4184 RVA: 0x00056D70 File Offset: 0x00054F70
+		// Token: 0x0600105F RID: 4191 RVA: 0x0005714C File Offset: 0x0005534C
 		private void PutString(string str)
 		{
 			this.Put(string.Empty);
@@ -269,7 +269,7 @@ namespace LitJson
 			this.writer.Write('"');
 		}
 
-		// Token: 0x06001059 RID: 4185 RVA: 0x00056ED6 File Offset: 0x000550D6
+		// Token: 0x06001060 RID: 4192 RVA: 0x000572B2 File Offset: 0x000554B2
 		private void Unindent()
 		{
 			if (this.pretty_print)
@@ -278,7 +278,7 @@ namespace LitJson
 			}
 		}
 
-		// Token: 0x0600105A RID: 4186 RVA: 0x00056EF3 File Offset: 0x000550F3
+		// Token: 0x06001061 RID: 4193 RVA: 0x000572CF File Offset: 0x000554CF
 		public override string ToString()
 		{
 			if (this.inst_string_builder == null)
@@ -288,7 +288,7 @@ namespace LitJson
 			return this.inst_string_builder.ToString();
 		}
 
-		// Token: 0x0600105B RID: 4187 RVA: 0x00056F10 File Offset: 0x00055110
+		// Token: 0x06001062 RID: 4194 RVA: 0x000572EC File Offset: 0x000554EC
 		public void Reset()
 		{
 			this.has_reached_end = false;
@@ -301,7 +301,7 @@ namespace LitJson
 			}
 		}
 
-		// Token: 0x0600105C RID: 4188 RVA: 0x00056F6B File Offset: 0x0005516B
+		// Token: 0x06001063 RID: 4195 RVA: 0x00057347 File Offset: 0x00055547
 		public void Write(bool boolean)
 		{
 			this.DoValidation(Condition.Value);
@@ -310,7 +310,7 @@ namespace LitJson
 			this.context.ExpectingValue = false;
 		}
 
-		// Token: 0x0600105D RID: 4189 RVA: 0x00056F9B File Offset: 0x0005519B
+		// Token: 0x06001064 RID: 4196 RVA: 0x00057377 File Offset: 0x00055577
 		public void Write(decimal number)
 		{
 			this.DoValidation(Condition.Value);
@@ -319,7 +319,7 @@ namespace LitJson
 			this.context.ExpectingValue = false;
 		}
 
-		// Token: 0x0600105E RID: 4190 RVA: 0x00056FC8 File Offset: 0x000551C8
+		// Token: 0x06001065 RID: 4197 RVA: 0x000573A4 File Offset: 0x000555A4
 		public void Write(double number)
 		{
 			this.DoValidation(Condition.Value);
@@ -333,7 +333,7 @@ namespace LitJson
 			this.context.ExpectingValue = false;
 		}
 
-		// Token: 0x0600105F RID: 4191 RVA: 0x00057027 File Offset: 0x00055227
+		// Token: 0x06001066 RID: 4198 RVA: 0x00057403 File Offset: 0x00055603
 		public void Write(int number)
 		{
 			this.DoValidation(Condition.Value);
@@ -342,7 +342,7 @@ namespace LitJson
 			this.context.ExpectingValue = false;
 		}
 
-		// Token: 0x06001060 RID: 4192 RVA: 0x00057053 File Offset: 0x00055253
+		// Token: 0x06001067 RID: 4199 RVA: 0x0005742F File Offset: 0x0005562F
 		public void Write(long number)
 		{
 			this.DoValidation(Condition.Value);
@@ -351,7 +351,7 @@ namespace LitJson
 			this.context.ExpectingValue = false;
 		}
 
-		// Token: 0x06001061 RID: 4193 RVA: 0x0005707F File Offset: 0x0005527F
+		// Token: 0x06001068 RID: 4200 RVA: 0x0005745B File Offset: 0x0005565B
 		public void Write(string str)
 		{
 			this.DoValidation(Condition.Value);
@@ -367,7 +367,7 @@ namespace LitJson
 			this.context.ExpectingValue = false;
 		}
 
-		// Token: 0x06001062 RID: 4194 RVA: 0x000570B1 File Offset: 0x000552B1
+		// Token: 0x06001069 RID: 4201 RVA: 0x0005748D File Offset: 0x0005568D
 		public void Write(ulong number)
 		{
 			this.DoValidation(Condition.Value);
@@ -376,7 +376,7 @@ namespace LitJson
 			this.context.ExpectingValue = false;
 		}
 
-		// Token: 0x06001063 RID: 4195 RVA: 0x000570E0 File Offset: 0x000552E0
+		// Token: 0x0600106A RID: 4202 RVA: 0x000574BC File Offset: 0x000556BC
 		public void WriteArrayEnd()
 		{
 			this.DoValidation(Condition.InArray);
@@ -395,7 +395,7 @@ namespace LitJson
 			this.Put("]");
 		}
 
-		// Token: 0x06001064 RID: 4196 RVA: 0x0005714C File Offset: 0x0005534C
+		// Token: 0x0600106B RID: 4203 RVA: 0x00057528 File Offset: 0x00055728
 		public void WriteArrayStart()
 		{
 			this.DoValidation(Condition.NotAProperty);
@@ -407,7 +407,7 @@ namespace LitJson
 			this.Indent();
 		}
 
-		// Token: 0x06001065 RID: 4197 RVA: 0x000571A0 File Offset: 0x000553A0
+		// Token: 0x0600106C RID: 4204 RVA: 0x0005757C File Offset: 0x0005577C
 		public void WriteObjectEnd()
 		{
 			this.DoValidation(Condition.InObject);
@@ -426,7 +426,7 @@ namespace LitJson
 			this.Put("}");
 		}
 
-		// Token: 0x06001066 RID: 4198 RVA: 0x0005720C File Offset: 0x0005540C
+		// Token: 0x0600106D RID: 4205 RVA: 0x000575E8 File Offset: 0x000557E8
 		public void WriteObjectStart()
 		{
 			this.DoValidation(Condition.NotAProperty);
@@ -438,7 +438,7 @@ namespace LitJson
 			this.Indent();
 		}
 
-		// Token: 0x06001067 RID: 4199 RVA: 0x00057260 File Offset: 0x00055460
+		// Token: 0x0600106E RID: 4206 RVA: 0x0005763C File Offset: 0x0005583C
 		public void WritePropertyName(string property_name)
 		{
 			this.DoValidation(Condition.Property);
@@ -463,37 +463,37 @@ namespace LitJson
 			this.context.ExpectingValue = true;
 		}
 
-		// Token: 0x0400121D RID: 4637
+		// Token: 0x04001223 RID: 4643
 		private static NumberFormatInfo number_format = NumberFormatInfo.InvariantInfo;
 
-		// Token: 0x0400121E RID: 4638
+		// Token: 0x04001224 RID: 4644
 		private WriterContext context;
 
-		// Token: 0x0400121F RID: 4639
+		// Token: 0x04001225 RID: 4645
 		private Stack<WriterContext> ctx_stack;
 
-		// Token: 0x04001220 RID: 4640
+		// Token: 0x04001226 RID: 4646
 		private bool has_reached_end;
 
-		// Token: 0x04001221 RID: 4641
+		// Token: 0x04001227 RID: 4647
 		private char[] hex_seq;
 
-		// Token: 0x04001222 RID: 4642
+		// Token: 0x04001228 RID: 4648
 		private int indentation;
 
-		// Token: 0x04001223 RID: 4643
+		// Token: 0x04001229 RID: 4649
 		private int indent_value;
 
-		// Token: 0x04001224 RID: 4644
+		// Token: 0x0400122A RID: 4650
 		private StringBuilder inst_string_builder;
 
-		// Token: 0x04001225 RID: 4645
+		// Token: 0x0400122B RID: 4651
 		private bool pretty_print;
 
-		// Token: 0x04001226 RID: 4646
+		// Token: 0x0400122C RID: 4652
 		private bool validate;
 
-		// Token: 0x04001227 RID: 4647
+		// Token: 0x0400122D RID: 4653
 		private TextWriter writer;
 	}
 }

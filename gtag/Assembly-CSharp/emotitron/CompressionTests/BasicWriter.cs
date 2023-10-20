@@ -2,16 +2,16 @@
 
 namespace emotitron.CompressionTests
 {
-	// Token: 0x0200034A RID: 842
+	// Token: 0x0200034C RID: 844
 	public class BasicWriter
 	{
-		// Token: 0x06001869 RID: 6249 RVA: 0x0008314A File Offset: 0x0008134A
+		// Token: 0x06001872 RID: 6258 RVA: 0x00083632 File Offset: 0x00081832
 		public static void Reset()
 		{
 			BasicWriter.pos = 0;
 		}
 
-		// Token: 0x0600186A RID: 6250 RVA: 0x00083152 File Offset: 0x00081352
+		// Token: 0x06001873 RID: 6259 RVA: 0x0008363A File Offset: 0x0008183A
 		public static byte[] BasicWrite(byte[] buffer, byte value)
 		{
 			buffer[BasicWriter.pos] = value;
@@ -19,7 +19,7 @@ namespace emotitron.CompressionTests
 			return buffer;
 		}
 
-		// Token: 0x0600186B RID: 6251 RVA: 0x00083169 File Offset: 0x00081369
+		// Token: 0x06001874 RID: 6260 RVA: 0x00083651 File Offset: 0x00081851
 		public static byte BasicRead(byte[] buffer)
 		{
 			byte result = buffer[BasicWriter.pos];
@@ -27,7 +27,7 @@ namespace emotitron.CompressionTests
 			return result;
 		}
 
-		// Token: 0x0400195B RID: 6491
+		// Token: 0x04001968 RID: 6504
 		public static int pos;
 	}
 }

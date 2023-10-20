@@ -2,19 +2,19 @@
 
 namespace LitJson
 {
-	// Token: 0x02000281 RID: 641
+	// Token: 0x02000282 RID: 642
 	internal class FsmContext
 	{
-		// Token: 0x04001228 RID: 4648
+		// Token: 0x0400122E RID: 4654
 		public bool Return;
 
-		// Token: 0x04001229 RID: 4649
+		// Token: 0x0400122F RID: 4655
 		public int NextState;
 
-		// Token: 0x0400122A RID: 4650
+		// Token: 0x04001230 RID: 4656
 		public Lexer L;
 
-		// Token: 0x0400122B RID: 4651
+		// Token: 0x04001231 RID: 4657
 		public int StateStack;
 	}
 }

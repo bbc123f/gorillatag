@@ -4,24 +4,24 @@ using UnityEngine;
 
 namespace GorillaLocomotion.Gameplay
 {
-	// Token: 0x0200029F RID: 671
+	// Token: 0x020002A1 RID: 673
 	public class TestRopePerf : MonoBehaviour
 	{
-		// Token: 0x06001181 RID: 4481 RVA: 0x00062B8F File Offset: 0x00060D8F
+		// Token: 0x06001188 RID: 4488 RVA: 0x00062FF7 File Offset: 0x000611F7
 		private IEnumerator Start()
 		{
 			yield break;
 		}
 
-		// Token: 0x04001423 RID: 5155
+		// Token: 0x04001430 RID: 5168
 		[SerializeField]
 		private GameObject ropesOld;
 
-		// Token: 0x04001424 RID: 5156
+		// Token: 0x04001431 RID: 5169
 		[SerializeField]
 		private GameObject ropesCustom;
 
-		// Token: 0x04001425 RID: 5157
+		// Token: 0x04001432 RID: 5170
 		[SerializeField]
 		private GameObject ropesCustomVectorized;
 	}

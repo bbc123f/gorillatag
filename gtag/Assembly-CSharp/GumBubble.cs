@@ -6,20 +6,20 @@ using UnityEngine.Serialization;
 // Token: 0x02000129 RID: 297
 public class GumBubble : LerpComponent
 {
-	// Token: 0x060007C8 RID: 1992 RVA: 0x00031495 File Offset: 0x0002F695
+	// Token: 0x060007C9 RID: 1993 RVA: 0x000312D5 File Offset: 0x0002F4D5
 	private void Awake()
 	{
 		base.enabled = false;
 		base.gameObject.SetActive(false);
 	}
 
-	// Token: 0x060007C9 RID: 1993 RVA: 0x000314AA File Offset: 0x0002F6AA
+	// Token: 0x060007CA RID: 1994 RVA: 0x000312EA File Offset: 0x0002F4EA
 	public void InflateDelayed()
 	{
 		this.InflateDelayed(this._delayInflate);
 	}
 
-	// Token: 0x060007CA RID: 1994 RVA: 0x000314B8 File Offset: 0x0002F6B8
+	// Token: 0x060007CB RID: 1995 RVA: 0x000312F8 File Offset: 0x0002F4F8
 	public void InflateDelayed(float delay)
 	{
 		if (delay < 0f)
@@ -29,7 +29,7 @@ public class GumBubble : LerpComponent
 		base.Invoke("Inflate", delay);
 	}
 
-	// Token: 0x060007CB RID: 1995 RVA: 0x000314D8 File Offset: 0x0002F6D8
+	// Token: 0x060007CC RID: 1996 RVA: 0x00031318 File Offset: 0x0002F518
 	public void Inflate()
 	{
 		base.gameObject.SetActive(true);
@@ -52,7 +52,7 @@ public class GumBubble : LerpComponent
 		unityEvent.Invoke();
 	}
 
-	// Token: 0x060007CC RID: 1996 RVA: 0x00031558 File Offset: 0x0002F758
+	// Token: 0x060007CD RID: 1997 RVA: 0x00031398 File Offset: 0x0002F598
 	public void Pop()
 	{
 		this._lerp = 0f;
@@ -72,7 +72,7 @@ public class GumBubble : LerpComponent
 		base.gameObject.SetActive(false);
 	}
 
-	// Token: 0x060007CD RID: 1997 RVA: 0x000315D8 File Offset: 0x0002F7D8
+	// Token: 0x060007CE RID: 1998 RVA: 0x00031418 File Offset: 0x0002F618
 	private void Update()
 	{
 		float t = Mathf.Clamp01(this._sinceInflate / this._lerpLength);
@@ -92,7 +92,7 @@ public class GumBubble : LerpComponent
 		}
 	}
 
-	// Token: 0x060007CE RID: 1998 RVA: 0x0003166C File Offset: 0x0002F86C
+	// Token: 0x060007CF RID: 1999 RVA: 0x000314AC File Offset: 0x0002F6AC
 	protected override void OnLerp(float t)
 	{
 		if (!this.target)

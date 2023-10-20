@@ -6,7 +6,7 @@ using UnityEngine;
 // Token: 0x020000DF RID: 223
 public class LegacyBalloonHoldable : LegacyTransferrableObject
 {
-	// Token: 0x06000516 RID: 1302 RVA: 0x00020957 File Offset: 0x0001EB57
+	// Token: 0x06000516 RID: 1302 RVA: 0x0002074B File Offset: 0x0001E94B
 	protected override void Awake()
 	{
 		base.Awake();
@@ -17,14 +17,14 @@ public class LegacyBalloonHoldable : LegacyTransferrableObject
 		this.rb = base.GetComponent<Rigidbody>();
 	}
 
-	// Token: 0x06000517 RID: 1303 RVA: 0x00020996 File Offset: 0x0001EB96
+	// Token: 0x06000517 RID: 1303 RVA: 0x0002078A File Offset: 0x0001E98A
 	protected override void Start()
 	{
 		base.Start();
 		this.EnableDynamics(false, false);
 	}
 
-	// Token: 0x06000518 RID: 1304 RVA: 0x000209A8 File Offset: 0x0001EBA8
+	// Token: 0x06000518 RID: 1304 RVA: 0x0002079C File Offset: 0x0001E99C
 	public override void OnEnable()
 	{
 		base.OnEnable();
@@ -42,13 +42,13 @@ public class LegacyBalloonHoldable : LegacyTransferrableObject
 		}
 	}
 
-	// Token: 0x06000519 RID: 1305 RVA: 0x000209F8 File Offset: 0x0001EBF8
+	// Token: 0x06000519 RID: 1305 RVA: 0x000207EC File Offset: 0x0001E9EC
 	private bool ShouldSimulate()
 	{
 		return (base.Dropped() || base.InHand()) && this.balloonState == LegacyBalloonHoldable.BalloonStates.Normal;
 	}
 
-	// Token: 0x0600051A RID: 1306 RVA: 0x00020A15 File Offset: 0x0001EC15
+	// Token: 0x0600051A RID: 1306 RVA: 0x00020809 File Offset: 0x0001EA09
 	public override void OnDisable()
 	{
 		base.OnDisable();
@@ -56,7 +56,7 @@ public class LegacyBalloonHoldable : LegacyTransferrableObject
 		this.EnableDynamics(false, false);
 	}
 
-	// Token: 0x0600051B RID: 1307 RVA: 0x00020A34 File Offset: 0x0001EC34
+	// Token: 0x0600051B RID: 1307 RVA: 0x00020828 File Offset: 0x0001EA28
 	protected override void OnWorldShareableItemSpawn()
 	{
 		LegacyWorldShareableItem component = this.worldShareableInstance.GetComponent<LegacyWorldShareableItem>();
@@ -69,7 +69,7 @@ public class LegacyBalloonHoldable : LegacyTransferrableObject
 		this.originalOwner = component.Target.owner;
 	}
 
-	// Token: 0x0600051C RID: 1308 RVA: 0x00020A98 File Offset: 0x0001EC98
+	// Token: 0x0600051C RID: 1308 RVA: 0x0002088C File Offset: 0x0001EA8C
 	protected override void OnWorldShareableItemDeallocated(Player player)
 	{
 		if (player == this.originalOwner || player == PhotonNetwork.LocalPlayer)
@@ -95,7 +95,7 @@ public class LegacyBalloonHoldable : LegacyTransferrableObject
 		}
 	}
 
-	// Token: 0x0600051D RID: 1309 RVA: 0x00020B4C File Offset: 0x0001ED4C
+	// Token: 0x0600051D RID: 1309 RVA: 0x00020940 File Offset: 0x0001EB40
 	private void PlayPopBalloonFX()
 	{
 		GameObject gameObject = ObjectPools.instance.Instantiate(this.balloonPopFXPrefab);
@@ -107,7 +107,7 @@ public class LegacyBalloonHoldable : LegacyTransferrableObject
 		}
 	}
 
-	// Token: 0x0600051E RID: 1310 RVA: 0x00020BA8 File Offset: 0x0001EDA8
+	// Token: 0x0600051E RID: 1310 RVA: 0x0002099C File Offset: 0x0001EB9C
 	private void EnableDynamics(bool enable, bool forceKinematicOn = false)
 	{
 		bool kinematic = false;
@@ -129,7 +129,7 @@ public class LegacyBalloonHoldable : LegacyTransferrableObject
 		}
 	}
 
-	// Token: 0x0600051F RID: 1311 RVA: 0x00020C14 File Offset: 0x0001EE14
+	// Token: 0x0600051F RID: 1311 RVA: 0x00020A08 File Offset: 0x0001EC08
 	private void PopBalloon()
 	{
 		this.PlayPopBalloonFX();
@@ -166,13 +166,13 @@ public class LegacyBalloonHoldable : LegacyTransferrableObject
 		}
 	}
 
-	// Token: 0x06000520 RID: 1312 RVA: 0x00020D0D File Offset: 0x0001EF0D
+	// Token: 0x06000520 RID: 1312 RVA: 0x00020B01 File Offset: 0x0001ED01
 	public void PopBalloonRemote()
 	{
 		this.balloonState = LegacyBalloonHoldable.BalloonStates.Pop;
 	}
 
-	// Token: 0x06000521 RID: 1313 RVA: 0x00020D18 File Offset: 0x0001EF18
+	// Token: 0x06000521 RID: 1313 RVA: 0x00020B0C File Offset: 0x0001ED0C
 	public void OnOwnerChangeCb(Player newOwner, Player prevOwner)
 	{
 		if (newOwner != PhotonNetwork.LocalPlayer)
@@ -189,7 +189,7 @@ public class LegacyBalloonHoldable : LegacyTransferrableObject
 		this.collisionPtAsRemote = Vector3.zero;
 	}
 
-	// Token: 0x06000522 RID: 1314 RVA: 0x00020D88 File Offset: 0x0001EF88
+	// Token: 0x06000522 RID: 1314 RVA: 0x00020B7C File Offset: 0x0001ED7C
 	private void OwnerPopBalloon()
 	{
 		if (this.worldShareableInstance != null)
@@ -203,7 +203,7 @@ public class LegacyBalloonHoldable : LegacyTransferrableObject
 		this.balloonState = LegacyBalloonHoldable.BalloonStates.Pop;
 	}
 
-	// Token: 0x06000523 RID: 1315 RVA: 0x00020DD0 File Offset: 0x0001EFD0
+	// Token: 0x06000523 RID: 1315 RVA: 0x00020BC4 File Offset: 0x0001EDC4
 	private void RunLocalPopSM()
 	{
 		switch (this.balloonState)
@@ -275,7 +275,7 @@ public class LegacyBalloonHoldable : LegacyTransferrableObject
 		}
 	}
 
-	// Token: 0x06000524 RID: 1316 RVA: 0x00020F84 File Offset: 0x0001F184
+	// Token: 0x06000524 RID: 1316 RVA: 0x00020D78 File Offset: 0x0001EF78
 	protected override void LateUpdateShared()
 	{
 		base.LateUpdateShared();
@@ -312,13 +312,13 @@ public class LegacyBalloonHoldable : LegacyTransferrableObject
 		}
 	}
 
-	// Token: 0x06000525 RID: 1317 RVA: 0x00021051 File Offset: 0x0001F251
+	// Token: 0x06000525 RID: 1317 RVA: 0x00020E45 File Offset: 0x0001F045
 	protected override void LateUpdateReplicated()
 	{
 		base.LateUpdateReplicated();
 	}
 
-	// Token: 0x06000526 RID: 1318 RVA: 0x00021059 File Offset: 0x0001F259
+	// Token: 0x06000526 RID: 1318 RVA: 0x00020E4D File Offset: 0x0001F04D
 	private void Grab()
 	{
 		if (this.balloonDynamics == null)
@@ -330,7 +330,7 @@ public class LegacyBalloonHoldable : LegacyTransferrableObject
 		this.lineRenderer.enabled = true;
 	}
 
-	// Token: 0x06000527 RID: 1319 RVA: 0x0002108A File Offset: 0x0001F28A
+	// Token: 0x06000527 RID: 1319 RVA: 0x00020E7E File Offset: 0x0001F07E
 	private void Release()
 	{
 		if (this.balloonDynamics == null)
@@ -342,7 +342,7 @@ public class LegacyBalloonHoldable : LegacyTransferrableObject
 		this.lineRenderer.enabled = false;
 	}
 
-	// Token: 0x06000528 RID: 1320 RVA: 0x000210BC File Offset: 0x0001F2BC
+	// Token: 0x06000528 RID: 1320 RVA: 0x00020EB0 File Offset: 0x0001F0B0
 	public void OnTriggerEnter(Collider other)
 	{
 		if (!this.ShouldSimulate())
@@ -399,7 +399,7 @@ public class LegacyBalloonHoldable : LegacyTransferrableObject
 		}
 	}
 
-	// Token: 0x06000529 RID: 1321 RVA: 0x00021248 File Offset: 0x0001F448
+	// Token: 0x06000529 RID: 1321 RVA: 0x0002103C File Offset: 0x0001F23C
 	public void OnCollisionEnter(Collision collision)
 	{
 		if (!this.ShouldSimulate())
@@ -480,20 +480,20 @@ public class LegacyBalloonHoldable : LegacyTransferrableObject
 	// Token: 0x0400061E RID: 1566
 	private LegacyBalloonHoldable.BalloonStates balloonState;
 
-	// Token: 0x020003E6 RID: 998
+	// Token: 0x020003E8 RID: 1000
 	private enum BalloonStates
 	{
-		// Token: 0x04001C61 RID: 7265
+		// Token: 0x04001C6E RID: 7278
 		Normal,
-		// Token: 0x04001C62 RID: 7266
+		// Token: 0x04001C6F RID: 7279
 		Pop,
-		// Token: 0x04001C63 RID: 7267
+		// Token: 0x04001C70 RID: 7280
 		Waiting,
-		// Token: 0x04001C64 RID: 7268
+		// Token: 0x04001C71 RID: 7281
 		WaitForOwnershipTransfer,
-		// Token: 0x04001C65 RID: 7269
+		// Token: 0x04001C72 RID: 7282
 		WaitForReDock,
-		// Token: 0x04001C66 RID: 7270
+		// Token: 0x04001C73 RID: 7283
 		Refilling
 	}
 }

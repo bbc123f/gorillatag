@@ -4,7 +4,7 @@ using UnityEngine;
 // Token: 0x020000CC RID: 204
 public class StylusTip : MonoBehaviour
 {
-	// Token: 0x06000487 RID: 1159 RVA: 0x0001CF74 File Offset: 0x0001B174
+	// Token: 0x06000487 RID: 1159 RVA: 0x0001CD50 File Offset: 0x0001AF50
 	private void Awake()
 	{
 		this.m_controller = ((this.m_handedness == OVRInput.Handedness.LeftHanded) ? OVRInput.Controller.LTouch : OVRInput.Controller.RTouch);
@@ -19,7 +19,7 @@ public class StylusTip : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000488 RID: 1160 RVA: 0x0001D014 File Offset: 0x0001B214
+	// Token: 0x06000488 RID: 1160 RVA: 0x0001CDF0 File Offset: 0x0001AFF0
 	private void Update()
 	{
 		Pose pose = new Pose(OVRInput.GetLocalControllerPosition(this.m_controller), OVRInput.GetLocalControllerRotation(this.m_controller));
@@ -48,7 +48,7 @@ public class StylusTip : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000489 RID: 1161 RVA: 0x0001D1A4 File Offset: 0x0001B3A4
+	// Token: 0x06000489 RID: 1161 RVA: 0x0001CF80 File Offset: 0x0001B180
 	private static Pose GetT_Device_StylusTip(OVRInput.Controller controller)
 	{
 		Pose identity = Pose.identity;

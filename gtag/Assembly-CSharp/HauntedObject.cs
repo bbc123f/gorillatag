@@ -5,10 +5,10 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Serialization;
 
-// Token: 0x02000190 RID: 400
+// Token: 0x02000191 RID: 401
 public class HauntedObject : MonoBehaviour
 {
-	// Token: 0x06000A44 RID: 2628 RVA: 0x0003FEE8 File Offset: 0x0003E0E8
+	// Token: 0x06000A49 RID: 2633 RVA: 0x00040018 File Offset: 0x0003E218
 	private void Awake()
 	{
 		this.lurkerGhost = GameObject.FindGameObjectWithTag("LurkerGhost");
@@ -28,7 +28,7 @@ public class HauntedObject : MonoBehaviour
 		this.animators = base.transform.GetComponentsInChildren<Animator>();
 	}
 
-	// Token: 0x06000A45 RID: 2629 RVA: 0x0003FFA4 File Offset: 0x0003E1A4
+	// Token: 0x06000A4A RID: 2634 RVA: 0x000400D4 File Offset: 0x0003E2D4
 	private void OnDestroy()
 	{
 		LurkerGhost lurkerGhost;
@@ -45,7 +45,7 @@ public class HauntedObject : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000A46 RID: 2630 RVA: 0x0004002F File Offset: 0x0003E22F
+	// Token: 0x06000A4B RID: 2635 RVA: 0x0004015F File Offset: 0x0003E35F
 	private void Start()
 	{
 		this.initialPos = base.transform.position;
@@ -53,7 +53,7 @@ public class HauntedObject : MonoBehaviour
 		this.lightPassedTime = 0f;
 	}
 
-	// Token: 0x06000A47 RID: 2631 RVA: 0x00040058 File Offset: 0x0003E258
+	// Token: 0x06000A4C RID: 2636 RVA: 0x00040188 File Offset: 0x0003E388
 	private void TriggerEffects(GameObject go)
 	{
 		if (base.gameObject != go)
@@ -85,7 +85,7 @@ public class HauntedObject : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000A48 RID: 2632 RVA: 0x00040122 File Offset: 0x0003E322
+	// Token: 0x06000A4D RID: 2637 RVA: 0x00040252 File Offset: 0x0003E452
 	private IEnumerator Shake()
 	{
 		while (this.passedTime < this.duration)
@@ -98,7 +98,7 @@ public class HauntedObject : MonoBehaviour
 		yield break;
 	}
 
-	// Token: 0x06000A49 RID: 2633 RVA: 0x00040131 File Offset: 0x0003E331
+	// Token: 0x06000A4E RID: 2638 RVA: 0x00040261 File Offset: 0x0003E461
 	private IEnumerator TurnOff()
 	{
 		this.TurnOffLight.gameObject.SetActive(false);
@@ -112,53 +112,53 @@ public class HauntedObject : MonoBehaviour
 		yield break;
 	}
 
-	// Token: 0x04000CDE RID: 3294
+	// Token: 0x04000CE2 RID: 3298
 	[Tooltip("If this box is checked, then object will rattle when hunted")]
 	public bool rattle;
 
-	// Token: 0x04000CDF RID: 3295
+	// Token: 0x04000CE3 RID: 3299
 	public float speed = 60f;
 
-	// Token: 0x04000CE0 RID: 3296
+	// Token: 0x04000CE4 RID: 3300
 	public float amount = 0.01f;
 
-	// Token: 0x04000CE1 RID: 3297
+	// Token: 0x04000CE5 RID: 3301
 	public float duration = 1f;
 
-	// Token: 0x04000CE2 RID: 3298
+	// Token: 0x04000CE6 RID: 3302
 	[FormerlySerializedAs("FBX")]
 	public GameObject FBXprefab;
 
-	// Token: 0x04000CE3 RID: 3299
+	// Token: 0x04000CE7 RID: 3303
 	[Tooltip("Use to turn off a game object like candle flames when hunted")]
 	public GameObject TurnOffLight;
 
-	// Token: 0x04000CE4 RID: 3300
+	// Token: 0x04000CE8 RID: 3304
 	public float TurnOffDuration = 2f;
 
-	// Token: 0x04000CE5 RID: 3301
+	// Token: 0x04000CE9 RID: 3305
 	private Vector3 initialPos;
 
-	// Token: 0x04000CE6 RID: 3302
+	// Token: 0x04000CEA RID: 3306
 	private float passedTime;
 
-	// Token: 0x04000CE7 RID: 3303
+	// Token: 0x04000CEB RID: 3307
 	private float lightPassedTime;
 
-	// Token: 0x04000CE8 RID: 3304
+	// Token: 0x04000CEC RID: 3308
 	private GameObject lurkerGhost;
 
-	// Token: 0x04000CE9 RID: 3305
+	// Token: 0x04000CED RID: 3309
 	private GameObject wanderingGhost;
 
-	// Token: 0x04000CEA RID: 3306
+	// Token: 0x04000CEE RID: 3310
 	private Animator[] animators;
 
-	// Token: 0x04000CEB RID: 3307
+	// Token: 0x04000CEF RID: 3311
 	[SerializeField]
 	private AudioSource audioSource;
 
-	// Token: 0x04000CEC RID: 3308
+	// Token: 0x04000CF0 RID: 3312
 	[FormerlySerializedAs("rattlingSound")]
 	public AudioClip hauntedSound;
 }

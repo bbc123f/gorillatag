@@ -4,7 +4,7 @@ using UnityEngine;
 // Token: 0x02000109 RID: 265
 public class CosmeticAnchors : MonoBehaviour
 {
-	// Token: 0x06000680 RID: 1664 RVA: 0x00028C42 File Offset: 0x00026E42
+	// Token: 0x06000681 RID: 1665 RVA: 0x00028A82 File Offset: 0x00026C82
 	protected void Awake()
 	{
 		this.anchorEnabled = false;
@@ -15,7 +15,7 @@ public class CosmeticAnchors : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000681 RID: 1665 RVA: 0x00028C7C File Offset: 0x00026E7C
+	// Token: 0x06000682 RID: 1666 RVA: 0x00028ABC File Offset: 0x00026CBC
 	protected void Update()
 	{
 		if (this.anchorEnabled && this.huntComputerAnchor && !GorillaTagger.Instance.offlineVRRig.huntComputer.activeSelf && this.anchorOverrides.HuntComputer.parent != this.anchorOverrides.HuntDefaultAnchor)
@@ -29,7 +29,7 @@ public class CosmeticAnchors : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000682 RID: 1666 RVA: 0x00028D4C File Offset: 0x00026F4C
+	// Token: 0x06000683 RID: 1667 RVA: 0x00028B8C File Offset: 0x00026D8C
 	public void EnableAnchor(bool enable)
 	{
 		this.anchorEnabled = enable;
@@ -62,7 +62,7 @@ public class CosmeticAnchors : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000683 RID: 1667 RVA: 0x00028E5C File Offset: 0x0002705C
+	// Token: 0x06000684 RID: 1668 RVA: 0x00028C9C File Offset: 0x00026E9C
 	private void SetHuntComputerAnchor(bool enable)
 	{
 		Transform huntComputer = this.anchorOverrides.HuntComputer;
@@ -78,7 +78,7 @@ public class CosmeticAnchors : MonoBehaviour
 		huntComputer.transform.localRotation = Quaternion.identity;
 	}
 
-	// Token: 0x06000684 RID: 1668 RVA: 0x00028ED4 File Offset: 0x000270D4
+	// Token: 0x06000685 RID: 1669 RVA: 0x00028D14 File Offset: 0x00026F14
 	public Transform GetPositionAnchor(TransferrableObject.PositionState pos)
 	{
 		if (pos != TransferrableObject.PositionState.OnLeftArm)
@@ -114,7 +114,7 @@ public class CosmeticAnchors : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000685 RID: 1669 RVA: 0x00028F42 File Offset: 0x00027142
+	// Token: 0x06000686 RID: 1670 RVA: 0x00028D82 File Offset: 0x00026F82
 	public Transform GetNameAnchor()
 	{
 		if (!this.nameAnchor)

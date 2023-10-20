@@ -4,7 +4,7 @@ using GorillaNetworking;
 // Token: 0x02000101 RID: 257
 internal class BundleList
 {
-	// Token: 0x0600063B RID: 1595 RVA: 0x00027458 File Offset: 0x00025658
+	// Token: 0x0600063C RID: 1596 RVA: 0x00027298 File Offset: 0x00025498
 	public void FromJson(string jsonString)
 	{
 		this.data = JSonHelper.FromJson<BundleData>(jsonString);
@@ -36,7 +36,7 @@ internal class BundleList
 		this.data[this.activeBundleIdx].isActive = true;
 	}
 
-	// Token: 0x0600063C RID: 1596 RVA: 0x0002760C File Offset: 0x0002580C
+	// Token: 0x0600063D RID: 1597 RVA: 0x0002744C File Offset: 0x0002564C
 	public bool HasSku(string skuName, out int idx)
 	{
 		for (int i = 0; i < this.data.Length; i++)
@@ -51,7 +51,7 @@ internal class BundleList
 		return false;
 	}
 
-	// Token: 0x0600063D RID: 1597 RVA: 0x0002764E File Offset: 0x0002584E
+	// Token: 0x0600063E RID: 1598 RVA: 0x0002748E File Offset: 0x0002568E
 	public BundleData ActiveBundle()
 	{
 		return this.data[this.activeBundleIdx];

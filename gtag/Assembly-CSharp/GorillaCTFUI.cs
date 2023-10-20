@@ -1,15 +1,15 @@
 ﻿using System;
 using UnityEngine;
 
-// Token: 0x02000170 RID: 368
+// Token: 0x02000171 RID: 369
 public class GorillaCTFUI : MonoBehaviour
 {
-	// Token: 0x0600092C RID: 2348 RVA: 0x000379EF File Offset: 0x00035BEF
+	// Token: 0x06000930 RID: 2352 RVA: 0x000378EF File Offset: 0x00035AEF
 	private void Start()
 	{
 	}
 
-	// Token: 0x0600092D RID: 2349 RVA: 0x000379F1 File Offset: 0x00035BF1
+	// Token: 0x06000931 RID: 2353 RVA: 0x000378F1 File Offset: 0x00035AF1
 	private void Update()
 	{
 	}

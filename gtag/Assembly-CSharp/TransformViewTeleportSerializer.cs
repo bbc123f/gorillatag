@@ -1,22 +1,22 @@
 ﻿using System;
 using Photon.Pun;
 
-// Token: 0x020001E5 RID: 485
+// Token: 0x020001E6 RID: 486
 public class TransformViewTeleportSerializer : MonoBehaviourPun, IPunObservable
 {
-	// Token: 0x06000C84 RID: 3204 RVA: 0x0004B89B File Offset: 0x00049A9B
+	// Token: 0x06000C8A RID: 3210 RVA: 0x0004BB03 File Offset: 0x00049D03
 	private void Start()
 	{
 		this.transformView = base.GetComponent<PhotonTransformView>();
 	}
 
-	// Token: 0x06000C85 RID: 3205 RVA: 0x0004B8A9 File Offset: 0x00049AA9
+	// Token: 0x06000C8B RID: 3211 RVA: 0x0004BB11 File Offset: 0x00049D11
 	public void SetWillTeleport()
 	{
 		this.willTeleport = true;
 	}
 
-	// Token: 0x06000C86 RID: 3206 RVA: 0x0004B8B2 File Offset: 0x00049AB2
+	// Token: 0x06000C8C RID: 3212 RVA: 0x0004BB1A File Offset: 0x00049D1A
 	public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
 	{
 		if (stream.IsWriting)
@@ -31,9 +31,9 @@ public class TransformViewTeleportSerializer : MonoBehaviourPun, IPunObservable
 		}
 	}
 
-	// Token: 0x04000FF3 RID: 4083
+	// Token: 0x04000FF7 RID: 4087
 	private bool willTeleport;
 
-	// Token: 0x04000FF4 RID: 4084
+	// Token: 0x04000FF8 RID: 4088
 	private PhotonTransformView transformView;
 }

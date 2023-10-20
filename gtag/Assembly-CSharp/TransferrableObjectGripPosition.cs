@@ -4,7 +4,7 @@ using UnityEngine;
 // Token: 0x0200011E RID: 286
 public class TransferrableObjectGripPosition : MonoBehaviour
 {
-	// Token: 0x0600078F RID: 1935 RVA: 0x000308BE File Offset: 0x0002EABE
+	// Token: 0x06000790 RID: 1936 RVA: 0x000306FE File Offset: 0x0002E8FE
 	private void Awake()
 	{
 		if (this.parentObject == null)
@@ -14,7 +14,7 @@ public class TransferrableObjectGripPosition : MonoBehaviour
 		this.parentObject.AddGripPosition(this.attachmentType, this);
 	}
 
-	// Token: 0x06000790 RID: 1936 RVA: 0x000308F6 File Offset: 0x0002EAF6
+	// Token: 0x06000791 RID: 1937 RVA: 0x00030736 File Offset: 0x0002E936
 	public SubGrabPoint CreateSubGrabPoint(SlotTransformOverride overrideContainer)
 	{
 		return new SubGrabPoint();

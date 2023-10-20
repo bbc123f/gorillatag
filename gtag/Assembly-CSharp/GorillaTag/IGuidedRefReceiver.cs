@@ -2,10 +2,10 @@
 
 namespace GorillaTag
 {
-	// Token: 0x02000307 RID: 775
+	// Token: 0x02000309 RID: 777
 	public interface IGuidedRefReceiver : IGuidedRefMonoBehaviour, IGuidedRefObject
 	{
-		// Token: 0x06001597 RID: 5527
+		// Token: 0x060015A0 RID: 5536
 		bool GuidRefResolveReference(int fieldId, IGuidedRefTarget target);
 	}
 }

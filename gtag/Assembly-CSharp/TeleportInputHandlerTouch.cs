@@ -5,12 +5,12 @@ using UnityEngine;
 // Token: 0x0200008B RID: 139
 public class TeleportInputHandlerTouch : TeleportInputHandlerHMD
 {
-	// Token: 0x06000305 RID: 773 RVA: 0x00012B4A File Offset: 0x00010D4A
+	// Token: 0x06000305 RID: 773 RVA: 0x00012926 File Offset: 0x00010B26
 	private void Start()
 	{
 	}
 
-	// Token: 0x06000306 RID: 774 RVA: 0x00012B4C File Offset: 0x00010D4C
+	// Token: 0x06000306 RID: 774 RVA: 0x00012928 File Offset: 0x00010B28
 	public override LocomotionTeleport.TeleportIntentions GetIntention()
 	{
 		if (!base.isActiveAndEnabled)
@@ -121,7 +121,7 @@ public class TeleportInputHandlerTouch : TeleportInputHandlerHMD
 		}
 	}
 
-	// Token: 0x06000307 RID: 775 RVA: 0x00012D84 File Offset: 0x00010F84
+	// Token: 0x06000307 RID: 775 RVA: 0x00012B60 File Offset: 0x00010D60
 	public override void GetAimData(out Ray aimRay)
 	{
 		OVRInput.Controller controller = this.AimingController;
@@ -133,7 +133,7 @@ public class TeleportInputHandlerTouch : TeleportInputHandlerHMD
 		aimRay = new Ray(transform.position, transform.forward);
 	}
 
-	// Token: 0x06000308 RID: 776 RVA: 0x00012DD0 File Offset: 0x00010FD0
+	// Token: 0x06000308 RID: 776 RVA: 0x00012BAC File Offset: 0x00010DAC
 	public TeleportInputHandlerTouch()
 	{
 		OVRInput.RawButton[] array = new OVRInput.RawButton[8];
@@ -177,37 +177,37 @@ public class TeleportInputHandlerTouch : TeleportInputHandlerHMD
 	[Tooltip("The thumbstick magnitude required to trigger aiming and teleports when InputMode==InputModes.ThumbstickTeleport")]
 	public float ThumbstickTeleportThreshold;
 
-	// Token: 0x020003BB RID: 955
+	// Token: 0x020003BD RID: 957
 	public enum InputModes
 	{
-		// Token: 0x04001BA4 RID: 7076
+		// Token: 0x04001BB1 RID: 7089
 		CapacitiveButtonForAimAndTeleport,
-		// Token: 0x04001BA5 RID: 7077
+		// Token: 0x04001BB2 RID: 7090
 		SeparateButtonsForAimAndTeleport,
-		// Token: 0x04001BA6 RID: 7078
+		// Token: 0x04001BB3 RID: 7091
 		ThumbstickTeleport,
-		// Token: 0x04001BA7 RID: 7079
+		// Token: 0x04001BB4 RID: 7092
 		ThumbstickTeleportForwardBackOnly
 	}
 
-	// Token: 0x020003BC RID: 956
+	// Token: 0x020003BE RID: 958
 	public enum AimCapTouchButtons
 	{
-		// Token: 0x04001BA9 RID: 7081
+		// Token: 0x04001BB6 RID: 7094
 		A,
-		// Token: 0x04001BAA RID: 7082
+		// Token: 0x04001BB7 RID: 7095
 		B,
-		// Token: 0x04001BAB RID: 7083
+		// Token: 0x04001BB8 RID: 7096
 		LeftTrigger,
-		// Token: 0x04001BAC RID: 7084
+		// Token: 0x04001BB9 RID: 7097
 		LeftThumbstick,
-		// Token: 0x04001BAD RID: 7085
+		// Token: 0x04001BBA RID: 7098
 		RightTrigger,
-		// Token: 0x04001BAE RID: 7086
+		// Token: 0x04001BBB RID: 7099
 		RightThumbstick,
-		// Token: 0x04001BAF RID: 7087
+		// Token: 0x04001BBC RID: 7100
 		X,
-		// Token: 0x04001BB0 RID: 7088
+		// Token: 0x04001BBD RID: 7101
 		Y
 	}
 }

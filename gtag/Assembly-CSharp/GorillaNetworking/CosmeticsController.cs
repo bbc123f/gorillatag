@@ -14,10 +14,10 @@ using UnityEngine.UI;
 
 namespace GorillaNetworking
 {
-	// Token: 0x020002AE RID: 686
+	// Token: 0x020002B0 RID: 688
 	public class CosmeticsController : MonoBehaviour
 	{
-		// Token: 0x060011E7 RID: 4583 RVA: 0x00065FD4 File Offset: 0x000641D4
+		// Token: 0x060011EE RID: 4590 RVA: 0x000664A0 File Offset: 0x000646A0
 		public void Awake()
 		{
 			if (CosmeticsController.instance == null)
@@ -53,7 +53,7 @@ namespace GorillaNetworking
 			}
 		}
 
-		// Token: 0x060011E8 RID: 4584 RVA: 0x00066129 File Offset: 0x00064329
+		// Token: 0x060011EF RID: 4591 RVA: 0x000665F5 File Offset: 0x000647F5
 		public void Start()
 		{
 			PlayFabTitleDataCache.Instance.GetTitleData("BundleData", delegate(string data)
@@ -65,12 +65,12 @@ namespace GorillaNetworking
 			});
 		}
 
-		// Token: 0x060011E9 RID: 4585 RVA: 0x00066165 File Offset: 0x00064365
+		// Token: 0x060011F0 RID: 4592 RVA: 0x00066631 File Offset: 0x00064831
 		public void Update()
 		{
 		}
 
-		// Token: 0x060011EA RID: 4586 RVA: 0x00066167 File Offset: 0x00064367
+		// Token: 0x060011F1 RID: 4593 RVA: 0x00066633 File Offset: 0x00064833
 		private CosmeticsController.CosmeticSlots CategoryToNonTransferrableSlot(CosmeticsController.CosmeticCategory category)
 		{
 			switch (category)
@@ -86,7 +86,7 @@ namespace GorillaNetworking
 			}
 		}
 
-		// Token: 0x060011EB RID: 4587 RVA: 0x00066187 File Offset: 0x00064387
+		// Token: 0x060011F2 RID: 4594 RVA: 0x00066653 File Offset: 0x00064853
 		private CosmeticsController.CosmeticSlots DropPositionToCosmeticSlot(BodyDockPositions.DropPositions pos)
 		{
 			switch (pos)
@@ -113,7 +113,7 @@ namespace GorillaNetworking
 			return CosmeticsController.CosmeticSlots.Count;
 		}
 
-		// Token: 0x060011EC RID: 4588 RVA: 0x000661B9 File Offset: 0x000643B9
+		// Token: 0x060011F3 RID: 4595 RVA: 0x00066685 File Offset: 0x00064885
 		private static BodyDockPositions.DropPositions CosmeticSlotToDropPosition(CosmeticsController.CosmeticSlots slot)
 		{
 			switch (slot)
@@ -132,14 +132,14 @@ namespace GorillaNetworking
 			return BodyDockPositions.DropPositions.None;
 		}
 
-		// Token: 0x060011ED RID: 4589 RVA: 0x000661ED File Offset: 0x000643ED
+		// Token: 0x060011F4 RID: 4596 RVA: 0x000666B9 File Offset: 0x000648B9
 		private void SaveItemPreference(CosmeticsController.CosmeticSlots slot, int slotIdx, CosmeticsController.CosmeticItem newItem)
 		{
 			PlayerPrefs.SetString(CosmeticsController.CosmeticSet.SlotPlayerPreferenceName(slot), newItem.itemName);
 			PlayerPrefs.Save();
 		}
 
-		// Token: 0x060011EE RID: 4590 RVA: 0x00066208 File Offset: 0x00064408
+		// Token: 0x060011F5 RID: 4597 RVA: 0x000666D4 File Offset: 0x000648D4
 		public void SaveCurrentItemPreferences()
 		{
 			for (int i = 0; i < 10; i++)
@@ -149,7 +149,7 @@ namespace GorillaNetworking
 			}
 		}
 
-		// Token: 0x060011EF RID: 4591 RVA: 0x00066240 File Offset: 0x00064440
+		// Token: 0x060011F6 RID: 4598 RVA: 0x0006670C File Offset: 0x0006490C
 		private void ApplyCosmeticToSet(CosmeticsController.CosmeticSet set, CosmeticsController.CosmeticItem newItem, int slotIdx, CosmeticsController.CosmeticSlots slot, bool applyToPlayerPrefs, List<CosmeticsController.CosmeticSlots> appliedSlots)
 		{
 			CosmeticsController.CosmeticItem cosmeticItem = (set.items[slotIdx].itemName == newItem.itemName) ? this.nullItem : newItem;
@@ -161,7 +161,7 @@ namespace GorillaNetworking
 			appliedSlots.Add(slot);
 		}
 
-		// Token: 0x060011F0 RID: 4592 RVA: 0x0006629C File Offset: 0x0006449C
+		// Token: 0x060011F7 RID: 4599 RVA: 0x00066768 File Offset: 0x00064968
 		private void PrivApplyCosmeticItemToSet(CosmeticsController.CosmeticSet set, CosmeticsController.CosmeticItem newItem, bool isLeftHand, bool applyToPlayerPrefs, List<CosmeticsController.CosmeticSlots> appliedSlots)
 		{
 			if (newItem.isNullItem)
@@ -234,7 +234,7 @@ namespace GorillaNetworking
 			}
 		}
 
-		// Token: 0x060011F1 RID: 4593 RVA: 0x000664A0 File Offset: 0x000646A0
+		// Token: 0x060011F8 RID: 4600 RVA: 0x0006696C File Offset: 0x00064B6C
 		public List<CosmeticsController.CosmeticSlots> ApplyCosmeticItemToSet(CosmeticsController.CosmeticSet set, CosmeticsController.CosmeticItem newItem, bool isLeftHand, bool applyToPlayerPrefs)
 		{
 			List<CosmeticsController.CosmeticSlots> list = new List<CosmeticsController.CosmeticSlots>(2);
@@ -253,7 +253,7 @@ namespace GorillaNetworking
 			return list;
 		}
 
-		// Token: 0x060011F2 RID: 4594 RVA: 0x000664FC File Offset: 0x000646FC
+		// Token: 0x060011F9 RID: 4601 RVA: 0x000669C8 File Offset: 0x00064BC8
 		public void RemoveCosmeticItemFromSet(CosmeticsController.CosmeticSet set, string itemName, bool applyToPlayerPrefs)
 		{
 			this.cachedSet.CopyItems(set);
@@ -273,7 +273,7 @@ namespace GorillaNetworking
 			set.ActivateCosmetics(this.cachedSet, offlineVRRig, component, CosmeticsController.instance.nullItem, offlineVRRig.cosmeticsObjectRegistry);
 		}
 
-		// Token: 0x060011F3 RID: 4595 RVA: 0x00066590 File Offset: 0x00064790
+		// Token: 0x060011FA RID: 4602 RVA: 0x00066A5C File Offset: 0x00064C5C
 		public void PressFittingRoomButton(FittingRoomButton pressedFittingRoomButton, bool isLeftHand)
 		{
 			this.ApplyCosmeticItemToSet(this.tryOnSet, pressedFittingRoomButton.currentCosmeticItem, isLeftHand, false);
@@ -281,7 +281,7 @@ namespace GorillaNetworking
 			this.UpdateWornCosmetics(true);
 		}
 
-		// Token: 0x060011F4 RID: 4596 RVA: 0x000665B4 File Offset: 0x000647B4
+		// Token: 0x060011FB RID: 4603 RVA: 0x00066A80 File Offset: 0x00064C80
 		public void PressCosmeticStandButton(CosmeticStand pressedStand)
 		{
 			this.searchIndex = this.currentCart.IndexOf(pressedStand.thisCosmeticItem);
@@ -319,7 +319,7 @@ namespace GorillaNetworking
 			this.UpdateShoppingCart();
 		}
 
-		// Token: 0x060011F5 RID: 4597 RVA: 0x000666F4 File Offset: 0x000648F4
+		// Token: 0x060011FC RID: 4604 RVA: 0x00066BC0 File Offset: 0x00064DC0
 		public void PressWardrobeItemButton(CosmeticsController.CosmeticItem cosmeticItem, bool isLeftHand)
 		{
 			if (cosmeticItem.isNullItem)
@@ -335,7 +335,7 @@ namespace GorillaNetworking
 			this.UpdateWornCosmetics(true);
 		}
 
-		// Token: 0x060011F6 RID: 4598 RVA: 0x00066784 File Offset: 0x00064984
+		// Token: 0x060011FD RID: 4605 RVA: 0x00066C50 File Offset: 0x00064E50
 		public void PressWardrobeFunctionButton(string function)
 		{
 			if (!(function == "left"))
@@ -404,7 +404,7 @@ namespace GorillaNetworking
 			this.UpdateWardrobeModelsAndButtons();
 		}
 
-		// Token: 0x060011F7 RID: 4599 RVA: 0x000668EA File Offset: 0x00064AEA
+		// Token: 0x060011FE RID: 4606 RVA: 0x00066DB6 File Offset: 0x00064FB6
 		public void ClearCheckout()
 		{
 			this.itemToBuy = this.allCosmetics[0];
@@ -413,7 +413,7 @@ namespace GorillaNetworking
 			this.ProcessPurchaseItemState(null, false);
 		}
 
-		// Token: 0x060011F8 RID: 4600 RVA: 0x00066924 File Offset: 0x00064B24
+		// Token: 0x060011FF RID: 4607 RVA: 0x00066DF0 File Offset: 0x00064FF0
 		public void PressCheckoutCartButton(CheckoutCartButton pressedCheckoutCartButton, bool isLeftHand)
 		{
 			if (this.currentPurchaseItemStage != CosmeticsController.PurchaseItemStages.Buying)
@@ -447,13 +447,13 @@ namespace GorillaNetworking
 			}
 		}
 
-		// Token: 0x060011F9 RID: 4601 RVA: 0x00066A66 File Offset: 0x00064C66
+		// Token: 0x06001200 RID: 4608 RVA: 0x00066F32 File Offset: 0x00065132
 		public void PressPurchaseItemButton(PurchaseItemButton pressedPurchaseItemButton, bool isLeftHand)
 		{
 			this.ProcessPurchaseItemState(pressedPurchaseItemButton.buttonSide, isLeftHand);
 		}
 
-		// Token: 0x060011FA RID: 4602 RVA: 0x00066A78 File Offset: 0x00064C78
+		// Token: 0x06001201 RID: 4609 RVA: 0x00066F44 File Offset: 0x00065144
 		public void PressEarlyAccessButton()
 		{
 			this.SwitchToStage(CosmeticsController.ATMStages.Begin);
@@ -465,7 +465,7 @@ namespace GorillaNetworking
 			this.SwitchToStage(CosmeticsController.ATMStages.Purchasing);
 		}
 
-		// Token: 0x060011FB RID: 4603 RVA: 0x00066AC8 File Offset: 0x00064CC8
+		// Token: 0x06001202 RID: 4610 RVA: 0x00066F94 File Offset: 0x00065194
 		public void ProcessPurchaseItemState(string buttonSide, bool isLeftHand)
 		{
 			switch (this.currentPurchaseItemStage)
@@ -574,7 +574,7 @@ namespace GorillaNetworking
 			}
 		}
 
-		// Token: 0x060011FC RID: 4604 RVA: 0x00066F64 File Offset: 0x00065164
+		// Token: 0x06001203 RID: 4611 RVA: 0x00067430 File Offset: 0x00065630
 		public void FormattedPurchaseText(string finalLineVar)
 		{
 			this.finalLine = finalLineVar;
@@ -591,7 +591,7 @@ namespace GorillaNetworking
 			});
 		}
 
-		// Token: 0x060011FD RID: 4605 RVA: 0x00066FE8 File Offset: 0x000651E8
+		// Token: 0x06001204 RID: 4612 RVA: 0x000674B4 File Offset: 0x000656B4
 		public void PurchaseItem()
 		{
 			PlayFabClientAPI.PurchaseItem(new PurchaseItemRequest
@@ -644,7 +644,7 @@ namespace GorillaNetworking
 			}, null, null);
 		}
 
-		// Token: 0x060011FE RID: 4606 RVA: 0x00067054 File Offset: 0x00065254
+		// Token: 0x06001205 RID: 4613 RVA: 0x00067520 File Offset: 0x00065720
 		private void UnlockItem(string itemIdToUnlock)
 		{
 			int num = this.allCosmetics.FindIndex((CosmeticsController.CosmeticItem x) => itemIdToUnlock == x.itemName);
@@ -695,7 +695,7 @@ namespace GorillaNetworking
 			}
 		}
 
-		// Token: 0x060011FF RID: 4607 RVA: 0x000671E0 File Offset: 0x000653E0
+		// Token: 0x06001206 RID: 4614 RVA: 0x000676AC File Offset: 0x000658AC
 		private IEnumerator CheckIfMyCosmeticsUpdated(string itemToBuyID)
 		{
 			yield return new WaitForSeconds(1f);
@@ -753,7 +753,7 @@ namespace GorillaNetworking
 			yield break;
 		}
 
-		// Token: 0x06001200 RID: 4608 RVA: 0x000671F8 File Offset: 0x000653F8
+		// Token: 0x06001207 RID: 4615 RVA: 0x000676C4 File Offset: 0x000658C4
 		public void UpdateWardrobeModelsAndButtons()
 		{
 			foreach (CosmeticsController.Wardrobe wardrobe in this.wardrobes)
@@ -776,7 +776,7 @@ namespace GorillaNetworking
 			}
 		}
 
-		// Token: 0x06001201 RID: 4609 RVA: 0x00067444 File Offset: 0x00065644
+		// Token: 0x06001208 RID: 4616 RVA: 0x00067910 File Offset: 0x00065B10
 		public void UpdateShoppingCart()
 		{
 			this.iterator = 0;
@@ -805,7 +805,7 @@ namespace GorillaNetworking
 			this.UpdateWardrobeModelsAndButtons();
 		}
 
-		// Token: 0x06001202 RID: 4610 RVA: 0x00067624 File Offset: 0x00065824
+		// Token: 0x06001209 RID: 4617 RVA: 0x00067AF0 File Offset: 0x00065CF0
 		public void UpdateWornCosmetics(bool sync = false)
 		{
 			GorillaTagger.Instance.offlineVRRig.LocalUpdateCosmeticsWithTryon(this.currentWornSet, this.tryOnSet);
@@ -821,7 +821,7 @@ namespace GorillaNetworking
 			}
 		}
 
-		// Token: 0x06001203 RID: 4611 RVA: 0x0006769C File Offset: 0x0006589C
+		// Token: 0x0600120A RID: 4618 RVA: 0x00067B68 File Offset: 0x00065D68
 		public CosmeticsController.CosmeticItem GetItemFromDict(string itemID)
 		{
 			if (!this.allCosmeticsDict.TryGetValue(itemID, out this.cosmeticItemVar))
@@ -831,7 +831,7 @@ namespace GorillaNetworking
 			return this.cosmeticItemVar;
 		}
 
-		// Token: 0x06001204 RID: 4612 RVA: 0x000676BF File Offset: 0x000658BF
+		// Token: 0x0600120B RID: 4619 RVA: 0x00067B8B File Offset: 0x00065D8B
 		public string GetItemNameFromDisplayName(string displayName)
 		{
 			if (!this.allCosmeticsItemIDsfromDisplayNamesDict.TryGetValue(displayName, out this.returnString))
@@ -841,7 +841,7 @@ namespace GorillaNetworking
 			return this.returnString;
 		}
 
-		// Token: 0x06001205 RID: 4613 RVA: 0x000676E4 File Offset: 0x000658E4
+		// Token: 0x0600120C RID: 4620 RVA: 0x00067BB0 File Offset: 0x00065DB0
 		public bool AnyMatch(CosmeticsController.CosmeticSet set, CosmeticsController.CosmeticItem item)
 		{
 			if (item.itemCategory != CosmeticsController.CosmeticCategory.Set)
@@ -859,7 +859,7 @@ namespace GorillaNetworking
 			return item.bundledItems.Length >= 3 && (this.AnyMatch(set, this.GetItemFromDict(item.bundledItems[0])) || this.AnyMatch(set, this.GetItemFromDict(item.bundledItems[1])) || this.AnyMatch(set, this.GetItemFromDict(item.bundledItems[2])));
 		}
 
-		// Token: 0x06001206 RID: 4614 RVA: 0x000677B4 File Offset: 0x000659B4
+		// Token: 0x0600120D RID: 4621 RVA: 0x00067C80 File Offset: 0x00065E80
 		public void Initialize()
 		{
 			if (base.gameObject.activeSelf)
@@ -868,7 +868,7 @@ namespace GorillaNetworking
 			}
 		}
 
-		// Token: 0x06001207 RID: 4615 RVA: 0x000677C9 File Offset: 0x000659C9
+		// Token: 0x0600120E RID: 4622 RVA: 0x00067C95 File Offset: 0x00065E95
 		public void GetLastDailyLogin()
 		{
 			PlayFabClientAPI.GetUserReadOnlyData(new GetUserDataRequest(), delegate(GetUserDataResult result)
@@ -903,7 +903,7 @@ namespace GorillaNetworking
 			}, null, null);
 		}
 
-		// Token: 0x06001208 RID: 4616 RVA: 0x000677EF File Offset: 0x000659EF
+		// Token: 0x0600120F RID: 4623 RVA: 0x00067CBB File Offset: 0x00065EBB
 		private IEnumerator CheckCanGetDaily()
 		{
 			for (;;)
@@ -943,7 +943,7 @@ namespace GorillaNetworking
 			yield break;
 		}
 
-		// Token: 0x06001209 RID: 4617 RVA: 0x000677FE File Offset: 0x000659FE
+		// Token: 0x06001210 RID: 4624 RVA: 0x00067CCA File Offset: 0x00065ECA
 		private IEnumerator GetMyDaily()
 		{
 			yield return new WaitForSeconds(10f);
@@ -980,7 +980,7 @@ namespace GorillaNetworking
 			yield break;
 		}
 
-		// Token: 0x0600120A RID: 4618 RVA: 0x0006780D File Offset: 0x00065A0D
+		// Token: 0x06001211 RID: 4625 RVA: 0x00067CD9 File Offset: 0x00065ED9
 		public void GetUserCosmeticsAllowed()
 		{
 			PlayFabClientAPI.GetUserInventory(new GetUserInventoryRequest(), delegate(GetUserInventoryResult result)
@@ -1196,7 +1196,7 @@ namespace GorillaNetworking
 			}, null, null);
 		}
 
-		// Token: 0x0600120B RID: 4619 RVA: 0x00067834 File Offset: 0x00065A34
+		// Token: 0x06001212 RID: 4626 RVA: 0x00067D00 File Offset: 0x00065F00
 		private void SteamPurchase()
 		{
 			Debug.Log("attempting to purchase item through steam");
@@ -1269,7 +1269,7 @@ namespace GorillaNetworking
 			}, null, null);
 		}
 
-		// Token: 0x0600120C RID: 4620 RVA: 0x000678C4 File Offset: 0x00065AC4
+		// Token: 0x06001213 RID: 4627 RVA: 0x00067D90 File Offset: 0x00065F90
 		public void ProcessATMState(string currencyButton)
 		{
 			switch (this.currentATMStage)
@@ -1354,7 +1354,7 @@ namespace GorillaNetworking
 			}
 		}
 
-		// Token: 0x0600120D RID: 4621 RVA: 0x00067A50 File Offset: 0x00065C50
+		// Token: 0x06001214 RID: 4628 RVA: 0x00067F1C File Offset: 0x0006611C
 		public void SwitchToStage(CosmeticsController.ATMStages newStage)
 		{
 			this.currentATMStage = newStage;
@@ -1412,13 +1412,13 @@ namespace GorillaNetworking
 			}
 		}
 
-		// Token: 0x0600120E RID: 4622 RVA: 0x00067C40 File Offset: 0x00065E40
+		// Token: 0x06001215 RID: 4629 RVA: 0x0006810C File Offset: 0x0006630C
 		public void PressCurrencyPurchaseButton(string currencyPurchaseSize)
 		{
 			this.ProcessATMState(currencyPurchaseSize);
 		}
 
-		// Token: 0x0600120F RID: 4623 RVA: 0x00067C49 File Offset: 0x00065E49
+		// Token: 0x06001216 RID: 4630 RVA: 0x00068115 File Offset: 0x00066315
 		private void OnMicroTxnAuthorizationResponse(MicroTxnAuthorizationResponse_t pCallback)
 		{
 			PlayFabClientAPI.ConfirmPurchase(new ConfirmPurchaseRequest
@@ -1452,7 +1452,7 @@ namespace GorillaNetworking
 			}, null, null);
 		}
 
-		// Token: 0x06001210 RID: 4624 RVA: 0x00067C7C File Offset: 0x00065E7C
+		// Token: 0x06001217 RID: 4631 RVA: 0x00068148 File Offset: 0x00066348
 		public void UpdateCurrencyBoard()
 		{
 			this.FormattedPurchaseText(this.finalLine);
@@ -1468,7 +1468,7 @@ namespace GorillaNetworking
 			});
 		}
 
-		// Token: 0x06001211 RID: 4625 RVA: 0x00067D30 File Offset: 0x00065F30
+		// Token: 0x06001218 RID: 4632 RVA: 0x000681FC File Offset: 0x000663FC
 		public void GetCurrencyBalance()
 		{
 			PlayFabClientAPI.GetUserInventory(new GetUserInventoryRequest(), delegate(GetUserInventoryResult result)
@@ -1497,7 +1497,7 @@ namespace GorillaNetworking
 			}, null, null);
 		}
 
-		// Token: 0x06001212 RID: 4626 RVA: 0x00067D69 File Offset: 0x00065F69
+		// Token: 0x06001219 RID: 4633 RVA: 0x00068235 File Offset: 0x00066435
 		public string GetItemDisplayName(CosmeticsController.CosmeticItem item)
 		{
 			if (item.overrideDisplayName != null && item.overrideDisplayName != "")
@@ -1507,12 +1507,12 @@ namespace GorillaNetworking
 			return item.displayName;
 		}
 
-		// Token: 0x06001213 RID: 4627 RVA: 0x00067D92 File Offset: 0x00065F92
+		// Token: 0x0600121A RID: 4634 RVA: 0x0006825E File Offset: 0x0006645E
 		public void LeaveSystemMenu()
 		{
 		}
 
-		// Token: 0x06001214 RID: 4628 RVA: 0x00067D94 File Offset: 0x00065F94
+		// Token: 0x0600121B RID: 4635 RVA: 0x00068260 File Offset: 0x00066460
 		private void AlreadyOwnAllBundleButtons()
 		{
 			EarlyAccessButton[] array = this.earlyAccessButtons;
@@ -1522,365 +1522,365 @@ namespace GorillaNetworking
 			}
 		}
 
-		// Token: 0x040014C5 RID: 5317
+		// Token: 0x040014D2 RID: 5330
 		public static int maximumTransferrableItems = 5;
 
-		// Token: 0x040014C6 RID: 5318
+		// Token: 0x040014D3 RID: 5331
 		public static volatile CosmeticsController instance;
 
-		// Token: 0x040014C7 RID: 5319
+		// Token: 0x040014D4 RID: 5332
 		public List<CosmeticsController.CosmeticItem> allCosmetics;
 
-		// Token: 0x040014C8 RID: 5320
+		// Token: 0x040014D5 RID: 5333
 		public Dictionary<string, CosmeticsController.CosmeticItem> allCosmeticsDict = new Dictionary<string, CosmeticsController.CosmeticItem>();
 
-		// Token: 0x040014C9 RID: 5321
+		// Token: 0x040014D6 RID: 5334
 		public Dictionary<string, string> allCosmeticsItemIDsfromDisplayNamesDict = new Dictionary<string, string>();
 
-		// Token: 0x040014CA RID: 5322
+		// Token: 0x040014D7 RID: 5335
 		public CosmeticsController.CosmeticItem nullItem;
 
-		// Token: 0x040014CB RID: 5323
+		// Token: 0x040014D8 RID: 5336
 		public string catalog;
 
-		// Token: 0x040014CC RID: 5324
+		// Token: 0x040014D9 RID: 5337
 		private string[] tempStringArray;
 
-		// Token: 0x040014CD RID: 5325
+		// Token: 0x040014DA RID: 5338
 		private CosmeticsController.CosmeticItem tempItem;
 
-		// Token: 0x040014CE RID: 5326
+		// Token: 0x040014DB RID: 5339
 		public List<CatalogItem> catalogItems;
 
-		// Token: 0x040014CF RID: 5327
+		// Token: 0x040014DC RID: 5340
 		public bool tryTwice;
 
-		// Token: 0x040014D0 RID: 5328
+		// Token: 0x040014DD RID: 5341
 		[NonSerialized]
 		public CosmeticsController.CosmeticSet tryOnSet = new CosmeticsController.CosmeticSet();
 
-		// Token: 0x040014D1 RID: 5329
+		// Token: 0x040014DE RID: 5342
 		public FittingRoomButton[] fittingRoomButtons;
 
-		// Token: 0x040014D2 RID: 5330
+		// Token: 0x040014DF RID: 5343
 		public CosmeticStand[] cosmeticStands;
 
-		// Token: 0x040014D3 RID: 5331
+		// Token: 0x040014E0 RID: 5344
 		public List<CosmeticsController.CosmeticItem> currentCart = new List<CosmeticsController.CosmeticItem>();
 
-		// Token: 0x040014D4 RID: 5332
+		// Token: 0x040014E1 RID: 5345
 		public CosmeticsController.PurchaseItemStages currentPurchaseItemStage;
 
-		// Token: 0x040014D5 RID: 5333
+		// Token: 0x040014E2 RID: 5346
 		public CheckoutCartButton[] checkoutCartButtons;
 
-		// Token: 0x040014D6 RID: 5334
+		// Token: 0x040014E3 RID: 5347
 		public PurchaseItemButton leftPurchaseButton;
 
-		// Token: 0x040014D7 RID: 5335
+		// Token: 0x040014E4 RID: 5348
 		public PurchaseItemButton rightPurchaseButton;
 
-		// Token: 0x040014D8 RID: 5336
+		// Token: 0x040014E5 RID: 5349
 		public Text purchaseText;
 
-		// Token: 0x040014D9 RID: 5337
+		// Token: 0x040014E6 RID: 5350
 		public CosmeticsController.CosmeticItem itemToBuy;
 
-		// Token: 0x040014DA RID: 5338
+		// Token: 0x040014E7 RID: 5351
 		public HeadModel checkoutHeadModel;
 
-		// Token: 0x040014DB RID: 5339
+		// Token: 0x040014E8 RID: 5352
 		private List<string> playerIDList = new List<string>();
 
-		// Token: 0x040014DC RID: 5340
+		// Token: 0x040014E9 RID: 5353
 		private bool foundCosmetic;
 
-		// Token: 0x040014DD RID: 5341
+		// Token: 0x040014EA RID: 5354
 		private int attempts;
 
-		// Token: 0x040014DE RID: 5342
+		// Token: 0x040014EB RID: 5355
 		private string finalLine;
 
-		// Token: 0x040014DF RID: 5343
+		// Token: 0x040014EC RID: 5356
 		private bool purchaseLocked;
 
-		// Token: 0x040014E0 RID: 5344
+		// Token: 0x040014ED RID: 5357
 		private bool isLastHandTouchedLeft;
 
-		// Token: 0x040014E1 RID: 5345
+		// Token: 0x040014EE RID: 5358
 		private CosmeticsController.CosmeticSet cachedSet = new CosmeticsController.CosmeticSet();
 
-		// Token: 0x040014E2 RID: 5346
+		// Token: 0x040014EF RID: 5359
 		public CosmeticsController.Wardrobe[] wardrobes;
 
-		// Token: 0x040014E3 RID: 5347
+		// Token: 0x040014F0 RID: 5360
 		public List<CosmeticsController.CosmeticItem> unlockedCosmetics = new List<CosmeticsController.CosmeticItem>();
 
-		// Token: 0x040014E4 RID: 5348
+		// Token: 0x040014F1 RID: 5361
 		public List<CosmeticsController.CosmeticItem> unlockedHats = new List<CosmeticsController.CosmeticItem>();
 
-		// Token: 0x040014E5 RID: 5349
+		// Token: 0x040014F2 RID: 5362
 		public List<CosmeticsController.CosmeticItem> unlockedFaces = new List<CosmeticsController.CosmeticItem>();
 
-		// Token: 0x040014E6 RID: 5350
+		// Token: 0x040014F3 RID: 5363
 		public List<CosmeticsController.CosmeticItem> unlockedBadges = new List<CosmeticsController.CosmeticItem>();
 
-		// Token: 0x040014E7 RID: 5351
+		// Token: 0x040014F4 RID: 5364
 		public List<CosmeticsController.CosmeticItem> unlockedHoldable = new List<CosmeticsController.CosmeticItem>();
 
-		// Token: 0x040014E8 RID: 5352
+		// Token: 0x040014F5 RID: 5365
 		public int[] cosmeticsPages = new int[4];
 
-		// Token: 0x040014E9 RID: 5353
+		// Token: 0x040014F6 RID: 5366
 		private List<CosmeticsController.CosmeticItem>[] itemLists = new List<CosmeticsController.CosmeticItem>[4];
 
-		// Token: 0x040014EA RID: 5354
+		// Token: 0x040014F7 RID: 5367
 		private int wardrobeType;
 
-		// Token: 0x040014EB RID: 5355
+		// Token: 0x040014F8 RID: 5368
 		[NonSerialized]
 		public CosmeticsController.CosmeticSet currentWornSet = new CosmeticsController.CosmeticSet();
 
-		// Token: 0x040014EC RID: 5356
+		// Token: 0x040014F9 RID: 5369
 		public string concatStringCosmeticsAllowed = "";
 
-		// Token: 0x040014ED RID: 5357
+		// Token: 0x040014FA RID: 5370
 		public Text atmText;
 
-		// Token: 0x040014EE RID: 5358
+		// Token: 0x040014FB RID: 5371
 		public string currentAtmString;
 
-		// Token: 0x040014EF RID: 5359
+		// Token: 0x040014FC RID: 5372
 		public Text infoText;
 
-		// Token: 0x040014F0 RID: 5360
+		// Token: 0x040014FD RID: 5373
 		public Text earlyAccessText;
 
-		// Token: 0x040014F1 RID: 5361
+		// Token: 0x040014FE RID: 5374
 		public Text[] purchaseButtonText;
 
-		// Token: 0x040014F2 RID: 5362
+		// Token: 0x040014FF RID: 5375
 		public Text dailyText;
 
-		// Token: 0x040014F3 RID: 5363
+		// Token: 0x04001500 RID: 5376
 		public CosmeticsController.ATMStages currentATMStage;
 
-		// Token: 0x040014F4 RID: 5364
+		// Token: 0x04001501 RID: 5377
 		public Text atmButtonsText;
 
-		// Token: 0x040014F5 RID: 5365
+		// Token: 0x04001502 RID: 5378
 		public int currencyBalance;
 
-		// Token: 0x040014F6 RID: 5366
+		// Token: 0x04001503 RID: 5379
 		public string currencyName;
 
-		// Token: 0x040014F7 RID: 5367
+		// Token: 0x04001504 RID: 5380
 		public PurchaseCurrencyButton[] purchaseCurrencyButtons;
 
-		// Token: 0x040014F8 RID: 5368
+		// Token: 0x04001505 RID: 5381
 		public Text currencyBoardText;
 
-		// Token: 0x040014F9 RID: 5369
+		// Token: 0x04001506 RID: 5382
 		public Text currencyBoxText;
 
-		// Token: 0x040014FA RID: 5370
+		// Token: 0x04001507 RID: 5383
 		public string startingCurrencyBoxTextString;
 
-		// Token: 0x040014FB RID: 5371
+		// Token: 0x04001508 RID: 5384
 		public string successfulCurrencyPurchaseTextString;
 
-		// Token: 0x040014FC RID: 5372
+		// Token: 0x04001509 RID: 5385
 		public int numShinyRocksToBuy;
 
-		// Token: 0x040014FD RID: 5373
+		// Token: 0x0400150A RID: 5386
 		public float shinyRocksCost;
 
-		// Token: 0x040014FE RID: 5374
+		// Token: 0x0400150B RID: 5387
 		public string itemToPurchase;
 
-		// Token: 0x040014FF RID: 5375
+		// Token: 0x0400150C RID: 5388
 		public bool confirmedDidntPlayInBeta;
 
-		// Token: 0x04001500 RID: 5376
+		// Token: 0x0400150D RID: 5389
 		public bool playedInBeta;
 
-		// Token: 0x04001501 RID: 5377
+		// Token: 0x0400150E RID: 5390
 		public bool gotMyDaily;
 
-		// Token: 0x04001502 RID: 5378
+		// Token: 0x0400150F RID: 5391
 		public bool checkedDaily;
 
-		// Token: 0x04001503 RID: 5379
+		// Token: 0x04001510 RID: 5392
 		public string currentPurchaseID;
 
-		// Token: 0x04001504 RID: 5380
+		// Token: 0x04001511 RID: 5393
 		public bool hasPrice;
 
-		// Token: 0x04001505 RID: 5381
+		// Token: 0x04001512 RID: 5394
 		private int searchIndex;
 
-		// Token: 0x04001506 RID: 5382
+		// Token: 0x04001513 RID: 5395
 		private int iterator;
 
-		// Token: 0x04001507 RID: 5383
+		// Token: 0x04001514 RID: 5396
 		private CosmeticsController.CosmeticItem cosmeticItemVar;
 
-		// Token: 0x04001508 RID: 5384
+		// Token: 0x04001515 RID: 5397
 		public EarlyAccessButton[] earlyAccessButtons;
 
-		// Token: 0x04001509 RID: 5385
+		// Token: 0x04001516 RID: 5398
 		private BundleList bundleList = new BundleList();
 
-		// Token: 0x0400150A RID: 5386
+		// Token: 0x04001517 RID: 5399
 		public string BundleSkuName = "2023_spider_monke_bundle";
 
-		// Token: 0x0400150B RID: 5387
+		// Token: 0x04001518 RID: 5400
 		public string BundlePlayfabItemName = "LSABD.";
 
-		// Token: 0x0400150C RID: 5388
+		// Token: 0x04001519 RID: 5401
 		public int BundleShinyRocks = 10000;
 
-		// Token: 0x0400150D RID: 5389
+		// Token: 0x0400151A RID: 5402
 		public bool buyingBundle;
 
-		// Token: 0x0400150E RID: 5390
+		// Token: 0x0400151B RID: 5403
 		public DateTime currentTime;
 
-		// Token: 0x0400150F RID: 5391
+		// Token: 0x0400151C RID: 5404
 		public string lastDailyLogin;
 
-		// Token: 0x04001510 RID: 5392
+		// Token: 0x0400151D RID: 5405
 		public UserDataRecord userDataRecord;
 
-		// Token: 0x04001511 RID: 5393
+		// Token: 0x0400151E RID: 5406
 		public int secondsUntilTomorrow;
 
-		// Token: 0x04001512 RID: 5394
+		// Token: 0x0400151F RID: 5407
 		public float secondsToWaitToCheckDaily = 10f;
 
-		// Token: 0x04001513 RID: 5395
+		// Token: 0x04001520 RID: 5408
 		private string returnString;
 
-		// Token: 0x04001514 RID: 5396
+		// Token: 0x04001521 RID: 5409
 		protected Callback<MicroTxnAuthorizationResponse_t> m_MicroTxnAuthorizationResponse;
 
-		// Token: 0x020004B5 RID: 1205
+		// Token: 0x020004B7 RID: 1207
 		public enum PurchaseItemStages
 		{
-			// Token: 0x04001F7F RID: 8063
+			// Token: 0x04001F8C RID: 8076
 			Start,
-			// Token: 0x04001F80 RID: 8064
+			// Token: 0x04001F8D RID: 8077
 			CheckoutButtonPressed,
-			// Token: 0x04001F81 RID: 8065
+			// Token: 0x04001F8E RID: 8078
 			ItemSelected,
-			// Token: 0x04001F82 RID: 8066
+			// Token: 0x04001F8F RID: 8079
 			ItemOwned,
-			// Token: 0x04001F83 RID: 8067
+			// Token: 0x04001F90 RID: 8080
 			FinalPurchaseAcknowledgement,
-			// Token: 0x04001F84 RID: 8068
+			// Token: 0x04001F91 RID: 8081
 			Buying,
-			// Token: 0x04001F85 RID: 8069
+			// Token: 0x04001F92 RID: 8082
 			Success,
-			// Token: 0x04001F86 RID: 8070
+			// Token: 0x04001F93 RID: 8083
 			Failure
 		}
 
-		// Token: 0x020004B6 RID: 1206
+		// Token: 0x020004B8 RID: 1208
 		[Serializable]
 		public struct Wardrobe
 		{
-			// Token: 0x04001F87 RID: 8071
+			// Token: 0x04001F94 RID: 8084
 			public WardrobeItemButton[] wardrobeItemButtons;
 
-			// Token: 0x04001F88 RID: 8072
+			// Token: 0x04001F95 RID: 8085
 			public HeadModel selfDoll;
 		}
 
-		// Token: 0x020004B7 RID: 1207
+		// Token: 0x020004B9 RID: 1209
 		public enum ATMStages
 		{
-			// Token: 0x04001F8A RID: 8074
+			// Token: 0x04001F97 RID: 8087
 			Unavailable,
-			// Token: 0x04001F8B RID: 8075
+			// Token: 0x04001F98 RID: 8088
 			Begin,
-			// Token: 0x04001F8C RID: 8076
+			// Token: 0x04001F99 RID: 8089
 			Menu,
-			// Token: 0x04001F8D RID: 8077
+			// Token: 0x04001F9A RID: 8090
 			Balance,
-			// Token: 0x04001F8E RID: 8078
+			// Token: 0x04001F9B RID: 8091
 			Choose,
-			// Token: 0x04001F8F RID: 8079
+			// Token: 0x04001F9C RID: 8092
 			Confirm,
-			// Token: 0x04001F90 RID: 8080
+			// Token: 0x04001F9D RID: 8093
 			Purchasing,
-			// Token: 0x04001F91 RID: 8081
+			// Token: 0x04001F9E RID: 8094
 			Success,
-			// Token: 0x04001F92 RID: 8082
+			// Token: 0x04001F9F RID: 8095
 			Failure,
-			// Token: 0x04001F93 RID: 8083
+			// Token: 0x04001FA0 RID: 8096
 			Locked
 		}
 
-		// Token: 0x020004B8 RID: 1208
+		// Token: 0x020004BA RID: 1210
 		public enum CosmeticCategory
 		{
-			// Token: 0x04001F95 RID: 8085
+			// Token: 0x04001FA2 RID: 8098
 			None,
-			// Token: 0x04001F96 RID: 8086
+			// Token: 0x04001FA3 RID: 8099
 			Hat,
-			// Token: 0x04001F97 RID: 8087
+			// Token: 0x04001FA4 RID: 8100
 			Badge,
-			// Token: 0x04001F98 RID: 8088
+			// Token: 0x04001FA5 RID: 8101
 			Face,
-			// Token: 0x04001F99 RID: 8089
+			// Token: 0x04001FA6 RID: 8102
 			Holdable,
-			// Token: 0x04001F9A RID: 8090
+			// Token: 0x04001FA7 RID: 8103
 			Gloves,
-			// Token: 0x04001F9B RID: 8091
+			// Token: 0x04001FA8 RID: 8104
 			Slingshot,
-			// Token: 0x04001F9C RID: 8092
+			// Token: 0x04001FA9 RID: 8105
 			Count,
-			// Token: 0x04001F9D RID: 8093
+			// Token: 0x04001FAA RID: 8106
 			Set
 		}
 
-		// Token: 0x020004B9 RID: 1209
+		// Token: 0x020004BB RID: 1211
 		public enum CosmeticSlots
 		{
-			// Token: 0x04001F9F RID: 8095
+			// Token: 0x04001FAC RID: 8108
 			Hat,
-			// Token: 0x04001FA0 RID: 8096
+			// Token: 0x04001FAD RID: 8109
 			Badge,
-			// Token: 0x04001FA1 RID: 8097
+			// Token: 0x04001FAE RID: 8110
 			Face,
-			// Token: 0x04001FA2 RID: 8098
+			// Token: 0x04001FAF RID: 8111
 			ArmLeft,
-			// Token: 0x04001FA3 RID: 8099
+			// Token: 0x04001FB0 RID: 8112
 			ArmRight,
-			// Token: 0x04001FA4 RID: 8100
+			// Token: 0x04001FB1 RID: 8113
 			BackLeft,
-			// Token: 0x04001FA5 RID: 8101
+			// Token: 0x04001FB2 RID: 8114
 			BackRight,
-			// Token: 0x04001FA6 RID: 8102
+			// Token: 0x04001FB3 RID: 8115
 			HandLeft,
-			// Token: 0x04001FA7 RID: 8103
+			// Token: 0x04001FB4 RID: 8116
 			HandRight,
-			// Token: 0x04001FA8 RID: 8104
+			// Token: 0x04001FB5 RID: 8117
 			Chest,
-			// Token: 0x04001FA9 RID: 8105
+			// Token: 0x04001FB6 RID: 8118
 			Count
 		}
 
-		// Token: 0x020004BA RID: 1210
+		// Token: 0x020004BC RID: 1212
 		[Serializable]
 		public class CosmeticSet
 		{
 			// Token: 0x14000026 RID: 38
-			// (add) Token: 0x06001E55 RID: 7765 RVA: 0x0009E244 File Offset: 0x0009C444
-			// (remove) Token: 0x06001E56 RID: 7766 RVA: 0x0009E27C File Offset: 0x0009C47C
+			// (add) Token: 0x06001E5E RID: 7774 RVA: 0x0009E550 File Offset: 0x0009C750
+			// (remove) Token: 0x06001E5F RID: 7775 RVA: 0x0009E588 File Offset: 0x0009C788
 			public event CosmeticsController.CosmeticSet.OnSetActivatedHandler onSetActivatedEvent;
 
-			// Token: 0x06001E57 RID: 7767 RVA: 0x0009E2B1 File Offset: 0x0009C4B1
+			// Token: 0x06001E60 RID: 7776 RVA: 0x0009E5BD File Offset: 0x0009C7BD
 			protected void OnSetActivated(CosmeticsController.CosmeticSet prevSet, CosmeticsController.CosmeticSet currentSet, Photon.Realtime.Player player)
 			{
 				if (this.onSetActivatedEvent != null)
@@ -1889,13 +1889,13 @@ namespace GorillaNetworking
 				}
 			}
 
-			// Token: 0x06001E58 RID: 7768 RVA: 0x0009E2C9 File Offset: 0x0009C4C9
+			// Token: 0x06001E61 RID: 7777 RVA: 0x0009E5D5 File Offset: 0x0009C7D5
 			public CosmeticSet()
 			{
 				this.items = new CosmeticsController.CosmeticItem[10];
 			}
 
-			// Token: 0x06001E59 RID: 7769 RVA: 0x0009E2EC File Offset: 0x0009C4EC
+			// Token: 0x06001E62 RID: 7778 RVA: 0x0009E5F8 File Offset: 0x0009C7F8
 			public CosmeticSet(string[] itemNames, CosmeticsController controller)
 			{
 				this.items = new CosmeticsController.CosmeticItem[10];
@@ -1907,7 +1907,7 @@ namespace GorillaNetworking
 				}
 			}
 
-			// Token: 0x06001E5A RID: 7770 RVA: 0x0009E348 File Offset: 0x0009C548
+			// Token: 0x06001E63 RID: 7779 RVA: 0x0009E654 File Offset: 0x0009C854
 			public void CopyItems(CosmeticsController.CosmeticSet other)
 			{
 				for (int i = 0; i < this.items.Length; i++)
@@ -1916,7 +1916,7 @@ namespace GorillaNetworking
 				}
 			}
 
-			// Token: 0x06001E5B RID: 7771 RVA: 0x0009E380 File Offset: 0x0009C580
+			// Token: 0x06001E64 RID: 7780 RVA: 0x0009E68C File Offset: 0x0009C88C
 			public void MergeSets(CosmeticsController.CosmeticSet tryOn, CosmeticsController.CosmeticSet current)
 			{
 				for (int i = 0; i < 10; i++)
@@ -1932,7 +1932,7 @@ namespace GorillaNetworking
 				}
 			}
 
-			// Token: 0x06001E5C RID: 7772 RVA: 0x0009E3F0 File Offset: 0x0009C5F0
+			// Token: 0x06001E65 RID: 7781 RVA: 0x0009E6FC File Offset: 0x0009C8FC
 			public void ClearSet(CosmeticsController.CosmeticItem nullItem)
 			{
 				for (int i = 0; i < 10; i++)
@@ -1941,7 +1941,7 @@ namespace GorillaNetworking
 				}
 			}
 
-			// Token: 0x06001E5D RID: 7773 RVA: 0x0009E418 File Offset: 0x0009C618
+			// Token: 0x06001E66 RID: 7782 RVA: 0x0009E724 File Offset: 0x0009C924
 			public bool IsActive(string name)
 			{
 				int num = 10;
@@ -1955,7 +1955,7 @@ namespace GorillaNetworking
 				return false;
 			}
 
-			// Token: 0x06001E5E RID: 7774 RVA: 0x0009E450 File Offset: 0x0009C650
+			// Token: 0x06001E67 RID: 7783 RVA: 0x0009E75C File Offset: 0x0009C95C
 			public bool HasItemOfCategory(CosmeticsController.CosmeticCategory category)
 			{
 				int num = 10;
@@ -1969,7 +1969,7 @@ namespace GorillaNetworking
 				return false;
 			}
 
-			// Token: 0x06001E5F RID: 7775 RVA: 0x0009E498 File Offset: 0x0009C698
+			// Token: 0x06001E68 RID: 7784 RVA: 0x0009E7A4 File Offset: 0x0009C9A4
 			public bool HasItem(string name)
 			{
 				int num = 10;
@@ -1983,31 +1983,31 @@ namespace GorillaNetworking
 				return false;
 			}
 
-			// Token: 0x06001E60 RID: 7776 RVA: 0x0009E4E3 File Offset: 0x0009C6E3
+			// Token: 0x06001E69 RID: 7785 RVA: 0x0009E7EF File Offset: 0x0009C9EF
 			public static bool IsSlotLeftHanded(CosmeticsController.CosmeticSlots slot)
 			{
 				return slot == CosmeticsController.CosmeticSlots.ArmLeft || slot == CosmeticsController.CosmeticSlots.BackLeft || slot == CosmeticsController.CosmeticSlots.HandLeft;
 			}
 
-			// Token: 0x06001E61 RID: 7777 RVA: 0x0009E4F3 File Offset: 0x0009C6F3
+			// Token: 0x06001E6A RID: 7786 RVA: 0x0009E7FF File Offset: 0x0009C9FF
 			public static bool IsSlotRightHanded(CosmeticsController.CosmeticSlots slot)
 			{
 				return slot == CosmeticsController.CosmeticSlots.ArmRight || slot == CosmeticsController.CosmeticSlots.BackRight || slot == CosmeticsController.CosmeticSlots.HandRight;
 			}
 
-			// Token: 0x06001E62 RID: 7778 RVA: 0x0009E503 File Offset: 0x0009C703
+			// Token: 0x06001E6B RID: 7787 RVA: 0x0009E80F File Offset: 0x0009CA0F
 			public static bool IsHoldable(CosmeticsController.CosmeticItem item)
 			{
 				return item.itemCategory == CosmeticsController.CosmeticCategory.Holdable || item.itemCategory == CosmeticsController.CosmeticCategory.Slingshot;
 			}
 
-			// Token: 0x06001E63 RID: 7779 RVA: 0x0009E519 File Offset: 0x0009C719
+			// Token: 0x06001E6C RID: 7788 RVA: 0x0009E825 File Offset: 0x0009CA25
 			public static bool IsSlotHoldable(CosmeticsController.CosmeticSlots slot)
 			{
 				return slot == CosmeticsController.CosmeticSlots.ArmLeft || slot == CosmeticsController.CosmeticSlots.ArmRight || slot == CosmeticsController.CosmeticSlots.BackLeft || slot == CosmeticsController.CosmeticSlots.BackRight || slot == CosmeticsController.CosmeticSlots.Chest;
 			}
 
-			// Token: 0x06001E64 RID: 7780 RVA: 0x0009E534 File Offset: 0x0009C734
+			// Token: 0x06001E6D RID: 7789 RVA: 0x0009E840 File Offset: 0x0009CA40
 			public static CosmeticsController.CosmeticSlots OppositeSlot(CosmeticsController.CosmeticSlots slot)
 			{
 				switch (slot)
@@ -2037,13 +2037,13 @@ namespace GorillaNetworking
 				}
 			}
 
-			// Token: 0x06001E65 RID: 7781 RVA: 0x0009E588 File Offset: 0x0009C788
+			// Token: 0x06001E6E RID: 7790 RVA: 0x0009E894 File Offset: 0x0009CA94
 			public static string SlotPlayerPreferenceName(CosmeticsController.CosmeticSlots slot)
 			{
 				return "slot_" + slot.ToString();
 			}
 
-			// Token: 0x06001E66 RID: 7782 RVA: 0x0009E5A4 File Offset: 0x0009C7A4
+			// Token: 0x06001E6F RID: 7791 RVA: 0x0009E8B0 File Offset: 0x0009CAB0
 			private void ActivateHoldable(int cosmeticIdx, BodyDockPositions bDock, CosmeticsController.CosmeticItem nullItem)
 			{
 				BodyDockPositions.DropPositions dropPositions = CosmeticsController.CosmeticSlotToDropPosition((CosmeticsController.CosmeticSlots)cosmeticIdx);
@@ -2065,7 +2065,7 @@ namespace GorillaNetworking
 				}
 			}
 
-			// Token: 0x06001E67 RID: 7783 RVA: 0x0009E618 File Offset: 0x0009C818
+			// Token: 0x06001E70 RID: 7792 RVA: 0x0009E924 File Offset: 0x0009CB24
 			private void ActivateCosmeticItem(CosmeticsController.CosmeticSet prevSet, VRRig rig, int cosmeticIdx, CosmeticItemRegistry cosmeticsObjectRegistry, CosmeticsController.CosmeticItem nullItem)
 			{
 				CosmeticsController.CosmeticItem cosmeticItem = prevSet.items[cosmeticIdx];
@@ -2113,7 +2113,7 @@ namespace GorillaNetworking
 				}
 			}
 
-			// Token: 0x06001E68 RID: 7784 RVA: 0x0009E700 File Offset: 0x0009C900
+			// Token: 0x06001E71 RID: 7793 RVA: 0x0009EA0C File Offset: 0x0009CC0C
 			public void ActivateCosmetics(CosmeticsController.CosmeticSet prevSet, VRRig rig, BodyDockPositions bDock, CosmeticsController.CosmeticItem nullItem, CosmeticItemRegistry cosmeticsObjectRegistry)
 			{
 				int num = 10;
@@ -2131,7 +2131,7 @@ namespace GorillaNetworking
 				this.OnSetActivated(prevSet, this, rig.myPlayer);
 			}
 
-			// Token: 0x06001E69 RID: 7785 RVA: 0x0009E74C File Offset: 0x0009C94C
+			// Token: 0x06001E72 RID: 7794 RVA: 0x0009EA58 File Offset: 0x0009CC58
 			public void DeactivateAllCosmetcs(BodyDockPositions bDock, CosmeticsController.CosmeticItem nullItem, CosmeticItemRegistry cosmeticObjectRegistry)
 			{
 				bDock.DisableAllTransferableItems();
@@ -2155,7 +2155,7 @@ namespace GorillaNetworking
 				}
 			}
 
-			// Token: 0x06001E6A RID: 7786 RVA: 0x0009E7B4 File Offset: 0x0009C9B4
+			// Token: 0x06001E73 RID: 7795 RVA: 0x0009EAC0 File Offset: 0x0009CCC0
 			public void LoadFromPlayerPreferences(CosmeticsController controller)
 			{
 				int num = 10;
@@ -2174,7 +2174,7 @@ namespace GorillaNetworking
 				}
 			}
 
-			// Token: 0x06001E6B RID: 7787 RVA: 0x0009E834 File Offset: 0x0009CA34
+			// Token: 0x06001E74 RID: 7796 RVA: 0x0009EB40 File Offset: 0x0009CD40
 			public string[] ToDisplayNameArray()
 			{
 				int num = 10;
@@ -2185,7 +2185,7 @@ namespace GorillaNetworking
 				return this.returnArray;
 			}
 
-			// Token: 0x06001E6C RID: 7788 RVA: 0x0009E870 File Offset: 0x0009CA70
+			// Token: 0x06001E75 RID: 7797 RVA: 0x0009EB7C File Offset: 0x0009CD7C
 			public string[] HoldableDisplayNames(bool leftHoldables)
 			{
 				int num = 10;
@@ -2229,7 +2229,7 @@ namespace GorillaNetworking
 				return array;
 			}
 
-			// Token: 0x06001E6D RID: 7789 RVA: 0x0009E974 File Offset: 0x0009CB74
+			// Token: 0x06001E76 RID: 7798 RVA: 0x0009EC80 File Offset: 0x0009CE80
 			public bool[] ToOnRightSideArray()
 			{
 				int num = 10;
@@ -2248,49 +2248,49 @@ namespace GorillaNetworking
 				return array;
 			}
 
-			// Token: 0x04001FAA RID: 8106
+			// Token: 0x04001FB7 RID: 8119
 			public CosmeticsController.CosmeticItem[] items;
 
-			// Token: 0x04001FAC RID: 8108
+			// Token: 0x04001FB9 RID: 8121
 			public string[] returnArray = new string[10];
 
-			// Token: 0x0200054F RID: 1359
-			// (Invoke) Token: 0x06001FC7 RID: 8135
+			// Token: 0x02000551 RID: 1361
+			// (Invoke) Token: 0x06001FD0 RID: 8144
 			public delegate void OnSetActivatedHandler(CosmeticsController.CosmeticSet prevSet, CosmeticsController.CosmeticSet currentSet, Photon.Realtime.Player player);
 		}
 
-		// Token: 0x020004BB RID: 1211
+		// Token: 0x020004BD RID: 1213
 		[Serializable]
 		public struct CosmeticItem
 		{
-			// Token: 0x04001FAD RID: 8109
+			// Token: 0x04001FBA RID: 8122
 			public string itemName;
 
-			// Token: 0x04001FAE RID: 8110
+			// Token: 0x04001FBB RID: 8123
 			public CosmeticsController.CosmeticCategory itemCategory;
 
-			// Token: 0x04001FAF RID: 8111
+			// Token: 0x04001FBC RID: 8124
 			public Sprite itemPicture;
 
-			// Token: 0x04001FB0 RID: 8112
+			// Token: 0x04001FBD RID: 8125
 			public string displayName;
 
-			// Token: 0x04001FB1 RID: 8113
+			// Token: 0x04001FBE RID: 8126
 			public string overrideDisplayName;
 
-			// Token: 0x04001FB2 RID: 8114
+			// Token: 0x04001FBF RID: 8127
 			public int cost;
 
-			// Token: 0x04001FB3 RID: 8115
+			// Token: 0x04001FC0 RID: 8128
 			public string[] bundledItems;
 
-			// Token: 0x04001FB4 RID: 8116
+			// Token: 0x04001FC1 RID: 8129
 			public bool canTryOn;
 
-			// Token: 0x04001FB5 RID: 8117
+			// Token: 0x04001FC2 RID: 8130
 			public bool bothHandsHoldable;
 
-			// Token: 0x04001FB6 RID: 8118
+			// Token: 0x04001FC3 RID: 8131
 			[HideInInspector]
 			public bool isNullItem;
 		}

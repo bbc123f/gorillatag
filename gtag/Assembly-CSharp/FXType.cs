@@ -1,12 +1,14 @@
 ﻿using System;
 
-// Token: 0x020001F1 RID: 497
+// Token: 0x020001F2 RID: 498
 public enum FXType
 {
-	// Token: 0x04001014 RID: 4116
+	// Token: 0x04001018 RID: 4120
 	BalloonPop,
-	// Token: 0x04001015 RID: 4117
+	// Token: 0x04001019 RID: 4121
+	PlayHandTap,
+	// Token: 0x0400101A RID: 4122
 	HWIngredients,
-	// Token: 0x04001016 RID: 4118
+	// Token: 0x0400101B RID: 4123
 	Length
 }

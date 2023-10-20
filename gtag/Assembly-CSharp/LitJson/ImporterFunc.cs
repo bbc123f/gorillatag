@@ -2,7 +2,7 @@
 
 namespace LitJson
 {
-	// Token: 0x02000278 RID: 632
-	// (Invoke) Token: 0x0600100C RID: 4108
+	// Token: 0x02000279 RID: 633
+	// (Invoke) Token: 0x06001013 RID: 4115
 	internal delegate object ImporterFunc(object input);
 }

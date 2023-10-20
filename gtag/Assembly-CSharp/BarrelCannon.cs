@@ -330,33 +330,33 @@ public class BarrelCannon : MonoBehaviourPun, IPunObservable, IPunOwnershipCallb
 	// Token: 0x040000D7 RID: 215
 	private float localFiringPositionLerpValue;
 
-	// Token: 0x02000387 RID: 903
+	// Token: 0x02000389 RID: 905
 	private enum BarrelCannonState
 	{
-		// Token: 0x04001AF2 RID: 6898
+		// Token: 0x04001AFF RID: 6911
 		Idle,
-		// Token: 0x04001AF3 RID: 6899
+		// Token: 0x04001B00 RID: 6912
 		Loaded,
-		// Token: 0x04001AF4 RID: 6900
+		// Token: 0x04001B01 RID: 6913
 		MovingToFirePosition,
-		// Token: 0x04001AF5 RID: 6901
+		// Token: 0x04001B02 RID: 6914
 		Firing,
-		// Token: 0x04001AF6 RID: 6902
+		// Token: 0x04001B03 RID: 6915
 		PostFireCooldown,
-		// Token: 0x04001AF7 RID: 6903
+		// Token: 0x04001B04 RID: 6916
 		ReturningToIdlePosition
 	}
 
-	// Token: 0x02000388 RID: 904
+	// Token: 0x0200038A RID: 906
 	private class BarrelCannonSyncedState
 	{
-		// Token: 0x04001AF8 RID: 6904
+		// Token: 0x04001B05 RID: 6917
 		public BarrelCannon.BarrelCannonState currentState;
 
-		// Token: 0x04001AF9 RID: 6905
+		// Token: 0x04001B06 RID: 6918
 		public bool hasAuthorityPassenger;
 
-		// Token: 0x04001AFA RID: 6906
+		// Token: 0x04001B07 RID: 6919
 		public float firingPositionLerpValue;
 	}
 }

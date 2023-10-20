@@ -1,28 +1,28 @@
 ﻿using System;
 using UnityEngine;
 
-// Token: 0x02000221 RID: 545
+// Token: 0x02000222 RID: 546
 public class BezierCurve : MonoBehaviour
 {
-	// Token: 0x06000D78 RID: 3448 RVA: 0x0004E9FC File Offset: 0x0004CBFC
+	// Token: 0x06000D7E RID: 3454 RVA: 0x0004EC5C File Offset: 0x0004CE5C
 	public Vector3 GetPoint(float t)
 	{
 		return base.transform.TransformPoint(Bezier.GetPoint(this.points[0], this.points[1], this.points[2], this.points[3], t));
 	}
 
-	// Token: 0x06000D79 RID: 3449 RVA: 0x0004EA4C File Offset: 0x0004CC4C
+	// Token: 0x06000D7F RID: 3455 RVA: 0x0004ECAC File Offset: 0x0004CEAC
 	public Vector3 GetVelocity(float t)
 	{
 		return base.transform.TransformPoint(Bezier.GetFirstDerivative(this.points[0], this.points[1], this.points[2], this.points[3], t)) - base.transform.position;
 	}
 
-	// Token: 0x06000D7A RID: 3450 RVA: 0x0004EAAC File Offset: 0x0004CCAC
+	// Token: 0x06000D80 RID: 3456 RVA: 0x0004ED0C File Offset: 0x0004CF0C
 	public Vector3 GetDirection(float t)
 	{
 		return this.GetVelocity(t).normalized;
 	}
 
-	// Token: 0x06000D7B RID: 3451 RVA: 0x0004EAC8 File Offset: 0x0004CCC8
+	// Token: 0x06000D81 RID: 3457 RVA: 0x0004ED28 File Offset: 0x0004CF28
 	public void Reset()
 	{
 		this.points = new Vector3[]
@@ -34,6 +34,6 @@ public class BezierCurve : MonoBehaviour
 		};
 	}
 
-	// Token: 0x040010A5 RID: 4261
+	// Token: 0x040010AA RID: 4266
 	public Vector3[] points;
 }

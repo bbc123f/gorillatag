@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using GorillaExtensions;
 using GorillaLocomotion;
 using GorillaNetworking;
 using GorillaTag;
@@ -10,15 +11,15 @@ using PlayFab;
 using PlayFab.ClientModels;
 using UnityEngine;
 
-// Token: 0x02000172 RID: 370
+// Token: 0x02000173 RID: 371
 public abstract class GorillaGameManager : MonoBehaviourPunCallbacks, IInRoomCallbacks, IPunInstantiateMagicCallback
 {
 	// Token: 0x14000015 RID: 21
-	// (add) Token: 0x06000938 RID: 2360 RVA: 0x00037EA0 File Offset: 0x000360A0
-	// (remove) Token: 0x06000939 RID: 2361 RVA: 0x00037ED4 File Offset: 0x000360D4
+	// (add) Token: 0x0600093C RID: 2364 RVA: 0x00037DA0 File Offset: 0x00035FA0
+	// (remove) Token: 0x0600093D RID: 2365 RVA: 0x00037DD4 File Offset: 0x00035FD4
 	public static event GorillaGameManager.OnTouchDelegate OnTouch;
 
-	// Token: 0x0600093A RID: 2362 RVA: 0x00037F07 File Offset: 0x00036107
+	// Token: 0x0600093E RID: 2366 RVA: 0x00037E07 File Offset: 0x00036007
 	public virtual void Awake()
 	{
 		this.currentRoom = PhotonNetwork.CurrentRoom;
@@ -28,7 +29,7 @@ public abstract class GorillaGameManager : MonoBehaviourPunCallbacks, IInRoomCal
 		this.playerProjectiles.Add(PhotonNetwork.LocalPlayer, new List<GorillaGameManager.ProjectileInfo>());
 	}
 
-	// Token: 0x0600093B RID: 2363 RVA: 0x00037F44 File Offset: 0x00036144
+	// Token: 0x0600093F RID: 2367 RVA: 0x00037E44 File Offset: 0x00036044
 	public virtual void Update()
 	{
 		if (GorillaGameManager.instance == null)
@@ -80,24 +81,24 @@ public abstract class GorillaGameManager : MonoBehaviourPunCallbacks, IInRoomCal
 		}
 	}
 
-	// Token: 0x0600093C RID: 2364 RVA: 0x000380A0 File Offset: 0x000362A0
+	// Token: 0x06000940 RID: 2368 RVA: 0x00037FA0 File Offset: 0x000361A0
 	public virtual void InfrequentUpdate()
 	{
 		this.currentPlayerArray = PhotonNetwork.PlayerList;
 	}
 
-	// Token: 0x0600093D RID: 2365 RVA: 0x000380AD File Offset: 0x000362AD
+	// Token: 0x06000941 RID: 2369 RVA: 0x00037FAD File Offset: 0x000361AD
 	public virtual string GameMode()
 	{
 		return "NONE";
 	}
 
-	// Token: 0x0600093E RID: 2366 RVA: 0x000380B4 File Offset: 0x000362B4
+	// Token: 0x06000942 RID: 2370 RVA: 0x00037FB4 File Offset: 0x000361B4
 	public virtual void ReportTag(Photon.Realtime.Player taggedPlayer, Photon.Realtime.Player taggingPlayer)
 	{
 	}
 
-	// Token: 0x0600093F RID: 2367 RVA: 0x000380B6 File Offset: 0x000362B6
+	// Token: 0x06000943 RID: 2371 RVA: 0x00037FB6 File Offset: 0x000361B6
 	public virtual void ReportTouch(Photon.Realtime.Player taggedPlayer, Photon.Realtime.Player taggingPlayer)
 	{
 		Debug.Log("Dispatching Touch");
@@ -107,18 +108,18 @@ public abstract class GorillaGameManager : MonoBehaviourPunCallbacks, IInRoomCal
 		}
 	}
 
-	// Token: 0x06000940 RID: 2368 RVA: 0x000380D5 File Offset: 0x000362D5
+	// Token: 0x06000944 RID: 2372 RVA: 0x00037FD5 File Offset: 0x000361D5
 	public virtual void ReportContactWithLava(Photon.Realtime.Player player)
 	{
 	}
 
-	// Token: 0x06000941 RID: 2369 RVA: 0x000380D7 File Offset: 0x000362D7
+	// Token: 0x06000945 RID: 2373 RVA: 0x00037FD7 File Offset: 0x000361D7
 	public virtual bool LavaWouldAffectPlayer(Photon.Realtime.Player player, bool enteredLavaThisFrame)
 	{
 		return false;
 	}
 
-	// Token: 0x06000942 RID: 2370 RVA: 0x000380DC File Offset: 0x000362DC
+	// Token: 0x06000946 RID: 2374 RVA: 0x00037FDC File Offset: 0x000361DC
 	public void ReportStep(VRRig steppingRig, bool isLeftHand, float velocityRatio)
 	{
 		float num = 0f;
@@ -137,7 +138,7 @@ public abstract class GorillaGameManager : MonoBehaviourPunCallbacks, IInRoomCal
 		Debug.Log("bbbb:sending tap to " + isLeftHand.ToString() + " at volume " + Mathf.Max(velocityRatio * this.stepVolumeMax, this.stepVolumeMin).ToString());
 	}
 
-	// Token: 0x06000943 RID: 2371 RVA: 0x00038168 File Offset: 0x00036368
+	// Token: 0x06000947 RID: 2375 RVA: 0x00038068 File Offset: 0x00036268
 	void IPunInstantiateMagicCallback.OnPhotonInstantiate(PhotonMessageInfo info)
 	{
 		GorillaNot.IncrementRPCCall(info, "OnPhotonInstantiate");
@@ -198,18 +199,18 @@ public abstract class GorillaGameManager : MonoBehaviourPunCallbacks, IInRoomCal
 		}
 	}
 
-	// Token: 0x06000944 RID: 2372 RVA: 0x000383A6 File Offset: 0x000365A6
+	// Token: 0x06000948 RID: 2376 RVA: 0x000382A6 File Offset: 0x000364A6
 	public virtual void NewVRRig(Photon.Realtime.Player player, int vrrigPhotonViewID, bool didTutorial)
 	{
 	}
 
-	// Token: 0x06000945 RID: 2373 RVA: 0x000383A8 File Offset: 0x000365A8
+	// Token: 0x06000949 RID: 2377 RVA: 0x000382A8 File Offset: 0x000364A8
 	public virtual bool LocalCanTag(Photon.Realtime.Player myPlayer, Photon.Realtime.Player otherPlayer)
 	{
 		return false;
 	}
 
-	// Token: 0x06000946 RID: 2374 RVA: 0x000383AB File Offset: 0x000365AB
+	// Token: 0x0600094A RID: 2378 RVA: 0x000382AB File Offset: 0x000364AB
 	public virtual PhotonView FindVRRigForPlayer(Photon.Realtime.Player player)
 	{
 		VRRig vrrig = this.FindPlayerVRRig(player);
@@ -220,7 +221,7 @@ public abstract class GorillaGameManager : MonoBehaviourPunCallbacks, IInRoomCal
 		return vrrig.photonView;
 	}
 
-	// Token: 0x06000947 RID: 2375 RVA: 0x000383BF File Offset: 0x000365BF
+	// Token: 0x0600094B RID: 2379 RVA: 0x000382BF File Offset: 0x000364BF
 	public virtual VRRig FindPlayerVRRig(Photon.Realtime.Player player)
 	{
 		this.returnRig = null;
@@ -236,7 +237,7 @@ public abstract class GorillaGameManager : MonoBehaviourPunCallbacks, IInRoomCal
 		return this.returnRig;
 	}
 
-	// Token: 0x06000948 RID: 2376 RVA: 0x00038400 File Offset: 0x00036600
+	// Token: 0x0600094C RID: 2380 RVA: 0x00038300 File Offset: 0x00036500
 	public static VRRig StaticFindRigForPlayer(Photon.Realtime.Player player)
 	{
 		VRRig result = null;
@@ -252,7 +253,7 @@ public abstract class GorillaGameManager : MonoBehaviourPunCallbacks, IInRoomCal
 		return result;
 	}
 
-	// Token: 0x06000949 RID: 2377 RVA: 0x00038445 File Offset: 0x00036645
+	// Token: 0x0600094D RID: 2381 RVA: 0x00038345 File Offset: 0x00036545
 	[PunRPC]
 	public virtual void ReportTagRPC(Photon.Realtime.Player taggedPlayer, PhotonMessageInfo info)
 	{
@@ -260,7 +261,7 @@ public abstract class GorillaGameManager : MonoBehaviourPunCallbacks, IInRoomCal
 		this.ReportTag(taggedPlayer, info.Sender);
 	}
 
-	// Token: 0x0600094A RID: 2378 RVA: 0x00038460 File Offset: 0x00036660
+	// Token: 0x0600094E RID: 2382 RVA: 0x00038360 File Offset: 0x00036560
 	[PunRPC]
 	public virtual void ReportContactWithLavaRPC(PhotonMessageInfo info)
 	{
@@ -273,7 +274,7 @@ public abstract class GorillaGameManager : MonoBehaviourPunCallbacks, IInRoomCal
 		}
 	}
 
-	// Token: 0x0600094B RID: 2379 RVA: 0x000384EC File Offset: 0x000366EC
+	// Token: 0x0600094F RID: 2383 RVA: 0x000383EC File Offset: 0x000365EC
 	public void AttemptGetNewPlayerCosmetic(Photon.Realtime.Player playerToUpdate, int attempts)
 	{
 		List<string> list = new List<string>();
@@ -329,7 +330,7 @@ public abstract class GorillaGameManager : MonoBehaviourPunCallbacks, IInRoomCal
 		}, null, null);
 	}
 
-	// Token: 0x0600094C RID: 2380 RVA: 0x0003859F File Offset: 0x0003679F
+	// Token: 0x06000950 RID: 2384 RVA: 0x0003849F File Offset: 0x0003669F
 	public override void OnPlayerLeftRoom(Photon.Realtime.Player otherPlayer)
 	{
 		base.OnPlayerLeftRoom(otherPlayer);
@@ -338,21 +339,21 @@ public abstract class GorillaGameManager : MonoBehaviourPunCallbacks, IInRoomCal
 		this.currentPlayerArray = PhotonNetwork.PlayerList;
 	}
 
-	// Token: 0x0600094D RID: 2381 RVA: 0x000385D7 File Offset: 0x000367D7
+	// Token: 0x06000951 RID: 2385 RVA: 0x000384D7 File Offset: 0x000366D7
 	public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
 	{
 		base.OnPlayerEnteredRoom(newPlayer);
 		this.currentPlayerArray = PhotonNetwork.PlayerList;
 	}
 
-	// Token: 0x0600094E RID: 2382 RVA: 0x000385EB File Offset: 0x000367EB
+	// Token: 0x06000952 RID: 2386 RVA: 0x000384EB File Offset: 0x000366EB
 	public override void OnJoinedRoom()
 	{
 		base.OnJoinedRoom();
 		this.currentPlayerArray = PhotonNetwork.PlayerList;
 	}
 
-	// Token: 0x0600094F RID: 2383 RVA: 0x000385FE File Offset: 0x000367FE
+	// Token: 0x06000953 RID: 2387 RVA: 0x000384FE File Offset: 0x000366FE
 	[PunRPC]
 	public void UpdatePlayerCosmetic(PhotonMessageInfo info)
 	{
@@ -360,7 +361,7 @@ public abstract class GorillaGameManager : MonoBehaviourPunCallbacks, IInRoomCal
 		PlayerCosmeticsSystem.UpdatePlayerCosmetics(info.Sender);
 	}
 
-	// Token: 0x06000950 RID: 2384 RVA: 0x00038618 File Offset: 0x00036818
+	// Token: 0x06000954 RID: 2388 RVA: 0x00038518 File Offset: 0x00036718
 	[PunRPC]
 	public void JoinPubWithFriends(string shufflerStr, string keyStr, PhotonMessageInfo info)
 	{
@@ -374,7 +375,7 @@ public abstract class GorillaGameManager : MonoBehaviourPunCallbacks, IInRoomCal
 		GorillaNot.instance.SendReport("possible kick attempt", info.Sender.UserId, info.Sender.NickName);
 	}
 
-	// Token: 0x06000951 RID: 2385 RVA: 0x000386A9 File Offset: 0x000368A9
+	// Token: 0x06000955 RID: 2389 RVA: 0x000385A9 File Offset: 0x000367A9
 	public virtual float[] LocalPlayerSpeed()
 	{
 		this.playerSpeed[0] = this.slowJumpLimit;
@@ -382,7 +383,7 @@ public abstract class GorillaGameManager : MonoBehaviourPunCallbacks, IInRoomCal
 		return this.playerSpeed;
 	}
 
-	// Token: 0x06000952 RID: 2386 RVA: 0x000386D0 File Offset: 0x000368D0
+	// Token: 0x06000956 RID: 2390 RVA: 0x000385D0 File Offset: 0x000367D0
 	public bool FindUserIDInRoom(string userID)
 	{
 		Photon.Realtime.Player[] playerList = PhotonNetwork.PlayerList;
@@ -396,13 +397,13 @@ public abstract class GorillaGameManager : MonoBehaviourPunCallbacks, IInRoomCal
 		return true;
 	}
 
-	// Token: 0x06000953 RID: 2387 RVA: 0x00038704 File Offset: 0x00036904
+	// Token: 0x06000957 RID: 2391 RVA: 0x00038604 File Offset: 0x00036804
 	public virtual int MyMatIndex(Photon.Realtime.Player forPlayer)
 	{
 		return 0;
 	}
 
-	// Token: 0x06000954 RID: 2388 RVA: 0x00038708 File Offset: 0x00036908
+	// Token: 0x06000958 RID: 2392 RVA: 0x00038608 File Offset: 0x00036808
 	public virtual void DestroyInvalidManager()
 	{
 		if (PhotonNetwork.InRoom)
@@ -425,11 +426,16 @@ public abstract class GorillaGameManager : MonoBehaviourPunCallbacks, IInRoomCal
 		}
 	}
 
-	// Token: 0x06000955 RID: 2389 RVA: 0x00038780 File Offset: 0x00036980
+	// Token: 0x06000959 RID: 2393 RVA: 0x00038680 File Offset: 0x00036880
 	[PunRPC]
 	public void LaunchSlingshotProjectile(Vector3 slingshotLaunchLocation, Vector3 slingshotLaunchVelocity, int projHash, int trailHash, bool forLeftHand, int projectileCount, bool shouldOverrideColor, float colorR, float colorG, float colorB, float colorA, PhotonMessageInfo info)
 	{
 		GorillaNot.IncrementRPCCall(info, "LaunchSlingshotProjectile");
+		if (!slingshotLaunchLocation.IsValid() || !slingshotLaunchVelocity.IsValid() || !float.IsFinite(colorR) || !float.IsFinite(colorG) || !float.IsFinite(colorB) || !float.IsFinite(colorA))
+		{
+			GorillaNot.instance.SendReport("invalid projectile state", info.Sender.UserId, info.Sender.NickName);
+			return;
+		}
 		this.tempRig = this.FindPlayerVRRig(info.Sender);
 		if (this.tempRig != null && (this.tempRig.transform.position - slingshotLaunchLocation).magnitude < this.tagDistanceThreshold)
 		{
@@ -437,11 +443,16 @@ public abstract class GorillaGameManager : MonoBehaviourPunCallbacks, IInRoomCal
 		}
 	}
 
-	// Token: 0x06000956 RID: 2390 RVA: 0x00038814 File Offset: 0x00036A14
+	// Token: 0x0600095A RID: 2394 RVA: 0x00038774 File Offset: 0x00036974
 	[PunRPC]
 	public void SpawnSlingshotPlayerImpactEffect(Vector3 hitLocation, float teamColorR, float teamColorG, float teamColorB, float teamColorA, int projectileCount, PhotonMessageInfo info)
 	{
 		GorillaNot.IncrementRPCCall(info, "SpawnSlingshotPlayerImpactEffect");
+		if (!hitLocation.IsValid() || !float.IsFinite(teamColorR) || !float.IsFinite(teamColorG) || !float.IsFinite(teamColorB) || !float.IsFinite(teamColorA))
+		{
+			GorillaNot.instance.SendReport("invalid impact state", info.Sender.UserId, info.Sender.NickName);
+			return;
+		}
 		this.tempRig = this.FindPlayerVRRig(info.Sender);
 		if (this.tempRig == null)
 		{
@@ -454,14 +465,14 @@ public abstract class GorillaGameManager : MonoBehaviourPunCallbacks, IInRoomCal
 		gameObject.GetComponent<GorillaColorizableBase>().SetColor(color);
 	}
 
-	// Token: 0x06000957 RID: 2391 RVA: 0x000388AB File Offset: 0x00036AAB
+	// Token: 0x0600095B RID: 2395 RVA: 0x00038860 File Offset: 0x00036A60
 	public int IncrementLocalPlayerProjectileCount()
 	{
 		this.localPlayerProjectileCounter++;
 		return this.localPlayerProjectileCounter;
 	}
 
-	// Token: 0x06000958 RID: 2392 RVA: 0x000388C1 File Offset: 0x00036AC1
+	// Token: 0x0600095C RID: 2396 RVA: 0x00038876 File Offset: 0x00036A76
 	public static void OnInstanceReady(Action action)
 	{
 		GorillaParent.OnReplicatedClientReady(delegate
@@ -475,13 +486,13 @@ public abstract class GorillaGameManager : MonoBehaviourPunCallbacks, IInRoomCal
 		});
 	}
 
-	// Token: 0x06000959 RID: 2393 RVA: 0x000388DF File Offset: 0x00036ADF
+	// Token: 0x0600095D RID: 2397 RVA: 0x00038894 File Offset: 0x00036A94
 	public static void ReplicatedClientReady()
 	{
 		GorillaGameManager.replicatedClientReady = true;
 	}
 
-	// Token: 0x0600095A RID: 2394 RVA: 0x000388E7 File Offset: 0x00036AE7
+	// Token: 0x0600095E RID: 2398 RVA: 0x0003889C File Offset: 0x00036A9C
 	public static void OnReplicatedClientReady(Action action)
 	{
 		if (GorillaGameManager.replicatedClientReady)
@@ -492,137 +503,137 @@ public abstract class GorillaGameManager : MonoBehaviourPunCallbacks, IInRoomCal
 		GorillaGameManager.onReplicatedClientReady = (Action)Delegate.Combine(GorillaGameManager.onReplicatedClientReady, action);
 	}
 
-	// Token: 0x04000B44 RID: 2884
+	// Token: 0x04000B48 RID: 2888
 	public static volatile GorillaGameManager instance;
 
-	// Token: 0x04000B45 RID: 2885
+	// Token: 0x04000B49 RID: 2889
 	public Room currentRoom;
 
-	// Token: 0x04000B46 RID: 2886
+	// Token: 0x04000B4A RID: 2890
 	public object obj;
 
-	// Token: 0x04000B47 RID: 2887
+	// Token: 0x04000B4B RID: 2891
 	public float stepVolumeMax = 0.2f;
 
-	// Token: 0x04000B48 RID: 2888
+	// Token: 0x04000B4C RID: 2892
 	public float stepVolumeMin = 0.05f;
 
-	// Token: 0x04000B49 RID: 2889
+	// Token: 0x04000B4D RID: 2893
 	public float fastJumpLimit;
 
-	// Token: 0x04000B4A RID: 2890
+	// Token: 0x04000B4E RID: 2894
 	public float fastJumpMultiplier;
 
-	// Token: 0x04000B4B RID: 2891
+	// Token: 0x04000B4F RID: 2895
 	public float slowJumpLimit;
 
-	// Token: 0x04000B4C RID: 2892
+	// Token: 0x04000B50 RID: 2896
 	public float slowJumpMultiplier;
 
-	// Token: 0x04000B4D RID: 2893
+	// Token: 0x04000B51 RID: 2897
 	public byte roomSize;
 
-	// Token: 0x04000B4E RID: 2894
+	// Token: 0x04000B52 RID: 2898
 	public float lastCheck;
 
-	// Token: 0x04000B4F RID: 2895
+	// Token: 0x04000B53 RID: 2899
 	public float checkCooldown = 3f;
 
-	// Token: 0x04000B50 RID: 2896
+	// Token: 0x04000B54 RID: 2900
 	public float userDecayTime = 15f;
 
-	// Token: 0x04000B51 RID: 2897
+	// Token: 0x04000B55 RID: 2901
 	public Dictionary<int, VRRig> playerVRRigDict = new Dictionary<int, VRRig>();
 
-	// Token: 0x04000B52 RID: 2898
+	// Token: 0x04000B56 RID: 2902
 	public Dictionary<string, float> expectedUsersDecay = new Dictionary<string, float>();
 
-	// Token: 0x04000B53 RID: 2899
+	// Token: 0x04000B57 RID: 2903
 	public Dictionary<int, string> playerCosmeticsLookup = new Dictionary<int, string>();
 
-	// Token: 0x04000B54 RID: 2900
+	// Token: 0x04000B58 RID: 2904
 	public string tempString;
 
-	// Token: 0x04000B55 RID: 2901
+	// Token: 0x04000B59 RID: 2905
 	public float startingToLookForFriend;
 
-	// Token: 0x04000B56 RID: 2902
+	// Token: 0x04000B5A RID: 2906
 	public float timeToSpendLookingForFriend = 10f;
 
-	// Token: 0x04000B57 RID: 2903
+	// Token: 0x04000B5B RID: 2907
 	public bool successfullyFoundFriend;
 
-	// Token: 0x04000B58 RID: 2904
+	// Token: 0x04000B5C RID: 2908
 	public int maxProjectilesToKeepTrackOfPerPlayer = 50;
 
-	// Token: 0x04000B59 RID: 2905
+	// Token: 0x04000B5D RID: 2909
 	public GameObject playerImpactEffectPrefab;
 
-	// Token: 0x04000B5A RID: 2906
+	// Token: 0x04000B5E RID: 2910
 	private int localPlayerProjectileCounter;
 
-	// Token: 0x04000B5B RID: 2907
+	// Token: 0x04000B5F RID: 2911
 	public Dictionary<Photon.Realtime.Player, List<GorillaGameManager.ProjectileInfo>> playerProjectiles = new Dictionary<Photon.Realtime.Player, List<GorillaGameManager.ProjectileInfo>>();
 
-	// Token: 0x04000B5C RID: 2908
+	// Token: 0x04000B60 RID: 2912
 	public float tagDistanceThreshold = 8f;
 
-	// Token: 0x04000B5D RID: 2909
+	// Token: 0x04000B61 RID: 2913
 	public bool testAssault;
 
-	// Token: 0x04000B5E RID: 2910
+	// Token: 0x04000B62 RID: 2914
 	public bool endGameManually;
 
-	// Token: 0x04000B5F RID: 2911
+	// Token: 0x04000B63 RID: 2915
 	public Photon.Realtime.Player currentMasterClient;
 
-	// Token: 0x04000B60 RID: 2912
+	// Token: 0x04000B64 RID: 2916
 	public PhotonView returnPhotonView;
 
-	// Token: 0x04000B61 RID: 2913
+	// Token: 0x04000B65 RID: 2917
 	public VRRig returnRig;
 
-	// Token: 0x04000B62 RID: 2914
+	// Token: 0x04000B66 RID: 2918
 	private Photon.Realtime.Player outPlayer;
 
-	// Token: 0x04000B63 RID: 2915
+	// Token: 0x04000B67 RID: 2919
 	private int outInt;
 
-	// Token: 0x04000B64 RID: 2916
+	// Token: 0x04000B68 RID: 2920
 	private VRRig tempRig;
 
-	// Token: 0x04000B65 RID: 2917
+	// Token: 0x04000B69 RID: 2921
 	public Photon.Realtime.Player[] currentPlayerArray;
 
-	// Token: 0x04000B66 RID: 2918
+	// Token: 0x04000B6A RID: 2922
 	public float[] playerSpeed = new float[2];
 
-	// Token: 0x04000B67 RID: 2919
+	// Token: 0x04000B6B RID: 2923
 	public List<string> prefabsToInstantiateByPath = new List<string>();
 
-	// Token: 0x04000B68 RID: 2920
+	// Token: 0x04000B6C RID: 2924
 	private List<GameObject> prefabsInstantiated = new List<GameObject>();
 
-	// Token: 0x04000B69 RID: 2921
+	// Token: 0x04000B6D RID: 2925
 	private RigContainer outContainer;
 
-	// Token: 0x04000B6A RID: 2922
+	// Token: 0x04000B6E RID: 2926
 	private static Action onInstanceReady;
 
-	// Token: 0x04000B6B RID: 2923
+	// Token: 0x04000B6F RID: 2927
 	private static bool replicatedClientReady;
 
-	// Token: 0x04000B6C RID: 2924
+	// Token: 0x04000B70 RID: 2928
 	private static Action onReplicatedClientReady;
 
-	// Token: 0x0200041E RID: 1054
-	// (Invoke) Token: 0x06001C53 RID: 7251
+	// Token: 0x02000420 RID: 1056
+	// (Invoke) Token: 0x06001C5C RID: 7260
 	public delegate void OnTouchDelegate(Photon.Realtime.Player taggedPlayer, Photon.Realtime.Player taggingPlayer);
 
-	// Token: 0x0200041F RID: 1055
+	// Token: 0x02000421 RID: 1057
 	public struct ProjectileInfo
 	{
-		// Token: 0x06001C56 RID: 7254 RVA: 0x00097684 File Offset: 0x00095884
+		// Token: 0x06001C5F RID: 7263 RVA: 0x00097B6C File Offset: 0x00095D6C
 		public ProjectileInfo(double newTime, Vector3 newVel, Vector3 origin, int newCount, float newScale)
 		{
 			this.timeLaunched = newTime;
@@ -632,19 +643,19 @@ public abstract class GorillaGameManager : MonoBehaviourPunCallbacks, IInRoomCal
 			this.scale = newScale;
 		}
 
-		// Token: 0x04001D17 RID: 7447
+		// Token: 0x04001D24 RID: 7460
 		public double timeLaunched;
 
-		// Token: 0x04001D18 RID: 7448
+		// Token: 0x04001D25 RID: 7461
 		public Vector3 shotVelocity;
 
-		// Token: 0x04001D19 RID: 7449
+		// Token: 0x04001D26 RID: 7462
 		public Vector3 launchOrigin;
 
-		// Token: 0x04001D1A RID: 7450
+		// Token: 0x04001D27 RID: 7463
 		public int projectileCount;
 
-		// Token: 0x04001D1B RID: 7451
+		// Token: 0x04001D28 RID: 7464
 		public float scale;
 	}
 }

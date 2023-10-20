@@ -2,24 +2,24 @@
 
 namespace OculusSampleFramework
 {
-	// Token: 0x020002DF RID: 735
+	// Token: 0x020002E1 RID: 737
 	public interface InteractableToolView
 	{
-		// Token: 0x17000152 RID: 338
-		// (get) Token: 0x060013D5 RID: 5077
+		// Token: 0x17000154 RID: 340
+		// (get) Token: 0x060013DC RID: 5084
 		InteractableTool InteractableTool { get; }
 
-		// Token: 0x060013D6 RID: 5078
+		// Token: 0x060013DD RID: 5085
 		void SetFocusedInteractable(Interactable interactable);
 
-		// Token: 0x17000153 RID: 339
-		// (get) Token: 0x060013D7 RID: 5079
-		// (set) Token: 0x060013D8 RID: 5080
+		// Token: 0x17000155 RID: 341
+		// (get) Token: 0x060013DE RID: 5086
+		// (set) Token: 0x060013DF RID: 5087
 		bool EnableState { get; set; }
 
-		// Token: 0x17000154 RID: 340
-		// (get) Token: 0x060013D9 RID: 5081
-		// (set) Token: 0x060013DA RID: 5082
+		// Token: 0x17000156 RID: 342
+		// (get) Token: 0x060013E0 RID: 5088
+		// (set) Token: 0x060013E1 RID: 5089
 		bool ToolActivateState { get; set; }
 	}
 }

@@ -2,11 +2,11 @@
 
 namespace BoingKit
 {
-	// Token: 0x02000378 RID: 888
+	// Token: 0x0200037A RID: 890
 	public struct BitArray
 	{
-		// Token: 0x170001BB RID: 443
-		// (get) Token: 0x06001A38 RID: 6712 RVA: 0x00091F5C File Offset: 0x0009015C
+		// Token: 0x170001BD RID: 445
+		// (get) Token: 0x06001A41 RID: 6721 RVA: 0x00092444 File Offset: 0x00090644
 		public int[] Blocks
 		{
 			get
@@ -15,19 +15,19 @@ namespace BoingKit
 			}
 		}
 
-		// Token: 0x06001A39 RID: 6713 RVA: 0x00091F64 File Offset: 0x00090164
+		// Token: 0x06001A42 RID: 6722 RVA: 0x0009244C File Offset: 0x0009064C
 		private static int GetBlockIndex(int index)
 		{
 			return index / 4;
 		}
 
-		// Token: 0x06001A3A RID: 6714 RVA: 0x00091F69 File Offset: 0x00090169
+		// Token: 0x06001A43 RID: 6723 RVA: 0x00092451 File Offset: 0x00090651
 		private static int GetSubIndex(int index)
 		{
 			return index % 4;
 		}
 
-		// Token: 0x06001A3B RID: 6715 RVA: 0x00091F70 File Offset: 0x00090170
+		// Token: 0x06001A44 RID: 6724 RVA: 0x00092458 File Offset: 0x00090658
 		private static void SetBit(int index, bool value, int[] blocks)
 		{
 			int blockIndex = BitArray.GetBlockIndex(index);
@@ -40,13 +40,13 @@ namespace BoingKit
 			blocks[blockIndex] &= ~(1 << subIndex);
 		}
 
-		// Token: 0x06001A3C RID: 6716 RVA: 0x00091FB2 File Offset: 0x000901B2
+		// Token: 0x06001A45 RID: 6725 RVA: 0x0009249A File Offset: 0x0009069A
 		private static bool IsBitSet(int index, int[] blocks)
 		{
 			return (blocks[BitArray.GetBlockIndex(index)] & 1 << BitArray.GetSubIndex(index)) != 0;
 		}
 
-		// Token: 0x06001A3D RID: 6717 RVA: 0x00091FCC File Offset: 0x000901CC
+		// Token: 0x06001A46 RID: 6726 RVA: 0x000924B4 File Offset: 0x000906B4
 		public BitArray(int capacity)
 		{
 			int num = (capacity + 4 - 1) / 4;
@@ -54,7 +54,7 @@ namespace BoingKit
 			this.Clear();
 		}
 
-		// Token: 0x06001A3E RID: 6718 RVA: 0x00091FF4 File Offset: 0x000901F4
+		// Token: 0x06001A47 RID: 6727 RVA: 0x000924DC File Offset: 0x000906DC
 		public void Resize(int capacity)
 		{
 			int num = (capacity + 4 - 1) / 4;
@@ -73,13 +73,13 @@ namespace BoingKit
 			this.m_aBlock = array;
 		}
 
-		// Token: 0x06001A3F RID: 6719 RVA: 0x00092043 File Offset: 0x00090243
+		// Token: 0x06001A48 RID: 6728 RVA: 0x0009252B File Offset: 0x0009072B
 		public void Clear()
 		{
 			this.SetAllBits(false);
 		}
 
-		// Token: 0x06001A40 RID: 6720 RVA: 0x0009204C File Offset: 0x0009024C
+		// Token: 0x06001A49 RID: 6729 RVA: 0x00092534 File Offset: 0x00090734
 		public void SetAllBits(bool value)
 		{
 			int num = value ? -1 : 1;
@@ -92,19 +92,19 @@ namespace BoingKit
 			}
 		}
 
-		// Token: 0x06001A41 RID: 6721 RVA: 0x0009207F File Offset: 0x0009027F
+		// Token: 0x06001A4A RID: 6730 RVA: 0x00092567 File Offset: 0x00090767
 		public void SetBit(int index, bool value)
 		{
 			BitArray.SetBit(index, value, this.m_aBlock);
 		}
 
-		// Token: 0x06001A42 RID: 6722 RVA: 0x0009208E File Offset: 0x0009028E
+		// Token: 0x06001A4B RID: 6731 RVA: 0x00092576 File Offset: 0x00090776
 		public bool IsBitSet(int index)
 		{
 			return BitArray.IsBitSet(index, this.m_aBlock);
 		}
 
-		// Token: 0x04001AA7 RID: 6823
+		// Token: 0x04001AB4 RID: 6836
 		private int[] m_aBlock;
 	}
 }

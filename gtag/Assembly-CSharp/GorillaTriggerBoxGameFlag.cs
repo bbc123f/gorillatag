@@ -5,7 +5,7 @@ using UnityEngine;
 // Token: 0x02000146 RID: 326
 public class GorillaTriggerBoxGameFlag : GorillaTriggerBox
 {
-	// Token: 0x06000836 RID: 2102 RVA: 0x0003330C File Offset: 0x0003150C
+	// Token: 0x06000837 RID: 2103 RVA: 0x0003314C File Offset: 0x0003134C
 	public override void OnBoxTriggered()
 	{
 		base.OnBoxTriggered();

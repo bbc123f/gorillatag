@@ -6,14 +6,14 @@ using UnityEngine.XR;
 [Serializable]
 public class VRMap
 {
-	// Token: 0x060005AF RID: 1455 RVA: 0x000236D4 File Offset: 0x000218D4
+	// Token: 0x060005AF RID: 1455 RVA: 0x000234C8 File Offset: 0x000216C8
 	public void MapOther(float lerpValue)
 	{
 		this.rigTarget.localPosition = Vector3.Lerp(this.rigTarget.localPosition, this.syncPos, lerpValue);
 		this.rigTarget.localRotation = Quaternion.Lerp(this.rigTarget.localRotation, this.syncRotation, lerpValue);
 	}
 
-	// Token: 0x060005B0 RID: 1456 RVA: 0x00023728 File Offset: 0x00021928
+	// Token: 0x060005B0 RID: 1456 RVA: 0x0002351C File Offset: 0x0002171C
 	public void MapMine(float ratio, Transform playerOffsetTransform)
 	{
 		if (this.overrideTarget != null)
@@ -34,19 +34,19 @@ public class VRMap
 		}
 	}
 
-	// Token: 0x060005B1 RID: 1457 RVA: 0x00023879 File Offset: 0x00021A79
+	// Token: 0x060005B1 RID: 1457 RVA: 0x0002366D File Offset: 0x0002186D
 	public virtual void MapOtherFinger(float handSync, float lerpValue)
 	{
 		this.calcT = handSync;
 		this.LerpFinger(lerpValue, true);
 	}
 
-	// Token: 0x060005B2 RID: 1458 RVA: 0x0002388A File Offset: 0x00021A8A
+	// Token: 0x060005B2 RID: 1458 RVA: 0x0002367E File Offset: 0x0002187E
 	public virtual void MapMyFinger(float lerpValue)
 	{
 	}
 
-	// Token: 0x060005B3 RID: 1459 RVA: 0x0002388C File Offset: 0x00021A8C
+	// Token: 0x060005B3 RID: 1459 RVA: 0x00023680 File Offset: 0x00021880
 	public virtual void LerpFinger(float lerpValue, bool isOther)
 	{
 	}

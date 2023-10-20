@@ -4,8 +4,8 @@ using UnityEngine;
 // Token: 0x0200013F RID: 319
 public class GorillaPlaySpace : MonoBehaviour
 {
-	// Token: 0x17000059 RID: 89
-	// (get) Token: 0x06000827 RID: 2087 RVA: 0x00033136 File Offset: 0x00031336
+	// Token: 0x1700005A RID: 90
+	// (get) Token: 0x06000828 RID: 2088 RVA: 0x00032F76 File Offset: 0x00031176
 	public static GorillaPlaySpace Instance
 	{
 		get
@@ -14,7 +14,7 @@ public class GorillaPlaySpace : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000828 RID: 2088 RVA: 0x0003313D File Offset: 0x0003133D
+	// Token: 0x06000829 RID: 2089 RVA: 0x00032F7D File Offset: 0x0003117D
 	private void Awake()
 	{
 		if (GorillaPlaySpace._instance != null && GorillaPlaySpace._instance != this)

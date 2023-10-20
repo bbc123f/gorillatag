@@ -5,10 +5,10 @@ using UnityEngine;
 
 namespace GorillaLocomotion.Climbing
 {
-	// Token: 0x020002A6 RID: 678
+	// Token: 0x020002A8 RID: 680
 	public class GorillaVelocityTracker : MonoBehaviour
 	{
-		// Token: 0x060011A2 RID: 4514 RVA: 0x000644B8 File Offset: 0x000626B8
+		// Token: 0x060011A9 RID: 4521 RVA: 0x00064920 File Offset: 0x00062B20
 		public void ResetState()
 		{
 			this.trans = base.transform;
@@ -21,19 +21,19 @@ namespace GorillaLocomotion.Climbing
 			this.lastWorldSpacePos = this.GetPosition(true);
 		}
 
-		// Token: 0x060011A3 RID: 4515 RVA: 0x00064537 File Offset: 0x00062737
+		// Token: 0x060011AA RID: 4522 RVA: 0x0006499F File Offset: 0x00062B9F
 		private void Awake()
 		{
 			this.ResetState();
 		}
 
-		// Token: 0x060011A4 RID: 4516 RVA: 0x0006453F File Offset: 0x0006273F
+		// Token: 0x060011AB RID: 4523 RVA: 0x000649A7 File Offset: 0x00062BA7
 		private void OnDisable()
 		{
 			this.ResetState();
 		}
 
-		// Token: 0x060011A5 RID: 4517 RVA: 0x00064547 File Offset: 0x00062747
+		// Token: 0x060011AC RID: 4524 RVA: 0x000649AF File Offset: 0x00062BAF
 		private Vector3 GetPosition(bool worldSpace)
 		{
 			if (worldSpace)
@@ -47,13 +47,13 @@ namespace GorillaLocomotion.Climbing
 			return this.trans.localPosition;
 		}
 
-		// Token: 0x060011A6 RID: 4518 RVA: 0x00064582 File Offset: 0x00062782
+		// Token: 0x060011AD RID: 4525 RVA: 0x000649EA File Offset: 0x00062BEA
 		private void Update()
 		{
 			this.Tick();
 		}
 
-		// Token: 0x060011A7 RID: 4519 RVA: 0x0006458C File Offset: 0x0006278C
+		// Token: 0x060011AE RID: 4526 RVA: 0x000649F4 File Offset: 0x00062BF4
 		public void Tick()
 		{
 			if (Time.frameCount <= this.lastTickedFrame)
@@ -80,7 +80,7 @@ namespace GorillaLocomotion.Climbing
 			this.lastTickedFrame = Time.frameCount;
 		}
 
-		// Token: 0x060011A8 RID: 4520 RVA: 0x00064679 File Offset: 0x00062879
+		// Token: 0x060011AF RID: 4527 RVA: 0x00064AE1 File Offset: 0x00062CE1
 		private void AddToQueue(ref List<GorillaVelocityTracker.VelocityDataPoint> dataPoints, GorillaVelocityTracker.VelocityDataPoint newData)
 		{
 			dataPoints.Add(newData);
@@ -90,7 +90,7 @@ namespace GorillaLocomotion.Climbing
 			}
 		}
 
-		// Token: 0x060011A9 RID: 4521 RVA: 0x0006469C File Offset: 0x0006289C
+		// Token: 0x060011B0 RID: 4528 RVA: 0x00064B04 File Offset: 0x00062D04
 		public Vector3 GetAverageVelocity(bool worldSpace = false, float maxTimeFromPast = 0.15f, bool doMagnitudeCheck = false)
 		{
 			float num = maxTimeFromPast / 2f;
@@ -143,7 +143,7 @@ namespace GorillaLocomotion.Climbing
 			return Vector3.zero;
 		}
 
-		// Token: 0x060011AA RID: 4522 RVA: 0x000647AC File Offset: 0x000629AC
+		// Token: 0x060011B1 RID: 4529 RVA: 0x00064C14 File Offset: 0x00062E14
 		public Vector3 GetLatestVelocity(bool worldSpace = false)
 		{
 			GorillaVelocityTracker.VelocityDataPoint[] array;
@@ -158,7 +158,7 @@ namespace GorillaLocomotion.Climbing
 			return array[this.currentDataPointIndex].delta;
 		}
 
-		// Token: 0x060011AB RID: 4523 RVA: 0x000647DC File Offset: 0x000629DC
+		// Token: 0x060011B2 RID: 4530 RVA: 0x00064C44 File Offset: 0x00062E44
 		public float GetAverageSpeedChangeMagnitudeInDirection(Vector3 dir, bool worldSpace = false, float maxTimeFromPast = 0.05f)
 		{
 			GorillaVelocityTracker.VelocityDataPoint[] array;
@@ -202,7 +202,7 @@ namespace GorillaLocomotion.Climbing
 			return num / (float)num2;
 		}
 
-		// Token: 0x060011AD RID: 4525 RVA: 0x0006489C File Offset: 0x00062A9C
+		// Token: 0x060011B4 RID: 4532 RVA: 0x00064D04 File Offset: 0x00062F04
 		[CompilerGenerated]
 		private void <ResetState>g__PopulateArray|10_0(GorillaVelocityTracker.VelocityDataPoint[] array)
 		{
@@ -212,7 +212,7 @@ namespace GorillaLocomotion.Climbing
 			}
 		}
 
-		// Token: 0x060011AE RID: 4526 RVA: 0x000648C4 File Offset: 0x00062AC4
+		// Token: 0x060011B5 RID: 4533 RVA: 0x00064D2C File Offset: 0x00062F2C
 		[CompilerGenerated]
 		internal static void <GetAverageVelocity>g__AddPoint|17_0(GorillaVelocityTracker.VelocityDataPoint point, ref GorillaVelocityTracker.<>c__DisplayClass17_0 A_1)
 		{
@@ -222,45 +222,45 @@ namespace GorillaLocomotion.Climbing
 			A_1.added = added + 1;
 		}
 
-		// Token: 0x0400145B RID: 5211
+		// Token: 0x04001468 RID: 5224
 		[SerializeField]
 		private int maxDataPoints = 20;
 
-		// Token: 0x0400145C RID: 5212
+		// Token: 0x04001469 RID: 5225
 		[SerializeField]
 		private Transform relativeTo;
 
-		// Token: 0x0400145D RID: 5213
+		// Token: 0x0400146A RID: 5226
 		private int currentDataPointIndex;
 
-		// Token: 0x0400145E RID: 5214
+		// Token: 0x0400146B RID: 5227
 		private GorillaVelocityTracker.VelocityDataPoint[] localSpaceData;
 
-		// Token: 0x0400145F RID: 5215
+		// Token: 0x0400146C RID: 5228
 		private GorillaVelocityTracker.VelocityDataPoint[] worldSpaceData;
 
-		// Token: 0x04001460 RID: 5216
+		// Token: 0x0400146D RID: 5229
 		private Transform trans;
 
-		// Token: 0x04001461 RID: 5217
+		// Token: 0x0400146E RID: 5230
 		private Vector3 lastWorldSpacePos;
 
-		// Token: 0x04001462 RID: 5218
+		// Token: 0x0400146F RID: 5231
 		private Vector3 lastLocalSpacePos;
 
-		// Token: 0x04001463 RID: 5219
+		// Token: 0x04001470 RID: 5232
 		private bool isRelativeTo;
 
-		// Token: 0x04001464 RID: 5220
+		// Token: 0x04001471 RID: 5233
 		private int lastTickedFrame = -1;
 
-		// Token: 0x020004AD RID: 1197
+		// Token: 0x020004AF RID: 1199
 		public class VelocityDataPoint
 		{
-			// Token: 0x04001F66 RID: 8038
+			// Token: 0x04001F73 RID: 8051
 			public Vector3 delta;
 
-			// Token: 0x04001F67 RID: 8039
+			// Token: 0x04001F74 RID: 8052
 			public float time = -1f;
 		}
 	}

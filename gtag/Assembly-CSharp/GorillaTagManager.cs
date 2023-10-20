@@ -6,10 +6,10 @@ using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
 
-// Token: 0x02000185 RID: 389
+// Token: 0x02000186 RID: 390
 public class GorillaTagManager : GorillaGameManager, IInRoomCallbacks, IMatchmakingCallbacks, IPunObservable
 {
-	// Token: 0x060009F6 RID: 2550 RVA: 0x0003DA8D File Offset: 0x0003BC8D
+	// Token: 0x060009FB RID: 2555 RVA: 0x0003DBBD File Offset: 0x0003BDBD
 	public override void Awake()
 	{
 		base.Awake();
@@ -20,7 +20,7 @@ public class GorillaTagManager : GorillaGameManager, IInRoomCallbacks, IMatchmak
 		Debug.Log(PhotonNetwork.CurrentRoom.ToStringFull());
 	}
 
-	// Token: 0x060009F7 RID: 2551 RVA: 0x0003DAB8 File Offset: 0x0003BCB8
+	// Token: 0x060009FC RID: 2556 RVA: 0x0003DBE8 File Offset: 0x0003BDE8
 	public void UpdateState()
 	{
 		if (base.photonView.IsMine)
@@ -67,7 +67,7 @@ public class GorillaTagManager : GorillaGameManager, IInRoomCallbacks, IMatchmak
 		}
 	}
 
-	// Token: 0x060009F8 RID: 2552 RVA: 0x0003DC10 File Offset: 0x0003BE10
+	// Token: 0x060009FD RID: 2557 RVA: 0x0003DD40 File Offset: 0x0003BF40
 	public override void InfrequentUpdate()
 	{
 		if (base.photonView.IsMine)
@@ -84,7 +84,7 @@ public class GorillaTagManager : GorillaGameManager, IInRoomCallbacks, IMatchmak
 		this.inspectorLocalPlayerSpeed = this.LocalPlayerSpeed();
 	}
 
-	// Token: 0x060009F9 RID: 2553 RVA: 0x0003DC9C File Offset: 0x0003BE9C
+	// Token: 0x060009FE RID: 2558 RVA: 0x0003DDCC File Offset: 0x0003BFCC
 	public IEnumerator InfectionEnd()
 	{
 		while ((double)Time.time < this.timeInfectedGameEnded + (double)this.tagCoolDown)
@@ -110,7 +110,7 @@ public class GorillaTagManager : GorillaGameManager, IInRoomCallbacks, IMatchmak
 		yield break;
 	}
 
-	// Token: 0x060009FA RID: 2554 RVA: 0x0003DCAC File Offset: 0x0003BEAC
+	// Token: 0x060009FF RID: 2559 RVA: 0x0003DDDC File Offset: 0x0003BFDC
 	public void UpdateInfectionState()
 	{
 		if (base.photonView.IsMine)
@@ -130,7 +130,7 @@ public class GorillaTagManager : GorillaGameManager, IInRoomCallbacks, IMatchmak
 		}
 	}
 
-	// Token: 0x060009FB RID: 2555 RVA: 0x0003DD28 File Offset: 0x0003BF28
+	// Token: 0x06000A00 RID: 2560 RVA: 0x0003DE58 File Offset: 0x0003C058
 	public void UpdateTagState(bool withTagFreeze = true)
 	{
 		if (base.photonView.IsMine)
@@ -158,7 +158,7 @@ public class GorillaTagManager : GorillaGameManager, IInRoomCallbacks, IMatchmak
 		}
 	}
 
-	// Token: 0x060009FC RID: 2556 RVA: 0x0003DDBC File Offset: 0x0003BFBC
+	// Token: 0x06000A01 RID: 2561 RVA: 0x0003DEEC File Offset: 0x0003C0EC
 	private void EndInfectionGame()
 	{
 		if (base.photonView.IsMine)
@@ -182,7 +182,7 @@ public class GorillaTagManager : GorillaGameManager, IInRoomCallbacks, IMatchmak
 		}
 	}
 
-	// Token: 0x060009FD RID: 2557 RVA: 0x0003DE58 File Offset: 0x0003C058
+	// Token: 0x06000A02 RID: 2562 RVA: 0x0003DF88 File Offset: 0x0003C188
 	private Player[] CurrentInfectionPlayers()
 	{
 		this.returnPlayerList.Clear();
@@ -196,7 +196,7 @@ public class GorillaTagManager : GorillaGameManager, IInRoomCallbacks, IMatchmak
 		return this.returnPlayerList.ToArray();
 	}
 
-	// Token: 0x060009FE RID: 2558 RVA: 0x0003DEC8 File Offset: 0x0003C0C8
+	// Token: 0x06000A03 RID: 2563 RVA: 0x0003DFF8 File Offset: 0x0003C1F8
 	public override bool LocalCanTag(Player myPlayer, Player otherPlayer)
 	{
 		if (!this.IsGameModeTag())
@@ -210,7 +210,7 @@ public class GorillaTagManager : GorillaGameManager, IInRoomCallbacks, IMatchmak
 		return this.currentInfected.Contains(myPlayer) && !this.currentInfected.Contains(otherPlayer);
 	}
 
-	// Token: 0x060009FF RID: 2559 RVA: 0x0003DF19 File Offset: 0x0003C119
+	// Token: 0x06000A04 RID: 2564 RVA: 0x0003E049 File Offset: 0x0003C249
 	private float InterpolatedInfectedJumpMultiplier(int infectedCount)
 	{
 		if (this.currentPlayerArray.Length == 1)
@@ -220,7 +220,7 @@ public class GorillaTagManager : GorillaGameManager, IInRoomCallbacks, IMatchmak
 		return (this.fastJumpMultiplier - this.slowJumpMultiplier) / (float)(this.currentPlayerArray.Length - 1) * (float)(this.currentPlayerArray.Length - infectedCount) + this.slowJumpMultiplier;
 	}
 
-	// Token: 0x06000A00 RID: 2560 RVA: 0x0003DF59 File Offset: 0x0003C159
+	// Token: 0x06000A05 RID: 2565 RVA: 0x0003E089 File Offset: 0x0003C289
 	private float InterpolatedInfectedJumpSpeed(int infectedCount)
 	{
 		if (this.currentPlayerArray.Length == 1)
@@ -230,7 +230,7 @@ public class GorillaTagManager : GorillaGameManager, IInRoomCallbacks, IMatchmak
 		return (this.fastJumpLimit - this.slowJumpLimit) / (float)(this.currentPlayerArray.Length - 1) * (float)(this.currentPlayerArray.Length - infectedCount) + this.slowJumpLimit;
 	}
 
-	// Token: 0x06000A01 RID: 2561 RVA: 0x0003DF99 File Offset: 0x0003C199
+	// Token: 0x06000A06 RID: 2566 RVA: 0x0003E0C9 File Offset: 0x0003C2C9
 	private float InterpolatedNoobJumpMultiplier(int infectedCount)
 	{
 		if (this.currentPlayerArray.Length == 1)
@@ -240,7 +240,7 @@ public class GorillaTagManager : GorillaGameManager, IInRoomCallbacks, IMatchmak
 		return (this.fastJumpMultiplier - this.slowJumpMultiplier) / (float)(this.currentPlayerArray.Length - 1) * (float)(infectedCount - 1) * 0.9f + this.slowJumpMultiplier;
 	}
 
-	// Token: 0x06000A02 RID: 2562 RVA: 0x0003DFD8 File Offset: 0x0003C1D8
+	// Token: 0x06000A07 RID: 2567 RVA: 0x0003E108 File Offset: 0x0003C308
 	private float InterpolatedNoobJumpSpeed(int infectedCount)
 	{
 		if (this.currentPlayerArray.Length == 1)
@@ -250,7 +250,7 @@ public class GorillaTagManager : GorillaGameManager, IInRoomCallbacks, IMatchmak
 		return (this.fastJumpLimit - this.fastJumpLimit) / (float)(this.currentPlayerArray.Length - 1) * (float)(infectedCount - 1) * 0.9f + this.slowJumpLimit;
 	}
 
-	// Token: 0x06000A03 RID: 2563 RVA: 0x0003E018 File Offset: 0x0003C218
+	// Token: 0x06000A08 RID: 2568 RVA: 0x0003E148 File Offset: 0x0003C348
 	public override void ReportTag(Player taggedPlayer, Player taggingPlayer)
 	{
 		if (base.photonView.IsMine && this.IsGameModeTag())
@@ -312,7 +312,7 @@ public class GorillaTagManager : GorillaGameManager, IInRoomCallbacks, IMatchmak
 		}
 	}
 
-	// Token: 0x06000A04 RID: 2564 RVA: 0x0003E1EC File Offset: 0x0003C3EC
+	// Token: 0x06000A09 RID: 2569 RVA: 0x0003E31C File Offset: 0x0003C51C
 	public override void ReportContactWithLava(Player taggedPlayer)
 	{
 		if (base.photonView.IsMine && this.IsGameModeTag())
@@ -362,7 +362,7 @@ public class GorillaTagManager : GorillaGameManager, IInRoomCallbacks, IMatchmak
 		}
 	}
 
-	// Token: 0x06000A05 RID: 2565 RVA: 0x0003E310 File Offset: 0x0003C510
+	// Token: 0x06000A0A RID: 2570 RVA: 0x0003E440 File Offset: 0x0003C640
 	public override bool LavaWouldAffectPlayer(Player player, bool enteredLavaThisFrame)
 	{
 		if (!this.IsGameModeTag())
@@ -376,13 +376,13 @@ public class GorillaTagManager : GorillaGameManager, IInRoomCallbacks, IMatchmak
 		return !this.waitingToStartNextInfectionGame && (double)Time.time >= this.timeInfectedGameEnded + (double)(2f * this.tagCoolDown) && !this.currentInfected.Contains(player);
 	}
 
-	// Token: 0x06000A06 RID: 2566 RVA: 0x0003E373 File Offset: 0x0003C573
+	// Token: 0x06000A0B RID: 2571 RVA: 0x0003E4A3 File Offset: 0x0003C6A3
 	public override void OnPlayerEnteredRoom(Player newPlayer)
 	{
 		bool isMine = base.photonView.IsMine;
 	}
 
-	// Token: 0x06000A07 RID: 2567 RVA: 0x0003E384 File Offset: 0x0003C584
+	// Token: 0x06000A0C RID: 2572 RVA: 0x0003E4B4 File Offset: 0x0003C6B4
 	public override void NewVRRig(Player player, int vrrigPhotonViewID, bool didntDoTutorial)
 	{
 		base.NewVRRig(player, vrrigPhotonViewID, didntDoTutorial);
@@ -401,7 +401,7 @@ public class GorillaTagManager : GorillaGameManager, IInRoomCallbacks, IMatchmak
 		}
 	}
 
-	// Token: 0x06000A08 RID: 2568 RVA: 0x0003E3D8 File Offset: 0x0003C5D8
+	// Token: 0x06000A0D RID: 2573 RVA: 0x0003E508 File Offset: 0x0003C708
 	public override void OnPlayerLeftRoom(Player otherPlayer)
 	{
 		base.OnPlayerLeftRoom(otherPlayer);
@@ -427,7 +427,7 @@ public class GorillaTagManager : GorillaGameManager, IInRoomCallbacks, IMatchmak
 		this.playerCosmeticsLookup.Remove(otherPlayer.ActorNumber);
 	}
 
-	// Token: 0x06000A09 RID: 2569 RVA: 0x0003E4A0 File Offset: 0x0003C6A0
+	// Token: 0x06000A0E RID: 2574 RVA: 0x0003E5D0 File Offset: 0x0003C7D0
 	private void CopyInfectedListToArray()
 	{
 		this.iterator1 = 0;
@@ -453,7 +453,7 @@ public class GorillaTagManager : GorillaGameManager, IInRoomCallbacks, IMatchmak
 		}
 	}
 
-	// Token: 0x06000A0A RID: 2570 RVA: 0x0003E580 File Offset: 0x0003C780
+	// Token: 0x06000A0F RID: 2575 RVA: 0x0003E6B0 File Offset: 0x0003C8B0
 	private void CopyInfectedArrayToList()
 	{
 		this.currentInfected.Clear();
@@ -475,7 +475,7 @@ public class GorillaTagManager : GorillaGameManager, IInRoomCallbacks, IMatchmak
 		Debug.Log("current infected players count is " + num.ToString());
 	}
 
-	// Token: 0x06000A0B RID: 2571 RVA: 0x0003E620 File Offset: 0x0003C820
+	// Token: 0x06000A10 RID: 2576 RVA: 0x0003E750 File Offset: 0x0003C950
 	public void ChangeCurrentIt(Player newCurrentIt, bool withTagFreeze = true)
 	{
 		this.lastTag = (double)Time.time;
@@ -483,7 +483,7 @@ public class GorillaTagManager : GorillaGameManager, IInRoomCallbacks, IMatchmak
 		this.UpdateTagState(withTagFreeze);
 	}
 
-	// Token: 0x06000A0C RID: 2572 RVA: 0x0003E63C File Offset: 0x0003C83C
+	// Token: 0x06000A11 RID: 2577 RVA: 0x0003E76C File Offset: 0x0003C96C
 	public void SetisCurrentlyTag(bool newTagSetting)
 	{
 		if (newTagSetting)
@@ -507,7 +507,7 @@ public class GorillaTagManager : GorillaGameManager, IInRoomCallbacks, IMatchmak
 		}
 	}
 
-	// Token: 0x06000A0D RID: 2573 RVA: 0x0003E6B4 File Offset: 0x0003C8B4
+	// Token: 0x06000A12 RID: 2578 RVA: 0x0003E7E4 File Offset: 0x0003C9E4
 	public void AddInfectedPlayer(Player infectedPlayer)
 	{
 		if (base.photonView.IsMine)
@@ -525,7 +525,7 @@ public class GorillaTagManager : GorillaGameManager, IInRoomCallbacks, IMatchmak
 		}
 	}
 
-	// Token: 0x06000A0E RID: 2574 RVA: 0x0003E724 File Offset: 0x0003C924
+	// Token: 0x06000A13 RID: 2579 RVA: 0x0003E854 File Offset: 0x0003CA54
 	public void AddInfectedPlayer(Player infectedPlayer, bool withTagStop)
 	{
 		if (base.photonView.IsMine)
@@ -550,7 +550,7 @@ public class GorillaTagManager : GorillaGameManager, IInRoomCallbacks, IMatchmak
 		}
 	}
 
-	// Token: 0x06000A0F RID: 2575 RVA: 0x0003E7A5 File Offset: 0x0003C9A5
+	// Token: 0x06000A14 RID: 2580 RVA: 0x0003E8D5 File Offset: 0x0003CAD5
 	public void ClearInfectionState()
 	{
 		this.currentInfected.Clear();
@@ -558,7 +558,7 @@ public class GorillaTagManager : GorillaGameManager, IInRoomCallbacks, IMatchmak
 		this.waitingToStartNextInfectionGame = false;
 	}
 
-	// Token: 0x06000A10 RID: 2576 RVA: 0x0003E7C0 File Offset: 0x0003C9C0
+	// Token: 0x06000A15 RID: 2581 RVA: 0x0003E8F0 File Offset: 0x0003CAF0
 	public bool IsGameModeTag()
 	{
 		if (!this.persistedIsTag)
@@ -569,7 +569,7 @@ public class GorillaTagManager : GorillaGameManager, IInRoomCallbacks, IMatchmak
 		return this.persistedIsTagResult;
 	}
 
-	// Token: 0x06000A11 RID: 2577 RVA: 0x0003E838 File Offset: 0x0003CA38
+	// Token: 0x06000A16 RID: 2582 RVA: 0x0003E968 File Offset: 0x0003CB68
 	void IInRoomCallbacks.OnMasterClientSwitched(Player newMasterClient)
 	{
 		if (base.photonView.IsMine)
@@ -587,7 +587,7 @@ public class GorillaTagManager : GorillaGameManager, IInRoomCallbacks, IMatchmak
 		}
 	}
 
-	// Token: 0x06000A12 RID: 2578 RVA: 0x0003E8C0 File Offset: 0x0003CAC0
+	// Token: 0x06000A17 RID: 2583 RVA: 0x0003E9F0 File Offset: 0x0003CBF0
 	public void CopyRoomDataToLocalData()
 	{
 		this.lastTag = 0.0;
@@ -604,7 +604,7 @@ public class GorillaTagManager : GorillaGameManager, IInRoomCallbacks, IMatchmak
 		}
 	}
 
-	// Token: 0x06000A13 RID: 2579 RVA: 0x0003E910 File Offset: 0x0003CB10
+	// Token: 0x06000A18 RID: 2584 RVA: 0x0003EA40 File Offset: 0x0003CC40
 	[PunRPC]
 	public override void ReportTagRPC(Player taggedPlayer, PhotonMessageInfo info)
 	{
@@ -612,7 +612,7 @@ public class GorillaTagManager : GorillaGameManager, IInRoomCallbacks, IMatchmak
 		this.ReportTag(taggedPlayer, info.Sender);
 	}
 
-	// Token: 0x06000A14 RID: 2580 RVA: 0x0003E92A File Offset: 0x0003CB2A
+	// Token: 0x06000A19 RID: 2585 RVA: 0x0003EA5A File Offset: 0x0003CC5A
 	[PunRPC]
 	public override void ReportContactWithLavaRPC(PhotonMessageInfo info)
 	{
@@ -620,7 +620,7 @@ public class GorillaTagManager : GorillaGameManager, IInRoomCallbacks, IMatchmak
 		this.ReportContactWithLava(info.Sender);
 	}
 
-	// Token: 0x06000A15 RID: 2581 RVA: 0x0003E944 File Offset: 0x0003CB44
+	// Token: 0x06000A1A RID: 2586 RVA: 0x0003EA74 File Offset: 0x0003CC74
 	void IPunObservable.OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
 	{
 		if (info.Sender != PhotonNetwork.MasterClient)
@@ -659,7 +659,7 @@ public class GorillaTagManager : GorillaGameManager, IInRoomCallbacks, IMatchmak
 		this.CopyInfectedArrayToList();
 	}
 
-	// Token: 0x06000A16 RID: 2582 RVA: 0x0003EB64 File Offset: 0x0003CD64
+	// Token: 0x06000A1B RID: 2587 RVA: 0x0003EC94 File Offset: 0x0003CE94
 	public override string GameMode()
 	{
 		if (!this.IsGameModeTag())
@@ -669,7 +669,7 @@ public class GorillaTagManager : GorillaGameManager, IInRoomCallbacks, IMatchmak
 		return "INFECTION";
 	}
 
-	// Token: 0x06000A17 RID: 2583 RVA: 0x0003EB79 File Offset: 0x0003CD79
+	// Token: 0x06000A1C RID: 2588 RVA: 0x0003ECA9 File Offset: 0x0003CEA9
 	public override int MyMatIndex(Player forPlayer)
 	{
 		if (!this.IsGameModeTag())
@@ -687,7 +687,7 @@ public class GorillaTagManager : GorillaGameManager, IInRoomCallbacks, IMatchmak
 		return 0;
 	}
 
-	// Token: 0x06000A18 RID: 2584 RVA: 0x0003EBAC File Offset: 0x0003CDAC
+	// Token: 0x06000A1D RID: 2589 RVA: 0x0003ECDC File Offset: 0x0003CEDC
 	public override float[] LocalPlayerSpeed()
 	{
 		if (!this.IsGameModeTag())
@@ -722,75 +722,75 @@ public class GorillaTagManager : GorillaGameManager, IInRoomCallbacks, IMatchmak
 		}
 	}
 
-	// Token: 0x04000C68 RID: 3176
+	// Token: 0x04000C6C RID: 3180
 	public float tagCoolDown = 5f;
 
-	// Token: 0x04000C69 RID: 3177
+	// Token: 0x04000C6D RID: 3181
 	public int infectedModeThreshold = 4;
 
-	// Token: 0x04000C6A RID: 3178
+	// Token: 0x04000C6E RID: 3182
 	public const byte ReportTagEvent = 1;
 
-	// Token: 0x04000C6B RID: 3179
+	// Token: 0x04000C6F RID: 3183
 	public const byte ReportInfectionTagEvent = 2;
 
-	// Token: 0x04000C6C RID: 3180
+	// Token: 0x04000C70 RID: 3184
 	public List<Player> currentInfected = new List<Player>();
 
-	// Token: 0x04000C6D RID: 3181
+	// Token: 0x04000C71 RID: 3185
 	public int[] currentInfectedArray = new int[10];
 
-	// Token: 0x04000C6E RID: 3182
+	// Token: 0x04000C72 RID: 3186
 	public Player currentIt;
 
-	// Token: 0x04000C6F RID: 3183
+	// Token: 0x04000C73 RID: 3187
 	public Player lastInfectedPlayer;
 
-	// Token: 0x04000C70 RID: 3184
+	// Token: 0x04000C74 RID: 3188
 	public double lastTag;
 
-	// Token: 0x04000C71 RID: 3185
+	// Token: 0x04000C75 RID: 3189
 	public double timeInfectedGameEnded;
 
-	// Token: 0x04000C72 RID: 3186
+	// Token: 0x04000C76 RID: 3190
 	public bool waitingToStartNextInfectionGame;
 
-	// Token: 0x04000C73 RID: 3187
+	// Token: 0x04000C77 RID: 3191
 	public bool isCurrentlyTag;
 
-	// Token: 0x04000C74 RID: 3188
+	// Token: 0x04000C78 RID: 3192
 	public bool isCasual;
 
-	// Token: 0x04000C75 RID: 3189
+	// Token: 0x04000C79 RID: 3193
 	private int tempItInt;
 
-	// Token: 0x04000C76 RID: 3190
+	// Token: 0x04000C7A RID: 3194
 	public object objRef;
 
-	// Token: 0x04000C77 RID: 3191
+	// Token: 0x04000C7B RID: 3195
 	private int iterator1;
 
-	// Token: 0x04000C78 RID: 3192
+	// Token: 0x04000C7C RID: 3196
 	private Player tempPlayer;
 
-	// Token: 0x04000C79 RID: 3193
+	// Token: 0x04000C7D RID: 3197
 	private bool allInfected;
 
-	// Token: 0x04000C7A RID: 3194
+	// Token: 0x04000C7E RID: 3198
 	private List<Player> returnPlayerList = new List<Player>();
 
-	// Token: 0x04000C7B RID: 3195
+	// Token: 0x04000C7F RID: 3199
 	private bool persistedIsTag;
 
-	// Token: 0x04000C7C RID: 3196
+	// Token: 0x04000C80 RID: 3200
 	private bool persistedIsTagResult;
 
-	// Token: 0x04000C7D RID: 3197
+	// Token: 0x04000C81 RID: 3201
 	public float[] inspectorLocalPlayerSpeed;
 
-	// Token: 0x04000C7E RID: 3198
+	// Token: 0x04000C82 RID: 3202
 	private VRRig taggingRig;
 
-	// Token: 0x04000C7F RID: 3199
+	// Token: 0x04000C83 RID: 3203
 	private VRRig taggedRig;
 }

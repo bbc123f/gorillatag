@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// Token: 0x020001A2 RID: 418
+// Token: 0x020001A3 RID: 419
 public class RandomizeTest : MonoBehaviour
 {
-	// Token: 0x06000AC2 RID: 2754 RVA: 0x0004232C File Offset: 0x0004052C
+	// Token: 0x06000AC7 RID: 2759 RVA: 0x00042464 File Offset: 0x00040664
 	private void Start()
 	{
 		for (int i = 0; i < 10; i++)
@@ -31,7 +31,7 @@ public class RandomizeTest : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000AC3 RID: 2755 RVA: 0x000423E4 File Offset: 0x000405E4
+	// Token: 0x06000AC8 RID: 2760 RVA: 0x0004251C File Offset: 0x0004071C
 	public void RandomizeList(ref List<int> listToRandomize)
 	{
 		this.randomIterator = 0;
@@ -45,18 +45,18 @@ public class RandomizeTest : MonoBehaviour
 		}
 	}
 
-	// Token: 0x04000D89 RID: 3465
+	// Token: 0x04000D8D RID: 3469
 	public List<int> testList = new List<int>();
 
-	// Token: 0x04000D8A RID: 3466
+	// Token: 0x04000D8E RID: 3470
 	public int[] testListArray = new int[10];
 
-	// Token: 0x04000D8B RID: 3467
+	// Token: 0x04000D8F RID: 3471
 	public int randomIterator;
 
-	// Token: 0x04000D8C RID: 3468
+	// Token: 0x04000D90 RID: 3472
 	public int tempRandIndex;
 
-	// Token: 0x04000D8D RID: 3469
+	// Token: 0x04000D91 RID: 3473
 	public int tempRandValue;
 }

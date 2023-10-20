@@ -4,12 +4,12 @@ using UnityEngine.UI;
 
 namespace OculusSampleFramework
 {
-	// Token: 0x020002E3 RID: 739
+	// Token: 0x020002E5 RID: 741
 	public class DistanceGrabberSample : MonoBehaviour
 	{
-		// Token: 0x1700015F RID: 351
-		// (get) Token: 0x060013FC RID: 5116 RVA: 0x000718CF File Offset: 0x0006FACF
-		// (set) Token: 0x060013FD RID: 5117 RVA: 0x000718D8 File Offset: 0x0006FAD8
+		// Token: 0x17000161 RID: 353
+		// (get) Token: 0x06001403 RID: 5123 RVA: 0x00071D9B File Offset: 0x0006FF9B
+		// (set) Token: 0x06001404 RID: 5124 RVA: 0x00071DA4 File Offset: 0x0006FFA4
 		public bool UseSpherecast
 		{
 			get
@@ -26,9 +26,9 @@ namespace OculusSampleFramework
 			}
 		}
 
-		// Token: 0x17000160 RID: 352
-		// (get) Token: 0x060013FE RID: 5118 RVA: 0x00071912 File Offset: 0x0006FB12
-		// (set) Token: 0x060013FF RID: 5119 RVA: 0x0007191C File Offset: 0x0006FB1C
+		// Token: 0x17000162 RID: 354
+		// (get) Token: 0x06001405 RID: 5125 RVA: 0x00071DDE File Offset: 0x0006FFDE
+		// (set) Token: 0x06001406 RID: 5126 RVA: 0x00071DE8 File Offset: 0x0006FFE8
 		public bool AllowGrabThroughWalls
 		{
 			get
@@ -45,7 +45,7 @@ namespace OculusSampleFramework
 			}
 		}
 
-		// Token: 0x06001400 RID: 5120 RVA: 0x0007195C File Offset: 0x0006FB5C
+		// Token: 0x06001407 RID: 5127 RVA: 0x00071E28 File Offset: 0x00070028
 		private void Start()
 		{
 			DebugUIBuilder.instance.AddLabel("Distance Grab Sample", 0);
@@ -60,25 +60,25 @@ namespace OculusSampleFramework
 			}
 		}
 
-		// Token: 0x06001401 RID: 5121 RVA: 0x00071A07 File Offset: 0x0006FC07
+		// Token: 0x06001408 RID: 5128 RVA: 0x00071ED3 File Offset: 0x000700D3
 		public void ToggleSphereCasting(Toggle t)
 		{
 			this.UseSpherecast = !this.UseSpherecast;
 		}
 
-		// Token: 0x06001402 RID: 5122 RVA: 0x00071A18 File Offset: 0x0006FC18
+		// Token: 0x06001409 RID: 5129 RVA: 0x00071EE4 File Offset: 0x000700E4
 		public void ToggleGrabThroughWalls(Toggle t)
 		{
 			this.AllowGrabThroughWalls = !this.AllowGrabThroughWalls;
 		}
 
-		// Token: 0x040016AE RID: 5806
+		// Token: 0x040016BB RID: 5819
 		private bool useSpherecast;
 
-		// Token: 0x040016AF RID: 5807
+		// Token: 0x040016BC RID: 5820
 		private bool allowGrabThroughWalls;
 
-		// Token: 0x040016B0 RID: 5808
+		// Token: 0x040016BD RID: 5821
 		[SerializeField]
 		private DistanceGrabber[] m_grabbers;
 	}

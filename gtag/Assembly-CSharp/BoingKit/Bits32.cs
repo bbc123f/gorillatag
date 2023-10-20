@@ -3,12 +3,12 @@ using UnityEngine;
 
 namespace BoingKit
 {
-	// Token: 0x02000377 RID: 887
+	// Token: 0x02000379 RID: 889
 	[Serializable]
 	public struct Bits32
 	{
-		// Token: 0x170001BA RID: 442
-		// (get) Token: 0x06001A33 RID: 6707 RVA: 0x00091F03 File Offset: 0x00090103
+		// Token: 0x170001BC RID: 444
+		// (get) Token: 0x06001A3C RID: 6716 RVA: 0x000923EB File Offset: 0x000905EB
 		public int IntValue
 		{
 			get
@@ -17,19 +17,19 @@ namespace BoingKit
 			}
 		}
 
-		// Token: 0x06001A34 RID: 6708 RVA: 0x00091F0B File Offset: 0x0009010B
+		// Token: 0x06001A3D RID: 6717 RVA: 0x000923F3 File Offset: 0x000905F3
 		public Bits32(int bits = 0)
 		{
 			this.m_bits = bits;
 		}
 
-		// Token: 0x06001A35 RID: 6709 RVA: 0x00091F14 File Offset: 0x00090114
+		// Token: 0x06001A3E RID: 6718 RVA: 0x000923FC File Offset: 0x000905FC
 		public void Clear()
 		{
 			this.m_bits = 0;
 		}
 
-		// Token: 0x06001A36 RID: 6710 RVA: 0x00091F1D File Offset: 0x0009011D
+		// Token: 0x06001A3F RID: 6719 RVA: 0x00092405 File Offset: 0x00090605
 		public void SetBit(int index, bool value)
 		{
 			if (value)
@@ -40,13 +40,13 @@ namespace BoingKit
 			this.m_bits &= ~(1 << index);
 		}
 
-		// Token: 0x06001A37 RID: 6711 RVA: 0x00091F4A File Offset: 0x0009014A
+		// Token: 0x06001A40 RID: 6720 RVA: 0x00092432 File Offset: 0x00090632
 		public bool IsBitSet(int index)
 		{
 			return (this.m_bits & 1 << index) != 0;
 		}
 
-		// Token: 0x04001AA6 RID: 6822
+		// Token: 0x04001AB3 RID: 6835
 		[SerializeField]
 		private int m_bits;
 	}

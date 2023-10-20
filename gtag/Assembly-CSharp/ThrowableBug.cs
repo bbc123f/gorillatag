@@ -3,10 +3,10 @@ using GorillaExtensions;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-// Token: 0x02000236 RID: 566
+// Token: 0x02000237 RID: 567
 public class ThrowableBug : TransferrableObject
 {
-	// Token: 0x06000DFF RID: 3583 RVA: 0x000511C0 File Offset: 0x0004F3C0
+	// Token: 0x06000E06 RID: 3590 RVA: 0x0005159C File Offset: 0x0004F79C
 	public new void Start()
 	{
 		float f = Random.Range(0f, 6.2831855f);
@@ -16,13 +16,13 @@ public class ThrowableBug : TransferrableObject
 		this.rayCastNonAllocColliders2 = new RaycastHit[5];
 	}
 
-	// Token: 0x06000E00 RID: 3584 RVA: 0x0005122A File Offset: 0x0004F42A
+	// Token: 0x06000E07 RID: 3591 RVA: 0x00051606 File Offset: 0x0004F806
 	public override bool ShouldBeKinematic()
 	{
 		return true;
 	}
 
-	// Token: 0x06000E01 RID: 3585 RVA: 0x00051230 File Offset: 0x0004F430
+	// Token: 0x06000E08 RID: 3592 RVA: 0x0005160C File Offset: 0x0004F80C
 	protected override void LateUpdateShared()
 	{
 		base.LateUpdateShared();
@@ -100,7 +100,7 @@ public class ThrowableBug : TransferrableObject
 		}
 	}
 
-	// Token: 0x06000E02 RID: 3586 RVA: 0x000513E0 File Offset: 0x0004F5E0
+	// Token: 0x06000E09 RID: 3593 RVA: 0x000517BC File Offset: 0x0004F9BC
 	protected override void LateUpdateLocal()
 	{
 		base.LateUpdateLocal();
@@ -208,13 +208,13 @@ public class ThrowableBug : TransferrableObject
 		}
 	}
 
-	// Token: 0x06000E03 RID: 3587 RVA: 0x00051904 File Offset: 0x0004FB04
+	// Token: 0x06000E0A RID: 3594 RVA: 0x00051CE0 File Offset: 0x0004FEE0
 	private float RandomizeBobingFrequency()
 	{
 		return Random.Range(this.minRandFrequency, this.maxRandFrequency);
 	}
 
-	// Token: 0x06000E04 RID: 3588 RVA: 0x00051918 File Offset: 0x0004FB18
+	// Token: 0x06000E0B RID: 3595 RVA: 0x00051CF4 File Offset: 0x0004FEF4
 	public override void OnRelease(DropZone zoneReleased, GameObject releasingHand)
 	{
 		base.OnRelease(zoneReleased, releasingHand);
@@ -229,13 +229,13 @@ public class ThrowableBug : TransferrableObject
 		this.targetVelocity = normalized * this.maxNaturalSpeed;
 	}
 
-	// Token: 0x06000E05 RID: 3589 RVA: 0x000519A2 File Offset: 0x0004FBA2
+	// Token: 0x06000E0C RID: 3596 RVA: 0x00051D7E File Offset: 0x0004FF7E
 	public void OnCollisionEnter(Collision collision)
 	{
 		this.reliableState.travelingDirection *= -1f;
 	}
 
-	// Token: 0x06000E06 RID: 3590 RVA: 0x000519C0 File Offset: 0x0004FBC0
+	// Token: 0x06000E0D RID: 3597 RVA: 0x00051D9C File Offset: 0x0004FF9C
 	private void Update()
 	{
 		if (this.updateMultiplier > 0)
@@ -247,149 +247,149 @@ public class ThrowableBug : TransferrableObject
 		}
 	}
 
-	// Token: 0x040010F3 RID: 4339
+	// Token: 0x040010F9 RID: 4345
 	public ThrowableBugReliableState reliableState;
 
-	// Token: 0x040010F4 RID: 4340
+	// Token: 0x040010FA RID: 4346
 	public float slowingDownProgress;
 
-	// Token: 0x040010F5 RID: 4341
+	// Token: 0x040010FB RID: 4347
 	public float startingSpeed;
 
-	// Token: 0x040010F6 RID: 4342
+	// Token: 0x040010FC RID: 4348
 	public float bobingSpeed = 1f;
 
-	// Token: 0x040010F7 RID: 4343
+	// Token: 0x040010FD RID: 4349
 	public float bobMagnintude = 0.1f;
 
-	// Token: 0x040010F8 RID: 4344
+	// Token: 0x040010FE RID: 4350
 	public bool shouldRandomizeFrequency;
 
-	// Token: 0x040010F9 RID: 4345
+	// Token: 0x040010FF RID: 4351
 	public float minRandFrequency = 0.008f;
 
-	// Token: 0x040010FA RID: 4346
+	// Token: 0x04001100 RID: 4352
 	public float maxRandFrequency = 1f;
 
-	// Token: 0x040010FB RID: 4347
+	// Token: 0x04001101 RID: 4353
 	public float bobingFrequency = 1f;
 
-	// Token: 0x040010FC RID: 4348
+	// Token: 0x04001102 RID: 4354
 	public float bobingState;
 
-	// Token: 0x040010FD RID: 4349
+	// Token: 0x04001103 RID: 4355
 	public float thrownYVelocity;
 
-	// Token: 0x040010FE RID: 4350
+	// Token: 0x04001104 RID: 4356
 	public float collisionHitRadius;
 
-	// Token: 0x040010FF RID: 4351
+	// Token: 0x04001105 RID: 4357
 	public LayerMask collisionCheckMask;
 
-	// Token: 0x04001100 RID: 4352
+	// Token: 0x04001106 RID: 4358
 	public Vector3 thrownVeloicity;
 
-	// Token: 0x04001101 RID: 4353
+	// Token: 0x04001107 RID: 4359
 	public Vector3 targetVelocity;
 
-	// Token: 0x04001102 RID: 4354
+	// Token: 0x04001108 RID: 4360
 	public Quaternion bugRotationalVelocity;
 
-	// Token: 0x04001103 RID: 4355
+	// Token: 0x04001109 RID: 4361
 	private RaycastHit[] rayCastNonAllocColliders;
 
-	// Token: 0x04001104 RID: 4356
+	// Token: 0x0400110A RID: 4362
 	private RaycastHit[] rayCastNonAllocColliders2;
 
-	// Token: 0x04001105 RID: 4357
+	// Token: 0x0400110B RID: 4363
 	public VRRig followingRig;
 
-	// Token: 0x04001106 RID: 4358
+	// Token: 0x0400110C RID: 4364
 	public bool isTooHighTravelingDown;
 
-	// Token: 0x04001107 RID: 4359
+	// Token: 0x0400110D RID: 4365
 	public float descentSlerp;
 
-	// Token: 0x04001108 RID: 4360
+	// Token: 0x0400110E RID: 4366
 	public float ascentSlerp;
 
-	// Token: 0x04001109 RID: 4361
+	// Token: 0x0400110F RID: 4367
 	public float maxNaturalSpeed;
 
-	// Token: 0x0400110A RID: 4362
+	// Token: 0x04001110 RID: 4368
 	public float slowdownAcceleration;
 
-	// Token: 0x0400110B RID: 4363
+	// Token: 0x04001111 RID: 4369
 	public float maximumHeightOffOfTheGroundBeforeStartingDescent = 5f;
 
-	// Token: 0x0400110C RID: 4364
+	// Token: 0x04001112 RID: 4370
 	public float minimumHeightOffOfTheGroundBeforeStoppingDescent = 3f;
 
-	// Token: 0x0400110D RID: 4365
+	// Token: 0x04001113 RID: 4371
 	public float descentRate = 0.2f;
 
-	// Token: 0x0400110E RID: 4366
+	// Token: 0x04001114 RID: 4372
 	public float descentSlerpRate = 0.2f;
 
-	// Token: 0x0400110F RID: 4367
+	// Token: 0x04001115 RID: 4373
 	public float minimumHeightOffOfTheGroundBeforeStartingAscent = 0.5f;
 
-	// Token: 0x04001110 RID: 4368
+	// Token: 0x04001116 RID: 4374
 	public float maximumHeightOffOfTheGroundBeforeStoppingAscent = 0.75f;
 
-	// Token: 0x04001111 RID: 4369
+	// Token: 0x04001117 RID: 4375
 	public float ascentRate = 0.4f;
 
-	// Token: 0x04001112 RID: 4370
+	// Token: 0x04001118 RID: 4376
 	public float ascentSlerpRate = 1f;
 
-	// Token: 0x04001113 RID: 4371
+	// Token: 0x04001119 RID: 4377
 	private bool isTooLowTravelingUp;
 
-	// Token: 0x04001114 RID: 4372
+	// Token: 0x0400111A RID: 4378
 	public Animator animator;
 
-	// Token: 0x04001115 RID: 4373
+	// Token: 0x0400111B RID: 4379
 	[FormerlySerializedAs("grabBugAudioSource")]
 	public AudioClip grabBugAudioClip;
 
-	// Token: 0x04001116 RID: 4374
+	// Token: 0x0400111C RID: 4380
 	[FormerlySerializedAs("releaseBugAudioSource")]
 	public AudioClip releaseBugAudioClip;
 
-	// Token: 0x04001117 RID: 4375
+	// Token: 0x0400111D RID: 4381
 	[FormerlySerializedAs("flyingBugAudioSource")]
 	public AudioClip flyingBugAudioClip;
 
-	// Token: 0x04001118 RID: 4376
+	// Token: 0x0400111E RID: 4382
 	[SerializeField]
 	private AudioSource audioSource;
 
-	// Token: 0x04001119 RID: 4377
+	// Token: 0x0400111F RID: 4383
 	private float bobbingDefaultFrequency = 1f;
 
-	// Token: 0x0400111A RID: 4378
+	// Token: 0x04001120 RID: 4384
 	public int updateMultiplier;
 
-	// Token: 0x0400111B RID: 4379
+	// Token: 0x04001121 RID: 4385
 	private float velocity;
 
-	// Token: 0x0400111C RID: 4380
+	// Token: 0x04001122 RID: 4386
 	private bool grabAudioPlayed;
 
-	// Token: 0x0400111D RID: 4381
+	// Token: 0x04001123 RID: 4387
 	private ThrowableBug.AudioState currentAudioState;
 
-	// Token: 0x02000480 RID: 1152
+	// Token: 0x02000482 RID: 1154
 	private enum AudioState
 	{
-		// Token: 0x04001EB9 RID: 7865
+		// Token: 0x04001EC6 RID: 7878
 		JustGrabbed,
-		// Token: 0x04001EBA RID: 7866
+		// Token: 0x04001EC7 RID: 7879
 		ContinuallyGrabbed,
-		// Token: 0x04001EBB RID: 7867
+		// Token: 0x04001EC8 RID: 7880
 		JustReleased,
-		// Token: 0x04001EBC RID: 7868
+		// Token: 0x04001EC9 RID: 7881
 		NotHeld
 	}
 }

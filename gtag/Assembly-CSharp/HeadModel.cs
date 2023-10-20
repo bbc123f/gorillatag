@@ -5,13 +5,13 @@ using UnityEngine;
 // Token: 0x02000106 RID: 262
 public class HeadModel : MonoBehaviour
 {
-	// Token: 0x06000650 RID: 1616 RVA: 0x00027A93 File Offset: 0x00025C93
+	// Token: 0x06000651 RID: 1617 RVA: 0x000278D3 File Offset: 0x00025AD3
 	public void Awake()
 	{
 		this.Initialize();
 	}
 
-	// Token: 0x06000651 RID: 1617 RVA: 0x00027A9C File Offset: 0x00025C9C
+	// Token: 0x06000652 RID: 1618 RVA: 0x000278DC File Offset: 0x00025ADC
 	private void Initialize()
 	{
 		if (!this.initialized && base.enabled)
@@ -28,13 +28,13 @@ public class HeadModel : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000652 RID: 1618 RVA: 0x00027AFD File Offset: 0x00025CFD
+	// Token: 0x06000653 RID: 1619 RVA: 0x0002793D File Offset: 0x00025B3D
 	public void OnEnable()
 	{
 		this.Initialize();
 	}
 
-	// Token: 0x06000653 RID: 1619 RVA: 0x00027B08 File Offset: 0x00025D08
+	// Token: 0x06000654 RID: 1620 RVA: 0x00027948 File Offset: 0x00025B48
 	public void SetCosmeticActive(string activeCosmeticName, bool forRightSide = false)
 	{
 		foreach (GameObject obj in this.currentActiveObjects)
@@ -49,7 +49,7 @@ public class HeadModel : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000654 RID: 1620 RVA: 0x00027B9C File Offset: 0x00025D9C
+	// Token: 0x06000655 RID: 1621 RVA: 0x000279DC File Offset: 0x00025BDC
 	public void SetCosmeticActiveArray(string[] activeCosmeticNames, bool[] forRightSideArray)
 	{
 		foreach (GameObject obj in this.currentActiveObjects)
@@ -67,7 +67,7 @@ public class HeadModel : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000655 RID: 1621 RVA: 0x00027C44 File Offset: 0x00025E44
+	// Token: 0x06000656 RID: 1622 RVA: 0x00027A84 File Offset: 0x00025C84
 	private void SetChildRendererWithOverride(GameObject obj, bool setEnabled, bool forRightSide)
 	{
 		GameObject gameObject = null;
@@ -91,7 +91,7 @@ public class HeadModel : MonoBehaviour
 		this.SetChildRenderers(obj, setEnabled);
 	}
 
-	// Token: 0x06000656 RID: 1622 RVA: 0x00027CAC File Offset: 0x00025EAC
+	// Token: 0x06000657 RID: 1623 RVA: 0x00027AEC File Offset: 0x00025CEC
 	private void SetChildRenderers(GameObject obj, bool setEnabled)
 	{
 		MeshRenderer[] componentsInChildren = obj.GetComponentsInChildren<MeshRenderer>();

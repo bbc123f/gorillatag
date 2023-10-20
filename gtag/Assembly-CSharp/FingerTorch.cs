@@ -6,13 +6,13 @@ using UnityEngine.XR;
 // Token: 0x0200003F RID: 63
 public class FingerTorch : MonoBehaviour
 {
-	// Token: 0x06000160 RID: 352 RVA: 0x0000B8BD File Offset: 0x00009ABD
+	// Token: 0x06000160 RID: 352 RVA: 0x0000B905 File Offset: 0x00009B05
 	protected void Awake()
 	{
 		this.myRig = base.GetComponentInParent<VRRig>();
 	}
 
-	// Token: 0x06000161 RID: 353 RVA: 0x0000B8CC File Offset: 0x00009ACC
+	// Token: 0x06000161 RID: 353 RVA: 0x0000B914 File Offset: 0x00009B14
 	protected void OnEnable()
 	{
 		int num = this.attachedToLeftHand ? 1 : 2;
@@ -20,12 +20,12 @@ public class FingerTorch : MonoBehaviour
 		this.OnExtendStateChanged(false);
 	}
 
-	// Token: 0x06000162 RID: 354 RVA: 0x0000B903 File Offset: 0x00009B03
+	// Token: 0x06000162 RID: 354 RVA: 0x0000B94B File Offset: 0x00009B4B
 	protected void OnDisable()
 	{
 	}
 
-	// Token: 0x06000163 RID: 355 RVA: 0x0000B908 File Offset: 0x00009B08
+	// Token: 0x06000163 RID: 355 RVA: 0x0000B950 File Offset: 0x00009B50
 	private void UpdateLocal()
 	{
 		int node = this.attachedToLeftHand ? 4 : 5;
@@ -40,7 +40,7 @@ public class FingerTorch : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000164 RID: 356 RVA: 0x0000B988 File Offset: 0x00009B88
+	// Token: 0x06000164 RID: 356 RVA: 0x0000B9D0 File Offset: 0x00009BD0
 	private void UpdateShared()
 	{
 		if (this.extended != this.networkedExtended)
@@ -53,7 +53,7 @@ public class FingerTorch : MonoBehaviour
 		this.thumbRingBone.SetPositionAndRotation(this.thumbRingAttachPoint.position, this.thumbRingAttachPoint.rotation);
 	}
 
-	// Token: 0x06000165 RID: 357 RVA: 0x0000BA09 File Offset: 0x00009C09
+	// Token: 0x06000165 RID: 357 RVA: 0x0000BA51 File Offset: 0x00009C51
 	private void UpdateReplicated()
 	{
 		if (this.myRig != null && !this.myRig.isOfflineVRRig)
@@ -62,13 +62,13 @@ public class FingerTorch : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000166 RID: 358 RVA: 0x0000BA42 File Offset: 0x00009C42
+	// Token: 0x06000166 RID: 358 RVA: 0x0000BA8A File Offset: 0x00009C8A
 	public bool IsMyItem()
 	{
 		return this.myRig != null && this.myRig.isOfflineVRRig;
 	}
 
-	// Token: 0x06000167 RID: 359 RVA: 0x0000BA5F File Offset: 0x00009C5F
+	// Token: 0x06000167 RID: 359 RVA: 0x0000BAA7 File Offset: 0x00009CA7
 	protected void LateUpdate()
 	{
 		if (this.IsMyItem())
@@ -82,7 +82,7 @@ public class FingerTorch : MonoBehaviour
 		this.UpdateShared();
 	}
 
-	// Token: 0x06000168 RID: 360 RVA: 0x0000BA80 File Offset: 0x00009C80
+	// Token: 0x06000168 RID: 360 RVA: 0x0000BAC8 File Offset: 0x00009CC8
 	private void OnExtendStateChanged(bool playAudio)
 	{
 		this.audioSource.clip = (this.extended ? this.extendAudioClip : this.retractAudioClip);

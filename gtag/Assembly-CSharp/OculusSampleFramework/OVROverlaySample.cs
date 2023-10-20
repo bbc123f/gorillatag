@@ -6,10 +6,10 @@ using UnityEngine.UI;
 
 namespace OculusSampleFramework
 {
-	// Token: 0x020002F3 RID: 755
+	// Token: 0x020002F5 RID: 757
 	public class OVROverlaySample : MonoBehaviour
 	{
-		// Token: 0x0600147A RID: 5242 RVA: 0x00073584 File Offset: 0x00071784
+		// Token: 0x06001481 RID: 5249 RVA: 0x00073A50 File Offset: 0x00071C50
 		private void Start()
 		{
 			DebugUIBuilder.instance.AddLabel("OVROverlay Sample", 0);
@@ -38,7 +38,7 @@ namespace OculusSampleFramework
 			this.spawnedCubes.Capacity = this.numObjectsPerLevel * this.numLevels;
 		}
 
-		// Token: 0x0600147B RID: 5243 RVA: 0x000736DC File Offset: 0x000718DC
+		// Token: 0x06001482 RID: 5250 RVA: 0x00073BA8 File Offset: 0x00071DA8
 		private void Update()
 		{
 			if (OVRInput.GetDown(OVRInput.Button.Two, OVRInput.Controller.Active) || OVRInput.GetDown(OVRInput.Button.Start, OVRInput.Controller.Active))
@@ -59,7 +59,7 @@ namespace OculusSampleFramework
 			}
 		}
 
-		// Token: 0x0600147C RID: 5244 RVA: 0x00073744 File Offset: 0x00071944
+		// Token: 0x06001483 RID: 5251 RVA: 0x00073C10 File Offset: 0x00071E10
 		private void ActivateWorldGeo()
 		{
 			this.worldspaceGeoParent.SetActive(true);
@@ -71,7 +71,7 @@ namespace OculusSampleFramework
 			Debug.Log("Switched to ActivateWorldGeo");
 		}
 
-		// Token: 0x0600147D RID: 5245 RVA: 0x000737AC File Offset: 0x000719AC
+		// Token: 0x06001484 RID: 5252 RVA: 0x00073C78 File Offset: 0x00071E78
 		private void ActivateOVROverlay()
 		{
 			this.worldspaceGeoParent.SetActive(false);
@@ -83,7 +83,7 @@ namespace OculusSampleFramework
 			Debug.Log("Switched to ActivateOVROVerlay");
 		}
 
-		// Token: 0x0600147E RID: 5246 RVA: 0x00073814 File Offset: 0x00071A14
+		// Token: 0x06001485 RID: 5253 RVA: 0x00073CE0 File Offset: 0x00071EE0
 		private void ActivateNone()
 		{
 			this.worldspaceGeoParent.SetActive(false);
@@ -94,13 +94,13 @@ namespace OculusSampleFramework
 			Debug.Log("Switched to ActivateNone");
 		}
 
-		// Token: 0x0600147F RID: 5247 RVA: 0x00073867 File Offset: 0x00071A67
+		// Token: 0x06001486 RID: 5254 RVA: 0x00073D33 File Offset: 0x00071F33
 		private void TriggerLoad()
 		{
 			base.StartCoroutine(this.WaitforOVROverlay());
 		}
 
-		// Token: 0x06001480 RID: 5248 RVA: 0x00073876 File Offset: 0x00071A76
+		// Token: 0x06001487 RID: 5255 RVA: 0x00073D42 File Offset: 0x00071F42
 		private IEnumerator WaitforOVROverlay()
 		{
 			Transform transform = this.mainCamera.transform;
@@ -120,14 +120,14 @@ namespace OculusSampleFramework
 			yield break;
 		}
 
-		// Token: 0x06001481 RID: 5249 RVA: 0x00073885 File Offset: 0x00071A85
+		// Token: 0x06001488 RID: 5256 RVA: 0x00073D51 File Offset: 0x00071F51
 		private void TriggerUnload()
 		{
 			this.ClearObjects();
 			this.applicationRadioButton.isOn = true;
 		}
 
-		// Token: 0x06001482 RID: 5250 RVA: 0x0007389C File Offset: 0x00071A9C
+		// Token: 0x06001489 RID: 5257 RVA: 0x00073D68 File Offset: 0x00071F68
 		private void CameraAndRenderTargetSetup()
 		{
 			float x = this.cameraRenderOverlay.transform.localScale.x;
@@ -161,7 +161,7 @@ namespace OculusSampleFramework
 			this.cameraRenderOverlay.textures[0] = renderTexture;
 		}
 
-		// Token: 0x06001483 RID: 5251 RVA: 0x00073A38 File Offset: 0x00071C38
+		// Token: 0x0600148A RID: 5258 RVA: 0x00073F04 File Offset: 0x00072104
 		private void SimulateLevelLoad()
 		{
 			int num = 0;
@@ -191,7 +191,7 @@ namespace OculusSampleFramework
 			}
 		}
 
-		// Token: 0x06001484 RID: 5252 RVA: 0x00073B90 File Offset: 0x00071D90
+		// Token: 0x0600148B RID: 5259 RVA: 0x0007405C File Offset: 0x0007225C
 		private void ClearObjects()
 		{
 			for (int i = 0; i < this.spawnedCubes.Count; i++)
@@ -202,7 +202,7 @@ namespace OculusSampleFramework
 			GC.Collect();
 		}
 
-		// Token: 0x06001485 RID: 5253 RVA: 0x00073BD4 File Offset: 0x00071DD4
+		// Token: 0x0600148C RID: 5260 RVA: 0x000740A0 File Offset: 0x000722A0
 		public void RadioPressed(string radioLabel, string group, Toggle t)
 		{
 			if (string.Compare(radioLabel, "OVROverlayID") == 0)
@@ -221,78 +221,78 @@ namespace OculusSampleFramework
 			}
 		}
 
-		// Token: 0x04001735 RID: 5941
+		// Token: 0x04001742 RID: 5954
 		private bool inMenu;
 
-		// Token: 0x04001736 RID: 5942
+		// Token: 0x04001743 RID: 5955
 		private const string ovrOverlayID = "OVROverlayID";
 
-		// Token: 0x04001737 RID: 5943
+		// Token: 0x04001744 RID: 5956
 		private const string applicationID = "ApplicationID";
 
-		// Token: 0x04001738 RID: 5944
+		// Token: 0x04001745 RID: 5957
 		private const string noneID = "NoneID";
 
-		// Token: 0x04001739 RID: 5945
+		// Token: 0x04001746 RID: 5958
 		private Toggle applicationRadioButton;
 
-		// Token: 0x0400173A RID: 5946
+		// Token: 0x04001747 RID: 5959
 		private Toggle noneRadioButton;
 
-		// Token: 0x0400173B RID: 5947
+		// Token: 0x04001748 RID: 5960
 		[Header("App vs Compositor Comparison Settings")]
 		public GameObject mainCamera;
 
-		// Token: 0x0400173C RID: 5948
+		// Token: 0x04001749 RID: 5961
 		public GameObject uiCamera;
 
-		// Token: 0x0400173D RID: 5949
+		// Token: 0x0400174A RID: 5962
 		public GameObject uiGeoParent;
 
-		// Token: 0x0400173E RID: 5950
+		// Token: 0x0400174B RID: 5963
 		public GameObject worldspaceGeoParent;
 
-		// Token: 0x0400173F RID: 5951
+		// Token: 0x0400174C RID: 5964
 		public OVROverlay cameraRenderOverlay;
 
-		// Token: 0x04001740 RID: 5952
+		// Token: 0x0400174D RID: 5965
 		public OVROverlay renderingLabelOverlay;
 
-		// Token: 0x04001741 RID: 5953
+		// Token: 0x0400174E RID: 5966
 		public Texture applicationLabelTexture;
 
-		// Token: 0x04001742 RID: 5954
+		// Token: 0x0400174F RID: 5967
 		public Texture compositorLabelTexture;
 
-		// Token: 0x04001743 RID: 5955
+		// Token: 0x04001750 RID: 5968
 		[Header("Level Loading Sim Settings")]
 		public GameObject prefabForLevelLoadSim;
 
-		// Token: 0x04001744 RID: 5956
+		// Token: 0x04001751 RID: 5969
 		public OVROverlay cubemapOverlay;
 
-		// Token: 0x04001745 RID: 5957
+		// Token: 0x04001752 RID: 5970
 		public OVROverlay loadingTextQuadOverlay;
 
-		// Token: 0x04001746 RID: 5958
+		// Token: 0x04001753 RID: 5971
 		public float distanceFromCamToLoadText;
 
-		// Token: 0x04001747 RID: 5959
+		// Token: 0x04001754 RID: 5972
 		public float cubeSpawnRadius;
 
-		// Token: 0x04001748 RID: 5960
+		// Token: 0x04001755 RID: 5973
 		public float heightBetweenItems;
 
-		// Token: 0x04001749 RID: 5961
+		// Token: 0x04001756 RID: 5974
 		public int numObjectsPerLevel;
 
-		// Token: 0x0400174A RID: 5962
+		// Token: 0x04001757 RID: 5975
 		public int numLevels;
 
-		// Token: 0x0400174B RID: 5963
+		// Token: 0x04001758 RID: 5976
 		public int numLoopsTrigger = 500000000;
 
-		// Token: 0x0400174C RID: 5964
+		// Token: 0x04001759 RID: 5977
 		private List<GameObject> spawnedCubes = new List<GameObject>();
 	}
 }

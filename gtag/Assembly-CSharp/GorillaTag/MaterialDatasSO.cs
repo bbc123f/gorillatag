@@ -5,11 +5,11 @@ using UnityEngine;
 
 namespace GorillaTag
 {
-	// Token: 0x02000311 RID: 785
+	// Token: 0x02000313 RID: 787
 	[CreateAssetMenu(fileName = "MaterialDatasSO", menuName = "Gorilla Tag/MaterialDatasSO")]
 	public class MaterialDatasSO : ScriptableObject
 	{
-		// Token: 0x040017BD RID: 6077
+		// Token: 0x040017CA RID: 6090
 		public List<Player.MaterialData> datas;
 	}
 }

@@ -9,13 +9,13 @@ using UnityEngine;
 [RequireComponent(typeof(VRRig), typeof(VRRigReliableState))]
 internal class RigContainer : MonoBehaviour
 {
-	// Token: 0x1700005E RID: 94
-	// (get) Token: 0x0600089F RID: 2207 RVA: 0x000352D7 File Offset: 0x000334D7
-	// (set) Token: 0x060008A0 RID: 2208 RVA: 0x000352DF File Offset: 0x000334DF
+	// Token: 0x1700005F RID: 95
+	// (get) Token: 0x060008A0 RID: 2208 RVA: 0x00035117 File Offset: 0x00033317
+	// (set) Token: 0x060008A1 RID: 2209 RVA: 0x0003511F File Offset: 0x0003331F
 	public bool Initialized { get; private set; }
 
-	// Token: 0x1700005F RID: 95
-	// (get) Token: 0x060008A1 RID: 2209 RVA: 0x000352E8 File Offset: 0x000334E8
+	// Token: 0x17000060 RID: 96
+	// (get) Token: 0x060008A2 RID: 2210 RVA: 0x00035128 File Offset: 0x00033328
 	public VRRig Rig
 	{
 		get
@@ -24,8 +24,8 @@ internal class RigContainer : MonoBehaviour
 		}
 	}
 
-	// Token: 0x17000060 RID: 96
-	// (get) Token: 0x060008A2 RID: 2210 RVA: 0x000352F0 File Offset: 0x000334F0
+	// Token: 0x17000061 RID: 97
+	// (get) Token: 0x060008A3 RID: 2211 RVA: 0x00035130 File Offset: 0x00033330
 	public VRRigReliableState ReliableState
 	{
 		get
@@ -34,8 +34,8 @@ internal class RigContainer : MonoBehaviour
 		}
 	}
 
-	// Token: 0x17000061 RID: 97
-	// (get) Token: 0x060008A3 RID: 2211 RVA: 0x000352F8 File Offset: 0x000334F8
+	// Token: 0x17000062 RID: 98
+	// (get) Token: 0x060008A4 RID: 2212 RVA: 0x00035138 File Offset: 0x00033338
 	public Transform SpeakerHead
 	{
 		get
@@ -44,9 +44,9 @@ internal class RigContainer : MonoBehaviour
 		}
 	}
 
-	// Token: 0x17000062 RID: 98
-	// (get) Token: 0x060008A4 RID: 2212 RVA: 0x00035300 File Offset: 0x00033500
-	// (set) Token: 0x060008A5 RID: 2213 RVA: 0x00035308 File Offset: 0x00033508
+	// Token: 0x17000063 RID: 99
+	// (get) Token: 0x060008A5 RID: 2213 RVA: 0x00035140 File Offset: 0x00033340
+	// (set) Token: 0x060008A6 RID: 2214 RVA: 0x00035148 File Offset: 0x00033348
 	public PhotonVoiceView Voice
 	{
 		get
@@ -68,8 +68,8 @@ internal class RigContainer : MonoBehaviour
 		}
 	}
 
-	// Token: 0x17000063 RID: 99
-	// (get) Token: 0x060008A6 RID: 2214 RVA: 0x00035345 File Offset: 0x00033545
+	// Token: 0x17000064 RID: 100
+	// (get) Token: 0x060008A7 RID: 2215 RVA: 0x00035185 File Offset: 0x00033385
 	public PhotonView photonView
 	{
 		get
@@ -78,9 +78,9 @@ internal class RigContainer : MonoBehaviour
 		}
 	}
 
-	// Token: 0x17000064 RID: 100
-	// (get) Token: 0x060008A7 RID: 2215 RVA: 0x00035352 File Offset: 0x00033552
-	// (set) Token: 0x060008A8 RID: 2216 RVA: 0x0003535D File Offset: 0x0003355D
+	// Token: 0x17000065 RID: 101
+	// (get) Token: 0x060008A8 RID: 2216 RVA: 0x00035192 File Offset: 0x00033392
+	// (set) Token: 0x060008A9 RID: 2217 RVA: 0x0003519D File Offset: 0x0003339D
 	public bool Muted
 	{
 		get
@@ -94,9 +94,9 @@ internal class RigContainer : MonoBehaviour
 		}
 	}
 
-	// Token: 0x17000065 RID: 101
-	// (get) Token: 0x060008A9 RID: 2217 RVA: 0x0003536F File Offset: 0x0003356F
-	// (set) Token: 0x060008AA RID: 2218 RVA: 0x0003537C File Offset: 0x0003357C
+	// Token: 0x17000066 RID: 102
+	// (get) Token: 0x060008AA RID: 2218 RVA: 0x000351AF File Offset: 0x000333AF
+	// (set) Token: 0x060008AB RID: 2219 RVA: 0x000351BC File Offset: 0x000333BC
 	public Player Creator
 	{
 		get
@@ -113,9 +113,9 @@ internal class RigContainer : MonoBehaviour
 		}
 	}
 
-	// Token: 0x17000066 RID: 102
-	// (get) Token: 0x060008AB RID: 2219 RVA: 0x000353B7 File Offset: 0x000335B7
-	// (set) Token: 0x060008AC RID: 2220 RVA: 0x000353BF File Offset: 0x000335BF
+	// Token: 0x17000067 RID: 103
+	// (get) Token: 0x060008AC RID: 2220 RVA: 0x000351F7 File Offset: 0x000333F7
+	// (set) Token: 0x060008AD RID: 2221 RVA: 0x000351FF File Offset: 0x000333FF
 	public bool ForceMute
 	{
 		get
@@ -129,7 +129,7 @@ internal class RigContainer : MonoBehaviour
 		}
 	}
 
-	// Token: 0x060008AD RID: 2221 RVA: 0x000353CE File Offset: 0x000335CE
+	// Token: 0x060008AE RID: 2222 RVA: 0x0003520E File Offset: 0x0003340E
 	private void Start()
 	{
 		if (this.Rig.isOfflineVRRig)
@@ -138,7 +138,7 @@ internal class RigContainer : MonoBehaviour
 		}
 	}
 
-	// Token: 0x060008AE RID: 2222 RVA: 0x000353F0 File Offset: 0x000335F0
+	// Token: 0x060008AF RID: 2223 RVA: 0x00035230 File Offset: 0x00033430
 	private void OnDisable()
 	{
 		this.Initialized = false;
@@ -151,7 +151,7 @@ internal class RigContainer : MonoBehaviour
 		this.forceMute = false;
 	}
 
-	// Token: 0x060008AF RID: 2223 RVA: 0x0003547C File Offset: 0x0003367C
+	// Token: 0x060008B0 RID: 2224 RVA: 0x000352BC File Offset: 0x000334BC
 	public void InitializeNetwork(PhotonView photonView, PhotonVoiceView voiceView)
 	{
 		if (!photonView || !voiceView)
@@ -191,7 +191,7 @@ internal class RigContainer : MonoBehaviour
 		this.vrrig.voiceAudio = voiceView.SpeakerInUse.GetComponent<AudioSource>();
 	}
 
-	// Token: 0x060008B0 RID: 2224 RVA: 0x000355DC File Offset: 0x000337DC
+	// Token: 0x060008B1 RID: 2225 RVA: 0x0003541C File Offset: 0x0003361C
 	public void RefreshVoiceChat()
 	{
 		if (this.photonVoiceView == null)
@@ -201,7 +201,7 @@ internal class RigContainer : MonoBehaviour
 		this.photonVoiceView.SpeakerInUse.enabled = (!this.forceMute && this.enableVoice && GorillaComputer.instance.voiceChatOn == "TRUE");
 	}
 
-	// Token: 0x060008B1 RID: 2225 RVA: 0x00035634 File Offset: 0x00033834
+	// Token: 0x060008B2 RID: 2226 RVA: 0x00035474 File Offset: 0x00033674
 	public static void RefreshAllRigVoices()
 	{
 		RigContainer.staticTempRC = null;

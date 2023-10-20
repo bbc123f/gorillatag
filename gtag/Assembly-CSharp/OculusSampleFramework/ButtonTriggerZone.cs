@@ -3,21 +3,21 @@ using UnityEngine;
 
 namespace OculusSampleFramework
 {
-	// Token: 0x020002CD RID: 717
+	// Token: 0x020002CF RID: 719
 	public class ButtonTriggerZone : MonoBehaviour, ColliderZone
 	{
-		// Token: 0x1700012B RID: 299
-		// (get) Token: 0x06001359 RID: 4953 RVA: 0x0006FBA6 File Offset: 0x0006DDA6
-		// (set) Token: 0x0600135A RID: 4954 RVA: 0x0006FBAE File Offset: 0x0006DDAE
+		// Token: 0x1700012D RID: 301
+		// (get) Token: 0x06001360 RID: 4960 RVA: 0x00070072 File Offset: 0x0006E272
+		// (set) Token: 0x06001361 RID: 4961 RVA: 0x0007007A File Offset: 0x0006E27A
 		public Collider Collider { get; private set; }
 
-		// Token: 0x1700012C RID: 300
-		// (get) Token: 0x0600135B RID: 4955 RVA: 0x0006FBB7 File Offset: 0x0006DDB7
-		// (set) Token: 0x0600135C RID: 4956 RVA: 0x0006FBBF File Offset: 0x0006DDBF
+		// Token: 0x1700012E RID: 302
+		// (get) Token: 0x06001362 RID: 4962 RVA: 0x00070083 File Offset: 0x0006E283
+		// (set) Token: 0x06001363 RID: 4963 RVA: 0x0007008B File Offset: 0x0006E28B
 		public Interactable ParentInteractable { get; private set; }
 
-		// Token: 0x1700012D RID: 301
-		// (get) Token: 0x0600135D RID: 4957 RVA: 0x0006FBC8 File Offset: 0x0006DDC8
+		// Token: 0x1700012F RID: 303
+		// (get) Token: 0x06001364 RID: 4964 RVA: 0x00070094 File Offset: 0x0006E294
 		public InteractableCollisionDepth CollisionDepth
 		{
 			get
@@ -38,14 +38,14 @@ namespace OculusSampleFramework
 			}
 		}
 
-		// Token: 0x0600135E RID: 4958 RVA: 0x0006FC08 File Offset: 0x0006DE08
+		// Token: 0x06001365 RID: 4965 RVA: 0x000700D4 File Offset: 0x0006E2D4
 		private void Awake()
 		{
 			this.Collider = base.GetComponent<Collider>();
 			this.ParentInteractable = this._parentInteractableObj.GetComponent<Interactable>();
 		}
 
-		// Token: 0x04001631 RID: 5681
+		// Token: 0x0400163E RID: 5694
 		[SerializeField]
 		private GameObject _parentInteractableObj;
 	}

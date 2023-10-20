@@ -1,10 +1,10 @@
 ﻿using System;
 using UnityEngine;
 
-// Token: 0x02000193 RID: 403
+// Token: 0x02000194 RID: 404
 public class MagicCauldronLiquid : MonoBehaviour
 {
-	// Token: 0x06000A5E RID: 2654 RVA: 0x00040C31 File Offset: 0x0003EE31
+	// Token: 0x06000A63 RID: 2659 RVA: 0x00040D69 File Offset: 0x0003EF69
 	private void Test()
 	{
 		this._animProgress = 0f;
@@ -12,7 +12,7 @@ public class MagicCauldronLiquid : MonoBehaviour
 		base.enabled = true;
 	}
 
-	// Token: 0x06000A5F RID: 2655 RVA: 0x00040C4C File Offset: 0x0003EE4C
+	// Token: 0x06000A64 RID: 2660 RVA: 0x00040D84 File Offset: 0x0003EF84
 	public void AnimateColorFromTo(Color a, Color b, float length = 1f)
 	{
 		this._colorStart = a;
@@ -23,7 +23,7 @@ public class MagicCauldronLiquid : MonoBehaviour
 		base.enabled = true;
 	}
 
-	// Token: 0x06000A60 RID: 2656 RVA: 0x00040C7C File Offset: 0x0003EE7C
+	// Token: 0x06000A65 RID: 2661 RVA: 0x00040DB4 File Offset: 0x0003EFB4
 	private void ApplyColor(Color color)
 	{
 		if (!this._applyMaterial)
@@ -34,7 +34,7 @@ public class MagicCauldronLiquid : MonoBehaviour
 		this._applyMaterial.Apply();
 	}
 
-	// Token: 0x06000A61 RID: 2657 RVA: 0x00040CA8 File Offset: 0x0003EEA8
+	// Token: 0x06000A66 RID: 2662 RVA: 0x00040DE0 File Offset: 0x0003EFE0
 	private void ApplyWaveParams(float amplitude, float frequency, float scale, float rotation)
 	{
 		if (!this._applyMaterial)
@@ -47,7 +47,7 @@ public class MagicCauldronLiquid : MonoBehaviour
 		this._applyMaterial.Apply();
 	}
 
-	// Token: 0x06000A62 RID: 2658 RVA: 0x00040D01 File Offset: 0x0003EF01
+	// Token: 0x06000A67 RID: 2663 RVA: 0x00040E39 File Offset: 0x0003F039
 	private void OnEnable()
 	{
 		if (this._applyMaterial)
@@ -56,14 +56,14 @@ public class MagicCauldronLiquid : MonoBehaviour
 		}
 	}
 
-	// Token: 0x06000A63 RID: 2659 RVA: 0x00040D1C File Offset: 0x0003EF1C
+	// Token: 0x06000A68 RID: 2664 RVA: 0x00040E54 File Offset: 0x0003F054
 	private void OnDisable()
 	{
 		this._animating = false;
 		this._animProgress = 0f;
 	}
 
-	// Token: 0x06000A64 RID: 2660 RVA: 0x00040D30 File Offset: 0x0003EF30
+	// Token: 0x06000A69 RID: 2665 RVA: 0x00040E68 File Offset: 0x0003F068
 	private void Update()
 	{
 		if (!this._animating)
@@ -88,57 +88,57 @@ public class MagicCauldronLiquid : MonoBehaviour
 		this._animProgress += Time.deltaTime;
 	}
 
-	// Token: 0x04000D1A RID: 3354
+	// Token: 0x04000D1E RID: 3358
 	[SerializeField]
 	private ApplyMaterialProperty _applyMaterial;
 
-	// Token: 0x04000D1B RID: 3355
+	// Token: 0x04000D1F RID: 3359
 	[SerializeField]
 	private Color _colorStart;
 
-	// Token: 0x04000D1C RID: 3356
+	// Token: 0x04000D20 RID: 3360
 	[SerializeField]
 	private Color _colorEnd;
 
-	// Token: 0x04000D1D RID: 3357
+	// Token: 0x04000D21 RID: 3361
 	[SerializeField]
 	private bool _animating;
 
-	// Token: 0x04000D1E RID: 3358
+	// Token: 0x04000D22 RID: 3362
 	[SerializeField]
 	private float _animProgress;
 
-	// Token: 0x04000D1F RID: 3359
+	// Token: 0x04000D23 RID: 3363
 	[SerializeField]
 	private AnimationCurve _animationCurve = AnimationCurves.EaseOutCubic;
 
-	// Token: 0x04000D20 RID: 3360
+	// Token: 0x04000D24 RID: 3364
 	[SerializeField]
 	private AnimationCurve _waveCurve = AnimationCurves.EaseInElastic;
 
-	// Token: 0x04000D21 RID: 3361
+	// Token: 0x04000D25 RID: 3365
 	public float animLength = 1f;
 
-	// Token: 0x04000D22 RID: 3362
+	// Token: 0x04000D26 RID: 3366
 	public MagicCauldronLiquid.WaveParams waveNormal;
 
-	// Token: 0x04000D23 RID: 3363
+	// Token: 0x04000D27 RID: 3367
 	public MagicCauldronLiquid.WaveParams waveAnimating;
 
-	// Token: 0x02000440 RID: 1088
+	// Token: 0x02000442 RID: 1090
 	[Serializable]
 	public struct WaveParams
 	{
-		// Token: 0x04001D9A RID: 7578
+		// Token: 0x04001DA7 RID: 7591
 		public float amplitude;
 
-		// Token: 0x04001D9B RID: 7579
+		// Token: 0x04001DA8 RID: 7592
 		public float frequency;
 
-		// Token: 0x04001D9C RID: 7580
+		// Token: 0x04001DA9 RID: 7593
 		public float scale;
 
-		// Token: 0x04001D9D RID: 7581
+		// Token: 0x04001DAA RID: 7594
 		public float rotation;
 	}
 }

@@ -4,10 +4,10 @@ using UnityEngine;
 
 namespace GorillaNetworking
 {
-	// Token: 0x020002AD RID: 685
+	// Token: 0x020002AF RID: 687
 	public class CosmeticItemInstance
 	{
-		// Token: 0x060011E3 RID: 4579 RVA: 0x00065D80 File Offset: 0x00063F80
+		// Token: 0x060011EA RID: 4586 RVA: 0x0006624C File Offset: 0x0006444C
 		private void EnableItem(GameObject obj, bool enable)
 		{
 			CosmeticAnchors component = obj.GetComponent<CosmeticAnchors>();
@@ -22,7 +22,7 @@ namespace GorillaNetworking
 			}
 		}
 
-		// Token: 0x060011E4 RID: 4580 RVA: 0x00065DC0 File Offset: 0x00063FC0
+		// Token: 0x060011EB RID: 4587 RVA: 0x0006628C File Offset: 0x0006448C
 		public void DisableItem(CosmeticsController.CosmeticSlots cosmeticSlot)
 		{
 			bool flag = CosmeticsController.CosmeticSet.IsSlotLeftHanded(cosmeticSlot);
@@ -47,7 +47,7 @@ namespace GorillaNetworking
 			}
 		}
 
-		// Token: 0x060011E5 RID: 4581 RVA: 0x00065EB4 File Offset: 0x000640B4
+		// Token: 0x060011EC RID: 4588 RVA: 0x00066380 File Offset: 0x00064580
 		public void EnableItem(CosmeticsController.CosmeticSlots cosmeticSlot)
 		{
 			bool flag = CosmeticsController.CosmeticSet.IsSlotLeftHanded(cosmeticSlot);
@@ -72,13 +72,13 @@ namespace GorillaNetworking
 			}
 		}
 
-		// Token: 0x040014C2 RID: 5314
+		// Token: 0x040014CF RID: 5327
 		public List<GameObject> leftObjects = new List<GameObject>();
 
-		// Token: 0x040014C3 RID: 5315
+		// Token: 0x040014D0 RID: 5328
 		public List<GameObject> rightObjects = new List<GameObject>();
 
-		// Token: 0x040014C4 RID: 5316
+		// Token: 0x040014D1 RID: 5329
 		public List<GameObject> objects = new List<GameObject>();
 	}
 }

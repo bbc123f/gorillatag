@@ -1,20 +1,20 @@
 ﻿using System;
 
-// Token: 0x02000168 RID: 360
+// Token: 0x02000169 RID: 361
 public enum CrystalNote
 {
-	// Token: 0x04000B0A RID: 2826
-	C,
-	// Token: 0x04000B0B RID: 2827
-	D,
-	// Token: 0x04000B0C RID: 2828
-	E,
-	// Token: 0x04000B0D RID: 2829
-	F,
 	// Token: 0x04000B0E RID: 2830
-	G,
+	C,
 	// Token: 0x04000B0F RID: 2831
-	A,
+	D,
 	// Token: 0x04000B10 RID: 2832
+	E,
+	// Token: 0x04000B11 RID: 2833
+	F,
+	// Token: 0x04000B12 RID: 2834
+	G,
+	// Token: 0x04000B13 RID: 2835
+	A,
+	// Token: 0x04000B14 RID: 2836
 	B
 }
