@@ -1,0 +1,47 @@
+﻿using System;
+using UnityEngine;
+
+public class HotPepperFace : MonoBehaviour
+{
+	public void PlayFX(float delay)
+	{
+		if (delay < 0f)
+		{
+			this.PlayFX();
+			return;
+		}
+		base.Invoke("PlayFX", delay);
+	}
+
+	public void PlayFX()
+	{
+		this._faceMesh.SetActive(true);
+		this._fireFX.Play();
+		this._flameSpeaker.Play();
+		this._breathSpeaker.Play();
+		base.Invoke("StopFX", this._effectLength);
+	}
+
+	public void StopFX()
+	{
+		this._faceMesh.SetActive(false);
+		this._fireFX.Stop();
+		this._flameSpeaker.Stop();
+		this._breathSpeaker.Stop();
+	}
+
+	[SerializeField]
+	private GameObject _faceMesh;
+
+	[SerializeField]
+	private ParticleSystem _fireFX;
+
+	[SerializeField]
+	private AudioSource _flameSpeaker;
+
+	[SerializeField]
+	private AudioSource _breathSpeaker;
+
+	[SerializeField]
+	private float _effectLength = 1.5f;
+}
