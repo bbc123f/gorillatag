@@ -63,6 +63,10 @@ public class GorillaPlayerScoreboardLine : MonoBehaviour
 
 	public void SetLineData(Player player)
 	{
+		if (this.playerActorNumber != player.ActorNumber)
+		{
+			this.initTime = Time.time;
+		}
 		this.playerActorNumber = player.ActorNumber;
 		this.linePlayer = player;
 		this.playerNameValue = player.NickName;
@@ -87,16 +91,19 @@ public class GorillaPlayerScoreboardLine : MonoBehaviour
 				}
 				if (this.rigContainer != null)
 				{
-					if (this.playerVRRig.photonView != null)
+					if (Time.time > this.initTime + this.emptyRigCooldown)
 					{
-						this.emptyRigCount = 0;
-					}
-					else
-					{
-						this.emptyRigCount++;
-						if (this.emptyRigCount > 5)
+						if (this.playerVRRig.photonView != null)
 						{
-							GorillaNot.instance.SendReport("empty rig", this.linePlayer.UserId, this.linePlayer.NickName);
+							this.emptyRigCount = 0;
+						}
+						else
+						{
+							this.emptyRigCount++;
+							if (this.emptyRigCount > 5)
+							{
+								GorillaNot.instance.SendReport("empty rig", this.linePlayer.UserId, this.linePlayer.NickName);
+							}
 						}
 					}
 					if (this.playerVRRig.setMatIndex != this.currentMatIndex && this.playerVRRig.setMatIndex != 0 && this.playerVRRig.setMatIndex > -1 && this.playerVRRig.setMatIndex < this.playerVRRig.materialsToChangeTo.Length)
@@ -229,6 +236,7 @@ public class GorillaPlayerScoreboardLine : MonoBehaviour
 		RaiseEventOptions raiseEventOptions = new RaiseEventOptions();
 		WebFlags flags = new WebFlags(1);
 		raiseEventOptions.Flags = flags;
+		raiseEventOptions.TargetActors = GorillaPlayerScoreboardLine.targetActors;
 		byte eventCode = 50;
 		object[] eventContent = new object[]
 		{
@@ -251,6 +259,7 @@ public class GorillaPlayerScoreboardLine : MonoBehaviour
 		RaiseEventOptions raiseEventOptions = new RaiseEventOptions();
 		WebFlags flags = new WebFlags(1);
 		raiseEventOptions.Flags = flags;
+		raiseEventOptions.TargetActors = GorillaPlayerScoreboardLine.targetActors;
 		byte eventCode = 51;
 		object[] eventContent = new object[]
 		{
@@ -302,6 +311,11 @@ public class GorillaPlayerScoreboardLine : MonoBehaviour
 	{
 		GorillaScoreboardTotalUpdater.UnregisterSL(this);
 	}
+
+	private static int[] targetActors = new int[]
+	{
+		-1
+	};
 
 	public Text playerName;
 
@@ -368,6 +382,10 @@ public class GorillaPlayerScoreboardLine : MonoBehaviour
 	public bool lastVisible = true;
 
 	public GorillaScoreBoard parentScoreboard;
+
+	public float initTime;
+
+	public float emptyRigCooldown = 10f;
 
 	internal RigContainer rigContainer;
 }

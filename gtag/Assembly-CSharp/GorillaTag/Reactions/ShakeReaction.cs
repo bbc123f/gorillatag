@@ -13,6 +13,8 @@ namespace GorillaTag.Reactions
 			}
 		}
 
+		bool ITickSystemPost.PostTickRunning { get; set; }
+
 		protected void Awake()
 		{
 			this.sampleHistoryPos = new Vector3[256];
@@ -43,7 +45,7 @@ namespace GorillaTag.Reactions
 			this.hasLoopSound = (this.loopSoundAudioSource != null);
 			this.hasShakeSound = (this.shakeSoundBankPlayer != null);
 			this.hasParticleSystem = (this.particles != null);
-			TickSystem.AddPostTickCallback(this);
+			TickSystem<object>.AddPostTickCallback(this);
 		}
 
 		protected void OnDisable()
@@ -52,12 +54,12 @@ namespace GorillaTag.Reactions
 			{
 				this.loopSoundAudioSource.Stop();
 			}
-			TickSystem.RemovePostTickCallback(this);
+			TickSystem<object>.RemovePostTickCallback(this);
 		}
 
 		private void HandleApplicationQuitting()
 		{
-			TickSystem.RemovePostTickCallback(this);
+			TickSystem<object>.RemovePostTickCallback(this);
 		}
 
 		void ITickSystemPost.PostTick()

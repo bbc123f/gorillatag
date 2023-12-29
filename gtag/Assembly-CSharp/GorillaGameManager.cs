@@ -409,10 +409,11 @@ public abstract class GorillaGameManager : MonoBehaviourPunCallbacks, IInRoomCal
 			return;
 		}
 		this.tempRig = this.FindPlayerVRRig(info.Sender);
-		if (this.tempRig != null && (this.tempRig.transform.position - slingshotLaunchLocation).magnitude < this.tagDistanceThreshold)
+		if (this.tempRig.IsNull() || !this.tempRig.CheckDistance(slingshotLaunchLocation, this.tagDistanceThreshold))
 		{
-			this.tempRig.slingshot.LaunchNetworkedProjectile(slingshotLaunchLocation, slingshotLaunchVelocity, projHash, trailHash, projectileCount, this.tempRig.scaleFactor, shouldOverrideColor, new Color(colorR, colorG, colorB, colorA), info);
+			return;
 		}
+		this.tempRig.slingshot.LaunchNetworkedProjectile(slingshotLaunchLocation, slingshotLaunchVelocity, projHash, trailHash, projectileCount, this.tempRig.scaleFactor, shouldOverrideColor, new Color(colorR, colorG, colorB, colorA), info);
 	}
 
 	[PunRPC]
@@ -523,7 +524,7 @@ public abstract class GorillaGameManager : MonoBehaviourPunCallbacks, IInRoomCal
 
 	public Dictionary<Photon.Realtime.Player, List<GorillaGameManager.ProjectileInfo>> playerProjectiles = new Dictionary<Photon.Realtime.Player, List<GorillaGameManager.ProjectileInfo>>();
 
-	public float tagDistanceThreshold = 8f;
+	public float tagDistanceThreshold = 4f;
 
 	public bool testAssault;
 

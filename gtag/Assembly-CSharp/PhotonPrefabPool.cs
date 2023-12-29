@@ -9,6 +9,8 @@ using UnityEngine;
 
 public class PhotonPrefabPool : MonoBehaviour, IPunPrefabPool, ITickSystemPre
 {
+	bool ITickSystemPre.PreTickRunning { get; set; }
+
 	private void Start()
 	{
 		PhotonNetwork.PrefabPool = this;
@@ -68,7 +70,7 @@ public class PhotonPrefabPool : MonoBehaviour, IPunPrefabPool, ITickSystemPre
 		if (!this.waiting)
 		{
 			this.waiting = true;
-			TickSystem.AddPreTickCallback(this);
+			TickSystem<object>.AddPreTickCallback(this);
 		}
 	}
 
@@ -93,7 +95,7 @@ public class PhotonPrefabPool : MonoBehaviour, IPunPrefabPool, ITickSystemPre
 				}
 			}
 		}
-		TickSystem.RemovePreTickCallback(this);
+		TickSystem<object>.RemovePreTickCallback(this);
 	}
 
 	private void CheckVOIPSettings(RemoteVoiceLink voiceLink)

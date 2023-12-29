@@ -263,7 +263,7 @@ public class GorillaTagManager : GorillaGameManager, IInRoomCallbacks, IMatchmak
 			}
 			else if (this.currentInfected.Contains(taggingPlayer) && !this.currentInfected.Contains(taggedPlayer) && (double)Time.time > this.lastTag + (double)this.tagCoolDown)
 			{
-				if ((this.taggingRig.transform.position - this.taggedRig.transform.position).magnitude > this.tagDistanceThreshold)
+				if (!this.taggingRig.CheckDistance(this.taggedRig.transform.position, this.tagDistanceThreshold))
 				{
 					GorillaNot.instance.SendReport("extremely far tag", taggingPlayer.UserId, taggingPlayer.NickName);
 				}

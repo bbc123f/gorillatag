@@ -1,92 +1,56 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 
-internal class CallbackContainer<T>
+internal class CallbackContainer<T> where T : ICallBack
 {
 	public virtual void Add(T inCallback)
 	{
-		if (this.runningUpdate)
-		{
-			this.addQ.Enqueue(inCallback);
-			return;
-		}
-		this.callbacks.Add(inCallback);
+		this.callbackCount++;
+		this.callbackList.Add(inCallback);
 	}
 
 	public virtual void Remove(T inCallback)
 	{
-		if (this.runningUpdate)
+		int num = this.callbackList.IndexOf(inCallback);
+		if (num > -1)
 		{
-			this.removeQ.Enqueue(inCallback);
-			return;
-		}
-		this.callbacks.Remove(inCallback);
-	}
-
-	public void SetRunUpdateCallback(CallbackContainer<T>.runCallbacksDelegate callback)
-	{
-		this.RunCallBack = callback;
-	}
-
-	public virtual void UpdateCallbacks()
-	{
-		while (this.addQ.Count > 0)
-		{
-			this.callbacks.Add(this.addQ.Dequeue());
-		}
-		while (this.removeQ.Count > 0)
-		{
-			this.callbacks.Remove(this.removeQ.Dequeue());
+			if (num <= this.currentIndex)
+			{
+				this.currentIndex--;
+			}
+			this.callbackCount--;
+			this.callbackList.RemoveAt(num);
 		}
 	}
 
 	public virtual void TryRunCallbacks()
 	{
-		this.runningUpdate = true;
-		this.UpdateCallbacks();
-		foreach (T callback in this.callbacks)
+		this.callbackCount = this.callbackList.Count;
+		this.currentIndex = 0;
+		while (this.currentIndex < this.callbackCount)
 		{
 			try
 			{
-				this.RunCallBack(callback);
+				T t = this.callbackList[this.currentIndex];
+				t.CallBack();
 			}
 			catch (Exception ex)
 			{
-				GTDev.LogError(ex.ToString(), null);
+				Debug.LogError(ex.ToString());
 			}
+			this.currentIndex++;
 		}
-		this.runningUpdate = false;
 	}
 
-	public virtual void TryRunCallbacks(CallbackContainer<T>.runCallbacksDelegate callbackDelegate)
+	public virtual void Clear()
 	{
-		this.runningUpdate = true;
-		this.UpdateCallbacks();
-		foreach (T callback in this.callbacks)
-		{
-			try
-			{
-				callbackDelegate(callback);
-			}
-			catch (Exception ex)
-			{
-				GTDev.LogError(ex.ToString(), null);
-			}
-		}
-		this.runningUpdate = false;
+		this.callbackList.Clear();
 	}
 
-	protected bool runningUpdate;
+	protected List<T> callbackList = new List<T>(100);
 
-	protected Queue<T> addQ = new Queue<T>(20);
+	protected int currentIndex = -1;
 
-	protected Queue<T> removeQ = new Queue<T>(20);
-
-	protected HashSet<T> callbacks = new HashSet<T>();
-
-	protected CallbackContainer<T>.runCallbacksDelegate RunCallBack = delegate(T t)
-	{
-	};
-
-	public delegate void runCallbacksDelegate(T callback);
+	protected int callbackCount = -1;
 }

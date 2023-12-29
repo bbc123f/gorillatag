@@ -12,6 +12,8 @@ using UnityEngine;
 
 internal class PlayerCosmeticsSystem : MonoBehaviour, ITickSystemPre
 {
+	bool ITickSystemPre.PreTickRunning { get; set; }
+
 	private void Awake()
 	{
 		if (PlayerCosmeticsSystem.instance == null)
@@ -41,7 +43,7 @@ internal class PlayerCosmeticsSystem : MonoBehaviour, ITickSystemPre
 	{
 		if (!this.isLookingUp)
 		{
-			TickSystem.AddPreTickCallback(this);
+			TickSystem<object>.AddPreTickCallback(this);
 			if (wait)
 			{
 				this.startSearchingTime = Time.time;
@@ -55,7 +57,7 @@ internal class PlayerCosmeticsSystem : MonoBehaviour, ITickSystemPre
 	{
 		if (PlayerCosmeticsSystem.playersToLookUp.Count < 1)
 		{
-			TickSystem.RemovePreTickCallback(this);
+			TickSystem<object>.RemovePreTickCallback(this);
 			this.startSearchingTime = float.MinValue;
 			this.isLookingUp = false;
 			return;

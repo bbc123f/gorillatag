@@ -382,7 +382,8 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 			this.scaleFactor = GorillaLocomotion.Player.Instance.scale;
 			base.transform.localScale = Vector3.one * this.scaleFactor;
 			base.transform.eulerAngles = new Vector3(0f, this.mainCamera.transform.rotation.eulerAngles.y, 0f);
-			base.transform.position = this.mainCamera.transform.position + this.headConstraint.rotation * this.head.trackingPositionOffset * this.scaleFactor + base.transform.rotation * this.headBodyOffset * this.scaleFactor;
+			this.syncPos = this.mainCamera.transform.position + this.headConstraint.rotation * this.head.trackingPositionOffset * this.scaleFactor + base.transform.rotation * this.headBodyOffset * this.scaleFactor;
+			base.transform.position = this.syncPos;
 			this.head.MapMine(this.scaleFactor, this.playerOffsetTransform);
 			this.rightHand.MapMine(this.scaleFactor, this.playerOffsetTransform);
 			this.leftHand.MapMine(this.scaleFactor, this.playerOffsetTransform);
@@ -1247,6 +1248,12 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		num5 /= (float)num6;
 		num5 = Mathf.Clamp(num5, 0f, 1f);
 		return Vector3.Lerp(this.velocityHistoryList[num].vel, this.velocityHistoryList[num2].vel, num5);
+	}
+
+	public bool CheckDistance(Vector3 position, float max)
+	{
+		max = max * max * this.scaleFactor;
+		return Vector3.SqrMagnitude(this.syncPos - position) < max;
 	}
 
 	public void SetColor(Color color)

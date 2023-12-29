@@ -139,6 +139,7 @@ public class GorillaNot : MonoBehaviourPunCallbacks
 			RaiseEventOptions raiseEventOptions = new RaiseEventOptions();
 			WebFlags flags = new WebFlags(1);
 			raiseEventOptions.Flags = flags;
+			raiseEventOptions.TargetActors = GorillaNot.targetActors;
 			raiseEventOptions.Receivers = ReceiverGroup.MasterClient;
 			string[] array = new string[this.cachedPlayerList.Length];
 			int num = 0;
@@ -407,6 +408,11 @@ public class GorillaNot : MonoBehaviourPunCallbacks
 	private const string InvalidRPC = "invalid RPC stuff";
 
 	public Player[] cachedPlayerList;
+
+	private static int[] targetActors = new int[]
+	{
+		-1
+	};
 
 	private Dictionary<string, Dictionary<string, GorillaNot.RPCCallTracker>> userRPCCalls = new Dictionary<string, Dictionary<string, GorillaNot.RPCCallTracker>>();
 

@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{EDBE16AB-B147-46D5-91A4-3D94366EBD1B}</ProjectGuid>
+    <ProjectGuid>{48CC1342-2423-4CEE-8DEA-F6FDB68C2347}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>Assembly-CSharp</RootNamespace>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -668,6 +668,7 @@
     <Compile Include="HorseStickNoiseMaker.cs" />
     <Compile Include="HotPepperEvents.cs" />
     <Compile Include="HotPepperFace.cs" />
+    <Compile Include="ICallBack.cs" />
     <Compile Include="Id128.cs" />
     <Compile Include="Id128Ext.cs" />
     <Compile Include="IDebugObject.cs" />
@@ -767,6 +768,8 @@
     <Compile Include="ObjectHierarchyFlattener.cs" />
     <Compile Include="ObjectHierarchyFlattenerManager.cs" />
     <Compile Include="ObjectManipulator.cs" />
+    <Compile Include="ObjectPool.cs" />
+    <Compile Include="ObjectPoolEvents.cs" />
     <Compile Include="ObjectPools.cs" />
     <Compile Include="ObjectToggle.cs" />
     <Compile Include="OculusSampleFramework\BoneCapsuleTriggerLogic.cs" />
@@ -994,6 +997,7 @@
     <Compile Include="ThrowableBug.cs" />
     <Compile Include="ThrowableBugReliableState.cs" />
     <Compile Include="ThrowableSetDressing.cs" />
+    <Compile Include="TickSystem.2.cs" />
     <Compile Include="TickSystem.cs" />
     <Compile Include="TimeOfDayDependentAudio.cs" />
     <Compile Include="TimeOfDayEvent.cs" />
@@ -1021,6 +1025,7 @@
     <Compile Include="UiSceneMenu.cs" />
     <Compile Include="UiVectorInspector.cs" />
     <Compile Include="UmbrellaItem.cs" />
+    <Compile Include="UniqueQueue.cs" />
     <Compile Include="UnityChan\AutoBlink.cs" />
     <Compile Include="UnityChan\IdleChanger.cs" />
     <Compile Include="UnityEngineUtils.cs" />

@@ -1196,7 +1196,7 @@ namespace GorillaNetworking
 
 		private int minorVersion = 1;
 
-		private int minorVersion2 = 66;
+		private int minorVersion2 = 68;
 
 		private string _gameVersionString = "";
 
