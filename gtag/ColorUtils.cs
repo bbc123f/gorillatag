@@ -1,32 +1,32 @@
-using System;
+﻿using System;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public static class ColorUtils
 {
-	private const byte kMaxByteForOverexposedColor = 191;
-
 	public static Color ComposeHDR(Color baseColor, float intensity)
 	{
 		intensity = Mathf.Clamp(intensity, -10f, 10f);
-		Color result = baseColor;
+		Color color = baseColor;
 		if (baseColor.maxColorComponent > 1f)
 		{
-			result = DecomposeHDR(baseColor).baseColor;
+			color = ColorUtils.DecomposeHDR(baseColor).Item1;
 		}
 		float num = Mathf.Pow(2f, intensity);
 		if (QualitySettings.activeColorSpace == ColorSpace.Linear)
 		{
 			num = Mathf.GammaToLinearSpace(intensity);
 		}
-		result *= num;
-		result.a = baseColor.a;
-		return result;
+		color *= num;
+		color.a = baseColor.a;
+		return color;
 	}
 
-	public static (Color baseColor, float intensity) DecomposeHDR(Color hdrColor)
+	[return: TupleElementNames(new string[] { "baseColor", "intensity" })]
+	public static ValueTuple<Color, float> DecomposeHDR(Color hdrColor)
 	{
 		Color32 color = default(Color32);
-		float item = 0f;
+		float num = 0f;
 		float maxColorComponent = hdrColor.maxColorComponent;
 		if (maxColorComponent == 0f || (maxColorComponent <= 1f && maxColorComponent >= 0.003921569f))
 		{
@@ -36,12 +36,14 @@ public static class ColorUtils
 		}
 		else
 		{
-			float num = 191f / maxColorComponent;
-			item = Mathf.Log(255f / num) / Mathf.Log(2f);
-			color.r = Math.Min((byte)191, (byte)Mathf.CeilToInt(num * hdrColor.r));
-			color.g = Math.Min((byte)191, (byte)Mathf.CeilToInt(num * hdrColor.g));
-			color.b = Math.Min((byte)191, (byte)Mathf.CeilToInt(num * hdrColor.b));
+			float num2 = 191f / maxColorComponent;
+			num = Mathf.Log(255f / num2) / Mathf.Log(2f);
+			color.r = Math.Min(191, (byte)Mathf.CeilToInt(num2 * hdrColor.r));
+			color.g = Math.Min(191, (byte)Mathf.CeilToInt(num2 * hdrColor.g));
+			color.b = Math.Min(191, (byte)Mathf.CeilToInt(num2 * hdrColor.b));
 		}
-		return (baseColor: color, intensity: item);
+		return new ValueTuple<Color, float>(color, num);
 	}
+
+	private const byte kMaxByteForOverexposedColor = 191;
 }

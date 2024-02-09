@@ -1,13 +1,16 @@
-namespace Viveport;
+﻿using System;
 
-public enum Locale
+namespace Viveport
 {
-	US,
-	DE,
-	JP,
-	KR,
-	RU,
-	CN,
-	TW,
-	FR
+	public enum Locale
+	{
+		US,
+		DE,
+		JP,
+		KR,
+		RU,
+		CN,
+		TW,
+		FR
+	}
 }

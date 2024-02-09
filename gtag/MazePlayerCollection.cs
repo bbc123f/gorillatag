@@ -1,3 +1,4 @@
+﻿using System;
 using System.Collections.Generic;
 using Photon.Pun;
 using Photon.Realtime;
@@ -5,44 +6,53 @@ using UnityEngine;
 
 public class MazePlayerCollection : MonoBehaviourPunCallbacks
 {
-	public List<VRRig> containedRigs = new List<VRRig>();
-
-	public List<MonkeyeAI> monkeyeAis = new List<MonkeyeAI>();
-
 	public void OnTriggerEnter(Collider other)
 	{
-		if ((bool)other.GetComponent<SphereCollider>())
+		if (!other.GetComponent<SphereCollider>())
 		{
-			VRRig component = other.attachedRigidbody.gameObject.GetComponent<VRRig>();
-			if (!(component == null) && !containedRigs.Contains(component))
-			{
-				containedRigs.Add(component);
-			}
+			return;
+		}
+		VRRig component = other.attachedRigidbody.gameObject.GetComponent<VRRig>();
+		if (component == null)
+		{
+			return;
+		}
+		if (!this.containedRigs.Contains(component))
+		{
+			this.containedRigs.Add(component);
 		}
 	}
 
 	public void OnTriggerExit(Collider other)
 	{
-		if ((bool)other.GetComponent<SphereCollider>())
+		if (!other.GetComponent<SphereCollider>())
 		{
-			VRRig component = other.attachedRigidbody.gameObject.GetComponent<VRRig>();
-			if (!(component == null) && containedRigs.Contains(component))
-			{
-				containedRigs.Remove(component);
-			}
+			return;
+		}
+		VRRig component = other.attachedRigidbody.gameObject.GetComponent<VRRig>();
+		if (component == null)
+		{
+			return;
+		}
+		if (this.containedRigs.Contains(component))
+		{
+			this.containedRigs.Remove(component);
 		}
 	}
 
 	public override void OnPlayerLeftRoom(Player otherPlayer)
 	{
-		VRRig vRRig = null;
-		for (int num = containedRigs.Count - 1; num >= 0; num--)
+		for (int i = this.containedRigs.Count - 1; i >= 0; i--)
 		{
-			vRRig = containedRigs[num];
-			if (vRRig?.creator == null || vRRig.creator == otherPlayer)
+			VRRig vrrig = this.containedRigs[i];
+			if (((vrrig != null) ? vrrig.creator : null) == null || vrrig.creator == otherPlayer)
 			{
-				containedRigs.RemoveAt(num);
+				this.containedRigs.RemoveAt(i);
 			}
 		}
 	}
+
+	public List<VRRig> containedRigs = new List<VRRig>();
+
+	public List<MonkeyeAI> monkeyeAis = new List<MonkeyeAI>();
 }

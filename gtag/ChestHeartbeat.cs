@@ -1,9 +1,55 @@
+﻿using System;
 using System.Collections;
 using Photon.Pun;
 using UnityEngine;
 
 public class ChestHeartbeat : MonoBehaviour
 {
+	public void Update()
+	{
+		if (PhotonNetwork.InRoom)
+		{
+			if ((PhotonNetwork.ServerTimestamp > this.lastShot + this.millisMin || Mathf.Abs(PhotonNetwork.ServerTimestamp - this.lastShot) > 10000) && PhotonNetwork.ServerTimestamp % 1500 <= 10)
+			{
+				this.lastShot = PhotonNetwork.ServerTimestamp;
+				this.audioSource.PlayOneShot(this.audioSource.clip);
+				base.StartCoroutine(this.HeartBeat());
+				return;
+			}
+		}
+		else if ((Time.time * 1000f > (float)(this.lastShot + this.millisMin) || Mathf.Abs(Time.time * 1000f - (float)this.lastShot) > 10000f) && Time.time * 1000f % 1500f <= 10f)
+		{
+			this.lastShot = PhotonNetwork.ServerTimestamp;
+			this.audioSource.PlayOneShot(this.audioSource.clip);
+			base.StartCoroutine(this.HeartBeat());
+		}
+	}
+
+	private IEnumerator HeartBeat()
+	{
+		float startTime = Time.time;
+		while (Time.time < startTime + this.endtime)
+		{
+			if (Time.time < startTime + this.minTime)
+			{
+				this.deltaTime = Time.time - startTime;
+				this.scaleTransform.localScale = Vector3.Lerp(Vector3.one, Vector3.one * this.heartMinSize, this.deltaTime / this.minTime);
+			}
+			else if (Time.time < startTime + this.maxTime)
+			{
+				this.deltaTime = Time.time - startTime - this.minTime;
+				this.scaleTransform.localScale = Vector3.Lerp(Vector3.one * this.heartMinSize, Vector3.one * this.heartMaxSize, this.deltaTime / (this.maxTime - this.minTime));
+			}
+			else if (Time.time < startTime + this.endtime)
+			{
+				this.deltaTime = Time.time - startTime - this.maxTime;
+				this.scaleTransform.localScale = Vector3.Lerp(Vector3.one * this.heartMaxSize, Vector3.one, this.deltaTime / (this.endtime - this.maxTime));
+			}
+			yield return new WaitForFixedUpdate();
+		}
+		yield break;
+	}
+
 	public int millisToWait;
 
 	public int millisMin = 300;
@@ -27,47 +73,4 @@ public class ChestHeartbeat : MonoBehaviour
 	private float endtime = 0.25f;
 
 	private float currentTime;
-
-	public void Update()
-	{
-		if (PhotonNetwork.InRoom)
-		{
-			if ((PhotonNetwork.ServerTimestamp > lastShot + millisMin || Mathf.Abs(PhotonNetwork.ServerTimestamp - lastShot) > 10000) && PhotonNetwork.ServerTimestamp % 1500 <= 10)
-			{
-				lastShot = PhotonNetwork.ServerTimestamp;
-				audioSource.PlayOneShot(audioSource.clip);
-				StartCoroutine(HeartBeat());
-			}
-		}
-		else if ((Time.time * 1000f > (float)(lastShot + millisMin) || Mathf.Abs(Time.time * 1000f - (float)lastShot) > 10000f) && Time.time * 1000f % 1500f <= 10f)
-		{
-			lastShot = PhotonNetwork.ServerTimestamp;
-			audioSource.PlayOneShot(audioSource.clip);
-			StartCoroutine(HeartBeat());
-		}
-	}
-
-	private IEnumerator HeartBeat()
-	{
-		float startTime = Time.time;
-		while (Time.time < startTime + endtime)
-		{
-			if (Time.time < startTime + minTime)
-			{
-				deltaTime = Time.time - startTime;
-				scaleTransform.localScale = Vector3.Lerp(Vector3.one, Vector3.one * heartMinSize, deltaTime / minTime);
-			}
-			else if (Time.time < startTime + maxTime)
-			{
-				deltaTime = Time.time - startTime - minTime;
-				scaleTransform.localScale = Vector3.Lerp(Vector3.one * heartMinSize, Vector3.one * heartMaxSize, deltaTime / (maxTime - minTime));
-			}
-			else if (Time.time < startTime + endtime)
-			{
-				deltaTime = Time.time - startTime - maxTime;
-				scaleTransform.localScale = Vector3.Lerp(Vector3.one * heartMaxSize, Vector3.one, deltaTime / (endtime - maxTime));
-			}
-			yield return new WaitForFixedUpdate();
-		}
-	}
 }

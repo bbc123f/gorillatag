@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
 public class DevInspectorColor : Attribute
@@ -7,6 +7,6 @@ public class DevInspectorColor : Attribute
 
 	public DevInspectorColor(string color)
 	{
-		Color = color;
+		this.Color = color;
 	}
 }

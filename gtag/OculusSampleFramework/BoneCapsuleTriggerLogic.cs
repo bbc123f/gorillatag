@@ -1,57 +1,59 @@
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace OculusSampleFramework;
-
-public class BoneCapsuleTriggerLogic : MonoBehaviour
+namespace OculusSampleFramework
 {
-	public InteractableToolTags ToolTags;
-
-	public HashSet<ColliderZone> CollidersTouchingUs = new HashSet<ColliderZone>();
-
-	private List<ColliderZone> _elementsToCleanUp = new List<ColliderZone>();
-
-	private void OnDisable()
+	public class BoneCapsuleTriggerLogic : MonoBehaviour
 	{
-		CollidersTouchingUs.Clear();
-	}
-
-	private void Update()
-	{
-		CleanUpDeadColliders();
-	}
-
-	private void OnTriggerEnter(Collider other)
-	{
-		ButtonTriggerZone component = other.GetComponent<ButtonTriggerZone>();
-		if (component != null && ((uint)component.ParentInteractable.ValidToolTagsMask & (uint)ToolTags) != 0)
+		private void OnDisable()
 		{
-			CollidersTouchingUs.Add(component);
+			this.CollidersTouchingUs.Clear();
 		}
-	}
 
-	private void OnTriggerExit(Collider other)
-	{
-		ButtonTriggerZone component = other.GetComponent<ButtonTriggerZone>();
-		if (component != null && ((uint)component.ParentInteractable.ValidToolTagsMask & (uint)ToolTags) != 0)
+		private void Update()
 		{
-			CollidersTouchingUs.Remove(component);
+			this.CleanUpDeadColliders();
 		}
-	}
 
-	private void CleanUpDeadColliders()
-	{
-		_elementsToCleanUp.Clear();
-		foreach (ColliderZone collidersTouchingU in CollidersTouchingUs)
+		private void OnTriggerEnter(Collider other)
 		{
-			if (!collidersTouchingU.Collider.gameObject.activeInHierarchy)
+			ButtonTriggerZone component = other.GetComponent<ButtonTriggerZone>();
+			if (component != null && (component.ParentInteractable.ValidToolTagsMask & (int)this.ToolTags) != 0)
 			{
-				_elementsToCleanUp.Add(collidersTouchingU);
+				this.CollidersTouchingUs.Add(component);
 			}
 		}
-		foreach (ColliderZone item in _elementsToCleanUp)
+
+		private void OnTriggerExit(Collider other)
 		{
-			CollidersTouchingUs.Remove(item);
+			ButtonTriggerZone component = other.GetComponent<ButtonTriggerZone>();
+			if (component != null && (component.ParentInteractable.ValidToolTagsMask & (int)this.ToolTags) != 0)
+			{
+				this.CollidersTouchingUs.Remove(component);
+			}
 		}
+
+		private void CleanUpDeadColliders()
+		{
+			this._elementsToCleanUp.Clear();
+			foreach (ColliderZone colliderZone in this.CollidersTouchingUs)
+			{
+				if (!colliderZone.Collider.gameObject.activeInHierarchy)
+				{
+					this._elementsToCleanUp.Add(colliderZone);
+				}
+			}
+			foreach (ColliderZone colliderZone2 in this._elementsToCleanUp)
+			{
+				this.CollidersTouchingUs.Remove(colliderZone2);
+			}
+		}
+
+		public InteractableToolTags ToolTags;
+
+		public HashSet<ColliderZone> CollidersTouchingUs = new HashSet<ColliderZone>();
+
+		private List<ColliderZone> _elementsToCleanUp = new List<ColliderZone>();
 	}
 }

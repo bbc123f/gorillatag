@@ -1,37 +1,38 @@
+﻿using System;
 using System.Diagnostics;
 using UnityEngine;
 
 public abstract class TeleportSupport : MonoBehaviour
 {
-	private bool _eventsActive;
-
-	protected LocomotionTeleport LocomotionTeleport { get; private set; }
+	private protected LocomotionTeleport LocomotionTeleport { protected get; private set; }
 
 	protected virtual void OnEnable()
 	{
-		LocomotionTeleport = GetComponent<LocomotionTeleport>();
-		AddEventHandlers();
+		this.LocomotionTeleport = base.GetComponent<LocomotionTeleport>();
+		this.AddEventHandlers();
 	}
 
 	protected virtual void OnDisable()
 	{
-		RemoveEventHandlers();
-		LocomotionTeleport = null;
+		this.RemoveEventHandlers();
+		this.LocomotionTeleport = null;
 	}
 
 	[Conditional("DEBUG_TELEPORT_EVENT_HANDLERS")]
 	private void LogEventHandler(string msg)
 	{
-		UnityEngine.Debug.Log("EventHandler: " + GetType().Name + ": " + msg);
+		Debug.Log("EventHandler: " + base.GetType().Name + ": " + msg);
 	}
 
 	protected virtual void AddEventHandlers()
 	{
-		_eventsActive = true;
+		this._eventsActive = true;
 	}
 
 	protected virtual void RemoveEventHandlers()
 	{
-		_eventsActive = false;
+		this._eventsActive = false;
 	}
+
+	private bool _eventsActive;
 }

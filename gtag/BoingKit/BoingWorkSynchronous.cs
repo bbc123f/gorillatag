@@ -1,117 +1,123 @@
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace BoingKit;
-
-internal static class BoingWorkSynchronous
+namespace BoingKit
 {
-	internal static void ExecuteBehaviors(Dictionary<int, BoingBehavior> behaviorMap, BoingManager.UpdateMode updateMode)
+	internal static class BoingWorkSynchronous
 	{
-		float deltaTime = Time.deltaTime;
-		foreach (KeyValuePair<int, BoingBehavior> item in behaviorMap)
+		internal static void ExecuteBehaviors(Dictionary<int, BoingBehavior> behaviorMap, BoingManager.UpdateMode updateMode)
 		{
-			BoingBehavior value = item.Value;
-			if (value.UpdateMode == updateMode)
+			float deltaTime = Time.deltaTime;
+			foreach (KeyValuePair<int, BoingBehavior> keyValuePair in behaviorMap)
 			{
-				value.PrepareExecute();
-				switch (value.UpdateMode)
+				BoingBehavior value = keyValuePair.Value;
+				if (value.UpdateMode == updateMode)
 				{
-				case BoingManager.UpdateMode.EarlyUpdate:
-				case BoingManager.UpdateMode.LateUpdate:
-					value.Execute(deltaTime);
-					break;
-				case BoingManager.UpdateMode.FixedUpdate:
-					value.Execute(BoingManager.FixedDeltaTime);
-					break;
+					value.PrepareExecute();
+					BoingManager.UpdateMode updateMode2 = value.UpdateMode;
+					if (updateMode2 != BoingManager.UpdateMode.FixedUpdate)
+					{
+						if (updateMode2 - BoingManager.UpdateMode.EarlyUpdate <= 1)
+						{
+							value.Execute(deltaTime);
+						}
+					}
+					else
+					{
+						value.Execute(BoingManager.FixedDeltaTime);
+					}
 				}
 			}
 		}
-	}
 
-	internal static void ExecuteReactors(BoingEffector.Params[] aEffectorParams, Dictionary<int, BoingReactor> reactorMap, Dictionary<int, BoingReactorField> fieldMap, Dictionary<int, BoingReactorFieldCPUSampler> cpuSamplerMap, BoingManager.UpdateMode updateMode)
-	{
-		float deltaTime = BoingManager.DeltaTime;
-		foreach (KeyValuePair<int, BoingReactor> item in reactorMap)
+		internal static void ExecuteReactors(BoingEffector.Params[] aEffectorParams, Dictionary<int, BoingReactor> reactorMap, Dictionary<int, BoingReactorField> fieldMap, Dictionary<int, BoingReactorFieldCPUSampler> cpuSamplerMap, BoingManager.UpdateMode updateMode)
 		{
-			BoingReactor value = item.Value;
-			if (value.UpdateMode != updateMode)
+			float deltaTime = BoingManager.DeltaTime;
+			foreach (KeyValuePair<int, BoingReactor> keyValuePair in reactorMap)
 			{
-				continue;
-			}
-			value.PrepareExecute();
-			if (aEffectorParams != null)
-			{
-				for (int i = 0; i < aEffectorParams.Length; i++)
+				BoingReactor value = keyValuePair.Value;
+				if (value.UpdateMode == updateMode)
 				{
-					value.Params.AccumulateTarget(ref aEffectorParams[i], deltaTime);
+					value.PrepareExecute();
+					if (aEffectorParams != null)
+					{
+						for (int i = 0; i < aEffectorParams.Length; i++)
+						{
+							value.Params.AccumulateTarget(ref aEffectorParams[i], deltaTime);
+						}
+					}
+					value.Params.EndAccumulateTargets();
+					BoingManager.UpdateMode updateMode2 = value.UpdateMode;
+					if (updateMode2 != BoingManager.UpdateMode.FixedUpdate)
+					{
+						if (updateMode2 - BoingManager.UpdateMode.EarlyUpdate <= 1)
+						{
+							value.Execute(deltaTime);
+						}
+					}
+					else
+					{
+						value.Execute(BoingManager.FixedDeltaTime);
+					}
 				}
 			}
-			value.Params.EndAccumulateTargets();
-			switch (value.UpdateMode)
+			foreach (KeyValuePair<int, BoingReactorField> keyValuePair2 in fieldMap)
 			{
-			case BoingManager.UpdateMode.EarlyUpdate:
-			case BoingManager.UpdateMode.LateUpdate:
-				value.Execute(deltaTime);
-				break;
-			case BoingManager.UpdateMode.FixedUpdate:
-				value.Execute(BoingManager.FixedDeltaTime);
-				break;
-			}
-		}
-		foreach (KeyValuePair<int, BoingReactorField> item2 in fieldMap)
-		{
-			BoingReactorField value2 = item2.Value;
-			if (value2.HardwareMode == BoingReactorField.HardwareModeEnum.CPU)
-			{
-				value2.ExecuteCpu(deltaTime);
-			}
-		}
-		foreach (KeyValuePair<int, BoingReactorFieldCPUSampler> item3 in cpuSamplerMap)
-		{
-			_ = item3.Value;
-		}
-	}
-
-	internal static void ExecuteBones(BoingEffector.Params[] aEffectorParams, Dictionary<int, BoingBones> bonesMap, BoingManager.UpdateMode updateMode)
-	{
-		float deltaTime = BoingManager.DeltaTime;
-		foreach (KeyValuePair<int, BoingBones> item in bonesMap)
-		{
-			BoingBones value = item.Value;
-			if (value.UpdateMode != updateMode)
-			{
-				continue;
-			}
-			value.PrepareExecute();
-			if (aEffectorParams != null)
-			{
-				for (int i = 0; i < aEffectorParams.Length; i++)
+				BoingReactorField value2 = keyValuePair2.Value;
+				if (value2.HardwareMode == BoingReactorField.HardwareModeEnum.CPU)
 				{
-					value.AccumulateTarget(ref aEffectorParams[i], deltaTime);
+					value2.ExecuteCpu(deltaTime);
 				}
 			}
-			value.EndAccumulateTargets();
-			switch (value.UpdateMode)
+			foreach (KeyValuePair<int, BoingReactorFieldCPUSampler> keyValuePair3 in cpuSamplerMap)
 			{
-			case BoingManager.UpdateMode.EarlyUpdate:
-			case BoingManager.UpdateMode.LateUpdate:
-				value.Params.Execute(value, BoingManager.DeltaTime);
-				break;
-			case BoingManager.UpdateMode.FixedUpdate:
-				value.Params.Execute(value, BoingManager.FixedDeltaTime);
-				break;
+				BoingReactorFieldCPUSampler value3 = keyValuePair3.Value;
 			}
 		}
-	}
 
-	internal static void PullBonesResults(BoingEffector.Params[] aEffectorParams, Dictionary<int, BoingBones> bonesMap, BoingManager.UpdateMode updateMode)
-	{
-		foreach (KeyValuePair<int, BoingBones> item in bonesMap)
+		internal static void ExecuteBones(BoingEffector.Params[] aEffectorParams, Dictionary<int, BoingBones> bonesMap, BoingManager.UpdateMode updateMode)
 		{
-			BoingBones value = item.Value;
-			if (value.UpdateMode == updateMode)
+			float deltaTime = BoingManager.DeltaTime;
+			foreach (KeyValuePair<int, BoingBones> keyValuePair in bonesMap)
 			{
-				value.Params.PullResults(value);
+				BoingBones value = keyValuePair.Value;
+				if (value.UpdateMode == updateMode)
+				{
+					value.PrepareExecute();
+					if (aEffectorParams != null)
+					{
+						for (int i = 0; i < aEffectorParams.Length; i++)
+						{
+							value.AccumulateTarget(ref aEffectorParams[i], deltaTime);
+						}
+					}
+					value.EndAccumulateTargets();
+					BoingManager.UpdateMode updateMode2 = value.UpdateMode;
+					if (updateMode2 != BoingManager.UpdateMode.FixedUpdate)
+					{
+						if (updateMode2 - BoingManager.UpdateMode.EarlyUpdate <= 1)
+						{
+							value.Params.Execute(value, BoingManager.DeltaTime);
+						}
+					}
+					else
+					{
+						value.Params.Execute(value, BoingManager.FixedDeltaTime);
+					}
+				}
+			}
+		}
+
+		internal static void PullBonesResults(BoingEffector.Params[] aEffectorParams, Dictionary<int, BoingBones> bonesMap, BoingManager.UpdateMode updateMode)
+		{
+			foreach (KeyValuePair<int, BoingBones> keyValuePair in bonesMap)
+			{
+				BoingBones value = keyValuePair.Value;
+				if (value.UpdateMode == updateMode)
+				{
+					value.Params.PullResults(value);
+				}
 			}
 		}
 	}

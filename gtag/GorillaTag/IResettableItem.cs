@@ -1,6 +1,9 @@
-namespace GorillaTag;
+﻿using System;
 
-public interface IResettableItem
+namespace GorillaTag
 {
-	void ResetToDefaultState();
+	public interface IResettableItem
+	{
+		void ResetToDefaultState();
+	}
 }

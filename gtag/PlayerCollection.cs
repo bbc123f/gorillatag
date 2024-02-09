@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using GorillaTag;
 using Photon.Pun;
@@ -7,19 +7,20 @@ using UnityEngine;
 
 public class PlayerCollection : MonoBehaviourPunCallbacks
 {
-	[NonSerialized]
-	[DebugReadout]
-	public readonly List<VRRig> containedRigs = new List<VRRig>(10);
-
 	public void OnTriggerEnter(Collider other)
 	{
-		if ((bool)other.GetComponent<SphereCollider>())
+		if (!other.GetComponent<SphereCollider>())
 		{
-			VRRig component = other.attachedRigidbody.gameObject.GetComponent<VRRig>();
-			if (!(component == null) && !containedRigs.Contains(component))
-			{
-				containedRigs.Add(component);
-			}
+			return;
+		}
+		VRRig component = other.attachedRigidbody.gameObject.GetComponent<VRRig>();
+		if (component == null)
+		{
+			return;
+		}
+		if (!this.containedRigs.Contains(component))
+		{
+			this.containedRigs.Add(component);
 		}
 	}
 
@@ -31,31 +32,39 @@ public class PlayerCollection : MonoBehaviourPunCallbacks
 			return;
 		}
 		VRRig component2 = other.attachedRigidbody.gameObject.GetComponent<VRRig>();
-		if (component2 == null || !containedRigs.Contains(component2))
+		if (component2 == null)
 		{
 			return;
 		}
-		Collider[] components = GetComponents<Collider>();
-		for (int i = 0; i < components.Length; i++)
+		if (this.containedRigs.Contains(component2))
 		{
-			if (Physics.ComputePenetration(components[i], base.transform.position, base.transform.rotation, component, component.transform.position, component.transform.rotation, out var _, out var _))
+			Collider[] components = base.GetComponents<Collider>();
+			for (int i = 0; i < components.Length; i++)
 			{
-				return;
+				Vector3 vector;
+				float num;
+				if (Physics.ComputePenetration(components[i], base.transform.position, base.transform.rotation, component, component.transform.position, component.transform.rotation, out vector, out num))
+				{
+					return;
+				}
 			}
+			this.containedRigs.Remove(component2);
 		}
-		containedRigs.Remove(component2);
 	}
 
 	public override void OnPlayerLeftRoom(Player otherPlayer)
 	{
-		VRRig vRRig = null;
-		for (int num = containedRigs.Count - 1; num >= 0; num--)
+		for (int i = this.containedRigs.Count - 1; i >= 0; i--)
 		{
-			vRRig = containedRigs[num];
-			if (vRRig?.creator == null || vRRig.creator == otherPlayer)
+			VRRig vrrig = this.containedRigs[i];
+			if (((vrrig != null) ? vrrig.creator : null) == null || vrrig.creator == otherPlayer)
 			{
-				containedRigs.RemoveAt(num);
+				this.containedRigs.RemoveAt(i);
 			}
 		}
 	}
+
+	[DebugReadout]
+	[NonSerialized]
+	public readonly List<VRRig> containedRigs = new List<VRRig>(10);
 }

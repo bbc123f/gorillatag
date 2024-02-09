@@ -1,22 +1,18 @@
-using System;
+﻿using System;
 using System.Collections;
 using UnityEngine;
 
 public abstract class TeleportInputHandler : TeleportSupport
 {
-	private readonly Action _startReadyAction;
-
-	private readonly Action _startAimAction;
-
 	protected TeleportInputHandler()
 	{
-		_startReadyAction = delegate
+		this._startReadyAction = delegate
 		{
-			StartCoroutine(TeleportReadyCoroutine());
+			base.StartCoroutine(this.TeleportReadyCoroutine());
 		};
-		_startAimAction = delegate
+		this._startAimAction = delegate
 		{
-			StartCoroutine(TeleportAimCoroutine());
+			base.StartCoroutine(this.TeleportAimCoroutine());
 		};
 	}
 
@@ -24,8 +20,8 @@ public abstract class TeleportInputHandler : TeleportSupport
 	{
 		base.LocomotionTeleport.InputHandler = this;
 		base.AddEventHandlers();
-		base.LocomotionTeleport.EnterStateReady += _startReadyAction;
-		base.LocomotionTeleport.EnterStateAim += _startAimAction;
+		base.LocomotionTeleport.EnterStateReady += this._startReadyAction;
+		base.LocomotionTeleport.EnterStateAim += this._startAimAction;
 	}
 
 	protected override void RemoveEventHandlers()
@@ -34,33 +30,39 @@ public abstract class TeleportInputHandler : TeleportSupport
 		{
 			base.LocomotionTeleport.InputHandler = null;
 		}
-		base.LocomotionTeleport.EnterStateReady -= _startReadyAction;
-		base.LocomotionTeleport.EnterStateAim -= _startAimAction;
+		base.LocomotionTeleport.EnterStateReady -= this._startReadyAction;
+		base.LocomotionTeleport.EnterStateAim -= this._startAimAction;
 		base.RemoveEventHandlers();
 	}
 
 	private IEnumerator TeleportReadyCoroutine()
 	{
-		while (GetIntention() != LocomotionTeleport.TeleportIntentions.Aim)
+		while (this.GetIntention() != LocomotionTeleport.TeleportIntentions.Aim)
 		{
 			yield return null;
 		}
 		base.LocomotionTeleport.CurrentIntention = LocomotionTeleport.TeleportIntentions.Aim;
+		yield break;
 	}
 
 	private IEnumerator TeleportAimCoroutine()
 	{
-		LocomotionTeleport.TeleportIntentions intention = GetIntention();
-		while (intention == LocomotionTeleport.TeleportIntentions.Aim || intention == LocomotionTeleport.TeleportIntentions.PreTeleport)
+		LocomotionTeleport.TeleportIntentions teleportIntentions = this.GetIntention();
+		while (teleportIntentions == LocomotionTeleport.TeleportIntentions.Aim || teleportIntentions == LocomotionTeleport.TeleportIntentions.PreTeleport)
 		{
-			base.LocomotionTeleport.CurrentIntention = intention;
+			base.LocomotionTeleport.CurrentIntention = teleportIntentions;
 			yield return null;
-			intention = GetIntention();
+			teleportIntentions = this.GetIntention();
 		}
-		base.LocomotionTeleport.CurrentIntention = intention;
+		base.LocomotionTeleport.CurrentIntention = teleportIntentions;
+		yield break;
 	}
 
 	public abstract LocomotionTeleport.TeleportIntentions GetIntention();
 
 	public abstract void GetAimData(out Ray aimRay);
+
+	private readonly Action _startReadyAction;
+
+	private readonly Action _startAimAction;
 }

@@ -1,249 +1,260 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace OculusSampleFramework;
-
-public class RayTool : InteractableTool
+namespace OculusSampleFramework
 {
-	private const float MINIMUM_RAY_CAST_DISTANCE = 0.8f;
-
-	private const float COLLIDER_RADIUS = 0.01f;
-
-	private const int NUM_MAX_PRIMARY_HITS = 10;
-
-	private const int NUM_MAX_SECONDARY_HITS = 25;
-
-	private const int NUM_COLLIDERS_TO_TEST = 20;
-
-	[SerializeField]
-	private RayToolView _rayToolView;
-
-	[Range(0f, 45f)]
-	[SerializeField]
-	private float _coneAngleDegrees = 20f;
-
-	[SerializeField]
-	private float _farFieldMaxDistance = 5f;
-
-	private PinchStateModule _pinchStateModule = new PinchStateModule();
-
-	private Interactable _focusedInteractable;
-
-	private Collider[] _collidersOverlapped = new Collider[20];
-
-	private Interactable _currInteractableCastedAgainst;
-
-	private float _coneAngleReleaseDegrees;
-
-	private RaycastHit[] _primaryHits = new RaycastHit[10];
-
-	private Collider[] _secondaryOverlapResults = new Collider[25];
-
-	private bool _initialized;
-
-	public override InteractableToolTags ToolTags => InteractableToolTags.Ray;
-
-	public override ToolInputState ToolInputState
+	public class RayTool : InteractableTool
 	{
-		get
+		public override InteractableToolTags ToolTags
 		{
-			if (_pinchStateModule.PinchDownOnFocusedObject)
+			get
 			{
-				return ToolInputState.PrimaryInputDown;
+				return InteractableToolTags.Ray;
 			}
-			if (_pinchStateModule.PinchSteadyOnFocusedObject)
+		}
+
+		public override ToolInputState ToolInputState
+		{
+			get
 			{
-				return ToolInputState.PrimaryInputDownStay;
+				if (this._pinchStateModule.PinchDownOnFocusedObject)
+				{
+					return ToolInputState.PrimaryInputDown;
+				}
+				if (this._pinchStateModule.PinchSteadyOnFocusedObject)
+				{
+					return ToolInputState.PrimaryInputDownStay;
+				}
+				if (this._pinchStateModule.PinchUpAndDownOnFocusedObject)
+				{
+					return ToolInputState.PrimaryInputUp;
+				}
+				return ToolInputState.Inactive;
 			}
-			if (_pinchStateModule.PinchUpAndDownOnFocusedObject)
+		}
+
+		public override bool IsFarFieldTool
+		{
+			get
 			{
-				return ToolInputState.PrimaryInputUp;
+				return true;
 			}
-			return ToolInputState.Inactive;
 		}
-	}
 
-	public override bool IsFarFieldTool => true;
-
-	public override bool EnableState
-	{
-		get
+		public override bool EnableState
 		{
-			return _rayToolView.EnableState;
+			get
+			{
+				return this._rayToolView.EnableState;
+			}
+			set
+			{
+				this._rayToolView.EnableState = value;
+			}
 		}
-		set
+
+		public override void Initialize()
 		{
-			_rayToolView.EnableState = value;
+			InteractableToolsInputRouter.Instance.RegisterInteractableTool(this);
+			this._rayToolView.InteractableTool = this;
+			this._coneAngleReleaseDegrees = this._coneAngleDegrees * 1.2f;
+			this._initialized = true;
 		}
-	}
 
-	public override void Initialize()
-	{
-		InteractableToolsInputRouter.Instance.RegisterInteractableTool(this);
-		_rayToolView.InteractableTool = this;
-		_coneAngleReleaseDegrees = _coneAngleDegrees * 1.2f;
-		_initialized = true;
-	}
-
-	private void OnDestroy()
-	{
-		if (InteractableToolsInputRouter.Instance != null)
+		private void OnDestroy()
 		{
-			InteractableToolsInputRouter.Instance.UnregisterInteractableTool(this);
+			if (InteractableToolsInputRouter.Instance != null)
+			{
+				InteractableToolsInputRouter.Instance.UnregisterInteractableTool(this);
+			}
 		}
-	}
 
-	private void Update()
-	{
-		if ((bool)HandsManager.Instance && HandsManager.Instance.IsInitialized() && _initialized)
+		private void Update()
 		{
-			OVRHand oVRHand = (base.IsRightHandedTool ? HandsManager.Instance.RightHand : HandsManager.Instance.LeftHand);
-			Transform pointerPose = oVRHand.PointerPose;
+			if (!HandsManager.Instance || !HandsManager.Instance.IsInitialized() || !this._initialized)
+			{
+				return;
+			}
+			OVRHand ovrhand = (base.IsRightHandedTool ? HandsManager.Instance.RightHand : HandsManager.Instance.LeftHand);
+			Transform pointerPose = ovrhand.PointerPose;
 			base.transform.position = pointerPose.position;
 			base.transform.rotation = pointerPose.rotation;
 			Vector3 interactionPosition = base.InteractionPosition;
 			Vector3 position = base.transform.position;
 			base.Velocity = (position - interactionPosition) / Time.deltaTime;
 			base.InteractionPosition = position;
-			_pinchStateModule.UpdateState(oVRHand, _focusedInteractable);
-			_rayToolView.ToolActivateState = _pinchStateModule.PinchSteadyOnFocusedObject || _pinchStateModule.PinchDownOnFocusedObject;
+			this._pinchStateModule.UpdateState(ovrhand, this._focusedInteractable);
+			this._rayToolView.ToolActivateState = this._pinchStateModule.PinchSteadyOnFocusedObject || this._pinchStateModule.PinchDownOnFocusedObject;
 		}
-	}
 
-	private Vector3 GetRayCastOrigin()
-	{
-		return base.transform.position + 0.8f * base.transform.forward;
-	}
+		private Vector3 GetRayCastOrigin()
+		{
+			return base.transform.position + 0.8f * base.transform.forward;
+		}
 
-	public override List<InteractableCollisionInfo> GetNextIntersectingObjects()
-	{
-		if (!_initialized)
+		public override List<InteractableCollisionInfo> GetNextIntersectingObjects()
 		{
-			return _currentIntersectingObjects;
-		}
-		if (_currInteractableCastedAgainst != null && HasRayReleasedInteractable(_currInteractableCastedAgainst))
-		{
-			_currInteractableCastedAgainst = null;
-		}
-		if (_currInteractableCastedAgainst == null)
-		{
-			_currentIntersectingObjects.Clear();
-			_currInteractableCastedAgainst = FindTargetInteractable();
-			if (_currInteractableCastedAgainst != null)
+			if (!this._initialized)
 			{
-				int num = Physics.OverlapSphereNonAlloc(_currInteractableCastedAgainst.transform.position, 0.01f, _collidersOverlapped);
-				for (int i = 0; i < num; i++)
+				return this._currentIntersectingObjects;
+			}
+			if (this._currInteractableCastedAgainst != null && this.HasRayReleasedInteractable(this._currInteractableCastedAgainst))
+			{
+				this._currInteractableCastedAgainst = null;
+			}
+			if (this._currInteractableCastedAgainst == null)
+			{
+				this._currentIntersectingObjects.Clear();
+				this._currInteractableCastedAgainst = this.FindTargetInteractable();
+				if (this._currInteractableCastedAgainst != null)
 				{
-					ColliderZone component = _collidersOverlapped[i].GetComponent<ColliderZone>();
-					if (component != null)
+					int num = Physics.OverlapSphereNonAlloc(this._currInteractableCastedAgainst.transform.position, 0.01f, this._collidersOverlapped);
+					for (int i = 0; i < num; i++)
 					{
-						Interactable parentInteractable = component.ParentInteractable;
-						if (!(parentInteractable == null) && !(parentInteractable != _currInteractableCastedAgainst))
+						ColliderZone component = this._collidersOverlapped[i].GetComponent<ColliderZone>();
+						if (component != null)
 						{
-							InteractableCollisionInfo item = new InteractableCollisionInfo(component, component.CollisionDepth, this);
-							_currentIntersectingObjects.Add(item);
+							Interactable parentInteractable = component.ParentInteractable;
+							if (!(parentInteractable == null) && !(parentInteractable != this._currInteractableCastedAgainst))
+							{
+								InteractableCollisionInfo interactableCollisionInfo = new InteractableCollisionInfo(component, component.CollisionDepth, this);
+								this._currentIntersectingObjects.Add(interactableCollisionInfo);
+							}
+						}
+					}
+					if (this._currentIntersectingObjects.Count == 0)
+					{
+						this._currInteractableCastedAgainst = null;
+					}
+				}
+			}
+			return this._currentIntersectingObjects;
+		}
+
+		private bool HasRayReleasedInteractable(Interactable focusedInteractable)
+		{
+			Vector3 position = base.transform.position;
+			Vector3 forward = base.transform.forward;
+			float num = Mathf.Cos(this._coneAngleReleaseDegrees * 0.017453292f);
+			Vector3 vector = focusedInteractable.transform.position - position;
+			vector.Normalize();
+			return Vector3.Dot(vector, forward) < num;
+		}
+
+		private Interactable FindTargetInteractable()
+		{
+			Vector3 rayCastOrigin = this.GetRayCastOrigin();
+			Vector3 forward = base.transform.forward;
+			Interactable interactable = this.FindPrimaryRaycastHit(rayCastOrigin, forward);
+			if (interactable == null)
+			{
+				interactable = this.FindInteractableViaConeTest(rayCastOrigin, forward);
+			}
+			return interactable;
+		}
+
+		private Interactable FindPrimaryRaycastHit(Vector3 rayOrigin, Vector3 rayDirection)
+		{
+			Interactable interactable = null;
+			int num = Physics.RaycastNonAlloc(new Ray(rayOrigin, rayDirection), this._primaryHits, float.PositiveInfinity);
+			float num2 = 0f;
+			for (int i = 0; i < num; i++)
+			{
+				RaycastHit raycastHit = this._primaryHits[i];
+				ColliderZone component = raycastHit.transform.GetComponent<ColliderZone>();
+				if (component != null)
+				{
+					Interactable parentInteractable = component.ParentInteractable;
+					if (!(parentInteractable == null) && (parentInteractable.ValidToolTagsMask & (int)this.ToolTags) != 0)
+					{
+						float magnitude = (parentInteractable.transform.position - rayOrigin).magnitude;
+						if (interactable == null || magnitude < num2)
+						{
+							interactable = parentInteractable;
+							num2 = magnitude;
 						}
 					}
 				}
-				if (_currentIntersectingObjects.Count == 0)
+			}
+			return interactable;
+		}
+
+		private Interactable FindInteractableViaConeTest(Vector3 rayOrigin, Vector3 rayDirection)
+		{
+			Interactable interactable = null;
+			float num = 0f;
+			float num2 = Mathf.Cos(this._coneAngleDegrees * 0.017453292f);
+			float num3 = Mathf.Tan(0.017453292f * this._coneAngleDegrees * 0.5f) * this._farFieldMaxDistance;
+			int num4 = Physics.OverlapBoxNonAlloc(rayOrigin + rayDirection * this._farFieldMaxDistance * 0.5f, new Vector3(num3, num3, this._farFieldMaxDistance * 0.5f), this._secondaryOverlapResults, base.transform.rotation);
+			for (int i = 0; i < num4; i++)
+			{
+				ColliderZone component = this._secondaryOverlapResults[i].GetComponent<ColliderZone>();
+				if (component != null)
 				{
-					_currInteractableCastedAgainst = null;
+					Interactable parentInteractable = component.ParentInteractable;
+					if (!(parentInteractable == null) && (parentInteractable.ValidToolTagsMask & (int)this.ToolTags) != 0)
+					{
+						Vector3 vector = parentInteractable.transform.position - rayOrigin;
+						float magnitude = vector.magnitude;
+						vector /= magnitude;
+						if (Vector3.Dot(vector, rayDirection) >= num2 && (interactable == null || magnitude < num))
+						{
+							interactable = parentInteractable;
+							num = magnitude;
+						}
+					}
 				}
 			}
+			return interactable;
 		}
-		return _currentIntersectingObjects;
-	}
 
-	private bool HasRayReleasedInteractable(Interactable focusedInteractable)
-	{
-		Vector3 position = base.transform.position;
-		Vector3 forward = base.transform.forward;
-		float num = Mathf.Cos(_coneAngleReleaseDegrees * ((float)Math.PI / 180f));
-		Vector3 lhs = focusedInteractable.transform.position - position;
-		lhs.Normalize();
-		return Vector3.Dot(lhs, forward) < num;
-	}
-
-	private Interactable FindTargetInteractable()
-	{
-		Vector3 rayCastOrigin = GetRayCastOrigin();
-		Vector3 forward = base.transform.forward;
-		Interactable interactable = null;
-		interactable = FindPrimaryRaycastHit(rayCastOrigin, forward);
-		if (interactable == null)
+		public override void FocusOnInteractable(Interactable focusedInteractable, ColliderZone colliderZone)
 		{
-			interactable = FindInteractableViaConeTest(rayCastOrigin, forward);
+			this._rayToolView.SetFocusedInteractable(focusedInteractable);
+			this._focusedInteractable = focusedInteractable;
 		}
-		return interactable;
-	}
 
-	private Interactable FindPrimaryRaycastHit(Vector3 rayOrigin, Vector3 rayDirection)
-	{
-		Interactable interactable = null;
-		int num = Physics.RaycastNonAlloc(new Ray(rayOrigin, rayDirection), _primaryHits, float.PositiveInfinity);
-		float num2 = 0f;
-		for (int i = 0; i < num; i++)
+		public override void DeFocus()
 		{
-			RaycastHit raycastHit = _primaryHits[i];
-			ColliderZone component = raycastHit.transform.GetComponent<ColliderZone>();
-			if (component == null)
-			{
-				continue;
-			}
-			Interactable parentInteractable = component.ParentInteractable;
-			if (!(parentInteractable == null) && ((uint)parentInteractable.ValidToolTagsMask & (uint)ToolTags) != 0)
-			{
-				float magnitude = (parentInteractable.transform.position - rayOrigin).magnitude;
-				if (interactable == null || magnitude < num2)
-				{
-					interactable = parentInteractable;
-					num2 = magnitude;
-				}
-			}
+			this._rayToolView.SetFocusedInteractable(null);
+			this._focusedInteractable = null;
 		}
-		return interactable;
-	}
 
-	private Interactable FindInteractableViaConeTest(Vector3 rayOrigin, Vector3 rayDirection)
-	{
-		Interactable interactable = null;
-		float num = 0f;
-		float num2 = Mathf.Cos(_coneAngleDegrees * ((float)Math.PI / 180f));
-		float num3 = Mathf.Tan((float)Math.PI / 180f * _coneAngleDegrees * 0.5f) * _farFieldMaxDistance;
-		int num4 = Physics.OverlapBoxNonAlloc(rayOrigin + rayDirection * _farFieldMaxDistance * 0.5f, new Vector3(num3, num3, _farFieldMaxDistance * 0.5f), _secondaryOverlapResults, base.transform.rotation);
-		for (int i = 0; i < num4; i++)
-		{
-			ColliderZone component = _secondaryOverlapResults[i].GetComponent<ColliderZone>();
-			if (component == null)
-			{
-				continue;
-			}
-			Interactable parentInteractable = component.ParentInteractable;
-			if (!(parentInteractable == null) && ((uint)parentInteractable.ValidToolTagsMask & (uint)ToolTags) != 0)
-			{
-				Vector3 lhs = parentInteractable.transform.position - rayOrigin;
-				float magnitude = lhs.magnitude;
-				lhs /= magnitude;
-				if (!(Vector3.Dot(lhs, rayDirection) < num2) && (interactable == null || magnitude < num))
-				{
-					interactable = parentInteractable;
-					num = magnitude;
-				}
-			}
-		}
-		return interactable;
-	}
+		private const float MINIMUM_RAY_CAST_DISTANCE = 0.8f;
 
-	public override void FocusOnInteractable(Interactable focusedInteractable, ColliderZone colliderZone)
-	{
-		_rayToolView.SetFocusedInteractable(focusedInteractable);
-		_focusedInteractable = focusedInteractable;
-	}
+		private const float COLLIDER_RADIUS = 0.01f;
 
-	public override void DeFocus()
-	{
-		_rayToolView.SetFocusedInteractable(null);
-		_focusedInteractable = null;
+		private const int NUM_MAX_PRIMARY_HITS = 10;
+
+		private const int NUM_MAX_SECONDARY_HITS = 25;
+
+		private const int NUM_COLLIDERS_TO_TEST = 20;
+
+		[SerializeField]
+		private RayToolView _rayToolView;
+
+		[Range(0f, 45f)]
+		[SerializeField]
+		private float _coneAngleDegrees = 20f;
+
+		[SerializeField]
+		private float _farFieldMaxDistance = 5f;
+
+		private PinchStateModule _pinchStateModule = new PinchStateModule();
+
+		private Interactable _focusedInteractable;
+
+		private Collider[] _collidersOverlapped = new Collider[20];
+
+		private Interactable _currInteractableCastedAgainst;
+
+		private float _coneAngleReleaseDegrees;
+
+		private RaycastHit[] _primaryHits = new RaycastHit[10];
+
+		private Collider[] _secondaryOverlapResults = new Collider[25];
+
+		private bool _initialized;
 	}
 }

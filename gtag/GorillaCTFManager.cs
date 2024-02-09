@@ -1,3 +1,0 @@
-public class GorillaCTFManager : GorillaGameManager
-{
-}

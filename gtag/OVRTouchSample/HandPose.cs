@@ -1,21 +1,41 @@
+﻿using System;
 using UnityEngine;
 
-namespace OVRTouchSample;
-
-public class HandPose : MonoBehaviour
+namespace OVRTouchSample
 {
-	[SerializeField]
-	private bool m_allowPointing;
+	public class HandPose : MonoBehaviour
+	{
+		public bool AllowPointing
+		{
+			get
+			{
+				return this.m_allowPointing;
+			}
+		}
 
-	[SerializeField]
-	private bool m_allowThumbsUp;
+		public bool AllowThumbsUp
+		{
+			get
+			{
+				return this.m_allowThumbsUp;
+			}
+		}
 
-	[SerializeField]
-	private HandPoseId m_poseId;
+		public HandPoseId PoseId
+		{
+			get
+			{
+				return this.m_poseId;
+			}
+		}
 
-	public bool AllowPointing => m_allowPointing;
+		[SerializeField]
+		private bool m_allowPointing;
 
-	public bool AllowThumbsUp => m_allowThumbsUp;
+		[SerializeField]
+		private bool m_allowThumbsUp;
 
-	public HandPoseId PoseId => m_poseId;
+		[SerializeField]
+		private HandPoseId m_poseId;
+	}
 }

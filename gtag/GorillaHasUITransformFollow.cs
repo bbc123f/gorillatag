@@ -1,12 +1,11 @@
+﻿using System;
 using UnityEngine;
 
 public class GorillaHasUITransformFollow : MonoBehaviour
 {
-	public GorillaUITransformFollow[] transformFollowers;
-
 	private void Awake()
 	{
-		GorillaUITransformFollow[] array = transformFollowers;
+		GorillaUITransformFollow[] array = this.transformFollowers;
 		for (int i = 0; i < array.Length; i++)
 		{
 			array[i].gameObject.SetActive(base.gameObject.activeSelf);
@@ -15,7 +14,7 @@ public class GorillaHasUITransformFollow : MonoBehaviour
 
 	private void OnDestroy()
 	{
-		GorillaUITransformFollow[] array = transformFollowers;
+		GorillaUITransformFollow[] array = this.transformFollowers;
 		for (int i = 0; i < array.Length; i++)
 		{
 			Object.Destroy(array[i].gameObject);
@@ -24,19 +23,21 @@ public class GorillaHasUITransformFollow : MonoBehaviour
 
 	private void OnEnable()
 	{
-		GorillaUITransformFollow[] array = transformFollowers;
+		GorillaUITransformFollow[] array = this.transformFollowers;
 		for (int i = 0; i < array.Length; i++)
 		{
-			array[i].gameObject.SetActive(value: true);
+			array[i].gameObject.SetActive(true);
 		}
 	}
 
 	private void OnDisable()
 	{
-		GorillaUITransformFollow[] array = transformFollowers;
+		GorillaUITransformFollow[] array = this.transformFollowers;
 		for (int i = 0; i < array.Length; i++)
 		{
-			array[i].gameObject.SetActive(value: false);
+			array[i].gameObject.SetActive(false);
 		}
 	}
+
+	public GorillaUITransformFollow[] transformFollowers;
 }

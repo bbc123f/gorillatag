@@ -1,9 +1,12 @@
-namespace OculusSampleFramework;
+﻿using System;
 
-public enum InteractableCollisionDepth
+namespace OculusSampleFramework
 {
-	None,
-	Proximity,
-	Contact,
-	Action
+	public enum InteractableCollisionDepth
+	{
+		None,
+		Proximity,
+		Contact,
+		Action
+	}
 }

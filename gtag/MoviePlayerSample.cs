@@ -1,23 +1,287 @@
-using System;
+﻿using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Video;
 
 public class MoviePlayerSample : MonoBehaviour
 {
-	public enum VideoShape
+	public bool IsPlaying { get; private set; }
+
+	public long Duration { get; private set; }
+
+	public long PlaybackPosition { get; private set; }
+
+	private void Awake()
 	{
-		_360,
-		_180,
-		Quad
+		Debug.Log("MovieSample Awake");
+		this.mediaRenderer = base.GetComponent<Renderer>();
+		this.videoPlayer = base.GetComponent<VideoPlayer>();
+		if (this.videoPlayer == null)
+		{
+			this.videoPlayer = base.gameObject.AddComponent<VideoPlayer>();
+		}
+		this.videoPlayer.isLooping = this.LoopVideo;
+		this.overlay = base.GetComponent<OVROverlay>();
+		if (this.overlay == null)
+		{
+			this.overlay = base.gameObject.AddComponent<OVROverlay>();
+		}
+		this.overlay.enabled = false;
+		this.overlay.isExternalSurface = NativeVideoPlayer.IsAvailable;
+		this.overlay.enabled = this.overlay.currentOverlayShape != OVROverlay.OverlayShape.Equirect || Application.platform == RuntimePlatform.Android;
 	}
 
-	public enum VideoStereo
+	private bool IsLocalVideo(string movieName)
 	{
-		Mono,
-		TopBottom,
-		LeftRight,
-		BottomTop
+		return !movieName.Contains("://");
+	}
+
+	private void UpdateShapeAndStereo()
+	{
+		if (this.AutoDetectStereoLayout && this.overlay.isExternalSurface)
+		{
+			int videoWidth = NativeVideoPlayer.VideoWidth;
+			int videoHeight = NativeVideoPlayer.VideoHeight;
+			switch (NativeVideoPlayer.VideoStereoMode)
+			{
+			case NativeVideoPlayer.StereoMode.Unknown:
+				if (videoWidth > videoHeight)
+				{
+					this.Stereo = MoviePlayerSample.VideoStereo.LeftRight;
+				}
+				else
+				{
+					this.Stereo = MoviePlayerSample.VideoStereo.TopBottom;
+				}
+				break;
+			case NativeVideoPlayer.StereoMode.Mono:
+				this.Stereo = MoviePlayerSample.VideoStereo.Mono;
+				break;
+			case NativeVideoPlayer.StereoMode.TopBottom:
+				this.Stereo = MoviePlayerSample.VideoStereo.TopBottom;
+				break;
+			case NativeVideoPlayer.StereoMode.LeftRight:
+				this.Stereo = MoviePlayerSample.VideoStereo.LeftRight;
+				break;
+			}
+		}
+		if (this.Shape != this._LastShape || this.Stereo != this._LastStereo || this.DisplayMono != this._LastDisplayMono)
+		{
+			Rect rect = new Rect(0f, 0f, 1f, 1f);
+			switch (this.Shape)
+			{
+			case MoviePlayerSample.VideoShape._360:
+				this.overlay.currentOverlayShape = OVROverlay.OverlayShape.Equirect;
+				goto IL_118;
+			case MoviePlayerSample.VideoShape._180:
+				this.overlay.currentOverlayShape = OVROverlay.OverlayShape.Equirect;
+				rect = new Rect(0.25f, 0f, 0.5f, 1f);
+				goto IL_118;
+			}
+			this.overlay.currentOverlayShape = OVROverlay.OverlayShape.Quad;
+			IL_118:
+			this.overlay.overrideTextureRectMatrix = true;
+			this.overlay.invertTextureRects = false;
+			Rect rect2 = new Rect(0f, 0f, 1f, 1f);
+			Rect rect3 = new Rect(0f, 0f, 1f, 1f);
+			switch (this.Stereo)
+			{
+			case MoviePlayerSample.VideoStereo.TopBottom:
+				rect2 = new Rect(0f, 0.5f, 1f, 0.5f);
+				rect3 = new Rect(0f, 0f, 1f, 0.5f);
+				break;
+			case MoviePlayerSample.VideoStereo.LeftRight:
+				rect2 = new Rect(0f, 0f, 0.5f, 1f);
+				rect3 = new Rect(0.5f, 0f, 0.5f, 1f);
+				break;
+			case MoviePlayerSample.VideoStereo.BottomTop:
+				rect2 = new Rect(0f, 0f, 1f, 0.5f);
+				rect3 = new Rect(0f, 0.5f, 1f, 0.5f);
+				break;
+			}
+			this.overlay.SetSrcDestRects(rect2, this.DisplayMono ? rect2 : rect3, rect, rect);
+			this._LastDisplayMono = this.DisplayMono;
+			this._LastStereo = this.Stereo;
+			this._LastShape = this.Shape;
+		}
+	}
+
+	private IEnumerator Start()
+	{
+		if (this.mediaRenderer.material == null)
+		{
+			Debug.LogError("No material for movie surface");
+			yield break;
+		}
+		yield return new WaitForSeconds(1f);
+		if (!string.IsNullOrEmpty(this.MovieName))
+		{
+			if (this.IsLocalVideo(this.MovieName))
+			{
+				this.Play(Application.streamingAssetsPath + "/" + this.MovieName, null);
+			}
+			else
+			{
+				this.Play(this.MovieName, this.DrmLicenseUrl);
+			}
+		}
+		yield break;
+	}
+
+	public void Play(string moviePath, string drmLicencesUrl)
+	{
+		if (moviePath != string.Empty)
+		{
+			Debug.Log("Playing Video: " + moviePath);
+			if (this.overlay.isExternalSurface)
+			{
+				OVROverlay.ExternalSurfaceObjectCreated externalSurfaceObjectCreated = delegate
+				{
+					Debug.Log("Playing ExoPlayer with SurfaceObject");
+					NativeVideoPlayer.PlayVideo(moviePath, drmLicencesUrl, this.overlay.externalSurfaceObject);
+					NativeVideoPlayer.SetLooping(this.LoopVideo);
+				};
+				if (this.overlay.externalSurfaceObject == IntPtr.Zero)
+				{
+					this.overlay.externalSurfaceObjectCreated = externalSurfaceObjectCreated;
+				}
+				else
+				{
+					externalSurfaceObjectCreated();
+				}
+			}
+			else
+			{
+				Debug.Log("Playing Unity VideoPlayer");
+				this.videoPlayer.url = moviePath;
+				this.videoPlayer.Prepare();
+				this.videoPlayer.Play();
+			}
+			Debug.Log("MovieSample Start");
+			this.IsPlaying = true;
+			return;
+		}
+		Debug.LogError("No media file name provided");
+	}
+
+	public void Play()
+	{
+		if (this.overlay.isExternalSurface)
+		{
+			NativeVideoPlayer.Play();
+		}
+		else
+		{
+			this.videoPlayer.Play();
+		}
+		this.IsPlaying = true;
+	}
+
+	public void Pause()
+	{
+		if (this.overlay.isExternalSurface)
+		{
+			NativeVideoPlayer.Pause();
+		}
+		else
+		{
+			this.videoPlayer.Pause();
+		}
+		this.IsPlaying = false;
+	}
+
+	public void SeekTo(long position)
+	{
+		long num = Math.Max(0L, Math.Min(this.Duration, position));
+		if (this.overlay.isExternalSurface)
+		{
+			NativeVideoPlayer.PlaybackPosition = num;
+			return;
+		}
+		this.videoPlayer.time = (double)num / 1000.0;
+	}
+
+	private void Update()
+	{
+		this.UpdateShapeAndStereo();
+		if (!this.overlay.isExternalSurface)
+		{
+			Texture texture = ((this.videoPlayer.texture != null) ? this.videoPlayer.texture : Texture2D.blackTexture);
+			if (this.overlay.enabled)
+			{
+				if (this.overlay.textures[0] != texture)
+				{
+					this.overlay.enabled = false;
+					this.overlay.textures[0] = texture;
+					this.overlay.enabled = true;
+				}
+			}
+			else
+			{
+				this.mediaRenderer.material.mainTexture = texture;
+				this.mediaRenderer.material.SetVector("_SrcRectLeft", this.overlay.srcRectLeft.ToVector());
+				this.mediaRenderer.material.SetVector("_SrcRectRight", this.overlay.srcRectRight.ToVector());
+			}
+			this.IsPlaying = this.videoPlayer.isPlaying;
+			this.PlaybackPosition = (long)(this.videoPlayer.time * 1000.0);
+			this.Duration = (long)(this.videoPlayer.length * 1000.0);
+			return;
+		}
+		NativeVideoPlayer.SetListenerRotation(Camera.main.transform.rotation);
+		this.IsPlaying = NativeVideoPlayer.IsPlaying;
+		this.PlaybackPosition = NativeVideoPlayer.PlaybackPosition;
+		this.Duration = NativeVideoPlayer.Duration;
+		if (this.IsPlaying && (int)OVRManager.display.displayFrequency != 60)
+		{
+			OVRManager.display.displayFrequency = 60f;
+			return;
+		}
+		if (!this.IsPlaying && (int)OVRManager.display.displayFrequency != 72)
+		{
+			OVRManager.display.displayFrequency = 72f;
+		}
+	}
+
+	public void SetPlaybackSpeed(float speed)
+	{
+		speed = Mathf.Max(0f, speed);
+		if (this.overlay.isExternalSurface)
+		{
+			NativeVideoPlayer.SetPlaybackSpeed(speed);
+			return;
+		}
+		this.videoPlayer.playbackSpeed = speed;
+	}
+
+	public void Stop()
+	{
+		if (this.overlay.isExternalSurface)
+		{
+			NativeVideoPlayer.Stop();
+		}
+		else
+		{
+			this.videoPlayer.Stop();
+		}
+		this.IsPlaying = false;
+	}
+
+	private void OnApplicationPause(bool appWasPaused)
+	{
+		Debug.Log("OnApplicationPause: " + appWasPaused.ToString());
+		if (appWasPaused)
+		{
+			this.videoPausedBeforeAppPause = !this.IsPlaying;
+		}
+		if (!this.videoPausedBeforeAppPause)
+		{
+			if (appWasPaused)
+			{
+				this.Pause();
+				return;
+			}
+			this.Play();
+		}
 	}
 
 	private bool videoPausedBeforeAppPause;
@@ -38,276 +302,32 @@ public class MoviePlayerSample : MonoBehaviour
 
 	public bool LoopVideo;
 
-	public VideoShape Shape;
+	public MoviePlayerSample.VideoShape Shape;
 
-	public VideoStereo Stereo;
+	public MoviePlayerSample.VideoStereo Stereo;
+
+	public bool AutoDetectStereoLayout;
 
 	public bool DisplayMono;
 
-	private VideoShape _LastShape = (VideoShape)(-1);
+	private MoviePlayerSample.VideoShape _LastShape = (MoviePlayerSample.VideoShape)(-1);
 
-	private VideoStereo _LastStereo = (VideoStereo)(-1);
+	private MoviePlayerSample.VideoStereo _LastStereo = (MoviePlayerSample.VideoStereo)(-1);
 
 	private bool _LastDisplayMono;
 
-	public bool IsPlaying { get; private set; }
-
-	public long Duration { get; private set; }
-
-	public long PlaybackPosition { get; private set; }
-
-	private void Awake()
+	public enum VideoShape
 	{
-		Debug.Log("MovieSample Awake");
-		mediaRenderer = GetComponent<Renderer>();
-		videoPlayer = GetComponent<VideoPlayer>();
-		if (videoPlayer == null)
-		{
-			videoPlayer = base.gameObject.AddComponent<VideoPlayer>();
-		}
-		videoPlayer.isLooping = LoopVideo;
-		overlay = GetComponent<OVROverlay>();
-		if (overlay == null)
-		{
-			overlay = base.gameObject.AddComponent<OVROverlay>();
-		}
-		overlay.enabled = false;
-		overlay.isExternalSurface = NativeVideoPlayer.IsAvailable;
-		overlay.enabled = overlay.currentOverlayShape != OVROverlay.OverlayShape.Equirect || Application.platform == RuntimePlatform.Android;
+		_360,
+		_180,
+		Quad
 	}
 
-	private bool IsLocalVideo(string movieName)
+	public enum VideoStereo
 	{
-		return !movieName.Contains("://");
-	}
-
-	private void UpdateShapeAndStereo()
-	{
-		if (Shape != _LastShape || Stereo != _LastStereo || DisplayMono != _LastDisplayMono)
-		{
-			Rect rect = new Rect(0f, 0f, 1f, 1f);
-			switch (Shape)
-			{
-			case VideoShape._360:
-				overlay.currentOverlayShape = OVROverlay.OverlayShape.Equirect;
-				break;
-			case VideoShape._180:
-				overlay.currentOverlayShape = OVROverlay.OverlayShape.Equirect;
-				rect = new Rect(0.25f, 0f, 0.5f, 1f);
-				break;
-			default:
-				overlay.currentOverlayShape = OVROverlay.OverlayShape.Quad;
-				break;
-			}
-			overlay.overrideTextureRectMatrix = true;
-			Rect rect2 = new Rect(0f, 0f, 1f, 1f);
-			Rect rect3 = new Rect(0f, 0f, 1f, 1f);
-			switch (Stereo)
-			{
-			case VideoStereo.LeftRight:
-				rect2 = new Rect(0f, 0f, 0.5f, 1f);
-				rect3 = new Rect(0.5f, 0f, 0.5f, 1f);
-				break;
-			case VideoStereo.TopBottom:
-				rect2 = new Rect(0f, 0.5f, 1f, 0.5f);
-				rect3 = new Rect(0f, 0f, 1f, 0.5f);
-				break;
-			case VideoStereo.BottomTop:
-				rect2 = new Rect(0f, 0f, 1f, 0.5f);
-				rect3 = new Rect(0f, 0.5f, 1f, 0.5f);
-				break;
-			}
-			overlay.invertTextureRects = false;
-			overlay.SetSrcDestRects(rect2, DisplayMono ? rect2 : rect3, rect, rect);
-			_LastDisplayMono = DisplayMono;
-			_LastStereo = Stereo;
-			_LastShape = Shape;
-		}
-	}
-
-	private IEnumerator Start()
-	{
-		if (mediaRenderer.material == null)
-		{
-			Debug.LogError("No material for movie surface");
-			yield break;
-		}
-		yield return new WaitForSeconds(1f);
-		if (!string.IsNullOrEmpty(MovieName))
-		{
-			if (IsLocalVideo(MovieName))
-			{
-				Play(Application.streamingAssetsPath + "/" + MovieName, null);
-			}
-			else
-			{
-				Play(MovieName, DrmLicenseUrl);
-			}
-		}
-	}
-
-	public void Play(string moviePath, string drmLicencesUrl)
-	{
-		if (moviePath != string.Empty)
-		{
-			Debug.Log("Playing Video: " + moviePath);
-			if (overlay.isExternalSurface)
-			{
-				OVROverlay.ExternalSurfaceObjectCreated externalSurfaceObjectCreated = delegate
-				{
-					Debug.Log("Playing ExoPlayer with SurfaceObject");
-					NativeVideoPlayer.PlayVideo(moviePath, drmLicencesUrl, overlay.externalSurfaceObject);
-					NativeVideoPlayer.SetLooping(LoopVideo);
-				};
-				if (overlay.externalSurfaceObject == IntPtr.Zero)
-				{
-					overlay.externalSurfaceObjectCreated = externalSurfaceObjectCreated;
-				}
-				else
-				{
-					externalSurfaceObjectCreated();
-				}
-			}
-			else
-			{
-				Debug.Log("Playing Unity VideoPlayer");
-				videoPlayer.url = moviePath;
-				videoPlayer.Prepare();
-				videoPlayer.Play();
-			}
-			Debug.Log("MovieSample Start");
-			IsPlaying = true;
-		}
-		else
-		{
-			Debug.LogError("No media file name provided");
-		}
-	}
-
-	public void Play()
-	{
-		if (overlay.isExternalSurface)
-		{
-			NativeVideoPlayer.Play();
-		}
-		else
-		{
-			videoPlayer.Play();
-		}
-		IsPlaying = true;
-	}
-
-	public void Pause()
-	{
-		if (overlay.isExternalSurface)
-		{
-			NativeVideoPlayer.Pause();
-		}
-		else
-		{
-			videoPlayer.Pause();
-		}
-		IsPlaying = false;
-	}
-
-	public void SeekTo(long position)
-	{
-		long num = Math.Max(0L, Math.Min(Duration, position));
-		if (overlay.isExternalSurface)
-		{
-			NativeVideoPlayer.PlaybackPosition = num;
-		}
-		else
-		{
-			videoPlayer.time = (double)num / 1000.0;
-		}
-	}
-
-	private void Update()
-	{
-		UpdateShapeAndStereo();
-		if (!overlay.isExternalSurface)
-		{
-			Texture texture = ((videoPlayer.texture != null) ? videoPlayer.texture : Texture2D.blackTexture);
-			if (overlay.enabled)
-			{
-				if (overlay.textures[0] != texture)
-				{
-					overlay.enabled = false;
-					overlay.textures[0] = texture;
-					overlay.enabled = true;
-				}
-			}
-			else
-			{
-				mediaRenderer.material.mainTexture = texture;
-				mediaRenderer.material.SetVector("_SrcRectLeft", overlay.srcRectLeft.ToVector());
-				mediaRenderer.material.SetVector("_SrcRectRight", overlay.srcRectRight.ToVector());
-			}
-			IsPlaying = videoPlayer.isPlaying;
-			PlaybackPosition = (long)(videoPlayer.time * 1000.0);
-			Duration = (long)(videoPlayer.length * 1000.0);
-		}
-		else
-		{
-			NativeVideoPlayer.SetListenerRotation(Camera.main.transform.rotation);
-			IsPlaying = NativeVideoPlayer.IsPlaying;
-			PlaybackPosition = NativeVideoPlayer.PlaybackPosition;
-			Duration = NativeVideoPlayer.Duration;
-			if (IsPlaying && (int)OVRManager.display.displayFrequency != 60)
-			{
-				OVRManager.display.displayFrequency = 60f;
-			}
-			else if (!IsPlaying && (int)OVRManager.display.displayFrequency != 72)
-			{
-				OVRManager.display.displayFrequency = 72f;
-			}
-		}
-	}
-
-	public void SetPlaybackSpeed(float speed)
-	{
-		speed = Mathf.Max(0f, speed);
-		if (overlay.isExternalSurface)
-		{
-			NativeVideoPlayer.SetPlaybackSpeed(speed);
-		}
-		else
-		{
-			videoPlayer.playbackSpeed = speed;
-		}
-	}
-
-	public void Stop()
-	{
-		if (overlay.isExternalSurface)
-		{
-			NativeVideoPlayer.Stop();
-		}
-		else
-		{
-			videoPlayer.Stop();
-		}
-		IsPlaying = false;
-	}
-
-	private void OnApplicationPause(bool appWasPaused)
-	{
-		Debug.Log("OnApplicationPause: " + appWasPaused);
-		if (appWasPaused)
-		{
-			videoPausedBeforeAppPause = !IsPlaying;
-		}
-		if (!videoPausedBeforeAppPause)
-		{
-			if (appWasPaused)
-			{
-				Pause();
-			}
-			else
-			{
-				Play();
-			}
-		}
+		Mono,
+		TopBottom,
+		LeftRight,
+		BottomTop
 	}
 }

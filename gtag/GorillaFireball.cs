@@ -1,32 +1,23 @@
+﻿using System;
 using Photon.Pun;
 using UnityEngine;
 
 public class GorillaFireball : GorillaThrowable, IPunInstantiateMagicCallback
 {
-	public float maxExplosionScale;
-
-	public float totalExplosionTime;
-
-	public float gravityStrength;
-
-	private bool canExplode;
-
-	private float explosionStartTime;
-
 	public override void Start()
 	{
 		base.Start();
-		canExplode = false;
-		explosionStartTime = 0f;
+		this.canExplode = false;
+		this.explosionStartTime = 0f;
 	}
 
 	private void Update()
 	{
-		if (explosionStartTime != 0f)
+		if (this.explosionStartTime != 0f)
 		{
-			float num = (Time.time - explosionStartTime) / totalExplosionTime * (maxExplosionScale - 0.25f) + 0.25f;
+			float num = (Time.time - this.explosionStartTime) / this.totalExplosionTime * (this.maxExplosionScale - 0.25f) + 0.25f;
 			base.gameObject.transform.localScale = new Vector3(num, num, num);
-			if (base.photonView.IsMine && Time.time > explosionStartTime + totalExplosionTime)
+			if (base.photonView.IsMine && Time.time > this.explosionStartTime + this.totalExplosionTime)
 			{
 				PhotonNetwork.Destroy(PhotonView.Get(this));
 			}
@@ -36,21 +27,21 @@ public class GorillaFireball : GorillaThrowable, IPunInstantiateMagicCallback
 	public override void LateUpdate()
 	{
 		base.LateUpdate();
-		if (rigidbody.useGravity)
+		if (this.rigidbody.useGravity)
 		{
-			rigidbody.AddForce(Physics.gravity * (0f - gravityStrength) * rigidbody.mass);
+			this.rigidbody.AddForce(Physics.gravity * -this.gravityStrength * this.rigidbody.mass);
 		}
 	}
 
 	public override void ThrowThisThingo()
 	{
 		base.ThrowThisThingo();
-		canExplode = true;
+		this.canExplode = true;
 	}
 
 	private new void OnCollisionEnter(Collision collision)
 	{
-		if (base.photonView.IsMine && canExplode)
+		if (base.photonView.IsMine && this.canExplode)
 		{
 			base.photonView.RPC("Explode", RpcTarget.All, null);
 		}
@@ -58,9 +49,9 @@ public class GorillaFireball : GorillaThrowable, IPunInstantiateMagicCallback
 
 	public void LocalExplode()
 	{
-		rigidbody.isKinematic = true;
-		canExplode = false;
-		explosionStartTime = Time.time;
+		this.rigidbody.isKinematic = true;
+		this.canExplode = false;
+		this.explosionStartTime = Time.time;
 	}
 
 	public void OnPhotonInstantiate(PhotonMessageInfo info)
@@ -70,17 +61,25 @@ public class GorillaFireball : GorillaThrowable, IPunInstantiateMagicCallback
 			if ((bool)base.photonView.InstantiationData[0])
 			{
 				base.transform.parent = GorillaPlaySpace.Instance.myVRRig.leftHandTransform;
+				return;
 			}
-			else
-			{
-				base.transform.parent = GorillaPlaySpace.Instance.myVRRig.rightHandTransform;
-			}
+			base.transform.parent = GorillaPlaySpace.Instance.myVRRig.rightHandTransform;
 		}
 	}
 
 	[PunRPC]
 	public void Explode()
 	{
-		LocalExplode();
+		this.LocalExplode();
 	}
+
+	public float maxExplosionScale;
+
+	public float totalExplosionTime;
+
+	public float gravityStrength;
+
+	private bool canExplode;
+
+	private float explosionStartTime;
 }

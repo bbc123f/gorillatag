@@ -1,3 +1,4 @@
+﻿using System;
 using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
@@ -8,27 +9,15 @@ using UnityEngine.AI;
 [RequireComponent(typeof(Rigidbody))]
 public class GorillaEnemyAI : MonoBehaviourPun, IPunObservable, IInRoomCallbacks
 {
-	public Transform playerTransform;
-
-	private NavMeshAgent agent;
-
-	private Rigidbody r;
-
-	private Vector3 targetPosition;
-
-	private Vector3 targetRotation;
-
-	public float lerpValue;
-
 	private void Start()
 	{
-		agent = GetComponent<NavMeshAgent>();
-		r = GetComponent<Rigidbody>();
-		r.useGravity = true;
+		this.agent = base.GetComponent<NavMeshAgent>();
+		this.r = base.GetComponent<Rigidbody>();
+		this.r.useGravity = true;
 		if (!base.photonView.IsMine)
 		{
-			agent.enabled = false;
-			r.isKinematic = true;
+			this.agent.enabled = false;
+			this.r.isKinematic = true;
 		}
 	}
 
@@ -38,49 +27,44 @@ public class GorillaEnemyAI : MonoBehaviourPun, IPunObservable, IInRoomCallbacks
 		{
 			stream.SendNext(base.transform.position);
 			stream.SendNext(base.transform.eulerAngles);
+			return;
 		}
-		else
-		{
-			targetPosition = (Vector3)stream.ReceiveNext();
-			targetRotation = (Vector3)stream.ReceiveNext();
-		}
+		this.targetPosition = (Vector3)stream.ReceiveNext();
+		this.targetRotation = (Vector3)stream.ReceiveNext();
 	}
 
 	private void Update()
 	{
 		if (PhotonNetwork.IsMasterClient)
 		{
-			FindClosestPlayer();
-			if (playerTransform != null)
+			this.FindClosestPlayer();
+			if (this.playerTransform != null)
 			{
-				agent.destination = playerTransform.position;
+				this.agent.destination = this.playerTransform.position;
 			}
-			base.transform.LookAt(new Vector3(playerTransform.transform.position.x, base.transform.position.y, playerTransform.position.z));
-			r.velocity *= 0.99f;
+			base.transform.LookAt(new Vector3(this.playerTransform.transform.position.x, base.transform.position.y, this.playerTransform.position.z));
+			this.r.velocity *= 0.99f;
+			return;
 		}
-		else
-		{
-			base.transform.position = Vector3.Lerp(base.transform.position, targetPosition, lerpValue);
-			base.transform.eulerAngles = Vector3.Lerp(base.transform.eulerAngles, targetRotation, lerpValue);
-		}
+		base.transform.position = Vector3.Lerp(base.transform.position, this.targetPosition, this.lerpValue);
+		base.transform.eulerAngles = Vector3.Lerp(base.transform.eulerAngles, this.targetRotation, this.lerpValue);
 	}
 
 	private void FindClosestPlayer()
 	{
 		VRRig[] array = Object.FindObjectsOfType<VRRig>();
-		VRRig vRRig = null;
+		VRRig vrrig = null;
 		float num = 100000f;
-		VRRig[] array2 = array;
-		foreach (VRRig vRRig2 in array2)
+		foreach (VRRig vrrig2 in array)
 		{
-			Vector3 vector = vRRig2.transform.position - base.transform.position;
+			Vector3 vector = vrrig2.transform.position - base.transform.position;
 			if (vector.magnitude < num)
 			{
-				vRRig = vRRig2;
+				vrrig = vrrig2;
 				num = vector.magnitude;
 			}
 		}
-		playerTransform = vRRig.transform;
+		this.playerTransform = vrrig.transform;
 	}
 
 	private void OnCollisionEnter(Collision collision)
@@ -95,8 +79,8 @@ public class GorillaEnemyAI : MonoBehaviourPun, IPunObservable, IInRoomCallbacks
 	{
 		if (PhotonNetwork.IsMasterClient)
 		{
-			agent.enabled = true;
-			r.isKinematic = false;
+			this.agent.enabled = true;
+			this.r.isKinematic = false;
 		}
 	}
 
@@ -115,4 +99,16 @@ public class GorillaEnemyAI : MonoBehaviourPun, IPunObservable, IInRoomCallbacks
 	void IInRoomCallbacks.OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
 	{
 	}
+
+	public Transform playerTransform;
+
+	private NavMeshAgent agent;
+
+	private Rigidbody r;
+
+	private Vector3 targetPosition;
+
+	private Vector3 targetRotation;
+
+	public float lerpValue;
 }

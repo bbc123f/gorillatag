@@ -1,351 +1,386 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace LitJson;
-
-public class JsonReader
+namespace LitJson
 {
-	private static IDictionary<int, IDictionary<int, int[]>> parse_table;
-
-	private Stack<int> automaton_stack;
-
-	private int current_input;
-
-	private int current_symbol;
-
-	private bool end_of_json;
-
-	private bool end_of_input;
-
-	private Lexer lexer;
-
-	private bool parser_in_string;
-
-	private bool parser_return;
-
-	private bool read_started;
-
-	private TextReader reader;
-
-	private bool reader_is_owned;
-
-	private object token_value;
-
-	private JsonToken token;
-
-	public bool AllowComments
+	public class JsonReader
 	{
-		get
+		public bool AllowComments
 		{
-			return lexer.AllowComments;
-		}
-		set
-		{
-			lexer.AllowComments = value;
-		}
-	}
-
-	public bool AllowSingleQuotedStrings
-	{
-		get
-		{
-			return lexer.AllowSingleQuotedStrings;
-		}
-		set
-		{
-			lexer.AllowSingleQuotedStrings = value;
-		}
-	}
-
-	public bool EndOfInput => end_of_input;
-
-	public bool EndOfJson => end_of_json;
-
-	public JsonToken Token => token;
-
-	public object Value => token_value;
-
-	static JsonReader()
-	{
-		PopulateParseTable();
-	}
-
-	public JsonReader(string json_text)
-		: this(new StringReader(json_text), owned: true)
-	{
-	}
-
-	public JsonReader(TextReader reader)
-		: this(reader, owned: false)
-	{
-	}
-
-	private JsonReader(TextReader reader, bool owned)
-	{
-		if (reader == null)
-		{
-			throw new ArgumentNullException("reader");
-		}
-		parser_in_string = false;
-		parser_return = false;
-		read_started = false;
-		automaton_stack = new Stack<int>();
-		automaton_stack.Push(65553);
-		automaton_stack.Push(65543);
-		lexer = new Lexer(reader);
-		end_of_input = false;
-		end_of_json = false;
-		this.reader = reader;
-		reader_is_owned = owned;
-	}
-
-	private static void PopulateParseTable()
-	{
-		parse_table = new Dictionary<int, IDictionary<int, int[]>>();
-		TableAddRow(ParserToken.Array);
-		TableAddCol(ParserToken.Array, 91, 91, 65549);
-		TableAddRow(ParserToken.ArrayPrime);
-		TableAddCol(ParserToken.ArrayPrime, 34, 65550, 65551, 93);
-		TableAddCol(ParserToken.ArrayPrime, 91, 65550, 65551, 93);
-		TableAddCol(ParserToken.ArrayPrime, 93, 93);
-		TableAddCol(ParserToken.ArrayPrime, 123, 65550, 65551, 93);
-		TableAddCol(ParserToken.ArrayPrime, 65537, 65550, 65551, 93);
-		TableAddCol(ParserToken.ArrayPrime, 65538, 65550, 65551, 93);
-		TableAddCol(ParserToken.ArrayPrime, 65539, 65550, 65551, 93);
-		TableAddCol(ParserToken.ArrayPrime, 65540, 65550, 65551, 93);
-		TableAddRow(ParserToken.Object);
-		TableAddCol(ParserToken.Object, 123, 123, 65545);
-		TableAddRow(ParserToken.ObjectPrime);
-		TableAddCol(ParserToken.ObjectPrime, 34, 65546, 65547, 125);
-		TableAddCol(ParserToken.ObjectPrime, 125, 125);
-		TableAddRow(ParserToken.Pair);
-		TableAddCol(ParserToken.Pair, 34, 65552, 58, 65550);
-		TableAddRow(ParserToken.PairRest);
-		TableAddCol(ParserToken.PairRest, 44, 44, 65546, 65547);
-		TableAddCol(ParserToken.PairRest, 125, 65554);
-		TableAddRow(ParserToken.String);
-		TableAddCol(ParserToken.String, 34, 34, 65541, 34);
-		TableAddRow(ParserToken.Text);
-		TableAddCol(ParserToken.Text, 91, 65548);
-		TableAddCol(ParserToken.Text, 123, 65544);
-		TableAddRow(ParserToken.Value);
-		TableAddCol(ParserToken.Value, 34, 65552);
-		TableAddCol(ParserToken.Value, 91, 65548);
-		TableAddCol(ParserToken.Value, 123, 65544);
-		TableAddCol(ParserToken.Value, 65537, 65537);
-		TableAddCol(ParserToken.Value, 65538, 65538);
-		TableAddCol(ParserToken.Value, 65539, 65539);
-		TableAddCol(ParserToken.Value, 65540, 65540);
-		TableAddRow(ParserToken.ValueRest);
-		TableAddCol(ParserToken.ValueRest, 44, 44, 65550, 65551);
-		TableAddCol(ParserToken.ValueRest, 93, 65554);
-	}
-
-	private static void TableAddCol(ParserToken row, int col, params int[] symbols)
-	{
-		parse_table[(int)row].Add(col, symbols);
-	}
-
-	private static void TableAddRow(ParserToken rule)
-	{
-		parse_table.Add((int)rule, new Dictionary<int, int[]>());
-	}
-
-	private void ProcessNumber(string number)
-	{
-		int result2;
-		long result3;
-		if ((number.IndexOf('.') != -1 || number.IndexOf('e') != -1 || number.IndexOf('E') != -1) && double.TryParse(number, out var result))
-		{
-			token = JsonToken.Double;
-			token_value = result;
-		}
-		else if (int.TryParse(number, out result2))
-		{
-			token = JsonToken.Int;
-			token_value = result2;
-		}
-		else if (long.TryParse(number, out result3))
-		{
-			token = JsonToken.Long;
-			token_value = result3;
-		}
-		else
-		{
-			token = JsonToken.Int;
-			token_value = 0;
-		}
-	}
-
-	private void ProcessSymbol()
-	{
-		if (current_symbol == 91)
-		{
-			token = JsonToken.ArrayStart;
-			parser_return = true;
-		}
-		else if (current_symbol == 93)
-		{
-			token = JsonToken.ArrayEnd;
-			parser_return = true;
-		}
-		else if (current_symbol == 123)
-		{
-			token = JsonToken.ObjectStart;
-			parser_return = true;
-		}
-		else if (current_symbol == 125)
-		{
-			token = JsonToken.ObjectEnd;
-			parser_return = true;
-		}
-		else if (current_symbol == 34)
-		{
-			if (parser_in_string)
+			get
 			{
-				parser_in_string = false;
-				parser_return = true;
+				return this.lexer.AllowComments;
+			}
+			set
+			{
+				this.lexer.AllowComments = value;
+			}
+		}
+
+		public bool AllowSingleQuotedStrings
+		{
+			get
+			{
+				return this.lexer.AllowSingleQuotedStrings;
+			}
+			set
+			{
+				this.lexer.AllowSingleQuotedStrings = value;
+			}
+		}
+
+		public bool EndOfInput
+		{
+			get
+			{
+				return this.end_of_input;
+			}
+		}
+
+		public bool EndOfJson
+		{
+			get
+			{
+				return this.end_of_json;
+			}
+		}
+
+		public JsonToken Token
+		{
+			get
+			{
+				return this.token;
+			}
+		}
+
+		public object Value
+		{
+			get
+			{
+				return this.token_value;
+			}
+		}
+
+		static JsonReader()
+		{
+			JsonReader.PopulateParseTable();
+		}
+
+		public JsonReader(string json_text)
+			: this(new StringReader(json_text), true)
+		{
+		}
+
+		public JsonReader(TextReader reader)
+			: this(reader, false)
+		{
+		}
+
+		private JsonReader(TextReader reader, bool owned)
+		{
+			if (reader == null)
+			{
+				throw new ArgumentNullException("reader");
+			}
+			this.parser_in_string = false;
+			this.parser_return = false;
+			this.read_started = false;
+			this.automaton_stack = new Stack<int>();
+			this.automaton_stack.Push(65553);
+			this.automaton_stack.Push(65543);
+			this.lexer = new Lexer(reader);
+			this.end_of_input = false;
+			this.end_of_json = false;
+			this.reader = reader;
+			this.reader_is_owned = owned;
+		}
+
+		private static void PopulateParseTable()
+		{
+			JsonReader.parse_table = new Dictionary<int, IDictionary<int, int[]>>();
+			JsonReader.TableAddRow(ParserToken.Array);
+			JsonReader.TableAddCol(ParserToken.Array, 91, new int[] { 91, 65549 });
+			JsonReader.TableAddRow(ParserToken.ArrayPrime);
+			JsonReader.TableAddCol(ParserToken.ArrayPrime, 34, new int[] { 65550, 65551, 93 });
+			JsonReader.TableAddCol(ParserToken.ArrayPrime, 91, new int[] { 65550, 65551, 93 });
+			JsonReader.TableAddCol(ParserToken.ArrayPrime, 93, new int[] { 93 });
+			JsonReader.TableAddCol(ParserToken.ArrayPrime, 123, new int[] { 65550, 65551, 93 });
+			JsonReader.TableAddCol(ParserToken.ArrayPrime, 65537, new int[] { 65550, 65551, 93 });
+			JsonReader.TableAddCol(ParserToken.ArrayPrime, 65538, new int[] { 65550, 65551, 93 });
+			JsonReader.TableAddCol(ParserToken.ArrayPrime, 65539, new int[] { 65550, 65551, 93 });
+			JsonReader.TableAddCol(ParserToken.ArrayPrime, 65540, new int[] { 65550, 65551, 93 });
+			JsonReader.TableAddRow(ParserToken.Object);
+			JsonReader.TableAddCol(ParserToken.Object, 123, new int[] { 123, 65545 });
+			JsonReader.TableAddRow(ParserToken.ObjectPrime);
+			JsonReader.TableAddCol(ParserToken.ObjectPrime, 34, new int[] { 65546, 65547, 125 });
+			JsonReader.TableAddCol(ParserToken.ObjectPrime, 125, new int[] { 125 });
+			JsonReader.TableAddRow(ParserToken.Pair);
+			JsonReader.TableAddCol(ParserToken.Pair, 34, new int[] { 65552, 58, 65550 });
+			JsonReader.TableAddRow(ParserToken.PairRest);
+			JsonReader.TableAddCol(ParserToken.PairRest, 44, new int[] { 44, 65546, 65547 });
+			JsonReader.TableAddCol(ParserToken.PairRest, 125, new int[] { 65554 });
+			JsonReader.TableAddRow(ParserToken.String);
+			JsonReader.TableAddCol(ParserToken.String, 34, new int[] { 34, 65541, 34 });
+			JsonReader.TableAddRow(ParserToken.Text);
+			JsonReader.TableAddCol(ParserToken.Text, 91, new int[] { 65548 });
+			JsonReader.TableAddCol(ParserToken.Text, 123, new int[] { 65544 });
+			JsonReader.TableAddRow(ParserToken.Value);
+			JsonReader.TableAddCol(ParserToken.Value, 34, new int[] { 65552 });
+			JsonReader.TableAddCol(ParserToken.Value, 91, new int[] { 65548 });
+			JsonReader.TableAddCol(ParserToken.Value, 123, new int[] { 65544 });
+			JsonReader.TableAddCol(ParserToken.Value, 65537, new int[] { 65537 });
+			JsonReader.TableAddCol(ParserToken.Value, 65538, new int[] { 65538 });
+			JsonReader.TableAddCol(ParserToken.Value, 65539, new int[] { 65539 });
+			JsonReader.TableAddCol(ParserToken.Value, 65540, new int[] { 65540 });
+			JsonReader.TableAddRow(ParserToken.ValueRest);
+			JsonReader.TableAddCol(ParserToken.ValueRest, 44, new int[] { 44, 65550, 65551 });
+			JsonReader.TableAddCol(ParserToken.ValueRest, 93, new int[] { 65554 });
+		}
+
+		private static void TableAddCol(ParserToken row, int col, params int[] symbols)
+		{
+			JsonReader.parse_table[(int)row].Add(col, symbols);
+		}
+
+		private static void TableAddRow(ParserToken rule)
+		{
+			JsonReader.parse_table.Add((int)rule, new Dictionary<int, int[]>());
+		}
+
+		private void ProcessNumber(string number)
+		{
+			double num;
+			if ((number.IndexOf('.') != -1 || number.IndexOf('e') != -1 || number.IndexOf('E') != -1) && double.TryParse(number, out num))
+			{
+				this.token = JsonToken.Double;
+				this.token_value = num;
 				return;
 			}
-			if (token == JsonToken.None)
+			int num2;
+			if (int.TryParse(number, out num2))
 			{
-				token = JsonToken.String;
+				this.token = JsonToken.Int;
+				this.token_value = num2;
+				return;
 			}
-			parser_in_string = true;
-		}
-		else if (current_symbol == 65541)
-		{
-			token_value = lexer.StringValue;
-		}
-		else if (current_symbol == 65539)
-		{
-			token = JsonToken.Boolean;
-			token_value = false;
-			parser_return = true;
-		}
-		else if (current_symbol == 65540)
-		{
-			token = JsonToken.Null;
-			parser_return = true;
-		}
-		else if (current_symbol == 65537)
-		{
-			ProcessNumber(lexer.StringValue);
-			parser_return = true;
-		}
-		else if (current_symbol == 65546)
-		{
-			token = JsonToken.PropertyName;
-		}
-		else if (current_symbol == 65538)
-		{
-			token = JsonToken.Boolean;
-			token_value = true;
-			parser_return = true;
-		}
-	}
-
-	private bool ReadToken()
-	{
-		if (end_of_input)
-		{
-			return false;
-		}
-		lexer.NextToken();
-		if (lexer.EndOfInput)
-		{
-			Close();
-			return false;
-		}
-		current_input = lexer.Token;
-		return true;
-	}
-
-	public void Close()
-	{
-		if (!end_of_input)
-		{
-			end_of_input = true;
-			end_of_json = true;
-			if (reader_is_owned)
+			long num3;
+			if (long.TryParse(number, out num3))
 			{
-				reader.Close();
+				this.token = JsonToken.Long;
+				this.token_value = num3;
+				return;
 			}
-			reader = null;
+			this.token = JsonToken.Int;
+			this.token_value = 0;
 		}
-	}
 
-	public bool Read()
-	{
-		if (end_of_input)
+		private void ProcessSymbol()
 		{
-			return false;
+			if (this.current_symbol == 91)
+			{
+				this.token = JsonToken.ArrayStart;
+				this.parser_return = true;
+				return;
+			}
+			if (this.current_symbol == 93)
+			{
+				this.token = JsonToken.ArrayEnd;
+				this.parser_return = true;
+				return;
+			}
+			if (this.current_symbol == 123)
+			{
+				this.token = JsonToken.ObjectStart;
+				this.parser_return = true;
+				return;
+			}
+			if (this.current_symbol == 125)
+			{
+				this.token = JsonToken.ObjectEnd;
+				this.parser_return = true;
+				return;
+			}
+			if (this.current_symbol == 34)
+			{
+				if (this.parser_in_string)
+				{
+					this.parser_in_string = false;
+					this.parser_return = true;
+					return;
+				}
+				if (this.token == JsonToken.None)
+				{
+					this.token = JsonToken.String;
+				}
+				this.parser_in_string = true;
+				return;
+			}
+			else
+			{
+				if (this.current_symbol == 65541)
+				{
+					this.token_value = this.lexer.StringValue;
+					return;
+				}
+				if (this.current_symbol == 65539)
+				{
+					this.token = JsonToken.Boolean;
+					this.token_value = false;
+					this.parser_return = true;
+					return;
+				}
+				if (this.current_symbol == 65540)
+				{
+					this.token = JsonToken.Null;
+					this.parser_return = true;
+					return;
+				}
+				if (this.current_symbol == 65537)
+				{
+					this.ProcessNumber(this.lexer.StringValue);
+					this.parser_return = true;
+					return;
+				}
+				if (this.current_symbol == 65546)
+				{
+					this.token = JsonToken.PropertyName;
+					return;
+				}
+				if (this.current_symbol == 65538)
+				{
+					this.token = JsonToken.Boolean;
+					this.token_value = true;
+					this.parser_return = true;
+				}
+				return;
+			}
 		}
-		if (end_of_json)
+
+		private bool ReadToken()
 		{
-			end_of_json = false;
-			automaton_stack.Clear();
-			automaton_stack.Push(65553);
-			automaton_stack.Push(65543);
-		}
-		parser_in_string = false;
-		parser_return = false;
-		token = JsonToken.None;
-		token_value = null;
-		if (!read_started)
-		{
-			read_started = true;
-			if (!ReadToken())
+			if (this.end_of_input)
 			{
 				return false;
 			}
-		}
-		while (true)
-		{
-			if (parser_return)
+			this.lexer.NextToken();
+			if (this.lexer.EndOfInput)
 			{
-				if (automaton_stack.Peek() == 65553)
-				{
-					end_of_json = true;
-				}
-				return true;
+				this.Close();
+				return false;
 			}
-			current_symbol = automaton_stack.Pop();
-			ProcessSymbol();
-			if (current_symbol == current_input)
-			{
-				if (!ReadToken())
-				{
-					break;
-				}
-				continue;
-			}
-			int[] array;
-			try
-			{
-				array = parse_table[current_symbol][current_input];
-			}
-			catch (KeyNotFoundException inner_exception)
-			{
-				throw new JsonException((ParserToken)current_input, inner_exception);
-			}
-			if (array[0] != 65554)
-			{
-				for (int num = array.Length - 1; num >= 0; num--)
-				{
-					automaton_stack.Push(array[num]);
-				}
-			}
-		}
-		if (automaton_stack.Peek() != 65553)
-		{
-			throw new JsonException("Input doesn't evaluate to proper JSON text");
-		}
-		if (parser_return)
-		{
+			this.current_input = this.lexer.Token;
 			return true;
 		}
-		return false;
+
+		public void Close()
+		{
+			if (this.end_of_input)
+			{
+				return;
+			}
+			this.end_of_input = true;
+			this.end_of_json = true;
+			if (this.reader_is_owned)
+			{
+				this.reader.Close();
+			}
+			this.reader = null;
+		}
+
+		public bool Read()
+		{
+			if (this.end_of_input)
+			{
+				return false;
+			}
+			if (this.end_of_json)
+			{
+				this.end_of_json = false;
+				this.automaton_stack.Clear();
+				this.automaton_stack.Push(65553);
+				this.automaton_stack.Push(65543);
+			}
+			this.parser_in_string = false;
+			this.parser_return = false;
+			this.token = JsonToken.None;
+			this.token_value = null;
+			if (!this.read_started)
+			{
+				this.read_started = true;
+				if (!this.ReadToken())
+				{
+					return false;
+				}
+			}
+			while (!this.parser_return)
+			{
+				this.current_symbol = this.automaton_stack.Pop();
+				this.ProcessSymbol();
+				if (this.current_symbol == this.current_input)
+				{
+					if (!this.ReadToken())
+					{
+						if (this.automaton_stack.Peek() != 65553)
+						{
+							throw new JsonException("Input doesn't evaluate to proper JSON text");
+						}
+						return this.parser_return;
+					}
+				}
+				else
+				{
+					int[] array;
+					try
+					{
+						array = JsonReader.parse_table[this.current_symbol][this.current_input];
+					}
+					catch (KeyNotFoundException ex)
+					{
+						throw new JsonException((ParserToken)this.current_input, ex);
+					}
+					if (array[0] != 65554)
+					{
+						for (int i = array.Length - 1; i >= 0; i--)
+						{
+							this.automaton_stack.Push(array[i]);
+						}
+					}
+				}
+			}
+			if (this.automaton_stack.Peek() == 65553)
+			{
+				this.end_of_json = true;
+			}
+			return true;
+		}
+
+		private static IDictionary<int, IDictionary<int, int[]>> parse_table;
+
+		private Stack<int> automaton_stack;
+
+		private int current_input;
+
+		private int current_symbol;
+
+		private bool end_of_json;
+
+		private bool end_of_input;
+
+		private Lexer lexer;
+
+		private bool parser_in_string;
+
+		private bool parser_return;
+
+		private bool read_started;
+
+		private TextReader reader;
+
+		private bool reader_is_owned;
+
+		private object token_value;
+
+		private JsonToken token;
 	}
 }

@@ -1,3 +1,4 @@
+﻿using System;
 using System.Collections.Generic;
 using GorillaLocomotion;
 using Sirenix.OdinInspector;
@@ -5,19 +6,11 @@ using UnityEngine;
 
 public class SnowballMaker : MonoBehaviour
 {
-	public bool isLeftHand;
-
-	[RequiredListLength(1, 999, PrefabKind = PrefabKind.InstanceInScene)]
-	public SnowballThrowable[] snowballs;
-
-	public GorillaVelocityEstimator velocityEstimator;
-
 	protected void Awake()
 	{
-		List<SnowballThrowable> list = new List<SnowballThrowable>(snowballs.Length);
+		List<SnowballThrowable> list = new List<SnowballThrowable>(this.snowballs.Length);
 		int num = 0;
-		SnowballThrowable[] array = snowballs;
-		foreach (SnowballThrowable snowballThrowable in array)
+		foreach (SnowballThrowable snowballThrowable in this.snowballs)
 		{
 			if (snowballThrowable == null)
 			{
@@ -30,19 +23,19 @@ public class SnowballMaker : MonoBehaviour
 		}
 		if (num > 0)
 		{
-			Debug.LogError($"Found {num} null references in snowballs array.", this);
+			Debug.LogError(string.Format("Found {0} null references in snowballs array.", num), this);
 		}
-		snowballs = list.ToArray();
-		for (int j = 0; j < snowballs.Length; j++)
+		this.snowballs = list.ToArray();
+		for (int j = 0; j < this.snowballs.Length; j++)
 		{
-			snowballs[j].throwableMakerIndex = j;
+			this.snowballs[j].throwableMakerIndex = j;
 		}
 	}
 
 	protected void LateUpdate()
 	{
 		bool flag = false;
-		SnowballThrowable[] array = snowballs;
+		SnowballThrowable[] array = this.snowballs;
 		for (int i = 0; i < array.Length; i++)
 		{
 			if (array[i].gameObject.activeSelf)
@@ -56,31 +49,37 @@ public class SnowballMaker : MonoBehaviour
 			return;
 		}
 		Player instance = Player.Instance;
-		int num = (isLeftHand ? instance.leftHandMaterialTouchIndex : instance.rightHandMaterialTouchIndex);
+		int num = (this.isLeftHand ? instance.leftHandMaterialTouchIndex : instance.rightHandMaterialTouchIndex);
 		if (num == 0)
 		{
 			return;
 		}
 		EquipmentInteractor instance2 = EquipmentInteractor.instance;
-		bool num2 = (isLeftHand ? instance2.isLeftGrabbing : instance2.isRightGrabbing);
-		bool flag2 = (isLeftHand ? instance2.leftHandHeldEquipment : instance2.rightHandHeldEquipment) != null;
-		if (!num2 || flag2)
+		bool flag2 = (this.isLeftHand ? instance2.isLeftGrabbing : instance2.isRightGrabbing);
+		bool flag3 = (this.isLeftHand ? instance2.leftHandHeldEquipment : instance2.rightHandHeldEquipment) != null;
+		if (!flag2 || flag3)
 		{
 			return;
 		}
 		Transform transform = base.transform;
-		array = snowballs;
-		foreach (SnowballThrowable snowballThrowable in array)
+		foreach (SnowballThrowable snowballThrowable in this.snowballs)
 		{
 			Transform transform2 = snowballThrowable.transform;
 			if (snowballThrowable.matDataIndexes.Contains(num))
 			{
-				snowballThrowable.EnableSnowballLocal(enable: true);
-				snowballThrowable.velocityEstimator = velocityEstimator;
+				snowballThrowable.EnableSnowballLocal(true);
+				snowballThrowable.velocityEstimator = this.velocityEstimator;
 				transform2.position = transform.position;
 				transform2.rotation = transform.rotation;
-				break;
+				return;
 			}
 		}
 	}
+
+	public bool isLeftHand;
+
+	[RequiredListLength(1, 999, PrefabKind = PrefabKind.InstanceInScene)]
+	public SnowballThrowable[] snowballs;
+
+	public GorillaVelocityEstimator velocityEstimator;
 }

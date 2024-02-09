@@ -1,8 +1,11 @@
-namespace BoingKit;
+﻿using System;
 
-public enum ParameterMode
+namespace BoingKit
 {
-	Exponential,
-	OscillationByHalfLife,
-	OscillationByDampingRatio
+	public enum ParameterMode
+	{
+		Exponential,
+		OscillationByHalfLife,
+		OscillationByDampingRatio
+	}
 }

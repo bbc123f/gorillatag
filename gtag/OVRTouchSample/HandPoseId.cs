@@ -1,9 +1,12 @@
-namespace OVRTouchSample;
+﻿using System;
 
-public enum HandPoseId
+namespace OVRTouchSample
 {
-	Default,
-	Generic,
-	PingPongBall,
-	Controller
+	public enum HandPoseId
+	{
+		Default,
+		Generic,
+		PingPongBall,
+		Controller
+	}
 }

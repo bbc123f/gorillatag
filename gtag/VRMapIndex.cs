@@ -1,10 +1,55 @@
-using System;
+﻿using System;
 using UnityEngine;
 using UnityEngine.XR;
 
 [Serializable]
 public class VRMapIndex : VRMap
 {
+	public override void MapMyFinger(float lerpValue)
+	{
+		this.calcT = 0f;
+		this.triggerValue = ControllerInputPoller.TriggerFloat(this.vrTargetNode);
+		this.triggerTouch = ControllerInputPoller.TriggerTouch(this.vrTargetNode);
+		this.calcT = 0.1f * this.triggerTouch;
+		this.calcT += 0.9f * this.triggerValue;
+		this.LerpFinger(lerpValue, false);
+	}
+
+	public override void LerpFinger(float lerpValue, bool isOther)
+	{
+		if (isOther)
+		{
+			this.currentAngle1 = Mathf.Lerp(this.currentAngle1, this.calcT, lerpValue);
+			this.currentAngle2 = Mathf.Lerp(this.currentAngle2, this.calcT, lerpValue);
+			this.currentAngle3 = Mathf.Lerp(this.currentAngle3, this.calcT, lerpValue);
+			this.myTempInt = (int)(this.currentAngle1 * 10.1f);
+			if (this.myTempInt != this.lastAngle1)
+			{
+				this.lastAngle1 = this.myTempInt;
+				this.fingerBone1.localRotation = this.angle1Table[this.lastAngle1];
+			}
+			this.myTempInt = (int)(this.currentAngle2 * 10.1f);
+			if (this.myTempInt != this.lastAngle2)
+			{
+				this.lastAngle2 = this.myTempInt;
+				this.fingerBone2.localRotation = this.angle2Table[this.lastAngle2];
+			}
+			this.myTempInt = (int)(this.currentAngle3 * 10.1f);
+			if (this.myTempInt != this.lastAngle3)
+			{
+				this.lastAngle3 = this.myTempInt;
+				this.fingerBone3.localRotation = this.angle3Table[this.lastAngle3];
+				return;
+			}
+		}
+		else
+		{
+			this.fingerBone1.localRotation = Quaternion.Lerp(this.fingerBone1.localRotation, Quaternion.Lerp(Quaternion.Euler(this.startingAngle1), Quaternion.Euler(this.closedAngle1), this.calcT), lerpValue);
+			this.fingerBone2.localRotation = Quaternion.Lerp(this.fingerBone2.localRotation, Quaternion.Lerp(Quaternion.Euler(this.startingAngle2), Quaternion.Euler(this.closedAngle2), this.calcT), lerpValue);
+			this.fingerBone3.localRotation = Quaternion.Lerp(this.fingerBone3.localRotation, Quaternion.Lerp(Quaternion.Euler(this.startingAngle3), Quaternion.Euler(this.closedAngle3), this.calcT), lerpValue);
+		}
+	}
+
 	public InputFeatureUsage inputAxis;
 
 	public float triggerTouch;
@@ -52,48 +97,4 @@ public class VRMapIndex : VRMap
 	private float currentAngle3;
 
 	private int myTempInt;
-
-	public override void MapMyFinger(float lerpValue)
-	{
-		calcT = 0f;
-		triggerValue = ControllerInputPoller.TriggerFloat(vrTargetNode);
-		triggerTouch = ControllerInputPoller.TriggerTouch(vrTargetNode);
-		calcT = 0.1f * triggerTouch;
-		calcT += 0.9f * triggerValue;
-		LerpFinger(lerpValue, isOther: false);
-	}
-
-	public override void LerpFinger(float lerpValue, bool isOther)
-	{
-		if (isOther)
-		{
-			currentAngle1 = Mathf.Lerp(currentAngle1, calcT, lerpValue);
-			currentAngle2 = Mathf.Lerp(currentAngle2, calcT, lerpValue);
-			currentAngle3 = Mathf.Lerp(currentAngle3, calcT, lerpValue);
-			myTempInt = (int)(currentAngle1 * 10.1f);
-			if (myTempInt != lastAngle1)
-			{
-				lastAngle1 = myTempInt;
-				fingerBone1.localRotation = angle1Table[lastAngle1];
-			}
-			myTempInt = (int)(currentAngle2 * 10.1f);
-			if (myTempInt != lastAngle2)
-			{
-				lastAngle2 = myTempInt;
-				fingerBone2.localRotation = angle2Table[lastAngle2];
-			}
-			myTempInt = (int)(currentAngle3 * 10.1f);
-			if (myTempInt != lastAngle3)
-			{
-				lastAngle3 = myTempInt;
-				fingerBone3.localRotation = angle3Table[lastAngle3];
-			}
-		}
-		else
-		{
-			fingerBone1.localRotation = Quaternion.Lerp(fingerBone1.localRotation, Quaternion.Lerp(Quaternion.Euler(startingAngle1), Quaternion.Euler(closedAngle1), calcT), lerpValue);
-			fingerBone2.localRotation = Quaternion.Lerp(fingerBone2.localRotation, Quaternion.Lerp(Quaternion.Euler(startingAngle2), Quaternion.Euler(closedAngle2), calcT), lerpValue);
-			fingerBone3.localRotation = Quaternion.Lerp(fingerBone3.localRotation, Quaternion.Lerp(Quaternion.Euler(startingAngle3), Quaternion.Euler(closedAngle3), calcT), lerpValue);
-		}
-	}
 }

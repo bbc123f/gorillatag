@@ -1,14 +1,9 @@
+﻿using System;
 using Photon.Pun;
 using UnityEngine;
 
 public class GorillaThrowingRock : GorillaThrowable, IPunInstantiateMagicCallback
 {
-	public float bonkSpeedMin = 1f;
-
-	public float bonkSpeedMax = 5f;
-
-	public VRRig hitRig;
-
 	public void OnPhotonInstantiate(PhotonMessageInfo info)
 	{
 	}
@@ -17,28 +12,43 @@ public class GorillaThrowingRock : GorillaThrowable, IPunInstantiateMagicCallbac
 	{
 		base.OnCollisionEnter(collision);
 		Debug.Log("did a collision enter");
-		hitRig = collision.collider.GetComponentInParent<VRRig>();
-		if (hitRig != null && hitRig.photonView.Owner != base.photonView.Owner)
+		this.hitRig = collision.collider.GetComponentInParent<VRRig>();
+		if (this.hitRig != null && this.hitRig.photonView.Owner != base.photonView.Owner)
 		{
-			hitRig.photonView.RPC("Bonk", RpcTarget.All, 4);
+			this.hitRig.photonView.RPC("Bonk", RpcTarget.All, new object[] { 4 });
 		}
 	}
 
 	public void OnTriggerEnter(Collider other)
 	{
 		Debug.Log("did a trigger enter");
-		hitRig = other.GetComponentInParent<VRRig>();
-		if (hitRig != null && !hitRig.isOfflineVRRig && (!PhotonView.Get(hitRig).IsMine || !isHeld))
+		this.hitRig = other.GetComponentInParent<VRRig>();
+		if (this.hitRig != null && !this.hitRig.isOfflineVRRig && (!PhotonView.Get(this.hitRig).IsMine || !this.isHeld))
 		{
 			Debug.Log("found rig");
-			if (!isHeld && rigidbody.velocity.magnitude > bonkSpeedMin)
+			if (!this.isHeld && this.rigidbody.velocity.magnitude > this.bonkSpeedMin)
 			{
-				PhotonView.Get(hitRig).RPC("Bonk", RpcTarget.All, 4, (Mathf.Clamp(rigidbody.velocity.magnitude, bonkSpeedMin, bonkSpeedMax) - 1f) / 5f + 0.05f);
+				PhotonView.Get(this.hitRig).RPC("Bonk", RpcTarget.All, new object[]
+				{
+					4,
+					(Mathf.Clamp(this.rigidbody.velocity.magnitude, this.bonkSpeedMin, this.bonkSpeedMax) - 1f) / 5f + 0.05f
+				});
+				return;
 			}
-			else if (isHeld)
+			if (this.isHeld)
 			{
-				PhotonView.Get(hitRig).RPC("Bonk", RpcTarget.All, 4, (Mathf.Clamp(denormalizedVelocityAverage.magnitude, bonkSpeedMin, bonkSpeedMax) - 1f) / 5f + 0.05f);
+				PhotonView.Get(this.hitRig).RPC("Bonk", RpcTarget.All, new object[]
+				{
+					4,
+					(Mathf.Clamp(this.denormalizedVelocityAverage.magnitude, this.bonkSpeedMin, this.bonkSpeedMax) - 1f) / 5f + 0.05f
+				});
 			}
 		}
 	}
+
+	public float bonkSpeedMin = 1f;
+
+	public float bonkSpeedMax = 5f;
+
+	public VRRig hitRig;
 }

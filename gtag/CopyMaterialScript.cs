@@ -1,24 +1,25 @@
+﻿using System;
 using UnityEngine;
 
 public class CopyMaterialScript : MonoBehaviour
 {
-	public SkinnedMeshRenderer sourceToCopyMaterialFrom;
-
-	public SkinnedMeshRenderer mySkinnedMeshRenderer;
-
 	private void Start()
 	{
 		if (Application.platform == RuntimePlatform.Android)
 		{
-			base.gameObject.SetActive(value: false);
+			base.gameObject.SetActive(false);
 		}
 	}
 
 	private void Update()
 	{
-		if (sourceToCopyMaterialFrom.material != mySkinnedMeshRenderer.material)
+		if (this.sourceToCopyMaterialFrom.material != this.mySkinnedMeshRenderer.material)
 		{
-			mySkinnedMeshRenderer.material = sourceToCopyMaterialFrom.material;
+			this.mySkinnedMeshRenderer.material = this.sourceToCopyMaterialFrom.material;
 		}
 	}
+
+	public SkinnedMeshRenderer sourceToCopyMaterialFrom;
+
+	public SkinnedMeshRenderer mySkinnedMeshRenderer;
 }

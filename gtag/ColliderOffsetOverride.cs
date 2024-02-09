@@ -1,60 +1,61 @@
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 public class ColliderOffsetOverride : MonoBehaviour
 {
-	public List<Collider> colliders;
-
-	[HideInInspector]
-	public bool autoSearch;
-
-	public float targetScale = 1f;
-
 	private void Awake()
 	{
-		if (autoSearch)
+		if (this.autoSearch)
 		{
-			FindColliders();
+			this.FindColliders();
 		}
-		foreach (Collider collider in colliders)
+		foreach (Collider collider in this.colliders)
 		{
 			if (collider != null)
 			{
-				collider.contactOffset = 0.01f * targetScale;
+				collider.contactOffset = 0.01f * this.targetScale;
 			}
 		}
 	}
 
 	public void FindColliders()
 	{
-		foreach (Collider item in base.gameObject.GetComponents<Collider>().ToList())
+		foreach (Collider collider in base.gameObject.GetComponents<Collider>().ToList<Collider>())
 		{
-			if (!colliders.Contains(item))
+			if (!this.colliders.Contains(collider))
 			{
-				colliders.Add(item);
+				this.colliders.Add(collider);
 			}
 		}
 	}
 
 	public void FindCollidersRecursively()
 	{
-		foreach (Collider item in base.gameObject.GetComponentsInChildren<Collider>().ToList())
+		foreach (Collider collider in base.gameObject.GetComponentsInChildren<Collider>().ToList<Collider>())
 		{
-			if (!colliders.Contains(item))
+			if (!this.colliders.Contains(collider))
 			{
-				colliders.Add(item);
+				this.colliders.Add(collider);
 			}
 		}
 	}
 
 	private void AutoDisabled()
 	{
-		autoSearch = true;
+		this.autoSearch = true;
 	}
 
 	private void AutoEnabled()
 	{
-		autoSearch = false;
+		this.autoSearch = false;
 	}
+
+	public List<Collider> colliders;
+
+	[HideInInspector]
+	public bool autoSearch;
+
+	public float targetScale = 1f;
 }

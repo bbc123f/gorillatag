@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,175 +7,38 @@ using UnityEngine.UI;
 
 public class DevConsole : MonoBehaviour, IDebugObject
 {
-	[Serializable]
-	public class LogEntry
+	public static DevConsole instance
 	{
-		private static int TotalIndex;
-
-		[SerializeReference]
-		[SerializeField]
-		public readonly string _Message;
-
-		[SerializeField]
-		[SerializeReference]
-		public readonly LogType Type;
-
-		public readonly string Trace;
-
-		public bool forwarded;
-
-		public int repeatCount = 1;
-
-		public bool filtered;
-
-		public int index;
-
-		public string Message
+		get
 		{
-			get
+			if (DevConsole._instance == null)
 			{
-				if (repeatCount > 1)
-				{
-					return $"({repeatCount}) {_Message}";
-				}
-				return _Message;
+				DevConsole._instance = Object.FindObjectOfType<DevConsole>();
 			}
-		}
-
-		public LogEntry(string message, LogType type, string trace)
-		{
-			_Message = message;
-			Type = type;
-			Trace = trace;
-			StringBuilder stringBuilder = new StringBuilder();
-			string[] array = trace.Split("\n".ToCharArray(), StringSplitOptions.None);
-			foreach (string line in array)
-			{
-				if (!tracebackScrubbing.Any((string scrubString) => line.Contains(scrubString)))
-				{
-					stringBuilder.AppendLine(line);
-				}
-			}
-			Trace = stringBuilder.ToString();
-			TotalIndex++;
-			index = TotalIndex;
+			return DevConsole._instance;
 		}
 	}
 
-	[Serializable]
-	public class DisplayedLogLine
+	public static List<DevConsole.LogEntry> logEntries
 	{
-		public GorillaDevButton[] buttons;
-
-		public Text lineText;
-
-		public RectTransform transform;
-
-		public int targetMessage;
-
-		public GorillaDevButton maximizeButton;
-
-		public GorillaDevButton forwardButton;
-
-		public SpriteRenderer backdrop;
-
-		private bool expanded;
-
-		public DevInspector inspector;
-
-		public Type data { get; set; }
-
-		public DisplayedLogLine(GameObject obj)
+		get
 		{
-			lineText = obj.GetComponentInChildren<Text>();
-			buttons = obj.GetComponentsInChildren<GorillaDevButton>();
-			transform = obj.GetComponent<RectTransform>();
-			backdrop = obj.GetComponentInChildren<SpriteRenderer>();
-			GorillaDevButton[] array = buttons;
-			foreach (GorillaDevButton gorillaDevButton in array)
-			{
-				if (gorillaDevButton.Type == DevButtonType.LineExpand)
-				{
-					maximizeButton = gorillaDevButton;
-				}
-				if (gorillaDevButton.Type == DevButtonType.LineForward)
-				{
-					forwardButton = gorillaDevButton;
-				}
-			}
+			return DevConsole.instance._logEntries;
 		}
 	}
 
-	[Serializable]
-	public class MessagePayload
+	public void OnDestroyDebugObject()
 	{
-		[Serializable]
-		public class Block
+		Debug.Log("Destroying debug instances now");
+		foreach (DevConsoleInstance devConsoleInstance in this.instances)
 		{
-			public string type;
-
-			public TextBlock text;
-
-			public Block(string markdownText)
-			{
-				text = new TextBlock
-				{
-					text = markdownText,
-					type = "mrkdwn"
-				};
-				type = "section";
-			}
+			Object.DestroyImmediate(devConsoleInstance.gameObject);
 		}
+	}
 
-		[Serializable]
-		public class TextBlock
-		{
-			public string type;
-
-			public string text;
-		}
-
-		public Block[] blocks;
-
-		public static List<MessagePayload> GeneratePayloads(string username, List<LogEntry> entries)
-		{
-			List<MessagePayload> list = new List<MessagePayload>();
-			List<Block> list2 = new List<Block>();
-			entries.Sort((LogEntry e1, LogEntry e2) => e1.index.CompareTo(e2.index));
-			string text = "";
-			text += "```";
-			list2.Add(new Block("User `" + username + "` Forwarded some errors"));
-			foreach (LogEntry entry in entries)
-			{
-				string[] array = entry.Trace.Split("\n".ToCharArray());
-				string text2 = "";
-				string[] array2 = array;
-				foreach (string text3 in array2)
-				{
-					text2 = text2 + "    " + text3 + "\n";
-				}
-				string text4 = $"({entry.Type}) {entry.Message}\n{text2}\n";
-				if (text.Length + text4.Length > 3000)
-				{
-					text += "```";
-					list2.Add(new Block(text));
-					list.Add(new MessagePayload
-					{
-						blocks = list2.ToArray()
-					});
-					list2 = new List<Block>();
-					text = "```";
-				}
-				text += $"({entry.Type}) {entry.Message}\n{text2}\n";
-			}
-			text += "```";
-			list2.Add(new Block(text));
-			list.Add(new MessagePayload
-			{
-				blocks = list2.ToArray()
-			});
-			return list;
-		}
+	private void OnEnable()
+	{
+		base.gameObject.SetActive(false);
 	}
 
 	private static DevConsole _instance;
@@ -189,13 +52,13 @@ public class DevConsole : MonoBehaviour, IDebugObject
 	[SerializeField]
 	private float maxHeight;
 
-	public static readonly string[] tracebackScrubbing = new string[3] { "ExitGames.Client.Photon", "Photon.Realtime.LoadBalancingClient", "Photon.Pun.PhotonHandler" };
+	public static readonly string[] tracebackScrubbing = new string[] { "ExitGames.Client.Photon", "Photon.Realtime.LoadBalancingClient", "Photon.Pun.PhotonHandler" };
 
 	private const int kLogEntriesCapacityIncrementAmount = 1024;
 
 	[SerializeReference]
 	[SerializeField]
-	private readonly List<LogEntry> _logEntries = new List<LogEntry>(1024);
+	private readonly List<DevConsole.LogEntry> _logEntries = new List<DevConsole.LogEntry>(1024);
 
 	public int targetLogIndex = -1;
 
@@ -215,7 +78,7 @@ public class DevConsole : MonoBehaviour, IDebugObject
 
 	public bool canExpand = true;
 
-	public List<DisplayedLogLine> logLines = new List<DisplayedLogLine>();
+	public List<DevConsole.DisplayedLogLine> logLines = new List<DevConsole.DisplayedLogLine>();
 
 	public float lineStartHeight;
 
@@ -227,31 +90,173 @@ public class DevConsole : MonoBehaviour, IDebugObject
 
 	public List<DevConsoleInstance> instances;
 
-	public static DevConsole instance
+	[Serializable]
+	public class LogEntry
 	{
-		get
+		public string Message
 		{
-			if (_instance == null)
+			get
 			{
-				_instance = UnityEngine.Object.FindObjectOfType<DevConsole>();
+				if (this.repeatCount > 1)
+				{
+					return string.Format("({0}) {1}", this.repeatCount, this._Message);
+				}
+				return this._Message;
 			}
-			return _instance;
 		}
-	}
 
-	public static List<LogEntry> logEntries => instance._logEntries;
-
-	public void OnDestroyDebugObject()
-	{
-		Debug.Log("Destroying debug instances now");
-		foreach (DevConsoleInstance instance in instances)
+		public LogEntry(string message, LogType type, string trace)
 		{
-			UnityEngine.Object.DestroyImmediate(instance.gameObject);
+			this._Message = message;
+			this.Type = type;
+			this.Trace = trace;
+			StringBuilder stringBuilder = new StringBuilder();
+			string[] array = trace.Split("\n".ToCharArray(), StringSplitOptions.None);
+			for (int i = 0; i < array.Length; i++)
+			{
+				string line = array[i];
+				if (!DevConsole.tracebackScrubbing.Any((string scrubString) => line.Contains(scrubString)))
+				{
+					stringBuilder.AppendLine(line);
+				}
+			}
+			this.Trace = stringBuilder.ToString();
+			DevConsole.LogEntry.TotalIndex++;
+			this.index = DevConsole.LogEntry.TotalIndex;
 		}
+
+		private static int TotalIndex;
+
+		[SerializeReference]
+		[SerializeField]
+		public readonly string _Message;
+
+		[SerializeField]
+		[SerializeReference]
+		public readonly LogType Type;
+
+		public readonly string Trace;
+
+		public bool forwarded;
+
+		public int repeatCount = 1;
+
+		public bool filtered;
+
+		public int index;
 	}
 
-	private void OnEnable()
+	[Serializable]
+	public class DisplayedLogLine
 	{
-		base.gameObject.SetActive(value: false);
+		public Type data { get; set; }
+
+		public DisplayedLogLine(GameObject obj)
+		{
+			this.lineText = obj.GetComponentInChildren<Text>();
+			this.buttons = obj.GetComponentsInChildren<GorillaDevButton>();
+			this.transform = obj.GetComponent<RectTransform>();
+			this.backdrop = obj.GetComponentInChildren<SpriteRenderer>();
+			foreach (GorillaDevButton gorillaDevButton in this.buttons)
+			{
+				if (gorillaDevButton.Type == DevButtonType.LineExpand)
+				{
+					this.maximizeButton = gorillaDevButton;
+				}
+				if (gorillaDevButton.Type == DevButtonType.LineForward)
+				{
+					this.forwardButton = gorillaDevButton;
+				}
+			}
+		}
+
+		public GorillaDevButton[] buttons;
+
+		public Text lineText;
+
+		public RectTransform transform;
+
+		public int targetMessage;
+
+		public GorillaDevButton maximizeButton;
+
+		public GorillaDevButton forwardButton;
+
+		public SpriteRenderer backdrop;
+
+		private bool expanded;
+
+		public DevInspector inspector;
+	}
+
+	[Serializable]
+	public class MessagePayload
+	{
+		public static List<DevConsole.MessagePayload> GeneratePayloads(string username, List<DevConsole.LogEntry> entries)
+		{
+			List<DevConsole.MessagePayload> list = new List<DevConsole.MessagePayload>();
+			List<DevConsole.MessagePayload.Block> list2 = new List<DevConsole.MessagePayload.Block>();
+			entries.Sort((DevConsole.LogEntry e1, DevConsole.LogEntry e2) => e1.index.CompareTo(e2.index));
+			string text = "";
+			text += "```";
+			list2.Add(new DevConsole.MessagePayload.Block("User `" + username + "` Forwarded some errors"));
+			foreach (DevConsole.LogEntry logEntry in entries)
+			{
+				string[] array = logEntry.Trace.Split("\n".ToCharArray());
+				string text2 = "";
+				foreach (string text3 in array)
+				{
+					text2 = text2 + "    " + text3 + "\n";
+				}
+				string text4 = string.Format("({0}) {1}\n{2}\n", logEntry.Type, logEntry.Message, text2);
+				if (text.Length + text4.Length > 3000)
+				{
+					text += "```";
+					list2.Add(new DevConsole.MessagePayload.Block(text));
+					list.Add(new DevConsole.MessagePayload
+					{
+						blocks = list2.ToArray()
+					});
+					list2 = new List<DevConsole.MessagePayload.Block>();
+					text = "```";
+				}
+				text += string.Format("({0}) {1}\n{2}\n", logEntry.Type, logEntry.Message, text2);
+			}
+			text += "```";
+			list2.Add(new DevConsole.MessagePayload.Block(text));
+			list.Add(new DevConsole.MessagePayload
+			{
+				blocks = list2.ToArray()
+			});
+			return list;
+		}
+
+		public DevConsole.MessagePayload.Block[] blocks;
+
+		[Serializable]
+		public class Block
+		{
+			public Block(string markdownText)
+			{
+				this.text = new DevConsole.MessagePayload.TextBlock
+				{
+					text = markdownText,
+					type = "mrkdwn"
+				};
+				this.type = "section";
+			}
+
+			public string type;
+
+			public DevConsole.MessagePayload.TextBlock text;
+		}
+
+		[Serializable]
+		public class TextBlock
+		{
+			public string type;
+
+			public string text;
+		}
 	}
 }

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Photon.Pun;
 using UnityEngine;
 
@@ -8,13 +8,14 @@ internal class VrrigReliableSerializer : GorillaSerializer
 	{
 		outTargetObject = null;
 		outTargetType = null;
-		if (info.Sender != info.photonView.Owner || photonView.IsRoomView)
+		if (info.Sender != info.photonView.Owner || this.photonView.IsRoomView)
 		{
 			return false;
 		}
-		if (VRRigCache.Instance.TryGetVrrig(info.Sender, out var playerRig))
+		RigContainer rigContainer;
+		if (VRRigCache.Instance.TryGetVrrig(info.Sender, out rigContainer))
 		{
-			outTargetObject = playerRig.gameObject;
+			outTargetObject = rigContainer.gameObject;
 			outTargetType = typeof(VRRigReliableState);
 			return true;
 		}

@@ -1,41 +1,43 @@
+﻿using System;
 using System.Collections;
 using UnityEngine;
 
 public class SlowCameraUpdate : MonoBehaviour
 {
+	public void Awake()
+	{
+		this.frameRate = 30f;
+		this.timeToNextFrame = 1f / this.frameRate;
+		this.myCamera = base.GetComponent<Camera>();
+	}
+
+	public void OnEnable()
+	{
+		base.StartCoroutine(this.UpdateMirror());
+	}
+
+	public void OnDisable()
+	{
+		base.StopAllCoroutines();
+	}
+
+	public IEnumerator UpdateMirror()
+	{
+		for (;;)
+		{
+			if (base.gameObject.activeSelf)
+			{
+				Debug.Log("rendering camera!");
+				this.myCamera.Render();
+			}
+			yield return new WaitForSeconds(this.timeToNextFrame);
+		}
+		yield break;
+	}
+
 	private Camera myCamera;
 
 	private float frameRate;
 
 	private float timeToNextFrame;
-
-	public void Awake()
-	{
-		frameRate = 30f;
-		timeToNextFrame = 1f / frameRate;
-		myCamera = GetComponent<Camera>();
-	}
-
-	public void OnEnable()
-	{
-		StartCoroutine(UpdateMirror());
-	}
-
-	public void OnDisable()
-	{
-		StopAllCoroutines();
-	}
-
-	public IEnumerator UpdateMirror()
-	{
-		while (true)
-		{
-			if (base.gameObject.activeSelf)
-			{
-				Debug.Log("rendering camera!");
-				myCamera.Render();
-			}
-			yield return new WaitForSeconds(timeToNextFrame);
-		}
-	}
 }

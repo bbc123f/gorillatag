@@ -1,25 +1,28 @@
+﻿using System;
 using GorillaTag;
 using UnityEngine;
 
 public class ThermalReceiver : MonoBehaviour, IDynamicFloat, IResettableItem
 {
-	public float radius = 0.2f;
+	public float Farenheit
+	{
+		get
+		{
+			return this.celsius * 1.8f + 32f;
+		}
+	}
 
-	[Tooltip("How fast the temperature should change overtime. 1.0 would be instantly.")]
-	public float conductivity = 0.3f;
-
-	[DebugOption]
-	public float celsius;
-
-	private float defaultCelsius;
-
-	public float Farenheit => celsius * 1.8f + 32f;
-
-	public float floatValue => celsius;
+	public float floatValue
+	{
+		get
+		{
+			return this.celsius;
+		}
+	}
 
 	protected void Awake()
 	{
-		defaultCelsius = celsius;
+		this.defaultCelsius = this.celsius;
 	}
 
 	protected void OnEnable()
@@ -34,6 +37,16 @@ public class ThermalReceiver : MonoBehaviour, IDynamicFloat, IResettableItem
 
 	public void ResetToDefaultState()
 	{
-		celsius = defaultCelsius;
+		this.celsius = this.defaultCelsius;
 	}
+
+	public float radius = 0.2f;
+
+	[Tooltip("How fast the temperature should change overtime. 1.0 would be instantly.")]
+	public float conductivity = 0.3f;
+
+	[DebugOption]
+	public float celsius;
+
+	private float defaultCelsius;
 }

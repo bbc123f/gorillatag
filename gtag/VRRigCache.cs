@@ -1,3 +1,4 @@
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Photon.Pun;
@@ -6,66 +7,94 @@ using UnityEngine;
 
 internal class VRRigCache : MonoBehaviourPunCallbacks
 {
-	public RigContainer localRig;
-
-	[SerializeField]
-	private Transform rigParent;
-
-	[SerializeField]
-	private Transform networkParent;
-
-	[SerializeField]
-	private GameObject rigTemplate;
-
-	[SerializeField]
-	private float rigAmount = 10f;
-
-	private static Queue<RigContainer> freeRigs = new Queue<RigContainer>(10);
-
-	private static Dictionary<Player, RigContainer> rigsInUse = new Dictionary<Player, RigContainer>(10);
+	public static bool TryFindRigPlayer(VRRig rig, out Player player)
+	{
+		player = null;
+		if (rig == null)
+		{
+			return false;
+		}
+		if (VRRigCache.rigsInUse == null)
+		{
+			return false;
+		}
+		foreach (KeyValuePair<Player, RigContainer> keyValuePair in VRRigCache.rigsInUse)
+		{
+			RigContainer value = keyValuePair.Value;
+			if (!(value == null) && !(value.Rig != rig))
+			{
+				player = keyValuePair.Key;
+				return true;
+			}
+		}
+		return false;
+	}
 
 	public static VRRigCache Instance { get; private set; }
 
-	public Transform NetworkParent => networkParent;
+	public Transform NetworkParent
+	{
+		get
+		{
+			return this.networkParent;
+		}
+	}
 
 	private void Start()
 	{
-		if (Instance != null && Instance != this)
+		this.InitializeVRRigCache();
+	}
+
+	public void InitializeVRRigCache()
+	{
+		if (this.isInitialized)
+		{
+			return;
+		}
+		if (VRRigCache.Instance != null && VRRigCache.Instance != this)
 		{
 			Object.Destroy(this);
 			return;
 		}
-		Instance = this;
-		if (rigParent == null)
+		VRRigCache.Instance = this;
+		if (this.rigParent == null)
 		{
-			rigParent = base.transform;
+			this.rigParent = base.transform;
 		}
-		if (networkParent == null)
+		if (this.networkParent == null)
 		{
-			networkParent = base.transform;
+			this.networkParent = base.transform;
 		}
-		for (int i = 0; (float)i < rigAmount; i++)
+		int num = 0;
+		while ((float)num < this.rigAmount)
 		{
-			RigContainer item = SpawnRig();
-			freeRigs.Enqueue(item);
+			RigContainer rigContainer = this.SpawnRig();
+			VRRigCache.freeRigs.Enqueue(rigContainer);
+			num++;
 		}
+		this.isInitialized = true;
 	}
 
 	private void OnDestroy()
 	{
-		if (Instance == this)
+		if (VRRigCache.Instance == this)
 		{
-			Instance = null;
+			VRRigCache.Instance = null;
 		}
 	}
 
 	private RigContainer SpawnRig()
 	{
-		if (rigTemplate.activeSelf)
+		if (this.rigTemplate.activeSelf)
 		{
-			rigTemplate.SetActive(value: false);
+			this.rigTemplate.SetActive(false);
 		}
-		return Object.Instantiate(rigTemplate, rigParent, worldPositionStays: false)?.GetComponent<RigContainer>();
+		GameObject gameObject = Object.Instantiate<GameObject>(this.rigTemplate, this.rigParent, false);
+		if (gameObject == null)
+		{
+			return null;
+		}
+		return gameObject.GetComponent<RigContainer>();
 	}
 
 	internal bool TryGetVrrig(Player targetPlayer, out RigContainer playerRig)
@@ -78,69 +107,74 @@ internal class VRRigCache : MonoBehaviourPunCallbacks
 		}
 		if (targetPlayer.IsLocal)
 		{
-			playerRig = localRig;
+			playerRig = this.localRig;
 			return true;
 		}
 		if (!targetPlayer.InRoom())
 		{
-			LogWarning("player is not in room?? " + targetPlayer.ToStringFull());
+			this.LogWarning("player is not in room?? " + targetPlayer.ToStringFull());
 			return false;
 		}
-		if (rigsInUse.ContainsKey(targetPlayer))
+		if (VRRigCache.rigsInUse.ContainsKey(targetPlayer))
 		{
-			playerRig = rigsInUse[targetPlayer];
+			playerRig = VRRigCache.rigsInUse[targetPlayer];
 		}
 		else
 		{
-			if (freeRigs.Count <= 0)
+			if (VRRigCache.freeRigs.Count <= 0)
 			{
-				LogWarning("all rigs are in use");
+				this.LogWarning("all rigs are in use");
 				return false;
 			}
-			playerRig = freeRigs.Dequeue();
+			playerRig = VRRigCache.freeRigs.Dequeue();
 			playerRig.Creator = targetPlayer;
-			rigsInUse.Add(targetPlayer, playerRig);
-			playerRig.gameObject.SetActive(value: true);
+			VRRigCache.rigsInUse.Add(targetPlayer, playerRig);
+			playerRig.gameObject.SetActive(true);
 		}
 		return true;
+	}
+
+	internal bool PlayerHasRig(Player targetPlayer)
+	{
+		return targetPlayer.InRoom() && (targetPlayer.IsLocal || VRRigCache.rigsInUse.ContainsKey(targetPlayer));
 	}
 
 	private void AddRigToGorillaParent(Player player, VRRig vrrig)
 	{
 		GorillaParent instance = GorillaParent.instance;
-		if (!(instance == null))
+		if (instance == null)
 		{
-			if (!instance.vrrigs.Contains(vrrig))
-			{
-				instance.vrrigs.Add(vrrig);
-			}
-			if (!instance.vrrigDict.ContainsKey(player))
-			{
-				instance.vrrigDict.Add(player, vrrig);
-			}
-			else
-			{
-				instance.vrrigDict[player] = vrrig;
-			}
+			return;
 		}
+		if (!instance.vrrigs.Contains(vrrig))
+		{
+			instance.vrrigs.Add(vrrig);
+		}
+		if (!instance.vrrigDict.ContainsKey(player))
+		{
+			instance.vrrigDict.Add(player, vrrig);
+			return;
+		}
+		instance.vrrigDict[player] = vrrig;
 	}
 
 	public override void OnPlayerEnteredRoom(Player newPlayer)
 	{
-		if (TryGetVrrig(newPlayer, out var playerRig))
+		RigContainer rigContainer;
+		if (this.TryGetVrrig(newPlayer, out rigContainer))
 		{
-			AddRigToGorillaParent(newPlayer, playerRig.Rig);
+			this.AddRigToGorillaParent(newPlayer, rigContainer.Rig);
 		}
 	}
 
 	public override void OnJoinedRoom()
 	{
-		Player[] playerList = PhotonNetwork.PlayerList;
-		foreach (Player player in playerList)
+		foreach (Player player in PhotonNetwork.PlayerList)
 		{
-			if (TryGetVrrig(player, out var playerRig))
+			RigContainer rigContainer;
+			if (this.TryGetVrrig(player, out rigContainer))
 			{
-				AddRigToGorillaParent(player, playerRig.Rig);
+				this.AddRigToGorillaParent(player, rigContainer.Rig);
 			}
 		}
 	}
@@ -148,47 +182,46 @@ internal class VRRigCache : MonoBehaviourPunCallbacks
 	private void RemoveRigFromGorillaParent(Player player, VRRig vrrig)
 	{
 		GorillaParent instance = GorillaParent.instance;
-		if (!(instance == null))
+		if (instance == null)
 		{
-			if (instance.vrrigs.Contains(vrrig))
-			{
-				instance.vrrigs.Remove(vrrig);
-			}
-			if (instance.vrrigDict.ContainsKey(player))
-			{
-				instance.vrrigDict.Remove(player);
-			}
+			return;
+		}
+		if (instance.vrrigs.Contains(vrrig))
+		{
+			instance.vrrigs.Remove(vrrig);
+		}
+		if (instance.vrrigDict.ContainsKey(player))
+		{
+			instance.vrrigDict.Remove(player);
 		}
 	}
 
 	public override void OnPlayerLeftRoom(Player otherPlayer)
 	{
-		if (rigsInUse.TryGetValue(otherPlayer, out var value))
+		RigContainer rigContainer;
+		if (VRRigCache.rigsInUse.TryGetValue(otherPlayer, out rigContainer))
 		{
-			value.gameObject.Disable();
-			freeRigs.Enqueue(value);
-			rigsInUse.Remove(otherPlayer);
-			RemoveRigFromGorillaParent(otherPlayer, value.Rig);
+			rigContainer.gameObject.Disable();
+			VRRigCache.freeRigs.Enqueue(rigContainer);
+			VRRigCache.rigsInUse.Remove(otherPlayer);
+			this.RemoveRigFromGorillaParent(otherPlayer, rigContainer.Rig);
+			return;
 		}
-		else
-		{
-			LogError("failed to find player's vrrig who left " + otherPlayer.ToStringFull());
-		}
+		this.LogError("failed to find player's vrrig who left " + otherPlayer.ToStringFull());
 	}
 
 	public override void OnLeftRoom()
 	{
-		Player[] array = rigsInUse.Keys.ToArray();
-		foreach (Player player in array)
+		foreach (Player player in VRRigCache.rigsInUse.Keys.ToArray<Player>())
 		{
-			RigContainer rigContainer = rigsInUse[player];
+			RigContainer rigContainer = VRRigCache.rigsInUse[player];
 			if (!(rigContainer == null))
 			{
-				VRRig rig = rigsInUse[player].Rig;
+				VRRig rig = VRRigCache.rigsInUse[player].Rig;
 				rigContainer.gameObject.Disable();
-				rigsInUse.Remove(player);
-				RemoveRigFromGorillaParent(player, rig);
-				freeRigs.Enqueue(rigContainer);
+				VRRigCache.rigsInUse.Remove(player);
+				this.RemoveRigFromGorillaParent(player, rig);
+				VRRigCache.freeRigs.Enqueue(rigContainer);
 			}
 		}
 	}
@@ -204,4 +237,26 @@ internal class VRRigCache : MonoBehaviourPunCallbacks
 	private void LogError(string log)
 	{
 	}
+
+	public RigContainer localRig;
+
+	[SerializeField]
+	private Transform rigParent;
+
+	[SerializeField]
+	private Transform networkParent;
+
+	[SerializeField]
+	private GameObject rigTemplate;
+
+	[SerializeField]
+	private float rigAmount = 10f;
+
+	[OnEnterPlay_Clear]
+	private static Queue<RigContainer> freeRigs = new Queue<RigContainer>(10);
+
+	[OnEnterPlay_Clear]
+	private static Dictionary<Player, RigContainer> rigsInUse = new Dictionary<Player, RigContainer>(10);
+
+	private bool isInitialized;
 }

@@ -1,26 +1,21 @@
+﻿using System;
 using UnityEngine;
 
 public class PlantablePoint : MonoBehaviour
 {
-	public bool shouldBeSet;
-
-	public LayerMask floorMask;
-
-	public PlantableObject plantableObject;
-
 	private void OnTriggerEnter(Collider other)
 	{
-		if (((int)floorMask & (1 << other.gameObject.layer)) != 0)
+		if ((this.floorMask & (1 << other.gameObject.layer)) != 0)
 		{
-			plantableObject.planted = true;
+			this.plantableObject.planted = true;
 		}
 	}
 
 	public void OnTriggerExit(Collider other)
 	{
-		if (((int)floorMask & (1 << other.gameObject.layer)) != 0)
+		if ((this.floorMask & (1 << other.gameObject.layer)) != 0)
 		{
-			plantableObject.planted = false;
+			this.plantableObject.planted = false;
 		}
 	}
 
@@ -31,4 +26,10 @@ public class PlantablePoint : MonoBehaviour
 	private void Update()
 	{
 	}
+
+	public bool shouldBeSet;
+
+	public LayerMask floorMask;
+
+	public PlantableObject plantableObject;
 }

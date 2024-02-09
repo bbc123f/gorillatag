@@ -1,3 +1,4 @@
+﻿using System;
 using System.Collections.Generic;
 using GorillaLocomotion;
 using Photon.Pun;
@@ -5,14 +6,170 @@ using UnityEngine;
 
 public class SizeManager : MonoBehaviour
 {
-	public enum SizeChangerType
+	public float currentScale
 	{
-		LocalOffline,
-		LocalOnline,
-		OtherOnline
+		get
+		{
+			if (this.targetRig != null)
+			{
+				return this.targetRig.scaleFactor;
+			}
+			if (this.targetPlayer != null)
+			{
+				return this.targetPlayer.scale;
+			}
+			return 1f;
+		}
 	}
 
-	public SizeChanger lastSizeChanger;
+	public int currentSizeLayerMaskValue
+	{
+		get
+		{
+			if (this.targetPlayer)
+			{
+				return this.targetPlayer.sizeLayerMask;
+			}
+			if (this.targetRig)
+			{
+				return this.targetRig.SizeLayerMask;
+			}
+			return 1;
+		}
+		set
+		{
+			if (this.targetPlayer)
+			{
+				this.targetPlayer.sizeLayerMask = value;
+				if (this.targetRig != null)
+				{
+					this.targetRig.SizeLayerMask = value;
+					return;
+				}
+			}
+			else if (this.targetRig)
+			{
+				this.targetRig.SizeLayerMask = value;
+			}
+		}
+	}
+
+	private void OnDisable()
+	{
+		this.touchingChangers.Clear();
+		this.currentSizeLayerMaskValue = 1;
+		SizeManagerManager.UnregisterSM(this);
+	}
+
+	private void OnEnable()
+	{
+		SizeManagerManager.RegisterSM(this);
+	}
+
+	private void CollectLineRenderers(GameObject obj)
+	{
+		this.lineRenderers = obj.GetComponentsInChildren<LineRenderer>(true);
+		int num = this.lineRenderers.Length;
+		foreach (LineRenderer lineRenderer in this.lineRenderers)
+		{
+			this.initLineScalar.Add(lineRenderer.widthMultiplier);
+		}
+	}
+
+	private void Awake()
+	{
+		this.rate = 650f;
+		if (this.targetRig != null)
+		{
+			this.CollectLineRenderers(this.targetRig.gameObject);
+		}
+		else if (this.targetPlayer != null)
+		{
+			this.CollectLineRenderers(GorillaTagger.Instance.offlineVRRig.gameObject);
+		}
+		this.mainCameraTransform = Camera.main.transform;
+		if (this.targetPlayer != null)
+		{
+			this.myType = SizeManager.SizeChangerType.LocalOffline;
+		}
+		else if (this.targetRig != null && !this.targetRig.isOfflineVRRig && this.targetRig.photonView != null && this.targetRig.photonView.Owner != PhotonNetwork.LocalPlayer)
+		{
+			this.myType = SizeManager.SizeChangerType.OtherOnline;
+		}
+		else
+		{
+			this.myType = SizeManager.SizeChangerType.LocalOnline;
+		}
+		SizeManagerManager.RegisterSM(this);
+	}
+
+	public void InvokeFixedUpdate()
+	{
+		float num = 1f;
+		SizeManager.SizeChangerType sizeChangerType = this.myType;
+		if (sizeChangerType != SizeManager.SizeChangerType.LocalOffline)
+		{
+			if (sizeChangerType - SizeManager.SizeChangerType.LocalOnline <= 1)
+			{
+				num = this.ScaleFromChanger(this.ControllingChanger(this.targetRig.transform), this.targetRig.transform, Time.fixedDeltaTime);
+				this.targetRig.scaleFactor = ((num == 1f) ? this.SizeOverTime(num, 0.33f, Time.fixedDeltaTime) : num);
+			}
+		}
+		else
+		{
+			num = this.ScaleFromChanger(this.ControllingChanger(this.targetRig.transform), this.mainCameraTransform, Time.fixedDeltaTime);
+			this.targetPlayer.scale = ((num == 1f) ? this.SizeOverTime(num, 0.33f, Time.fixedDeltaTime) : num);
+		}
+		if (num != this.lastScale)
+		{
+			for (int i = 0; i < this.lineRenderers.Length; i++)
+			{
+				this.lineRenderers[i].widthMultiplier = num * this.initLineScalar[i];
+			}
+		}
+		this.lastScale = num;
+	}
+
+	private SizeChanger ControllingChanger(Transform t)
+	{
+		for (int i = this.touchingChangers.Count - 1; i >= 0; i--)
+		{
+			SizeChanger sizeChanger = this.touchingChangers[i];
+			if (!(sizeChanger == null) && sizeChanger.gameObject.activeInHierarchy && (sizeChanger.SizeLayerMask & this.currentSizeLayerMaskValue) != 0 && (sizeChanger.ClosestPoint(t.position) - t.position).magnitude < this.magnitudeThreshold)
+			{
+				return sizeChanger;
+			}
+		}
+		return null;
+	}
+
+	private float ScaleFromChanger(SizeChanger sC, Transform t, float deltaTime)
+	{
+		if (sC == null)
+		{
+			return 1f;
+		}
+		SizeChanger.ChangerType changerType = sC.MyType;
+		if (changerType == SizeChanger.ChangerType.Static)
+		{
+			return this.SizeOverTime(sC.MinScale, sC.StaticEasing, deltaTime);
+		}
+		if (changerType == SizeChanger.ChangerType.Continuous)
+		{
+			Vector3 vector = Vector3.Project(t.position - sC.StartPos.position, sC.EndPos.position - sC.StartPos.position);
+			return Mathf.Clamp(sC.MaxScale - vector.magnitude / (sC.StartPos.position - sC.EndPos.position).magnitude * (sC.MaxScale - sC.MinScale), sC.MinScale, sC.MaxScale);
+		}
+		return 1f;
+	}
+
+	private float SizeOverTime(float targetSize, float easing, float deltaTime)
+	{
+		if (easing <= 0f || Mathf.Abs(this.targetRig.scaleFactor - targetSize) < 0.05f)
+		{
+			return targetSize;
+		}
+		return Mathf.MoveTowards(this.targetRig.scaleFactor, targetSize, deltaTime / easing);
+	}
 
 	public List<SizeChanger> touchingChangers;
 
@@ -30,170 +187,16 @@ public class SizeManager : MonoBehaviour
 
 	public Transform mainCameraTransform;
 
-	public SizeChangerType myType;
+	public SizeManager.SizeChangerType myType;
 
 	public float lastScale;
 
-	public float currentScale
-	{
-		get
-		{
-			if (targetRig != null)
-			{
-				return targetRig.scaleFactor;
-			}
-			if (targetPlayer != null)
-			{
-				return targetPlayer.scale;
-			}
-			return 1f;
-		}
-	}
+	private const float returnToNormalEasing = 0.33f;
 
-	public int currentSizeLayerMaskValue
+	public enum SizeChangerType
 	{
-		get
-		{
-			if ((bool)targetPlayer)
-			{
-				return targetPlayer.sizeLayerMask;
-			}
-			if ((bool)targetRig)
-			{
-				return targetRig.SizeLayerMask;
-			}
-			return 1;
-		}
-		set
-		{
-			if ((bool)targetPlayer)
-			{
-				targetPlayer.sizeLayerMask = value;
-				if (targetRig != null)
-				{
-					targetRig.SizeLayerMask = value;
-				}
-			}
-			else if ((bool)targetRig)
-			{
-				targetRig.SizeLayerMask = value;
-			}
-		}
-	}
-
-	private void OnDisable()
-	{
-		touchingChangers.Clear();
-		currentSizeLayerMaskValue = 1;
-	}
-
-	private void CollectLineRenderers(GameObject obj)
-	{
-		lineRenderers = obj.GetComponentsInChildren<LineRenderer>(includeInactive: true);
-		_ = lineRenderers.Length;
-		LineRenderer[] array = lineRenderers;
-		foreach (LineRenderer lineRenderer in array)
-		{
-			initLineScalar.Add(lineRenderer.widthMultiplier);
-		}
-	}
-
-	private void Awake()
-	{
-		rate = 650f;
-		if (targetRig != null)
-		{
-			CollectLineRenderers(targetRig.gameObject);
-		}
-		else if (targetPlayer != null)
-		{
-			CollectLineRenderers(GorillaTagger.Instance.offlineVRRig.gameObject);
-		}
-		mainCameraTransform = Camera.main.transform;
-		if (targetPlayer != null)
-		{
-			myType = SizeChangerType.LocalOffline;
-		}
-		else if (targetRig != null && !targetRig.isOfflineVRRig && targetRig.photonView != null && targetRig.photonView.Owner != PhotonNetwork.LocalPlayer)
-		{
-			myType = SizeChangerType.OtherOnline;
-		}
-		else
-		{
-			myType = SizeChangerType.LocalOnline;
-		}
-	}
-
-	private void FixedUpdate()
-	{
-		float num = 1f;
-		switch (myType)
-		{
-		case SizeChangerType.LocalOnline:
-		case SizeChangerType.OtherOnline:
-			lastSizeChanger = ControllingChanger(targetRig.transform);
-			num = ScaleFromChanger(lastSizeChanger, targetRig.transform);
-			targetRig.scaleFactor = ((num == 1f) ? LerpSizeToNormal(targetRig.scaleFactor) : num);
-			break;
-		case SizeChangerType.LocalOffline:
-			lastSizeChanger = ControllingChanger(mainCameraTransform);
-			num = ScaleFromChanger(lastSizeChanger, mainCameraTransform);
-			targetPlayer.scale = ((num == 1f) ? LerpSizeToNormal(targetPlayer.scale) : num);
-			break;
-		}
-		if (num != lastScale)
-		{
-			for (int i = 0; i < lineRenderers.Length; i++)
-			{
-				lineRenderers[i].widthMultiplier = num * initLineScalar[i];
-			}
-		}
-		lastScale = num;
-	}
-
-	public SizeChanger ControllingChanger(Transform t)
-	{
-		for (int num = touchingChangers.Count - 1; num >= 0; num--)
-		{
-			SizeChanger sizeChanger = touchingChangers[num];
-			if (!(sizeChanger == null) && sizeChanger.gameObject.activeInHierarchy && (sizeChanger.SizeLayerMask & currentSizeLayerMaskValue) != 0 && (sizeChanger.myCollider.ClosestPoint(t.position) - t.position).magnitude < magnitudeThreshold)
-			{
-				return sizeChanger;
-			}
-		}
-		return null;
-	}
-
-	public float ScaleFromChanger(SizeChanger sC, Transform t)
-	{
-		if (sC == null)
-		{
-			return 1f;
-		}
-		switch (sC.myType)
-		{
-		case SizeChanger.ChangerType.Continuous:
-		{
-			Vector3 vector = Vector3.Project(t.position - sC.startPos.position, sC.endPos.position - sC.startPos.position);
-			return Mathf.Clamp(sC.maxScale - vector.magnitude / (sC.startPos.position - sC.endPos.position).magnitude * (sC.maxScale - sC.minScale), sC.minScale, sC.maxScale);
-		}
-		case SizeChanger.ChangerType.Static:
-			return sC.minScale;
-		default:
-			return 1f;
-		}
-	}
-
-	public float LerpSizeToNormal(float currentSize)
-	{
-		if (Mathf.Abs(1f - currentSize) < 0.05f)
-		{
-			return 1f;
-		}
-		float num = 0.75f;
-		float num2 = (1f - currentSize) / num;
-		float num3 = 0f;
-		num3 += num2 * Time.fixedDeltaTime;
-		return Mathf.Lerp(currentSize, 1f, num3);
+		LocalOffline,
+		LocalOnline,
+		OtherOnline
 	}
 }

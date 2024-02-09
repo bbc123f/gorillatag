@@ -1,36 +1,18 @@
-using System;
+﻿using System;
 using UnityEngine;
 
 public class SimpleCapsuleWithStickMovement : MonoBehaviour
 {
-	public bool EnableLinearMovement = true;
-
-	public bool EnableRotation = true;
-
-	public bool HMDRotatesPlayer = true;
-
-	public bool RotationEitherThumbstick;
-
-	public float RotationAngle = 45f;
-
-	public float Speed;
-
-	public OVRCameraRig CameraRig;
-
-	private bool ReadyToSnapTurn;
-
-	private Rigidbody _rigidbody;
-
 	public event Action CameraUpdated;
 
 	public event Action PreCharacterMove;
 
 	private void Awake()
 	{
-		_rigidbody = GetComponent<Rigidbody>();
-		if (CameraRig == null)
+		this._rigidbody = base.GetComponent<Rigidbody>();
+		if (this.CameraRig == null)
 		{
-			CameraRig = GetComponentInChildren<OVRCameraRig>();
+			this.CameraRig = base.GetComponentInChildren<OVRCameraRig>();
 		}
 	}
 
@@ -48,24 +30,24 @@ public class SimpleCapsuleWithStickMovement : MonoBehaviour
 		{
 			this.PreCharacterMove();
 		}
-		if (HMDRotatesPlayer)
+		if (this.HMDRotatesPlayer)
 		{
-			RotatePlayerToHMD();
+			this.RotatePlayerToHMD();
 		}
-		if (EnableLinearMovement)
+		if (this.EnableLinearMovement)
 		{
-			StickMovement();
+			this.StickMovement();
 		}
-		if (EnableRotation)
+		if (this.EnableRotation)
 		{
-			SnapTurn();
+			this.SnapTurn();
 		}
 	}
 
 	private void RotatePlayerToHMD()
 	{
-		Transform trackingSpace = CameraRig.trackingSpace;
-		Transform centerEyeAnchor = CameraRig.centerEyeAnchor;
+		Transform trackingSpace = this.CameraRig.trackingSpace;
+		Transform centerEyeAnchor = this.CameraRig.centerEyeAnchor;
 		Vector3 position = trackingSpace.position;
 		Quaternion rotation = trackingSpace.rotation;
 		base.transform.rotation = Quaternion.Euler(0f, centerEyeAnchor.rotation.eulerAngles.y, 0f);
@@ -75,39 +57,57 @@ public class SimpleCapsuleWithStickMovement : MonoBehaviour
 
 	private void StickMovement()
 	{
-		Vector3 eulerAngles = CameraRig.centerEyeAnchor.rotation.eulerAngles;
+		Vector3 eulerAngles = this.CameraRig.centerEyeAnchor.rotation.eulerAngles;
 		eulerAngles.z = (eulerAngles.x = 0f);
 		Quaternion quaternion = Quaternion.Euler(eulerAngles);
-		Vector3 zero = Vector3.zero;
-		Vector2 vector = OVRInput.Get(OVRInput.Axis2D.PrimaryThumbstick);
-		zero += quaternion * (vector.x * Vector3.right);
-		zero += quaternion * (vector.y * Vector3.forward);
-		_rigidbody.MovePosition(_rigidbody.position + zero * Speed * Time.fixedDeltaTime);
+		Vector3 vector = Vector3.zero;
+		Vector2 vector2 = OVRInput.Get(OVRInput.Axis2D.PrimaryThumbstick, OVRInput.Controller.Active);
+		vector += quaternion * (vector2.x * Vector3.right);
+		vector += quaternion * (vector2.y * Vector3.forward);
+		this._rigidbody.MovePosition(this._rigidbody.position + vector * this.Speed * Time.fixedDeltaTime);
 	}
 
 	private void SnapTurn()
 	{
-		Vector3 eulerAngles = base.transform.rotation.eulerAngles;
-		if (OVRInput.Get(OVRInput.Button.SecondaryThumbstickLeft) || (RotationEitherThumbstick && OVRInput.Get(OVRInput.Button.PrimaryThumbstickLeft)))
+		if (OVRInput.Get(OVRInput.Button.SecondaryThumbstickLeft, OVRInput.Controller.Active) || (this.RotationEitherThumbstick && OVRInput.Get(OVRInput.Button.PrimaryThumbstickLeft, OVRInput.Controller.Active)))
 		{
-			if (ReadyToSnapTurn)
+			if (this.ReadyToSnapTurn)
 			{
-				eulerAngles.y -= RotationAngle;
-				ReadyToSnapTurn = false;
+				this.ReadyToSnapTurn = false;
+				base.transform.RotateAround(this.CameraRig.centerEyeAnchor.position, Vector3.up, -this.RotationAngle);
+				return;
 			}
 		}
-		else if (OVRInput.Get(OVRInput.Button.SecondaryThumbstickRight) || (RotationEitherThumbstick && OVRInput.Get(OVRInput.Button.PrimaryThumbstickRight)))
+		else if (OVRInput.Get(OVRInput.Button.SecondaryThumbstickRight, OVRInput.Controller.Active) || (this.RotationEitherThumbstick && OVRInput.Get(OVRInput.Button.PrimaryThumbstickRight, OVRInput.Controller.Active)))
 		{
-			if (ReadyToSnapTurn)
+			if (this.ReadyToSnapTurn)
 			{
-				eulerAngles.y += RotationAngle;
-				ReadyToSnapTurn = false;
+				this.ReadyToSnapTurn = false;
+				base.transform.RotateAround(this.CameraRig.centerEyeAnchor.position, Vector3.up, this.RotationAngle);
+				return;
 			}
 		}
 		else
 		{
-			ReadyToSnapTurn = true;
+			this.ReadyToSnapTurn = true;
 		}
-		base.transform.rotation = Quaternion.Euler(eulerAngles);
 	}
+
+	public bool EnableLinearMovement = true;
+
+	public bool EnableRotation = true;
+
+	public bool HMDRotatesPlayer = true;
+
+	public bool RotationEitherThumbstick;
+
+	public float RotationAngle = 45f;
+
+	public float Speed;
+
+	public OVRCameraRig CameraRig;
+
+	private bool ReadyToSnapTurn;
+
+	private Rigidbody _rigidbody;
 }

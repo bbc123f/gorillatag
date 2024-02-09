@@ -1,111 +1,115 @@
-using System;
-using System.Collections;
+﻿using System;
 using System.Collections.Generic;
+using GorillaExtensions;
 using Photon.Pun;
 using Photon.Realtime;
 using Photon.Voice.PUN;
 using Photon.Voice.Unity;
 using UnityEngine;
 
-public class PhotonPrefabPool : MonoBehaviour, IPunPrefabPool
+public class PhotonPrefabPool : MonoBehaviour, IPunPrefabPool, ITickSystemPre
 {
-	[SerializeField]
-	private PrefabType[] networkPrefabsData;
-
-	private Dictionary<string, GameObject> networkPrefabs = new Dictionary<string, GameObject>();
-
-	private Queue<GameObject> objectsWaiting = new Queue<GameObject>(20);
-
-	private HashSet<GameObject> netInstantiedObjects = new HashSet<GameObject>();
-
-	private List<PhotonView> tempViews = new List<PhotonView>(5);
-
-	private Coroutine frameDelay;
-
-	private IEnumerator waitOneFrame;
-
-	private bool waiting;
+	bool ITickSystemPre.PreTickRunning { get; set; }
 
 	private void Start()
 	{
 		PhotonNetwork.PrefabPool = this;
-		waitOneFrame = WaitOneFrame();
-		PhotonVoiceNetwork.Instance.RemoteVoiceAdded += CheckVOIPSettings;
-		for (int i = 0; i < networkPrefabsData.Length; i++)
+		PhotonVoiceNetwork.Instance.RemoteVoiceAdded += this.CheckVOIPSettings;
+		for (int i = 0; i < this.networkPrefabsData.Length; i++)
 		{
-			PrefabType prefabType = networkPrefabsData[i];
-			if ((bool)prefabType.prefab)
+			PrefabType prefabType = this.networkPrefabsData[i];
+			if (prefabType.prefab)
 			{
 				if (string.IsNullOrEmpty(prefabType.prefabName))
 				{
 					prefabType.prefabName = prefabType.prefab.name;
 				}
-				networkPrefabs.Add(prefabType.prefabName, prefabType.prefab);
+				this.networkPrefabs.Add(prefabType.prefabName, prefabType.prefab);
 			}
 		}
 	}
 
 	GameObject IPunPrefabPool.Instantiate(string prefabId, Vector3 position, Quaternion rotation)
 	{
-		if (!networkPrefabs.TryGetValue(prefabId, out var value))
+		GameObject gameObject;
+		if (!this.networkPrefabs.TryGetValue(prefabId, out gameObject))
 		{
 			return null;
 		}
-		bool activeSelf = value.activeSelf;
+		bool activeSelf = gameObject.activeSelf;
 		if (activeSelf)
 		{
-			value.SetActive(value: false);
+			gameObject.SetActive(false);
 		}
-		GameObject gameObject = UnityEngine.Object.Instantiate(value, position, rotation);
-		netInstantiedObjects.Add(gameObject);
+		GameObject gameObject2 = Object.Instantiate<GameObject>(gameObject, position, rotation);
+		this.netInstantiedObjects.Add(gameObject2);
 		if (activeSelf)
 		{
-			value.SetActive(value: true);
+			gameObject.SetActive(true);
 		}
-		return gameObject;
+		return gameObject2;
 	}
 
 	void IPunPrefabPool.Destroy(GameObject gameObject)
 	{
-		if (netInstantiedObjects.Contains(gameObject))
+		if (gameObject.IsNull())
 		{
-			netInstantiedObjects.Remove(gameObject);
-			UnityEngine.Object.Destroy(gameObject);
 			return;
 		}
-		objectsWaiting.Enqueue(gameObject);
-		if (!waiting)
+		if (this.netInstantiedObjects.Contains(gameObject))
 		{
-			waiting = true;
-			frameDelay = StartCoroutine(WaitOneFrame());
+			this.netInstantiedObjects.Remove(gameObject);
+			Object.Destroy(gameObject);
+			return;
+		}
+		if (!this.objectsQueued.Contains(gameObject))
+		{
+			this.objectsWaiting.Enqueue(gameObject);
+			this.objectsQueued.Add(gameObject);
+		}
+		if (!this.waiting)
+		{
+			this.waiting = true;
+			TickSystem<object>.AddPreTickCallback(this);
 		}
 	}
 
-	private IEnumerator WaitOneFrame()
+	void ITickSystemPre.PreTick()
 	{
-		yield return null;
-		while (objectsWaiting.Count > 0)
+		if (this.waiting)
 		{
-			GameObject obj = objectsWaiting.Dequeue();
-			obj.SetActive(value: true);
-			obj.GetComponents(tempViews);
-			for (int i = 0; i < tempViews.Count; i++)
+			this.waiting = false;
+			return;
+		}
+		while (this.objectsWaiting.Count > 0)
+		{
+			GameObject gameObject = this.objectsWaiting.Dequeue();
+			this.objectsQueued.Remove(gameObject);
+			if (!gameObject.IsNull())
 			{
-				PhotonNetwork.RegisterPhotonView(tempViews[i]);
+				gameObject.SetActive(true);
+				gameObject.GetComponents<PhotonView>(this.tempViews);
+				for (int i = 0; i < this.tempViews.Count; i++)
+				{
+					PhotonNetwork.RegisterPhotonView(this.tempViews[i]);
+				}
 			}
 		}
-		waiting = false;
-		StopCoroutine(frameDelay);
+		TickSystem<object>.RemovePreTickCallback(this);
 	}
 
 	private void CheckVOIPSettings(RemoteVoiceLink voiceLink)
 	{
 		try
 		{
-			Player player = PhotonNetwork.CurrentRoom.GetPlayer((int)voiceLink.Info.UserData / PhotonNetwork.MAX_VIEW_IDS);
-			if (player != null && (voiceLink.Info.Bitrate > 20000 || voiceLink.Info.SamplingRate > 16000) && VRRigCache.Instance.TryGetVrrig(player, out var playerRig))
+			Player player = PhotonNetwork.CurrentRoom.GetPlayer((int)voiceLink.Info.UserData / PhotonNetwork.MAX_VIEW_IDS, false);
+			if (player != null)
 			{
-				playerRig.ForceMute = true;
+				RigContainer rigContainer;
+				if ((voiceLink.Info.Bitrate > 20000 || voiceLink.Info.SamplingRate > 16000) && VRRigCache.Instance.TryGetVrrig(player, out rigContainer))
+				{
+					rigContainer.ForceMute = true;
+				}
 			}
 		}
 		catch (Exception ex)
@@ -113,4 +117,19 @@ public class PhotonPrefabPool : MonoBehaviour, IPunPrefabPool
 			Debug.LogError(ex.ToString());
 		}
 	}
+
+	[SerializeField]
+	private PrefabType[] networkPrefabsData;
+
+	private Dictionary<string, GameObject> networkPrefabs = new Dictionary<string, GameObject>();
+
+	private Queue<GameObject> objectsWaiting = new Queue<GameObject>(20);
+
+	private HashSet<GameObject> objectsQueued = new HashSet<GameObject>();
+
+	private HashSet<GameObject> netInstantiedObjects = new HashSet<GameObject>();
+
+	private List<PhotonView> tempViews = new List<PhotonView>(5);
+
+	private bool waiting;
 }

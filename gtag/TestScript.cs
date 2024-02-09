@@ -1,9 +1,16 @@
+﻿using System;
 using Photon.Pun;
 using UnityEngine;
 
 public class TestScript : MonoBehaviourPunCallbacks
 {
-	public GameObject testDelete;
+	public int callbackOrder
+	{
+		get
+		{
+			return 0;
+		}
+	}
 
-	public int callbackOrder => 0;
+	public GameObject testDelete;
 }

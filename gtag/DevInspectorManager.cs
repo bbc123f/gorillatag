@@ -1,18 +1,19 @@
+﻿using System;
 using UnityEngine;
 
 public class DevInspectorManager : MonoBehaviour
 {
-	private static DevInspectorManager _instance;
-
 	public static DevInspectorManager instance
 	{
 		get
 		{
-			if (_instance == null)
+			if (DevInspectorManager._instance == null)
 			{
-				_instance = Object.FindObjectOfType<DevInspectorManager>();
+				DevInspectorManager._instance = Object.FindObjectOfType<DevInspectorManager>();
 			}
-			return _instance;
+			return DevInspectorManager._instance;
 		}
 	}
+
+	private static DevInspectorManager _instance;
 }

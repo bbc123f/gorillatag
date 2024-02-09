@@ -1,10 +1,13 @@
-namespace Viveport;
+﻿using System;
 
-public class Leaderboard
+namespace Viveport
 {
-	public int Rank { get; set; }
+	public class Leaderboard
+	{
+		public int Rank { get; set; }
 
-	public int Score { get; set; }
+		public int Score { get; set; }
 
-	public string UserName { get; set; }
+		public string UserName { get; set; }
+	}
 }

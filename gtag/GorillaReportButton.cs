@@ -1,23 +1,51 @@
+﻿using System;
 using Photon.Pun;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class GorillaReportButton : MonoBehaviour
 {
-	[SerializeField]
-	public enum MetaReportReason
+	public void AssignParentLine(GorillaPlayerScoreboardLine parent)
 	{
-		HateSpeech,
-		Cheating,
-		Toxicity,
-		Bullying,
-		Doxing,
-		Impersonation,
-		Submit,
-		Cancel
+		this.parentLine = parent;
 	}
 
-	public MetaReportReason metaReportType;
+	private void OnTriggerEnter(Collider collider)
+	{
+		if (base.enabled && this.touchTime + this.debounceTime < Time.time)
+		{
+			this.isOn = !this.isOn;
+			this.UpdateColor();
+			this.selected = !this.selected;
+			this.touchTime = Time.time;
+			GorillaTagger.Instance.StartVibration(false, GorillaTagger.Instance.tapHapticStrength / 2f, GorillaTagger.Instance.tapHapticDuration);
+			GorillaTagger.Instance.offlineVRRig.PlayHandTapLocal(67, false, 0.05f);
+			if (PhotonNetwork.InRoom && GorillaTagger.Instance.myVRRig != null)
+			{
+				PhotonView.Get(GorillaTagger.Instance.myVRRig).RPC("PlayHandTap", RpcTarget.Others, new object[] { 67, false, 0.05f });
+			}
+		}
+	}
+
+	private void OnTriggerExit(Collider other)
+	{
+		if (this.metaReportType != GorillaReportButton.MetaReportReason.Cancel)
+		{
+			other.GetComponentInParent<GorillaTriggerColliderHandIndicator>() != null;
+		}
+	}
+
+	public void UpdateColor()
+	{
+		if (this.isOn)
+		{
+			base.GetComponent<MeshRenderer>().material = this.onMaterial;
+			return;
+		}
+		base.GetComponent<MeshRenderer>().material = this.offMaterial;
+	}
+
+	public GorillaReportButton.MetaReportReason metaReportType;
 
 	public GorillaPlayerLineButton.ButtonType buttonType;
 
@@ -43,45 +71,16 @@ public class GorillaReportButton : MonoBehaviour
 
 	public bool selected;
 
-	public void AssignParentLine(GorillaPlayerScoreboardLine parent)
+	[SerializeField]
+	public enum MetaReportReason
 	{
-		parentLine = parent;
-	}
-
-	private void OnTriggerEnter(Collider collider)
-	{
-		if (base.enabled && touchTime + debounceTime < Time.time)
-		{
-			isOn = !isOn;
-			UpdateColor();
-			selected = !selected;
-			touchTime = Time.time;
-			GorillaTagger.Instance.StartVibration(forLeftController: false, GorillaTagger.Instance.tapHapticStrength / 2f, GorillaTagger.Instance.tapHapticDuration);
-			GorillaTagger.Instance.offlineVRRig.PlayHandTapLocal(67, isLeftHand: false, 0.05f);
-			if (PhotonNetwork.InRoom && GorillaTagger.Instance.myVRRig != null)
-			{
-				PhotonView.Get(GorillaTagger.Instance.myVRRig).RPC("PlayHandTap", RpcTarget.Others, 67, false, 0.05f);
-			}
-		}
-	}
-
-	private void OnTriggerExit(Collider other)
-	{
-		if (metaReportType != MetaReportReason.Cancel)
-		{
-			_ = other.GetComponentInParent<GorillaTriggerColliderHandIndicator>() != null;
-		}
-	}
-
-	public void UpdateColor()
-	{
-		if (isOn)
-		{
-			GetComponent<MeshRenderer>().material = onMaterial;
-		}
-		else
-		{
-			GetComponent<MeshRenderer>().material = offMaterial;
-		}
+		HateSpeech,
+		Cheating,
+		Toxicity,
+		Bullying,
+		Doxing,
+		Impersonation,
+		Submit,
+		Cancel
 	}
 }

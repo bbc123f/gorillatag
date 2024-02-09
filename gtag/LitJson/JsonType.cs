@@ -1,13 +1,16 @@
-namespace LitJson;
+﻿using System;
 
-public enum JsonType
+namespace LitJson
 {
-	None,
-	Object,
-	Array,
-	String,
-	Int,
-	Long,
-	Double,
-	Boolean
+	public enum JsonType
+	{
+		None,
+		Object,
+		Array,
+		String,
+		Int,
+		Long,
+		Double,
+		Boolean
+	}
 }

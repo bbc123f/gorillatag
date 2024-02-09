@@ -1,64 +1,51 @@
+﻿using System;
 using Photon.Pun;
 using UnityEngine;
 
-namespace GorillaNetworking;
-
-public class GorillaKeyboardButton : GorillaTriggerBox
+namespace GorillaNetworking
 {
-	public string characterString;
-
-	public GorillaComputer computer;
-
-	public float pressTime;
-
-	public bool functionKey;
-
-	public bool testClick;
-
-	public bool repeatTestClick;
-
-	public float repeatCooldown = 2f;
-
-	private float lastTestClick;
-
-	private void Start()
+	public class GorillaKeyboardButton : GorillaTriggerBox
 	{
-		pressTime = 0f;
-		computer = GorillaComputer.instance;
-	}
+		private void Start()
+		{
+			this.pressTime = 0f;
+			this.computer = GorillaComputer.instance;
+		}
 
-	public void Update()
-	{
-		if (testClick)
+		private void OnTriggerEnter(Collider collider)
 		{
-			testClick = false;
-			computer.PressButton(this);
-		}
-		if (repeatTestClick && lastTestClick + repeatCooldown < Time.time)
-		{
-			lastTestClick = Time.time;
-			testClick = true;
-		}
-	}
-
-	private void OnTriggerEnter(Collider collider)
-	{
-		Debug.Log("collision detected" + collider, collider);
-		if (!(collider.GetComponentInParent<GorillaTriggerColliderHandIndicator>() != null))
-		{
-			return;
-		}
-		GorillaTriggerColliderHandIndicator component = collider.GetComponent<GorillaTriggerColliderHandIndicator>();
-		Debug.Log("buttan press");
-		computer.PressButton(this);
-		if (component != null)
-		{
-			GorillaTagger.Instance.StartVibration(component.isLeftHand, GorillaTagger.Instance.tapHapticStrength / 2f, GorillaTagger.Instance.tapHapticDuration);
-			GorillaTagger.Instance.offlineVRRig.PlayHandTapLocal(66, component.isLeftHand, 0.1f);
-			if (PhotonNetwork.InRoom && GorillaTagger.Instance.myVRRig != null)
+			Debug.Log("GorillaKeyboardButton.OnTriggerEnter: collision detected " + ((collider != null) ? collider.ToString() : null), collider);
+			if (collider.GetComponentInParent<GorillaTriggerColliderHandIndicator>() != null)
 			{
-				GorillaTagger.Instance.myVRRig.RPC("PlayHandTap", RpcTarget.Others, 66, component.isLeftHand, 0.1f);
+				GorillaTriggerColliderHandIndicator component = collider.GetComponent<GorillaTriggerColliderHandIndicator>();
+				Debug.Log("buttan press");
+				this.computer.PressButton(this);
+				if (component != null)
+				{
+					GorillaTagger.Instance.StartVibration(component.isLeftHand, GorillaTagger.Instance.tapHapticStrength / 2f, GorillaTagger.Instance.tapHapticDuration);
+					GorillaTagger.Instance.offlineVRRig.PlayHandTapLocal(66, component.isLeftHand, 0.1f);
+					if (PhotonNetwork.InRoom && GorillaTagger.Instance.myVRRig != null)
+					{
+						GorillaTagger.Instance.myVRRig.RPC("PlayHandTap", RpcTarget.Others, new object[] { 66, component.isLeftHand, 0.1f });
+					}
+				}
 			}
 		}
+
+		public string characterString;
+
+		public GorillaComputer computer;
+
+		public float pressTime;
+
+		public bool functionKey;
+
+		public bool testClick;
+
+		public bool repeatTestClick;
+
+		public float repeatCooldown = 2f;
+
+		private float lastTestClick;
 	}
 }

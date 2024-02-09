@@ -1,171 +1,184 @@
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace GorillaTag;
-
-[DefaultExecutionOrder(2000)]
-public class StaticLodManager : MonoBehaviour
+namespace GorillaTag
 {
-	private struct GroupInfo
+	[DefaultExecutionOrder(2000)]
+	public class StaticLodManager : MonoBehaviour
 	{
-		public bool componentEnabled;
-
-		public Vector3 center;
-
-		public float radiusSq;
-
-		public bool uiEnabled;
-
-		public float uiEnableDistanceSq;
-
-		public Text[] uiTexts;
-
-		public bool collidersEnabled;
-
-		public float collisionEnableDistanceSq;
-
-		public Collider[] interactableColliders;
-	}
-
-	private static readonly List<StaticLodGroup> groupMonoBehaviours = new List<StaticLodGroup>(32);
-
-	[DebugReadout]
-	private static readonly List<GroupInfo> groupInfos = new List<GroupInfo>(32);
-
-	private static LayerMask gorillaInteractableLayerMask;
-
-	private static bool isApplicationQuitting;
-
-	private Camera mainCamera;
-
-	private bool hasMainCamera;
-
-	private void Awake()
-	{
-		gorillaInteractableLayerMask = LayerMask.NameToLayer("GorillaInteractable");
-		Application.quitting += HandleApplicationQuitting;
-	}
-
-	private void OnEnable()
-	{
-		mainCamera = Camera.main;
-		hasMainCamera = mainCamera != null;
-	}
-
-	private void HandleApplicationQuitting()
-	{
-		isApplicationQuitting = true;
-	}
-
-	public static int Register(StaticLodGroup lodGroup)
-	{
-		groupMonoBehaviours.Add(lodGroup);
-		StaticLodGroupExcluder componentInParent = lodGroup.GetComponentInParent<StaticLodGroupExcluder>();
-		Text[] componentsInChildren = lodGroup.GetComponentsInChildren<Text>(includeInactive: true);
-		List<Text> list = new List<Text>(componentsInChildren.Length);
-		Text[] array = componentsInChildren;
-		foreach (Text text in array)
+		private void Awake()
 		{
-			StaticLodGroupExcluder componentInParent2 = text.GetComponentInParent<StaticLodGroupExcluder>();
-			if (!(componentInParent2 != null) || !(componentInParent2 != componentInParent))
-			{
-				list.Add(text);
-			}
+			StaticLodManager.gorillaInteractableLayer = UnityLayer.GorillaInteractable;
+			Application.quitting += this.HandleApplicationQuitting;
 		}
-		componentsInChildren = list.ToArray();
-		Collider[] componentsInChildren2 = lodGroup.GetComponentsInChildren<Collider>(includeInactive: true);
-		List<Collider> list2 = new List<Collider>(componentsInChildren2.Length);
-		Collider[] array2 = componentsInChildren2;
-		foreach (Collider collider in array2)
+
+		private void OnEnable()
 		{
-			if (collider.gameObject.layer == (int)gorillaInteractableLayerMask)
+			this.mainCamera = Camera.main;
+			this.hasMainCamera = this.mainCamera != null;
+		}
+
+		private void HandleApplicationQuitting()
+		{
+			StaticLodManager.isApplicationQuitting = true;
+		}
+
+		public static int Register(StaticLodGroup lodGroup)
+		{
+			StaticLodManager.groupMonoBehaviours.Add(lodGroup);
+			StaticLodGroupExcluder componentInParent = lodGroup.GetComponentInParent<StaticLodGroupExcluder>();
+			Text[] array = lodGroup.GetComponentsInChildren<Text>(true);
+			List<Text> list = new List<Text>(array.Length);
+			foreach (Text text in array)
 			{
-				StaticLodGroupExcluder componentInParent3 = collider.GetComponentInParent<StaticLodGroupExcluder>();
-				if (!(componentInParent3 != null) || !(componentInParent3 != componentInParent))
+				StaticLodGroupExcluder componentInParent2 = text.GetComponentInParent<StaticLodGroupExcluder>();
+				if (!(componentInParent2 != null) || !(componentInParent2 != componentInParent))
 				{
-					list2.Add(collider);
+					list.Add(text);
 				}
 			}
-		}
-		Bounds bounds = ((componentsInChildren.Length != 0) ? new Bounds(componentsInChildren[0].transform.position, Vector3.one * 0.01f) : ((list2.Count <= 0) ? new Bounds(lodGroup.transform.position, Vector3.one * 0.01f) : new Bounds(list2[0].bounds.center, list2[0].bounds.size)));
-		array = componentsInChildren;
-		foreach (Text text2 in array)
-		{
-			bounds.Encapsulate(text2.transform.position);
-		}
-		foreach (Collider item in list2)
-		{
-			bounds.Encapsulate(item.bounds);
-		}
-		groupInfos.Add(new GroupInfo
-		{
-			componentEnabled = lodGroup.isActiveAndEnabled,
-			center = bounds.center,
-			radiusSq = bounds.extents.sqrMagnitude,
-			uiEnabled = true,
-			uiEnableDistanceSq = lodGroup.uiFadeDistanceMax * lodGroup.uiFadeDistanceMax,
-			uiTexts = componentsInChildren,
-			collidersEnabled = true,
-			collisionEnableDistanceSq = lodGroup.collisionEnableDistance * lodGroup.collisionEnableDistance,
-			interactableColliders = list2.ToArray()
-		});
-		return groupMonoBehaviours.Count - 1;
-	}
-
-	public static void SetEnabled(int index, bool enable)
-	{
-		if (isApplicationQuitting)
-		{
-			GroupInfo value = groupInfos[index];
-			value.componentEnabled = enable;
-			groupInfos[index] = value;
-		}
-	}
-
-	protected void LateUpdate()
-	{
-		if (!hasMainCamera)
-		{
-			return;
-		}
-		Vector3 position = mainCamera.transform.position;
-		for (int i = 0; i < groupInfos.Count; i++)
-		{
-			GroupInfo value = groupInfos[i];
-			if (!value.componentEnabled)
+			array = list.ToArray();
+			Collider[] componentsInChildren = lodGroup.GetComponentsInChildren<Collider>(true);
+			List<Collider> list2 = new List<Collider>(componentsInChildren.Length);
+			foreach (Collider collider in componentsInChildren)
 			{
-				continue;
-			}
-			float num = Mathf.Max(0f, (value.center - position).sqrMagnitude - value.radiusSq);
-			float num2 = (value.uiEnabled ? 0.010000001f : 0f);
-			bool flag = num < value.uiEnableDistanceSq + num2;
-			if (flag != value.uiEnabled)
-			{
-				for (int j = 0; j < value.uiTexts.Length; j++)
+				if (collider.gameObject.IsOnLayer(StaticLodManager.gorillaInteractableLayer))
 				{
-					Text text = value.uiTexts[j];
-					if (!(text == null))
+					StaticLodGroupExcluder componentInParent3 = collider.GetComponentInParent<StaticLodGroupExcluder>();
+					if (!(componentInParent3 != null) || !(componentInParent3 != componentInParent))
 					{
-						text.enabled = flag;
+						list2.Add(collider);
 					}
 				}
 			}
-			value.uiEnabled = flag;
-			num2 = (value.collidersEnabled ? 0.010000001f : 0f);
-			bool flag2 = num < value.collisionEnableDistanceSq + num2;
-			if (flag2 != value.collidersEnabled)
+			Bounds bounds;
+			if (array.Length != 0)
 			{
-				for (int k = 0; k < value.interactableColliders.Length; k++)
+				bounds = new Bounds(array[0].transform.position, Vector3.one * 0.01f);
+			}
+			else if (list2.Count > 0)
+			{
+				bounds = new Bounds(list2[0].bounds.center, list2[0].bounds.size);
+			}
+			else
+			{
+				bounds = new Bounds(lodGroup.transform.position, Vector3.one * 0.01f);
+			}
+			foreach (Text text2 in array)
+			{
+				bounds.Encapsulate(text2.transform.position);
+			}
+			foreach (Collider collider2 in list2)
+			{
+				bounds.Encapsulate(collider2.bounds);
+			}
+			StaticLodManager.groupInfos.Add(new StaticLodManager.GroupInfo
+			{
+				componentEnabled = lodGroup.isActiveAndEnabled,
+				center = bounds.center,
+				radiusSq = bounds.extents.sqrMagnitude,
+				uiEnabled = true,
+				uiEnableDistanceSq = lodGroup.uiFadeDistanceMax * lodGroup.uiFadeDistanceMax,
+				uiTexts = array,
+				collidersEnabled = true,
+				collisionEnableDistanceSq = lodGroup.collisionEnableDistance * lodGroup.collisionEnableDistance,
+				interactableColliders = list2.ToArray()
+			});
+			return StaticLodManager.groupMonoBehaviours.Count - 1;
+		}
+
+		public static void SetEnabled(int index, bool enable)
+		{
+			if (!StaticLodManager.isApplicationQuitting)
+			{
+				return;
+			}
+			StaticLodManager.GroupInfo groupInfo = StaticLodManager.groupInfos[index];
+			groupInfo.componentEnabled = enable;
+			StaticLodManager.groupInfos[index] = groupInfo;
+		}
+
+		protected void LateUpdate()
+		{
+			if (!this.hasMainCamera)
+			{
+				return;
+			}
+			Vector3 position = this.mainCamera.transform.position;
+			for (int i = 0; i < StaticLodManager.groupInfos.Count; i++)
+			{
+				StaticLodManager.GroupInfo groupInfo = StaticLodManager.groupInfos[i];
+				if (groupInfo.componentEnabled)
 				{
-					if (!(value.interactableColliders[k] == null))
+					float num = Mathf.Max(0f, (groupInfo.center - position).sqrMagnitude - groupInfo.radiusSq);
+					float num2 = (groupInfo.uiEnabled ? 0.010000001f : 0f);
+					bool flag = num < groupInfo.uiEnableDistanceSq + num2;
+					if (flag != groupInfo.uiEnabled)
 					{
-						value.interactableColliders[k].enabled = flag2;
+						for (int j = 0; j < groupInfo.uiTexts.Length; j++)
+						{
+							Text text = groupInfo.uiTexts[j];
+							if (!(text == null))
+							{
+								text.enabled = flag;
+							}
+						}
 					}
+					groupInfo.uiEnabled = flag;
+					num2 = (groupInfo.collidersEnabled ? 0.010000001f : 0f);
+					bool flag2 = num < groupInfo.collisionEnableDistanceSq + num2;
+					if (flag2 != groupInfo.collidersEnabled)
+					{
+						for (int k = 0; k < groupInfo.interactableColliders.Length; k++)
+						{
+							if (!(groupInfo.interactableColliders[k] == null))
+							{
+								groupInfo.interactableColliders[k].enabled = flag2;
+							}
+						}
+					}
+					groupInfo.collidersEnabled = flag2;
+					StaticLodManager.groupInfos[i] = groupInfo;
 				}
 			}
-			value.collidersEnabled = flag2;
-			groupInfos[i] = value;
+		}
+
+		[OnEnterPlay_Clear]
+		private static readonly List<StaticLodGroup> groupMonoBehaviours = new List<StaticLodGroup>(32);
+
+		[DebugReadout]
+		[OnEnterPlay_Clear]
+		private static readonly List<StaticLodManager.GroupInfo> groupInfos = new List<StaticLodManager.GroupInfo>(32);
+
+		private static UnityLayer gorillaInteractableLayer;
+
+		private static bool isApplicationQuitting;
+
+		private Camera mainCamera;
+
+		private bool hasMainCamera;
+
+		private struct GroupInfo
+		{
+			public bool componentEnabled;
+
+			public Vector3 center;
+
+			public float radiusSq;
+
+			public bool uiEnabled;
+
+			public float uiEnableDistanceSq;
+
+			public Text[] uiTexts;
+
+			public bool collidersEnabled;
+
+			public float collisionEnableDistanceSq;
+
+			public Collider[] interactableColliders;
 		}
 	}
 }

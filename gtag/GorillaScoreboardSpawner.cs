@@ -1,4 +1,6 @@
+﻿using System;
 using System.Collections;
+using GorillaLocomotion;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
@@ -6,6 +8,93 @@ using UnityEngine.UI;
 
 public class GorillaScoreboardSpawner : MonoBehaviourPunCallbacks
 {
+	public void Awake()
+	{
+		base.StartCoroutine(this.UpdateBoard());
+	}
+
+	public bool IsCurrentScoreboard()
+	{
+		return base.gameObject.activeInHierarchy;
+	}
+
+	public override void OnJoinedRoom()
+	{
+		if (this.IsCurrentScoreboard())
+		{
+			this.notInRoomText.SetActive(false);
+			GameObject gameObject = Object.Instantiate<GameObject>(this.scoreboardPrefab, base.transform);
+			this.currentScoreboard = gameObject.GetComponent<GorillaScoreBoard>();
+			gameObject.transform.rotation = base.transform.rotation;
+			if (this.includeMMR)
+			{
+				gameObject.GetComponent<GorillaScoreBoard>().includeMMR = true;
+				gameObject.GetComponent<Text>().text = "Player                     Color         Level        MMR";
+			}
+		}
+	}
+
+	public override void OnDisconnected(DisconnectCause cause)
+	{
+		this.OnLeftRoom();
+	}
+
+	public bool IsVisible()
+	{
+		if (!this.forOverlay)
+		{
+			return this.controllingParentGameObject.activeSelf;
+		}
+		return GorillaLocomotion.Player.Instance.inOverlay;
+	}
+
+	private IEnumerator UpdateBoard()
+	{
+		for (;;)
+		{
+			try
+			{
+				if (this.currentScoreboard != null)
+				{
+					bool flag = this.IsVisible();
+					foreach (GorillaPlayerScoreboardLine gorillaPlayerScoreboardLine in this.currentScoreboard.lines)
+					{
+						if (flag != gorillaPlayerScoreboardLine.lastVisible)
+						{
+							gorillaPlayerScoreboardLine.lastVisible = flag;
+						}
+					}
+					if (this.currentScoreboard.boardText.enabled != flag)
+					{
+						this.currentScoreboard.boardText.enabled = flag;
+					}
+					if (this.currentScoreboard.buttonText.enabled != flag)
+					{
+						this.currentScoreboard.buttonText.enabled = flag;
+					}
+				}
+			}
+			catch
+			{
+			}
+			yield return new WaitForSeconds(1f);
+		}
+		yield break;
+	}
+
+	public override void OnLeftRoom()
+	{
+		if (this.currentScoreboard != null)
+		{
+			Object.Destroy(this.currentScoreboard.gameObject);
+			this.currentScoreboard = null;
+		}
+		if (this.notInRoomText)
+		{
+			this.notInRoomText.SetActive(true);
+		}
+	}
+
 	public string gameType;
 
 	public bool includeMMR;
@@ -22,81 +111,5 @@ public class GorillaScoreboardSpawner : MonoBehaviourPunCallbacks
 
 	public bool lastVisible;
 
-	public void Awake()
-	{
-		StartCoroutine(UpdateBoard());
-	}
-
-	public bool IsCurrentScoreboard()
-	{
-		return base.gameObject.activeInHierarchy;
-	}
-
-	public override void OnJoinedRoom()
-	{
-		if (IsCurrentScoreboard())
-		{
-			notInRoomText.SetActive(value: false);
-			GameObject gameObject = Object.Instantiate(scoreboardPrefab, base.transform);
-			currentScoreboard = gameObject.GetComponent<GorillaScoreBoard>();
-			gameObject.transform.rotation = base.transform.rotation;
-			if (includeMMR)
-			{
-				gameObject.GetComponent<GorillaScoreBoard>().includeMMR = true;
-				gameObject.GetComponent<Text>().text = "Player                     Color         Level        MMR";
-			}
-		}
-	}
-
-	public override void OnDisconnected(DisconnectCause cause)
-	{
-		OnLeftRoom();
-	}
-
-	private IEnumerator UpdateBoard()
-	{
-		while (true)
-		{
-			try
-			{
-				if (currentScoreboard != null)
-				{
-					bool activeSelf = controllingParentGameObject.activeSelf;
-					foreach (GorillaPlayerScoreboardLine line in currentScoreboard.lines)
-					{
-						if (activeSelf != line.lastVisible)
-						{
-							line.HideShowLine(activeSelf);
-						}
-						line.lastVisible = activeSelf;
-					}
-					if (currentScoreboard.boardText.enabled != activeSelf)
-					{
-						currentScoreboard.boardText.enabled = activeSelf;
-					}
-					if (currentScoreboard.buttonText.enabled != activeSelf)
-					{
-						currentScoreboard.buttonText.enabled = activeSelf;
-					}
-				}
-			}
-			catch
-			{
-			}
-			yield return new WaitForSeconds(1f);
-		}
-	}
-
-	public override void OnLeftRoom()
-	{
-		if (currentScoreboard != null)
-		{
-			Object.Destroy(currentScoreboard.gameObject);
-			currentScoreboard = null;
-		}
-		if ((bool)notInRoomText)
-		{
-			notInRoomText.SetActive(value: true);
-		}
-	}
+	public bool forOverlay;
 }

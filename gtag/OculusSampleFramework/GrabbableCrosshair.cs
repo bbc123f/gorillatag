@@ -1,56 +1,60 @@
+﻿using System;
 using UnityEngine;
 
-namespace OculusSampleFramework;
-
-public class GrabbableCrosshair : MonoBehaviour
+namespace OculusSampleFramework
 {
-	public enum CrosshairState
+	public class GrabbableCrosshair : MonoBehaviour
 	{
-		Disabled,
-		Enabled,
-		Targeted
-	}
-
-	private CrosshairState m_state;
-
-	private Transform m_centerEyeAnchor;
-
-	[SerializeField]
-	private GameObject m_targetedCrosshair;
-
-	[SerializeField]
-	private GameObject m_enabledCrosshair;
-
-	private void Start()
-	{
-		m_centerEyeAnchor = GameObject.Find("CenterEyeAnchor").transform;
-	}
-
-	public void SetState(CrosshairState cs)
-	{
-		m_state = cs;
-		switch (cs)
+		private void Start()
 		{
-		case CrosshairState.Disabled:
-			m_targetedCrosshair.SetActive(value: false);
-			m_enabledCrosshair.SetActive(value: false);
-			break;
-		case CrosshairState.Enabled:
-			m_targetedCrosshair.SetActive(value: false);
-			m_enabledCrosshair.SetActive(value: true);
-			break;
-		case CrosshairState.Targeted:
-			m_targetedCrosshair.SetActive(value: true);
-			m_enabledCrosshair.SetActive(value: false);
-			break;
+			this.m_centerEyeAnchor = GameObject.Find("CenterEyeAnchor").transform;
 		}
-	}
 
-	private void Update()
-	{
-		if (m_state != 0)
+		public void SetState(GrabbableCrosshair.CrosshairState cs)
 		{
-			base.transform.LookAt(m_centerEyeAnchor);
+			this.m_state = cs;
+			if (cs == GrabbableCrosshair.CrosshairState.Disabled)
+			{
+				this.m_targetedCrosshair.SetActive(false);
+				this.m_enabledCrosshair.SetActive(false);
+				return;
+			}
+			if (cs == GrabbableCrosshair.CrosshairState.Enabled)
+			{
+				this.m_targetedCrosshair.SetActive(false);
+				this.m_enabledCrosshair.SetActive(true);
+				return;
+			}
+			if (cs == GrabbableCrosshair.CrosshairState.Targeted)
+			{
+				this.m_targetedCrosshair.SetActive(true);
+				this.m_enabledCrosshair.SetActive(false);
+			}
+		}
+
+		private void Update()
+		{
+			if (this.m_state != GrabbableCrosshair.CrosshairState.Disabled)
+			{
+				base.transform.LookAt(this.m_centerEyeAnchor);
+			}
+		}
+
+		private GrabbableCrosshair.CrosshairState m_state;
+
+		private Transform m_centerEyeAnchor;
+
+		[SerializeField]
+		private GameObject m_targetedCrosshair;
+
+		[SerializeField]
+		private GameObject m_enabledCrosshair;
+
+		public enum CrosshairState
+		{
+			Disabled,
+			Enabled,
+			Targeted
 		}
 	}
 }

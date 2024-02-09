@@ -1,8 +1,13 @@
+﻿using System;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 
 public class GorillaTurning : GorillaTriggerBox
 {
+	private void Awake()
+	{
+	}
+
 	public Material redMaterial;
 
 	public Material blueMaterial;
@@ -26,8 +31,4 @@ public class GorillaTurning : GorillaTriggerBox
 	public string currentChoice;
 
 	public float currentSpeed;
-
-	private void Awake()
-	{
-	}
 }

@@ -1,12 +1,175 @@
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Bubbler : TransferrableObject
 {
-	private enum BubblerState
+	protected override void Awake()
 	{
-		None = 1,
-		Bubbling
+		base.Awake();
+		this.hasParticleSystem = this.bubbleParticleSystem != null;
+		if (this.hasParticleSystem)
+		{
+			this.bubbleParticleArray = new ParticleSystem.Particle[this.bubbleParticleSystem.main.maxParticles];
+			this.bubbleParticleSystem.trigger.SetCollider(0, GorillaTagger.Instance.leftHandTriggerCollider.GetComponent<SphereCollider>());
+			this.bubbleParticleSystem.trigger.SetCollider(1, GorillaTagger.Instance.rightHandTriggerCollider.GetComponent<SphereCollider>());
+		}
+		this.initialTriggerDuration = 0.05f;
+		this.triggerStrength = 0.8f;
+		this.itemState = TransferrableObject.ItemStates.State0;
+	}
+
+	public override void OnEnable()
+	{
+		base.OnEnable();
+		this.itemState = TransferrableObject.ItemStates.State0;
+		this.hasBubblerAudio = this.bubblerAudio != null && this.bubblerAudio.clip != null;
+		this.hasPopBubbleAudio = this.popBubbleAudio != null && this.popBubbleAudio.clip != null;
+	}
+
+	private void InitToDefault()
+	{
+		this.itemState = TransferrableObject.ItemStates.State0;
+		if (this.hasParticleSystem && this.bubbleParticleSystem.isPlaying)
+		{
+			this.bubbleParticleSystem.Stop();
+		}
+		if (this.hasBubblerAudio && this.bubblerAudio.isPlaying)
+		{
+			this.bubblerAudio.Stop();
+		}
+	}
+
+	public override void OnDisable()
+	{
+		base.OnDisable();
+		this.itemState = TransferrableObject.ItemStates.State0;
+		if (this.hasParticleSystem && this.bubbleParticleSystem.isPlaying)
+		{
+			this.bubbleParticleSystem.Stop();
+		}
+		if (this.hasBubblerAudio && this.bubblerAudio.isPlaying)
+		{
+			this.bubblerAudio.Stop();
+		}
+		this.currentParticles.Clear();
+		this.particleInfoDict.Clear();
+	}
+
+	public override void ResetToDefaultState()
+	{
+		base.ResetToDefaultState();
+		this.InitToDefault();
+	}
+
+	protected override void LateUpdateShared()
+	{
+		base.LateUpdateShared();
+		if (!this.IsMyItem() && this.myOnlineRig != null && this.myOnlineRig.muted)
+		{
+			this.itemState = TransferrableObject.ItemStates.State0;
+		}
+		bool flag = this.currentState == TransferrableObject.PositionState.InLeftHand;
+		bool flag2 = this.itemState != TransferrableObject.ItemStates.State0;
+		Behaviour[] array = this.behavioursToEnableWhenTriggerPressed;
+		for (int i = 0; i < array.Length; i++)
+		{
+			array[i].enabled = flag2;
+		}
+		if (this.itemState == TransferrableObject.ItemStates.State0)
+		{
+			if (this.hasParticleSystem && this.bubbleParticleSystem.isPlaying)
+			{
+				this.bubbleParticleSystem.Stop();
+			}
+			if (this.hasBubblerAudio && this.bubblerAudio.isPlaying)
+			{
+				this.bubblerAudio.Stop();
+			}
+		}
+		else
+		{
+			if (this.hasParticleSystem && !this.bubbleParticleSystem.isEmitting)
+			{
+				this.bubbleParticleSystem.Play();
+			}
+			if (this.hasBubblerAudio && !this.bubblerAudio.isPlaying)
+			{
+				this.bubblerAudio.Play();
+			}
+			if (this.IsMyItem())
+			{
+				this.initialTriggerPull = Time.time;
+				GorillaTagger.Instance.StartVibration(flag, this.triggerStrength, this.initialTriggerDuration);
+				if (Time.time > this.initialTriggerPull + this.initialTriggerDuration)
+				{
+					GorillaTagger.Instance.StartVibration(flag, this.ongoingStrength, Time.deltaTime);
+				}
+			}
+			float num = this.fan.transform.localEulerAngles.z + this.rotationSpeed * Time.fixedDeltaTime;
+			this.fan.transform.localEulerAngles = new Vector3(0f, 0f, num);
+		}
+		if (this.hasParticleSystem && (!this.allBubblesPopped || this.itemState == TransferrableObject.ItemStates.State1))
+		{
+			int particles = this.bubbleParticleSystem.GetParticles(this.bubbleParticleArray);
+			this.allBubblesPopped = particles <= 0;
+			if (!this.allBubblesPopped)
+			{
+				for (int j = 0; j < particles; j++)
+				{
+					if (this.currentParticles.Contains(this.bubbleParticleArray[j].randomSeed))
+					{
+						this.currentParticles.Remove(this.bubbleParticleArray[j].randomSeed);
+					}
+				}
+				foreach (uint num2 in this.currentParticles)
+				{
+					if (this.particleInfoDict.TryGetValue(num2, out this.outPosition))
+					{
+						if (this.hasPopBubbleAudio)
+						{
+							AudioSource.PlayClipAtPoint(this.popBubbleAudio.clip, this.outPosition);
+						}
+						this.particleInfoDict.Remove(num2);
+					}
+				}
+				this.currentParticles.Clear();
+				for (int k = 0; k < particles; k++)
+				{
+					if (this.particleInfoDict.TryGetValue(this.bubbleParticleArray[k].randomSeed, out this.outPosition))
+					{
+						this.particleInfoDict[this.bubbleParticleArray[k].randomSeed] = this.bubbleParticleArray[k].position;
+					}
+					else
+					{
+						this.particleInfoDict.Add(this.bubbleParticleArray[k].randomSeed, this.bubbleParticleArray[k].position);
+					}
+					this.currentParticles.Add(this.bubbleParticleArray[k].randomSeed);
+				}
+			}
+		}
+	}
+
+	public override void OnActivate()
+	{
+		base.OnActivate();
+		this.itemState = TransferrableObject.ItemStates.State1;
+	}
+
+	public override void OnDeactivate()
+	{
+		base.OnDeactivate();
+		this.itemState = TransferrableObject.ItemStates.State0;
+	}
+
+	public override bool CanActivate()
+	{
+		return !this.disableActivation;
+	}
+
+	public override bool CanDeactivate()
+	{
+		return !this.disableDeactivation;
 	}
 
 	public ParticleSystem bubbleParticleSystem;
@@ -49,173 +212,9 @@ public class Bubbler : TransferrableObject
 
 	private bool hasParticleSystem;
 
-	protected override void Awake()
+	private enum BubblerState
 	{
-		base.Awake();
-		hasParticleSystem = bubbleParticleSystem != null;
-		if (hasParticleSystem)
-		{
-			bubbleParticleArray = new ParticleSystem.Particle[bubbleParticleSystem.main.maxParticles];
-			bubbleParticleSystem.trigger.SetCollider(0, GorillaTagger.Instance.leftHandTriggerCollider.GetComponent<SphereCollider>());
-			bubbleParticleSystem.trigger.SetCollider(1, GorillaTagger.Instance.rightHandTriggerCollider.GetComponent<SphereCollider>());
-		}
-		initialTriggerDuration = 0.05f;
-		triggerStrength = 0.8f;
-		itemState = ItemStates.State0;
-	}
-
-	public override void OnEnable()
-	{
-		base.OnEnable();
-		itemState = ItemStates.State0;
-		hasBubblerAudio = bubblerAudio != null && bubblerAudio.clip != null;
-		hasPopBubbleAudio = popBubbleAudio != null && popBubbleAudio.clip != null;
-	}
-
-	private void InitToDefault()
-	{
-		itemState = ItemStates.State0;
-		if (hasParticleSystem && bubbleParticleSystem.isPlaying)
-		{
-			bubbleParticleSystem.Stop();
-		}
-		if (hasBubblerAudio && bubblerAudio.isPlaying)
-		{
-			bubblerAudio.Stop();
-		}
-	}
-
-	public override void OnDisable()
-	{
-		base.OnDisable();
-		itemState = ItemStates.State0;
-		if (hasParticleSystem && bubbleParticleSystem.isPlaying)
-		{
-			bubbleParticleSystem.Stop();
-		}
-		if (hasBubblerAudio && bubblerAudio.isPlaying)
-		{
-			bubblerAudio.Stop();
-		}
-		currentParticles.Clear();
-		particleInfoDict.Clear();
-	}
-
-	public override void ResetToDefaultState()
-	{
-		base.ResetToDefaultState();
-		InitToDefault();
-	}
-
-	protected override void LateUpdateShared()
-	{
-		base.LateUpdateShared();
-		if (!IsMyItem() && myOnlineRig != null && myOnlineRig.muted)
-		{
-			itemState = ItemStates.State0;
-		}
-		bool forLeftController = currentState == PositionState.InLeftHand;
-		bool flag = itemState != ItemStates.State0;
-		Behaviour[] array = behavioursToEnableWhenTriggerPressed;
-		for (int i = 0; i < array.Length; i++)
-		{
-			array[i].enabled = flag;
-		}
-		if (itemState == ItemStates.State0)
-		{
-			if (hasParticleSystem && bubbleParticleSystem.isPlaying)
-			{
-				bubbleParticleSystem.Stop();
-			}
-			if (hasBubblerAudio && bubblerAudio.isPlaying)
-			{
-				bubblerAudio.Stop();
-			}
-		}
-		else
-		{
-			if (hasParticleSystem && !bubbleParticleSystem.isEmitting)
-			{
-				bubbleParticleSystem.Play();
-			}
-			if (hasBubblerAudio && !bubblerAudio.isPlaying)
-			{
-				bubblerAudio.Play();
-			}
-			if (IsMyItem())
-			{
-				initialTriggerPull = Time.time;
-				GorillaTagger.Instance.StartVibration(forLeftController, triggerStrength, initialTriggerDuration);
-				if (Time.time > initialTriggerPull + initialTriggerDuration)
-				{
-					GorillaTagger.Instance.StartVibration(forLeftController, ongoingStrength, Time.deltaTime);
-				}
-			}
-			float z = fan.transform.localEulerAngles.z + rotationSpeed * Time.fixedDeltaTime;
-			fan.transform.localEulerAngles = new Vector3(0f, 0f, z);
-		}
-		if (!hasParticleSystem || (allBubblesPopped && itemState != ItemStates.State1))
-		{
-			return;
-		}
-		int particles = bubbleParticleSystem.GetParticles(bubbleParticleArray);
-		allBubblesPopped = particles <= 0;
-		if (allBubblesPopped)
-		{
-			return;
-		}
-		for (int j = 0; j < particles; j++)
-		{
-			if (currentParticles.Contains(bubbleParticleArray[j].randomSeed))
-			{
-				currentParticles.Remove(bubbleParticleArray[j].randomSeed);
-			}
-		}
-		foreach (uint currentParticle in currentParticles)
-		{
-			if (particleInfoDict.TryGetValue(currentParticle, out outPosition))
-			{
-				if (hasPopBubbleAudio)
-				{
-					AudioSource.PlayClipAtPoint(popBubbleAudio.clip, outPosition);
-				}
-				particleInfoDict.Remove(currentParticle);
-			}
-		}
-		currentParticles.Clear();
-		for (int k = 0; k < particles; k++)
-		{
-			if (particleInfoDict.TryGetValue(bubbleParticleArray[k].randomSeed, out outPosition))
-			{
-				particleInfoDict[bubbleParticleArray[k].randomSeed] = bubbleParticleArray[k].position;
-			}
-			else
-			{
-				particleInfoDict.Add(bubbleParticleArray[k].randomSeed, bubbleParticleArray[k].position);
-			}
-			currentParticles.Add(bubbleParticleArray[k].randomSeed);
-		}
-	}
-
-	public override void OnActivate()
-	{
-		base.OnActivate();
-		itemState = ItemStates.State1;
-	}
-
-	public override void OnDeactivate()
-	{
-		base.OnDeactivate();
-		itemState = ItemStates.State0;
-	}
-
-	public override bool CanActivate()
-	{
-		return !disableActivation;
-	}
-
-	public override bool CanDeactivate()
-	{
-		return !disableDeactivation;
+		None = 1,
+		Bubbling
 	}
 }

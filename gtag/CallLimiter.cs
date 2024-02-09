@@ -1,10 +1,62 @@
-using System;
+﻿using System;
 using Photon.Pun;
 using UnityEngine;
 
 [Serializable]
 public class CallLimiter
 {
+	public CallLimiter()
+	{
+	}
+
+	public CallLimiter(int historyLength, float coolDown, float latencyMax = 0.5f)
+	{
+		this.callTimeHistory = new float[historyLength];
+		this.callHistoryLength = historyLength;
+		for (int i = 0; i < historyLength; i++)
+		{
+			this.callTimeHistory[i] = float.MinValue;
+		}
+		this.timeCooldown = coolDown;
+		this.maxLatency = latencyMax;
+	}
+
+	public bool CheckCallServerTime(double time)
+	{
+		return Mathf.Abs((float)(PhotonNetwork.Time - time)) <= this.maxLatency && this.CheckCallTime((float)time);
+	}
+
+	public virtual bool CheckCallTime(float time)
+	{
+		if (this.callTimeHistory[this.oldTimeIndex] > time)
+		{
+			this.blockCall = true;
+			this.blockStartTime = time;
+			return false;
+		}
+		this.callTimeHistory[this.oldTimeIndex] = time + this.timeCooldown;
+		int num = this.oldTimeIndex + 1;
+		this.oldTimeIndex = num;
+		this.oldTimeIndex = num % this.callHistoryLength;
+		this.blockCall = false;
+		return true;
+	}
+
+	public virtual void Reset()
+	{
+		if (this.callTimeHistory == null)
+		{
+			return;
+		}
+		for (int i = 0; i < this.callHistoryLength; i++)
+		{
+			this.callTimeHistory[i] = float.MinValue;
+		}
+		this.oldTimeIndex = 0;
+		this.blockStartTime = 0f;
+		this.blockCall = false;
+	}
+
 	[SerializeField]
 	protected float[] callTimeHistory;
 
@@ -22,58 +74,4 @@ public class CallLimiter
 	protected bool blockCall;
 
 	protected float blockStartTime;
-
-	public CallLimiter()
-	{
-	}
-
-	public CallLimiter(int historyLength, float coolDown, float latencyMax = 0.5f)
-	{
-		callTimeHistory = new float[historyLength];
-		callHistoryLength = historyLength;
-		for (int i = 0; i < historyLength; i++)
-		{
-			callTimeHistory[i] = float.MinValue;
-		}
-		timeCooldown = coolDown;
-		maxLatency = latencyMax;
-	}
-
-	public bool CheckCallServerTime(double time)
-	{
-		if (Mathf.Abs((float)(PhotonNetwork.Time - time)) > maxLatency)
-		{
-			return false;
-		}
-		return CheckCallTime((float)time);
-	}
-
-	public virtual bool CheckCallTime(float time)
-	{
-		Debug.Log("old time index " + oldTimeIndex);
-		if (callTimeHistory[oldTimeIndex] > time)
-		{
-			blockCall = true;
-			blockStartTime = time;
-			return false;
-		}
-		callTimeHistory[oldTimeIndex] = time + timeCooldown;
-		oldTimeIndex = ++oldTimeIndex % callHistoryLength;
-		blockCall = false;
-		return true;
-	}
-
-	public virtual void reset()
-	{
-		if (callTimeHistory != null)
-		{
-			for (int i = 0; i < callHistoryLength; i++)
-			{
-				callTimeHistory[i] = float.MinValue;
-			}
-			oldTimeIndex = 0;
-			blockStartTime = 0f;
-			blockCall = false;
-		}
-	}
 }

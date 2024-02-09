@@ -1,9 +1,39 @@
+﻿using System;
 using GorillaNetworking;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class FittingRoomButton : GorillaPressableButton
 {
+	public override void Start()
+	{
+		this.currentCosmeticItem = CosmeticsController.instance.nullItem;
+	}
+
+	public override void UpdateColor()
+	{
+		if (this.currentCosmeticItem.itemName == "null")
+		{
+			this.button.material = this.unpressedMaterial;
+			this.buttonText.text = this.noCosmeticText;
+			return;
+		}
+		if (this.isOn)
+		{
+			this.button.material = this.pressedMaterial;
+			this.buttonText.text = this.onText;
+			return;
+		}
+		this.button.material = this.unpressedMaterial;
+		this.buttonText.text = this.offText;
+	}
+
+	public override void ButtonActivationWithHand(bool isLeftHand)
+	{
+		base.ButtonActivationWithHand(isLeftHand);
+		CosmeticsController.instance.PressFittingRoomButton(this, isLeftHand);
+	}
+
 	public CosmeticsController.CosmeticItem currentCosmeticItem;
 
 	public Image currentImage;
@@ -15,34 +45,4 @@ public class FittingRoomButton : GorillaPressableButton
 	public string noCosmeticText;
 
 	public Text buttonText;
-
-	public override void Start()
-	{
-		currentCosmeticItem = CosmeticsController.instance.nullItem;
-	}
-
-	public override void UpdateColor()
-	{
-		if (currentCosmeticItem.itemName == "null")
-		{
-			button.material = unpressedMaterial;
-			buttonText.text = noCosmeticText;
-		}
-		else if (isOn)
-		{
-			button.material = pressedMaterial;
-			buttonText.text = onText;
-		}
-		else
-		{
-			button.material = unpressedMaterial;
-			buttonText.text = offText;
-		}
-	}
-
-	public override void ButtonActivationWithHand(bool isLeftHand)
-	{
-		base.ButtonActivationWithHand(isLeftHand);
-		CosmeticsController.instance.PressFittingRoomButton(this, isLeftHand);
-	}
 }

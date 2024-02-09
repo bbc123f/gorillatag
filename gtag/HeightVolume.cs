@@ -1,7 +1,34 @@
+﻿using System;
 using UnityEngine;
 
 public class HeightVolume : MonoBehaviour
 {
+	private void Awake()
+	{
+		if (this.targetTransform == null)
+		{
+			this.targetTransform = Camera.main.transform;
+		}
+	}
+
+	private void Update()
+	{
+		if (this.audioSource.gameObject.activeSelf)
+		{
+			if (this.targetTransform.position.y > this.heightTop.position.y)
+			{
+				this.audioSource.volume = ((!this.invertHeightVol) ? this.baseVolume : this.minVolume);
+				return;
+			}
+			if (this.targetTransform.position.y < this.heightBottom.position.y)
+			{
+				this.audioSource.volume = ((!this.invertHeightVol) ? this.minVolume : this.baseVolume);
+				return;
+			}
+			this.audioSource.volume = ((!this.invertHeightVol) ? ((this.targetTransform.position.y - this.heightBottom.position.y) / (this.heightTop.position.y - this.heightBottom.position.y) * (this.baseVolume - this.minVolume) + this.minVolume) : ((this.heightTop.position.y - this.targetTransform.position.y) / (this.heightTop.position.y - this.heightBottom.position.y) * (this.baseVolume - this.minVolume) + this.minVolume));
+		}
+	}
+
 	public Transform heightTop;
 
 	public Transform heightBottom;
@@ -15,31 +42,4 @@ public class HeightVolume : MonoBehaviour
 	public Transform targetTransform;
 
 	public bool invertHeightVol;
-
-	private void Awake()
-	{
-		if (targetTransform == null)
-		{
-			targetTransform = Camera.main.transform;
-		}
-	}
-
-	private void Update()
-	{
-		if (audioSource.gameObject.activeSelf)
-		{
-			if (targetTransform.position.y > heightTop.position.y)
-			{
-				audioSource.volume = ((!invertHeightVol) ? baseVolume : minVolume);
-			}
-			else if (targetTransform.position.y < heightBottom.position.y)
-			{
-				audioSource.volume = ((!invertHeightVol) ? minVolume : baseVolume);
-			}
-			else
-			{
-				audioSource.volume = ((!invertHeightVol) ? ((targetTransform.position.y - heightBottom.position.y) / (heightTop.position.y - heightBottom.position.y) * (baseVolume - minVolume) + minVolume) : ((heightTop.position.y - targetTransform.position.y) / (heightTop.position.y - heightBottom.position.y) * (baseVolume - minVolume) + minVolume));
-			}
-		}
-	}
 }

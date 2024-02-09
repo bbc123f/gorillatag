@@ -1,7 +1,17 @@
+﻿using System;
 using UnityEngine;
 
 public class SoundOnCollisionTagSpecific : MonoBehaviour
 {
+	private void OnTriggerEnter(Collider collider)
+	{
+		if (Time.time > this.nextSound && collider.gameObject.CompareTag(this.tagName))
+		{
+			this.nextSound = Time.time + this.noiseCooldown;
+			this.audioSource.PlayOneShot(this.collisionSounds[Random.Range(0, this.collisionSounds.Length)], 0.5f);
+		}
+	}
+
 	public string tagName;
 
 	public float noiseCooldown = 1f;
@@ -11,13 +21,4 @@ public class SoundOnCollisionTagSpecific : MonoBehaviour
 	public AudioSource audioSource;
 
 	public AudioClip[] collisionSounds;
-
-	private void OnTriggerEnter(Collider collider)
-	{
-		if (Time.time > nextSound && collider.gameObject.CompareTag(tagName))
-		{
-			nextSound = Time.time + noiseCooldown;
-			audioSource.PlayOneShot(collisionSounds[Random.Range(0, collisionSounds.Length)], 0.5f);
-		}
-	}
 }

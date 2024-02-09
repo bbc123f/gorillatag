@@ -1,11 +1,13 @@
+﻿using System;
 using UnityEngine;
 
-namespace GorillaTag;
-
-public class DestroyOnAwake : MonoBehaviour
+namespace GorillaTag
 {
-	protected void Awake()
+	public class DestroyOnAwake : MonoBehaviour
 	{
-		Object.Destroy(base.gameObject);
+		protected void Awake()
+		{
+			Object.Destroy(base.gameObject);
+		}
 	}
 }

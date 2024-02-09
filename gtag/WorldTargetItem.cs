@@ -1,36 +1,25 @@
+﻿using System;
 using JetBrains.Annotations;
 using Photon.Realtime;
 using UnityEngine;
 
 public class WorldTargetItem
 {
-	public readonly Player owner;
-
-	public readonly int itemIdx;
-
-	public readonly Transform targetObject;
-
-	public readonly TransferrableObject transferrableObject;
-
 	public bool IsValid()
 	{
-		if (itemIdx != -1)
-		{
-			return owner != null;
-		}
-		return false;
+		return this.itemIdx != -1 && this.owner != null;
 	}
 
 	[CanBeNull]
 	public static WorldTargetItem GenerateTargetFromPlayerAndID(Player owner, int itemIdx)
 	{
-		VRRig vRRig = GorillaGameManager.StaticFindRigForPlayer(owner);
-		if (vRRig == null)
+		VRRig vrrig = GorillaGameManager.StaticFindRigForPlayer(owner);
+		if (vrrig == null)
 		{
 			Debug.LogError("Tried to setup a sharable object but the target rig is null...");
 			return null;
 		}
-		Transform component = vRRig.myBodyDockPositions.TransferrableItem(itemIdx).gameObject.GetComponent<Transform>();
+		Transform component = vrrig.myBodyDockPositions.TransferrableItem(itemIdx).gameObject.GetComponent<Transform>();
 		return new WorldTargetItem(owner, itemIdx, component);
 	}
 
@@ -43,12 +32,20 @@ public class WorldTargetItem
 	{
 		this.owner = owner;
 		this.itemIdx = itemIdx;
-		targetObject = transform;
-		transferrableObject = transform.GetComponent<TransferrableObject>();
+		this.targetObject = transform;
+		this.transferrableObject = transform.GetComponent<TransferrableObject>();
 	}
 
 	public override string ToString()
 	{
-		return $"Id: {itemIdx} ({owner})";
+		return string.Format("Id: {0} ({1})", this.itemIdx, this.owner);
 	}
+
+	public readonly Player owner;
+
+	public readonly int itemIdx;
+
+	public readonly Transform targetObject;
+
+	public readonly TransferrableObject transferrableObject;
 }

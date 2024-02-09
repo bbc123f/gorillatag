@@ -1,19 +1,37 @@
+﻿using System;
 using UnityEngine;
 
 public class MagicRingCosmetic : MonoBehaviour
 {
-	private enum FadeState
+	protected void Awake()
 	{
-		FadedOut,
-		FadedIn
+		this.materialPropertyBlock = new MaterialPropertyBlock();
+		this.defaultEmissiveColor = this.ringRenderer.sharedMaterial.GetColor(this.emissionColorShaderPropID);
+	}
+
+	protected void LateUpdate()
+	{
+		float celsius = this.thermalReceiver.celsius;
+		if (celsius >= this.fadeInTemperatureThreshold && this.fadeState != MagicRingCosmetic.FadeState.FadedIn)
+		{
+			this.fadeInSounds.Play(null, null);
+			this.fadeState = MagicRingCosmetic.FadeState.FadedIn;
+		}
+		else if (celsius <= this.fadeOutTemperatureThreshold && this.fadeState != MagicRingCosmetic.FadeState.FadedOut)
+		{
+			this.fadeOutSounds.Play(null, null);
+			this.fadeState = MagicRingCosmetic.FadeState.FadedOut;
+		}
+		this.emissiveAmount = Mathf.MoveTowards(this.emissiveAmount, (this.fadeState == MagicRingCosmetic.FadeState.FadedIn) ? 1f : 0f, Time.deltaTime / this.fadeTime);
+		this.ringRenderer.GetPropertyBlock(this.materialPropertyBlock);
+		this.materialPropertyBlock.SetColor(this.emissionColorShaderPropID, new Color(this.defaultEmissiveColor.r, this.defaultEmissiveColor.g, this.defaultEmissiveColor.b, this.emissiveAmount));
+		this.ringRenderer.SetPropertyBlock(this.materialPropertyBlock);
 	}
 
 	[Tooltip("The ring will fade in the emissive texture based on temperature from this ThermalReceiver.")]
 	public ThermalReceiver thermalReceiver;
 
 	public Renderer ringRenderer;
-
-	public string emissiveAmountShaderProperty;
 
 	public float fadeInTemperatureThreshold = 200f;
 
@@ -25,36 +43,19 @@ public class MagicRingCosmetic : MonoBehaviour
 
 	public SoundBankPlayer fadeOutSounds;
 
-	private FadeState fadeState;
+	private MagicRingCosmetic.FadeState fadeState;
 
-	private int emissiveAmountShaderPropID;
+	private int emissionColorShaderPropID = Shader.PropertyToID("_EmissionColor");
+
+	private Color defaultEmissiveColor;
 
 	private float emissiveAmount;
 
 	private MaterialPropertyBlock materialPropertyBlock;
 
-	protected void Awake()
+	private enum FadeState
 	{
-		emissiveAmountShaderPropID = Shader.PropertyToID(emissiveAmountShaderProperty);
-		materialPropertyBlock = new MaterialPropertyBlock();
-	}
-
-	protected void LateUpdate()
-	{
-		float celsius = thermalReceiver.celsius;
-		if (celsius >= fadeInTemperatureThreshold && fadeState != FadeState.FadedIn)
-		{
-			fadeInSounds.Play();
-			fadeState = FadeState.FadedIn;
-		}
-		else if (celsius <= fadeOutTemperatureThreshold && fadeState != 0)
-		{
-			fadeOutSounds.Play();
-			fadeState = FadeState.FadedOut;
-		}
-		emissiveAmount = Mathf.MoveTowards(emissiveAmount, (fadeState == FadeState.FadedIn) ? 1f : 0f, Time.deltaTime / fadeTime);
-		ringRenderer.GetPropertyBlock(materialPropertyBlock);
-		materialPropertyBlock.SetFloat(emissiveAmountShaderPropID, emissiveAmount);
-		ringRenderer.SetPropertyBlock(materialPropertyBlock);
+		FadedOut,
+		FadedIn
 	}
 }

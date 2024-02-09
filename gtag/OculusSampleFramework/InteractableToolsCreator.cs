@@ -1,64 +1,65 @@
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace OculusSampleFramework;
-
-public class InteractableToolsCreator : MonoBehaviour
+namespace OculusSampleFramework
 {
-	[SerializeField]
-	private Transform[] LeftHandTools;
-
-	[SerializeField]
-	private Transform[] RightHandTools;
-
-	private void Awake()
+	public class InteractableToolsCreator : MonoBehaviour
 	{
-		if (LeftHandTools != null && LeftHandTools.Length != 0)
+		private void Awake()
 		{
-			StartCoroutine(AttachToolsToHands(LeftHandTools, isRightHand: false));
-		}
-		if (RightHandTools != null && RightHandTools.Length != 0)
-		{
-			StartCoroutine(AttachToolsToHands(RightHandTools, isRightHand: true));
-		}
-	}
-
-	private IEnumerator AttachToolsToHands(Transform[] toolObjects, bool isRightHand)
-	{
-		HandsManager handsManagerObj;
-		while (true)
-		{
-			HandsManager instance;
-			handsManagerObj = (instance = HandsManager.Instance);
-			if (!(instance == null) && handsManagerObj.IsInitialized())
+			if (this.LeftHandTools != null && this.LeftHandTools.Length != 0)
 			{
-				break;
+				base.StartCoroutine(this.AttachToolsToHands(this.LeftHandTools, false));
 			}
-			yield return null;
+			if (this.RightHandTools != null && this.RightHandTools.Length != 0)
+			{
+				base.StartCoroutine(this.AttachToolsToHands(this.RightHandTools, true));
+			}
 		}
-		HashSet<Transform> hashSet = new HashSet<Transform>();
-		foreach (Transform transform in toolObjects)
+
+		private IEnumerator AttachToolsToHands(Transform[] toolObjects, bool isRightHand)
 		{
-			hashSet.Add(transform.transform);
-		}
-		foreach (Transform toolObject in hashSet)
-		{
-			OVRSkeleton handSkeletonToAttachTo = (isRightHand ? handsManagerObj.RightHandSkeleton : handsManagerObj.LeftHandSkeleton);
-			while (handSkeletonToAttachTo == null || handSkeletonToAttachTo.Bones == null)
+			HandsManager handsManagerObj = null;
+			while ((handsManagerObj = HandsManager.Instance) == null || !handsManagerObj.IsInitialized())
 			{
 				yield return null;
 			}
-			AttachToolToHandTransform(toolObject, isRightHand);
+			HashSet<Transform> hashSet = new HashSet<Transform>();
+			foreach (Transform transform in toolObjects)
+			{
+				hashSet.Add(transform.transform);
+			}
+			foreach (Transform toolObject in hashSet)
+			{
+				OVRSkeleton handSkeletonToAttachTo = (isRightHand ? handsManagerObj.RightHandSkeleton : handsManagerObj.LeftHandSkeleton);
+				while (handSkeletonToAttachTo == null || handSkeletonToAttachTo.Bones == null)
+				{
+					yield return null;
+				}
+				this.AttachToolToHandTransform(toolObject, isRightHand);
+				handSkeletonToAttachTo = null;
+				toolObject = null;
+			}
+			HashSet<Transform>.Enumerator enumerator = default(HashSet<Transform>.Enumerator);
+			yield break;
+			yield break;
 		}
-	}
 
-	private void AttachToolToHandTransform(Transform tool, bool isRightHanded)
-	{
-		Transform obj = Object.Instantiate(tool).transform;
-		obj.localPosition = Vector3.zero;
-		InteractableTool component = obj.GetComponent<InteractableTool>();
-		component.IsRightHandedTool = isRightHanded;
-		component.Initialize();
+		private void AttachToolToHandTransform(Transform tool, bool isRightHanded)
+		{
+			Transform transform = Object.Instantiate<Transform>(tool).transform;
+			transform.localPosition = Vector3.zero;
+			InteractableTool component = transform.GetComponent<InteractableTool>();
+			component.IsRightHandedTool = isRightHanded;
+			component.Initialize();
+		}
+
+		[SerializeField]
+		private Transform[] LeftHandTools;
+
+		[SerializeField]
+		private Transform[] RightHandTools;
 	}
 }

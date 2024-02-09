@@ -1,11 +1,105 @@
+﻿using System;
 using UnityEngine;
 
 public class VacuumHoldable : TransferrableObject
 {
-	private enum VacuumState
+	protected override void Awake()
 	{
-		None = 1,
-		Active
+		base.Awake();
+		this.itemState = TransferrableObject.ItemStates.State0;
+	}
+
+	public override void OnEnable()
+	{
+		base.OnEnable();
+		this.itemState = TransferrableObject.ItemStates.State0;
+		this.hasAudioSource = this.audioSource != null && this.audioSource.clip != null;
+	}
+
+	public override void OnDisable()
+	{
+		base.OnDisable();
+		this.itemState = TransferrableObject.ItemStates.State0;
+		if (this.particleFX.isPlaying)
+		{
+			this.particleFX.Stop();
+		}
+		if (this.hasAudioSource && this.audioSource.isPlaying)
+		{
+			this.audioSource.Stop();
+		}
+	}
+
+	private void InitToDefault()
+	{
+		this.itemState = TransferrableObject.ItemStates.State0;
+		if (this.particleFX.isPlaying)
+		{
+			this.particleFX.Stop();
+		}
+		if (this.hasAudioSource && this.audioSource.isPlaying)
+		{
+			this.audioSource.Stop();
+		}
+	}
+
+	public override void ResetToDefaultState()
+	{
+		base.ResetToDefaultState();
+		this.InitToDefault();
+	}
+
+	protected override void LateUpdateShared()
+	{
+		base.LateUpdateShared();
+		if (!this.IsMyItem() && this.myOnlineRig != null && this.myOnlineRig.muted)
+		{
+			this.itemState = TransferrableObject.ItemStates.State0;
+		}
+		if (this.itemState == TransferrableObject.ItemStates.State0)
+		{
+			if (this.particleFX.isPlaying)
+			{
+				this.particleFX.Stop();
+			}
+			if (this.hasAudioSource && this.audioSource.isPlaying)
+			{
+				this.audioSource.Stop();
+				return;
+			}
+		}
+		else
+		{
+			if (!this.particleFX.isEmitting)
+			{
+				this.particleFX.Play();
+			}
+			if (this.hasAudioSource && !this.audioSource.isPlaying)
+			{
+				this.audioSource.Play();
+			}
+			if (this.IsMyItem() && Time.time > this.activationStartTime + this.activationVibrationStartDuration)
+			{
+				GorillaTagger.Instance.StartVibration(this.currentState == TransferrableObject.PositionState.InLeftHand, this.activationVibrationLoopStrength, Time.deltaTime);
+			}
+		}
+	}
+
+	public override void OnActivate()
+	{
+		base.OnActivate();
+		this.itemState = TransferrableObject.ItemStates.State1;
+		if (this.IsMyItem())
+		{
+			this.activationStartTime = Time.time;
+			GorillaTagger.Instance.StartVibration(this.currentState == TransferrableObject.PositionState.InLeftHand, this.activationVibrationStartStrength, this.activationVibrationStartDuration);
+		}
+	}
+
+	public override void OnDeactivate()
+	{
+		base.OnDeactivate();
+		this.itemState = TransferrableObject.ItemStates.State0;
 	}
 
 	[Tooltip("Emission rate will be increase when the trigger button is pressed.")]
@@ -24,99 +118,9 @@ public class VacuumHoldable : TransferrableObject
 
 	private bool hasAudioSource;
 
-	protected override void Awake()
+	private enum VacuumState
 	{
-		base.Awake();
-		itemState = ItemStates.State0;
-	}
-
-	public override void OnEnable()
-	{
-		base.OnEnable();
-		itemState = ItemStates.State0;
-		hasAudioSource = audioSource != null && audioSource.clip != null;
-	}
-
-	public override void OnDisable()
-	{
-		base.OnDisable();
-		itemState = ItemStates.State0;
-		if (particleFX.isPlaying)
-		{
-			particleFX.Stop();
-		}
-		if (hasAudioSource && audioSource.isPlaying)
-		{
-			audioSource.Stop();
-		}
-	}
-
-	private void InitToDefault()
-	{
-		itemState = ItemStates.State0;
-		if (particleFX.isPlaying)
-		{
-			particleFX.Stop();
-		}
-		if (hasAudioSource && audioSource.isPlaying)
-		{
-			audioSource.Stop();
-		}
-	}
-
-	public override void ResetToDefaultState()
-	{
-		base.ResetToDefaultState();
-		InitToDefault();
-	}
-
-	protected override void LateUpdateShared()
-	{
-		base.LateUpdateShared();
-		if (!IsMyItem() && myOnlineRig != null && myOnlineRig.muted)
-		{
-			itemState = ItemStates.State0;
-		}
-		if (itemState == ItemStates.State0)
-		{
-			if (particleFX.isPlaying)
-			{
-				particleFX.Stop();
-			}
-			if (hasAudioSource && audioSource.isPlaying)
-			{
-				audioSource.Stop();
-			}
-			return;
-		}
-		if (!particleFX.isEmitting)
-		{
-			particleFX.Play();
-		}
-		if (hasAudioSource && !audioSource.isPlaying)
-		{
-			audioSource.Play();
-		}
-		if (IsMyItem() && Time.time > activationStartTime + activationVibrationStartDuration)
-		{
-			GorillaTagger.Instance.StartVibration(currentState == PositionState.InLeftHand, activationVibrationLoopStrength, Time.deltaTime);
-		}
-	}
-
-	public override void OnActivate()
-	{
-		base.OnActivate();
-		itemState = ItemStates.State1;
-		if (IsMyItem())
-		{
-			activationStartTime = Time.time;
-			GorillaTagger.Instance.StartVibration(currentState == PositionState.InLeftHand, activationVibrationStartStrength, activationVibrationStartDuration);
-		}
-	}
-
-	public override void OnDeactivate()
-	{
-		base.OnDeactivate();
-		itemState = ItemStates.State0;
+		None = 1,
+		Active
 	}
 }

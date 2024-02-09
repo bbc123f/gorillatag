@@ -1,3 +1,5 @@
+﻿using System;
+
 public class TeleportOrientationHandler360 : TeleportOrientationHandler
 {
 	protected override void InitializeTeleportDestination()
@@ -6,6 +8,6 @@ public class TeleportOrientationHandler360 : TeleportOrientationHandler
 
 	protected override void UpdateTeleportDestination()
 	{
-		base.LocomotionTeleport.OnUpdateTeleportDestination(AimData.TargetValid, AimData.Destination, null, null);
+		base.LocomotionTeleport.OnUpdateTeleportDestination(this.AimData.TargetValid, this.AimData.Destination, null, null);
 	}
 }

@@ -1,47 +1,52 @@
+﻿using System;
 using UnityEngine;
 
-namespace BoingKit;
-
-public class BoingManagerPostUpdatePump : MonoBehaviour
+namespace BoingKit
 {
-	private void Start()
+	public class BoingManagerPostUpdatePump : MonoBehaviour
 	{
-		Object.DontDestroyOnLoad(base.gameObject);
-	}
-
-	private bool TryDestroyDuplicate()
-	{
-		if (BoingManager.s_managerGo == base.gameObject)
+		private void Start()
 		{
-			return false;
+			Object.DontDestroyOnLoad(base.gameObject);
 		}
-		Object.Destroy(base.gameObject);
-		return true;
-	}
 
-	private void FixedUpdate()
-	{
-		if (!TryDestroyDuplicate())
+		private bool TryDestroyDuplicate()
 		{
+			if (BoingManager.s_managerGo == base.gameObject)
+			{
+				return false;
+			}
+			Object.Destroy(base.gameObject);
+			return true;
+		}
+
+		private void FixedUpdate()
+		{
+			if (this.TryDestroyDuplicate())
+			{
+				return;
+			}
 			BoingManager.Execute(BoingManager.UpdateMode.FixedUpdate);
 		}
-	}
 
-	private void Update()
-	{
-		if (!TryDestroyDuplicate())
+		private void Update()
 		{
+			if (this.TryDestroyDuplicate())
+			{
+				return;
+			}
 			BoingManager.Execute(BoingManager.UpdateMode.EarlyUpdate);
 			BoingManager.PullBehaviorResults(BoingManager.UpdateMode.EarlyUpdate);
 			BoingManager.PullReactorResults(BoingManager.UpdateMode.EarlyUpdate);
 			BoingManager.PullBonesResults(BoingManager.UpdateMode.EarlyUpdate);
 		}
-	}
 
-	private void LateUpdate()
-	{
-		if (!TryDestroyDuplicate())
+		private void LateUpdate()
 		{
+			if (this.TryDestroyDuplicate())
+			{
+				return;
+			}
 			BoingManager.PullBehaviorResults(BoingManager.UpdateMode.FixedUpdate);
 			BoingManager.PullReactorResults(BoingManager.UpdateMode.FixedUpdate);
 			BoingManager.PullBonesResults(BoingManager.UpdateMode.FixedUpdate);

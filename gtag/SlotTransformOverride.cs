@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using GorillaExtensions;
 using GorillaTag;
@@ -7,6 +7,36 @@ using UnityEngine;
 [Serializable]
 public class SlotTransformOverride
 {
+	public void Initialize(Transform anchor)
+	{
+		this.overrideTransformMatrix = this.overrideTransform.LocalMatrixRelativeToParentWithScale();
+		if (!this.useAdvancedGrab)
+		{
+			return;
+		}
+		this.AdvOriginLocalToParentAnchorLocal = anchor.worldToLocalMatrix * this.advancedGrabPointOrigin.localToWorldMatrix;
+		this.AdvAnchorLocalToAdvOriginLocal = this.advancedGrabPointOrigin.worldToLocalMatrix * this.advancedGrabPointAnchor.localToWorldMatrix;
+		foreach (SubGrabPoint subGrabPoint in this.multiPoints)
+		{
+			if (subGrabPoint == null)
+			{
+				break;
+			}
+			subGrabPoint.InitializePoints(anchor, this.advancedGrabPointAnchor, this.advancedGrabPointOrigin);
+		}
+	}
+
+	public void AddLineButton()
+	{
+		this.multiPoints.Add(new SubLineGrabPoint());
+	}
+
+	public void AddSubGrabPoint(TransferrableObjectGripPosition togp)
+	{
+		SubGrabPoint subGrabPoint = togp.CreateSubGrabPoint(this);
+		this.multiPoints.Add(subGrabPoint);
+	}
+
 	public Transform overrideTransform;
 
 	public TransferrableObject.PositionState positionState;
@@ -23,31 +53,7 @@ public class SlotTransformOverride
 	[SerializeReference]
 	public List<SubGrabPoint> multiPoints = new List<SubGrabPoint>();
 
-	public Matrix4x4 grabPointRelativeToObjectAnchor;
+	public Matrix4x4 AdvOriginLocalToParentAnchorLocal;
 
-	public Matrix4x4 GrabPointAnchorRelativeToGripOrigin;
-
-	public void Initialize(Transform anchor)
-	{
-		overrideTransformMatrix = overrideTransform.LocalMatrixRelativeToParentWithScale();
-		if (!useAdvancedGrab)
-		{
-			return;
-		}
-		grabPointRelativeToObjectAnchor = anchor.worldToLocalMatrix * advancedGrabPointOrigin.localToWorldMatrix;
-		GrabPointAnchorRelativeToGripOrigin = advancedGrabPointOrigin.worldToLocalMatrix * advancedGrabPointAnchor.localToWorldMatrix;
-		foreach (SubGrabPoint multiPoint in multiPoints)
-		{
-			if (multiPoint == null)
-			{
-				break;
-			}
-			multiPoint.InitializePoints(anchor, advancedGrabPointAnchor, advancedGrabPointOrigin);
-		}
-	}
-
-	public void AddLineButton()
-	{
-		multiPoints.Add(new SubLineGrabPoint());
-	}
+	public Matrix4x4 AdvAnchorLocalToAdvOriginLocal;
 }

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using GorillaExtensions;
@@ -12,6 +12,779 @@ using UnityEngine.Serialization;
 [RequireComponent(typeof(PhotonView))]
 public class RequestableOwnershipGuard : MonoBehaviourPunCallbacks, ISelfValidator
 {
+	private void SetViewToRequest()
+	{
+		base.GetComponent<PhotonView>().OwnershipTransfer = OwnershipOption.Request;
+	}
+
+	private new PhotonView photonView
+	{
+		get
+		{
+			if (this.photonViews == null)
+			{
+				return null;
+			}
+			if (this.photonViews.Length == 0)
+			{
+				return null;
+			}
+			return this.photonViews[0];
+		}
+	}
+
+	[DevInspectorShow]
+	public bool isTrulyMine
+	{
+		get
+		{
+			return object.Equals(this.actualOwner, PhotonNetwork.LocalPlayer);
+		}
+	}
+
+	public bool isMine
+	{
+		get
+		{
+			return object.Equals(this.currentOwner, PhotonNetwork.LocalPlayer);
+		}
+	}
+
+	private void BindPhotonViews()
+	{
+		this.photonViews = base.GetComponents<PhotonView>();
+	}
+
+	public override void OnDisable()
+	{
+		base.OnDisable();
+		RequestableOwnershipGaurdHandler.RemoveViews(this.photonViews, this);
+		this.currentMasterClient = null;
+		this.currentOwner = null;
+		this.actualOwner = null;
+		this.creator = PhotonNetwork.LocalPlayer;
+		this.currentState = NetworkingState.IsOwner;
+	}
+
+	public override void OnEnable()
+	{
+		base.OnEnable();
+		if (this.autoRegister)
+		{
+			this.BindPhotonViews();
+		}
+		if (this.photonViews == null)
+		{
+			return;
+		}
+		RequestableOwnershipGaurdHandler.RegisterViews(this.photonViews, this);
+		if (!PhotonNetwork.InRoom)
+		{
+			GorillaTagger.OnPlayerSpawned(delegate
+			{
+				this.SetOwnership(PhotonNetwork.LocalPlayer, false, false);
+			});
+			return;
+		}
+		this.currentMasterClient = PhotonNetwork.MasterClient;
+		if (this.photonView.CreatorActorNr != PhotonNetwork.MasterClient.ActorNumber)
+		{
+			this.SetOwnership(PhotonNetwork.CurrentRoom.GetPlayer(this.photonView.CreatorActorNr, false), false, false);
+			return;
+		}
+		if (this.PlayerHasAuthority(PhotonNetwork.LocalPlayer))
+		{
+			this.SetOwnership(PhotonNetwork.LocalPlayer, false, false);
+			this.currentState = NetworkingState.IsOwner;
+			return;
+		}
+		this.currentState = NetworkingState.IsBlindClient;
+		this.SetOwnership(null, false, false);
+		this.RequestTheCurrentOwnerFromAuthority();
+	}
+
+	public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+	{
+		throw new NotImplementedException();
+	}
+
+	public override void OnPlayerEnteredRoom(Player newPlayer)
+	{
+		if (PhotonNetwork.InRoom && this.PlayerHasAuthority(PhotonNetwork.LocalPlayer))
+		{
+			this.photonView.RPC("SetOwnershipFromMasterClient", newPlayer, new object[] { this.currentOwner });
+		}
+	}
+
+	public override void OnPreLeavingRoom()
+	{
+		if (!PhotonNetwork.InRoom)
+		{
+			return;
+		}
+		switch (this.currentState)
+		{
+		case NetworkingState.IsOwner:
+		case NetworkingState.IsBlindClient:
+		case NetworkingState.RequestingOwnershipWaitingForSight:
+		case NetworkingState.ForcefullyTakingOverWaitingForSight:
+			break;
+		case NetworkingState.IsClient:
+		case NetworkingState.ForcefullyTakingOver:
+		case NetworkingState.RequestingOwnership:
+			this.callbacksList.ForEachBackwards(delegate(IRequestableOwnershipGuardCallbacks callback)
+			{
+				callback.OnMyOwnerLeft();
+			});
+			break;
+		default:
+			throw new ArgumentOutOfRangeException();
+		}
+		this.SetOwnership(PhotonNetwork.LocalPlayer, false, false);
+	}
+
+	public override void OnJoinedRoom()
+	{
+		this.currentMasterClient = PhotonNetwork.MasterClient;
+		if (this.PlayerHasAuthority(PhotonNetwork.LocalPlayer))
+		{
+			this.SetOwnership(PhotonNetwork.LocalPlayer, false, false);
+			this.currentState = NetworkingState.IsOwner;
+			return;
+		}
+		this.currentState = NetworkingState.IsBlindClient;
+		this.SetOwnership(null, false, false);
+	}
+
+	public override void OnPlayerLeftRoom(Player otherPlayer)
+	{
+		base.OnPlayerLeftRoom(otherPlayer);
+		switch (this.currentState)
+		{
+		case NetworkingState.IsOwner:
+		case NetworkingState.RequestingOwnershipWaitingForSight:
+		case NetworkingState.ForcefullyTakingOverWaitingForSight:
+			break;
+		case NetworkingState.IsBlindClient:
+			if (this.PlayerHasAuthority(PhotonNetwork.LocalPlayer))
+			{
+				this.SetOwnership(PhotonNetwork.LocalPlayer, false, false);
+				return;
+			}
+			this.RequestTheCurrentOwnerFromAuthority();
+			return;
+		case NetworkingState.IsClient:
+			if (this.creator != null && object.Equals(this.creator, otherPlayer))
+			{
+				this.callbacksList.ForEachBackwards(delegate(IRequestableOwnershipGuardCallbacks callback)
+				{
+					callback.OnMyCreatorLeft();
+				});
+			}
+			if (object.Equals(this.actualOwner, otherPlayer))
+			{
+				this.callbacksList.ForEachBackwards(delegate(IRequestableOwnershipGuardCallbacks callback)
+				{
+					callback.OnMyOwnerLeft();
+				});
+				if (this.fallbackOwner != null)
+				{
+					this.SetOwnership(this.fallbackOwner, false, false);
+					return;
+				}
+				this.SetOwnership(this.currentMasterClient, false, false);
+				return;
+			}
+			break;
+		case NetworkingState.ForcefullyTakingOver:
+		case NetworkingState.RequestingOwnership:
+			if (this.creator != null && object.Equals(this.creator, otherPlayer))
+			{
+				this.callbacksList.ForEachBackwards(delegate(IRequestableOwnershipGuardCallbacks callback)
+				{
+					callback.OnMyCreatorLeft();
+				});
+			}
+			if (this.currentState == NetworkingState.ForcefullyTakingOver && object.Equals(this.currentOwner, otherPlayer))
+			{
+				this.callbacksList.ForEachBackwards(delegate(IRequestableOwnershipGuardCallbacks callback)
+				{
+					callback.OnMyOwnerLeft();
+				});
+			}
+			if (object.Equals(this.actualOwner, otherPlayer))
+			{
+				if (this.fallbackOwner != null)
+				{
+					this.SetOwnership(this.fallbackOwner, false, false);
+					if (object.Equals(this.fallbackOwner, PhotonNetwork.LocalPlayer))
+					{
+						Action action = this.ownershipRequestAccepted;
+						if (action == null)
+						{
+							return;
+						}
+						action();
+						return;
+					}
+					else
+					{
+						Action action2 = this.ownershipDenied;
+						if (action2 == null)
+						{
+							return;
+						}
+						action2();
+						return;
+					}
+				}
+				else if (object.Equals(this.currentMasterClient, PhotonNetwork.LocalPlayer))
+				{
+					Action action3 = this.ownershipRequestAccepted;
+					if (action3 == null)
+					{
+						return;
+					}
+					action3();
+					return;
+				}
+				else
+				{
+					Action action4 = this.ownershipDenied;
+					if (action4 == null)
+					{
+						return;
+					}
+					action4();
+					return;
+				}
+			}
+			break;
+		default:
+			throw new ArgumentOutOfRangeException();
+		}
+	}
+
+	public override void OnMasterClientSwitched(Player newMasterClient)
+	{
+		switch (this.currentState)
+		{
+		case NetworkingState.IsOwner:
+		case NetworkingState.IsClient:
+			if (this.actualOwner == null && this.currentMasterClient == null)
+			{
+				this.SetOwnership(newMasterClient, false, false);
+			}
+			break;
+		case NetworkingState.IsBlindClient:
+			if (object.Equals(newMasterClient, PhotonNetwork.LocalPlayer))
+			{
+				this.SetOwnership(PhotonNetwork.LocalPlayer, false, false);
+			}
+			else
+			{
+				this.RequestTheCurrentOwnerFromAuthority();
+			}
+			break;
+		case NetworkingState.ForcefullyTakingOver:
+		case NetworkingState.RequestingOwnership:
+		case NetworkingState.RequestingOwnershipWaitingForSight:
+		case NetworkingState.ForcefullyTakingOverWaitingForSight:
+			break;
+		default:
+			throw new ArgumentOutOfRangeException();
+		}
+		this.currentMasterClient = newMasterClient;
+	}
+
+	[PunRPC]
+	public void RequestCurrentOwnerFromAuthorityRPC(PhotonMessageInfo info)
+	{
+		GorillaNot.IncrementRPCCall(info, "RequestCurrentOwnerFromAuthorityRPC");
+		if (!this.PlayerHasAuthority(PhotonNetwork.LocalPlayer))
+		{
+			return;
+		}
+		this.photonView.RPC("SetOwnershipFromMasterClient", info.Sender, new object[] { this.actualOwner });
+	}
+
+	[PunRPC]
+	public void TransferOwnershipFromToRPC([CanBeNull] Player player, string nonce, PhotonMessageInfo info)
+	{
+		GorillaNot.IncrementRPCCall(info, "TransferOwnershipFromToRPC");
+		if (!this.PlayerHasAuthority(PhotonNetwork.LocalPlayer) && this.photonView.OwnerActorNr != info.Sender.ActorNumber)
+		{
+			Player player2 = this.currentOwner;
+			int? num = ((player2 != null) ? new int?(player2.ActorNumber) : null);
+			int num2 = info.Sender.ActorNumber;
+			if (!((num.GetValueOrDefault() == num2) & (num != null)))
+			{
+				Player player3 = this.actualOwner;
+				num = ((player3 != null) ? new int?(player3.ActorNumber) : null);
+				num2 = info.Sender.ActorNumber;
+				if (!((num.GetValueOrDefault() == num2) & (num != null)))
+				{
+					return;
+				}
+			}
+		}
+		if (this.currentOwner == null)
+		{
+			this.RequestTheCurrentOwnerFromAuthority();
+			return;
+		}
+		if (this.currentOwner.ActorNumber != this.photonView.OwnerActorNr)
+		{
+			return;
+		}
+		if (this.actualOwner.ActorNumber == player.ActorNumber)
+		{
+			return;
+		}
+		switch (this.currentState)
+		{
+		case NetworkingState.IsClient:
+			this.SetOwnership(player, false, false);
+			return;
+		case NetworkingState.ForcefullyTakingOver:
+		case NetworkingState.RequestingOwnership:
+			if (this.ownershipRequestNonce == nonce)
+			{
+				this.ownershipRequestNonce = "";
+				this.SetOwnership(PhotonNetwork.LocalPlayer, false, false);
+				return;
+			}
+			this.actualOwner = player;
+			return;
+		case NetworkingState.RequestingOwnershipWaitingForSight:
+		case NetworkingState.ForcefullyTakingOverWaitingForSight:
+			this.RequestTheCurrentOwnerFromAuthority();
+			return;
+		}
+		throw new ArgumentOutOfRangeException();
+	}
+
+	[PunRPC]
+	public void SetOwnershipFromMasterClient([CanBeNull] Player player, PhotonMessageInfo info)
+	{
+		GorillaNot.IncrementRPCCall(info, "SetOwnershipFromMasterClient");
+		if (player == null)
+		{
+			return;
+		}
+		if (!this.PlayerHasAuthority(info.Sender))
+		{
+			GorillaNot.instance.SendReport("Sent an SetOwnershipFromMasterClient when they weren't the master client", info.Sender.UserId, info.Sender.NickName);
+			return;
+		}
+		NetworkingState networkingState;
+		if (this.currentOwner == null)
+		{
+			networkingState = this.currentState;
+			if (networkingState != NetworkingState.IsBlindClient)
+			{
+				int num = networkingState - NetworkingState.RequestingOwnershipWaitingForSight;
+			}
+		}
+		networkingState = this.currentState;
+		if (networkingState - NetworkingState.ForcefullyTakingOver <= 3 && object.Equals(player, PhotonNetwork.LocalPlayer))
+		{
+			Action action = this.ownershipRequestAccepted;
+			if (action != null)
+			{
+				action();
+			}
+			this.SetOwnership(player, false, false);
+			return;
+		}
+		switch (this.currentState)
+		{
+		case NetworkingState.IsOwner:
+		case NetworkingState.IsBlindClient:
+		case NetworkingState.IsClient:
+			this.SetOwnership(player, false, false);
+			return;
+		case NetworkingState.ForcefullyTakingOver:
+			this.actualOwner = player;
+			this.currentState = NetworkingState.ForcefullyTakingOver;
+			return;
+		case NetworkingState.RequestingOwnership:
+			this.SetOwnership(PhotonNetwork.LocalPlayer, false, false);
+			this.currentState = NetworkingState.RequestingOwnership;
+			return;
+		case NetworkingState.RequestingOwnershipWaitingForSight:
+			this.SetOwnership(PhotonNetwork.LocalPlayer, false, false);
+			this.currentState = NetworkingState.RequestingOwnership;
+			this.ownershipRequestNonce = Guid.NewGuid().ToString();
+			this.photonView.RPC("OwnershipRequested", this.actualOwner, new object[] { this.ownershipRequestNonce });
+			return;
+		case NetworkingState.ForcefullyTakingOverWaitingForSight:
+			this.actualOwner = player;
+			this.currentState = NetworkingState.ForcefullyTakingOver;
+			this.ownershipRequestNonce = Guid.NewGuid().ToString();
+			this.photonView.RPC("OwnershipRequested", this.actualOwner, new object[] { this.ownershipRequestNonce });
+			return;
+		default:
+			throw new ArgumentOutOfRangeException();
+		}
+	}
+
+	[PunRPC]
+	public void OnMasterClientAssistedTakeoverRequest(string nonce, PhotonMessageInfo info)
+	{
+		GorillaNot.IncrementRPCCall(info, "OnMasterClientAssistedTakeoverRequest");
+		bool flag = true;
+		using (List<IRequestableOwnershipGuardCallbacks>.Enumerator enumerator = this.callbacksList.GetEnumerator())
+		{
+			while (enumerator.MoveNext())
+			{
+				if (!enumerator.Current.OnMasterClientAssistedTakeoverRequest(this.actualOwner, info.Sender))
+				{
+					flag = false;
+				}
+			}
+		}
+		if (!flag)
+		{
+			this.photonView.RPC("OwnershipRequestDenied", info.Sender, new object[] { nonce });
+			return;
+		}
+		this.TransferOwnership(info.Sender, nonce);
+	}
+
+	[PunRPC]
+	public void OwnershipRequested(string nonce, PhotonMessageInfo info)
+	{
+		GorillaNot.IncrementRPCCall(info, "OwnershipRequested");
+		if (info.Sender == PhotonNetwork.LocalPlayer)
+		{
+			return;
+		}
+		bool flag = true;
+		using (List<IRequestableOwnershipGuardCallbacks>.Enumerator enumerator = this.callbacksList.GetEnumerator())
+		{
+			while (enumerator.MoveNext())
+			{
+				if (!enumerator.Current.OnOwnershipRequest(info.Sender))
+				{
+					flag = false;
+				}
+			}
+		}
+		if (!flag)
+		{
+			this.photonView.RPC("OwnershipRequestDenied", info.Sender, new object[] { nonce });
+			return;
+		}
+		this.TransferOwnership(info.Sender, nonce);
+	}
+
+	private void TransferOwnershipWithID(int id)
+	{
+		this.TransferOwnership(PhotonNetwork.CurrentRoom.GetPlayer(id, false), "");
+	}
+
+	public void TransferOwnership(Player player, string Nonce = "")
+	{
+		if (this.photonView.IsMine)
+		{
+			this.SetOwnership(player, false, false);
+			this.photonView.RPC("TransferOwnershipFromToRPC", RpcTarget.Others, new object[] { player, Nonce });
+			return;
+		}
+		if (this.PlayerHasAuthority(PhotonNetwork.LocalPlayer))
+		{
+			this.SetOwnership(player, false, false);
+			this.photonView.RPC("SetOwnershipFromMasterClient", RpcTarget.Others, new object[] { player });
+			return;
+		}
+		Debug.LogError("Tried to transfer ownership when im not the owner or a master client");
+	}
+
+	public void RequestTheCurrentOwnerFromAuthority()
+	{
+		this.photonView.RPC("RequestCurrentOwnerFromAuthorityRPC", this.GetAuthoritativePlayer(), Array.Empty<object>());
+	}
+
+	protected void SetCurrentOwner(Player player)
+	{
+		if (player == null)
+		{
+			this.currentOwner = null;
+		}
+		else
+		{
+			this.currentOwner = player;
+		}
+		foreach (PhotonView photonView in this.photonViews)
+		{
+			if (player == null)
+			{
+				photonView.OwnerActorNr = -1;
+				photonView.ControllerActorNr = -1;
+			}
+			else
+			{
+				photonView.OwnerActorNr = player.ActorNumber;
+				photonView.ControllerActorNr = player.ActorNumber;
+			}
+		}
+	}
+
+	protected internal void SetOwnership(Player player, bool isLocalOnly = false, bool dontPropigate = false)
+	{
+		if (!object.Equals(player, this.currentOwner) && !dontPropigate)
+		{
+			this.callbacksList.ForEachBackwards(delegate(IRequestableOwnershipGuardCallbacks actualOwner)
+			{
+				actualOwner.OnOwnershipTransferred(player, this.currentOwner);
+			});
+		}
+		this.SetCurrentOwner(player);
+		if (isLocalOnly)
+		{
+			return;
+		}
+		this.actualOwner = player;
+		if (player == null)
+		{
+			return;
+		}
+		if (player.ActorNumber == PhotonNetwork.LocalPlayer.ActorNumber)
+		{
+			this.currentState = NetworkingState.IsOwner;
+			return;
+		}
+		this.currentState = NetworkingState.IsClient;
+	}
+
+	public Player GetAuthoritativePlayer()
+	{
+		if (this.giveCreatorAbsoluteAuthority)
+		{
+			return this.creator;
+		}
+		return PhotonNetwork.MasterClient;
+	}
+
+	public bool PlayerHasAuthority(Player player)
+	{
+		return object.Equals(this.GetAuthoritativePlayer(), player);
+	}
+
+	[PunRPC]
+	public void OwnershipRequestDenied(string nonce, PhotonMessageInfo info)
+	{
+		GorillaNot.IncrementRPCCall(info, "OwnershipRequestDenied");
+		int actorNumber = info.Sender.ActorNumber;
+		Player player = this.actualOwner;
+		int? num = ((player != null) ? new int?(player.ActorNumber) : null);
+		if (!((actorNumber == num.GetValueOrDefault()) & (num != null)) && !this.PlayerHasAuthority(info.Sender))
+		{
+			return;
+		}
+		if (this.attemptMasterAssistedTakeoverOnDeny)
+		{
+			this.ownershipRequestNonce = Guid.NewGuid().ToString();
+			this.photonView.RPC("OnMasterClientAssistedTakeoverRequest", RpcTarget.MasterClient, new object[] { this.ownershipRequestNonce });
+			this.attemptMasterAssistedTakeoverOnDeny = false;
+			return;
+		}
+		Action action = this.ownershipDenied;
+		if (action != null)
+		{
+			action();
+		}
+		this.ownershipDenied = null;
+		switch (this.currentState)
+		{
+		case NetworkingState.IsOwner:
+		case NetworkingState.IsBlindClient:
+		case NetworkingState.IsClient:
+			return;
+		case NetworkingState.ForcefullyTakingOver:
+		case NetworkingState.RequestingOwnership:
+			this.currentState = NetworkingState.IsClient;
+			this.SetOwnership(this.actualOwner, false, false);
+			return;
+		case NetworkingState.RequestingOwnershipWaitingForSight:
+		case NetworkingState.ForcefullyTakingOverWaitingForSight:
+			this.photonView.RPC("OwnershipRequested", this.actualOwner, new object[] { this.ownershipRequestNonce });
+			return;
+		default:
+			throw new ArgumentOutOfRangeException();
+		}
+	}
+
+	public IEnumerator RequestTimeout()
+	{
+		Debug.Log(string.Format("Timeout request started...  {0} ", this.currentState));
+		yield return new WaitForSecondsRealtime(2f);
+		Debug.Log(string.Format("Timeout request ended! {0} ", this.currentState));
+		switch (this.currentState)
+		{
+		case NetworkingState.IsOwner:
+		case NetworkingState.IsBlindClient:
+		case NetworkingState.IsClient:
+			break;
+		case NetworkingState.ForcefullyTakingOver:
+		case NetworkingState.RequestingOwnership:
+			this.currentState = NetworkingState.IsClient;
+			this.SetOwnership(this.actualOwner, false, false);
+			break;
+		case NetworkingState.RequestingOwnershipWaitingForSight:
+		case NetworkingState.ForcefullyTakingOverWaitingForSight:
+			this.photonView.RPC("OwnershipRequested", this.actualOwner, new object[] { this.ownershipRequestNonce });
+			break;
+		default:
+			throw new ArgumentOutOfRangeException();
+		}
+		yield break;
+	}
+
+	public void RequestOwnership(Action onRequestSuccess, Action onRequestFailed)
+	{
+		switch (this.currentState)
+		{
+		case NetworkingState.IsOwner:
+			return;
+		case NetworkingState.IsBlindClient:
+			this.ownershipDenied = (Action)Delegate.Combine(this.ownershipDenied, onRequestFailed);
+			this.currentState = NetworkingState.RequestingOwnershipWaitingForSight;
+			base.StartCoroutine("RequestTimeout");
+			return;
+		case NetworkingState.IsClient:
+			this.ownershipDenied = (Action)Delegate.Combine(this.ownershipDenied, onRequestFailed);
+			this.ownershipRequestNonce = Guid.NewGuid().ToString();
+			this.currentState = NetworkingState.RequestingOwnership;
+			this.photonView.RPC("OwnershipRequested", this.actualOwner, new object[] { this.ownershipRequestNonce });
+			base.StartCoroutine("RequestTimeout");
+			return;
+		case NetworkingState.ForcefullyTakingOver:
+		case NetworkingState.RequestingOwnership:
+		case NetworkingState.RequestingOwnershipWaitingForSight:
+		case NetworkingState.ForcefullyTakingOverWaitingForSight:
+			this.ownershipDenied = (Action)Delegate.Combine(this.ownershipDenied, onRequestFailed);
+			base.StartCoroutine("RequestTimeout");
+			return;
+		default:
+			throw new ArgumentOutOfRangeException();
+		}
+	}
+
+	public void RequestOwnershipImmediately(Action onRequestFailed)
+	{
+		Debug.Log("WorldShareable RequestOwnershipImmediately");
+		if (this.PlayerHasAuthority(PhotonNetwork.LocalPlayer))
+		{
+			this.RequestOwnershipImmediatelyWithGuaranteedAuthority();
+			return;
+		}
+		switch (this.currentState)
+		{
+		case NetworkingState.IsOwner:
+		{
+			bool inRoom = PhotonNetwork.InRoom;
+			return;
+		}
+		case NetworkingState.IsBlindClient:
+			this.ownershipDenied = (Action)Delegate.Combine(this.ownershipDenied, onRequestFailed);
+			this.currentState = NetworkingState.ForcefullyTakingOverWaitingForSight;
+			this.SetOwnership(PhotonNetwork.LocalPlayer, true, false);
+			this.RequestTheCurrentOwnerFromAuthority();
+			return;
+		case NetworkingState.IsClient:
+			this.ownershipDenied = (Action)Delegate.Combine(this.ownershipDenied, onRequestFailed);
+			this.ownershipRequestNonce = Guid.NewGuid().ToString();
+			this.currentState = NetworkingState.ForcefullyTakingOver;
+			this.SetOwnership(PhotonNetwork.LocalPlayer, true, false);
+			this.photonView.RPC("OwnershipRequested", this.actualOwner, new object[] { this.ownershipRequestNonce });
+			base.StartCoroutine("RequestTimeout");
+			return;
+		case NetworkingState.ForcefullyTakingOver:
+		case NetworkingState.RequestingOwnership:
+			this.ownershipDenied = (Action)Delegate.Combine(this.ownershipDenied, onRequestFailed);
+			this.currentState = NetworkingState.ForcefullyTakingOver;
+			base.StartCoroutine("RequestTimeout");
+			return;
+		default:
+			throw new ArgumentOutOfRangeException();
+		}
+	}
+
+	public void RequestOwnershipImmediatelyWithGuaranteedAuthority()
+	{
+		Debug.Log("WorldShareable RequestOwnershipImmediatelyWithGuaranteedAuthority");
+		if (!this.PlayerHasAuthority(PhotonNetwork.LocalPlayer))
+		{
+			Debug.LogError("Tried to request ownership immediately with guaranteed authority without acutely having authority ");
+		}
+		switch (this.currentState)
+		{
+		case NetworkingState.IsOwner:
+			return;
+		case NetworkingState.IsBlindClient:
+			this.currentState = NetworkingState.ForcefullyTakingOverWaitingForSight;
+			this.SetOwnership(PhotonNetwork.LocalPlayer, true, false);
+			this.RequestTheCurrentOwnerFromAuthority();
+			return;
+		case NetworkingState.IsClient:
+			this.currentState = NetworkingState.ForcefullyTakingOver;
+			this.SetOwnership(PhotonNetwork.LocalPlayer, true, false);
+			this.photonView.RPC("SetOwnershipFromMasterClient", RpcTarget.All, new object[] { PhotonNetwork.LocalPlayer });
+			base.StartCoroutine("RequestTimeout");
+			return;
+		case NetworkingState.ForcefullyTakingOver:
+		case NetworkingState.RequestingOwnership:
+			this.currentState = NetworkingState.ForcefullyTakingOver;
+			base.StartCoroutine("RequestTimeout");
+			return;
+		default:
+			throw new ArgumentOutOfRangeException();
+		}
+	}
+
+	public void Validate(SelfValidationResult result)
+	{
+	}
+
+	public void AddCallbackTarget(IRequestableOwnershipGuardCallbacks callbackObject)
+	{
+		if (!this.callbacksList.Contains(callbackObject))
+		{
+			this.callbacksList.Add(callbackObject);
+			if (this.currentOwner != null)
+			{
+				callbackObject.OnOwnershipTransferred(this.currentOwner, null);
+			}
+		}
+	}
+
+	public void RemoveCallbackTarget(IRequestableOwnershipGuardCallbacks callbackObject)
+	{
+		if (this.callbacksList.Contains(callbackObject))
+		{
+			this.callbacksList.Remove(callbackObject);
+			if (this.currentOwner != null)
+			{
+				callbackObject.OnOwnershipTransferred(null, this.currentOwner);
+			}
+		}
+	}
+
+	public void SetCreator(Player player)
+	{
+		this.creator = player;
+	}
+
+	private NetworkingState EdCurrentState
+	{
+		get
+		{
+			return this.currentState;
+		}
+	}
+
 	[DevInspectorShow]
 	[DevInspectorColor("#ff5")]
 	public NetworkingState currentState;
@@ -62,740 +835,4 @@ public class RequestableOwnershipGuard : MonoBehaviourPunCallbacks, ISelfValidat
 	public string ownershipRequestNonce;
 
 	public List<IRequestableOwnershipGuardCallbacks> callbacksList = new List<IRequestableOwnershipGuardCallbacks>();
-
-	private new PhotonView photonView
-	{
-		get
-		{
-			if (photonViews == null)
-			{
-				return null;
-			}
-			if (photonViews.Length == 0)
-			{
-				return null;
-			}
-			return photonViews[0];
-		}
-	}
-
-	[DevInspectorShow]
-	public bool isTrulyMine => object.Equals(actualOwner, PhotonNetwork.LocalPlayer);
-
-	public bool isMine => object.Equals(currentOwner, PhotonNetwork.LocalPlayer);
-
-	private NetworkingState EdCurrentState => currentState;
-
-	private void SetViewToRequest()
-	{
-		GetComponent<PhotonView>().OwnershipTransfer = OwnershipOption.Request;
-	}
-
-	private void BindPhotonViews()
-	{
-		photonViews = GetComponents<PhotonView>();
-	}
-
-	public override void OnDisable()
-	{
-		base.OnDisable();
-		RequestableOwnershipGaurdHandler.RemoveViews(photonViews, this);
-		currentMasterClient = null;
-		currentOwner = null;
-		actualOwner = null;
-		creator = PhotonNetwork.LocalPlayer;
-		currentState = NetworkingState.IsOwner;
-	}
-
-	public override void OnEnable()
-	{
-		base.OnEnable();
-		if (autoRegister)
-		{
-			BindPhotonViews();
-		}
-		if (photonViews == null)
-		{
-			return;
-		}
-		RequestableOwnershipGaurdHandler.RegisterViews(photonViews, this);
-		if (PhotonNetwork.InRoom)
-		{
-			currentMasterClient = PhotonNetwork.MasterClient;
-			if (photonView.CreatorActorNr != PhotonNetwork.MasterClient.ActorNumber)
-			{
-				SetOwnership(PhotonNetwork.CurrentRoom.GetPlayer(photonView.CreatorActorNr));
-			}
-			else if (PlayerHasAuthority(PhotonNetwork.LocalPlayer))
-			{
-				SetOwnership(PhotonNetwork.LocalPlayer);
-				currentState = NetworkingState.IsOwner;
-			}
-			else
-			{
-				currentState = NetworkingState.IsBlindClient;
-				SetOwnership(null);
-				RequestTheCurrentOwnerFromAuthority();
-			}
-		}
-		else
-		{
-			GorillaTagger.OnPlayerSpawned(delegate
-			{
-				SetOwnership(PhotonNetwork.LocalPlayer);
-			});
-		}
-	}
-
-	public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-	{
-		throw new NotImplementedException();
-	}
-
-	public override void OnPlayerEnteredRoom(Player newPlayer)
-	{
-		Debug.Log($"Seeing if i can send Ownership to new player {PhotonNetwork.InRoom} {PhotonNetwork.LocalPlayer.IsMasterClient}");
-		if (PhotonNetwork.InRoom && PlayerHasAuthority(PhotonNetwork.LocalPlayer))
-		{
-			Debug.Log("Sending Ownership to new player");
-			photonView.RPC("SetOwnershipFromMasterClient", newPlayer, currentOwner);
-		}
-	}
-
-	public override void OnPreLeavingRoom()
-	{
-		if (!PhotonNetwork.InRoom)
-		{
-			return;
-		}
-		Debug.Log("Pre leaving room", this);
-		switch (currentState)
-		{
-		case NetworkingState.IsClient:
-		case NetworkingState.ForcefullyTakingOver:
-		case NetworkingState.RequestingOwnership:
-			callbacksList.ForEachBackwards(delegate(IRequestableOwnershipGuardCallbacks callback)
-			{
-				callback.OnMyOwnerLeft();
-			});
-			break;
-		default:
-			throw new ArgumentOutOfRangeException();
-		case NetworkingState.IsOwner:
-		case NetworkingState.IsBlindClient:
-		case NetworkingState.RequestingOwnershipWaitingForSight:
-		case NetworkingState.ForcefullyTakingOverWaitingForSight:
-			break;
-		}
-		SetOwnership(PhotonNetwork.LocalPlayer);
-	}
-
-	public override void OnJoinedRoom()
-	{
-		Debug.Log("Joined room, Setting self to blind client");
-		currentMasterClient = PhotonNetwork.MasterClient;
-		if (PlayerHasAuthority(PhotonNetwork.LocalPlayer))
-		{
-			SetOwnership(PhotonNetwork.LocalPlayer);
-			currentState = NetworkingState.IsOwner;
-		}
-		else
-		{
-			currentState = NetworkingState.IsBlindClient;
-			SetOwnership(null);
-		}
-	}
-
-	public override void OnPlayerLeftRoom(Player otherPlayer)
-	{
-		base.OnPlayerLeftRoom(otherPlayer);
-		switch (currentState)
-		{
-		case NetworkingState.IsClient:
-			if (creator != null && object.Equals(creator, otherPlayer))
-			{
-				callbacksList.ForEachBackwards(delegate(IRequestableOwnershipGuardCallbacks callback)
-				{
-					callback.OnMyCreatorLeft();
-				});
-			}
-			if (object.Equals(actualOwner, otherPlayer))
-			{
-				callbacksList.ForEachBackwards(delegate(IRequestableOwnershipGuardCallbacks callback)
-				{
-					callback.OnMyOwnerLeft();
-				});
-				if (fallbackOwner != null)
-				{
-					SetOwnership(fallbackOwner);
-				}
-				else
-				{
-					SetOwnership(currentMasterClient);
-				}
-			}
-			break;
-		case NetworkingState.IsBlindClient:
-			if (PlayerHasAuthority(PhotonNetwork.LocalPlayer))
-			{
-				SetOwnership(PhotonNetwork.LocalPlayer);
-			}
-			else
-			{
-				RequestTheCurrentOwnerFromAuthority();
-			}
-			break;
-		case NetworkingState.ForcefullyTakingOver:
-		case NetworkingState.RequestingOwnership:
-			if (creator != null && object.Equals(creator, otherPlayer))
-			{
-				callbacksList.ForEachBackwards(delegate(IRequestableOwnershipGuardCallbacks callback)
-				{
-					callback.OnMyCreatorLeft();
-				});
-			}
-			if (currentState == NetworkingState.ForcefullyTakingOver && object.Equals(currentOwner, otherPlayer))
-			{
-				callbacksList.ForEachBackwards(delegate(IRequestableOwnershipGuardCallbacks callback)
-				{
-					callback.OnMyOwnerLeft();
-				});
-			}
-			if (!object.Equals(actualOwner, otherPlayer))
-			{
-				break;
-			}
-			if (fallbackOwner != null)
-			{
-				SetOwnership(fallbackOwner);
-				if (object.Equals(fallbackOwner, PhotonNetwork.LocalPlayer))
-				{
-					ownershipRequestAccepted?.Invoke();
-				}
-				else
-				{
-					ownershipDenied?.Invoke();
-				}
-			}
-			else if (object.Equals(currentMasterClient, PhotonNetwork.LocalPlayer))
-			{
-				ownershipRequestAccepted?.Invoke();
-			}
-			else
-			{
-				ownershipDenied?.Invoke();
-			}
-			break;
-		default:
-			throw new ArgumentOutOfRangeException();
-		case NetworkingState.IsOwner:
-		case NetworkingState.RequestingOwnershipWaitingForSight:
-		case NetworkingState.ForcefullyTakingOverWaitingForSight:
-			break;
-		}
-	}
-
-	public override void OnMasterClientSwitched(Player newMasterClient)
-	{
-		switch (currentState)
-		{
-		case NetworkingState.IsOwner:
-		case NetworkingState.IsClient:
-			if (actualOwner == null && currentMasterClient == null)
-			{
-				SetOwnership(newMasterClient);
-			}
-			break;
-		case NetworkingState.IsBlindClient:
-			if (object.Equals(newMasterClient, PhotonNetwork.LocalPlayer))
-			{
-				SetOwnership(PhotonNetwork.LocalPlayer);
-			}
-			else
-			{
-				RequestTheCurrentOwnerFromAuthority();
-			}
-			break;
-		default:
-			throw new ArgumentOutOfRangeException();
-		case NetworkingState.ForcefullyTakingOver:
-		case NetworkingState.RequestingOwnership:
-		case NetworkingState.RequestingOwnershipWaitingForSight:
-		case NetworkingState.ForcefullyTakingOverWaitingForSight:
-			break;
-		}
-		currentMasterClient = newMasterClient;
-	}
-
-	[PunRPC]
-	public void RequestCurrentOwnerFromAuthorityRPC(PhotonMessageInfo info)
-	{
-		if (!PlayerHasAuthority(PhotonNetwork.LocalPlayer))
-		{
-			Debug.LogError("Got an assurance request but we arent the master client");
-			return;
-		}
-		photonView.RPC("SetOwnershipFromMasterClient", info.Sender, actualOwner);
-	}
-
-	[PunRPC]
-	public void TransferOwnershipFromToRPC([CanBeNull] Player player, string nonce, PhotonMessageInfo info)
-	{
-		Debug.Log($"TransferOwnershipFromToRPC player: {player.ActorNumber}, nonce: {nonce}, sender: {info.Sender.ActorNumber}");
-		Debug.LogFormat("TransferOwnershipFromToRPC player: {0}, nonce: {1}, sender: {2}", player.ActorNumber, nonce, info.Sender.ActorNumber);
-		if (!PlayerHasAuthority(PhotonNetwork.LocalPlayer) && photonView.OwnerActorNr != info.Sender.ActorNumber && currentOwner?.ActorNumber != info.Sender.ActorNumber && actualOwner?.ActorNumber != info.Sender.ActorNumber)
-		{
-			Debug.LogError("Got transfer request but the sender does not match the current owner");
-			return;
-		}
-		if (currentOwner == null)
-		{
-			Debug.LogError("Tried to transfer ownership when the currentOwner is null. This happens if we just loaded in and haven't been told the current owner by the master client yet.");
-			RequestTheCurrentOwnerFromAuthority();
-			return;
-		}
-		if (currentOwner.ActorNumber != photonView.OwnerActorNr)
-		{
-			Debug.LogError("The stored actor number does not match the current actor number. Possible Attacker attempt or desync?");
-			return;
-		}
-		if (actualOwner.ActorNumber == player.ActorNumber)
-		{
-			Debug.LogError("Tried to set the new owner to ourselves? This shouldn't happen.");
-			return;
-		}
-		switch (currentState)
-		{
-		case NetworkingState.IsClient:
-			SetOwnership(player);
-			break;
-		case NetworkingState.ForcefullyTakingOver:
-		case NetworkingState.RequestingOwnership:
-			if (ownershipRequestNonce == nonce)
-			{
-				ownershipRequestNonce = "";
-				SetOwnership(PhotonNetwork.LocalPlayer);
-			}
-			else
-			{
-				actualOwner = player;
-			}
-			break;
-		case NetworkingState.RequestingOwnershipWaitingForSight:
-		case NetworkingState.ForcefullyTakingOverWaitingForSight:
-			RequestTheCurrentOwnerFromAuthority();
-			break;
-		default:
-			throw new ArgumentOutOfRangeException();
-		}
-	}
-
-	[PunRPC]
-	public void SetOwnershipFromMasterClient([CanBeNull] Player player, PhotonMessageInfo info)
-	{
-		if (player == null)
-		{
-			Debug.LogError("SetOwnershipFromMasterClient: Player that was requested to be set is null");
-			return;
-		}
-		Debug.LogFormat("SetOwnershipFromMasterClient player: {0}, sender: {1}", player.ActorNumber, info.Sender.ActorNumber);
-		if (!PlayerHasAuthority(info.Sender))
-		{
-			Debug.LogError("Got Master client only request from a non masterclient, Ignoring.");
-			GorillaNot.instance.SendReport("Sent an SetOwnershipFromMasterClient when they weren't the master client", info.Sender.UserId, info.Sender.NickName);
-			return;
-		}
-		NetworkingState networkingState;
-		if (currentOwner == null)
-		{
-			networkingState = currentState;
-			if (networkingState != NetworkingState.IsBlindClient)
-			{
-				_ = networkingState - 5;
-				_ = 1;
-			}
-		}
-		if (currentOwner != null && currentOwner?.ActorNumber != photonView.OwnerActorNr)
-		{
-			Debug.LogError("The stored actor number does not match the current actor number. Possible Attacker attempt or desync? Continuing regardless.\ncurrentOwner?.ActorNumber != photonView.OwnerActorNr\n" + $"{currentOwner?.ActorNumber} != {photonView.OwnerActorNr}", this);
-		}
-		if (object.Equals(actualOwner, player))
-		{
-			Debug.LogWarning("Tried to set the new owner to what it is already set too? This shouldn't happen. Continuing regardless", this);
-		}
-		networkingState = currentState;
-		if ((uint)(networkingState - 3) <= 3u && object.Equals(player, PhotonNetwork.LocalPlayer))
-		{
-			ownershipRequestAccepted?.Invoke();
-			SetOwnership(player);
-			return;
-		}
-		switch (currentState)
-		{
-		case NetworkingState.IsOwner:
-		case NetworkingState.IsBlindClient:
-		case NetworkingState.IsClient:
-			SetOwnership(player);
-			break;
-		case NetworkingState.ForcefullyTakingOverWaitingForSight:
-			actualOwner = player;
-			currentState = NetworkingState.ForcefullyTakingOver;
-			ownershipRequestNonce = Guid.NewGuid().ToString();
-			photonView.RPC("OwnershipRequested", actualOwner, ownershipRequestNonce);
-			break;
-		case NetworkingState.ForcefullyTakingOver:
-			actualOwner = player;
-			currentState = NetworkingState.ForcefullyTakingOver;
-			break;
-		case NetworkingState.RequestingOwnershipWaitingForSight:
-			SetOwnership(PhotonNetwork.LocalPlayer);
-			currentState = NetworkingState.RequestingOwnership;
-			ownershipRequestNonce = Guid.NewGuid().ToString();
-			photonView.RPC("OwnershipRequested", actualOwner, ownershipRequestNonce);
-			break;
-		case NetworkingState.RequestingOwnership:
-			SetOwnership(PhotonNetwork.LocalPlayer);
-			currentState = NetworkingState.RequestingOwnership;
-			break;
-		default:
-			throw new ArgumentOutOfRangeException();
-		}
-	}
-
-	[PunRPC]
-	public void OnMasterClientAssistedTakeoverRequest(string nonce, PhotonMessageInfo info)
-	{
-		Debug.Log($"OnMasterClientAssistedTakeoverRequest id: {info.Sender?.ActorNumber} nonce: {nonce}");
-		bool flag = true;
-		foreach (IRequestableOwnershipGuardCallbacks callbacks in callbacksList)
-		{
-			if (!callbacks.OnMasterClientAssistedTakeoverRequest(actualOwner, info.Sender))
-			{
-				flag = false;
-			}
-		}
-		if (!flag)
-		{
-			photonView.RPC("OwnershipRequestDenied", info.Sender, nonce);
-		}
-		else
-		{
-			TransferOwnership(info.Sender, nonce);
-			Debug.Log($"OnMasterClientAssistedTakeover: actualOwner: {actualOwner} refused to give up ownership, We are stealing ownership and giving it to {info.Sender}", this);
-		}
-	}
-
-	[PunRPC]
-	public void OwnershipRequested(string nonce, PhotonMessageInfo info)
-	{
-		Debug.Log($"OwnershipRequested id: {info.Sender?.ActorNumber} nonce: {nonce}");
-		bool flag = true;
-		foreach (IRequestableOwnershipGuardCallbacks callbacks in callbacksList)
-		{
-			if (!callbacks.OnOwnershipRequest(info.Sender))
-			{
-				flag = false;
-			}
-		}
-		if (!flag)
-		{
-			photonView.RPC("OwnershipRequestDenied", info.Sender, nonce);
-		}
-		else
-		{
-			TransferOwnership(info.Sender, nonce);
-		}
-	}
-
-	private void TransferOwnershipWithID(int id)
-	{
-		TransferOwnership(PhotonNetwork.CurrentRoom.GetPlayer(id));
-	}
-
-	public void TransferOwnership(Player player, string Nonce = "")
-	{
-		if (photonView.IsMine)
-		{
-			SetOwnership(player);
-			photonView.RPC("TransferOwnershipFromToRPC", RpcTarget.Others, player, Nonce);
-		}
-		else if (PlayerHasAuthority(PhotonNetwork.LocalPlayer))
-		{
-			SetOwnership(player);
-			photonView.RPC("SetOwnershipFromMasterClient", RpcTarget.Others, player);
-		}
-		else
-		{
-			Debug.LogError("Tried to transfer ownership when im not the owner or a master client");
-		}
-	}
-
-	public void RequestTheCurrentOwnerFromAuthority()
-	{
-		photonView.RPC("RequestCurrentOwnerFromAuthorityRPC", GetAuthoritativePlayer());
-	}
-
-	protected void SetCurrentOwner(Player player)
-	{
-		if (player == null)
-		{
-			currentOwner = null;
-		}
-		else
-		{
-			currentOwner = player;
-		}
-		PhotonView[] array = photonViews;
-		foreach (PhotonView photonView in array)
-		{
-			if (player == null)
-			{
-				photonView.OwnerActorNr = -1;
-				photonView.ControllerActorNr = -1;
-			}
-			else
-			{
-				photonView.OwnerActorNr = player.ActorNumber;
-				photonView.ControllerActorNr = player.ActorNumber;
-			}
-		}
-	}
-
-	protected internal void SetOwnership(Player player, bool isLocalOnly = false, bool dontPropigate = false)
-	{
-		if (!object.Equals(player, currentOwner) && !dontPropigate)
-		{
-			callbacksList.ForEachBackwards(delegate(IRequestableOwnershipGuardCallbacks actualOwner)
-			{
-				actualOwner.OnOwnershipTransferred(player, currentOwner);
-			});
-		}
-		SetCurrentOwner(player);
-		if (isLocalOnly)
-		{
-			return;
-		}
-		actualOwner = player;
-		if (player != null)
-		{
-			if (player.ActorNumber == PhotonNetwork.LocalPlayer.ActorNumber)
-			{
-				currentState = NetworkingState.IsOwner;
-			}
-			else
-			{
-				currentState = NetworkingState.IsClient;
-			}
-		}
-	}
-
-	public Player GetAuthoritativePlayer()
-	{
-		if (giveCreatorAbsoluteAuthority)
-		{
-			return creator;
-		}
-		return PhotonNetwork.MasterClient;
-	}
-
-	public bool PlayerHasAuthority(Player player)
-	{
-		return object.Equals(GetAuthoritativePlayer(), player);
-	}
-
-	[PunRPC]
-	public void OwnershipRequestDenied(string nonce, PhotonMessageInfo info)
-	{
-		if (info.Sender.ActorNumber != actualOwner?.ActorNumber && !PlayerHasAuthority(info.Sender))
-		{
-			Debug.LogError("OwnershipRequestDenied came from not the current owner and not the master client");
-			return;
-		}
-		Debug.Log($"OwnershipRequestDenied id: {info.Sender?.ActorNumber} nonce: {nonce}");
-		if (attemptMasterAssistedTakeoverOnDeny)
-		{
-			ownershipRequestNonce = Guid.NewGuid().ToString();
-			photonView.RPC("OnMasterClientAssistedTakeoverRequest", RpcTarget.MasterClient, ownershipRequestNonce);
-			attemptMasterAssistedTakeoverOnDeny = false;
-			return;
-		}
-		ownershipDenied?.Invoke();
-		ownershipDenied = null;
-		switch (currentState)
-		{
-		case NetworkingState.ForcefullyTakingOver:
-		case NetworkingState.RequestingOwnership:
-			currentState = NetworkingState.IsClient;
-			SetOwnership(actualOwner);
-			break;
-		case NetworkingState.RequestingOwnershipWaitingForSight:
-		case NetworkingState.ForcefullyTakingOverWaitingForSight:
-			photonView.RPC("OwnershipRequested", actualOwner, ownershipRequestNonce);
-			break;
-		default:
-			throw new ArgumentOutOfRangeException();
-		case NetworkingState.IsOwner:
-		case NetworkingState.IsBlindClient:
-		case NetworkingState.IsClient:
-			break;
-		}
-	}
-
-	public IEnumerator RequestTimeout()
-	{
-		Debug.Log($"Timeout request started...  {currentState} ");
-		yield return new WaitForSecondsRealtime(2f);
-		Debug.Log($"Timeout request ended! {currentState} ");
-		switch (currentState)
-		{
-		case NetworkingState.ForcefullyTakingOver:
-		case NetworkingState.RequestingOwnership:
-			currentState = NetworkingState.IsClient;
-			SetOwnership(actualOwner);
-			break;
-		case NetworkingState.RequestingOwnershipWaitingForSight:
-		case NetworkingState.ForcefullyTakingOverWaitingForSight:
-			photonView.RPC("OwnershipRequested", actualOwner, ownershipRequestNonce);
-			break;
-		default:
-			throw new ArgumentOutOfRangeException();
-		case NetworkingState.IsOwner:
-		case NetworkingState.IsBlindClient:
-		case NetworkingState.IsClient:
-			break;
-		}
-	}
-
-	public void RequestOwnership(Action onRequestSuccess, Action onRequestFailed)
-	{
-		switch (currentState)
-		{
-		case NetworkingState.ForcefullyTakingOver:
-		case NetworkingState.RequestingOwnership:
-		case NetworkingState.RequestingOwnershipWaitingForSight:
-		case NetworkingState.ForcefullyTakingOverWaitingForSight:
-			ownershipDenied = (Action)Delegate.Combine(ownershipDenied, onRequestFailed);
-			StartCoroutine("RequestTimeout");
-			break;
-		case NetworkingState.IsClient:
-			ownershipDenied = (Action)Delegate.Combine(ownershipDenied, onRequestFailed);
-			ownershipRequestNonce = Guid.NewGuid().ToString();
-			currentState = NetworkingState.RequestingOwnership;
-			photonView.RPC("OwnershipRequested", actualOwner, ownershipRequestNonce);
-			StartCoroutine("RequestTimeout");
-			break;
-		case NetworkingState.IsBlindClient:
-			ownershipDenied = (Action)Delegate.Combine(ownershipDenied, onRequestFailed);
-			currentState = NetworkingState.RequestingOwnershipWaitingForSight;
-			StartCoroutine("RequestTimeout");
-			break;
-		default:
-			throw new ArgumentOutOfRangeException();
-		case NetworkingState.IsOwner:
-			break;
-		}
-	}
-
-	public void RequestOwnershipImmediately(Action onRequestFailed)
-	{
-		Debug.Log("WorldShareable RequestOwnershipImmediately");
-		if (PlayerHasAuthority(PhotonNetwork.LocalPlayer))
-		{
-			RequestOwnershipImmediatelyWithGuaranteedAuthority();
-			return;
-		}
-		switch (currentState)
-		{
-		case NetworkingState.IsOwner:
-			_ = PhotonNetwork.InRoom;
-			break;
-		case NetworkingState.ForcefullyTakingOver:
-		case NetworkingState.RequestingOwnership:
-			ownershipDenied = (Action)Delegate.Combine(ownershipDenied, onRequestFailed);
-			currentState = NetworkingState.ForcefullyTakingOver;
-			StartCoroutine("RequestTimeout");
-			break;
-		case NetworkingState.IsClient:
-			ownershipDenied = (Action)Delegate.Combine(ownershipDenied, onRequestFailed);
-			ownershipRequestNonce = Guid.NewGuid().ToString();
-			currentState = NetworkingState.ForcefullyTakingOver;
-			SetOwnership(PhotonNetwork.LocalPlayer, isLocalOnly: true);
-			photonView.RPC("OwnershipRequested", actualOwner, ownershipRequestNonce);
-			StartCoroutine("RequestTimeout");
-			break;
-		case NetworkingState.IsBlindClient:
-			ownershipDenied = (Action)Delegate.Combine(ownershipDenied, onRequestFailed);
-			currentState = NetworkingState.ForcefullyTakingOverWaitingForSight;
-			SetOwnership(PhotonNetwork.LocalPlayer, isLocalOnly: true);
-			RequestTheCurrentOwnerFromAuthority();
-			break;
-		default:
-			throw new ArgumentOutOfRangeException();
-		}
-	}
-
-	public void RequestOwnershipImmediatelyWithGuaranteedAuthority()
-	{
-		Debug.Log("WorldShareable RequestOwnershipImmediatelyWithGuaranteedAuthority");
-		if (!PlayerHasAuthority(PhotonNetwork.LocalPlayer))
-		{
-			Debug.LogError("Tried to request ownership immediately with guaranteed authority without acutely having authority ");
-		}
-		switch (currentState)
-		{
-		case NetworkingState.ForcefullyTakingOver:
-		case NetworkingState.RequestingOwnership:
-			currentState = NetworkingState.ForcefullyTakingOver;
-			StartCoroutine("RequestTimeout");
-			break;
-		case NetworkingState.IsClient:
-			currentState = NetworkingState.ForcefullyTakingOver;
-			SetOwnership(PhotonNetwork.LocalPlayer, isLocalOnly: true);
-			photonView.RPC("SetOwnershipFromMasterClient", RpcTarget.All, PhotonNetwork.LocalPlayer);
-			StartCoroutine("RequestTimeout");
-			break;
-		case NetworkingState.IsBlindClient:
-			currentState = NetworkingState.ForcefullyTakingOverWaitingForSight;
-			SetOwnership(PhotonNetwork.LocalPlayer, isLocalOnly: true);
-			RequestTheCurrentOwnerFromAuthority();
-			break;
-		default:
-			throw new ArgumentOutOfRangeException();
-		case NetworkingState.IsOwner:
-			break;
-		}
-	}
-
-	public void Validate(SelfValidationResult result)
-	{
-	}
-
-	public void AddCallbackTarget(IRequestableOwnershipGuardCallbacks callbackObject)
-	{
-		if (!callbacksList.Contains(callbackObject))
-		{
-			callbacksList.Add(callbackObject);
-			if (currentOwner != null)
-			{
-				callbackObject.OnOwnershipTransferred(currentOwner, null);
-			}
-		}
-	}
-
-	public void RemoveCallbackTarget(IRequestableOwnershipGuardCallbacks callbackObject)
-	{
-		if (callbacksList.Contains(callbackObject))
-		{
-			callbacksList.Remove(callbackObject);
-			if (currentOwner != null)
-			{
-				callbackObject.OnOwnershipTransferred(null, currentOwner);
-			}
-		}
-	}
-
-	public void SetCreator(Player player)
-	{
-		creator = player;
-	}
 }

@@ -1,9 +1,138 @@
+﻿using System;
 using System.Collections.Generic;
 using Photon.Pun;
 using UnityEngine;
 
 public class DrumsItem : MonoBehaviour
 {
+	private void Start()
+	{
+		this.leftHandIndicator = GorillaTagger.Instance.leftHandTriggerCollider.GetComponent<GorillaTriggerColliderHandIndicator>();
+		this.rightHandIndicator = GorillaTagger.Instance.rightHandTriggerCollider.GetComponent<GorillaTriggerColliderHandIndicator>();
+		this.sphereRadius = this.leftHandIndicator.GetComponent<SphereCollider>().radius;
+		for (int i = 0; i < this.collidersForThisDrum.Length; i++)
+		{
+			this.collidersForThisDrumList.Add(this.collidersForThisDrum[i]);
+		}
+	}
+
+	private void LateUpdate()
+	{
+		this.CheckHandHit(ref this.leftHandIn, ref this.leftHandIndicator, true);
+		this.CheckHandHit(ref this.rightHandIn, ref this.rightHandIndicator, false);
+	}
+
+	private void CheckHandHit(ref bool handIn, ref GorillaTriggerColliderHandIndicator handIndicator, bool isLeftHand)
+	{
+		this.spherecastSweep = handIndicator.transform.position - handIndicator.lastPosition;
+		if (this.spherecastSweep.magnitude < 0.0001f)
+		{
+			this.spherecastSweep = Vector3.up * 0.0001f;
+		}
+		for (int i = 0; i < this.collidersHit.Length; i++)
+		{
+			this.collidersHit[i] = this.nullHit;
+		}
+		this.collidersHitCount = Physics.SphereCastNonAlloc(handIndicator.lastPosition, this.sphereRadius, this.spherecastSweep.normalized, this.collidersHit, this.spherecastSweep.magnitude, this.drumsTouchable, QueryTriggerInteraction.Collide);
+		this.drumHit = false;
+		if (this.collidersHitCount > 0)
+		{
+			this.hitList.Clear();
+			for (int j = 0; j < this.collidersHit.Length; j++)
+			{
+				if (this.collidersHit[j].collider != null && this.collidersForThisDrumList.Contains(this.collidersHit[j].collider) && this.collidersHit[j].collider.gameObject.activeSelf)
+				{
+					this.hitList.Add(this.collidersHit[j]);
+				}
+			}
+			this.hitList.Sort(new Comparison<RaycastHit>(this.RayCastHitCompare));
+			int k = 0;
+			while (k < this.hitList.Count)
+			{
+				this.tempDrum = this.hitList[k].collider.GetComponent<Drum>();
+				if (this.tempDrum != null)
+				{
+					this.drumHit = true;
+					if (!handIn && !this.tempDrum.disabler)
+					{
+						this.DrumHit(this.tempDrum, isLeftHand, handIndicator.currentVelocity.magnitude);
+						break;
+					}
+					break;
+				}
+				else
+				{
+					k++;
+				}
+			}
+		}
+		if (!this.drumHit & handIn)
+		{
+			GorillaTagger.Instance.StartVibration(isLeftHand, GorillaTagger.Instance.tapHapticStrength / 8f, GorillaTagger.Instance.tapHapticDuration);
+		}
+		handIn = this.drumHit;
+	}
+
+	private int RayCastHitCompare(RaycastHit a, RaycastHit b)
+	{
+		if (a.distance < b.distance)
+		{
+			return -1;
+		}
+		if (a.distance == b.distance)
+		{
+			return 0;
+		}
+		return 1;
+	}
+
+	public void DrumHit(Drum tempDrumInner, bool isLeftHand, float hitVelocity)
+	{
+		if (isLeftHand)
+		{
+			if (this.leftHandIn)
+			{
+				return;
+			}
+			this.leftHandIn = true;
+		}
+		else
+		{
+			if (this.rightHandIn)
+			{
+				return;
+			}
+			this.rightHandIn = true;
+		}
+		this.volToPlay = Mathf.Max(Mathf.Min(1f, hitVelocity / this.maxDrumVolumeVelocity) * this.maxDrumVolume, this.minDrumVolume);
+		if (PhotonNetwork.InRoom)
+		{
+			if (!this.myRig.isOfflineVRRig)
+			{
+				PhotonView photonView = this.myRig.photonView;
+				if (photonView != null)
+				{
+					photonView.RPC("PlayDrum", RpcTarget.Others, new object[]
+					{
+						tempDrumInner.myIndex + this.onlineOffset,
+						this.volToPlay
+					});
+				}
+			}
+			else
+			{
+				GorillaTagger.Instance.myVRRig.RPC("PlayDrum", RpcTarget.Others, new object[]
+				{
+					tempDrumInner.myIndex + this.onlineOffset,
+					this.volToPlay
+				});
+			}
+		}
+		GorillaTagger.Instance.StartVibration(isLeftHand, GorillaTagger.Instance.tapHapticStrength / 4f, GorillaTagger.Instance.tapHapticDuration);
+		this.drumsAS[tempDrumInner.myIndex].volume = this.maxDrumVolume;
+		this.drumsAS[tempDrumInner.myIndex].PlayOneShot(this.drumsAS[tempDrumInner.myIndex].clip, this.volToPlay);
+	}
+
 	[Tooltip("Array of colliders for this specific drum.")]
 	public Collider[] collidersForThisDrum;
 
@@ -55,114 +184,4 @@ public class DrumsItem : MonoBehaviour
 
 	[Tooltip("VRRig object of the player, used to determine if it is an offline rig.")]
 	public VRRig myRig;
-
-	private void Start()
-	{
-		leftHandIndicator = GorillaTagger.Instance.leftHandTriggerCollider.GetComponent<GorillaTriggerColliderHandIndicator>();
-		rightHandIndicator = GorillaTagger.Instance.rightHandTriggerCollider.GetComponent<GorillaTriggerColliderHandIndicator>();
-		sphereRadius = leftHandIndicator.GetComponent<SphereCollider>().radius;
-		for (int i = 0; i < collidersForThisDrum.Length; i++)
-		{
-			collidersForThisDrumList.Add(collidersForThisDrum[i]);
-		}
-	}
-
-	private void LateUpdate()
-	{
-		CheckHandHit(ref leftHandIn, ref leftHandIndicator, isLeftHand: true);
-		CheckHandHit(ref rightHandIn, ref rightHandIndicator, isLeftHand: false);
-	}
-
-	private void CheckHandHit(ref bool handIn, ref GorillaTriggerColliderHandIndicator handIndicator, bool isLeftHand)
-	{
-		spherecastSweep = handIndicator.transform.position - handIndicator.lastPosition;
-		if (spherecastSweep.magnitude < 0.0001f)
-		{
-			spherecastSweep = Vector3.up * 0.0001f;
-		}
-		for (int i = 0; i < collidersHit.Length; i++)
-		{
-			collidersHit[i] = nullHit;
-		}
-		collidersHitCount = Physics.SphereCastNonAlloc(handIndicator.lastPosition, sphereRadius, spherecastSweep.normalized, collidersHit, spherecastSweep.magnitude, drumsTouchable, QueryTriggerInteraction.Collide);
-		drumHit = false;
-		if (collidersHitCount > 0)
-		{
-			hitList.Clear();
-			for (int j = 0; j < collidersHit.Length; j++)
-			{
-				if (collidersHit[j].collider != null && collidersForThisDrumList.Contains(collidersHit[j].collider) && collidersHit[j].collider.gameObject.activeSelf)
-				{
-					hitList.Add(collidersHit[j]);
-				}
-			}
-			hitList.Sort(RayCastHitCompare);
-			for (int k = 0; k < hitList.Count; k++)
-			{
-				tempDrum = hitList[k].collider.GetComponent<Drum>();
-				if (tempDrum != null)
-				{
-					drumHit = true;
-					if (!handIn && !tempDrum.disabler)
-					{
-						DrumHit(tempDrum, isLeftHand, handIndicator.currentVelocity.magnitude);
-					}
-					break;
-				}
-			}
-		}
-		if (!drumHit & handIn)
-		{
-			GorillaTagger.Instance.StartVibration(isLeftHand, GorillaTagger.Instance.tapHapticStrength / 8f, GorillaTagger.Instance.tapHapticDuration);
-		}
-		handIn = drumHit;
-	}
-
-	private int RayCastHitCompare(RaycastHit a, RaycastHit b)
-	{
-		if (a.distance < b.distance)
-		{
-			return -1;
-		}
-		if (a.distance == b.distance)
-		{
-			return 0;
-		}
-		return 1;
-	}
-
-	public void DrumHit(Drum tempDrumInner, bool isLeftHand, float hitVelocity)
-	{
-		if (isLeftHand)
-		{
-			if (leftHandIn)
-			{
-				return;
-			}
-			leftHandIn = true;
-		}
-		else
-		{
-			if (rightHandIn)
-			{
-				return;
-			}
-			rightHandIn = true;
-		}
-		volToPlay = Mathf.Max(Mathf.Min(1f, hitVelocity / maxDrumVolumeVelocity) * maxDrumVolume, minDrumVolume);
-		if (PhotonNetwork.InRoom)
-		{
-			if (!myRig.isOfflineVRRig)
-			{
-				myRig.photonView?.RPC("PlayDrum", RpcTarget.Others, tempDrumInner.myIndex + onlineOffset, volToPlay);
-			}
-			else
-			{
-				GorillaTagger.Instance.myVRRig.RPC("PlayDrum", RpcTarget.Others, tempDrumInner.myIndex + onlineOffset, volToPlay);
-			}
-		}
-		GorillaTagger.Instance.StartVibration(isLeftHand, GorillaTagger.Instance.tapHapticStrength / 4f, GorillaTagger.Instance.tapHapticDuration);
-		drumsAS[tempDrumInner.myIndex].volume = maxDrumVolume;
-		drumsAS[tempDrumInner.myIndex].PlayOneShot(drumsAS[tempDrumInner.myIndex].clip, volToPlay);
-	}
 }

@@ -1,16 +1,16 @@
+﻿using System;
 using UnityEngine;
 
 public class ShoppingCart : MonoBehaviour
 {
-	public static volatile ShoppingCart instance;
-
 	public void Awake()
 	{
-		if (instance == null)
+		if (ShoppingCart.instance == null)
 		{
-			instance = this;
+			ShoppingCart.instance = this;
+			return;
 		}
-		else if (instance != this)
+		if (ShoppingCart.instance != this)
 		{
 			Object.Destroy(base.gameObject);
 		}
@@ -23,4 +23,7 @@ public class ShoppingCart : MonoBehaviour
 	private void Update()
 	{
 	}
+
+	[OnEnterPlay_SetNull]
+	public static volatile ShoppingCart instance;
 }

@@ -1,12 +1,112 @@
+﻿using System;
 using GorillaTagScripts;
 using UnityEngine;
-using UnityEngine.Serialization;
 
-public class GorillaCaveCrystalVisuals : MonoBehaviour, ISerializationCallbackReceiver
+public class GorillaCaveCrystalVisuals : MonoBehaviour
 {
+	public float lerp
+	{
+		get
+		{
+			return this._lerp;
+		}
+		set
+		{
+			this._lerp = value;
+		}
+	}
+
+	public void Setup()
+	{
+		base.TryGetComponent<MeshRenderer>(out this._renderer);
+		if (this._renderer == null)
+		{
+			return;
+		}
+		this._setup = GorillaCaveCrystalSetup.Instance;
+		this._sharedMaterial = this._renderer.sharedMaterial;
+		this._initialized = this.crysalPreset != null && this._renderer != null && this._sharedMaterial != null;
+		this.Update();
+	}
+
+	private void Start()
+	{
+		this.UpdateAlbedo();
+		this.ForceUpdate();
+	}
+
+	public void UpdateAlbedo()
+	{
+		if (!this._initialized)
+		{
+			return;
+		}
+		if (this.instanceAlbedo == null)
+		{
+			return;
+		}
+		if (this._block == null)
+		{
+			this._block = new MaterialPropertyBlock();
+		}
+		this._renderer.GetPropertyBlock(this._block);
+		this._block.SetTexture(ShaderIds._MainTex, this.instanceAlbedo);
+		this._renderer.SetPropertyBlock(this._block);
+	}
+
+	private void Awake()
+	{
+		this.UpdateAlbedo();
+		this.Update();
+	}
+
+	private void Update()
+	{
+		if (!this._initialized)
+		{
+			return;
+		}
+		if (Application.isPlaying)
+		{
+			int hashCode = new ValueTuple<CrystalVisualsPreset, float>(this.crysalPreset, this._lerp).GetHashCode();
+			if (this._lastState == hashCode)
+			{
+				return;
+			}
+			this._lastState = hashCode;
+		}
+		if (this._block == null)
+		{
+			this._block = new MaterialPropertyBlock();
+		}
+		CrystalVisualsPreset.VisualState stateA = this.crysalPreset.stateA;
+		CrystalVisualsPreset.VisualState stateB = this.crysalPreset.stateB;
+		Color color = Color.Lerp(stateA.albedo, stateB.albedo, this._lerp);
+		Color color2 = Color.Lerp(stateA.emission, stateB.emission, this._lerp);
+		this._renderer.GetPropertyBlock(this._block);
+		this._block.SetColor(ShaderIds._Color, color);
+		this._block.SetColor(ShaderIds._EmissionColor, color2);
+		this._renderer.SetPropertyBlock(this._block);
+	}
+
+	public void ForceUpdate()
+	{
+		this._lastState = 0;
+		this.Update();
+	}
+
+	private static void InitializeCrystals()
+	{
+		foreach (GorillaCaveCrystalVisuals gorillaCaveCrystalVisuals in Object.FindObjectsByType<GorillaCaveCrystalVisuals>(FindObjectsInactive.Include, FindObjectsSortMode.InstanceID))
+		{
+			gorillaCaveCrystalVisuals.UpdateAlbedo();
+			gorillaCaveCrystalVisuals.ForceUpdate();
+			gorillaCaveCrystalVisuals._lastState = -1;
+		}
+	}
+
 	public CrystalVisualsPreset crysalPreset;
 
-	[FormerlySerializedAs("_lerpState")]
 	[SerializeField]
 	[Range(0f, 1f)]
 	private float _lerp;
@@ -16,7 +116,6 @@ public class GorillaCaveCrystalVisuals : MonoBehaviour, ISerializationCallbackRe
 
 	public Material _sharedMaterial;
 
-	[FormerlySerializedAs("albedoOverride")]
 	[SerializeField]
 	public Texture2D instanceAlbedo;
 
@@ -31,102 +130,6 @@ public class GorillaCaveCrystalVisuals : MonoBehaviour, ISerializationCallbackRe
 
 	private MaterialPropertyBlock _block;
 
-	private static readonly int kIdEmission = Shader.PropertyToID("_EmissionColor");
-
-	private static readonly int kIdAlbedo = Shader.PropertyToID("_Color");
-
-	private static readonly int kIdMainTex = Shader.PropertyToID("_MainTex");
-
-	public float lerp
-	{
-		get
-		{
-			return _lerp;
-		}
-		set
-		{
-			_lerp = value;
-		}
-	}
-
-	public void Setup()
-	{
-		TryGetComponent<MeshRenderer>(out _renderer);
-		if (!(_renderer == null))
-		{
-			_setup = GorillaCaveCrystalSetup.Instance;
-			_sharedMaterial = _renderer.sharedMaterial;
-			_initialized = crysalPreset != null && _renderer != null && _sharedMaterial != null;
-			Update();
-		}
-	}
-
-	public void UpdateAlbedo()
-	{
-		if (_initialized && !(instanceAlbedo == null))
-		{
-			if (_block == null)
-			{
-				_block = new MaterialPropertyBlock();
-			}
-			_renderer.GetPropertyBlock(_block);
-			_block.SetTexture(kIdMainTex, instanceAlbedo);
-			_renderer.SetPropertyBlock(_block);
-		}
-	}
-
-	private void Awake()
-	{
-		UpdateAlbedo();
-		Update();
-	}
-
-	private void Update()
-	{
-		if (!_initialized)
-		{
-			return;
-		}
-		if (Application.isPlaying)
-		{
-			int hashCode = (crysalPreset, _lerp).GetHashCode();
-			if (_lastState == hashCode)
-			{
-				return;
-			}
-			_lastState = hashCode;
-		}
-		if (_block == null)
-		{
-			_block = new MaterialPropertyBlock();
-		}
-		CrystalVisualsPreset.VisualState stateA = crysalPreset.stateA;
-		CrystalVisualsPreset.VisualState stateB = crysalPreset.stateB;
-		Color value = Color.Lerp(stateA.albedo, stateB.albedo, _lerp);
-		Color value2 = Color.Lerp(stateA.emission, stateB.emission, _lerp);
-		_renderer.GetPropertyBlock(_block);
-		_block.SetColor(kIdAlbedo, value);
-		_block.SetColor(kIdEmission, value2);
-		_renderer.SetPropertyBlock(_block);
-	}
-
-	public void ForceUpdate()
-	{
-		_lastState = 0;
-		Update();
-	}
-
-	private void OnValidate()
-	{
-		ForceUpdate();
-	}
-
-	void ISerializationCallbackReceiver.OnBeforeSerialize()
-	{
-		ForceUpdate();
-	}
-
-	void ISerializationCallbackReceiver.OnAfterDeserialize()
-	{
-	}
+	[NonSerialized]
+	private bool _ranSetupOnce;
 }

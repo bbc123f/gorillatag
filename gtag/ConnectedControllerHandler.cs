@@ -1,3 +1,4 @@
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using GorillaLocomotion;
@@ -7,6 +8,223 @@ using UnityEngine.XR.Interaction.Toolkit;
 
 internal class ConnectedControllerHandler : MonoBehaviour
 {
+	public static ConnectedControllerHandler Instance { get; private set; }
+
+	public bool RightValid
+	{
+		get
+		{
+			return this.rightValid;
+		}
+	}
+
+	public bool LeftValid
+	{
+		get
+		{
+			return this.leftValid;
+		}
+	}
+
+	private void Awake()
+	{
+		if (ConnectedControllerHandler.Instance != null && ConnectedControllerHandler.Instance != this)
+		{
+			Object.Destroy(this);
+			return;
+		}
+		ConnectedControllerHandler.Instance = this;
+		if (this.leftHandFollower == null || this.rightHandFollower == null || this.rightXRController == null || this.leftXRController == null || this.snapTurnController == null)
+		{
+			base.enabled = false;
+			return;
+		}
+		this.rightControllerList = new List<XRController>();
+		this.leftcontrollerList = new List<XRController>();
+		this.rightControllerList.Add(this.rightXRController);
+		this.leftcontrollerList.Add(this.leftXRController);
+		InputDevice deviceAtXRNode = InputDevices.GetDeviceAtXRNode(XRNode.RightHand);
+		InputDevice deviceAtXRNode2 = InputDevices.GetDeviceAtXRNode(XRNode.LeftHand);
+		Debug.Log(string.Format("right controller? {0}", (deviceAtXRNode.characteristics & (InputDeviceCharacteristics.Controller | InputDeviceCharacteristics.Right)) == (InputDeviceCharacteristics.Controller | InputDeviceCharacteristics.Right)));
+		this.rightControllerValid = deviceAtXRNode.isValid;
+		this.leftControllerValid = deviceAtXRNode2.isValid;
+		InputDevices.deviceConnected += this.DeviceConnected;
+		InputDevices.deviceDisconnected += this.DeviceDisconnected;
+		this.UpdateControllerStates();
+	}
+
+	private void Start()
+	{
+		if (this.leftHandFollower == null || this.rightHandFollower == null || this.leftXRController == null || this.rightXRController == null || this.snapTurnController == null)
+		{
+			return;
+		}
+		this.playerHandler = Player.Instance;
+		this.rightHandFollower.followTransform = GorillaTagger.Instance.offlineVRRig.transform;
+		this.leftHandFollower.followTransform = GorillaTagger.Instance.offlineVRRig.transform;
+	}
+
+	private void OnEnable()
+	{
+		base.StartCoroutine(this.ControllerValidator());
+	}
+
+	private void ONDisable()
+	{
+		base.StopCoroutine(this.ControllerValidator());
+	}
+
+	private void OnDestroy()
+	{
+		if (ConnectedControllerHandler.Instance != null && ConnectedControllerHandler.Instance == this)
+		{
+			ConnectedControllerHandler.Instance = null;
+		}
+		InputDevices.deviceConnected -= this.DeviceConnected;
+		InputDevices.deviceDisconnected -= this.DeviceDisconnected;
+	}
+
+	private void LateUpdate()
+	{
+		if (!this.rightValid)
+		{
+			this.rightHandFollower.UpdatePositionRotation();
+		}
+		if (!this.leftValid)
+		{
+			this.leftHandFollower.UpdatePositionRotation();
+		}
+	}
+
+	private IEnumerator ControllerValidator()
+	{
+		yield return null;
+		this.lastRightPos = ControllerInputPoller.DevicePosition(XRNode.RightHand);
+		this.lastLeftPos = ControllerInputPoller.DevicePosition(XRNode.LeftHand);
+		for (;;)
+		{
+			yield return new WaitForSeconds(this.overridePollRate);
+			this.updateControllers = false;
+			if (!this.playerHandler.inOverlay)
+			{
+				if (this.rightControllerValid)
+				{
+					this.tempRightPos = ControllerInputPoller.DevicePosition(XRNode.RightHand);
+					if (this.tempRightPos == this.lastRightPos)
+					{
+						if ((this.overrideController & OverrideControllers.RightController) != OverrideControllers.RightController)
+						{
+							this.overrideController |= OverrideControllers.RightController;
+							this.updateControllers = true;
+						}
+					}
+					else if ((this.overrideController & OverrideControllers.RightController) == OverrideControllers.RightController)
+					{
+						this.overrideController &= ~OverrideControllers.RightController;
+						this.updateControllers = true;
+					}
+					this.lastRightPos = this.tempRightPos;
+				}
+				if (this.leftControllerValid)
+				{
+					this.tempLeftPos = ControllerInputPoller.DevicePosition(XRNode.LeftHand);
+					if (this.tempLeftPos == this.lastLeftPos)
+					{
+						if ((this.overrideController & OverrideControllers.LeftController) != OverrideControllers.LeftController)
+						{
+							this.overrideController |= OverrideControllers.LeftController;
+							this.updateControllers = true;
+						}
+					}
+					else if ((this.overrideController & OverrideControllers.LeftController) == OverrideControllers.LeftController)
+					{
+						this.overrideController &= ~OverrideControllers.LeftController;
+						this.updateControllers = true;
+					}
+					this.lastLeftPos = this.tempLeftPos;
+				}
+				if (this.updateControllers)
+				{
+					this.overrideEnabled = this.overrideController > OverrideControllers.None;
+					this.UpdateControllerStates();
+				}
+			}
+		}
+		yield break;
+	}
+
+	private void DeviceDisconnected(InputDevice device)
+	{
+		if ((device.characteristics & (InputDeviceCharacteristics.Controller | InputDeviceCharacteristics.Right)) == (InputDeviceCharacteristics.Controller | InputDeviceCharacteristics.Right))
+		{
+			this.rightControllerValid = false;
+		}
+		if ((device.characteristics & (InputDeviceCharacteristics.Controller | InputDeviceCharacteristics.Left)) == (InputDeviceCharacteristics.Controller | InputDeviceCharacteristics.Left))
+		{
+			this.leftControllerValid = false;
+		}
+		this.UpdateControllerStates();
+	}
+
+	private void DeviceConnected(InputDevice device)
+	{
+		if ((device.characteristics & (InputDeviceCharacteristics.Controller | InputDeviceCharacteristics.Right)) == (InputDeviceCharacteristics.Controller | InputDeviceCharacteristics.Right))
+		{
+			this.rightControllerValid = true;
+		}
+		if ((device.characteristics & (InputDeviceCharacteristics.Controller | InputDeviceCharacteristics.Left)) == (InputDeviceCharacteristics.Controller | InputDeviceCharacteristics.Left))
+		{
+			this.leftControllerValid = true;
+		}
+		this.UpdateControllerStates();
+	}
+
+	private void UpdateControllerStates()
+	{
+		if (this.overrideEnabled && this.overrideController != OverrideControllers.None)
+		{
+			this.rightValid = this.rightControllerValid && (this.overrideController & OverrideControllers.RightController) != OverrideControllers.RightController;
+			this.leftValid = this.leftControllerValid && (this.overrideController & OverrideControllers.LeftController) != OverrideControllers.LeftController;
+		}
+		else
+		{
+			this.rightValid = this.rightControllerValid;
+			this.leftValid = this.leftControllerValid;
+		}
+		this.rightXRController.enabled = this.rightValid;
+		this.leftXRController.enabled = this.leftValid;
+		this.AssignSnapturnController();
+	}
+
+	private void AssignSnapturnController()
+	{
+		if (!this.leftValid && this.rightValid)
+		{
+			this.snapTurnController.controllers = this.rightControllerList;
+			return;
+		}
+		if (!this.rightValid && this.leftValid)
+		{
+			this.snapTurnController.controllers = this.leftcontrollerList;
+			return;
+		}
+		this.snapTurnController.controllers = this.rightControllerList;
+	}
+
+	public bool GetValidForXRNode(XRNode controllerNode)
+	{
+		bool flag;
+		if (controllerNode != XRNode.LeftHand)
+		{
+			flag = controllerNode != XRNode.RightHand || this.rightValid;
+		}
+		else
+		{
+			flag = this.leftValid;
+		}
+		return flag;
+	}
+
 	[SerializeField]
 	private HandTransformFollowOffest rightHandFollower;
 
@@ -63,205 +281,4 @@ internal class ConnectedControllerHandler : MonoBehaviour
 
 	[SerializeField]
 	private OverrideControllers overrideController;
-
-	public static ConnectedControllerHandler Instance { get; private set; }
-
-	public bool RightValid => rightValid;
-
-	public bool LeftValid => leftValid;
-
-	private void Awake()
-	{
-		if (Instance != null && Instance != this)
-		{
-			Object.Destroy(this);
-			return;
-		}
-		Instance = this;
-		if (leftHandFollower == null || rightHandFollower == null || rightXRController == null || leftXRController == null || snapTurnController == null)
-		{
-			base.enabled = false;
-			return;
-		}
-		rightControllerList = new List<XRController>();
-		leftcontrollerList = new List<XRController>();
-		rightControllerList.Add(rightXRController);
-		leftcontrollerList.Add(leftXRController);
-		InputDevice deviceAtXRNode = InputDevices.GetDeviceAtXRNode(XRNode.RightHand);
-		InputDevice deviceAtXRNode2 = InputDevices.GetDeviceAtXRNode(XRNode.LeftHand);
-		Debug.Log($"right controller? {(deviceAtXRNode.characteristics & (InputDeviceCharacteristics.Controller | InputDeviceCharacteristics.Right)) == (InputDeviceCharacteristics.Controller | InputDeviceCharacteristics.Right)}");
-		rightControllerValid = deviceAtXRNode.isValid;
-		leftControllerValid = deviceAtXRNode2.isValid;
-		InputDevices.deviceConnected += DeviceConnected;
-		InputDevices.deviceDisconnected += DeviceDisconnected;
-		UpdateControllerStates();
-	}
-
-	private void Start()
-	{
-		if (leftHandFollower != null && rightHandFollower != null && !(leftXRController == null) && !(rightXRController == null) && !(snapTurnController == null))
-		{
-			playerHandler = Player.Instance;
-			rightHandFollower.followTransform = GorillaTagger.Instance.offlineVRRig.transform;
-			leftHandFollower.followTransform = GorillaTagger.Instance.offlineVRRig.transform;
-		}
-	}
-
-	private void OnEnable()
-	{
-		StartCoroutine(ControllerValidator());
-	}
-
-	private void ONDisable()
-	{
-		StopCoroutine(ControllerValidator());
-	}
-
-	private void OnDestroy()
-	{
-		if (Instance != null && Instance == this)
-		{
-			Instance = null;
-		}
-		InputDevices.deviceConnected -= DeviceConnected;
-		InputDevices.deviceDisconnected -= DeviceDisconnected;
-	}
-
-	private void LateUpdate()
-	{
-		if (!rightValid)
-		{
-			rightHandFollower.UpdatePositionRotation();
-		}
-		if (!leftValid)
-		{
-			leftHandFollower.UpdatePositionRotation();
-		}
-	}
-
-	private IEnumerator ControllerValidator()
-	{
-		yield return null;
-		lastRightPos = ControllerInputPoller.DevicePosition(XRNode.RightHand);
-		lastLeftPos = ControllerInputPoller.DevicePosition(XRNode.LeftHand);
-		while (true)
-		{
-			yield return new WaitForSeconds(overridePollRate);
-			updateControllers = false;
-			if (playerHandler.inOverlay)
-			{
-				continue;
-			}
-			if (rightControllerValid)
-			{
-				tempRightPos = ControllerInputPoller.DevicePosition(XRNode.RightHand);
-				if (tempRightPos == lastRightPos)
-				{
-					if ((overrideController & OverrideControllers.RightController) != OverrideControllers.RightController)
-					{
-						overrideController |= OverrideControllers.RightController;
-						updateControllers = true;
-					}
-				}
-				else if ((overrideController & OverrideControllers.RightController) == OverrideControllers.RightController)
-				{
-					overrideController &= ~OverrideControllers.RightController;
-					updateControllers = true;
-				}
-				lastRightPos = tempRightPos;
-			}
-			if (leftControllerValid)
-			{
-				tempLeftPos = ControllerInputPoller.DevicePosition(XRNode.LeftHand);
-				if (tempLeftPos == lastLeftPos)
-				{
-					if ((overrideController & OverrideControllers.LeftController) != OverrideControllers.LeftController)
-					{
-						overrideController |= OverrideControllers.LeftController;
-						updateControllers = true;
-					}
-				}
-				else if ((overrideController & OverrideControllers.LeftController) == OverrideControllers.LeftController)
-				{
-					overrideController &= ~OverrideControllers.LeftController;
-					updateControllers = true;
-				}
-				lastLeftPos = tempLeftPos;
-			}
-			if (updateControllers)
-			{
-				overrideEnabled = overrideController != OverrideControllers.None;
-				UpdateControllerStates();
-			}
-		}
-	}
-
-	private void DeviceDisconnected(InputDevice device)
-	{
-		if ((device.characteristics & (InputDeviceCharacteristics.Controller | InputDeviceCharacteristics.Right)) == (InputDeviceCharacteristics.Controller | InputDeviceCharacteristics.Right))
-		{
-			rightControllerValid = false;
-		}
-		if ((device.characteristics & (InputDeviceCharacteristics.Controller | InputDeviceCharacteristics.Left)) == (InputDeviceCharacteristics.Controller | InputDeviceCharacteristics.Left))
-		{
-			leftControllerValid = false;
-		}
-		UpdateControllerStates();
-	}
-
-	private void DeviceConnected(InputDevice device)
-	{
-		if ((device.characteristics & (InputDeviceCharacteristics.Controller | InputDeviceCharacteristics.Right)) == (InputDeviceCharacteristics.Controller | InputDeviceCharacteristics.Right))
-		{
-			rightControllerValid = true;
-		}
-		if ((device.characteristics & (InputDeviceCharacteristics.Controller | InputDeviceCharacteristics.Left)) == (InputDeviceCharacteristics.Controller | InputDeviceCharacteristics.Left))
-		{
-			leftControllerValid = true;
-		}
-		UpdateControllerStates();
-	}
-
-	private void UpdateControllerStates()
-	{
-		if (overrideEnabled && overrideController != 0)
-		{
-			rightValid = rightControllerValid && (overrideController & OverrideControllers.RightController) != OverrideControllers.RightController;
-			leftValid = leftControllerValid && (overrideController & OverrideControllers.LeftController) != OverrideControllers.LeftController;
-		}
-		else
-		{
-			rightValid = rightControllerValid;
-			leftValid = leftControllerValid;
-		}
-		rightXRController.enabled = rightValid;
-		leftXRController.enabled = leftValid;
-		AssignSnapturnController();
-	}
-
-	private void AssignSnapturnController()
-	{
-		if (!leftValid && rightValid)
-		{
-			snapTurnController.controllers = rightControllerList;
-		}
-		else if (!rightValid && leftValid)
-		{
-			snapTurnController.controllers = leftcontrollerList;
-		}
-		else
-		{
-			snapTurnController.controllers = rightControllerList;
-		}
-	}
-
-	public bool GetValidForXRNode(XRNode controllerNode)
-	{
-		return controllerNode switch
-		{
-			XRNode.LeftHand => leftValid, 
-			XRNode.RightHand => rightValid, 
-			_ => true, 
-		};
-	}
 }

@@ -1,38 +1,41 @@
+﻿using System;
 using UnityEngine;
 
-namespace BoingKit;
-
-public class BoingManagerPreUpdatePump : MonoBehaviour
+namespace BoingKit
 {
-	private int m_lastPumpedFrame = -1;
-
-	private void FixedUpdate()
+	public class BoingManagerPreUpdatePump : MonoBehaviour
 	{
-		TryPump();
-	}
-
-	private void Update()
-	{
-		TryPump();
-	}
-
-	private void TryPump()
-	{
-		if (m_lastPumpedFrame < Time.frameCount)
+		private void FixedUpdate()
 		{
-			if (m_lastPumpedFrame >= 0)
-			{
-				DoPump();
-			}
-			m_lastPumpedFrame = Time.frameCount;
+			this.TryPump();
 		}
-	}
 
-	private void DoPump()
-	{
-		BoingManager.RestoreBehaviors();
-		BoingManager.RestoreReactors();
-		BoingManager.RestoreBones();
-		BoingManager.DispatchReactorFieldCompute();
+		private void Update()
+		{
+			this.TryPump();
+		}
+
+		private void TryPump()
+		{
+			if (this.m_lastPumpedFrame >= Time.frameCount)
+			{
+				return;
+			}
+			if (this.m_lastPumpedFrame >= 0)
+			{
+				this.DoPump();
+			}
+			this.m_lastPumpedFrame = Time.frameCount;
+		}
+
+		private void DoPump()
+		{
+			BoingManager.RestoreBehaviors();
+			BoingManager.RestoreReactors();
+			BoingManager.RestoreBones();
+			BoingManager.DispatchReactorFieldCompute();
+		}
+
+		private int m_lastPumpedFrame = -1;
 	}
 }

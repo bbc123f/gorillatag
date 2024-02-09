@@ -1,28 +1,21 @@
+﻿using System;
 using GorillaLocomotion;
 using UnityEngine;
 
 public class EnclosedSpaceVolume : GorillaTriggerBox
 {
-	public AudioSource audioSourceInside;
-
-	public AudioSource audioSourceOutside;
-
-	public float loudVolume;
-
-	public float quietVolume;
-
 	private void Awake()
 	{
-		audioSourceInside.volume = quietVolume;
-		audioSourceOutside.volume = loudVolume;
+		this.audioSourceInside.volume = this.quietVolume;
+		this.audioSourceOutside.volume = this.loudVolume;
 	}
 
 	private void OnTriggerEnter(Collider other)
 	{
 		if (other.attachedRigidbody.GetComponentInParent<Player>() != null)
 		{
-			audioSourceInside.volume = loudVolume;
-			audioSourceOutside.volume = quietVolume;
+			this.audioSourceInside.volume = this.loudVolume;
+			this.audioSourceOutside.volume = this.quietVolume;
 		}
 	}
 
@@ -30,8 +23,16 @@ public class EnclosedSpaceVolume : GorillaTriggerBox
 	{
 		if (other.attachedRigidbody.GetComponentInParent<Player>() != null)
 		{
-			audioSourceInside.volume = quietVolume;
-			audioSourceOutside.volume = loudVolume;
+			this.audioSourceInside.volume = this.quietVolume;
+			this.audioSourceOutside.volume = this.loudVolume;
 		}
 	}
+
+	public AudioSource audioSourceInside;
+
+	public AudioSource audioSourceOutside;
+
+	public float loudVolume;
+
+	public float quietVolume;
 }

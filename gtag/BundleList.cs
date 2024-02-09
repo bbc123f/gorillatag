@@ -1,47 +1,49 @@
+﻿using System;
 using GorillaNetworking;
 
 internal class BundleList
 {
-	private int activeBundleIdx;
-
-	public BundleData[] data;
-
 	public void FromJson(string jsonString)
 	{
-		data = JSonHelper.FromJson<BundleData>(jsonString);
-		if (data.Length == 0)
+		this.data = JSonHelper.FromJson<BundleData>(jsonString);
+		if (this.data.Length == 0)
 		{
 			return;
 		}
-		activeBundleIdx = 0;
-		int majorVersion = data[0].majorVersion;
-		int minorVersion = data[0].minorVersion;
-		int minorVersion2 = data[0].minorVersion2;
+		this.activeBundleIdx = 0;
+		int num = this.data[0].majorVersion;
+		int num2 = this.data[0].minorVersion;
+		int num3 = this.data[0].minorVersion2;
 		int gameMajorVersion = PhotonNetworkController.Instance.GameMajorVersion;
 		int gameMinorVersion = PhotonNetworkController.Instance.GameMinorVersion;
 		int gameMinorVersion2 = PhotonNetworkController.Instance.GameMinorVersion2;
-		for (int i = 1; i < data.Length; i++)
+		for (int i = 1; i < this.data.Length; i++)
 		{
-			data[i].isActive = false;
-			int num = gameMajorVersion * 1000000 + gameMinorVersion * 1000 + gameMinorVersion2;
-			int num2 = data[i].majorVersion * 1000000 + data[i].minorVersion * 1000 + data[i].minorVersion2;
-			if (num >= num2 && data[i].majorVersion >= majorVersion && data[i].minorVersion >= minorVersion && data[i].minorVersion2 >= minorVersion2)
+			this.data[i].isActive = false;
+			int num4 = gameMajorVersion * 1000000 + gameMinorVersion * 1000 + gameMinorVersion2;
+			int num5 = this.data[i].majorVersion * 1000000 + this.data[i].minorVersion * 1000 + this.data[i].minorVersion2;
+			if (num4 >= num5 && this.data[i].majorVersion >= num && this.data[i].minorVersion >= num2 && this.data[i].minorVersion2 >= num3)
 			{
-				activeBundleIdx = i;
-				majorVersion = data[i].majorVersion;
-				minorVersion = data[i].minorVersion;
-				minorVersion2 = data[i].minorVersion2;
+				this.activeBundleIdx = i;
+				num = this.data[i].majorVersion;
+				num2 = this.data[i].minorVersion;
+				num3 = this.data[i].minorVersion2;
 				break;
 			}
 		}
-		data[activeBundleIdx].isActive = true;
+		this.data[this.activeBundleIdx].isActive = true;
 	}
 
 	public bool HasSku(string skuName, out int idx)
 	{
-		for (int i = 0; i < data.Length; i++)
+		if (this.data == null)
 		{
-			if (data[i].skuName == skuName)
+			idx = -1;
+			return false;
+		}
+		for (int i = 0; i < this.data.Length; i++)
+		{
+			if (this.data[i].skuName == skuName)
 			{
 				idx = i;
 				return true;
@@ -53,6 +55,10 @@ internal class BundleList
 
 	public BundleData ActiveBundle()
 	{
-		return data[activeBundleIdx];
+		return this.data[this.activeBundleIdx];
 	}
+
+	private int activeBundleIdx;
+
+	public BundleData[] data;
 }

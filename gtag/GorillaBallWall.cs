@@ -1,16 +1,16 @@
+﻿using System;
 using UnityEngine;
 
 public class GorillaBallWall : MonoBehaviour
 {
-	public static volatile GorillaBallWall instance;
-
 	private void Awake()
 	{
-		if (instance == null)
+		if (GorillaBallWall.instance == null)
 		{
-			instance = this;
+			GorillaBallWall.instance = this;
+			return;
 		}
-		else if (instance != this)
+		if (GorillaBallWall.instance != this)
 		{
 			Object.Destroy(base.gameObject);
 		}
@@ -19,4 +19,7 @@ public class GorillaBallWall : MonoBehaviour
 	private void Update()
 	{
 	}
+
+	[OnEnterPlay_SetNull]
+	public static volatile GorillaBallWall instance;
 }

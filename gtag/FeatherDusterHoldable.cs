@@ -1,7 +1,40 @@
+﻿using System;
 using UnityEngine;
 
 public class FeatherDusterHoldable : MonoBehaviour
 {
+	protected void Awake()
+	{
+		this.timeSinceLastSound = this.soundCooldown;
+		this.emissionModule = this.particleFx.emission;
+		this.initialRateOverTime = this.emissionModule.rateOverTimeMultiplier;
+	}
+
+	protected void OnEnable()
+	{
+		this.lastWorldPos = base.transform.position;
+		this.emissionModule.rateOverTimeMultiplier = 0f;
+	}
+
+	protected void Update()
+	{
+		this.timeSinceLastSound += Time.deltaTime;
+		Transform transform = base.transform;
+		Vector3 position = transform.position;
+		float num = (position - this.lastWorldPos).magnitude / Time.deltaTime;
+		this.emissionModule.rateOverTimeMultiplier = 0f;
+		if (num >= this.collideMinSpeed && Physics.OverlapSphereNonAlloc(position, this.overlapSphereRadius * transform.localScale.x, this.colliderResult, this.collisionLayer) > 0)
+		{
+			this.emissionModule.rateOverTimeMultiplier = this.initialRateOverTime;
+			if (this.timeSinceLastSound >= this.soundCooldown)
+			{
+				this.soundBankPlayer.Play(null, null);
+				this.timeSinceLastSound = 0f;
+			}
+		}
+		this.lastWorldPos = position;
+	}
+
 	public LayerMask collisionLayer;
 
 	public float overlapSphereRadius = 0.08f;
@@ -24,36 +57,4 @@ public class FeatherDusterHoldable : MonoBehaviour
 	private Vector3 lastWorldPos;
 
 	private Collider[] colliderResult = new Collider[1];
-
-	protected void Awake()
-	{
-		timeSinceLastSound = soundCooldown;
-		emissionModule = particleFx.emission;
-		initialRateOverTime = emissionModule.rateOverTimeMultiplier;
-	}
-
-	protected void OnEnable()
-	{
-		lastWorldPos = base.transform.position;
-		emissionModule.rateOverTimeMultiplier = 0f;
-	}
-
-	protected void Update()
-	{
-		timeSinceLastSound += Time.deltaTime;
-		Transform transform = base.transform;
-		Vector3 position = transform.position;
-		float num = (position - lastWorldPos).magnitude / Time.deltaTime;
-		emissionModule.rateOverTimeMultiplier = 0f;
-		if (num >= collideMinSpeed && Physics.OverlapSphereNonAlloc(position, overlapSphereRadius * transform.localScale.x, colliderResult, collisionLayer) > 0)
-		{
-			emissionModule.rateOverTimeMultiplier = initialRateOverTime;
-			if (timeSinceLastSound >= soundCooldown)
-			{
-				soundBankPlayer.Play();
-				timeSinceLastSound = 0f;
-			}
-		}
-		lastWorldPos = position;
-	}
 }

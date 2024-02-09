@@ -1,9 +1,8 @@
+﻿using System;
 using UnityEngine;
 
 public class GTPosRotConstraints : MonoBehaviour
 {
-	public GorillaPosRotConstraint[] constraints;
-
 	protected void OnEnable()
 	{
 		GTPosRotConstraintManager.Register(this);
@@ -13,4 +12,6 @@ public class GTPosRotConstraints : MonoBehaviour
 	{
 		GTPosRotConstraintManager.Unregister(this);
 	}
+
+	public GorillaPosRotConstraint[] constraints;
 }

@@ -1,12 +1,13 @@
-using System;
+﻿using System;
 
-namespace OculusSampleFramework;
-
-[Flags]
-public enum InteractableToolTags
+namespace OculusSampleFramework
 {
-	None = 0,
-	Ray = 1,
-	Poke = 4,
-	All = -1
+	[Flags]
+	public enum InteractableToolTags
+	{
+		None = 0,
+		Ray = 1,
+		Poke = 4,
+		All = -1
+	}
 }

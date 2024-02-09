@@ -1,77 +1,77 @@
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace GorillaNetworking;
-
-public class CosmeticItemInstance
+namespace GorillaNetworking
 {
-	public List<GameObject> leftObjects = new List<GameObject>();
-
-	public List<GameObject> rightObjects = new List<GameObject>();
-
-	public List<GameObject> objects = new List<GameObject>();
-
-	private void EnableItem(GameObject obj, bool enable)
+	public class CosmeticItemInstance
 	{
-		CosmeticAnchors component = obj.GetComponent<CosmeticAnchors>();
-		if ((bool)component && !enable)
+		private void EnableItem(GameObject obj, bool enable)
 		{
-			component.EnableAnchor(enable: false);
-		}
-		obj.SetActive(enable);
-		if ((bool)component && enable)
-		{
-			component.EnableAnchor(enable: true);
-		}
-	}
-
-	public void DisableItem(CosmeticsController.CosmeticSlots cosmeticSlot)
-	{
-		bool flag = CosmeticsController.CosmeticSet.IsSlotLeftHanded(cosmeticSlot);
-		bool flag2 = CosmeticsController.CosmeticSet.IsSlotRightHanded(cosmeticSlot);
-		foreach (GameObject @object in objects)
-		{
-			EnableItem(@object, enable: false);
-		}
-		if (flag)
-		{
-			foreach (GameObject leftObject in leftObjects)
+			CosmeticAnchors component = obj.GetComponent<CosmeticAnchors>();
+			if (component && !enable)
 			{
-				EnableItem(leftObject, enable: false);
+				component.EnableAnchor(false);
+			}
+			obj.SetActive(enable);
+			if (component && enable)
+			{
+				component.EnableAnchor(true);
 			}
 		}
-		if (!flag2)
-		{
-			return;
-		}
-		foreach (GameObject rightObject in rightObjects)
-		{
-			EnableItem(rightObject, enable: false);
-		}
-	}
 
-	public void EnableItem(CosmeticsController.CosmeticSlots cosmeticSlot)
-	{
-		bool flag = CosmeticsController.CosmeticSet.IsSlotLeftHanded(cosmeticSlot);
-		bool flag2 = CosmeticsController.CosmeticSet.IsSlotRightHanded(cosmeticSlot);
-		foreach (GameObject @object in objects)
+		public void DisableItem(CosmeticsController.CosmeticSlots cosmeticSlot)
 		{
-			EnableItem(@object, enable: true);
-		}
-		if (flag)
-		{
-			foreach (GameObject leftObject in leftObjects)
+			bool flag = CosmeticsController.CosmeticSet.IsSlotLeftHanded(cosmeticSlot);
+			bool flag2 = CosmeticsController.CosmeticSet.IsSlotRightHanded(cosmeticSlot);
+			foreach (GameObject gameObject in this.objects)
 			{
-				EnableItem(leftObject, enable: true);
+				this.EnableItem(gameObject, false);
+			}
+			if (flag)
+			{
+				foreach (GameObject gameObject2 in this.leftObjects)
+				{
+					this.EnableItem(gameObject2, false);
+				}
+			}
+			if (flag2)
+			{
+				foreach (GameObject gameObject3 in this.rightObjects)
+				{
+					this.EnableItem(gameObject3, false);
+				}
 			}
 		}
-		if (!flag2)
+
+		public void EnableItem(CosmeticsController.CosmeticSlots cosmeticSlot)
 		{
-			return;
+			bool flag = CosmeticsController.CosmeticSet.IsSlotLeftHanded(cosmeticSlot);
+			bool flag2 = CosmeticsController.CosmeticSet.IsSlotRightHanded(cosmeticSlot);
+			foreach (GameObject gameObject in this.objects)
+			{
+				this.EnableItem(gameObject, true);
+			}
+			if (flag)
+			{
+				foreach (GameObject gameObject2 in this.leftObjects)
+				{
+					this.EnableItem(gameObject2, true);
+				}
+			}
+			if (flag2)
+			{
+				foreach (GameObject gameObject3 in this.rightObjects)
+				{
+					this.EnableItem(gameObject3, true);
+				}
+			}
 		}
-		foreach (GameObject rightObject in rightObjects)
-		{
-			EnableItem(rightObject, enable: true);
-		}
+
+		public List<GameObject> leftObjects = new List<GameObject>();
+
+		public List<GameObject> rightObjects = new List<GameObject>();
+
+		public List<GameObject> objects = new List<GameObject>();
 	}
 }

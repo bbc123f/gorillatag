@@ -1,17 +1,20 @@
-namespace OculusSampleFramework;
+﻿using System;
 
-public class InteractableCollisionInfo
+namespace OculusSampleFramework
 {
-	public ColliderZone InteractableCollider;
-
-	public InteractableCollisionDepth CollisionDepth;
-
-	public InteractableTool CollidingTool;
-
-	public InteractableCollisionInfo(ColliderZone collider, InteractableCollisionDepth collisionDepth, InteractableTool collidingTool)
+	public class InteractableCollisionInfo
 	{
-		InteractableCollider = collider;
-		CollisionDepth = collisionDepth;
-		CollidingTool = collidingTool;
+		public InteractableCollisionInfo(ColliderZone collider, InteractableCollisionDepth collisionDepth, InteractableTool collidingTool)
+		{
+			this.InteractableCollider = collider;
+			this.CollisionDepth = collisionDepth;
+			this.CollidingTool = collidingTool;
+		}
+
+		public ColliderZone InteractableCollider;
+
+		public InteractableCollisionDepth CollisionDepth;
+
+		public InteractableTool CollidingTool;
 	}
 }

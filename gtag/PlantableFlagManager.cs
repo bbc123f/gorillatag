@@ -1,21 +1,12 @@
-using System;
+﻿using System;
 using Photon.Pun;
 using UnityEngine;
 
 public class PlantableFlagManager : MonoBehaviourPun, IPunObservable
 {
-	public PlantableObject[] flags;
-
-	public FlagCauldronColorer[] cauldrons;
-
-	public FlagCauldronColorer.ColorMode[] mode;
-
-	public PlantableObject.AppliedColors[][] flagColors;
-
 	public void ResetMyFlags()
 	{
-		PlantableObject[] array = flags;
-		foreach (PlantableObject plantableObject in array)
+		foreach (PlantableObject plantableObject in this.flags)
 		{
 			if (plantableObject.IsMyItem())
 			{
@@ -30,8 +21,7 @@ public class PlantableFlagManager : MonoBehaviourPun, IPunObservable
 
 	public void ResetAllFlags()
 	{
-		PlantableObject[] array = flags;
-		foreach (PlantableObject plantableObject in array)
+		foreach (PlantableObject plantableObject in this.flags)
 		{
 			if (!plantableObject.IsMyItem())
 			{
@@ -49,14 +39,14 @@ public class PlantableFlagManager : MonoBehaviourPun, IPunObservable
 
 	public void RainbowifyAllFlags(float saturation = 1f, float value = 1f)
 	{
-		_ = Color.red;
-		for (int i = 0; i < flags.Length; i++)
+		Color red = Color.red;
+		for (int i = 0; i < this.flags.Length; i++)
 		{
-			Color colorR = Color.HSVToRGB((float)i / (float)flags.Length, saturation, value);
-			PlantableObject plantableObject = flags[i];
-			if ((bool)plantableObject)
+			Color color = Color.HSVToRGB((float)i / (float)this.flags.Length, saturation, value);
+			PlantableObject plantableObject = this.flags[i];
+			if (plantableObject)
 			{
-				plantableObject.colorR = colorR;
+				plantableObject.colorR = color;
 				plantableObject.colorG = Color.black;
 			}
 		}
@@ -64,76 +54,97 @@ public class PlantableFlagManager : MonoBehaviourPun, IPunObservable
 
 	public void Awake()
 	{
-		mode = new FlagCauldronColorer.ColorMode[flags.Length];
-		flagColors = new PlantableObject.AppliedColors[flags.Length][];
-		for (int i = 0; i < flags.Length; i++)
+		this.mode = new FlagCauldronColorer.ColorMode[this.flags.Length];
+		this.flagColors = new PlantableObject.AppliedColors[this.flags.Length][];
+		for (int i = 0; i < this.flags.Length; i++)
 		{
-			flagColors[i] = new PlantableObject.AppliedColors[20];
+			this.flagColors[i] = new PlantableObject.AppliedColors[20];
 		}
 	}
 
 	public void Update()
 	{
-		if (mode == null)
+		if (this.mode == null)
 		{
-			mode = new FlagCauldronColorer.ColorMode[flags.Length];
+			this.mode = new FlagCauldronColorer.ColorMode[this.flags.Length];
 		}
-		if (flagColors == null)
+		if (this.flagColors == null)
 		{
-			flagColors = new PlantableObject.AppliedColors[flags.Length][];
-			for (int i = 0; i < flags.Length; i++)
+			this.flagColors = new PlantableObject.AppliedColors[this.flags.Length][];
+			for (int i = 0; i < this.flags.Length; i++)
 			{
-				flagColors[i] = new PlantableObject.AppliedColors[20];
+				this.flagColors[i] = new PlantableObject.AppliedColors[20];
 			}
 		}
-		for (int j = 0; j < flags.Length; j++)
+		for (int j = 0; j < this.flags.Length; j++)
 		{
-			PlantableObject plantableObject = flags[j];
-			if (!plantableObject.IsMyItem() || Vector3.SqrMagnitude(plantableObject.flagTip.position - base.transform.position) > 25f)
+			PlantableObject plantableObject = this.flags[j];
+			if (plantableObject.IsMyItem() && Vector3.SqrMagnitude(plantableObject.flagTip.position - base.transform.position) <= 25f)
 			{
-				continue;
-			}
-			bool flag = false;
-			FlagCauldronColorer[] array = cauldrons;
-			foreach (FlagCauldronColorer flagCauldronColorer in array)
-			{
-				if (!((double)Vector3.SqrMagnitude(plantableObject.flagTip.position - flagCauldronColorer.colorPoint.position) < 0.05))
+				bool flag = false;
+				FlagCauldronColorer[] array = this.cauldrons;
+				int k = 0;
+				while (k < array.Length)
 				{
-					continue;
-				}
-				flag = true;
-				if (mode[j] != flagCauldronColorer.mode)
-				{
-					mode[j] = flagCauldronColorer.mode;
-					PlantableObject.AppliedColors appliedColors = flagCauldronColorer.mode switch
+					FlagCauldronColorer flagCauldronColorer = array[k];
+					if ((double)Vector3.SqrMagnitude(plantableObject.flagTip.position - flagCauldronColorer.colorPoint.position) < 0.05)
 					{
-						FlagCauldronColorer.ColorMode.Red => PlantableObject.AppliedColors.Red, 
-						FlagCauldronColorer.ColorMode.Green => PlantableObject.AppliedColors.Green, 
-						FlagCauldronColorer.ColorMode.Blue => PlantableObject.AppliedColors.Blue, 
-						FlagCauldronColorer.ColorMode.Black => PlantableObject.AppliedColors.Black, 
-						FlagCauldronColorer.ColorMode.Clear => PlantableObject.AppliedColors.None, 
-						_ => throw new ArgumentOutOfRangeException(), 
-					};
-					if (appliedColors == PlantableObject.AppliedColors.None)
-					{
-						plantableObject.ClearColors();
+						flag = true;
+						if (this.mode[j] != flagCauldronColorer.mode)
+						{
+							this.mode[j] = flagCauldronColorer.mode;
+							PlantableObject.AppliedColors appliedColors;
+							switch (flagCauldronColorer.mode)
+							{
+							case FlagCauldronColorer.ColorMode.Red:
+								appliedColors = PlantableObject.AppliedColors.Red;
+								break;
+							case FlagCauldronColorer.ColorMode.Green:
+								appliedColors = PlantableObject.AppliedColors.Green;
+								break;
+							case FlagCauldronColorer.ColorMode.Blue:
+								appliedColors = PlantableObject.AppliedColors.Blue;
+								break;
+							case FlagCauldronColorer.ColorMode.Black:
+								appliedColors = PlantableObject.AppliedColors.Black;
+								break;
+							case FlagCauldronColorer.ColorMode.Clear:
+								appliedColors = PlantableObject.AppliedColors.None;
+								break;
+							default:
+								throw new ArgumentOutOfRangeException();
+							}
+							if (appliedColors == PlantableObject.AppliedColors.None)
+							{
+								plantableObject.ClearColors();
+							}
+							else
+							{
+								plantableObject.AddColor(appliedColors);
+							}
+							if (!PhotonNetwork.IsMasterClient)
+							{
+								base.photonView.RPC("UpdateFlagColorRPC", RpcTarget.MasterClient, new object[]
+								{
+									j,
+									(int)appliedColors
+								});
+							}
+							plantableObject.UpdateDisplayedDippedColor();
+							this.flagColors[j] = plantableObject.dippedColors;
+							break;
+						}
+						break;
 					}
 					else
 					{
-						plantableObject.AddColor(appliedColors);
+						k++;
 					}
-					if (!PhotonNetwork.IsMasterClient)
-					{
-						base.photonView.RPC("UpdateFlagColorRPC", RpcTarget.MasterClient, j, (int)appliedColors);
-					}
-					plantableObject.UpdateDisplayedDippedColor();
-					flagColors[j] = plantableObject.dippedColors;
 				}
-				break;
-			}
-			if (!flag)
-			{
-				mode[j] = FlagCauldronColorer.ColorMode.None;
+				if (!flag)
+				{
+					this.mode[j] = FlagCauldronColorer.ColorMode.None;
+				}
 			}
 		}
 	}
@@ -141,23 +152,21 @@ public class PlantableFlagManager : MonoBehaviourPun, IPunObservable
 	[PunRPC]
 	public void UpdateFlagColorRPC(int flagIndex, int colorIndex, PhotonMessageInfo info)
 	{
-		PlantableObject plantableObject = flags[flagIndex];
+		PlantableObject plantableObject = this.flags[flagIndex];
 		if (colorIndex == 0)
 		{
 			plantableObject.ClearColors();
+			return;
 		}
-		else
-		{
-			plantableObject.AddColor((PlantableObject.AppliedColors)colorIndex);
-		}
+		plantableObject.AddColor((PlantableObject.AppliedColors)colorIndex);
 	}
 
 	public void UpdateFlagColors()
 	{
-		for (int i = 0; i < flagColors.Length; i++)
+		for (int i = 0; i < this.flagColors.Length; i++)
 		{
-			PlantableObject.AppliedColors[] array = flagColors[i];
-			PlantableObject plantableObject = flags[i];
+			PlantableObject.AppliedColors[] array = this.flagColors[i];
+			PlantableObject plantableObject = this.flags[i];
 			if (!plantableObject.IsMyItem() && array.Length <= 20)
 			{
 				plantableObject.dippedColors = array;
@@ -170,22 +179,30 @@ public class PlantableFlagManager : MonoBehaviourPun, IPunObservable
 	{
 		if (stream.IsWriting)
 		{
-			for (int i = 0; i < flagColors.Length; i++)
+			for (int i = 0; i < this.flagColors.Length; i++)
 			{
 				for (int j = 0; j < 20; j++)
 				{
-					stream.SendNext((int)flagColors[i][j]);
+					stream.SendNext((int)this.flagColors[i][j]);
 				}
 			}
 			return;
 		}
-		for (int k = 0; k < flagColors.Length; k++)
+		for (int k = 0; k < this.flagColors.Length; k++)
 		{
 			for (int l = 0; l < 20; l++)
 			{
-				flagColors[k][l] = (PlantableObject.AppliedColors)stream.ReceiveNext();
+				this.flagColors[k][l] = (PlantableObject.AppliedColors)stream.ReceiveNext();
 			}
 		}
-		UpdateFlagColors();
+		this.UpdateFlagColors();
 	}
+
+	public PlantableObject[] flags;
+
+	public FlagCauldronColorer[] cauldrons;
+
+	public FlagCauldronColorer.ColorMode[] mode;
+
+	public PlantableObject.AppliedColors[][] flagColors;
 }

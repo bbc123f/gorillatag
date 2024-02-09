@@ -1,29 +1,30 @@
+﻿using System;
 using GorillaNetworking;
 using Photon.Pun;
 
 public class GroupJoinButton : GorillaPressableButton
 {
-	public int gameModeIndex;
-
-	public GorillaFriendCollider friendCollider;
-
-	public bool inPrivate;
-
 	public override void ButtonActivation()
 	{
 		base.ButtonActivation();
-		if (inPrivate)
+		if (this.inPrivate)
 		{
-			GorillaComputer.instance.OnGroupJoinButtonPress(gameModeIndex, friendCollider);
+			GorillaComputer.instance.OnGroupJoinButtonPress(this.gameModeIndex, this.friendCollider);
 		}
 	}
 
 	public void Update()
 	{
-		inPrivate = PhotonNetwork.InRoom && !PhotonNetwork.CurrentRoom.IsVisible;
-		if (!inPrivate)
+		this.inPrivate = PhotonNetwork.InRoom && !PhotonNetwork.CurrentRoom.IsVisible;
+		if (!this.inPrivate)
 		{
-			isOn = true;
+			this.isOn = true;
 		}
 	}
+
+	public int gameModeIndex;
+
+	public GorillaFriendCollider friendCollider;
+
+	public bool inPrivate;
 }

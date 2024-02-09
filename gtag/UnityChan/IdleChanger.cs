@@ -1,108 +1,111 @@
+﻿using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace UnityChan;
-
-public class IdleChanger : MonoBehaviour
+namespace UnityChan
 {
-	private AnimatorStateInfo currentState;
-
-	private AnimatorStateInfo previousState;
-
-	public bool _random;
-
-	public float _threshold = 0.5f;
-
-	public float _interval = 10f;
-
-	public bool isGUI = true;
-
-	public Animator UnityChanA;
-
-	public Animator UnityChanB;
-
-	private Keyboard kb;
-
-	private void Start()
+	public class IdleChanger : MonoBehaviour
 	{
-		currentState = UnityChanA.GetCurrentAnimatorStateInfo(0);
-		previousState = currentState;
-		StartCoroutine("RandomChange");
-		kb = Keyboard.current;
-	}
+		private void Start()
+		{
+			this.currentState = this.UnityChanA.GetCurrentAnimatorStateInfo(0);
+			this.previousState = this.currentState;
+			base.StartCoroutine("RandomChange");
+			this.kb = Keyboard.current;
+		}
 
-	private void Update()
-	{
-		if (kb.upArrowKey.wasPressedThisFrame || kb.spaceKey.wasPressedThisFrame)
+		private void Update()
 		{
-			UnityChanA.SetBool("Next", value: true);
-			UnityChanB.SetBool("Next", value: true);
-		}
-		if (kb.downArrowKey.wasPressedThisFrame)
-		{
-			UnityChanA.SetBool("Back", value: true);
-			UnityChanB.SetBool("Back", value: true);
-		}
-		if (UnityChanA.GetBool("Next"))
-		{
-			currentState = UnityChanA.GetCurrentAnimatorStateInfo(0);
-			if (previousState.fullPathHash != currentState.fullPathHash)
+			if (this.kb.upArrowKey.wasPressedThisFrame || this.kb.spaceKey.wasPressedThisFrame)
 			{
-				UnityChanA.SetBool("Next", value: false);
-				UnityChanB.SetBool("Next", value: false);
-				previousState = currentState;
+				this.UnityChanA.SetBool("Next", true);
+				this.UnityChanB.SetBool("Next", true);
 			}
-		}
-		if (UnityChanA.GetBool("Back"))
-		{
-			currentState = UnityChanA.GetCurrentAnimatorStateInfo(0);
-			if (previousState.fullPathHash != currentState.fullPathHash)
+			if (this.kb.downArrowKey.wasPressedThisFrame)
 			{
-				UnityChanA.SetBool("Back", value: false);
-				UnityChanB.SetBool("Back", value: false);
-				previousState = currentState;
+				this.UnityChanA.SetBool("Back", true);
+				this.UnityChanB.SetBool("Back", true);
 			}
-		}
-	}
-
-	private void OnGUI()
-	{
-		if (isGUI)
-		{
-			GUI.Box(new Rect(Screen.width - 110, 10f, 100f, 90f), "Change Motion");
-			if (GUI.Button(new Rect(Screen.width - 100, 40f, 80f, 20f), "Next"))
+			if (this.UnityChanA.GetBool("Next"))
 			{
-				UnityChanA.SetBool("Next", value: true);
-				UnityChanB.SetBool("Next", value: true);
-			}
-			if (GUI.Button(new Rect(Screen.width - 100, 70f, 80f, 20f), "Back"))
-			{
-				UnityChanA.SetBool("Back", value: true);
-				UnityChanB.SetBool("Back", value: true);
-			}
-		}
-	}
-
-	private IEnumerator RandomChange()
-	{
-		while (true)
-		{
-			if (_random)
-			{
-				float num = Random.Range(0f, 1f);
-				if (num < _threshold)
+				this.currentState = this.UnityChanA.GetCurrentAnimatorStateInfo(0);
+				if (this.previousState.fullPathHash != this.currentState.fullPathHash)
 				{
-					UnityChanA.SetBool("Back", value: true);
-					UnityChanB.SetBool("Back", value: true);
-				}
-				else if (num >= _threshold)
-				{
-					UnityChanA.SetBool("Next", value: true);
-					UnityChanB.SetBool("Next", value: true);
+					this.UnityChanA.SetBool("Next", false);
+					this.UnityChanB.SetBool("Next", false);
+					this.previousState = this.currentState;
 				}
 			}
-			yield return new WaitForSeconds(_interval);
+			if (this.UnityChanA.GetBool("Back"))
+			{
+				this.currentState = this.UnityChanA.GetCurrentAnimatorStateInfo(0);
+				if (this.previousState.fullPathHash != this.currentState.fullPathHash)
+				{
+					this.UnityChanA.SetBool("Back", false);
+					this.UnityChanB.SetBool("Back", false);
+					this.previousState = this.currentState;
+				}
+			}
 		}
+
+		private void OnGUI()
+		{
+			if (this.isGUI)
+			{
+				GUI.Box(new Rect((float)(Screen.width - 110), 10f, 100f, 90f), "Change Motion");
+				if (GUI.Button(new Rect((float)(Screen.width - 100), 40f, 80f, 20f), "Next"))
+				{
+					this.UnityChanA.SetBool("Next", true);
+					this.UnityChanB.SetBool("Next", true);
+				}
+				if (GUI.Button(new Rect((float)(Screen.width - 100), 70f, 80f, 20f), "Back"))
+				{
+					this.UnityChanA.SetBool("Back", true);
+					this.UnityChanB.SetBool("Back", true);
+				}
+			}
+		}
+
+		private IEnumerator RandomChange()
+		{
+			for (;;)
+			{
+				if (this._random)
+				{
+					float num = Random.Range(0f, 1f);
+					if (num < this._threshold)
+					{
+						this.UnityChanA.SetBool("Back", true);
+						this.UnityChanB.SetBool("Back", true);
+					}
+					else if (num >= this._threshold)
+					{
+						this.UnityChanA.SetBool("Next", true);
+						this.UnityChanB.SetBool("Next", true);
+					}
+				}
+				yield return new WaitForSeconds(this._interval);
+			}
+			yield break;
+		}
+
+		private AnimatorStateInfo currentState;
+
+		private AnimatorStateInfo previousState;
+
+		public bool _random;
+
+		public float _threshold = 0.5f;
+
+		public float _interval = 10f;
+
+		public bool isGUI = true;
+
+		public Animator UnityChanA;
+
+		public Animator UnityChanB;
+
+		private Keyboard kb;
 	}
 }

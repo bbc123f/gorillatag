@@ -1,53 +1,40 @@
+﻿using System;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class MediaPlayerImage : Image
 {
-	public enum ButtonType
-	{
-		Play,
-		Pause,
-		FastForward,
-		Rewind,
-		SkipForward,
-		SkipBack,
-		Stop
-	}
-
-	[SerializeField]
-	private ButtonType m_ButtonType;
-
-	public ButtonType buttonType
+	public MediaPlayerImage.ButtonType buttonType
 	{
 		get
 		{
-			return m_ButtonType;
+			return this.m_ButtonType;
 		}
 		set
 		{
-			if (m_ButtonType != value)
+			if (this.m_ButtonType != value)
 			{
-				m_ButtonType = value;
-				SetAllDirty();
+				this.m_ButtonType = value;
+				this.SetAllDirty();
 			}
 		}
 	}
 
 	protected override void OnPopulateMesh(VertexHelper toFill)
 	{
-		Rect pixelAdjustedRect = GetPixelAdjustedRect();
+		Rect pixelAdjustedRect = base.GetPixelAdjustedRect();
 		Vector4 vector = new Vector4(pixelAdjustedRect.x, pixelAdjustedRect.y, pixelAdjustedRect.x + pixelAdjustedRect.width, pixelAdjustedRect.y + pixelAdjustedRect.height);
 		Color32 color = this.color;
 		toFill.Clear();
-		switch (m_ButtonType)
+		switch (this.m_ButtonType)
 		{
-		case ButtonType.Play:
+		case MediaPlayerImage.ButtonType.Play:
 			toFill.AddVert(new Vector3(vector.x, vector.y), color, new Vector2(0f, 0f));
 			toFill.AddVert(new Vector3(vector.x, vector.w), color, new Vector2(0f, 1f));
 			toFill.AddVert(new Vector3(vector.z, Mathf.Lerp(vector.y, vector.w, 0.5f)), color, new Vector2(1f, 0.5f));
 			toFill.AddTriangle(0, 1, 2);
-			break;
-		case ButtonType.Pause:
+			return;
+		case MediaPlayerImage.ButtonType.Pause:
 			toFill.AddVert(new Vector3(vector.x, vector.y), color, new Vector2(0f, 0f));
 			toFill.AddVert(new Vector3(vector.x, vector.w), color, new Vector2(0f, 1f));
 			toFill.AddVert(new Vector3(Mathf.Lerp(vector.x, vector.z, 0.35f), vector.w), color, new Vector2(0.35f, 1f));
@@ -60,8 +47,8 @@ public class MediaPlayerImage : Image
 			toFill.AddTriangle(2, 3, 0);
 			toFill.AddTriangle(4, 5, 6);
 			toFill.AddTriangle(6, 7, 4);
-			break;
-		case ButtonType.FastForward:
+			return;
+		case MediaPlayerImage.ButtonType.FastForward:
 			toFill.AddVert(new Vector3(vector.x, vector.y), color, new Vector2(0f, 0f));
 			toFill.AddVert(new Vector3(vector.x, vector.w), color, new Vector2(0f, 1f));
 			toFill.AddVert(new Vector3(Mathf.Lerp(vector.x, vector.z, 0.5f), Mathf.Lerp(vector.y, vector.w, 0.5f)), color, new Vector2(0.5f, 0.5f));
@@ -70,8 +57,8 @@ public class MediaPlayerImage : Image
 			toFill.AddVert(new Vector3(vector.z, Mathf.Lerp(vector.y, vector.w, 0.5f)), color, new Vector2(1f, 0.5f));
 			toFill.AddTriangle(0, 1, 2);
 			toFill.AddTriangle(3, 4, 5);
-			break;
-		case ButtonType.Rewind:
+			return;
+		case MediaPlayerImage.ButtonType.Rewind:
 			toFill.AddVert(new Vector3(vector.x, Mathf.Lerp(vector.y, vector.w, 0.5f)), color, new Vector2(0f, 0.5f));
 			toFill.AddVert(new Vector3(Mathf.Lerp(vector.x, vector.z, 0.5f), vector.w), color, new Vector2(0.5f, 1f));
 			toFill.AddVert(new Vector3(Mathf.Lerp(vector.x, vector.z, 0.5f), vector.y), color, new Vector2(0.5f, 0f));
@@ -80,8 +67,8 @@ public class MediaPlayerImage : Image
 			toFill.AddVert(new Vector3(vector.z, vector.y), color, new Vector2(1f, 0f));
 			toFill.AddTriangle(0, 1, 2);
 			toFill.AddTriangle(3, 4, 5);
-			break;
-		case ButtonType.SkipForward:
+			return;
+		case MediaPlayerImage.ButtonType.SkipForward:
 			toFill.AddVert(new Vector3(vector.x, vector.y), color, new Vector2(0f, 0f));
 			toFill.AddVert(new Vector3(vector.x, vector.w), color, new Vector2(0f, 1f));
 			toFill.AddVert(new Vector3(Mathf.Lerp(vector.x, vector.z, 0.4375f), Mathf.Lerp(vector.y, vector.w, 0.5f)), color, new Vector2(0.4375f, 0.5f));
@@ -96,8 +83,8 @@ public class MediaPlayerImage : Image
 			toFill.AddTriangle(3, 4, 5);
 			toFill.AddTriangle(6, 7, 8);
 			toFill.AddTriangle(8, 9, 6);
-			break;
-		case ButtonType.SkipBack:
+			return;
+		case MediaPlayerImage.ButtonType.SkipBack:
 			toFill.AddVert(new Vector3(vector.x, vector.y), color, new Vector2(0f, 0f));
 			toFill.AddVert(new Vector3(vector.x, vector.w), color, new Vector2(0f, 1f));
 			toFill.AddVert(new Vector3(Mathf.Lerp(vector.x, vector.z, 0.125f), vector.w), color, new Vector2(0.125f, 1f));
@@ -112,15 +99,27 @@ public class MediaPlayerImage : Image
 			toFill.AddTriangle(2, 3, 0);
 			toFill.AddTriangle(4, 5, 6);
 			toFill.AddTriangle(7, 8, 9);
-			break;
-		default:
-			toFill.AddVert(new Vector3(vector.x, vector.y), color, new Vector2(0f, 0f));
-			toFill.AddVert(new Vector3(vector.x, vector.w), color, new Vector2(0f, 1f));
-			toFill.AddVert(new Vector3(vector.z, vector.w), color, new Vector2(1f, 1f));
-			toFill.AddVert(new Vector3(vector.z, vector.y), color, new Vector2(1f, 0f));
-			toFill.AddTriangle(0, 1, 2);
-			toFill.AddTriangle(2, 3, 0);
-			break;
+			return;
 		}
+		toFill.AddVert(new Vector3(vector.x, vector.y), color, new Vector2(0f, 0f));
+		toFill.AddVert(new Vector3(vector.x, vector.w), color, new Vector2(0f, 1f));
+		toFill.AddVert(new Vector3(vector.z, vector.w), color, new Vector2(1f, 1f));
+		toFill.AddVert(new Vector3(vector.z, vector.y), color, new Vector2(1f, 0f));
+		toFill.AddTriangle(0, 1, 2);
+		toFill.AddTriangle(2, 3, 0);
+	}
+
+	[SerializeField]
+	private MediaPlayerImage.ButtonType m_ButtonType;
+
+	public enum ButtonType
+	{
+		Play,
+		Pause,
+		FastForward,
+		Rewind,
+		SkipForward,
+		SkipBack,
+		Stop
 	}
 }

@@ -1,9 +1,12 @@
-namespace OculusSampleFramework;
+﻿using System;
 
-public enum ToolInputState
+namespace OculusSampleFramework
 {
-	Inactive,
-	PrimaryInputDown,
-	PrimaryInputDownStay,
-	PrimaryInputUp
+	public enum ToolInputState
+	{
+		Inactive,
+		PrimaryInputDown,
+		PrimaryInputDownStay,
+		PrimaryInputUp
+	}
 }

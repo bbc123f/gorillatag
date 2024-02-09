@@ -1,84 +1,96 @@
-namespace BoingKit;
+﻿using System;
 
-public struct BitArray
+namespace BoingKit
 {
-	private int[] m_aBlock;
-
-	public int[] Blocks => m_aBlock;
-
-	private static int GetBlockIndex(int index)
+	public struct BitArray
 	{
-		return index / 4;
-	}
-
-	private static int GetSubIndex(int index)
-	{
-		return index % 4;
-	}
-
-	private static void SetBit(int index, bool value, int[] blocks)
-	{
-		int blockIndex = GetBlockIndex(index);
-		int subIndex = GetSubIndex(index);
-		if (value)
+		public int[] Blocks
 		{
-			blocks[blockIndex] |= 1 << subIndex;
+			get
+			{
+				return this.m_aBlock;
+			}
 		}
-		else
+
+		private static int GetBlockIndex(int index)
 		{
+			return index / 4;
+		}
+
+		private static int GetSubIndex(int index)
+		{
+			return index % 4;
+		}
+
+		private static void SetBit(int index, bool value, int[] blocks)
+		{
+			int blockIndex = BitArray.GetBlockIndex(index);
+			int subIndex = BitArray.GetSubIndex(index);
+			if (value)
+			{
+				blocks[blockIndex] |= 1 << subIndex;
+				return;
+			}
 			blocks[blockIndex] &= ~(1 << subIndex);
 		}
-	}
 
-	private static bool IsBitSet(int index, int[] blocks)
-	{
-		return (blocks[GetBlockIndex(index)] & (1 << GetSubIndex(index))) != 0;
-	}
-
-	public BitArray(int capacity)
-	{
-		int num = (capacity + 4 - 1) / 4;
-		m_aBlock = new int[num];
-		Clear();
-	}
-
-	public void Resize(int capacity)
-	{
-		int num = (capacity + 4 - 1) / 4;
-		if (num > m_aBlock.Length)
+		private static bool IsBitSet(int index, int[] blocks)
 		{
+			return (blocks[BitArray.GetBlockIndex(index)] & (1 << BitArray.GetSubIndex(index))) != 0;
+		}
+
+		public BitArray(int capacity)
+		{
+			int num = (capacity + 4 - 1) / 4;
+			this.m_aBlock = new int[num];
+			this.Clear();
+		}
+
+		public void Resize(int capacity)
+		{
+			int num = (capacity + 4 - 1) / 4;
+			if (num <= this.m_aBlock.Length)
+			{
+				return;
+			}
 			int[] array = new int[num];
 			int i = 0;
-			for (int num2 = m_aBlock.Length; i < num2; i++)
+			int num2 = this.m_aBlock.Length;
+			while (i < num2)
 			{
-				array[i] = m_aBlock[i];
+				array[i] = this.m_aBlock[i];
+				i++;
 			}
-			m_aBlock = array;
+			this.m_aBlock = array;
 		}
-	}
 
-	public void Clear()
-	{
-		SetAllBits(value: false);
-	}
-
-	public void SetAllBits(bool value)
-	{
-		int num = ((!value) ? 1 : (-1));
-		int i = 0;
-		for (int num2 = m_aBlock.Length; i < num2; i++)
+		public void Clear()
 		{
-			m_aBlock[i] = num;
+			this.SetAllBits(false);
 		}
-	}
 
-	public void SetBit(int index, bool value)
-	{
-		SetBit(index, value, m_aBlock);
-	}
+		public void SetAllBits(bool value)
+		{
+			int num = (value ? (-1) : 1);
+			int i = 0;
+			int num2 = this.m_aBlock.Length;
+			while (i < num2)
+			{
+				this.m_aBlock[i] = num;
+				i++;
+			}
+		}
 
-	public bool IsBitSet(int index)
-	{
-		return IsBitSet(index, m_aBlock);
+		public void SetBit(int index, bool value)
+		{
+			BitArray.SetBit(index, value, this.m_aBlock);
+		}
+
+		public bool IsBitSet(int index)
+		{
+			return BitArray.IsBitSet(index, this.m_aBlock);
+		}
+
+		private int[] m_aBlock;
 	}
 }

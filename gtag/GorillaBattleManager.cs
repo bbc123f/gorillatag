@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,29 +7,745 @@ using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
 
-public class GorillaBattleManager : GorillaGameManager, IInRoomCallbacks, IMatchmakingCallbacks, IPunObservable
+public class GorillaBattleManager : GorillaGameManager
 {
-	public enum BattleStatus
+	private void ActivateBattleBalloons(bool enable)
 	{
-		RedTeam = 1,
-		BlueTeam = 2,
-		Normal = 4,
-		Hit = 8,
-		Stunned = 16,
-		Grace = 32,
-		Eliminated = 64,
-		None = 0
+		if (GorillaTagger.Instance.offlineVRRig != null)
+		{
+			GorillaTagger.Instance.offlineVRRig.battleBalloons.gameObject.SetActive(enable);
+		}
 	}
 
-	private enum BattleState
+	private bool HasFlag(GorillaBattleManager.BattleStatus state, GorillaBattleManager.BattleStatus statusFlag)
 	{
-		NotEnoughPlayers,
-		GameEnd,
-		GameEndWaiting,
-		StartCountdown,
-		CountingDownToStart,
-		GameStart,
-		GameRunning
+		return (state & statusFlag) > GorillaBattleManager.BattleStatus.None;
+	}
+
+	public override GameModeType GameType()
+	{
+		return GameModeType.Battle;
+	}
+
+	public override string GameModeName()
+	{
+		return "BATTLE";
+	}
+
+	private void ActivateDefaultSlingShot()
+	{
+		VRRig offlineVRRig = GorillaTagger.Instance.offlineVRRig;
+		if (offlineVRRig != null && !Slingshot.IsSlingShotEnabled())
+		{
+			CosmeticsController instance = CosmeticsController.instance;
+			CosmeticsController.CosmeticItem itemFromDict = instance.GetItemFromDict("Slingshot");
+			instance.ApplyCosmeticItemToSet(offlineVRRig.cosmeticSet, itemFromDict, true, false);
+		}
+	}
+
+	public override void Awake()
+	{
+		base.Awake();
+		this.coroutineRunning = false;
+		this.currentState = GorillaBattleManager.BattleState.NotEnoughPlayers;
+	}
+
+	public override void StartPlaying()
+	{
+		base.StartPlaying();
+		this.ActivateBattleBalloons(true);
+		this.VerifyPlayersInDict<int>(this.playerLives);
+		this.VerifyPlayersInDict<GorillaBattleManager.BattleStatus>(this.playerStatusDict);
+		this.VerifyPlayersInDict<float>(this.playerHitTimes);
+		this.VerifyPlayersInDict<float>(this.playerStunTimes);
+		this.CopyBattleDictToArray();
+		this.UpdateBattleState();
+	}
+
+	public override void StopPlaying()
+	{
+		base.StopPlaying();
+		if (Slingshot.IsSlingShotEnabled())
+		{
+			CosmeticsController instance = CosmeticsController.instance;
+			VRRig offlineVRRig = GorillaTagger.Instance.offlineVRRig;
+			if (offlineVRRig.cosmeticSet.HasItem("Slingshot"))
+			{
+				instance.RemoveCosmeticItemFromSet(offlineVRRig.cosmeticSet, "Slingshot", true);
+			}
+		}
+		this.ActivateBattleBalloons(false);
+		base.StopAllCoroutines();
+		this.coroutineRunning = false;
+	}
+
+	public override void Reset()
+	{
+		base.Reset();
+		this.playerLives.Clear();
+		this.playerStatusDict.Clear();
+		this.playerHitTimes.Clear();
+		this.playerStunTimes.Clear();
+		for (int i = 0; i < this.playerActorNumberArray.Length; i++)
+		{
+			this.playerLivesArray[i] = 0;
+			this.playerActorNumberArray[i] = 0;
+			this.playerStatusArray[i] = GorillaBattleManager.BattleStatus.None;
+		}
+		this.currentState = GorillaBattleManager.BattleState.NotEnoughPlayers;
+	}
+
+	private void VerifyPlayersInDict<T>(Dictionary<int, T> dict)
+	{
+		if (dict.Count < 1)
+		{
+			return;
+		}
+		int[] array = dict.Keys.ToArray<int>();
+		for (int i = 0; i < array.Length; i++)
+		{
+			if (!Utils.PlayerInRoom(array[i]))
+			{
+				dict.Remove(array[i]);
+			}
+		}
+	}
+
+	internal override void NetworkLinkSetup(GameModeSerializer netSerializer)
+	{
+		base.NetworkLinkSetup(netSerializer);
+		netSerializer.AddRPCComponent<BattleRPCs>();
+	}
+
+	private void Transition(GorillaBattleManager.BattleState newState)
+	{
+		this.currentState = newState;
+		Debug.Log("current state is: " + this.currentState.ToString());
+	}
+
+	public void UpdateBattleState()
+	{
+		if (PhotonNetwork.LocalPlayer.IsMasterClient)
+		{
+			switch (this.currentState)
+			{
+			case GorillaBattleManager.BattleState.NotEnoughPlayers:
+				if ((float)RoomSystem.PlayersInRoom.Count >= this.playerMin)
+				{
+					this.Transition(GorillaBattleManager.BattleState.StartCountdown);
+				}
+				break;
+			case GorillaBattleManager.BattleState.GameEnd:
+				if (this.EndBattleGame())
+				{
+					this.Transition(GorillaBattleManager.BattleState.GameEndWaiting);
+				}
+				break;
+			case GorillaBattleManager.BattleState.GameEndWaiting:
+				if (this.BattleEnd())
+				{
+					this.Transition(GorillaBattleManager.BattleState.StartCountdown);
+				}
+				break;
+			case GorillaBattleManager.BattleState.StartCountdown:
+				this.RandomizeTeams();
+				this.ActivateBattleBalloons(true);
+				base.StartCoroutine(this.StartBattleCountdown());
+				this.Transition(GorillaBattleManager.BattleState.CountingDownToStart);
+				break;
+			case GorillaBattleManager.BattleState.CountingDownToStart:
+				if (!this.coroutineRunning)
+				{
+					this.Transition(GorillaBattleManager.BattleState.StartCountdown);
+				}
+				break;
+			case GorillaBattleManager.BattleState.GameStart:
+				this.StartBattle();
+				this.Transition(GorillaBattleManager.BattleState.GameRunning);
+				break;
+			case GorillaBattleManager.BattleState.GameRunning:
+				if (this.CheckForGameEnd())
+				{
+					this.Transition(GorillaBattleManager.BattleState.GameEnd);
+				}
+				if ((float)RoomSystem.PlayersInRoom.Count < this.playerMin)
+				{
+					this.InitializePlayerStatus();
+					this.ActivateBattleBalloons(false);
+					this.Transition(GorillaBattleManager.BattleState.NotEnoughPlayers);
+				}
+				break;
+			}
+			this.UpdatePlayerStatus();
+		}
+	}
+
+	private bool CheckForGameEnd()
+	{
+		this.bcount = 0;
+		this.rcount = 0;
+		foreach (Player player in RoomSystem.PlayersInRoom)
+		{
+			if (this.playerLives.TryGetValue(player.ActorNumber, out this.lives))
+			{
+				if (this.lives > 0 && this.playerStatusDict.TryGetValue(player.ActorNumber, out this.tempStatus))
+				{
+					if (this.HasFlag(this.tempStatus, GorillaBattleManager.BattleStatus.RedTeam))
+					{
+						this.rcount++;
+					}
+					else if (this.HasFlag(this.tempStatus, GorillaBattleManager.BattleStatus.BlueTeam))
+					{
+						this.bcount++;
+					}
+				}
+			}
+			else
+			{
+				this.playerLives.Add(player.ActorNumber, 0);
+			}
+		}
+		return this.bcount == 0 || this.rcount == 0;
+	}
+
+	public IEnumerator StartBattleCountdown()
+	{
+		this.coroutineRunning = true;
+		this.countDownTime = 5;
+		while (this.countDownTime > 0)
+		{
+			try
+			{
+				RoomSystem.SendSoundEffectAll(6, 0.25f);
+				foreach (Player player in RoomSystem.PlayersInRoom)
+				{
+					this.playerLives[player.ActorNumber] = 3;
+				}
+			}
+			catch
+			{
+			}
+			yield return new WaitForSeconds(1f);
+			this.countDownTime--;
+		}
+		this.coroutineRunning = false;
+		this.currentState = GorillaBattleManager.BattleState.GameStart;
+		yield return null;
+		yield break;
+	}
+
+	public void StartBattle()
+	{
+		RoomSystem.SendSoundEffectAll(7, 0.5f);
+		foreach (Player player in RoomSystem.PlayersInRoom)
+		{
+			this.playerLives[player.ActorNumber] = 3;
+		}
+	}
+
+	private bool EndBattleGame()
+	{
+		if ((float)RoomSystem.PlayersInRoom.Count >= this.playerMin)
+		{
+			RoomSystem.SendStatusEffectAll(RoomSystem.StatusEffects.TaggedTime);
+			RoomSystem.SendSoundEffectAll(2, 0.25f);
+			this.timeBattleEnded = Time.time;
+			return true;
+		}
+		return false;
+	}
+
+	public bool BattleEnd()
+	{
+		return Time.time > this.timeBattleEnded + this.tagCoolDown;
+	}
+
+	public bool SlingshotHit(Player myPlayer, Player otherPlayer)
+	{
+		return this.playerLives.TryGetValue(otherPlayer.ActorNumber, out this.lives) && this.lives > 0;
+	}
+
+	public void ReportSlingshotHit(Player taggedPlayer, Vector3 hitLocation, int projectileCount, PhotonMessageInfo info)
+	{
+		if (!PhotonNetwork.LocalPlayer.IsMasterClient)
+		{
+			return;
+		}
+		if (this.currentState != GorillaBattleManager.BattleState.GameRunning)
+		{
+			return;
+		}
+		if (this.OnSameTeam(taggedPlayer, info.Sender))
+		{
+			return;
+		}
+		if (this.GetPlayerLives(taggedPlayer) > 0 && this.GetPlayerLives(info.Sender) > 0 && !this.PlayerInHitCooldown(taggedPlayer))
+		{
+			if (!this.playerHitTimes.TryGetValue(taggedPlayer.ActorNumber, out this.outHitTime))
+			{
+				this.playerHitTimes.Add(taggedPlayer.ActorNumber, Time.time);
+			}
+			else
+			{
+				this.playerHitTimes[taggedPlayer.ActorNumber] = Time.time;
+			}
+			Dictionary<int, int> dictionary = this.playerLives;
+			int actorNumber = taggedPlayer.ActorNumber;
+			int num = dictionary[actorNumber];
+			dictionary[actorNumber] = num - 1;
+			RoomSystem.SendSoundEffectOnOther(0, 0.25f, taggedPlayer);
+			return;
+		}
+		if (this.GetPlayerLives(info.Sender) == 0 && this.GetPlayerLives(taggedPlayer) > 0)
+		{
+			this.tempStatus = this.GetPlayerStatus(taggedPlayer);
+			if (this.HasFlag(this.tempStatus, GorillaBattleManager.BattleStatus.Normal) && !this.PlayerInHitCooldown(taggedPlayer) && !this.PlayerInStunCooldown(taggedPlayer))
+			{
+				if (!this.playerStunTimes.TryGetValue(taggedPlayer.ActorNumber, out this.outHitTime))
+				{
+					this.playerStunTimes.Add(taggedPlayer.ActorNumber, Time.time);
+				}
+				else
+				{
+					this.playerStunTimes[taggedPlayer.ActorNumber] = Time.time;
+				}
+				RoomSystem.SendStatusEffectToPlayer(RoomSystem.StatusEffects.SetSlowedTime, taggedPlayer);
+				RoomSystem.SendSoundEffectOnOther(5, 0.125f, taggedPlayer);
+				this.tempView = this.FindVRRigForPlayer(taggedPlayer);
+			}
+		}
+	}
+
+	public override void HitPlayer(Player player)
+	{
+		if (!PhotonNetwork.LocalPlayer.IsMasterClient || this.currentState != GorillaBattleManager.BattleState.GameRunning)
+		{
+			return;
+		}
+		if (this.GetPlayerLives(player) > 0)
+		{
+			this.playerLives[player.ActorNumber] = 0;
+			RoomSystem.SendSoundEffectOnOther(0, 0.25f, player);
+		}
+	}
+
+	public override bool CanAffectPlayer(Player player, bool thisFrame)
+	{
+		return this.playerLives.TryGetValue(player.ActorNumber, out this.lives) && this.lives > 0;
+	}
+
+	public override void OnPlayerEnteredRoom(Player newPlayer)
+	{
+		base.OnPlayerEnteredRoom(newPlayer);
+		if (PhotonNetwork.LocalPlayer.IsMasterClient)
+		{
+			if (this.currentState == GorillaBattleManager.BattleState.GameRunning)
+			{
+				this.playerLives.Add(newPlayer.ActorNumber, 0);
+			}
+			else
+			{
+				this.playerLives.Add(newPlayer.ActorNumber, 3);
+			}
+			this.playerStatusDict.Add(newPlayer.ActorNumber, GorillaBattleManager.BattleStatus.None);
+			this.CopyBattleDictToArray();
+			this.AddPlayerToCorrectTeam(newPlayer);
+		}
+	}
+
+	public override void OnPlayerLeftRoom(Player otherPlayer)
+	{
+		base.OnPlayerLeftRoom(otherPlayer);
+		if (this.playerLives.ContainsKey(otherPlayer.ActorNumber))
+		{
+			this.playerLives.Remove(otherPlayer.ActorNumber);
+		}
+		if (this.playerStatusDict.ContainsKey(otherPlayer.ActorNumber))
+		{
+			this.playerStatusDict.Remove(otherPlayer.ActorNumber);
+		}
+	}
+
+	public override void OnSerializeWrite(PhotonStream stream, PhotonMessageInfo info)
+	{
+		this.CopyBattleDictToArray();
+		for (int i = 0; i < this.playerLivesArray.Length; i++)
+		{
+			stream.SendNext(this.playerActorNumberArray[i]);
+			stream.SendNext(this.playerLivesArray[i]);
+			stream.SendNext(this.playerStatusArray[i]);
+		}
+		stream.SendNext((int)this.currentState);
+	}
+
+	public override void OnSerializeRead(PhotonStream stream, PhotonMessageInfo info)
+	{
+		for (int i = 0; i < this.playerLivesArray.Length; i++)
+		{
+			this.playerActorNumberArray[i] = (int)stream.ReceiveNext();
+			this.playerLivesArray[i] = (int)stream.ReceiveNext();
+			this.playerStatusArray[i] = (GorillaBattleManager.BattleStatus)stream.ReceiveNext();
+		}
+		this.currentState = (GorillaBattleManager.BattleState)stream.ReceiveNext();
+		this.CopyArrayToBattleDict();
+	}
+
+	public override int MyMatIndex(Player forPlayer)
+	{
+		this.tempStatus = this.GetPlayerStatus(forPlayer);
+		if (this.tempStatus != GorillaBattleManager.BattleStatus.None)
+		{
+			if (this.HasFlag(this.tempStatus, GorillaBattleManager.BattleStatus.RedTeam))
+			{
+				if (this.HasFlag(this.tempStatus, GorillaBattleManager.BattleStatus.Normal))
+				{
+					return 8;
+				}
+				if (this.HasFlag(this.tempStatus, GorillaBattleManager.BattleStatus.Hit))
+				{
+					return 9;
+				}
+				if (this.HasFlag(this.tempStatus, GorillaBattleManager.BattleStatus.Stunned))
+				{
+					return 10;
+				}
+				if (this.HasFlag(this.tempStatus, GorillaBattleManager.BattleStatus.Grace))
+				{
+					return 10;
+				}
+				if (this.HasFlag(this.tempStatus, GorillaBattleManager.BattleStatus.Eliminated))
+				{
+					return 11;
+				}
+			}
+			else
+			{
+				if (this.HasFlag(this.tempStatus, GorillaBattleManager.BattleStatus.Normal))
+				{
+					return 4;
+				}
+				if (this.HasFlag(this.tempStatus, GorillaBattleManager.BattleStatus.Hit))
+				{
+					return 5;
+				}
+				if (this.HasFlag(this.tempStatus, GorillaBattleManager.BattleStatus.Stunned))
+				{
+					return 6;
+				}
+				if (this.HasFlag(this.tempStatus, GorillaBattleManager.BattleStatus.Grace))
+				{
+					return 6;
+				}
+				if (this.HasFlag(this.tempStatus, GorillaBattleManager.BattleStatus.Eliminated))
+				{
+					return 7;
+				}
+			}
+		}
+		return 0;
+	}
+
+	public override float[] LocalPlayerSpeed()
+	{
+		if (this.playerStatusDict.TryGetValue(PhotonNetwork.LocalPlayer.ActorNumber, out this.tempStatus))
+		{
+			if (this.HasFlag(this.tempStatus, GorillaBattleManager.BattleStatus.Normal))
+			{
+				this.playerSpeed[0] = 6.5f;
+				this.playerSpeed[1] = 1.1f;
+				return this.playerSpeed;
+			}
+			if (this.HasFlag(this.tempStatus, GorillaBattleManager.BattleStatus.Stunned))
+			{
+				this.playerSpeed[0] = 2f;
+				this.playerSpeed[1] = 0.5f;
+				return this.playerSpeed;
+			}
+			if (this.HasFlag(this.tempStatus, GorillaBattleManager.BattleStatus.Eliminated))
+			{
+				this.playerSpeed[0] = this.fastJumpLimit;
+				this.playerSpeed[1] = this.fastJumpMultiplier;
+				return this.playerSpeed;
+			}
+		}
+		this.playerSpeed[0] = 6.5f;
+		this.playerSpeed[1] = 1.1f;
+		return this.playerSpeed;
+	}
+
+	public override void Tick()
+	{
+		base.Tick();
+		if (PhotonNetwork.LocalPlayer.IsMasterClient)
+		{
+			this.UpdateBattleState();
+		}
+		this.ActivateDefaultSlingShot();
+	}
+
+	public override void InfrequentUpdate()
+	{
+		base.InfrequentUpdate();
+		foreach (int num in this.playerLives.Keys)
+		{
+			this.playerInList = false;
+			using (List<Player>.Enumerator enumerator2 = RoomSystem.PlayersInRoom.GetEnumerator())
+			{
+				while (enumerator2.MoveNext())
+				{
+					if (enumerator2.Current.ActorNumber == num)
+					{
+						this.playerInList = true;
+					}
+				}
+			}
+			if (!this.playerInList)
+			{
+				this.playerLives.Remove(num);
+			}
+		}
+	}
+
+	public int GetPlayerLives(Player player)
+	{
+		if (player == null)
+		{
+			return 0;
+		}
+		if (this.playerLives.TryGetValue(player.ActorNumber, out this.outLives))
+		{
+			return this.outLives;
+		}
+		return 0;
+	}
+
+	public bool PlayerInHitCooldown(Player player)
+	{
+		float num;
+		return this.playerHitTimes.TryGetValue(player.ActorNumber, out num) && num + this.hitCooldown > Time.time;
+	}
+
+	public bool PlayerInStunCooldown(Player player)
+	{
+		float num;
+		return this.playerStunTimes.TryGetValue(player.ActorNumber, out num) && num + this.hitCooldown + this.stunGracePeriod > Time.time;
+	}
+
+	public GorillaBattleManager.BattleStatus GetPlayerStatus(Player player)
+	{
+		if (this.playerStatusDict.TryGetValue(player.ActorNumber, out this.tempStatus))
+		{
+			return this.tempStatus;
+		}
+		return GorillaBattleManager.BattleStatus.None;
+	}
+
+	public bool OnRedTeam(GorillaBattleManager.BattleStatus status)
+	{
+		return this.HasFlag(status, GorillaBattleManager.BattleStatus.RedTeam);
+	}
+
+	public bool OnRedTeam(Player player)
+	{
+		GorillaBattleManager.BattleStatus playerStatus = this.GetPlayerStatus(player);
+		return this.OnRedTeam(playerStatus);
+	}
+
+	public bool OnBlueTeam(GorillaBattleManager.BattleStatus status)
+	{
+		return this.HasFlag(status, GorillaBattleManager.BattleStatus.BlueTeam);
+	}
+
+	public bool OnBlueTeam(Player player)
+	{
+		GorillaBattleManager.BattleStatus playerStatus = this.GetPlayerStatus(player);
+		return this.OnBlueTeam(playerStatus);
+	}
+
+	public bool OnNoTeam(GorillaBattleManager.BattleStatus status)
+	{
+		return !this.OnRedTeam(status) && !this.OnBlueTeam(status);
+	}
+
+	public bool OnNoTeam(Player player)
+	{
+		GorillaBattleManager.BattleStatus playerStatus = this.GetPlayerStatus(player);
+		return this.OnNoTeam(playerStatus);
+	}
+
+	public override bool LocalCanTag(Player myPlayer, Player otherPlayer)
+	{
+		return false;
+	}
+
+	public bool OnSameTeam(GorillaBattleManager.BattleStatus playerA, GorillaBattleManager.BattleStatus playerB)
+	{
+		bool flag = this.OnRedTeam(playerA) && this.OnRedTeam(playerB);
+		bool flag2 = this.OnBlueTeam(playerA) && this.OnBlueTeam(playerB);
+		return flag || flag2;
+	}
+
+	public bool OnSameTeam(Player myPlayer, Player otherPlayer)
+	{
+		GorillaBattleManager.BattleStatus playerStatus = this.GetPlayerStatus(myPlayer);
+		GorillaBattleManager.BattleStatus playerStatus2 = this.GetPlayerStatus(otherPlayer);
+		return this.OnSameTeam(playerStatus, playerStatus2);
+	}
+
+	public bool LocalCanHit(Player myPlayer, Player otherPlayer)
+	{
+		bool flag = !this.OnSameTeam(myPlayer, otherPlayer);
+		bool flag2 = this.GetPlayerLives(otherPlayer) != 0;
+		return flag && flag2;
+	}
+
+	private void CopyBattleDictToArray()
+	{
+		for (int i = 0; i < this.playerLivesArray.Length; i++)
+		{
+			this.playerLivesArray[i] = 0;
+			this.playerActorNumberArray[i] = 0;
+		}
+		this.keyValuePairs = this.playerLives.ToArray<KeyValuePair<int, int>>();
+		int num = 0;
+		while (num < this.playerLivesArray.Length && num < this.keyValuePairs.Length)
+		{
+			this.playerActorNumberArray[num] = this.keyValuePairs[num].Key;
+			this.playerLivesArray[num] = this.keyValuePairs[num].Value;
+			this.playerStatusArray[num] = this.GetPlayerStatus(PhotonNetwork.LocalPlayer.Get(this.keyValuePairs[num].Key));
+			num++;
+		}
+	}
+
+	private void CopyArrayToBattleDict()
+	{
+		for (int i = 0; i < this.playerLivesArray.Length; i++)
+		{
+			if (this.playerActorNumberArray[i] != 0 && Utils.PlayerInRoom(this.playerActorNumberArray[i]))
+			{
+				if (this.playerLives.TryGetValue(this.playerActorNumberArray[i], out this.outLives))
+				{
+					this.playerLives[this.playerActorNumberArray[i]] = this.playerLivesArray[i];
+				}
+				else
+				{
+					this.playerLives.Add(this.playerActorNumberArray[i], this.playerLivesArray[i]);
+				}
+				if (this.playerStatusDict.ContainsKey(this.playerActorNumberArray[i]))
+				{
+					this.playerStatusDict[this.playerActorNumberArray[i]] = this.playerStatusArray[i];
+				}
+				else
+				{
+					this.playerStatusDict.Add(this.playerActorNumberArray[i], this.playerStatusArray[i]);
+				}
+			}
+		}
+	}
+
+	private GorillaBattleManager.BattleStatus SetFlag(GorillaBattleManager.BattleStatus currState, GorillaBattleManager.BattleStatus flag)
+	{
+		return currState | flag;
+	}
+
+	private GorillaBattleManager.BattleStatus SetFlagExclusive(GorillaBattleManager.BattleStatus currState, GorillaBattleManager.BattleStatus flag)
+	{
+		return flag;
+	}
+
+	private GorillaBattleManager.BattleStatus ClearFlag(GorillaBattleManager.BattleStatus currState, GorillaBattleManager.BattleStatus flag)
+	{
+		return currState & ~flag;
+	}
+
+	private bool FlagIsSet(GorillaBattleManager.BattleStatus currState, GorillaBattleManager.BattleStatus flag)
+	{
+		return (currState & flag) > GorillaBattleManager.BattleStatus.None;
+	}
+
+	public void RandomizeTeams()
+	{
+		int[] array = new int[RoomSystem.PlayersInRoom.Count];
+		for (int i = 0; i < RoomSystem.PlayersInRoom.Count; i++)
+		{
+			array[i] = i;
+		}
+		Random rand = new Random();
+		int[] array2 = array.OrderBy((int x) => rand.Next()).ToArray<int>();
+		GorillaBattleManager.BattleStatus battleStatus = ((rand.Next(0, 2) == 0) ? GorillaBattleManager.BattleStatus.RedTeam : GorillaBattleManager.BattleStatus.BlueTeam);
+		GorillaBattleManager.BattleStatus battleStatus2 = ((battleStatus == GorillaBattleManager.BattleStatus.RedTeam) ? GorillaBattleManager.BattleStatus.BlueTeam : GorillaBattleManager.BattleStatus.RedTeam);
+		for (int j = 0; j < RoomSystem.PlayersInRoom.Count; j++)
+		{
+			GorillaBattleManager.BattleStatus battleStatus3 = ((array2[j] % 2 == 0) ? battleStatus2 : battleStatus);
+			this.playerStatusDict[RoomSystem.PlayersInRoom[j].ActorNumber] = battleStatus3;
+		}
+	}
+
+	public void AddPlayerToCorrectTeam(Player newPlayer)
+	{
+		this.rcount = 0;
+		for (int i = 0; i < RoomSystem.PlayersInRoom.Count; i++)
+		{
+			if (this.playerStatusDict.ContainsKey(RoomSystem.PlayersInRoom[i].ActorNumber))
+			{
+				GorillaBattleManager.BattleStatus battleStatus = this.playerStatusDict[RoomSystem.PlayersInRoom[i].ActorNumber];
+				this.rcount = (this.HasFlag(battleStatus, GorillaBattleManager.BattleStatus.RedTeam) ? (this.rcount + 1) : this.rcount);
+			}
+		}
+		if ((RoomSystem.PlayersInRoom.Count - 1) / 2 == this.rcount)
+		{
+			this.playerStatusDict[newPlayer.ActorNumber] = ((Random.Range(0, 2) == 0) ? this.SetFlag(this.playerStatusDict[newPlayer.ActorNumber], GorillaBattleManager.BattleStatus.RedTeam) : this.SetFlag(this.playerStatusDict[newPlayer.ActorNumber], GorillaBattleManager.BattleStatus.BlueTeam));
+			return;
+		}
+		if (this.rcount <= (RoomSystem.PlayersInRoom.Count - 1) / 2)
+		{
+			this.playerStatusDict[newPlayer.ActorNumber] = this.SetFlag(this.playerStatusDict[newPlayer.ActorNumber], GorillaBattleManager.BattleStatus.RedTeam);
+		}
+	}
+
+	private void InitializePlayerStatus()
+	{
+		this.keyValuePairsStatus = this.playerStatusDict.ToArray<KeyValuePair<int, GorillaBattleManager.BattleStatus>>();
+		foreach (KeyValuePair<int, GorillaBattleManager.BattleStatus> keyValuePair in this.keyValuePairsStatus)
+		{
+			this.playerStatusDict[keyValuePair.Key] = GorillaBattleManager.BattleStatus.Normal;
+		}
+	}
+
+	private void UpdatePlayerStatus()
+	{
+		this.keyValuePairsStatus = this.playerStatusDict.ToArray<KeyValuePair<int, GorillaBattleManager.BattleStatus>>();
+		foreach (KeyValuePair<int, GorillaBattleManager.BattleStatus> keyValuePair in this.keyValuePairsStatus)
+		{
+			GorillaBattleManager.BattleStatus battleStatus = (this.HasFlag(this.playerStatusDict[keyValuePair.Key], GorillaBattleManager.BattleStatus.RedTeam) ? GorillaBattleManager.BattleStatus.RedTeam : GorillaBattleManager.BattleStatus.BlueTeam);
+			if (this.playerLives.TryGetValue(keyValuePair.Key, out this.outLives) && this.outLives == 0)
+			{
+				this.playerStatusDict[keyValuePair.Key] = battleStatus | GorillaBattleManager.BattleStatus.Eliminated;
+			}
+			else if (this.playerHitTimes.TryGetValue(keyValuePair.Key, out this.outHitTime) && this.outHitTime + this.hitCooldown > Time.time)
+			{
+				this.playerStatusDict[keyValuePair.Key] = battleStatus | GorillaBattleManager.BattleStatus.Hit;
+			}
+			else if (this.playerStunTimes.TryGetValue(keyValuePair.Key, out this.outHitTime))
+			{
+				if (this.outHitTime + this.hitCooldown > Time.time)
+				{
+					this.playerStatusDict[keyValuePair.Key] = battleStatus | GorillaBattleManager.BattleStatus.Stunned;
+				}
+				else if (this.outHitTime + this.hitCooldown + this.stunGracePeriod > Time.time)
+				{
+					this.playerStatusDict[keyValuePair.Key] = battleStatus | GorillaBattleManager.BattleStatus.Grace;
+				}
+				else
+				{
+					this.playerStatusDict[keyValuePair.Key] = battleStatus | GorillaBattleManager.BattleStatus.Normal;
+				}
+			}
+			else
+			{
+				this.playerStatusDict[keyValuePair.Key] = battleStatus | GorillaBattleManager.BattleStatus.Normal;
+			}
+		}
 	}
 
 	private float playerMin = 2f;
@@ -38,7 +754,7 @@ public class GorillaBattleManager : GorillaGameManager, IInRoomCallbacks, IMatch
 
 	public Dictionary<int, int> playerLives = new Dictionary<int, int>();
 
-	public Dictionary<int, BattleStatus> playerStatusDict = new Dictionary<int, BattleStatus>();
+	public Dictionary<int, GorillaBattleManager.BattleStatus> playerStatusDict = new Dictionary<int, GorillaBattleManager.BattleStatus>();
 
 	public Dictionary<int, float> playerHitTimes = new Dictionary<int, float>();
 
@@ -48,7 +764,7 @@ public class GorillaBattleManager : GorillaGameManager, IInRoomCallbacks, IMatch
 
 	public int[] playerLivesArray = new int[10];
 
-	public BattleStatus[] playerStatusArray = new BattleStatus[10];
+	public GorillaBattleManager.BattleStatus[] playerStatusArray = new GorillaBattleManager.BattleStatus[10];
 
 	public bool teamBattle = true;
 
@@ -82,728 +798,32 @@ public class GorillaBattleManager : GorillaGameManager, IInRoomCallbacks, IMatch
 
 	private KeyValuePair<int, int>[] keyValuePairs;
 
-	private KeyValuePair<int, BattleStatus>[] keyValuePairsStatus;
+	private KeyValuePair<int, GorillaBattleManager.BattleStatus>[] keyValuePairsStatus;
 
-	private BattleStatus tempStatus;
+	private GorillaBattleManager.BattleStatus tempStatus;
 
-	private BattleState currentState;
+	private GorillaBattleManager.BattleState currentState;
 
-	private void ActivateBattleBalloons(bool enable)
+	public enum BattleStatus
 	{
-		if (GorillaTagger.Instance.offlineVRRig != null)
-		{
-			GorillaTagger.Instance.offlineVRRig.battleBalloons.gameObject.SetActive(enable);
-		}
+		RedTeam = 1,
+		BlueTeam,
+		Normal = 4,
+		Hit = 8,
+		Stunned = 16,
+		Grace = 32,
+		Eliminated = 64,
+		None = 0
 	}
 
-	private bool HasFlag(BattleStatus state, BattleStatus statusFlag)
+	private enum BattleState
 	{
-		return (state & statusFlag) != 0;
-	}
-
-	public override string GameMode()
-	{
-		return "BATTLE";
-	}
-
-	private void ActivateDefaultSlingShot()
-	{
-		VRRig offlineVRRig = GorillaTagger.Instance.offlineVRRig;
-		if (offlineVRRig != null && !Slingshot.IsSlingShotEnabled())
-		{
-			CosmeticsController cosmeticsController = CosmeticsController.instance;
-			cosmeticsController.ApplyCosmeticItemToSet(newItem: cosmeticsController.GetItemFromDict("Slingshot"), set: offlineVRRig.cosmeticSet, isLeftHand: true, applyToPlayerPrefs: false);
-		}
-	}
-
-	public override void Awake()
-	{
-		base.Awake();
-		coroutineRunning = false;
-		Debug.Log(PhotonNetwork.CurrentRoom.ToStringFull());
-		if (base.photonView.IsMine)
-		{
-			currentState = BattleState.NotEnoughPlayers;
-		}
-		ActivateDefaultSlingShot();
-		ActivateBattleBalloons(enable: true);
-	}
-
-	private void Transition(BattleState newState)
-	{
-		currentState = newState;
-		Debug.Log("current state is: " + currentState);
-	}
-
-	public void UpdateBattleState()
-	{
-		if (!base.photonView.IsMine)
-		{
-			return;
-		}
-		switch (currentState)
-		{
-		case BattleState.NotEnoughPlayers:
-			if ((float)currentPlayerArray.Length >= playerMin)
-			{
-				Transition(BattleState.StartCountdown);
-			}
-			break;
-		case BattleState.GameRunning:
-			if (CheckForGameEnd())
-			{
-				Transition(BattleState.GameEnd);
-			}
-			if ((float)currentPlayerArray.Length < playerMin)
-			{
-				InitializePlayerStatus();
-				ActivateBattleBalloons(enable: false);
-				Transition(BattleState.NotEnoughPlayers);
-			}
-			break;
-		case BattleState.GameEnd:
-			if (EndBattleGame())
-			{
-				Transition(BattleState.GameEndWaiting);
-			}
-			break;
-		case BattleState.GameEndWaiting:
-			if (BattleEnd())
-			{
-				Transition(BattleState.StartCountdown);
-			}
-			break;
-		case BattleState.StartCountdown:
-			RandomizeTeams();
-			ActivateBattleBalloons(enable: true);
-			StartCoroutine(StartBattleCountdown());
-			Transition(BattleState.CountingDownToStart);
-			break;
-		case BattleState.CountingDownToStart:
-			if (!coroutineRunning)
-			{
-				Transition(BattleState.StartCountdown);
-			}
-			break;
-		case BattleState.GameStart:
-			StartBattle();
-			Transition(BattleState.GameRunning);
-			break;
-		}
-		UpdatePlayerStatus();
-	}
-
-	private bool CheckForGameEnd()
-	{
-		bcount = 0;
-		rcount = 0;
-		Player[] array = currentPlayerArray;
-		foreach (Player player in array)
-		{
-			if (playerLives.TryGetValue(player.ActorNumber, out lives))
-			{
-				if (lives > 0 && playerStatusDict.TryGetValue(player.ActorNumber, out tempStatus))
-				{
-					if (HasFlag(tempStatus, BattleStatus.RedTeam))
-					{
-						rcount++;
-					}
-					else if (HasFlag(tempStatus, BattleStatus.BlueTeam))
-					{
-						bcount++;
-					}
-				}
-			}
-			else
-			{
-				playerLives.Add(player.ActorNumber, 0);
-			}
-		}
-		if (bcount == 0 || rcount == 0)
-		{
-			return true;
-		}
-		return false;
-	}
-
-	public IEnumerator StartBattleCountdown()
-	{
-		coroutineRunning = true;
-		for (countDownTime = 5; countDownTime > 0; countDownTime--)
-		{
-			try
-			{
-				Player[] playerList = PhotonNetwork.PlayerList;
-				foreach (Player player in playerList)
-				{
-					playerLives[player.ActorNumber] = 3;
-					PhotonView photonView = FindVRRigForPlayer(player);
-					if (photonView != null)
-					{
-						photonView.RPC("PlayTagSound", player, 6, 0.25f);
-					}
-				}
-			}
-			catch
-			{
-			}
-			yield return new WaitForSeconds(1f);
-		}
-		coroutineRunning = false;
-		currentState = BattleState.GameStart;
-		yield return null;
-	}
-
-	public void StartBattle()
-	{
-		Player[] playerList = PhotonNetwork.PlayerList;
-		foreach (Player player in playerList)
-		{
-			playerLives[player.ActorNumber] = 3;
-			PhotonView photonView = FindVRRigForPlayer(player);
-			if (photonView != null)
-			{
-				photonView.RPC("PlayTagSound", player, 7, 0.5f);
-			}
-		}
-	}
-
-	private bool EndBattleGame()
-	{
-		if ((float)PhotonNetwork.PlayerList.Length >= playerMin)
-		{
-			Player[] playerList = PhotonNetwork.PlayerList;
-			foreach (Player player in playerList)
-			{
-				PhotonView photonView = FindVRRigForPlayer(player);
-				if (photonView != null)
-				{
-					photonView.RPC("SetTaggedTime", player, null);
-					photonView.RPC("PlayTagSound", player, 2, 0.25f);
-				}
-			}
-			timeBattleEnded = Time.time;
-			return true;
-		}
-		return false;
-	}
-
-	public bool BattleEnd()
-	{
-		return Time.time > timeBattleEnded + tagCoolDown;
-	}
-
-	public bool SlingshotHit(Player myPlayer, Player otherPlayer)
-	{
-		if (playerLives.TryGetValue(otherPlayer.ActorNumber, out lives))
-		{
-			return lives > 0;
-		}
-		return false;
-	}
-
-	[PunRPC]
-	public void ReportSlingshotHit(Player taggedPlayer, Vector3 hitLocation, int projectileCount, PhotonMessageInfo info)
-	{
-		GorillaNot.IncrementRPCCall(info, "ReportSlingshotHit");
-		if (!base.photonView.IsMine || currentState != BattleState.GameRunning || OnSameTeam(taggedPlayer, info.Sender))
-		{
-			return;
-		}
-		if (GetPlayerLives(taggedPlayer) > 0 && GetPlayerLives(info.Sender) > 0 && !PlayerInHitCooldown(taggedPlayer))
-		{
-			if (!playerHitTimes.TryGetValue(taggedPlayer.ActorNumber, out outHitTime))
-			{
-				playerHitTimes.Add(taggedPlayer.ActorNumber, Time.time);
-			}
-			else
-			{
-				playerHitTimes[taggedPlayer.ActorNumber] = Time.time;
-			}
-			playerLives[taggedPlayer.ActorNumber]--;
-			tempView = FindVRRigForPlayer(taggedPlayer);
-			if (tempView != null)
-			{
-				tempView.RPC("PlayTagSound", RpcTarget.All, 0, 0.25f);
-			}
-		}
-		else
-		{
-			if (GetPlayerLives(info.Sender) != 0 || GetPlayerLives(taggedPlayer) <= 0)
-			{
-				return;
-			}
-			tempStatus = GetPlayerStatus(taggedPlayer);
-			if (HasFlag(tempStatus, BattleStatus.Normal) && !PlayerInHitCooldown(taggedPlayer) && !PlayerInStunCooldown(taggedPlayer))
-			{
-				if (!playerStunTimes.TryGetValue(taggedPlayer.ActorNumber, out outHitTime))
-				{
-					playerStunTimes.Add(taggedPlayer.ActorNumber, Time.time);
-				}
-				else
-				{
-					playerStunTimes[taggedPlayer.ActorNumber] = Time.time;
-				}
-				tempView = FindVRRigForPlayer(taggedPlayer);
-				if (tempView != null)
-				{
-					tempView.RPC("SetSlowedTime", taggedPlayer, null);
-					tempView.RPC("PlayTagSound", RpcTarget.All, 5, 0.125f);
-				}
-			}
-		}
-	}
-
-	public override void OnPlayerEnteredRoom(Player newPlayer)
-	{
-		base.OnPlayerEnteredRoom(newPlayer);
-		if (base.photonView.IsMine)
-		{
-			if (currentState == BattleState.GameRunning)
-			{
-				playerLives.Add(newPlayer.ActorNumber, 0);
-			}
-			else
-			{
-				playerLives.Add(newPlayer.ActorNumber, 3);
-			}
-			playerStatusDict.Add(newPlayer.ActorNumber, BattleStatus.None);
-			CopyBattleDictToArray();
-			AddPlayerToCorrectTeam(newPlayer);
-		}
-		playerProjectiles.Add(newPlayer, new List<ProjectileInfo>());
-	}
-
-	public override void OnPlayerLeftRoom(Player otherPlayer)
-	{
-		base.OnPlayerLeftRoom(otherPlayer);
-		if (playerLives.ContainsKey(otherPlayer.ActorNumber))
-		{
-			playerLives.Remove(otherPlayer.ActorNumber);
-		}
-		if (playerStatusDict.ContainsKey(otherPlayer.ActorNumber))
-		{
-			playerStatusDict.Remove(otherPlayer.ActorNumber);
-		}
-		if (playerProjectiles.ContainsKey(otherPlayer))
-		{
-			playerProjectiles.Remove(otherPlayer);
-		}
-		playerVRRigDict.Remove(otherPlayer.ActorNumber);
-	}
-
-	void IInRoomCallbacks.OnMasterClientSwitched(Player newMasterClient)
-	{
-	}
-
-	void IPunObservable.OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-	{
-		if (info.Sender != PhotonNetwork.MasterClient)
-		{
-			return;
-		}
-		if (stream.IsWriting)
-		{
-			CopyBattleDictToArray();
-			for (int i = 0; i < playerLivesArray.Length; i++)
-			{
-				stream.SendNext(playerActorNumberArray[i]);
-				stream.SendNext(playerLivesArray[i]);
-				stream.SendNext(playerStatusArray[i]);
-			}
-			stream.SendNext((int)currentState);
-		}
-		else
-		{
-			for (int j = 0; j < playerLivesArray.Length; j++)
-			{
-				playerActorNumberArray[j] = (int)stream.ReceiveNext();
-				playerLivesArray[j] = (int)stream.ReceiveNext();
-				playerStatusArray[j] = (BattleStatus)stream.ReceiveNext();
-			}
-			currentState = (BattleState)stream.ReceiveNext();
-			CopyArrayToBattleDict();
-		}
-	}
-
-	public override int MyMatIndex(Player forPlayer)
-	{
-		tempStatus = GetPlayerStatus(forPlayer);
-		if (tempStatus != 0)
-		{
-			if (HasFlag(tempStatus, BattleStatus.RedTeam))
-			{
-				if (HasFlag(tempStatus, BattleStatus.Normal))
-				{
-					return 8;
-				}
-				if (HasFlag(tempStatus, BattleStatus.Hit))
-				{
-					return 9;
-				}
-				if (HasFlag(tempStatus, BattleStatus.Stunned))
-				{
-					return 10;
-				}
-				if (HasFlag(tempStatus, BattleStatus.Grace))
-				{
-					return 10;
-				}
-				if (HasFlag(tempStatus, BattleStatus.Eliminated))
-				{
-					return 11;
-				}
-			}
-			else
-			{
-				if (HasFlag(tempStatus, BattleStatus.Normal))
-				{
-					return 4;
-				}
-				if (HasFlag(tempStatus, BattleStatus.Hit))
-				{
-					return 5;
-				}
-				if (HasFlag(tempStatus, BattleStatus.Stunned))
-				{
-					return 6;
-				}
-				if (HasFlag(tempStatus, BattleStatus.Grace))
-				{
-					return 6;
-				}
-				if (HasFlag(tempStatus, BattleStatus.Eliminated))
-				{
-					return 7;
-				}
-			}
-		}
-		return 0;
-	}
-
-	public override float[] LocalPlayerSpeed()
-	{
-		if (playerStatusDict.TryGetValue(PhotonNetwork.LocalPlayer.ActorNumber, out tempStatus))
-		{
-			if (HasFlag(tempStatus, BattleStatus.Normal))
-			{
-				playerSpeed[0] = 6.5f;
-				playerSpeed[1] = 1.1f;
-				return playerSpeed;
-			}
-			if (HasFlag(tempStatus, BattleStatus.Stunned))
-			{
-				playerSpeed[0] = 2f;
-				playerSpeed[1] = 0.5f;
-				return playerSpeed;
-			}
-			if (HasFlag(tempStatus, BattleStatus.Eliminated))
-			{
-				playerSpeed[0] = fastJumpLimit;
-				playerSpeed[1] = fastJumpMultiplier;
-				return playerSpeed;
-			}
-		}
-		playerSpeed[0] = 6.5f;
-		playerSpeed[1] = 1.1f;
-		return playerSpeed;
-	}
-
-	public override void Update()
-	{
-		base.Update();
-		if (base.photonView.IsMine)
-		{
-			UpdateBattleState();
-		}
-		ActivateDefaultSlingShot();
-	}
-
-	public override void InfrequentUpdate()
-	{
-		base.InfrequentUpdate();
-		foreach (int key in playerLives.Keys)
-		{
-			playerInList = false;
-			Player[] array = currentPlayerArray;
-			for (int i = 0; i < array.Length; i++)
-			{
-				if (array[i].ActorNumber == key)
-				{
-					playerInList = true;
-				}
-			}
-			if (!playerInList)
-			{
-				playerLives.Remove(key);
-			}
-		}
-	}
-
-	public int GetPlayerLives(Player player)
-	{
-		if (player == null)
-		{
-			return 0;
-		}
-		if (playerLives.TryGetValue(player.ActorNumber, out outLives))
-		{
-			return outLives;
-		}
-		return 0;
-	}
-
-	public bool PlayerInHitCooldown(Player player)
-	{
-		if (playerHitTimes.TryGetValue(player.ActorNumber, out var value))
-		{
-			return value + hitCooldown > Time.time;
-		}
-		return false;
-	}
-
-	public bool PlayerInStunCooldown(Player player)
-	{
-		if (playerStunTimes.TryGetValue(player.ActorNumber, out var value))
-		{
-			return value + hitCooldown + stunGracePeriod > Time.time;
-		}
-		return false;
-	}
-
-	public BattleStatus GetPlayerStatus(Player player)
-	{
-		if (playerStatusDict.TryGetValue(player.ActorNumber, out tempStatus))
-		{
-			return tempStatus;
-		}
-		return BattleStatus.None;
-	}
-
-	public bool OnRedTeam(BattleStatus status)
-	{
-		return HasFlag(status, BattleStatus.RedTeam);
-	}
-
-	public bool OnRedTeam(Player player)
-	{
-		BattleStatus playerStatus = GetPlayerStatus(player);
-		return OnRedTeam(playerStatus);
-	}
-
-	public bool OnBlueTeam(BattleStatus status)
-	{
-		return HasFlag(status, BattleStatus.BlueTeam);
-	}
-
-	public bool OnBlueTeam(Player player)
-	{
-		BattleStatus playerStatus = GetPlayerStatus(player);
-		return OnBlueTeam(playerStatus);
-	}
-
-	public bool OnNoTeam(BattleStatus status)
-	{
-		if (!OnRedTeam(status))
-		{
-			return !OnBlueTeam(status);
-		}
-		return false;
-	}
-
-	public bool OnNoTeam(Player player)
-	{
-		BattleStatus playerStatus = GetPlayerStatus(player);
-		return OnNoTeam(playerStatus);
-	}
-
-	public override bool LocalCanTag(Player myPlayer, Player otherPlayer)
-	{
-		return false;
-	}
-
-	public bool OnSameTeam(BattleStatus playerA, BattleStatus playerB)
-	{
-		bool num = OnRedTeam(playerA) && OnRedTeam(playerB);
-		bool flag = OnBlueTeam(playerA) && OnBlueTeam(playerB);
-		return num || flag;
-	}
-
-	public bool OnSameTeam(Player myPlayer, Player otherPlayer)
-	{
-		BattleStatus playerStatus = GetPlayerStatus(myPlayer);
-		BattleStatus playerStatus2 = GetPlayerStatus(otherPlayer);
-		return OnSameTeam(playerStatus, playerStatus2);
-	}
-
-	public bool LocalCanHit(Player myPlayer, Player otherPlayer)
-	{
-		bool num = !OnSameTeam(myPlayer, otherPlayer);
-		bool flag = GetPlayerLives(otherPlayer) != 0;
-		return num && flag;
-	}
-
-	private void CopyBattleDictToArray()
-	{
-		for (int i = 0; i < playerLivesArray.Length; i++)
-		{
-			playerLivesArray[i] = 0;
-			playerActorNumberArray[i] = 0;
-		}
-		keyValuePairs = playerLives.ToArray();
-		for (int j = 0; j < playerLivesArray.Length && j < keyValuePairs.Length; j++)
-		{
-			playerActorNumberArray[j] = keyValuePairs[j].Key;
-			playerLivesArray[j] = keyValuePairs[j].Value;
-			playerStatusArray[j] = GetPlayerStatus(PhotonNetwork.LocalPlayer.Get(keyValuePairs[j].Key));
-		}
-	}
-
-	private void CopyArrayToBattleDict()
-	{
-		for (int i = 0; i < playerLivesArray.Length; i++)
-		{
-			if (playerActorNumberArray[i] != 0)
-			{
-				if (playerLives.TryGetValue(playerActorNumberArray[i], out outLives))
-				{
-					playerLives[playerActorNumberArray[i]] = playerLivesArray[i];
-				}
-				else
-				{
-					playerLives.Add(playerActorNumberArray[i], playerLivesArray[i]);
-				}
-				if (playerStatusDict.ContainsKey(playerActorNumberArray[i]))
-				{
-					playerStatusDict[playerActorNumberArray[i]] = playerStatusArray[i];
-				}
-				else
-				{
-					playerStatusDict.Add(playerActorNumberArray[i], playerStatusArray[i]);
-				}
-			}
-		}
-	}
-
-	private BattleStatus SetFlag(BattleStatus currState, BattleStatus flag)
-	{
-		return currState | flag;
-	}
-
-	private BattleStatus SetFlagExclusive(BattleStatus currState, BattleStatus flag)
-	{
-		return flag;
-	}
-
-	private BattleStatus ClearFlag(BattleStatus currState, BattleStatus flag)
-	{
-		return currState & ~flag;
-	}
-
-	private bool FlagIsSet(BattleStatus currState, BattleStatus flag)
-	{
-		return (currState & flag) != 0;
-	}
-
-	public void RandomizeTeams()
-	{
-		int[] array = new int[currentPlayerArray.Length];
-		for (int i = 0; i < currentPlayerArray.Length; i++)
-		{
-			array[i] = i;
-		}
-		System.Random rand = new System.Random();
-		int[] array2 = array.OrderBy((int x) => rand.Next()).ToArray();
-		BattleStatus battleStatus = ((rand.Next(0, 2) == 0) ? BattleStatus.RedTeam : BattleStatus.BlueTeam);
-		BattleStatus battleStatus2 = ((battleStatus != BattleStatus.RedTeam) ? BattleStatus.RedTeam : BattleStatus.BlueTeam);
-		for (int j = 0; j < currentPlayerArray.Length; j++)
-		{
-			BattleStatus value = ((array2[j] % 2 == 0) ? battleStatus2 : battleStatus);
-			playerStatusDict[currentPlayerArray[j].ActorNumber] = value;
-		}
-	}
-
-	public void AddPlayerToCorrectTeam(Player newPlayer)
-	{
-		rcount = 0;
-		for (int i = 0; i < currentPlayerArray.Length; i++)
-		{
-			if (playerStatusDict.ContainsKey(currentPlayerArray[i].ActorNumber))
-			{
-				BattleStatus state = playerStatusDict[currentPlayerArray[i].ActorNumber];
-				rcount = (HasFlag(state, BattleStatus.RedTeam) ? (rcount + 1) : rcount);
-			}
-		}
-		if ((currentPlayerArray.Length - 1) / 2 == rcount)
-		{
-			playerStatusDict[newPlayer.ActorNumber] = ((UnityEngine.Random.Range(0, 2) == 0) ? SetFlag(playerStatusDict[newPlayer.ActorNumber], BattleStatus.RedTeam) : SetFlag(playerStatusDict[newPlayer.ActorNumber], BattleStatus.BlueTeam));
-		}
-		else if (rcount <= (currentPlayerArray.Length - 1) / 2)
-		{
-			playerStatusDict[newPlayer.ActorNumber] = SetFlag(playerStatusDict[newPlayer.ActorNumber], BattleStatus.RedTeam);
-		}
-	}
-
-	private void InitializePlayerStatus()
-	{
-		keyValuePairsStatus = playerStatusDict.ToArray();
-		KeyValuePair<int, BattleStatus>[] array = keyValuePairsStatus;
-		foreach (KeyValuePair<int, BattleStatus> keyValuePair in array)
-		{
-			playerStatusDict[keyValuePair.Key] = BattleStatus.Normal;
-		}
-	}
-
-	private void UpdatePlayerStatus()
-	{
-		keyValuePairsStatus = playerStatusDict.ToArray();
-		KeyValuePair<int, BattleStatus>[] array = keyValuePairsStatus;
-		for (int i = 0; i < array.Length; i++)
-		{
-			KeyValuePair<int, BattleStatus> keyValuePair = array[i];
-			BattleStatus battleStatus = (HasFlag(playerStatusDict[keyValuePair.Key], BattleStatus.RedTeam) ? BattleStatus.RedTeam : BattleStatus.BlueTeam);
-			if (playerLives.TryGetValue(keyValuePair.Key, out outLives) && outLives == 0)
-			{
-				playerStatusDict[keyValuePair.Key] = battleStatus | BattleStatus.Eliminated;
-			}
-			else if (playerHitTimes.TryGetValue(keyValuePair.Key, out outHitTime) && outHitTime + hitCooldown > Time.time)
-			{
-				playerStatusDict[keyValuePair.Key] = battleStatus | BattleStatus.Hit;
-			}
-			else if (playerStunTimes.TryGetValue(keyValuePair.Key, out outHitTime))
-			{
-				if (outHitTime + hitCooldown > Time.time)
-				{
-					playerStatusDict[keyValuePair.Key] = battleStatus | BattleStatus.Stunned;
-				}
-				else if (outHitTime + hitCooldown + stunGracePeriod > Time.time)
-				{
-					playerStatusDict[keyValuePair.Key] = battleStatus | BattleStatus.Grace;
-				}
-				else
-				{
-					playerStatusDict[keyValuePair.Key] = battleStatus | BattleStatus.Normal;
-				}
-			}
-			else
-			{
-				playerStatusDict[keyValuePair.Key] = battleStatus | BattleStatus.Normal;
-			}
-		}
-	}
-
-	public override void OnDisable()
-	{
-		base.OnDisable();
-		if (Slingshot.IsSlingShotEnabled())
-		{
-			CosmeticsController cosmeticsController = CosmeticsController.instance;
-			VRRig offlineVRRig = GorillaTagger.Instance.offlineVRRig;
-			if (offlineVRRig.cosmeticSet.HasItem("Slingshot"))
-			{
-				cosmeticsController.RemoveCosmeticItemFromSet(offlineVRRig.cosmeticSet, "Slingshot", applyToPlayerPrefs: true);
-			}
-		}
-		ActivateBattleBalloons(enable: false);
+		NotEnoughPlayers,
+		GameEnd,
+		GameEndWaiting,
+		StartCountdown,
+		CountingDownToStart,
+		GameStart,
+		GameRunning
 	}
 }

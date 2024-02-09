@@ -1,36 +1,38 @@
+﻿using System;
 using UnityEngine;
 
-namespace OculusSampleFramework;
-
-public class FingerTipPokeToolView : MonoBehaviour, InteractableToolView
+namespace OculusSampleFramework
 {
-	[SerializeField]
-	private MeshRenderer _sphereMeshRenderer;
-
-	public InteractableTool InteractableTool { get; set; }
-
-	public bool EnableState
+	public class FingerTipPokeToolView : MonoBehaviour, InteractableToolView
 	{
-		get
+		public InteractableTool InteractableTool { get; set; }
+
+		public bool EnableState
 		{
-			return _sphereMeshRenderer.enabled;
+			get
+			{
+				return this._sphereMeshRenderer.enabled;
+			}
+			set
+			{
+				this._sphereMeshRenderer.enabled = value;
+			}
 		}
-		set
+
+		public bool ToolActivateState { get; set; }
+
+		public float SphereRadius { get; private set; }
+
+		private void Awake()
 		{
-			_sphereMeshRenderer.enabled = value;
+			this.SphereRadius = this._sphereMeshRenderer.transform.localScale.z * 0.5f;
 		}
-	}
 
-	public bool ToolActivateState { get; set; }
+		public void SetFocusedInteractable(Interactable interactable)
+		{
+		}
 
-	public float SphereRadius { get; private set; }
-
-	private void Awake()
-	{
-		SphereRadius = _sphereMeshRenderer.transform.localScale.z * 0.5f;
-	}
-
-	public void SetFocusedInteractable(Interactable interactable)
-	{
+		[SerializeField]
+		private MeshRenderer _sphereMeshRenderer;
 	}
 }

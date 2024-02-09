@@ -1,7 +1,30 @@
+﻿using System;
 using UnityEngine;
 
 public class CornOnCobCosmetic : MonoBehaviour
 {
+	protected void Awake()
+	{
+		this.emissionModule = this.particleSys.emission;
+		this.maxBurstProbability = ((this.emissionModule.burstCount > 0) ? this.emissionModule.GetBurst(0).probability : 0.2f);
+	}
+
+	protected void LateUpdate()
+	{
+		for (int i = 0; i < this.emissionModule.burstCount; i++)
+		{
+			ParticleSystem.Burst burst = this.emissionModule.GetBurst(i);
+			burst.probability = this.maxBurstProbability * this.particleEmissionCurve.Evaluate(this.thermalReceiver.celsius);
+			this.emissionModule.SetBurst(i, burst);
+		}
+		int particleCount = this.particleSys.particleCount;
+		if (particleCount > this.previousParticleCount)
+		{
+			this.soundBankPlayer.Play(null, null);
+		}
+		this.previousParticleCount = particleCount;
+	}
+
 	[Tooltip("The corn will start popping based on the temperature from this ThermalReceiver.")]
 	public ThermalReceiver thermalReceiver;
 
@@ -18,26 +41,4 @@ public class CornOnCobCosmetic : MonoBehaviour
 	private float maxBurstProbability;
 
 	private int previousParticleCount;
-
-	protected void Awake()
-	{
-		emissionModule = particleSys.emission;
-		maxBurstProbability = ((emissionModule.burstCount > 0) ? emissionModule.GetBurst(0).probability : 0.2f);
-	}
-
-	protected void LateUpdate()
-	{
-		for (int i = 0; i < emissionModule.burstCount; i++)
-		{
-			ParticleSystem.Burst burst = emissionModule.GetBurst(i);
-			burst.probability = maxBurstProbability * particleEmissionCurve.Evaluate(thermalReceiver.celsius);
-			emissionModule.SetBurst(i, burst);
-		}
-		int particleCount = particleSys.particleCount;
-		if (particleCount > previousParticleCount)
-		{
-			soundBankPlayer.Play();
-		}
-		previousParticleCount = particleCount;
-	}
 }

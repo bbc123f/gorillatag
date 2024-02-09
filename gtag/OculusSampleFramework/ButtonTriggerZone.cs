@@ -1,39 +1,41 @@
+﻿using System;
 using UnityEngine;
 
-namespace OculusSampleFramework;
-
-public class ButtonTriggerZone : MonoBehaviour, ColliderZone
+namespace OculusSampleFramework
 {
-	[SerializeField]
-	private GameObject _parentInteractableObj;
-
-	public Collider Collider { get; private set; }
-
-	public Interactable ParentInteractable { get; private set; }
-
-	public InteractableCollisionDepth CollisionDepth
+	public class ButtonTriggerZone : MonoBehaviour, ColliderZone
 	{
-		get
+		public Collider Collider { get; private set; }
+
+		public Interactable ParentInteractable { get; private set; }
+
+		public InteractableCollisionDepth CollisionDepth
 		{
-			if (ParentInteractable.ProximityCollider != this)
+			get
 			{
-				if (ParentInteractable.ContactCollider != this)
+				if (this.ParentInteractable.ProximityCollider == this)
 				{
-					if (ParentInteractable.ActionCollider != this)
-					{
-						return InteractableCollisionDepth.None;
-					}
-					return InteractableCollisionDepth.Action;
+					return InteractableCollisionDepth.Proximity;
 				}
-				return InteractableCollisionDepth.Contact;
+				if (this.ParentInteractable.ContactCollider == this)
+				{
+					return InteractableCollisionDepth.Contact;
+				}
+				if (this.ParentInteractable.ActionCollider != this)
+				{
+					return InteractableCollisionDepth.None;
+				}
+				return InteractableCollisionDepth.Action;
 			}
-			return InteractableCollisionDepth.Proximity;
 		}
-	}
 
-	private void Awake()
-	{
-		Collider = GetComponent<Collider>();
-		ParentInteractable = _parentInteractableObj.GetComponent<Interactable>();
+		private void Awake()
+		{
+			this.Collider = base.GetComponent<Collider>();
+			this.ParentInteractable = this._parentInteractableObj.GetComponent<Interactable>();
+		}
+
+		[SerializeField]
+		private GameObject _parentInteractableObj;
 	}
 }

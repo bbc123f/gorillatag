@@ -1,21 +1,13 @@
+﻿using System;
 using System.Diagnostics;
 using Photon.Pun;
 using UnityEngine;
 
 public class Tappable : MonoBehaviour
 {
-	public int tappableId;
-
-	public string staticId;
-
-	public bool useStaticId;
-
-	[Space]
-	public TappableManager manager;
-
 	public void Validate()
 	{
-		TappableManager.CalculateId(this, force: true);
+		TappableManager.CalculateId(this, true);
 	}
 
 	protected virtual void OnEnable()
@@ -30,11 +22,16 @@ public class Tappable : MonoBehaviour
 
 	public void OnTap(float tapStrength, float tapTime)
 	{
-		OnTapLocal(tapStrength, tapTime);
-		if (PhotonNetwork.InRoom && (bool)manager)
+		this.OnTapLocal(tapStrength, tapTime);
+		if (!PhotonNetwork.InRoom)
 		{
-			manager.photonView.RPC("SendOnTapRPC", RpcTarget.Others, tappableId, tapStrength);
+			return;
 		}
+		if (!this.manager)
+		{
+			return;
+		}
+		this.manager.photonView.RPC("SendOnTapRPC", RpcTarget.Others, new object[] { this.tappableId, tapStrength });
 	}
 
 	public virtual void OnTapLocal(float tapStrength, float tapTime)
@@ -43,12 +40,21 @@ public class Tappable : MonoBehaviour
 
 	private void RecalculateId()
 	{
-		TappableManager.CalculateId(this, force: true);
+		TappableManager.CalculateId(this, true);
 	}
 
 	[Conditional("UNITY_EDITOR")]
 	private void OnValidate()
 	{
-		TappableManager.CalculateId(this);
+		TappableManager.CalculateId(this, false);
 	}
+
+	public int tappableId;
+
+	public string staticId;
+
+	public bool useStaticId;
+
+	[Space]
+	public TappableManager manager;
 }

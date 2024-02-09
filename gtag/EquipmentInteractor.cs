@@ -1,3 +1,4 @@
+﻿using System;
 using System.Collections.Generic;
 using GorillaLocomotion.Climbing;
 using UnityEngine;
@@ -5,8 +6,209 @@ using UnityEngine.XR;
 
 public class EquipmentInteractor : MonoBehaviour
 {
+	private void Awake()
+	{
+		if (EquipmentInteractor.instance == null)
+		{
+			EquipmentInteractor.instance = this;
+			EquipmentInteractor.hasInstance = true;
+		}
+		else if (EquipmentInteractor.instance != this)
+		{
+			Object.Destroy(base.gameObject);
+		}
+		this.leftHandSet = false;
+		this.rightHandSet = false;
+		this.autoGrabLeft = true;
+		this.autoGrabRight = true;
+		this.gorillaInteractableLayerMask = LayerMask.GetMask(new string[] { "GorillaInteractable" });
+	}
+
+	private void OnDestroy()
+	{
+		if (EquipmentInteractor.instance == this)
+		{
+			EquipmentInteractor.hasInstance = false;
+			EquipmentInteractor.instance = null;
+		}
+	}
+
+	public void ReleaseRightHand()
+	{
+		if (this.rightHandHeldEquipment != null)
+		{
+			this.rightHandHeldEquipment.OnRelease(null, this.rightHand);
+		}
+		if (this.leftHandHeldEquipment != null)
+		{
+			this.leftHandHeldEquipment.OnRelease(null, this.rightHand);
+		}
+		this.autoGrabRight = true;
+	}
+
+	public void ReleaseLeftHand()
+	{
+		if (this.rightHandHeldEquipment != null)
+		{
+			this.rightHandHeldEquipment.OnRelease(null, this.leftHand);
+		}
+		if (this.leftHandHeldEquipment != null)
+		{
+			this.leftHandHeldEquipment.OnRelease(null, this.leftHand);
+		}
+		this.autoGrabLeft = true;
+	}
+
+	public void ForceStopClimbing()
+	{
+		this.leftClimber.ForceStopClimbing(false, false);
+		this.rightClimber.ForceStopClimbing(false, false);
+	}
+
+	public bool GetIsHolding(XRNode node)
+	{
+		if (node == XRNode.LeftHand)
+		{
+			return this.leftHandHeldEquipment;
+		}
+		return this.rightHandHeldEquipment;
+	}
+
+	private void LateUpdate()
+	{
+		this.CheckInputValue(true);
+		this.isLeftGrabbing = (this.wasLeftGrabPressed && this.grabValue > this.grabThreshold - this.grabHysteresis) || (!this.wasLeftGrabPressed && this.grabValue > this.grabThreshold + this.grabHysteresis);
+		if (this.leftClimber && this.leftClimber.isClimbing)
+		{
+			this.isLeftGrabbing = false;
+		}
+		this.CheckInputValue(false);
+		this.isRightGrabbing = (this.wasRightGrabPressed && this.grabValue > this.grabThreshold - this.grabHysteresis) || (!this.wasRightGrabPressed && this.grabValue > this.grabThreshold + this.grabHysteresis);
+		if (this.rightClimber && this.rightClimber.isClimbing)
+		{
+			this.isRightGrabbing = false;
+		}
+		this.FireHandInteractions(this.leftHand, true);
+		this.FireHandInteractions(this.rightHand, false);
+		if (!this.isRightGrabbing && this.wasRightGrabPressed)
+		{
+			this.ReleaseRightHand();
+		}
+		if (!this.isLeftGrabbing && this.wasLeftGrabPressed)
+		{
+			this.ReleaseLeftHand();
+		}
+		this.wasLeftGrabPressed = this.isLeftGrabbing;
+		this.wasRightGrabPressed = this.isRightGrabbing;
+	}
+
+	private void FireHandInteractions(GameObject interactingHand, bool isLeftHand)
+	{
+		if (isLeftHand)
+		{
+			this.justGrabbed = (this.isLeftGrabbing && !this.wasLeftGrabPressed) || (this.isLeftGrabbing && this.autoGrabLeft);
+			this.justReleased = this.leftHandHeldEquipment != null && !this.isLeftGrabbing && this.wasLeftGrabPressed;
+		}
+		else
+		{
+			this.justGrabbed = (this.isRightGrabbing && !this.wasRightGrabPressed) || (this.isRightGrabbing && this.autoGrabRight);
+			this.justReleased = this.rightHandHeldEquipment != null && !this.isRightGrabbing && this.wasRightGrabPressed;
+		}
+		foreach (InteractionPoint interactionPoint in (isLeftHand ? this.overlapInteractionPointsLeft : this.overlapInteractionPointsRight))
+		{
+			bool flag = (isLeftHand ? (this.leftHandHeldEquipment != null) : (this.rightHandHeldEquipment != null));
+			bool flag2 = (isLeftHand ? this.disableLeftGrab : this.disableRightGrab);
+			if (!flag && !flag2 && interactionPoint != null)
+			{
+				if (this.justGrabbed)
+				{
+					interactionPoint.parentTransferrableObject.OnGrab(interactionPoint, interactingHand);
+				}
+				else
+				{
+					interactionPoint.parentTransferrableObject.OnHover(interactionPoint, interactingHand);
+				}
+			}
+			if (this.justReleased)
+			{
+				this.tempZone = interactionPoint.GetComponent<DropZone>();
+				if (this.tempZone != null)
+				{
+					if (interactingHand == this.leftHand)
+					{
+						if (this.leftHandHeldEquipment != null)
+						{
+							this.leftHandHeldEquipment.OnRelease(this.tempZone, interactingHand);
+						}
+					}
+					else if (this.rightHandHeldEquipment != null)
+					{
+						this.rightHandHeldEquipment.OnRelease(this.tempZone, interactingHand);
+					}
+				}
+			}
+		}
+	}
+
+	public void UpdateHandEquipment(HoldableObject newEquipment, bool forLeftHand)
+	{
+		if (forLeftHand)
+		{
+			if (newEquipment == this.rightHandHeldEquipment)
+			{
+				this.rightHandHeldEquipment = null;
+			}
+			if (this.leftHandHeldEquipment != null)
+			{
+				this.leftHandHeldEquipment.DropItemCleanup();
+			}
+			this.leftHandHeldEquipment = newEquipment;
+			this.autoGrabLeft = false;
+			return;
+		}
+		if (newEquipment == this.leftHandHeldEquipment)
+		{
+			this.leftHandHeldEquipment = null;
+		}
+		if (this.rightHandHeldEquipment != null)
+		{
+			this.rightHandHeldEquipment.DropItemCleanup();
+		}
+		this.rightHandHeldEquipment = newEquipment;
+		this.autoGrabRight = false;
+	}
+
+	public void CheckInputValue(bool isLeftHand)
+	{
+		if (isLeftHand)
+		{
+			this.grabValue = ControllerInputPoller.GripFloat(XRNode.LeftHand);
+			this.tempValue = ControllerInputPoller.TriggerFloat(XRNode.LeftHand);
+		}
+		else
+		{
+			this.grabValue = ControllerInputPoller.GripFloat(XRNode.RightHand);
+			this.tempValue = ControllerInputPoller.TriggerFloat(XRNode.RightHand);
+		}
+		this.grabValue = Mathf.Max(this.grabValue, this.tempValue);
+	}
+
+	public void ForceDropEquipment(HoldableObject equipment)
+	{
+		if (this.rightHandHeldEquipment == equipment)
+		{
+			this.rightHandHeldEquipment = null;
+		}
+		if (this.leftHandHeldEquipment == equipment)
+		{
+			this.leftHandHeldEquipment = null;
+		}
+	}
+
+	[OnEnterPlay_SetNull]
 	public static volatile EquipmentInteractor instance;
 
+	[OnEnterPlay_Set(false)]
 	public static bool hasInstance;
 
 	public HoldableObject leftHandHeldEquipment;
@@ -80,201 +282,4 @@ public class EquipmentInteractor : MonoBehaviour
 
 	[SerializeField]
 	private GorillaHandClimber rightClimber;
-
-	private void Awake()
-	{
-		if (instance == null)
-		{
-			instance = this;
-			hasInstance = true;
-		}
-		else if (instance != this)
-		{
-			Object.Destroy(base.gameObject);
-		}
-		leftHandSet = false;
-		rightHandSet = false;
-		autoGrabLeft = true;
-		autoGrabRight = true;
-		gorillaInteractableLayerMask = LayerMask.GetMask("GorillaInteractable");
-	}
-
-	private void OnDestroy()
-	{
-		if (instance == this)
-		{
-			hasInstance = false;
-			instance = null;
-		}
-	}
-
-	public void ReleaseRightHand()
-	{
-		if (rightHandHeldEquipment != null)
-		{
-			rightHandHeldEquipment.OnRelease(null, rightHand);
-		}
-		if (leftHandHeldEquipment != null)
-		{
-			leftHandHeldEquipment.OnRelease(null, rightHand);
-		}
-		autoGrabRight = true;
-	}
-
-	public void ReleaseLeftHand()
-	{
-		if (rightHandHeldEquipment != null)
-		{
-			rightHandHeldEquipment.OnRelease(null, leftHand);
-		}
-		if (leftHandHeldEquipment != null)
-		{
-			leftHandHeldEquipment.OnRelease(null, leftHand);
-		}
-		autoGrabLeft = true;
-	}
-
-	public bool GetIsHolding(XRNode node)
-	{
-		if (node == XRNode.LeftHand)
-		{
-			return leftHandHeldEquipment;
-		}
-		return rightHandHeldEquipment;
-	}
-
-	private void LateUpdate()
-	{
-		CheckInputValue(isLeftHand: true);
-		isLeftGrabbing = (wasLeftGrabPressed && grabValue > grabThreshold - grabHysteresis) || (!wasLeftGrabPressed && grabValue > grabThreshold + grabHysteresis);
-		if ((bool)leftClimber && leftClimber.isClimbing)
-		{
-			isLeftGrabbing = false;
-		}
-		CheckInputValue(isLeftHand: false);
-		isRightGrabbing = (wasRightGrabPressed && grabValue > grabThreshold - grabHysteresis) || (!wasRightGrabPressed && grabValue > grabThreshold + grabHysteresis);
-		if ((bool)rightClimber && rightClimber.isClimbing)
-		{
-			isRightGrabbing = false;
-		}
-		FireHandInteractions(leftHand, isLeftHand: true);
-		FireHandInteractions(rightHand, isLeftHand: false);
-		if (!isRightGrabbing && wasRightGrabPressed)
-		{
-			ReleaseRightHand();
-		}
-		if (!isLeftGrabbing && wasLeftGrabPressed)
-		{
-			ReleaseLeftHand();
-		}
-		wasLeftGrabPressed = isLeftGrabbing;
-		wasRightGrabPressed = isRightGrabbing;
-	}
-
-	private void FireHandInteractions(GameObject interactingHand, bool isLeftHand)
-	{
-		if (isLeftHand)
-		{
-			justGrabbed = (isLeftGrabbing && !wasLeftGrabPressed) || (isLeftGrabbing && autoGrabLeft);
-			justReleased = leftHandHeldEquipment != null && !isLeftGrabbing && wasLeftGrabPressed;
-		}
-		else
-		{
-			justGrabbed = (isRightGrabbing && !wasRightGrabPressed) || (isRightGrabbing && autoGrabRight);
-			justReleased = rightHandHeldEquipment != null && !isRightGrabbing && wasRightGrabPressed;
-		}
-		foreach (InteractionPoint item in isLeftHand ? overlapInteractionPointsLeft : overlapInteractionPointsRight)
-		{
-			bool num = (isLeftHand ? (leftHandHeldEquipment != null) : (rightHandHeldEquipment != null));
-			bool flag = (isLeftHand ? disableLeftGrab : disableRightGrab);
-			if (!num && !flag && item != null)
-			{
-				if (justGrabbed)
-				{
-					item.parentTransferrableObject.OnGrab(item, interactingHand);
-				}
-				else
-				{
-					item.parentTransferrableObject.OnHover(item, interactingHand);
-				}
-			}
-			if (!justReleased)
-			{
-				continue;
-			}
-			tempZone = item.GetComponent<DropZone>();
-			if (!(tempZone != null))
-			{
-				continue;
-			}
-			if (interactingHand == leftHand)
-			{
-				if (leftHandHeldEquipment != null)
-				{
-					leftHandHeldEquipment.OnRelease(tempZone, interactingHand);
-				}
-			}
-			else if (rightHandHeldEquipment != null)
-			{
-				rightHandHeldEquipment.OnRelease(tempZone, interactingHand);
-			}
-		}
-	}
-
-	public void UpdateHandEquipment(HoldableObject newEquipment, bool forLeftHand)
-	{
-		if (forLeftHand)
-		{
-			if (newEquipment == rightHandHeldEquipment)
-			{
-				rightHandHeldEquipment = null;
-			}
-			if (leftHandHeldEquipment != null)
-			{
-				leftHandHeldEquipment.DropItemCleanup();
-			}
-			leftHandHeldEquipment = newEquipment;
-			autoGrabLeft = false;
-		}
-		else
-		{
-			if (newEquipment == leftHandHeldEquipment)
-			{
-				leftHandHeldEquipment = null;
-			}
-			if (rightHandHeldEquipment != null)
-			{
-				rightHandHeldEquipment.DropItemCleanup();
-			}
-			rightHandHeldEquipment = newEquipment;
-			autoGrabRight = false;
-		}
-	}
-
-	public void CheckInputValue(bool isLeftHand)
-	{
-		if (isLeftHand)
-		{
-			grabValue = ControllerInputPoller.GripFloat(XRNode.LeftHand);
-			tempValue = ControllerInputPoller.TriggerFloat(XRNode.LeftHand);
-		}
-		else
-		{
-			grabValue = ControllerInputPoller.GripFloat(XRNode.RightHand);
-			tempValue = ControllerInputPoller.TriggerFloat(XRNode.RightHand);
-		}
-		grabValue = Mathf.Max(grabValue, tempValue);
-	}
-
-	public void ForceDropEquipment(HoldableObject equipment)
-	{
-		if (rightHandHeldEquipment == equipment)
-		{
-			rightHandHeldEquipment = null;
-		}
-		if (leftHandHeldEquipment == equipment)
-		{
-			leftHandHeldEquipment = null;
-		}
-	}
 }

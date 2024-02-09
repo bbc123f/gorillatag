@@ -1,31 +1,33 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace GorillaNetworking;
-
-public static class ExtensionMethods
+namespace GorillaNetworking
 {
-	public static void SafeInvoke<T>(this Action<T> action, T data)
+	public static class ExtensionMethods
 	{
-		try
+		public static void SafeInvoke<T>(this Action<T> action, T data)
 		{
-			action?.Invoke(data);
+			try
+			{
+				if (action != null)
+				{
+					action(data);
+				}
+			}
+			catch (Exception ex)
+			{
+				Debug.LogError(string.Format("Failure invoking action: {0}", ex));
+			}
 		}
-		catch (Exception arg)
-		{
-			Debug.LogError($"Failure invoking action: {arg}");
-		}
-	}
 
-	public static void AddOrUpdate<TKey, TValue>(this Dictionary<TKey, TValue> dict, TKey key, TValue value)
-	{
-		if (dict.ContainsKey(key))
+		public static void AddOrUpdate<TKey, TValue>(this Dictionary<TKey, TValue> dict, TKey key, TValue value)
 		{
-			dict[key] = value;
-		}
-		else
-		{
+			if (dict.ContainsKey(key))
+			{
+				dict[key] = value;
+				return;
+			}
 			dict.Add(key, value);
 		}
 	}

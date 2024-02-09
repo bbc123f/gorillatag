@@ -1,7 +1,57 @@
+﻿using System;
 using UnityEngine;
 
 public class Example : MonoBehaviour
 {
+	private void OnDrawGizmos()
+	{
+		if (this.debugPoint)
+		{
+			DebugExtension.DrawPoint(this.debugPoint_Position, this.debugPoint_Color, this.debugPoint_Scale);
+		}
+		if (this.debugBounds)
+		{
+			DebugExtension.DrawBounds(new Bounds(new Vector3(10f, 0f, 0f), this.debugBounds_Size), this.debugBounds_Color);
+		}
+		if (this.debugCircle)
+		{
+			DebugExtension.DrawCircle(new Vector3(20f, 0f, 0f), this.debugCircle_Up, this.debugCircle_Color, this.debugCircle_Radius);
+		}
+		if (this.debugWireSphere)
+		{
+			Gizmos.color = this.debugWireSphere_Color;
+			Gizmos.DrawWireSphere(new Vector3(30f, 0f, 0f), this.debugWireSphere_Radius);
+		}
+		if (this.debugCylinder)
+		{
+			DebugExtension.DrawCylinder(new Vector3(40f, 0f, 0f), this.debugCylinder_End, this.debugCylinder_Color, this.debugCylinder_Radius);
+		}
+		if (this.debugCone)
+		{
+			DebugExtension.DrawCone(new Vector3(50f, 0f, 0f), this.debugCone_Direction, this.debugCone_Color, this.debugCone_Angle);
+		}
+		if (this.debugArrow)
+		{
+			DebugExtension.DrawArrow(new Vector3(60f, 0f, 0f), this.debugArrow_Direction, this.debugArrow_Color);
+		}
+		if (this.debugCapsule)
+		{
+			DebugExtension.DrawCapsule(new Vector3(70f, 0f, 0f), this.debugCapsule_End, this.debugCapsule_Color, this.debugCapsule_Radius);
+		}
+	}
+
+	private void Update()
+	{
+		DebugExtension.DebugPoint(this.debugPoint_Position, this.debugPoint_Color, this.debugPoint_Scale, 0f, true);
+		DebugExtension.DebugBounds(new Bounds(new Vector3(10f, 0f, 0f), this.debugBounds_Size), this.debugBounds_Color, 0f, true);
+		DebugExtension.DebugCircle(new Vector3(20f, 0f, 0f), this.debugCircle_Up, this.debugCircle_Color, this.debugCircle_Radius, 0f, true);
+		DebugExtension.DebugWireSphere(new Vector3(30f, 0f, 0f), this.debugWireSphere_Color, this.debugWireSphere_Radius, 0f, true);
+		DebugExtension.DebugCylinder(new Vector3(40f, 0f, 0f), this.debugCylinder_End, this.debugCylinder_Color, this.debugCylinder_Radius, 0f, true);
+		DebugExtension.DebugCone(new Vector3(50f, 0f, 0f), this.debugCone_Direction, this.debugCone_Color, this.debugCone_Angle, 0f, true);
+		DebugExtension.DebugArrow(new Vector3(60f, 0f, 0f), this.debugArrow_Direction, this.debugArrow_Color, 0f, true);
+		DebugExtension.DebugCapsule(new Vector3(70f, 0f, 0f), this.debugCapsule_End, this.debugCapsule_Color, this.debugCapsule_Radius, 0f, true);
+	}
+
 	public bool debugPoint;
 
 	public Vector3 debugPoint_Position;
@@ -61,53 +111,4 @@ public class Example : MonoBehaviour
 	public float debugCapsule_Radius;
 
 	public Color debugCapsule_Color;
-
-	private void OnDrawGizmos()
-	{
-		if (debugPoint)
-		{
-			DebugExtension.DrawPoint(debugPoint_Position, debugPoint_Color, debugPoint_Scale);
-		}
-		if (debugBounds)
-		{
-			DebugExtension.DrawBounds(new Bounds(new Vector3(10f, 0f, 0f), debugBounds_Size), debugBounds_Color);
-		}
-		if (debugCircle)
-		{
-			DebugExtension.DrawCircle(new Vector3(20f, 0f, 0f), debugCircle_Up, debugCircle_Color, debugCircle_Radius);
-		}
-		if (debugWireSphere)
-		{
-			Gizmos.color = debugWireSphere_Color;
-			Gizmos.DrawWireSphere(new Vector3(30f, 0f, 0f), debugWireSphere_Radius);
-		}
-		if (debugCylinder)
-		{
-			DebugExtension.DrawCylinder(new Vector3(40f, 0f, 0f), debugCylinder_End, debugCylinder_Color, debugCylinder_Radius);
-		}
-		if (debugCone)
-		{
-			DebugExtension.DrawCone(new Vector3(50f, 0f, 0f), debugCone_Direction, debugCone_Color, debugCone_Angle);
-		}
-		if (debugArrow)
-		{
-			DebugExtension.DrawArrow(new Vector3(60f, 0f, 0f), debugArrow_Direction, debugArrow_Color);
-		}
-		if (debugCapsule)
-		{
-			DebugExtension.DrawCapsule(new Vector3(70f, 0f, 0f), debugCapsule_End, debugCapsule_Color, debugCapsule_Radius);
-		}
-	}
-
-	private void Update()
-	{
-		DebugExtension.DebugPoint(debugPoint_Position, debugPoint_Color, debugPoint_Scale);
-		DebugExtension.DebugBounds(new Bounds(new Vector3(10f, 0f, 0f), debugBounds_Size), debugBounds_Color);
-		DebugExtension.DebugCircle(new Vector3(20f, 0f, 0f), debugCircle_Up, debugCircle_Color, debugCircle_Radius);
-		DebugExtension.DebugWireSphere(new Vector3(30f, 0f, 0f), debugWireSphere_Color, debugWireSphere_Radius);
-		DebugExtension.DebugCylinder(new Vector3(40f, 0f, 0f), debugCylinder_End, debugCylinder_Color, debugCylinder_Radius);
-		DebugExtension.DebugCone(new Vector3(50f, 0f, 0f), debugCone_Direction, debugCone_Color, debugCone_Angle);
-		DebugExtension.DebugArrow(new Vector3(60f, 0f, 0f), debugArrow_Direction, debugArrow_Color);
-		DebugExtension.DebugCapsule(new Vector3(70f, 0f, 0f), debugCapsule_End, debugCapsule_Color, debugCapsule_Radius);
-	}
 }

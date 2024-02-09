@@ -1,20 +1,17 @@
+﻿using System;
 using GorillaLocomotion;
 using GorillaNetworking;
 using UnityEngine;
 
 public class GorillaVRConstraint : MonoBehaviour
 {
-	public bool isConstrained;
-
-	public float angle = 3600f;
-
 	private void Update()
 	{
 		if (PhotonNetworkController.Instance.wrongVersion)
 		{
-			isConstrained = true;
+			this.isConstrained = true;
 		}
-		if (isConstrained && Time.realtimeSinceStartup > angle)
+		if (this.isConstrained && Time.realtimeSinceStartup > this.angle)
 		{
 			Application.Quit();
 			Object.DestroyImmediate(PhotonNetworkController.Instance);
@@ -26,4 +23,8 @@ public class GorillaVRConstraint : MonoBehaviour
 			}
 		}
 	}
+
+	public bool isConstrained;
+
+	public float angle = 3600f;
 }

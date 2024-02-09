@@ -1,12 +1,14 @@
+﻿using System;
 using UnityEngine;
 
-namespace OculusSampleFramework;
-
-public interface ColliderZone
+namespace OculusSampleFramework
 {
-	Collider Collider { get; }
+	public interface ColliderZone
+	{
+		Collider Collider { get; }
 
-	Interactable ParentInteractable { get; }
+		Interactable ParentInteractable { get; }
 
-	InteractableCollisionDepth CollisionDepth { get; }
+		InteractableCollisionDepth CollisionDepth { get; }
+	}
 }

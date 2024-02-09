@@ -1,9 +1,46 @@
-using System;
+﻿using System;
 using GorillaTag;
 using UnityEngine;
 
 public class LocalActivateOnDateRange : MonoBehaviour
 {
+	private void Awake()
+	{
+		GameObject[] array = this.gameObjectsToActivate;
+		for (int i = 0; i < array.Length; i++)
+		{
+			array[i].SetActive(false);
+		}
+	}
+
+	private void OnEnable()
+	{
+		this.InitActiveTimes();
+	}
+
+	private void InitActiveTimes()
+	{
+		this.activationTime = new DateTime(this.activationYear, this.activationMonth, this.activationDay, this.activationHour, this.activationMinute, this.activationSecond, DateTimeKind.Utc);
+		this.deactivationTime = new DateTime(this.deactivationYear, this.deactivationMonth, this.deactivationDay, this.deactivationHour, this.deactivationMinute, this.deactivationSecond, DateTimeKind.Utc);
+	}
+
+	private void LateUpdate()
+	{
+		DateTime utcNow = DateTime.UtcNow;
+		this.dbgTimeUntilActivation = (this.activationTime - utcNow).TotalSeconds;
+		this.dbgTimeUntilDeactivation = (this.deactivationTime - utcNow).TotalSeconds;
+		bool flag = utcNow >= this.activationTime && utcNow <= this.deactivationTime;
+		if (flag != this.isActive)
+		{
+			GameObject[] array = this.gameObjectsToActivate;
+			for (int i = 0; i < array.Length; i++)
+			{
+				array[i].SetActive(flag);
+			}
+			this.isActive = flag;
+		}
+	}
+
 	[Header("Activation Date and Time (UTC)")]
 	public int activationYear = 2023;
 
@@ -43,41 +80,4 @@ public class LocalActivateOnDateRange : MonoBehaviour
 
 	[DebugReadout]
 	public double dbgTimeUntilDeactivation;
-
-	private void Awake()
-	{
-		GameObject[] array = gameObjectsToActivate;
-		for (int i = 0; i < array.Length; i++)
-		{
-			array[i].SetActive(value: false);
-		}
-	}
-
-	private void OnEnable()
-	{
-		InitActiveTimes();
-	}
-
-	private void InitActiveTimes()
-	{
-		activationTime = new DateTime(activationYear, activationMonth, activationDay, activationHour, activationMinute, activationSecond, DateTimeKind.Utc);
-		deactivationTime = new DateTime(deactivationYear, deactivationMonth, deactivationDay, deactivationHour, deactivationMinute, deactivationSecond, DateTimeKind.Utc);
-	}
-
-	private void LateUpdate()
-	{
-		DateTime utcNow = DateTime.UtcNow;
-		dbgTimeUntilActivation = (activationTime - utcNow).TotalSeconds;
-		dbgTimeUntilDeactivation = (deactivationTime - utcNow).TotalSeconds;
-		bool flag = utcNow >= activationTime && utcNow <= deactivationTime;
-		if (flag != isActive)
-		{
-			GameObject[] array = gameObjectsToActivate;
-			for (int i = 0; i < array.Length; i++)
-			{
-				array[i].SetActive(flag);
-			}
-			isActive = flag;
-		}
-	}
 }

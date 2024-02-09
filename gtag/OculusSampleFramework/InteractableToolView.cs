@@ -1,12 +1,15 @@
-namespace OculusSampleFramework;
+﻿using System;
 
-public interface InteractableToolView
+namespace OculusSampleFramework
 {
-	InteractableTool InteractableTool { get; }
+	public interface InteractableToolView
+	{
+		InteractableTool InteractableTool { get; }
 
-	bool EnableState { get; set; }
+		void SetFocusedInteractable(Interactable interactable);
 
-	bool ToolActivateState { get; set; }
+		bool EnableState { get; set; }
 
-	void SetFocusedInteractable(Interactable interactable);
+		bool ToolActivateState { get; set; }
+	}
 }

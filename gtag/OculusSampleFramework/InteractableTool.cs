@@ -1,120 +1,128 @@
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace OculusSampleFramework;
-
-public abstract class InteractableTool : MonoBehaviour
+namespace OculusSampleFramework
 {
-	protected List<InteractableCollisionInfo> _currentIntersectingObjects = new List<InteractableCollisionInfo>();
-
-	private List<Interactable> _addedInteractables = new List<Interactable>();
-
-	private List<Interactable> _removedInteractables = new List<Interactable>();
-
-	private List<Interactable> _remainingInteractables = new List<Interactable>();
-
-	private Dictionary<Interactable, InteractableCollisionInfo> _currInteractableToCollisionInfos = new Dictionary<Interactable, InteractableCollisionInfo>();
-
-	private Dictionary<Interactable, InteractableCollisionInfo> _prevInteractableToCollisionInfos = new Dictionary<Interactable, InteractableCollisionInfo>();
-
-	public Transform ToolTransform => base.transform;
-
-	public bool IsRightHandedTool { get; set; }
-
-	public abstract InteractableToolTags ToolTags { get; }
-
-	public abstract ToolInputState ToolInputState { get; }
-
-	public abstract bool IsFarFieldTool { get; }
-
-	public Vector3 Velocity { get; protected set; }
-
-	public Vector3 InteractionPosition { get; protected set; }
-
-	public abstract bool EnableState { get; set; }
-
-	public List<InteractableCollisionInfo> GetCurrentIntersectingObjects()
+	public abstract class InteractableTool : MonoBehaviour
 	{
-		return _currentIntersectingObjects;
-	}
-
-	public abstract List<InteractableCollisionInfo> GetNextIntersectingObjects();
-
-	public abstract void FocusOnInteractable(Interactable focusedInteractable, ColliderZone colliderZone);
-
-	public abstract void DeFocus();
-
-	public abstract void Initialize();
-
-	public KeyValuePair<Interactable, InteractableCollisionInfo> GetFirstCurrentCollisionInfo()
-	{
-		return _currInteractableToCollisionInfos.First();
-	}
-
-	public void ClearAllCurrentCollisionInfos()
-	{
-		_currInteractableToCollisionInfos.Clear();
-	}
-
-	public virtual void UpdateCurrentCollisionsBasedOnDepth()
-	{
-		_currInteractableToCollisionInfos.Clear();
-		foreach (InteractableCollisionInfo currentIntersectingObject in _currentIntersectingObjects)
+		public Transform ToolTransform
 		{
-			Interactable parentInteractable = currentIntersectingObject.InteractableCollider.ParentInteractable;
-			InteractableCollisionDepth collisionDepth = currentIntersectingObject.CollisionDepth;
-			InteractableCollisionInfo value = null;
-			if (!_currInteractableToCollisionInfos.TryGetValue(parentInteractable, out value))
+			get
 			{
-				_currInteractableToCollisionInfos[parentInteractable] = currentIntersectingObject;
-			}
-			else if (value.CollisionDepth < collisionDepth)
-			{
-				value.InteractableCollider = currentIntersectingObject.InteractableCollider;
-				value.CollisionDepth = collisionDepth;
+				return base.transform;
 			}
 		}
-	}
 
-	public virtual void UpdateLatestCollisionData()
-	{
-		_addedInteractables.Clear();
-		_removedInteractables.Clear();
-		_remainingInteractables.Clear();
-		foreach (Interactable key in _currInteractableToCollisionInfos.Keys)
+		public bool IsRightHandedTool { get; set; }
+
+		public abstract InteractableToolTags ToolTags { get; }
+
+		public abstract ToolInputState ToolInputState { get; }
+
+		public abstract bool IsFarFieldTool { get; }
+
+		public Vector3 Velocity { get; protected set; }
+
+		public Vector3 InteractionPosition { get; protected set; }
+
+		public List<InteractableCollisionInfo> GetCurrentIntersectingObjects()
 		{
-			if (!_prevInteractableToCollisionInfos.ContainsKey(key))
+			return this._currentIntersectingObjects;
+		}
+
+		public abstract List<InteractableCollisionInfo> GetNextIntersectingObjects();
+
+		public abstract void FocusOnInteractable(Interactable focusedInteractable, ColliderZone colliderZone);
+
+		public abstract void DeFocus();
+
+		public abstract bool EnableState { get; set; }
+
+		public abstract void Initialize();
+
+		public KeyValuePair<Interactable, InteractableCollisionInfo> GetFirstCurrentCollisionInfo()
+		{
+			return this._currInteractableToCollisionInfos.First<KeyValuePair<Interactable, InteractableCollisionInfo>>();
+		}
+
+		public void ClearAllCurrentCollisionInfos()
+		{
+			this._currInteractableToCollisionInfos.Clear();
+		}
+
+		public virtual void UpdateCurrentCollisionsBasedOnDepth()
+		{
+			this._currInteractableToCollisionInfos.Clear();
+			foreach (InteractableCollisionInfo interactableCollisionInfo in this._currentIntersectingObjects)
 			{
-				_addedInteractables.Add(key);
+				Interactable parentInteractable = interactableCollisionInfo.InteractableCollider.ParentInteractable;
+				InteractableCollisionDepth collisionDepth = interactableCollisionInfo.CollisionDepth;
+				InteractableCollisionInfo interactableCollisionInfo2 = null;
+				if (!this._currInteractableToCollisionInfos.TryGetValue(parentInteractable, out interactableCollisionInfo2))
+				{
+					this._currInteractableToCollisionInfos[parentInteractable] = interactableCollisionInfo;
+				}
+				else if (interactableCollisionInfo2.CollisionDepth < collisionDepth)
+				{
+					interactableCollisionInfo2.InteractableCollider = interactableCollisionInfo.InteractableCollider;
+					interactableCollisionInfo2.CollisionDepth = collisionDepth;
+				}
 			}
-			else
+		}
+
+		public virtual void UpdateLatestCollisionData()
+		{
+			this._addedInteractables.Clear();
+			this._removedInteractables.Clear();
+			this._remainingInteractables.Clear();
+			foreach (Interactable interactable in this._currInteractableToCollisionInfos.Keys)
 			{
-				_remainingInteractables.Add(key);
+				if (!this._prevInteractableToCollisionInfos.ContainsKey(interactable))
+				{
+					this._addedInteractables.Add(interactable);
+				}
+				else
+				{
+					this._remainingInteractables.Add(interactable);
+				}
 			}
-		}
-		foreach (Interactable key2 in _prevInteractableToCollisionInfos.Keys)
-		{
-			if (!_currInteractableToCollisionInfos.ContainsKey(key2))
+			foreach (Interactable interactable2 in this._prevInteractableToCollisionInfos.Keys)
 			{
-				_removedInteractables.Add(key2);
+				if (!this._currInteractableToCollisionInfos.ContainsKey(interactable2))
+				{
+					this._removedInteractables.Add(interactable2);
+				}
 			}
+			foreach (Interactable interactable3 in this._removedInteractables)
+			{
+				interactable3.UpdateCollisionDepth(this, this._prevInteractableToCollisionInfos[interactable3].CollisionDepth, InteractableCollisionDepth.None);
+			}
+			foreach (Interactable interactable4 in this._addedInteractables)
+			{
+				InteractableCollisionDepth collisionDepth = this._currInteractableToCollisionInfos[interactable4].CollisionDepth;
+				interactable4.UpdateCollisionDepth(this, InteractableCollisionDepth.None, collisionDepth);
+			}
+			foreach (Interactable interactable5 in this._remainingInteractables)
+			{
+				InteractableCollisionDepth collisionDepth2 = this._currInteractableToCollisionInfos[interactable5].CollisionDepth;
+				InteractableCollisionDepth collisionDepth3 = this._prevInteractableToCollisionInfos[interactable5].CollisionDepth;
+				interactable5.UpdateCollisionDepth(this, collisionDepth3, collisionDepth2);
+			}
+			this._prevInteractableToCollisionInfos = new Dictionary<Interactable, InteractableCollisionInfo>(this._currInteractableToCollisionInfos);
 		}
-		foreach (Interactable removedInteractable in _removedInteractables)
-		{
-			removedInteractable.UpdateCollisionDepth(this, _prevInteractableToCollisionInfos[removedInteractable].CollisionDepth, InteractableCollisionDepth.None);
-		}
-		foreach (Interactable addedInteractable in _addedInteractables)
-		{
-			InteractableCollisionDepth collisionDepth = _currInteractableToCollisionInfos[addedInteractable].CollisionDepth;
-			addedInteractable.UpdateCollisionDepth(this, InteractableCollisionDepth.None, collisionDepth);
-		}
-		foreach (Interactable remainingInteractable in _remainingInteractables)
-		{
-			InteractableCollisionDepth collisionDepth2 = _currInteractableToCollisionInfos[remainingInteractable].CollisionDepth;
-			InteractableCollisionDepth collisionDepth3 = _prevInteractableToCollisionInfos[remainingInteractable].CollisionDepth;
-			remainingInteractable.UpdateCollisionDepth(this, collisionDepth3, collisionDepth2);
-		}
-		_prevInteractableToCollisionInfos = new Dictionary<Interactable, InteractableCollisionInfo>(_currInteractableToCollisionInfos);
+
+		protected List<InteractableCollisionInfo> _currentIntersectingObjects = new List<InteractableCollisionInfo>();
+
+		private List<Interactable> _addedInteractables = new List<Interactable>();
+
+		private List<Interactable> _removedInteractables = new List<Interactable>();
+
+		private List<Interactable> _remainingInteractables = new List<Interactable>();
+
+		private Dictionary<Interactable, InteractableCollisionInfo> _currInteractableToCollisionInfos = new Dictionary<Interactable, InteractableCollisionInfo>();
+
+		private Dictionary<Interactable, InteractableCollisionInfo> _prevInteractableToCollisionInfos = new Dictionary<Interactable, InteractableCollisionInfo>();
 	}
 }

@@ -1,24 +1,8 @@
-using System;
+﻿using System;
 using System.Runtime.CompilerServices;
 
 public static class GTBitOps
 {
-	public readonly struct BitWriteInfo
-	{
-		public readonly int index;
-
-		public readonly int valueMask;
-
-		public readonly int clearMask;
-
-		public BitWriteInfo(int index, int count)
-		{
-			this.index = index;
-			valueMask = GetValueMask(count);
-			clearMask = GetClearMask(index, valueMask);
-		}
-	}
-
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static int GetValueMask(int count)
 	{
@@ -44,7 +28,7 @@ public static class GTBitOps
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static int ReadBits(int bits, BitWriteInfo info)
+	public static int ReadBits(int bits, GTBitOps.BitWriteInfo info)
 	{
 		return (bits >> info.index) & info.valueMask;
 	}
@@ -62,15 +46,15 @@ public static class GTBitOps
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static void WriteBits(ref int bits, BitWriteInfo info, int value)
+	public static void WriteBits(ref int bits, GTBitOps.BitWriteInfo info, int value)
 	{
 		bits = (bits & info.clearMask) | ((value & info.valueMask) << info.index);
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static int WriteBits(int bits, BitWriteInfo info, int value)
+	public static int WriteBits(int bits, GTBitOps.BitWriteInfo info, int value)
 	{
-		WriteBits(ref bits, info, value);
+		GTBitOps.WriteBits(ref bits, info, value);
 		return bits;
 	}
 
@@ -83,7 +67,7 @@ public static class GTBitOps
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static int WriteBits(int bits, int index, int valueMask, int clearMask, int value)
 	{
-		WriteBits(ref bits, index, valueMask, clearMask, value);
+		GTBitOps.WriteBits(ref bits, index, valueMask, clearMask, value);
 		return bits;
 	}
 
@@ -96,7 +80,7 @@ public static class GTBitOps
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static int WriteBitsByCount(int bits, int index, int count, int value)
 	{
-		WriteBitsByCount(ref bits, index, count, value);
+		GTBitOps.WriteBitsByCount(ref bits, index, count, value);
 		return bits;
 	}
 
@@ -109,12 +93,28 @@ public static class GTBitOps
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static int WriteBit(int bits, int index, bool value)
 	{
-		WriteBit(ref bits, index, value);
+		GTBitOps.WriteBit(ref bits, index, value);
 		return bits;
 	}
 
 	public static string ToBinaryString(int number)
 	{
 		return Convert.ToString(number, 2).PadLeft(32, '0');
+	}
+
+	public readonly struct BitWriteInfo
+	{
+		public BitWriteInfo(int index, int count)
+		{
+			this.index = index;
+			this.valueMask = GTBitOps.GetValueMask(count);
+			this.clearMask = GTBitOps.GetClearMask(index, this.valueMask);
+		}
+
+		public readonly int index;
+
+		public readonly int valueMask;
+
+		public readonly int clearMask;
 	}
 }

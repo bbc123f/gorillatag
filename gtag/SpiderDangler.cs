@@ -1,18 +1,87 @@
+﻿using System;
 using UnityEngine;
 
 public class SpiderDangler : MonoBehaviour
 {
-	public struct RopeSegment
+	protected void Awake()
 	{
-		public Vector3 pos;
-
-		public Vector3 posOld;
-
-		public RopeSegment(Vector3 pos)
+		this.lineRenderer = base.GetComponent<LineRenderer>();
+		Vector3 position = base.transform.position;
+		float magnitude = (this.endTransform.position - position).magnitude;
+		this.ropeSegLen = magnitude / 6f;
+		this.ropeSegs = new SpiderDangler.RopeSegment[6];
+		for (int i = 0; i < 6; i++)
 		{
-			this.pos = pos;
-			posOld = pos;
+			this.ropeSegs[i] = new SpiderDangler.RopeSegment(position);
+			position.y -= this.ropeSegLen;
 		}
+	}
+
+	protected void FixedUpdate()
+	{
+		this.Simulate();
+	}
+
+	protected void LateUpdate()
+	{
+		this.DrawRope();
+		Vector3 normalized = (this.ropeSegs[this.ropeSegs.Length - 2].pos - this.ropeSegs[this.ropeSegs.Length - 1].pos).normalized;
+		this.endTransform.position = this.ropeSegs[this.ropeSegs.Length - 1].pos;
+		this.endTransform.up = normalized;
+		Vector4 vector = this.spinSpeeds * Time.time;
+		vector = new Vector4(Mathf.Sin(vector.x), Mathf.Sin(vector.y), Mathf.Sin(vector.z), Mathf.Sin(vector.w));
+		vector.Scale(this.spinScales);
+		this.endTransform.Rotate(Vector3.up, vector.x + vector.y + vector.z + vector.w);
+	}
+
+	private void Simulate()
+	{
+		this.ropeSegLenScaled = this.ropeSegLen * base.transform.lossyScale.x;
+		Vector3 vector = new Vector3(0f, -0.5f, 0f) * Time.fixedDeltaTime;
+		for (int i = 1; i < 6; i++)
+		{
+			Vector3 vector2 = this.ropeSegs[i].pos - this.ropeSegs[i].posOld;
+			this.ropeSegs[i].posOld = this.ropeSegs[i].pos;
+			SpiderDangler.RopeSegment[] array = this.ropeSegs;
+			int num = i;
+			array[num].pos = array[num].pos + vector2 * 0.95f;
+			SpiderDangler.RopeSegment[] array2 = this.ropeSegs;
+			int num2 = i;
+			array2[num2].pos = array2[num2].pos + vector;
+		}
+		for (int j = 0; j < 8; j++)
+		{
+			this.ApplyConstraint();
+		}
+	}
+
+	private void ApplyConstraint()
+	{
+		this.ropeSegs[0].pos = base.transform.position;
+		this.ApplyConstraintSegment(ref this.ropeSegs[0], ref this.ropeSegs[1], 0f, 1f);
+		for (int i = 1; i < 5; i++)
+		{
+			this.ApplyConstraintSegment(ref this.ropeSegs[i], ref this.ropeSegs[i + 1], 0.5f, 0.5f);
+		}
+	}
+
+	private void ApplyConstraintSegment(ref SpiderDangler.RopeSegment segA, ref SpiderDangler.RopeSegment segB, float dampenA, float dampenB)
+	{
+		float num = (segA.pos - segB.pos).magnitude - this.ropeSegLenScaled;
+		Vector3 vector = (segA.pos - segB.pos).normalized * num;
+		segA.pos -= vector * dampenA;
+		segB.pos += vector * dampenB;
+	}
+
+	private void DrawRope()
+	{
+		Vector3[] array = new Vector3[6];
+		for (int i = 0; i < 6; i++)
+		{
+			array[i] = this.ropeSegs[i].pos;
+		}
+		this.lineRenderer.positionCount = array.Length;
+		this.lineRenderer.SetPositions(array);
 	}
 
 	public Transform endTransform;
@@ -23,7 +92,7 @@ public class SpiderDangler : MonoBehaviour
 
 	private LineRenderer lineRenderer;
 
-	private RopeSegment[] ropeSegs;
+	private SpiderDangler.RopeSegment[] ropeSegs;
 
 	private float ropeSegLen;
 
@@ -35,80 +104,16 @@ public class SpiderDangler : MonoBehaviour
 
 	private const int kConstraintCalculationIterations = 8;
 
-	protected void Awake()
+	public struct RopeSegment
 	{
-		lineRenderer = GetComponent<LineRenderer>();
-		Vector3 position = base.transform.position;
-		float magnitude = (endTransform.position - position).magnitude;
-		ropeSegLen = magnitude / 6f;
-		ropeSegs = new RopeSegment[6];
-		for (int i = 0; i < 6; i++)
+		public RopeSegment(Vector3 pos)
 		{
-			ropeSegs[i] = new RopeSegment(position);
-			position.y -= ropeSegLen;
+			this.pos = pos;
+			this.posOld = pos;
 		}
-	}
 
-	protected void FixedUpdate()
-	{
-		Simulate();
-	}
+		public Vector3 pos;
 
-	protected void LateUpdate()
-	{
-		DrawRope();
-		Vector3 normalized = (ropeSegs[ropeSegs.Length - 2].pos - ropeSegs[ropeSegs.Length - 1].pos).normalized;
-		endTransform.position = ropeSegs[ropeSegs.Length - 1].pos;
-		endTransform.up = normalized;
-		Vector4 vector = spinSpeeds * Time.time;
-		vector = new Vector4(Mathf.Sin(vector.x), Mathf.Sin(vector.y), Mathf.Sin(vector.z), Mathf.Sin(vector.w));
-		vector.Scale(spinScales);
-		endTransform.Rotate(Vector3.up, vector.x + vector.y + vector.z + vector.w);
-	}
-
-	private void Simulate()
-	{
-		ropeSegLenScaled = ropeSegLen * base.transform.lossyScale.x;
-		Vector3 vector = new Vector3(0f, -0.5f, 0f) * Time.fixedDeltaTime;
-		for (int i = 1; i < 6; i++)
-		{
-			Vector3 vector2 = ropeSegs[i].pos - ropeSegs[i].posOld;
-			ropeSegs[i].posOld = ropeSegs[i].pos;
-			ropeSegs[i].pos += vector2 * 0.95f;
-			ropeSegs[i].pos += vector;
-		}
-		for (int j = 0; j < 8; j++)
-		{
-			ApplyConstraint();
-		}
-	}
-
-	private void ApplyConstraint()
-	{
-		ropeSegs[0].pos = base.transform.position;
-		ApplyConstraintSegment(ref ropeSegs[0], ref ropeSegs[1], 0f, 1f);
-		for (int i = 1; i < 5; i++)
-		{
-			ApplyConstraintSegment(ref ropeSegs[i], ref ropeSegs[i + 1], 0.5f, 0.5f);
-		}
-	}
-
-	private void ApplyConstraintSegment(ref RopeSegment segA, ref RopeSegment segB, float dampenA, float dampenB)
-	{
-		float num = (segA.pos - segB.pos).magnitude - ropeSegLenScaled;
-		Vector3 vector = (segA.pos - segB.pos).normalized * num;
-		segA.pos -= vector * dampenA;
-		segB.pos += vector * dampenB;
-	}
-
-	private void DrawRope()
-	{
-		Vector3[] array = new Vector3[6];
-		for (int i = 0; i < 6; i++)
-		{
-			array[i] = ropeSegs[i].pos;
-		}
-		lineRenderer.positionCount = array.Length;
-		lineRenderer.SetPositions(array);
+		public Vector3 posOld;
 	}
 }

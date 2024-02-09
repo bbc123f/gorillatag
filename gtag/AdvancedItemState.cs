@@ -1,21 +1,161 @@
-using System;
+﻿using System;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 [Serializable]
 public class AdvancedItemState
 {
-	[Serializable]
-	public class PreData
+	public void Encode()
 	{
-		public float distAlongLine;
-
-		public PointType pointType;
+		this._encodedValue = this.EncodeData();
 	}
 
-	public enum PointType
+	public void Decode()
 	{
-		Standard,
-		DistanceBased
+		AdvancedItemState advancedItemState = this.DecodeData(this._encodedValue);
+		this.index = advancedItemState.index;
+		this.preData = advancedItemState.preData;
+		this.limitAxis = advancedItemState.limitAxis;
+		this.reverseGrip = advancedItemState.reverseGrip;
+		this.angle = advancedItemState.angle;
+	}
+
+	public Quaternion GetQuaternion()
+	{
+		Vector3 one = Vector3.one;
+		if (this.reverseGrip)
+		{
+			switch (this.limitAxis)
+			{
+			case LimitAxis.NoMovement:
+				return Quaternion.identity;
+			case LimitAxis.YAxis:
+				return Quaternion.identity;
+			case LimitAxis.XAxis:
+			case LimitAxis.ZAxis:
+				break;
+			default:
+				throw new ArgumentOutOfRangeException();
+			}
+		}
+		return Quaternion.identity;
+	}
+
+	[return: TupleElementNames(new string[] { "grabPointIndex", "YRotation", "XRotation", "ZRotation" })]
+	public ValueTuple<int, float, float, float> DecodeAdvancedItemState(int encodedValue)
+	{
+		int num = (encodedValue >> 21) & 255;
+		float num2 = (float)((encodedValue >> 14) & 127) / 128f * 360f;
+		float num3 = (float)((encodedValue >> 7) & 127) / 128f * 360f;
+		float num4 = (float)(encodedValue & 127) / 128f * 360f;
+		return new ValueTuple<int, float, float, float>(num, num2, num3, num4);
+	}
+
+	private float EncodedDeltaRotation
+	{
+		get
+		{
+			return this.GetEncodedDeltaRotation();
+		}
+	}
+
+	public float GetEncodedDeltaRotation()
+	{
+		return Mathf.Abs(Mathf.Atan2(this.angleVectorWhereUpIsStandard.x, this.angleVectorWhereUpIsStandard.y)) / 3.1415927f;
+	}
+
+	public void DecodeDeltaRotation(float encodedDelta, bool isFlipped)
+	{
+		float num = encodedDelta * 3.1415927f;
+		if (isFlipped)
+		{
+			this.angleVectorWhereUpIsStandard = new Vector2(-Mathf.Sin(num), Mathf.Cos(num));
+		}
+		else
+		{
+			this.angleVectorWhereUpIsStandard = new Vector2(Mathf.Sin(num), Mathf.Cos(num));
+		}
+		switch (this.limitAxis)
+		{
+		case LimitAxis.NoMovement:
+		case LimitAxis.XAxis:
+		case LimitAxis.ZAxis:
+			return;
+		case LimitAxis.YAxis:
+		{
+			Vector3 vector = new Vector3(this.angleVectorWhereUpIsStandard.x, 0f, this.angleVectorWhereUpIsStandard.y);
+			Vector3 vector2 = (this.reverseGrip ? Vector3.down : Vector3.up);
+			this.deltaRotation = Quaternion.LookRotation(vector, vector2);
+			return;
+		}
+		default:
+			throw new ArgumentOutOfRangeException();
+		}
+	}
+
+	public int EncodeData()
+	{
+		int num = 0;
+		if ((this.index >= 32) | (this.index < 0))
+		{
+			throw new ArgumentOutOfRangeException(string.Format("Index is invalid {0}", this.index));
+		}
+		num |= this.index << 25;
+		AdvancedItemState.PointType pointType = this.preData.pointType;
+		num |= (int)((int)(pointType & (AdvancedItemState.PointType)7) << 22);
+		num |= (int)((int)this.limitAxis << 19);
+		num |= (this.reverseGrip ? 1 : 0) << 18;
+		bool flag = this.angleVectorWhereUpIsStandard.x < 0f;
+		if (pointType != AdvancedItemState.PointType.Standard)
+		{
+			if (pointType != AdvancedItemState.PointType.DistanceBased)
+			{
+				throw new ArgumentOutOfRangeException();
+			}
+			int num2 = (int)(this.GetEncodedDeltaRotation() * 512f) & 511;
+			num |= (flag ? 1 : 0) << 17;
+			num |= num2 << 9;
+			int num3 = (int)(this.preData.distAlongLine * 256f) & 255;
+			num |= num3;
+		}
+		else
+		{
+			int num4 = (int)(this.GetEncodedDeltaRotation() * 65536f) & 65535;
+			num |= (flag ? 1 : 0) << 17;
+			num |= num4 << 1;
+		}
+		return num;
+	}
+
+	public AdvancedItemState DecodeData(int encoded)
+	{
+		AdvancedItemState advancedItemState = new AdvancedItemState();
+		advancedItemState.index = (encoded >> 25) & 31;
+		advancedItemState.limitAxis = (LimitAxis)((encoded >> 19) & 7);
+		advancedItemState.reverseGrip = ((encoded >> 18) & 1) == 1;
+		AdvancedItemState.PointType pointType = (AdvancedItemState.PointType)((encoded >> 22) & 7);
+		if (pointType != AdvancedItemState.PointType.Standard)
+		{
+			if (pointType != AdvancedItemState.PointType.DistanceBased)
+			{
+				throw new ArgumentOutOfRangeException();
+			}
+			advancedItemState.preData = new AdvancedItemState.PreData
+			{
+				pointType = pointType,
+				distAlongLine = (float)(encoded & 255) / 256f
+			};
+			this.DecodeDeltaRotation((float)((encoded >> 9) & 511) / 512f, ((encoded >> 17) & 1) > 0);
+		}
+		else
+		{
+			advancedItemState.preData = new AdvancedItemState.PreData
+			{
+				pointType = pointType
+			};
+			this.DecodeDeltaRotation((float)((encoded >> 1) & 65535) / 65536f, ((encoded >> 17) & 1) > 0);
+		}
+		return advancedItemState;
 	}
 
 	private int _encodedValue;
@@ -26,7 +166,7 @@ public class AdvancedItemState
 
 	public int index;
 
-	public PreData preData;
+	public AdvancedItemState.PreData preData;
 
 	public LimitAxis limitAxis;
 
@@ -34,148 +174,17 @@ public class AdvancedItemState
 
 	public float angle;
 
-	private float EncodedDeltaRotation => GetEncodedDeltaRotation();
-
-	public void Encode()
+	[Serializable]
+	public class PreData
 	{
-		_encodedValue = EncodeData();
+		public float distAlongLine;
+
+		public AdvancedItemState.PointType pointType;
 	}
 
-	public void Decode()
+	public enum PointType
 	{
-		AdvancedItemState advancedItemState = DecodeData(_encodedValue);
-		index = advancedItemState.index;
-		preData = advancedItemState.preData;
-		limitAxis = advancedItemState.limitAxis;
-		reverseGrip = advancedItemState.reverseGrip;
-		angle = advancedItemState.angle;
-	}
-
-	public Quaternion GetQuaternion()
-	{
-		_ = Vector3.one;
-		if (reverseGrip)
-		{
-			switch (limitAxis)
-			{
-			case LimitAxis.NoMovement:
-				return Quaternion.identity;
-			case LimitAxis.YAxis:
-				return Quaternion.identity;
-			default:
-				throw new ArgumentOutOfRangeException();
-			case LimitAxis.XAxis:
-			case LimitAxis.ZAxis:
-				break;
-			}
-		}
-		return Quaternion.identity;
-	}
-
-	public (int grabPointIndex, float YRotation, float XRotation, float ZRotation) DecodeAdvancedItemState(int encodedValue)
-	{
-		int item = (encodedValue >> 21) & 0xFF;
-		float item2 = (float)((encodedValue >> 14) & 0x7F) / 128f * 360f;
-		float item3 = (float)((encodedValue >> 7) & 0x7F) / 128f * 360f;
-		float item4 = (float)(encodedValue & 0x7F) / 128f * 360f;
-		return (grabPointIndex: item, YRotation: item2, XRotation: item3, ZRotation: item4);
-	}
-
-	public float GetEncodedDeltaRotation()
-	{
-		return Mathf.Abs(Mathf.Atan2(angleVectorWhereUpIsStandard.x, angleVectorWhereUpIsStandard.y)) / (float)Math.PI;
-	}
-
-	public void DecodeDeltaRotation(float encodedDelta, bool isFlipped)
-	{
-		float f = encodedDelta * (float)Math.PI;
-		if (isFlipped)
-		{
-			angleVectorWhereUpIsStandard = new Vector2(0f - Mathf.Sin(f), Mathf.Cos(f));
-		}
-		else
-		{
-			angleVectorWhereUpIsStandard = new Vector2(Mathf.Sin(f), Mathf.Cos(f));
-		}
-		switch (limitAxis)
-		{
-		case LimitAxis.YAxis:
-		{
-			Vector3 forward = new Vector3(angleVectorWhereUpIsStandard.x, 0f, angleVectorWhereUpIsStandard.y);
-			Vector3 upwards = (reverseGrip ? Vector3.down : Vector3.up);
-			deltaRotation = Quaternion.LookRotation(forward, upwards);
-			break;
-		}
-		default:
-			throw new ArgumentOutOfRangeException();
-		case LimitAxis.NoMovement:
-		case LimitAxis.XAxis:
-		case LimitAxis.ZAxis:
-			break;
-		}
-	}
-
-	public int EncodeData()
-	{
-		int num = 0;
-		if ((index >= 32) | (index < 0))
-		{
-			throw new ArgumentOutOfRangeException($"Index is invalid {index}");
-		}
-		num |= index << 25;
-		PointType pointType = preData.pointType;
-		num |= (int)(pointType & (PointType)7) << 22;
-		num |= (int)limitAxis << 19;
-		num |= (reverseGrip ? 1 : 0) << 18;
-		bool flag = angleVectorWhereUpIsStandard.x < 0f;
-		switch (pointType)
-		{
-		case PointType.Standard:
-		{
-			int num4 = (int)(GetEncodedDeltaRotation() * 65536f) & 0xFFFF;
-			num |= (flag ? 1 : 0) << 17;
-			return num | (num4 << 1);
-		}
-		case PointType.DistanceBased:
-		{
-			int num2 = (int)(GetEncodedDeltaRotation() * 512f) & 0x1FF;
-			num |= (flag ? 1 : 0) << 17;
-			num |= num2 << 9;
-			int num3 = (int)(preData.distAlongLine * 256f) & 0xFF;
-			return num | num3;
-		}
-		default:
-			throw new ArgumentOutOfRangeException();
-		}
-	}
-
-	public AdvancedItemState DecodeData(int encoded)
-	{
-		AdvancedItemState advancedItemState = new AdvancedItemState();
-		advancedItemState.index = (encoded >> 25) & 0x1F;
-		advancedItemState.limitAxis = (LimitAxis)((encoded >> 19) & 7);
-		advancedItemState.reverseGrip = ((encoded >> 18) & 1) == 1;
-		PointType pointType = (PointType)((encoded >> 22) & 7);
-		switch (pointType)
-		{
-		case PointType.Standard:
-			advancedItemState.preData = new PreData
-			{
-				pointType = pointType
-			};
-			DecodeDeltaRotation((float)((encoded >> 1) & 0xFFFF) / 65536f, ((encoded >> 17) & 1) > 0);
-			break;
-		case PointType.DistanceBased:
-			advancedItemState.preData = new PreData
-			{
-				pointType = pointType,
-				distAlongLine = (float)(encoded & 0xFF) / 256f
-			};
-			DecodeDeltaRotation((float)((encoded >> 9) & 0x1FF) / 512f, ((encoded >> 17) & 1) > 0);
-			break;
-		default:
-			throw new ArgumentOutOfRangeException();
-		}
-		return advancedItemState;
+		Standard,
+		DistanceBased
 	}
 }

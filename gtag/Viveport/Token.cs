@@ -1,60 +1,57 @@
-using System;
+﻿using System;
 using AOT;
 using Viveport.Internal;
 
-namespace Viveport;
-
-internal class Token
+namespace Viveport
 {
-	private static Viveport.Internal.StatusCallback isReadyIl2cppCallback;
-
-	private static Viveport.Internal.StatusCallback2 getSessionTokenIl2cppCallback;
-
-	[MonoPInvokeCallback(typeof(Viveport.Internal.StatusCallback))]
-	private static void IsReadyIl2cppCallback(int errorCode)
+	internal class Token
 	{
-		isReadyIl2cppCallback(errorCode);
-	}
+		[MonoPInvokeCallback(typeof(StatusCallback))]
+		private static void IsReadyIl2cppCallback(int errorCode)
+		{
+			Token.isReadyIl2cppCallback(errorCode);
+		}
 
-	public static void IsReady(StatusCallback callback)
-	{
-		if (callback == null)
+		public static void IsReady(StatusCallback callback)
 		{
-			throw new InvalidOperationException("callback == null");
+			if (callback == null)
+			{
+				throw new InvalidOperationException("callback == null");
+			}
+			Token.isReadyIl2cppCallback = new StatusCallback(callback.Invoke);
+			Api.InternalStatusCallbacks.Add(new StatusCallback(Token.IsReadyIl2cppCallback));
+			if (IntPtr.Size == 8)
+			{
+				Token.IsReady_64(new StatusCallback(Token.IsReadyIl2cppCallback));
+				return;
+			}
+			Token.IsReady(new StatusCallback(Token.IsReadyIl2cppCallback));
 		}
-		isReadyIl2cppCallback = callback.Invoke;
-		Api.InternalStatusCallbacks.Add(IsReadyIl2cppCallback);
-		if (IntPtr.Size == 8)
-		{
-			Viveport.Internal.Token.IsReady_64(IsReadyIl2cppCallback);
-		}
-		else
-		{
-			Viveport.Internal.Token.IsReady(IsReadyIl2cppCallback);
-		}
-	}
 
-	[MonoPInvokeCallback(typeof(Viveport.Internal.StatusCallback2))]
-	private static void GetSessionTokenIl2cppCallback(int errorCode, string message)
-	{
-		getSessionTokenIl2cppCallback(errorCode, message);
-	}
+		[MonoPInvokeCallback(typeof(StatusCallback2))]
+		private static void GetSessionTokenIl2cppCallback(int errorCode, string message)
+		{
+			Token.getSessionTokenIl2cppCallback(errorCode, message);
+		}
 
-	public static void GetSessionToken(StatusCallback2 callback)
-	{
-		if (callback == null)
+		public static void GetSessionToken(StatusCallback2 callback)
 		{
-			throw new InvalidOperationException("callback == null");
+			if (callback == null)
+			{
+				throw new InvalidOperationException("callback == null");
+			}
+			Token.getSessionTokenIl2cppCallback = new StatusCallback2(callback.Invoke);
+			Api.InternalStatusCallback2s.Add(new StatusCallback2(Token.GetSessionTokenIl2cppCallback));
+			if (IntPtr.Size == 8)
+			{
+				Token.GetSessionToken_64(new StatusCallback2(Token.GetSessionTokenIl2cppCallback));
+				return;
+			}
+			Token.GetSessionToken(new StatusCallback2(Token.GetSessionTokenIl2cppCallback));
 		}
-		getSessionTokenIl2cppCallback = callback.Invoke;
-		Api.InternalStatusCallback2s.Add(GetSessionTokenIl2cppCallback);
-		if (IntPtr.Size == 8)
-		{
-			Viveport.Internal.Token.GetSessionToken_64(GetSessionTokenIl2cppCallback);
-		}
-		else
-		{
-			Viveport.Internal.Token.GetSessionToken(GetSessionTokenIl2cppCallback);
-		}
+
+		private static StatusCallback isReadyIl2cppCallback;
+
+		private static StatusCallback2 getSessionTokenIl2cppCallback;
 	}
 }

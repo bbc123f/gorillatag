@@ -1,10 +1,13 @@
-namespace LitJson;
+﻿using System;
 
-internal enum Condition
+namespace LitJson
 {
-	InArray,
-	InObject,
-	NotAProperty,
-	Property,
-	Value
+	internal enum Condition
+	{
+		InArray,
+		InObject,
+		NotAProperty,
+		Property,
+		Value
+	}
 }

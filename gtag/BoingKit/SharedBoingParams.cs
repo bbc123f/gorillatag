@@ -1,14 +1,16 @@
+﻿using System;
 using UnityEngine;
 
-namespace BoingKit;
-
-[CreateAssetMenu(fileName = "BoingParams", menuName = "Boing Kit/Shared Boing Params", order = 550)]
-public class SharedBoingParams : ScriptableObject
+namespace BoingKit
 {
-	public BoingWork.Params Params;
-
-	public SharedBoingParams()
+	[CreateAssetMenu(fileName = "BoingParams", menuName = "Boing Kit/Shared Boing Params", order = 550)]
+	public class SharedBoingParams : ScriptableObject
 	{
-		Params.Init();
+		public SharedBoingParams()
+		{
+			this.Params.Init();
+		}
+
+		public BoingWork.Params Params;
 	}
 }

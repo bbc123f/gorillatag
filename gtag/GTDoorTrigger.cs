@@ -1,46 +1,59 @@
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
 
 public class GTDoorTrigger : MonoBehaviour
 {
-	[Tooltip("Optional timeline to play to animate the thing getting activated, play sound, particles, etc...")]
-	public PlayableDirector timeline;
+	public int overlapCount
+	{
+		get
+		{
+			return this.overlappingColliders.Count;
+		}
+	}
 
-	private int lastTriggeredFrame = -1;
-
-	private List<Collider> overlappingColliders = new List<Collider>(20);
-
-	public int overlapCount => overlappingColliders.Count;
-
-	public bool TriggeredThisFrame => lastTriggeredFrame == Time.frameCount;
+	public bool TriggeredThisFrame
+	{
+		get
+		{
+			return this.lastTriggeredFrame == Time.frameCount;
+		}
+	}
 
 	public void ValidateOverlappingColliders()
 	{
-		for (int num = overlappingColliders.Count - 1; num >= 0; num--)
+		for (int i = this.overlappingColliders.Count - 1; i >= 0; i--)
 		{
-			if (overlappingColliders[num] == null || !overlappingColliders[num].gameObject.activeInHierarchy || !overlappingColliders[num].enabled)
+			if (this.overlappingColliders[i] == null || !this.overlappingColliders[i].gameObject.activeInHierarchy || !this.overlappingColliders[i].enabled)
 			{
-				overlappingColliders.RemoveAt(num);
+				this.overlappingColliders.RemoveAt(i);
 			}
 		}
 	}
 
 	private void OnTriggerEnter(Collider other)
 	{
-		if (!overlappingColliders.Contains(other))
+		if (!this.overlappingColliders.Contains(other))
 		{
-			overlappingColliders.Add(other);
+			this.overlappingColliders.Add(other);
 		}
-		lastTriggeredFrame = Time.frameCount;
-		if (timeline != null && (timeline.time == 0.0 || timeline.time >= timeline.duration))
+		this.lastTriggeredFrame = Time.frameCount;
+		if (this.timeline != null && (this.timeline.time == 0.0 || this.timeline.time >= this.timeline.duration))
 		{
-			timeline.Play();
+			this.timeline.Play();
 		}
 	}
 
 	private void OnTriggerExit(Collider other)
 	{
-		overlappingColliders.Remove(other);
+		this.overlappingColliders.Remove(other);
 	}
+
+	[Tooltip("Optional timeline to play to animate the thing getting activated, play sound, particles, etc...")]
+	public PlayableDirector timeline;
+
+	private int lastTriggeredFrame = -1;
+
+	private List<Collider> overlappingColliders = new List<Collider>(20);
 }

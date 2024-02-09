@@ -1,9 +1,12 @@
-namespace OculusSampleFramework;
+﻿using System;
 
-public enum InteractableState
+namespace OculusSampleFramework
 {
-	Default,
-	ProximityState,
-	ContactState,
-	ActionState
+	public enum InteractableState
+	{
+		Default,
+		ProximityState,
+		ContactState,
+		ActionState
+	}
 }

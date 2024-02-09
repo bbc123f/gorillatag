@@ -1,9 +1,11 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class BetterBakerPositionOverrides : MonoBehaviour
 {
+	public List<BetterBakerPositionOverrides.OverridePosition> overridePositions;
+
 	[Serializable]
 	public struct OverridePosition
 	{
@@ -13,6 +15,4 @@ public class BetterBakerPositionOverrides : MonoBehaviour
 
 		public Transform gameTransform;
 	}
-
-	public List<OverridePosition> overridePositions;
 }

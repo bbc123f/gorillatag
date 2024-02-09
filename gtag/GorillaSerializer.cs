@@ -1,69 +1,61 @@
-using System;
+﻿using System;
+using GorillaExtensions;
 using Photon.Pun;
 using UnityEngine;
 
 [RequireComponent(typeof(PhotonView))]
 internal class GorillaSerializer : MonoBehaviour, IPunObservable, IPunInstantiateMagicCallback
 {
-	protected bool successfullInstantiate;
-
-	private IGorillaSerializeable serializeTarget;
-
-	private Type targetType;
-
-	protected GameObject targetObject;
-
-	[SerializeField]
-	protected PhotonView photonView;
-
 	void IPunObservable.OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
 	{
-		if (successfullInstantiate && info.Sender == info.photonView.Owner && serializeTarget != null)
+		if (!this.successfullInstantiate || this.serializeTarget == null || !this.ValidOnSerialize(stream, info))
 		{
-			if (stream.IsReading)
-			{
-				serializeTarget.OnSerializeRead(stream, info);
-			}
-			else
-			{
-				serializeTarget.OnSerializeWrite(stream, info);
-			}
+			return;
 		}
+		if (stream.IsReading)
+		{
+			this.serializeTarget.OnSerializeRead(stream, info);
+			return;
+		}
+		this.serializeTarget.OnSerializeWrite(stream, info);
 	}
 
 	void IPunInstantiateMagicCallback.OnPhotonInstantiate(PhotonMessageInfo info)
 	{
-		if (photonView == null)
+		if (this.photonView == null)
 		{
 			return;
 		}
-		successfullInstantiate = OnInstantiateSetup(info, out targetObject, out targetType);
-		if (successfullInstantiate)
+		this.successfullInstantiate = this.OnInstantiateSetup(info, out this.targetObject, out this.targetType);
+		if (this.successfullInstantiate)
 		{
-			if (targetObject?.GetComponent(targetType) is IGorillaSerializeable gorillaSerializeable)
+			if (this.targetType != null && this.targetObject.IsNotNull())
 			{
-				serializeTarget = gorillaSerializeable;
+				IGorillaSerializeable gorillaSerializeable = this.targetObject.GetComponent(this.targetType) as IGorillaSerializeable;
+				if (gorillaSerializeable != null)
+				{
+					this.serializeTarget = gorillaSerializeable;
+				}
 			}
-			if (targetType == null || targetObject == null || serializeTarget == null)
+			if (this.serializeTarget == null)
 			{
-				successfullInstantiate = false;
+				this.successfullInstantiate = false;
 			}
 		}
-		if (successfullInstantiate)
+		if (this.successfullInstantiate)
 		{
-			OnSuccessfullInstantiate(info);
+			this.OnSuccessfullInstantiate(info);
 			return;
 		}
-		Debug.Log("failed to network instantiate");
-		if (photonView.IsMine)
+		if (PhotonNetwork.InRoom && this.photonView.IsMine)
 		{
-			PhotonNetwork.Destroy(photonView);
+			PhotonNetwork.Destroy(this.photonView);
 		}
 		else
 		{
-			base.gameObject.SetActive(value: false);
+			Object.Destroy(base.gameObject);
 		}
-		photonView.ObservedComponents.Remove(this);
+		this.photonView.ObservedComponents.Remove(this);
 	}
 
 	protected virtual void OnSuccessfullInstantiate(PhotonMessageInfo info)
@@ -76,4 +68,28 @@ internal class GorillaSerializer : MonoBehaviour, IPunObservable, IPunInstantiat
 		outTargetObject = base.gameObject;
 		return true;
 	}
+
+	protected virtual bool ValidOnSerialize(PhotonStream stream, in PhotonMessageInfo info)
+	{
+		return info.Sender == info.photonView.Owner;
+	}
+
+	public virtual T AddRPCComponent<T>() where T : RPCNetworkBase
+	{
+		T t = base.gameObject.AddComponent<T>();
+		this.photonView.RefreshRpcMonoBehaviourCache();
+		t.SetClassTarget(this.serializeTarget, this);
+		return t;
+	}
+
+	protected bool successfullInstantiate;
+
+	protected IGorillaSerializeable serializeTarget;
+
+	private Type targetType;
+
+	protected GameObject targetObject;
+
+	[SerializeField]
+	protected PhotonView photonView;
 }

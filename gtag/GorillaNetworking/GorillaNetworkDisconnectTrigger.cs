@@ -1,47 +1,49 @@
+﻿using System;
 using Photon.Pun;
 using UnityEngine;
 
-namespace GorillaNetworking;
-
-public class GorillaNetworkDisconnectTrigger : GorillaTriggerBox
+namespace GorillaNetworking
 {
-	public PhotonNetworkController photonNetworkController;
-
-	public GameObject offlineVRRig;
-
-	public GameObject makeSureThisIsEnabled;
-
-	public GameObject[] makeSureTheseAreEnabled;
-
-	public string componentTypeToRemove;
-
-	public GameObject componentTarget;
-
-	public override void OnBoxTriggered()
+	public class GorillaNetworkDisconnectTrigger : GorillaTriggerBox
 	{
-		base.OnBoxTriggered();
-		if (makeSureThisIsEnabled != null)
+		public override void OnBoxTriggered()
 		{
-			makeSureThisIsEnabled.SetActive(value: true);
-		}
-		GameObject[] array = makeSureTheseAreEnabled;
-		for (int i = 0; i < array.Length; i++)
-		{
-			array[i].SetActive(value: true);
-		}
-		if (PhotonNetwork.InRoom)
-		{
-			if (componentTypeToRemove != "" && componentTarget.GetComponent(componentTypeToRemove) != null)
+			base.OnBoxTriggered();
+			if (this.makeSureThisIsEnabled != null)
 			{
-				Object.Destroy(componentTarget.GetComponent(componentTypeToRemove));
+				this.makeSureThisIsEnabled.SetActive(true);
 			}
-			PhotonNetwork.Disconnect();
-			SkinnedMeshRenderer[] array2 = photonNetworkController.offlineVRRig;
-			for (int i = 0; i < array2.Length; i++)
+			GameObject[] array = this.makeSureTheseAreEnabled;
+			for (int i = 0; i < array.Length; i++)
 			{
-				array2[i].enabled = true;
+				array[i].SetActive(true);
 			}
-			PhotonNetwork.ConnectUsingSettings();
+			if (PhotonNetwork.InRoom)
+			{
+				if (this.componentTypeToRemove != "" && this.componentTarget.GetComponent(this.componentTypeToRemove) != null)
+				{
+					Object.Destroy(this.componentTarget.GetComponent(this.componentTypeToRemove));
+				}
+				PhotonNetwork.Disconnect();
+				SkinnedMeshRenderer[] array2 = this.photonNetworkController.offlineVRRig;
+				for (int i = 0; i < array2.Length; i++)
+				{
+					array2[i].enabled = true;
+				}
+				PhotonNetwork.ConnectUsingSettings();
+			}
 		}
+
+		public PhotonNetworkController photonNetworkController;
+
+		public GameObject offlineVRRig;
+
+		public GameObject makeSureThisIsEnabled;
+
+		public GameObject[] makeSureTheseAreEnabled;
+
+		public string componentTypeToRemove;
+
+		public GameObject componentTarget;
 	}
 }

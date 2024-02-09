@@ -1,14 +1,112 @@
-using System;
-using System.Collections;
+﻿using System;
 using System.Collections.Generic;
-using ExitGames.Client.Photon;
 using Photon.Pun;
-using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GorillaScoreBoard : MonoBehaviourPunCallbacks, IInRoomCallbacks, IOnEventCallback
+public class GorillaScoreBoard : MonoBehaviour
 {
+	public void SetSleepState(bool awake)
+	{
+		this.boardText.enabled = awake;
+		this.buttonText.enabled = awake;
+		this.linesParent.SetActive(awake);
+	}
+
+	public string GetBeginningString()
+	{
+		return "ROOM ID: " + ((!PhotonNetwork.CurrentRoom.IsVisible) ? "-PRIVATE- GAME MODE: " : (PhotonNetwork.CurrentRoom.Name + "    GAME MODE: ")) + this.RoomType() + "\n   PLAYER      COLOR   MUTE   REPORT";
+	}
+
+	public string RoomType()
+	{
+		this.initialGameMode = RoomSystem.RoomGameMode;
+		this.gmNames = GameMode.gameModeNames;
+		this.gmName = "ERROR";
+		int count = this.gmNames.Count;
+		for (int i = 0; i < count; i++)
+		{
+			this.tempGmName = this.gmNames[i];
+			if (this.initialGameMode.Contains(this.tempGmName))
+			{
+				this.gmName = this.tempGmName;
+				break;
+			}
+		}
+		return this.gmName;
+	}
+
+	public void RedrawPlayerLines()
+	{
+		this.boardText.text = this.GetBeginningString();
+		this.buttonText.text = "";
+		for (int i = 0; i < this.lines.Count; i++)
+		{
+			try
+			{
+				if (this.lines[i].gameObject.activeInHierarchy)
+				{
+					this.lines[i].gameObject.GetComponent<RectTransform>().localPosition = new Vector3(0f, (float)(this.startingYValue - this.lineHeight * i), 0f);
+					if (this.lines[i].linePlayer != null)
+					{
+						Text text = this.boardText;
+						text.text = text.text + "\n " + this.NormalizeName(true, this.lines[i].linePlayer.NickName);
+						if (this.lines[i].linePlayer != PhotonNetwork.LocalPlayer)
+						{
+							if (this.lines[i].reportButton.isActiveAndEnabled)
+							{
+								Text text2 = this.buttonText;
+								text2.text += "MUTE                                REPORT\n";
+							}
+							else
+							{
+								Text text3 = this.buttonText;
+								text3.text += "MUTE                HATE SPEECH    TOXICITY      CHEATING      CANCEL\n";
+							}
+						}
+						else
+						{
+							Text text4 = this.buttonText;
+							text4.text += "\n";
+						}
+					}
+				}
+			}
+			catch
+			{
+			}
+		}
+	}
+
+	public string NormalizeName(bool doIt, string text)
+	{
+		if (doIt)
+		{
+			text = new string(Array.FindAll<char>(text.ToCharArray(), (char c) => char.IsLetterOrDigit(c)));
+			if (text.Length > 12)
+			{
+				text = text.Substring(0, 10);
+			}
+			text = text.ToUpper();
+		}
+		return text;
+	}
+
+	private void Start()
+	{
+		GorillaScoreboardTotalUpdater.RegisterScoreboard(this);
+	}
+
+	private void OnEnable()
+	{
+		GorillaScoreboardTotalUpdater.RegisterScoreboard(this);
+	}
+
+	private void OnDisable()
+	{
+		GorillaScoreboardTotalUpdater.UnregisterScoreboard(this);
+	}
+
 	public GameObject scoreBoardLinePrefab;
 
 	public int startingYValue;
@@ -23,199 +121,26 @@ public class GorillaScoreBoard : MonoBehaviourPunCallbacks, IInRoomCallbacks, IO
 
 	public bool isActive;
 
+	public GameObject linesParent;
+
+	[SerializeField]
 	public List<GorillaPlayerScoreboardLine> lines;
 
 	public Text boardText;
 
 	public Text buttonText;
 
-	private Player playerForVRRig;
+	public bool needsUpdate;
 
-	private int i;
+	public GameObject notInRoomText;
 
-	private VRRig currentRig;
+	public string initialGameMode;
 
-	private Player outPlayer;
+	private string tempGmName;
 
-	public void Awake()
-	{
-		PhotonNetwork.AddCallbackTarget(this);
-		if (PhotonNetwork.InRoom && GorillaGameManager.instance != null)
-		{
-			boardText.text = GetBeginningString();
-		}
-		StartCoroutine(InfrequentUpdateCoroutine());
-	}
+	private string gmName;
 
-	public string GetBeginningString()
-	{
-		if (GorillaGameManager.instance != null)
-		{
-			return "ROOM ID: " + ((!PhotonNetwork.CurrentRoom.IsVisible) ? "-PRIVATE- GAME MODE: " : (PhotonNetwork.CurrentRoom.Name + "    GAME MODE: ")) + GorillaGameManager.instance.GameMode() + "\n   PLAYER      COLOR   MUTE   REPORT";
-		}
-		return "ROOM ID: " + ((!PhotonNetwork.CurrentRoom.IsVisible) ? "-PRIVATE-" : PhotonNetwork.CurrentRoom.Name) + "\n   PLAYER      COLOR   MUTE   REPORT";
-	}
+	private const string error = "ERROR";
 
-	private IEnumerator InfrequentUpdateCoroutine()
-	{
-		yield return new WaitForSeconds(UnityEngine.Random.Range(0f, 1f));
-		while (true)
-		{
-			InfrequentUpdate(forcedRefresh: false);
-			yield return new WaitForSeconds(1f);
-		}
-	}
-
-	private void InfrequentUpdate(bool forcedRefresh)
-	{
-		try
-		{
-			bool flag = false;
-			this.i = lines.Count - 1;
-			while (this.i > -1)
-			{
-				if (lines[this.i] == null)
-				{
-					lines.RemoveAt(this.i);
-					flag = true;
-				}
-				else if (lines[this.i].linePlayer == null || !PhotonNetwork.CurrentRoom.Players.TryGetValue(lines[this.i].linePlayer.ActorNumber, out outPlayer) || (PhotonNetwork.CurrentRoom.Players.TryGetValue(lines[this.i].linePlayer.ActorNumber, out outPlayer) && outPlayer == null))
-				{
-					lines[this.i].enabled = false;
-					UnityEngine.Object.Destroy(lines[this.i].gameObject);
-					lines.RemoveAt(this.i);
-					flag = true;
-				}
-				this.i--;
-			}
-			Player[] array = ((GorillaGameManager.instance != null) ? GorillaGameManager.instance.currentPlayerArray : PhotonNetwork.PlayerList);
-			if (PhotonNetwork.CurrentRoom != null && lines.Count != array.Length)
-			{
-				Player[] array2 = array;
-				foreach (Player player in array2)
-				{
-					if (player == null)
-					{
-						continue;
-					}
-					bool flag2 = false;
-					foreach (GorillaPlayerScoreboardLine line in lines)
-					{
-						if (line.playerActorNumber == player.ActorNumber)
-						{
-							flag2 = true;
-						}
-					}
-					if (!flag2 && player.InRoom())
-					{
-						GorillaPlayerScoreboardLine component = UnityEngine.Object.Instantiate(scoreBoardLinePrefab, base.transform).GetComponent<GorillaPlayerScoreboardLine>();
-						lines.Add(component);
-						component.playerActorNumber = player.ActorNumber;
-						component.linePlayer = player;
-						component.playerNameValue = player.NickName;
-						if (VRRigCache.Instance.TryGetVrrig(player, out var playerRig))
-						{
-							component.rigContainer = playerRig;
-							component.playerVRRig = playerRig.Rig;
-						}
-						flag = true;
-					}
-				}
-			}
-			if (flag || forcedRefresh)
-			{
-				RedrawPlayerLines();
-			}
-		}
-		catch
-		{
-		}
-	}
-
-	public override void OnPlayerLeftRoom(Player otherPlayer)
-	{
-		InfrequentUpdate(forcedRefresh: true);
-	}
-
-	public void RedrawPlayerLines()
-	{
-		lines.Sort((GorillaPlayerScoreboardLine line1, GorillaPlayerScoreboardLine line2) => line1.playerActorNumber.CompareTo(line2.playerActorNumber));
-		boardText.text = GetBeginningString();
-		buttonText.text = "";
-		for (int i = 0; i < lines.Count; i++)
-		{
-			try
-			{
-				lines[i].gameObject.GetComponent<RectTransform>().localPosition = new Vector3(0f, startingYValue - lineHeight * i, 0f);
-				if (lines[i].linePlayer == null)
-				{
-					continue;
-				}
-				Text text = boardText;
-				text.text = text.text + "\n " + NormalizeName(doIt: true, lines[i].linePlayer.NickName);
-				if (lines[i].linePlayer != PhotonNetwork.LocalPlayer)
-				{
-					if (lines[i].reportButton.isActiveAndEnabled)
-					{
-						buttonText.text += "MUTE                                REPORT\n";
-					}
-					else
-					{
-						buttonText.text += "MUTE                HATE SPEECH    TOXICITY      CHEATING      CANCEL\n";
-					}
-				}
-				else
-				{
-					buttonText.text += "\n";
-				}
-			}
-			catch
-			{
-			}
-		}
-	}
-
-	void IOnEventCallback.OnEvent(EventData photonEvent)
-	{
-	}
-
-	public IEnumerator RefreshData(int actorNumber1, int actorNumber2)
-	{
-		yield return new WaitForSeconds(1f);
-		foreach (GorillaPlayerScoreboardLine line in lines)
-		{
-			if (line.playerActorNumber != actorNumber1)
-			{
-				_ = line.playerActorNumber;
-				_ = actorNumber2;
-			}
-		}
-	}
-
-	private int GetActorIDFromUserID(string userID)
-	{
-		Player[] playerList = PhotonNetwork.PlayerList;
-		foreach (Player player in playerList)
-		{
-			if (player.UserId == userID)
-			{
-				return player.ActorNumber;
-			}
-		}
-		return -1;
-	}
-
-	public string NormalizeName(bool doIt, string text)
-	{
-		if (doIt)
-		{
-			text = new string(Array.FindAll(text.ToCharArray(), (char c) => char.IsLetterOrDigit(c)));
-			if (text.Length > 12)
-			{
-				text = text.Substring(0, 10);
-			}
-			text = text.ToUpper();
-		}
-		return text;
-	}
+	private List<string> gmNames;
 }

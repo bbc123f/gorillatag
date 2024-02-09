@@ -1,40 +1,45 @@
-using System;
+﻿using System;
 using UnityEngine;
 
-namespace BoingKit;
-
-[Serializable]
-public struct Bits32
+namespace BoingKit
 {
-	[SerializeField]
-	private int m_bits;
-
-	public int IntValue => m_bits;
-
-	public Bits32(int bits = 0)
+	[Serializable]
+	public struct Bits32
 	{
-		m_bits = bits;
-	}
-
-	public void Clear()
-	{
-		m_bits = 0;
-	}
-
-	public void SetBit(int index, bool value)
-	{
-		if (value)
+		public int IntValue
 		{
-			m_bits |= 1 << index;
+			get
+			{
+				return this.m_bits;
+			}
 		}
-		else
-		{
-			m_bits &= ~(1 << index);
-		}
-	}
 
-	public bool IsBitSet(int index)
-	{
-		return (m_bits & (1 << index)) != 0;
+		public Bits32(int bits = 0)
+		{
+			this.m_bits = bits;
+		}
+
+		public void Clear()
+		{
+			this.m_bits = 0;
+		}
+
+		public void SetBit(int index, bool value)
+		{
+			if (value)
+			{
+				this.m_bits |= 1 << index;
+				return;
+			}
+			this.m_bits &= ~(1 << index);
+		}
+
+		public bool IsBitSet(int index)
+		{
+			return (this.m_bits & (1 << index)) != 0;
+		}
+
+		[SerializeField]
+		private int m_bits;
 	}
 }

@@ -1,3 +1,4 @@
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,16 +16,15 @@ public class HitChecker : MonoBehaviour
 			raycastHits[i] = nullHit;
 		}
 		collidersHitCount = Physics.SphereCastNonAlloc(handIndicator.lastPosition, sphereRadius, spherecastSweep.normalized, raycastHits, spherecastSweep.magnitude, layerMask, QueryTriggerInteraction.Collide);
-		if (collidersHitCount <= 0)
+		if (collidersHitCount > 0)
 		{
-			return;
-		}
-		raycastHitList.Clear();
-		for (int j = 0; j < raycastHits.Length; j++)
-		{
-			if (raycastHits[j].collider != null)
+			raycastHitList.Clear();
+			for (int j = 0; j < raycastHits.Length; j++)
 			{
-				raycastHitList.Add(raycastHits[j]);
+				if (raycastHits[j].collider != null)
+				{
+					raycastHitList.Add(raycastHits[j]);
+				}
 			}
 		}
 	}

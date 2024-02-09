@@ -1,52 +1,53 @@
-using System;
+﻿using System;
 
-namespace LitJson;
-
-internal struct ArrayMetadata
+namespace LitJson
 {
-	private Type element_type;
-
-	private bool is_array;
-
-	private bool is_list;
-
-	public Type ElementType
+	internal struct ArrayMetadata
 	{
-		get
+		public Type ElementType
 		{
-			if (element_type == null)
+			get
 			{
-				return typeof(JsonData);
+				if (this.element_type == null)
+				{
+					return typeof(JsonData);
+				}
+				return this.element_type;
 			}
-			return element_type;
+			set
+			{
+				this.element_type = value;
+			}
 		}
-		set
-		{
-			element_type = value;
-		}
-	}
 
-	public bool IsArray
-	{
-		get
+		public bool IsArray
 		{
-			return is_array;
+			get
+			{
+				return this.is_array;
+			}
+			set
+			{
+				this.is_array = value;
+			}
 		}
-		set
-		{
-			is_array = value;
-		}
-	}
 
-	public bool IsList
-	{
-		get
+		public bool IsList
 		{
-			return is_list;
+			get
+			{
+				return this.is_list;
+			}
+			set
+			{
+				this.is_list = value;
+			}
 		}
-		set
-		{
-			is_list = value;
-		}
+
+		private Type element_type;
+
+		private bool is_array;
+
+		private bool is_list;
 	}
 }

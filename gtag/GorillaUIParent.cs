@@ -1,18 +1,21 @@
+﻿using System;
 using UnityEngine;
 
 public class GorillaUIParent : MonoBehaviour
 {
-	public static volatile GorillaUIParent instance;
-
 	private void Awake()
 	{
-		if (instance == null)
+		if (GorillaUIParent.instance == null)
 		{
-			instance = this;
+			GorillaUIParent.instance = this;
+			return;
 		}
-		else if (instance != this)
+		if (GorillaUIParent.instance != this)
 		{
 			Object.Destroy(base.gameObject);
 		}
 	}
+
+	[OnEnterPlay_SetNull]
+	public static volatile GorillaUIParent instance;
 }

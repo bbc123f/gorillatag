@@ -1,22 +1,42 @@
+﻿using System;
 using Photon.Pun;
 using UnityEngine;
 
 public class MonkeyeAI_ReplState : MonoBehaviour, IPunObservable
 {
-	public enum EStates
+	void IPunObservable.OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
 	{
-		Sleeping,
-		Patrolling,
-		Chasing,
-		ReturnToSleepPt,
-		GoToSleep,
-		BeginAttack,
-		OpenFloor,
-		DropPlayer,
-		CloseFloor
+		if (stream.IsWriting)
+		{
+			stream.SendNext(this.userId);
+			stream.SendNext(this.attackPos);
+			stream.SendNext(this.timer);
+			stream.SendNext(this.floorEnabled);
+			stream.SendNext(this.portalEnabled);
+			stream.SendNext(this.freezePlayer);
+			stream.SendNext(this.alpha);
+			stream.SendNext(this.state);
+			return;
+		}
+		if (info.photonView.Owner == null)
+		{
+			return;
+		}
+		if (info.Sender.ActorNumber != info.photonView.Owner.ActorNumber)
+		{
+			return;
+		}
+		this.userId = (string)stream.ReceiveNext();
+		this.attackPos = (Vector3)stream.ReceiveNext();
+		this.timer = (float)stream.ReceiveNext();
+		this.floorEnabled = (bool)stream.ReceiveNext();
+		this.portalEnabled = (bool)stream.ReceiveNext();
+		this.freezePlayer = (bool)stream.ReceiveNext();
+		this.alpha = (float)stream.ReceiveNext();
+		this.state = (MonkeyeAI_ReplState.EStates)stream.ReceiveNext();
 	}
 
-	public EStates state;
+	public MonkeyeAI_ReplState.EStates state;
 
 	public string userId;
 
@@ -32,29 +52,16 @@ public class MonkeyeAI_ReplState : MonoBehaviour, IPunObservable
 
 	public float alpha;
 
-	void IPunObservable.OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+	public enum EStates
 	{
-		if (stream.IsWriting)
-		{
-			stream.SendNext(userId);
-			stream.SendNext(attackPos);
-			stream.SendNext(timer);
-			stream.SendNext(floorEnabled);
-			stream.SendNext(portalEnabled);
-			stream.SendNext(freezePlayer);
-			stream.SendNext(alpha);
-			stream.SendNext(state);
-		}
-		else if (info.photonView.Owner != null && info.Sender.ActorNumber == info.photonView.Owner.ActorNumber)
-		{
-			userId = (string)stream.ReceiveNext();
-			attackPos = (Vector3)stream.ReceiveNext();
-			timer = (float)stream.ReceiveNext();
-			floorEnabled = (bool)stream.ReceiveNext();
-			portalEnabled = (bool)stream.ReceiveNext();
-			freezePlayer = (bool)stream.ReceiveNext();
-			alpha = (float)stream.ReceiveNext();
-			state = (EStates)stream.ReceiveNext();
-		}
+		Sleeping,
+		Patrolling,
+		Chasing,
+		ReturnToSleepPt,
+		GoToSleep,
+		BeginAttack,
+		OpenFloor,
+		DropPlayer,
+		CloseFloor
 	}
 }

@@ -1,299 +1,304 @@
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace OculusSampleFramework;
-
-public class HandsManager : MonoBehaviour
+namespace OculusSampleFramework
 {
-	public enum HandsVisualMode
+	public class HandsManager : MonoBehaviour
 	{
-		Mesh,
-		Skeleton,
-		Both
-	}
-
-	private const string SKELETON_VISUALIZER_NAME = "SkeletonRenderer";
-
-	[SerializeField]
-	private GameObject _leftHand;
-
-	[SerializeField]
-	private GameObject _rightHand;
-
-	public HandsVisualMode VisualMode;
-
-	private OVRHand[] _hand = new OVRHand[2];
-
-	private OVRSkeleton[] _handSkeleton = new OVRSkeleton[2];
-
-	private OVRSkeletonRenderer[] _handSkeletonRenderer = new OVRSkeletonRenderer[2];
-
-	private OVRMesh[] _handMesh = new OVRMesh[2];
-
-	private OVRMeshRenderer[] _handMeshRenderer = new OVRMeshRenderer[2];
-
-	private SkinnedMeshRenderer _leftMeshRenderer;
-
-	private SkinnedMeshRenderer _rightMeshRenderer;
-
-	private GameObject _leftSkeletonVisual;
-
-	private GameObject _rightSkeletonVisual;
-
-	private float _currentHandAlpha = 1f;
-
-	private int HandAlphaId = Shader.PropertyToID("_HandAlpha");
-
-	public OVRHand RightHand
-	{
-		get
+		public OVRHand RightHand
 		{
-			return _hand[1];
-		}
-		private set
-		{
-			_hand[1] = value;
-		}
-	}
-
-	public OVRSkeleton RightHandSkeleton
-	{
-		get
-		{
-			return _handSkeleton[1];
-		}
-		private set
-		{
-			_handSkeleton[1] = value;
-		}
-	}
-
-	public OVRSkeletonRenderer RightHandSkeletonRenderer
-	{
-		get
-		{
-			return _handSkeletonRenderer[1];
-		}
-		private set
-		{
-			_handSkeletonRenderer[1] = value;
-		}
-	}
-
-	public OVRMesh RightHandMesh
-	{
-		get
-		{
-			return _handMesh[1];
-		}
-		private set
-		{
-			_handMesh[1] = value;
-		}
-	}
-
-	public OVRMeshRenderer RightHandMeshRenderer
-	{
-		get
-		{
-			return _handMeshRenderer[1];
-		}
-		private set
-		{
-			_handMeshRenderer[1] = value;
-		}
-	}
-
-	public OVRHand LeftHand
-	{
-		get
-		{
-			return _hand[0];
-		}
-		private set
-		{
-			_hand[0] = value;
-		}
-	}
-
-	public OVRSkeleton LeftHandSkeleton
-	{
-		get
-		{
-			return _handSkeleton[0];
-		}
-		private set
-		{
-			_handSkeleton[0] = value;
-		}
-	}
-
-	public OVRSkeletonRenderer LeftHandSkeletonRenderer
-	{
-		get
-		{
-			return _handSkeletonRenderer[0];
-		}
-		private set
-		{
-			_handSkeletonRenderer[0] = value;
-		}
-	}
-
-	public OVRMesh LeftHandMesh
-	{
-		get
-		{
-			return _handMesh[0];
-		}
-		private set
-		{
-			_handMesh[0] = value;
-		}
-	}
-
-	public OVRMeshRenderer LeftHandMeshRenderer
-	{
-		get
-		{
-			return _handMeshRenderer[0];
-		}
-		private set
-		{
-			_handMeshRenderer[0] = value;
-		}
-	}
-
-	public static HandsManager Instance { get; private set; }
-
-	private void Awake()
-	{
-		if ((bool)Instance && Instance != this)
-		{
-			Object.Destroy(this);
-			return;
-		}
-		Instance = this;
-		LeftHand = _leftHand.GetComponent<OVRHand>();
-		LeftHandSkeleton = _leftHand.GetComponent<OVRSkeleton>();
-		LeftHandSkeletonRenderer = _leftHand.GetComponent<OVRSkeletonRenderer>();
-		LeftHandMesh = _leftHand.GetComponent<OVRMesh>();
-		LeftHandMeshRenderer = _leftHand.GetComponent<OVRMeshRenderer>();
-		RightHand = _rightHand.GetComponent<OVRHand>();
-		RightHandSkeleton = _rightHand.GetComponent<OVRSkeleton>();
-		RightHandSkeletonRenderer = _rightHand.GetComponent<OVRSkeletonRenderer>();
-		RightHandMesh = _rightHand.GetComponent<OVRMesh>();
-		RightHandMeshRenderer = _rightHand.GetComponent<OVRMeshRenderer>();
-		_leftMeshRenderer = LeftHand.GetComponent<SkinnedMeshRenderer>();
-		_rightMeshRenderer = RightHand.GetComponent<SkinnedMeshRenderer>();
-		StartCoroutine(FindSkeletonVisualGameObjects());
-	}
-
-	private void Update()
-	{
-		switch (VisualMode)
-		{
-		case HandsVisualMode.Mesh:
-		case HandsVisualMode.Skeleton:
-			_currentHandAlpha = 1f;
-			break;
-		case HandsVisualMode.Both:
-			_currentHandAlpha = 0.6f;
-			break;
-		default:
-			_currentHandAlpha = 1f;
-			break;
-		}
-		_rightMeshRenderer.sharedMaterial.SetFloat(HandAlphaId, _currentHandAlpha);
-		_leftMeshRenderer.sharedMaterial.SetFloat(HandAlphaId, _currentHandAlpha);
-	}
-
-	private IEnumerator FindSkeletonVisualGameObjects()
-	{
-		while (!_leftSkeletonVisual || !_rightSkeletonVisual)
-		{
-			if (!_leftSkeletonVisual)
+			get
 			{
-				Transform transform = LeftHand.transform.Find("SkeletonRenderer");
-				if ((bool)transform)
+				return this._hand[1];
+			}
+			private set
+			{
+				this._hand[1] = value;
+			}
+		}
+
+		public OVRSkeleton RightHandSkeleton
+		{
+			get
+			{
+				return this._handSkeleton[1];
+			}
+			private set
+			{
+				this._handSkeleton[1] = value;
+			}
+		}
+
+		public OVRSkeletonRenderer RightHandSkeletonRenderer
+		{
+			get
+			{
+				return this._handSkeletonRenderer[1];
+			}
+			private set
+			{
+				this._handSkeletonRenderer[1] = value;
+			}
+		}
+
+		public OVRMesh RightHandMesh
+		{
+			get
+			{
+				return this._handMesh[1];
+			}
+			private set
+			{
+				this._handMesh[1] = value;
+			}
+		}
+
+		public OVRMeshRenderer RightHandMeshRenderer
+		{
+			get
+			{
+				return this._handMeshRenderer[1];
+			}
+			private set
+			{
+				this._handMeshRenderer[1] = value;
+			}
+		}
+
+		public OVRHand LeftHand
+		{
+			get
+			{
+				return this._hand[0];
+			}
+			private set
+			{
+				this._hand[0] = value;
+			}
+		}
+
+		public OVRSkeleton LeftHandSkeleton
+		{
+			get
+			{
+				return this._handSkeleton[0];
+			}
+			private set
+			{
+				this._handSkeleton[0] = value;
+			}
+		}
+
+		public OVRSkeletonRenderer LeftHandSkeletonRenderer
+		{
+			get
+			{
+				return this._handSkeletonRenderer[0];
+			}
+			private set
+			{
+				this._handSkeletonRenderer[0] = value;
+			}
+		}
+
+		public OVRMesh LeftHandMesh
+		{
+			get
+			{
+				return this._handMesh[0];
+			}
+			private set
+			{
+				this._handMesh[0] = value;
+			}
+		}
+
+		public OVRMeshRenderer LeftHandMeshRenderer
+		{
+			get
+			{
+				return this._handMeshRenderer[0];
+			}
+			private set
+			{
+				this._handMeshRenderer[0] = value;
+			}
+		}
+
+		public static HandsManager Instance { get; private set; }
+
+		private void Awake()
+		{
+			if (HandsManager.Instance && HandsManager.Instance != this)
+			{
+				Object.Destroy(this);
+				return;
+			}
+			HandsManager.Instance = this;
+			this.LeftHand = this._leftHand.GetComponent<OVRHand>();
+			this.LeftHandSkeleton = this._leftHand.GetComponent<OVRSkeleton>();
+			this.LeftHandSkeletonRenderer = this._leftHand.GetComponent<OVRSkeletonRenderer>();
+			this.LeftHandMesh = this._leftHand.GetComponent<OVRMesh>();
+			this.LeftHandMeshRenderer = this._leftHand.GetComponent<OVRMeshRenderer>();
+			this.RightHand = this._rightHand.GetComponent<OVRHand>();
+			this.RightHandSkeleton = this._rightHand.GetComponent<OVRSkeleton>();
+			this.RightHandSkeletonRenderer = this._rightHand.GetComponent<OVRSkeletonRenderer>();
+			this.RightHandMesh = this._rightHand.GetComponent<OVRMesh>();
+			this.RightHandMeshRenderer = this._rightHand.GetComponent<OVRMeshRenderer>();
+			this._leftMeshRenderer = this.LeftHand.GetComponent<SkinnedMeshRenderer>();
+			this._rightMeshRenderer = this.RightHand.GetComponent<SkinnedMeshRenderer>();
+			base.StartCoroutine(this.FindSkeletonVisualGameObjects());
+		}
+
+		private void Update()
+		{
+			HandsManager.HandsVisualMode visualMode = this.VisualMode;
+			if (visualMode > HandsManager.HandsVisualMode.Skeleton)
+			{
+				if (visualMode != HandsManager.HandsVisualMode.Both)
 				{
-					_leftSkeletonVisual = transform.gameObject;
+					this._currentHandAlpha = 1f;
+				}
+				else
+				{
+					this._currentHandAlpha = 0.6f;
 				}
 			}
-			if (!_rightSkeletonVisual)
+			else
 			{
-				Transform transform2 = RightHand.transform.Find("SkeletonRenderer");
-				if ((bool)transform2)
+				this._currentHandAlpha = 1f;
+			}
+			this._rightMeshRenderer.sharedMaterial.SetFloat(this.HandAlphaId, this._currentHandAlpha);
+			this._leftMeshRenderer.sharedMaterial.SetFloat(this.HandAlphaId, this._currentHandAlpha);
+		}
+
+		private IEnumerator FindSkeletonVisualGameObjects()
+		{
+			while (!this._leftSkeletonVisual || !this._rightSkeletonVisual)
+			{
+				if (!this._leftSkeletonVisual)
 				{
-					_rightSkeletonVisual = transform2.gameObject;
+					Transform transform = this.LeftHand.transform.Find("SkeletonRenderer");
+					if (transform)
+					{
+						this._leftSkeletonVisual = transform.gameObject;
+					}
+				}
+				if (!this._rightSkeletonVisual)
+				{
+					Transform transform2 = this.RightHand.transform.Find("SkeletonRenderer");
+					if (transform2)
+					{
+						this._rightSkeletonVisual = transform2.gameObject;
+					}
+				}
+				yield return null;
+			}
+			this.SetToCurrentVisualMode();
+			yield break;
+		}
+
+		public void SwitchVisualization()
+		{
+			if (!this._leftSkeletonVisual || !this._rightSkeletonVisual)
+			{
+				return;
+			}
+			this.VisualMode = (this.VisualMode + 1) % (HandsManager.HandsVisualMode)3;
+			this.SetToCurrentVisualMode();
+		}
+
+		private void SetToCurrentVisualMode()
+		{
+			switch (this.VisualMode)
+			{
+			case HandsManager.HandsVisualMode.Mesh:
+				this.RightHandMeshRenderer.enabled = true;
+				this._rightMeshRenderer.enabled = true;
+				this._rightSkeletonVisual.gameObject.SetActive(false);
+				this.LeftHandMeshRenderer.enabled = true;
+				this._leftMeshRenderer.enabled = true;
+				this._leftSkeletonVisual.gameObject.SetActive(false);
+				return;
+			case HandsManager.HandsVisualMode.Skeleton:
+				this.RightHandMeshRenderer.enabled = false;
+				this._rightMeshRenderer.enabled = false;
+				this._rightSkeletonVisual.gameObject.SetActive(true);
+				this.LeftHandMeshRenderer.enabled = false;
+				this._leftMeshRenderer.enabled = false;
+				this._leftSkeletonVisual.gameObject.SetActive(true);
+				return;
+			case HandsManager.HandsVisualMode.Both:
+				this.RightHandMeshRenderer.enabled = true;
+				this._rightMeshRenderer.enabled = true;
+				this._rightSkeletonVisual.gameObject.SetActive(true);
+				this.LeftHandMeshRenderer.enabled = true;
+				this._leftMeshRenderer.enabled = true;
+				this._leftSkeletonVisual.gameObject.SetActive(true);
+				return;
+			default:
+				return;
+			}
+		}
+
+		public static List<OVRBoneCapsule> GetCapsulesPerBone(OVRSkeleton skeleton, OVRSkeleton.BoneId boneId)
+		{
+			List<OVRBoneCapsule> list = new List<OVRBoneCapsule>();
+			IList<OVRBoneCapsule> capsules = skeleton.Capsules;
+			for (int i = 0; i < capsules.Count; i++)
+			{
+				if (capsules[i].BoneIndex == (short)boneId)
+				{
+					list.Add(capsules[i]);
 				}
 			}
-			yield return null;
+			return list;
 		}
-		SetToCurrentVisualMode();
-	}
 
-	public void SwitchVisualization()
-	{
-		if ((bool)_leftSkeletonVisual && (bool)_rightSkeletonVisual)
+		public bool IsInitialized()
 		{
-			VisualMode = (HandsVisualMode)((int)(VisualMode + 1) % 3);
-			SetToCurrentVisualMode();
+			return this.LeftHandSkeleton && this.LeftHandSkeleton.IsInitialized && this.RightHandSkeleton && this.RightHandSkeleton.IsInitialized && this.LeftHandMesh && this.LeftHandMesh.IsInitialized && this.RightHandMesh && this.RightHandMesh.IsInitialized;
 		}
-	}
 
-	private void SetToCurrentVisualMode()
-	{
-		switch (VisualMode)
-		{
-		case HandsVisualMode.Mesh:
-			RightHandMeshRenderer.enabled = true;
-			_rightMeshRenderer.enabled = true;
-			_rightSkeletonVisual.gameObject.SetActive(value: false);
-			LeftHandMeshRenderer.enabled = true;
-			_leftMeshRenderer.enabled = true;
-			_leftSkeletonVisual.gameObject.SetActive(value: false);
-			break;
-		case HandsVisualMode.Skeleton:
-			RightHandMeshRenderer.enabled = false;
-			_rightMeshRenderer.enabled = false;
-			_rightSkeletonVisual.gameObject.SetActive(value: true);
-			LeftHandMeshRenderer.enabled = false;
-			_leftMeshRenderer.enabled = false;
-			_leftSkeletonVisual.gameObject.SetActive(value: true);
-			break;
-		case HandsVisualMode.Both:
-			RightHandMeshRenderer.enabled = true;
-			_rightMeshRenderer.enabled = true;
-			_rightSkeletonVisual.gameObject.SetActive(value: true);
-			LeftHandMeshRenderer.enabled = true;
-			_leftMeshRenderer.enabled = true;
-			_leftSkeletonVisual.gameObject.SetActive(value: true);
-			break;
-		}
-	}
+		private const string SKELETON_VISUALIZER_NAME = "SkeletonRenderer";
 
-	public static List<OVRBoneCapsule> GetCapsulesPerBone(OVRSkeleton skeleton, OVRSkeleton.BoneId boneId)
-	{
-		List<OVRBoneCapsule> list = new List<OVRBoneCapsule>();
-		IList<OVRBoneCapsule> capsules = skeleton.Capsules;
-		for (int i = 0; i < capsules.Count; i++)
-		{
-			if (capsules[i].BoneIndex == (short)boneId)
-			{
-				list.Add(capsules[i]);
-			}
-		}
-		return list;
-	}
+		[SerializeField]
+		private GameObject _leftHand;
 
-	public bool IsInitialized()
-	{
-		if ((bool)LeftHandSkeleton && LeftHandSkeleton.IsInitialized && (bool)RightHandSkeleton && RightHandSkeleton.IsInitialized && (bool)LeftHandMesh && LeftHandMesh.IsInitialized && (bool)RightHandMesh)
+		[SerializeField]
+		private GameObject _rightHand;
+
+		public HandsManager.HandsVisualMode VisualMode;
+
+		private OVRHand[] _hand = new OVRHand[2];
+
+		private OVRSkeleton[] _handSkeleton = new OVRSkeleton[2];
+
+		private OVRSkeletonRenderer[] _handSkeletonRenderer = new OVRSkeletonRenderer[2];
+
+		private OVRMesh[] _handMesh = new OVRMesh[2];
+
+		private OVRMeshRenderer[] _handMeshRenderer = new OVRMeshRenderer[2];
+
+		private SkinnedMeshRenderer _leftMeshRenderer;
+
+		private SkinnedMeshRenderer _rightMeshRenderer;
+
+		private GameObject _leftSkeletonVisual;
+
+		private GameObject _rightSkeletonVisual;
+
+		private float _currentHandAlpha = 1f;
+
+		private int HandAlphaId = Shader.PropertyToID("_HandAlpha");
+
+		public enum HandsVisualMode
 		{
-			return RightHandMesh.IsInitialized;
+			Mesh,
+			Skeleton,
+			Both
 		}
-		return false;
 	}
 }

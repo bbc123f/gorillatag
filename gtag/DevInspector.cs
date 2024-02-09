@@ -1,8 +1,14 @@
+﻿using System;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class DevInspector : MonoBehaviour
 {
+	private void OnEnable()
+	{
+		Object.Destroy(base.gameObject);
+	}
+
 	public GameObject pivot;
 
 	public Text outputInfo;
@@ -16,9 +22,4 @@ public class DevInspector : MonoBehaviour
 	public GameObject canvas;
 
 	public int sidewaysOffset;
-
-	private void OnEnable()
-	{
-		Object.Destroy(base.gameObject);
-	}
 }

@@ -1,8 +1,11 @@
-namespace OculusSampleFramework;
+﻿using System;
 
-public enum InteractionType
+namespace OculusSampleFramework
 {
-	Enter,
-	Stay,
-	Exit
+	public enum InteractionType
+	{
+		Enter,
+		Stay,
+		Exit
+	}
 }

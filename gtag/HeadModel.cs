@@ -1,71 +1,68 @@
-using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class HeadModel : MonoBehaviour
 {
-	public GameObject[] cosmetics;
-
-	private GameObject objRef;
-
-	private List<GameObject> currentActiveObjects = new List<GameObject>();
-
-	private Dictionary<string, GameObject> cosmeticDict = new Dictionary<string, GameObject>();
-
-	private bool initialized;
-
 	public void Awake()
 	{
-		StartCoroutine(DisableAfterASecond());
+		this.Initialize();
 	}
 
-	private IEnumerator DisableAfterASecond()
+	private void Initialize()
 	{
-		yield return new WaitForSeconds(0.1f);
-		if (!initialized && base.isActiveAndEnabled)
+		if (!this.initialized && base.enabled)
 		{
-			initialized = true;
-			GameObject[] array = cosmetics;
-			foreach (GameObject gameObject in array)
+			this.initialized = true;
+			foreach (GameObject gameObject in this.cosmetics)
 			{
-				cosmeticDict.Add(gameObject.name, gameObject);
-				SetChildRendererWithOverride(gameObject, setEnabled: false, forRightSide: false);
+				if (!(gameObject == null))
+				{
+					if (!this.cosmeticDict.TryAdd(gameObject.name, gameObject))
+					{
+						Debug.LogError("HeadModel.Initialize: Cosmetic id \"" + gameObject.name + "\" already exists in cosmeticDict. Did you accidentally have 2 head models with the same name?", gameObject);
+					}
+					else
+					{
+						this.SetChildRendererWithOverride(gameObject, false, false);
+					}
+				}
 			}
 		}
 	}
 
 	public void OnEnable()
 	{
-		Awake();
+		this.Initialize();
 	}
 
 	public void SetCosmeticActive(string activeCosmeticName, bool forRightSide = false)
 	{
-		foreach (GameObject currentActiveObject in currentActiveObjects)
+		foreach (GameObject gameObject in this.currentActiveObjects)
 		{
-			SetChildRendererWithOverride(currentActiveObject, setEnabled: false, forRightSide);
+			this.SetChildRendererWithOverride(gameObject, false, forRightSide);
 		}
-		currentActiveObjects.Clear();
-		if (cosmeticDict.TryGetValue(activeCosmeticName, out objRef))
+		this.currentActiveObjects.Clear();
+		if (this.cosmeticDict.TryGetValue(activeCosmeticName, out this.objRef))
 		{
-			currentActiveObjects.Add(objRef);
-			SetChildRendererWithOverride(objRef, setEnabled: true, forRightSide);
+			this.currentActiveObjects.Add(this.objRef);
+			this.SetChildRendererWithOverride(this.objRef, true, forRightSide);
 		}
 	}
 
 	public void SetCosmeticActiveArray(string[] activeCosmeticNames, bool[] forRightSideArray)
 	{
-		foreach (GameObject currentActiveObject in currentActiveObjects)
+		foreach (GameObject gameObject in this.currentActiveObjects)
 		{
-			SetChildRendererWithOverride(currentActiveObject, setEnabled: false, forRightSide: false);
+			this.SetChildRendererWithOverride(gameObject, false, false);
 		}
-		currentActiveObjects.Clear();
+		this.currentActiveObjects.Clear();
 		for (int i = 0; i < activeCosmeticNames.Length; i++)
 		{
-			if (cosmeticDict.TryGetValue(activeCosmeticNames[i], out objRef))
+			if (this.cosmeticDict.TryGetValue(activeCosmeticNames[i], out this.objRef))
 			{
-				currentActiveObjects.Add(objRef);
-				SetChildRendererWithOverride(objRef, setEnabled: true, forRightSideArray[i]);
+				this.currentActiveObjects.Add(this.objRef);
+				this.SetChildRendererWithOverride(this.objRef, true, forRightSideArray[i]);
 			}
 		}
 	}
@@ -80,18 +77,17 @@ public class HeadModel : MonoBehaviour
 		}
 		if (setEnabled && forRightSide && gameObject != null)
 		{
-			SetChildRenderers(gameObject, setEnabled: true);
-			SetChildRenderers(obj, setEnabled: false);
+			this.SetChildRenderers(gameObject, true);
+			this.SetChildRenderers(obj, false);
+			return;
 		}
-		else if (gameObject != null)
+		if (gameObject != null)
 		{
-			SetChildRenderers(gameObject, setEnabled: false);
-			SetChildRenderers(obj, setEnabled);
+			this.SetChildRenderers(gameObject, false);
+			this.SetChildRenderers(obj, setEnabled);
+			return;
 		}
-		else
-		{
-			SetChildRenderers(obj, setEnabled);
-		}
+		this.SetChildRenderers(obj, setEnabled);
 	}
 
 	private void SetChildRenderers(GameObject obj, bool setEnabled)
@@ -107,4 +103,14 @@ public class HeadModel : MonoBehaviour
 			componentsInChildren2[i].enabled = setEnabled;
 		}
 	}
+
+	public GameObject[] cosmetics;
+
+	private GameObject objRef;
+
+	private List<GameObject> currentActiveObjects = new List<GameObject>();
+
+	private Dictionary<string, GameObject> cosmeticDict = new Dictionary<string, GameObject>();
+
+	private bool initialized;
 }

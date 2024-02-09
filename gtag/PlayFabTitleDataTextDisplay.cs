@@ -1,10 +1,47 @@
+﻿using System;
 using GorillaNetworking;
 using PlayFab;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class PlayFabTitleDataTextDisplay : MonoBehaviour
 {
+	private void Start()
+	{
+		this.textBox.color = this.defaultTextColor;
+		PlayFabTitleDataCache.Instance.OnTitleDataUpdate.AddListener(new UnityAction<string>(this.OnNewTitleDataAdded));
+		PlayFabTitleDataCache.Instance.GetTitleData(this.playfabKey, new Action<string>(this.OnTitleDataRequestComplete), new Action<PlayFabError>(this.OnPlayFabError));
+	}
+
+	private void OnPlayFabError(PlayFabError error)
+	{
+		this.textBox.text = this.fallbackText;
+	}
+
+	private void OnTitleDataRequestComplete(string titleDataResult)
+	{
+		string text = titleDataResult.Replace("\\r", "\r").Replace("\\n", "\n");
+		if (text[0] == '"' && text[text.Length - 1] == '"')
+		{
+			text = text.Substring(1, text.Length - 2);
+		}
+		this.textBox.text = text;
+	}
+
+	private void OnNewTitleDataAdded(string key)
+	{
+		if (key == this.playfabKey)
+		{
+			this.textBox.color = this.newUpdateColor;
+		}
+	}
+
+	private void OnDestroy()
+	{
+		PlayFabTitleDataCache.Instance.OnTitleDataUpdate.RemoveListener(new UnityAction<string>(this.OnNewTitleDataAdded));
+	}
+
 	[SerializeField]
 	private Text textBox;
 
@@ -22,39 +59,4 @@ public class PlayFabTitleDataTextDisplay : MonoBehaviour
 	[TextArea(3, 5)]
 	[SerializeField]
 	private string fallbackText;
-
-	private void Start()
-	{
-		textBox.color = defaultTextColor;
-		PlayFabTitleDataCache.Instance.OnTitleDataUpdate.AddListener(OnNewTitleDataAdded);
-		PlayFabTitleDataCache.Instance.GetTitleData(playfabKey, OnTitleDataRequestComplete, OnPlayFabError);
-	}
-
-	private void OnPlayFabError(PlayFabError error)
-	{
-		textBox.text = fallbackText;
-	}
-
-	private void OnTitleDataRequestComplete(string titleDataResult)
-	{
-		string text = titleDataResult.Replace("\\r", "\r").Replace("\\n", "\n");
-		if (text[0] == '"' && text[text.Length - 1] == '"')
-		{
-			text = text.Substring(1, text.Length - 2);
-		}
-		textBox.text = text;
-	}
-
-	private void OnNewTitleDataAdded(string key)
-	{
-		if (key == playfabKey)
-		{
-			textBox.color = newUpdateColor;
-		}
-	}
-
-	private void OnDestroy()
-	{
-		PlayFabTitleDataCache.Instance.OnTitleDataUpdate.RemoveListener(OnNewTitleDataAdded);
-	}
 }

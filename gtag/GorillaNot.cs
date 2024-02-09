@@ -1,3 +1,4 @@
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -9,13 +10,351 @@ using UnityEngine;
 
 public class GorillaNot : MonoBehaviourPunCallbacks
 {
-	private class RPCCallTracker
+	private bool sendReport
 	{
-		public int RPCCalls;
-
-		public int RPCCallsMax;
+		get
+		{
+			return this._sendReport;
+		}
+		set
+		{
+			if (!this._sendReport)
+			{
+				this._sendReport = true;
+			}
+		}
 	}
 
+	private string suspiciousPlayerId
+	{
+		get
+		{
+			return this._suspiciousPlayerId;
+		}
+		set
+		{
+			if (this._suspiciousPlayerId == "")
+			{
+				this._suspiciousPlayerId = value;
+			}
+		}
+	}
+
+	private string suspiciousPlayerName
+	{
+		get
+		{
+			return this._suspiciousPlayerName;
+		}
+		set
+		{
+			if (this._suspiciousPlayerName == "")
+			{
+				this._suspiciousPlayerName = value;
+			}
+		}
+	}
+
+	private string suspiciousReason
+	{
+		get
+		{
+			return this._suspiciousReason;
+		}
+		set
+		{
+			if (this._suspiciousReason == "")
+			{
+				this._suspiciousReason = value;
+			}
+		}
+	}
+
+	private void Start()
+	{
+		if (GorillaNot.instance == null)
+		{
+			GorillaNot.instance = this;
+		}
+		else if (GorillaNot.instance != this)
+		{
+			Object.Destroy(this);
+		}
+		base.StartCoroutine(this.CheckReports());
+		this.logErrorCount = 0;
+		Application.logMessageReceived += this.LogErrorCount;
+	}
+
+	public void LogErrorCount(string logString, string stackTrace, LogType type)
+	{
+		if (type == LogType.Error)
+		{
+			this.logErrorCount++;
+			this.stringIndex = logString.LastIndexOf("Sender is ");
+			if (logString.Contains("RPC") && this.stringIndex >= 0)
+			{
+				this.playerID = logString.Substring(this.stringIndex + 10);
+				this.tempPlayer = null;
+				for (int i = 0; i < this.cachedPlayerList.Length; i++)
+				{
+					if (this.cachedPlayerList[i].UserId == this.playerID)
+					{
+						this.tempPlayer = this.cachedPlayerList[i];
+						break;
+					}
+				}
+				string text = "invalid RPC stuff";
+				if (!this.IncrementRPCTracker(this.tempPlayer, text, this.rpcErrorMax))
+				{
+					this.SendReport("invalid RPC stuff", this.tempPlayer.UserId, this.tempPlayer.NickName);
+				}
+				this.tempPlayer = null;
+			}
+			if (this.logErrorCount > this.logErrorMax)
+			{
+				Debug.unityLogger.logEnabled = false;
+			}
+		}
+	}
+
+	public void SendReport(string susReason, string susId, string susNick)
+	{
+		this.suspiciousReason = susReason;
+		this.suspiciousPlayerId = susId;
+		this.suspiciousPlayerName = susNick;
+		this.sendReport = true;
+	}
+
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	private void DispatchReport()
+	{
+		if ((this.sendReport || this.testAssault) && this.suspiciousPlayerId != "" && this.reportedPlayers.IndexOf(this.suspiciousPlayerId) == -1)
+		{
+			if (this._suspiciousPlayerName.Length > 12)
+			{
+				this._suspiciousPlayerName = this._suspiciousPlayerName.Remove(12);
+			}
+			this.reportedPlayers.Add(this.suspiciousPlayerId);
+			this.testAssault = false;
+			RaiseEventOptions raiseEventOptions = new RaiseEventOptions();
+			WebFlags webFlags = new WebFlags(1);
+			raiseEventOptions.Flags = webFlags;
+			raiseEventOptions.TargetActors = GorillaNot.targetActors;
+			raiseEventOptions.Receivers = ReceiverGroup.MasterClient;
+			string[] array = new string[this.cachedPlayerList.Length];
+			int num = 0;
+			foreach (Player player in this.cachedPlayerList)
+			{
+				array[num] = player.UserId;
+				num++;
+			}
+			object[] array3 = new object[]
+			{
+				PhotonNetwork.CurrentRoom.ToStringStripped(),
+				array,
+				PhotonNetwork.MasterClient.UserId,
+				this.suspiciousPlayerId,
+				this.suspiciousPlayerName,
+				this.suspiciousReason,
+				PhotonNetworkController.Instance.GameVersionString
+			};
+			PhotonNetwork.RaiseEvent(8, array3, raiseEventOptions, SendOptions.SendReliable);
+			if (this.ShouldDisconnectFromRoom())
+			{
+				base.StartCoroutine(this.QuitDelay());
+			}
+		}
+		this._sendReport = false;
+		this._suspiciousPlayerId = "";
+		this._suspiciousPlayerName = "";
+		this._suspiciousReason = "";
+	}
+
+	private IEnumerator CheckReports()
+	{
+		for (;;)
+		{
+			try
+			{
+				this.logErrorCount = 0;
+				if (PhotonNetwork.InRoom)
+				{
+					this.lastCheck = Time.time;
+					this.lastServerTimestamp = PhotonNetwork.ServerTimestamp;
+					if (!PhotonNetwork.CurrentRoom.PublishUserId)
+					{
+						this.sendReport = true;
+						this.suspiciousReason = "missing player ids";
+						this.SetToRoomCreatorIfHere();
+						this.CloseInvalidRoom();
+						Debug.Log("publish user id's is off");
+					}
+					else if (this.cachedPlayerList.Length > (int)PhotonNetworkController.Instance.GetRoomSize(PhotonNetworkController.Instance.currentGameType))
+					{
+						this.sendReport = true;
+						this.suspiciousReason = "too many players";
+						this.SetToRoomCreatorIfHere();
+						this.CloseInvalidRoom();
+					}
+					if (this.currentMasterClient != PhotonNetwork.MasterClient || this.LowestActorNumber() != PhotonNetwork.MasterClient.ActorNumber)
+					{
+						foreach (Player player in this.cachedPlayerList)
+						{
+							if (this.currentMasterClient == player)
+							{
+								this.sendReport = true;
+								this.suspiciousReason = "room host force changed";
+								this.suspiciousPlayerId = PhotonNetwork.MasterClient.UserId;
+								this.suspiciousPlayerName = PhotonNetwork.MasterClient.NickName;
+							}
+						}
+						this.currentMasterClient = PhotonNetwork.MasterClient;
+					}
+					this.DispatchReport();
+					foreach (Dictionary<string, GorillaNot.RPCCallTracker> dictionary in this.userRPCCalls.Values)
+					{
+						foreach (GorillaNot.RPCCallTracker rpccallTracker in dictionary.Values)
+						{
+							rpccallTracker.RPCCalls = 0;
+						}
+					}
+				}
+			}
+			catch
+			{
+			}
+			yield return new WaitForSeconds(1.01f);
+		}
+		yield break;
+	}
+
+	private int LowestActorNumber()
+	{
+		this.lowestActorNumber = PhotonNetwork.LocalPlayer.ActorNumber;
+		foreach (Player player in this.cachedPlayerList)
+		{
+			if (player.ActorNumber < this.lowestActorNumber)
+			{
+				this.lowestActorNumber = player.ActorNumber;
+			}
+		}
+		return this.lowestActorNumber;
+	}
+
+	public override void OnPlayerEnteredRoom(Player newPlayer)
+	{
+		base.OnPlayerEnteredRoom(newPlayer);
+		this.cachedPlayerList = PhotonNetwork.PlayerList;
+	}
+
+	public override void OnPlayerLeftRoom(Player otherPlayer)
+	{
+		base.OnPlayerLeftRoom(otherPlayer);
+		this.cachedPlayerList = PhotonNetwork.PlayerList;
+		Dictionary<string, GorillaNot.RPCCallTracker> dictionary;
+		if (this.userRPCCalls.TryGetValue(otherPlayer.UserId, out dictionary))
+		{
+			this.userRPCCalls.Remove(otherPlayer.UserId);
+		}
+	}
+
+	public static void IncrementRPCCall(PhotonMessageInfo info, [CallerMemberName] string callingMethod = "")
+	{
+		GorillaNot.instance.IncrementRPCCallLocal(info, callingMethod);
+	}
+
+	private void IncrementRPCCallLocal(PhotonMessageInfo info, string rpcFunction)
+	{
+		if (info.SentServerTimestamp < this.lastServerTimestamp)
+		{
+			return;
+		}
+		if (!this.IncrementRPCTracker(info.Sender, rpcFunction, this.rpcCallLimit))
+		{
+			this.SendReport("too many rpc calls! " + rpcFunction, info.Sender.UserId, info.Sender.NickName);
+			return;
+		}
+	}
+
+	private bool IncrementRPCTracker(in Player sender, in string rpcFunction, in int callLimit)
+	{
+		GorillaNot.RPCCallTracker rpccallTracker = this.GetRPCCallTracker(sender, rpcFunction);
+		if (rpccallTracker == null)
+		{
+			return true;
+		}
+		rpccallTracker.RPCCalls++;
+		if (rpccallTracker.RPCCalls > rpccallTracker.RPCCallsMax)
+		{
+			rpccallTracker.RPCCallsMax = rpccallTracker.RPCCalls;
+		}
+		return rpccallTracker.RPCCalls <= callLimit;
+	}
+
+	private GorillaNot.RPCCallTracker GetRPCCallTracker(in Player sender, in string rpcFunction)
+	{
+		if (sender == null || sender.UserId == null)
+		{
+			return null;
+		}
+		GorillaNot.RPCCallTracker rpccallTracker = null;
+		Dictionary<string, GorillaNot.RPCCallTracker> dictionary;
+		if (!this.userRPCCalls.TryGetValue(sender.UserId, out dictionary))
+		{
+			rpccallTracker = new GorillaNot.RPCCallTracker
+			{
+				RPCCalls = 0,
+				RPCCallsMax = 0
+			};
+			Dictionary<string, GorillaNot.RPCCallTracker> dictionary2 = new Dictionary<string, GorillaNot.RPCCallTracker>();
+			dictionary2.Add(rpcFunction, rpccallTracker);
+			this.userRPCCalls.Add(sender.UserId, dictionary2);
+		}
+		else if (!dictionary.TryGetValue(rpcFunction, out rpccallTracker))
+		{
+			rpccallTracker = new GorillaNot.RPCCallTracker
+			{
+				RPCCalls = 0,
+				RPCCallsMax = 0
+			};
+			dictionary.Add(rpcFunction, rpccallTracker);
+		}
+		return rpccallTracker;
+	}
+
+	private IEnumerator QuitDelay()
+	{
+		yield return new WaitForSeconds(1f);
+		PhotonNetworkController.Instance.AttemptDisconnect();
+		yield break;
+	}
+
+	private void SetToRoomCreatorIfHere()
+	{
+		this.tempPlayer = PhotonNetwork.CurrentRoom.GetPlayer(1, false);
+		if (this.tempPlayer != null)
+		{
+			this.suspiciousPlayerId = this.tempPlayer.UserId;
+			this.suspiciousPlayerName = this.tempPlayer.NickName;
+			return;
+		}
+		this.suspiciousPlayerId = "n/a";
+		this.suspiciousPlayerName = "n/a";
+	}
+
+	private bool ShouldDisconnectFromRoom()
+	{
+		return this._suspiciousReason.Contains("too many players") || this._suspiciousReason.Contains("invalid room name") || this._suspiciousReason.Contains("invalid game mode") || this._suspiciousReason.Contains("missing player ids");
+	}
+
+	private void CloseInvalidRoom()
+	{
+		PhotonNetwork.CurrentRoom.IsOpen = false;
+		PhotonNetwork.CurrentRoom.IsVisible = false;
+		PhotonNetwork.CurrentRoom.MaxPlayers = PhotonNetworkController.Instance.GetRoomSize(PhotonNetworkController.Instance.currentGameType);
+	}
+
+	[OnEnterPlay_SetNull]
 	public static volatile GorillaNot instance;
 
 	private bool _sendReport;
@@ -70,348 +409,16 @@ public class GorillaNot : MonoBehaviourPunCallbacks
 
 	public Player[] cachedPlayerList;
 
-	private Dictionary<string, Dictionary<string, RPCCallTracker>> userRPCCalls = new Dictionary<string, Dictionary<string, RPCCallTracker>>();
+	private static int[] targetActors = new int[] { -1 };
 
-	private ExitGames.Client.Photon.Hashtable hashTable;
+	private Dictionary<string, Dictionary<string, GorillaNot.RPCCallTracker>> userRPCCalls = new Dictionary<string, Dictionary<string, GorillaNot.RPCCallTracker>>();
 
-	private bool sendReport
+	private Hashtable hashTable;
+
+	private class RPCCallTracker
 	{
-		get
-		{
-			return _sendReport;
-		}
-		set
-		{
-			if (!_sendReport)
-			{
-				_sendReport = true;
-			}
-		}
-	}
+		public int RPCCalls;
 
-	private string suspiciousPlayerId
-	{
-		get
-		{
-			return _suspiciousPlayerId;
-		}
-		set
-		{
-			if (_suspiciousPlayerId == "")
-			{
-				_suspiciousPlayerId = value;
-			}
-		}
-	}
-
-	private string suspiciousPlayerName
-	{
-		get
-		{
-			return _suspiciousPlayerName;
-		}
-		set
-		{
-			if (_suspiciousPlayerName == "")
-			{
-				_suspiciousPlayerName = value;
-			}
-		}
-	}
-
-	private string suspiciousReason
-	{
-		get
-		{
-			return _suspiciousReason;
-		}
-		set
-		{
-			if (_suspiciousReason == "")
-			{
-				_suspiciousReason = value;
-			}
-		}
-	}
-
-	private void Start()
-	{
-		if (instance == null)
-		{
-			instance = this;
-		}
-		else if (instance != this)
-		{
-			Object.Destroy(this);
-		}
-		StartCoroutine(CheckReports());
-		logErrorCount = 0;
-		Application.logMessageReceived += LogErrorCount;
-	}
-
-	public void LogErrorCount(string logString, string stackTrace, LogType type)
-	{
-		if (type != 0)
-		{
-			return;
-		}
-		logErrorCount++;
-		stringIndex = logString.LastIndexOf("Sender is ");
-		if (logString.Contains("RPC") && stringIndex >= 0)
-		{
-			playerID = logString.Substring(stringIndex + 10);
-			tempPlayer = null;
-			for (int i = 0; i < cachedPlayerList.Length; i++)
-			{
-				if (cachedPlayerList[i].UserId == playerID)
-				{
-					tempPlayer = cachedPlayerList[i];
-					break;
-				}
-			}
-			ref Player sender = ref tempPlayer;
-			string rpcFunction = "invalid RPC stuff";
-			if (!IncrementRPCTracker(in sender, in rpcFunction, in rpcErrorMax))
-			{
-				SendReport("invalid RPC stuff", tempPlayer.UserId, tempPlayer.NickName);
-			}
-			tempPlayer = null;
-		}
-		if (logErrorCount > logErrorMax)
-		{
-			Debug.unityLogger.logEnabled = false;
-		}
-	}
-
-	public void SendReport(string susReason, string susId, string susNick)
-	{
-		suspiciousReason = susReason;
-		suspiciousPlayerId = susId;
-		suspiciousPlayerName = susNick;
-		sendReport = true;
-	}
-
-	private IEnumerator CheckReports()
-	{
-		while (true)
-		{
-			try
-			{
-				logErrorCount = 0;
-				if (PhotonNetwork.InRoom)
-				{
-					lastCheck = Time.time;
-					lastServerTimestamp = PhotonNetwork.ServerTimestamp;
-					if (!PhotonNetwork.CurrentRoom.PublishUserId)
-					{
-						sendReport = true;
-						suspiciousReason = "missing player ids";
-						SetToRoomCreatorIfHere();
-						CloseInvalidRoom();
-						Debug.Log("publish user id's is off");
-					}
-					else if (cachedPlayerList.Length > PhotonNetworkController.Instance.GetRoomSize(PhotonNetworkController.Instance.currentGameType))
-					{
-						sendReport = true;
-						suspiciousReason = "too many players";
-						SetToRoomCreatorIfHere();
-						CloseInvalidRoom();
-					}
-					if (currentMasterClient != PhotonNetwork.MasterClient || LowestActorNumber() != PhotonNetwork.MasterClient.ActorNumber)
-					{
-						Player[] array = cachedPlayerList;
-						foreach (Player player in array)
-						{
-							if (currentMasterClient == player)
-							{
-								sendReport = true;
-								suspiciousReason = "room host force changed";
-								suspiciousPlayerId = PhotonNetwork.MasterClient.UserId;
-								suspiciousPlayerName = PhotonNetwork.MasterClient.NickName;
-							}
-						}
-						currentMasterClient = PhotonNetwork.MasterClient;
-					}
-					if (sendReport || testAssault)
-					{
-						if (suspiciousPlayerId != "" && reportedPlayers.IndexOf(suspiciousPlayerId) == -1)
-						{
-							reportedPlayers.Add(suspiciousPlayerId);
-							testAssault = false;
-							RaiseEventOptions raiseEventOptions = new RaiseEventOptions();
-							WebFlags flags = new WebFlags(1);
-							raiseEventOptions.Flags = flags;
-							string[] array2 = new string[cachedPlayerList.Length];
-							int num = 0;
-							Player[] array = cachedPlayerList;
-							foreach (Player player2 in array)
-							{
-								array2[num] = player2.UserId;
-								num++;
-							}
-							object[] eventContent = new object[7]
-							{
-								PhotonNetwork.CurrentRoom.ToStringFull(),
-								array2,
-								PhotonNetwork.MasterClient.UserId,
-								suspiciousPlayerId,
-								suspiciousPlayerName,
-								suspiciousReason,
-								PhotonNetworkController.Instance.GameVersionString
-							};
-							PhotonNetwork.RaiseEvent(8, eventContent, raiseEventOptions, SendOptions.SendReliable);
-							if (ShouldDisconnectFromRoom())
-							{
-								StartCoroutine(QuitDelay());
-							}
-						}
-						_sendReport = false;
-						_suspiciousPlayerId = "";
-						_suspiciousPlayerName = "";
-						_suspiciousReason = "";
-					}
-					foreach (Dictionary<string, RPCCallTracker> value in userRPCCalls.Values)
-					{
-						foreach (RPCCallTracker value2 in value.Values)
-						{
-							value2.RPCCalls = 0;
-						}
-					}
-				}
-			}
-			catch
-			{
-			}
-			yield return new WaitForSeconds(1.01f);
-		}
-	}
-
-	private int LowestActorNumber()
-	{
-		lowestActorNumber = PhotonNetwork.LocalPlayer.ActorNumber;
-		Player[] array = cachedPlayerList;
-		foreach (Player player in array)
-		{
-			if (player.ActorNumber < lowestActorNumber)
-			{
-				lowestActorNumber = player.ActorNumber;
-			}
-		}
-		return lowestActorNumber;
-	}
-
-	public override void OnPlayerEnteredRoom(Player newPlayer)
-	{
-		base.OnPlayerEnteredRoom(newPlayer);
-		cachedPlayerList = PhotonNetwork.PlayerList;
-	}
-
-	public override void OnPlayerLeftRoom(Player otherPlayer)
-	{
-		base.OnPlayerLeftRoom(otherPlayer);
-		cachedPlayerList = PhotonNetwork.PlayerList;
-		if (userRPCCalls.TryGetValue(otherPlayer.UserId, out var _))
-		{
-			userRPCCalls.Remove(otherPlayer.UserId);
-		}
-	}
-
-	public static void IncrementRPCCall(PhotonMessageInfo info, [CallerMemberName] string callingMethod = "")
-	{
-		instance.IncrementRPCCallLocal(info, callingMethod);
-	}
-
-	private void IncrementRPCCallLocal(PhotonMessageInfo info, string rpcFunction)
-	{
-		if (info.SentServerTimestamp >= lastServerTimestamp && !IncrementRPCTracker(in info.Sender, in rpcFunction, in rpcCallLimit))
-		{
-			SendReport("too many rpc calls! " + rpcFunction, info.Sender.UserId, info.Sender.NickName);
-		}
-	}
-
-	private bool IncrementRPCTracker(in Player sender, in string rpcFunction, in int callLimit)
-	{
-		RPCCallTracker rPCCallTracker = GetRPCCallTracker(in sender, in rpcFunction);
-		if (rPCCallTracker == null)
-		{
-			return true;
-		}
-		rPCCallTracker.RPCCalls++;
-		if (rPCCallTracker.RPCCalls > rPCCallTracker.RPCCallsMax)
-		{
-			rPCCallTracker.RPCCallsMax = rPCCallTracker.RPCCalls;
-		}
-		if (rPCCallTracker.RPCCalls > callLimit)
-		{
-			return false;
-		}
-		return true;
-	}
-
-	private RPCCallTracker GetRPCCallTracker(in Player sender, in string rpcFunction)
-	{
-		if (sender == null || sender.UserId == null)
-		{
-			return null;
-		}
-		RPCCallTracker value = null;
-		if (!userRPCCalls.TryGetValue(sender.UserId, out var value2))
-		{
-			value = new RPCCallTracker
-			{
-				RPCCalls = 0,
-				RPCCallsMax = 0
-			};
-			Dictionary<string, RPCCallTracker> dictionary = new Dictionary<string, RPCCallTracker>();
-			dictionary.Add(rpcFunction, value);
-			userRPCCalls.Add(sender.UserId, dictionary);
-		}
-		else if (!value2.TryGetValue(rpcFunction, out value))
-		{
-			value = new RPCCallTracker
-			{
-				RPCCalls = 0,
-				RPCCallsMax = 0
-			};
-			value2.Add(rpcFunction, value);
-		}
-		return value;
-	}
-
-	private IEnumerator QuitDelay()
-	{
-		yield return new WaitForSeconds(1f);
-		PhotonNetworkController.Instance.AttemptDisconnect();
-	}
-
-	private void SetToRoomCreatorIfHere()
-	{
-		tempPlayer = PhotonNetwork.CurrentRoom.GetPlayer(1);
-		if (tempPlayer != null)
-		{
-			suspiciousPlayerId = tempPlayer.UserId;
-			suspiciousPlayerName = tempPlayer.NickName;
-		}
-		else
-		{
-			suspiciousPlayerId = "n/a";
-			suspiciousPlayerName = "n/a";
-		}
-	}
-
-	private bool ShouldDisconnectFromRoom()
-	{
-		if (!_suspiciousReason.Contains("too many players") && !_suspiciousReason.Contains("invalid room name") && !_suspiciousReason.Contains("invalid game mode"))
-		{
-			return _suspiciousReason.Contains("missing player ids");
-		}
-		return true;
-	}
-
-	private void CloseInvalidRoom()
-	{
-		PhotonNetwork.CurrentRoom.IsOpen = false;
-		PhotonNetwork.CurrentRoom.IsVisible = false;
-		PhotonNetwork.CurrentRoom.MaxPlayers = PhotonNetworkController.Instance.GetRoomSize(PhotonNetworkController.Instance.currentGameType);
+		public int RPCCallsMax;
 	}
 }

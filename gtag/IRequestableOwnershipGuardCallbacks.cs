@@ -1,3 +1,4 @@
+﻿using System;
 using Photon.Realtime;
 
 public interface IRequestableOwnershipGuardCallbacks

@@ -1,8 +1,102 @@
-using System;
+﻿using System;
 using UnityEngine;
 
 public class TeleportDestination : MonoBehaviour
 {
+	public bool IsValidDestination { get; private set; }
+
+	private TeleportDestination()
+	{
+		this._updateTeleportDestinationAction = new Action<bool, Vector3?, Quaternion?, Quaternion?>(this.UpdateTeleportDestination);
+	}
+
+	public void OnEnable()
+	{
+		this.PositionIndicator.gameObject.SetActive(false);
+		if (this.OrientationIndicator != null)
+		{
+			this.OrientationIndicator.gameObject.SetActive(false);
+		}
+		this.LocomotionTeleport.UpdateTeleportDestination += this._updateTeleportDestinationAction;
+		this._eventsActive = true;
+	}
+
+	private void TryDisableEventHandlers()
+	{
+		if (!this._eventsActive)
+		{
+			return;
+		}
+		this.LocomotionTeleport.UpdateTeleportDestination -= this._updateTeleportDestinationAction;
+		this._eventsActive = false;
+	}
+
+	public void OnDisable()
+	{
+		this.TryDisableEventHandlers();
+	}
+
+	public event Action<TeleportDestination> Deactivated;
+
+	public void OnDeactivated()
+	{
+		if (this.Deactivated != null)
+		{
+			this.Deactivated(this);
+			return;
+		}
+		this.Recycle();
+	}
+
+	public void Recycle()
+	{
+		this.LocomotionTeleport.RecycleTeleportDestination(this);
+	}
+
+	public virtual void UpdateTeleportDestination(bool isValidDestination, Vector3? position, Quaternion? rotation, Quaternion? landingRotation)
+	{
+		this.IsValidDestination = isValidDestination;
+		this.LandingRotation = landingRotation.GetValueOrDefault();
+		GameObject gameObject = this.PositionIndicator.gameObject;
+		bool activeInHierarchy = gameObject.activeInHierarchy;
+		if (position == null)
+		{
+			if (activeInHierarchy)
+			{
+				gameObject.SetActive(false);
+			}
+			return;
+		}
+		if (!activeInHierarchy)
+		{
+			gameObject.SetActive(true);
+		}
+		base.transform.position = position.GetValueOrDefault();
+		if (this.OrientationIndicator == null)
+		{
+			if (rotation != null)
+			{
+				base.transform.rotation = rotation.GetValueOrDefault();
+			}
+			return;
+		}
+		GameObject gameObject2 = this.OrientationIndicator.gameObject;
+		bool activeInHierarchy2 = gameObject2.activeInHierarchy;
+		if (rotation == null)
+		{
+			if (activeInHierarchy2)
+			{
+				gameObject2.SetActive(false);
+			}
+			return;
+		}
+		this.OrientationIndicator.rotation = rotation.GetValueOrDefault();
+		if (!activeInHierarchy2)
+		{
+			gameObject2.SetActive(true);
+		}
+	}
+
 	[Tooltip("If the target handler provides a target position, this transform will be moved to that position and it's game object enabled. A target position being provided does not mean the position is valid, only that the aim handler found something to test as a destination.")]
 	public Transform PositionIndicator;
 
@@ -21,99 +115,4 @@ public class TeleportDestination : MonoBehaviour
 	private readonly Action<bool, Vector3?, Quaternion?, Quaternion?> _updateTeleportDestinationAction;
 
 	private bool _eventsActive;
-
-	public bool IsValidDestination { get; private set; }
-
-	public event Action<TeleportDestination> Deactivated;
-
-	private TeleportDestination()
-	{
-		_updateTeleportDestinationAction = UpdateTeleportDestination;
-	}
-
-	public void OnEnable()
-	{
-		PositionIndicator.gameObject.SetActive(value: false);
-		if (OrientationIndicator != null)
-		{
-			OrientationIndicator.gameObject.SetActive(value: false);
-		}
-		LocomotionTeleport.UpdateTeleportDestination += _updateTeleportDestinationAction;
-		_eventsActive = true;
-	}
-
-	private void TryDisableEventHandlers()
-	{
-		if (_eventsActive)
-		{
-			LocomotionTeleport.UpdateTeleportDestination -= _updateTeleportDestinationAction;
-			_eventsActive = false;
-		}
-	}
-
-	public void OnDisable()
-	{
-		TryDisableEventHandlers();
-	}
-
-	public void OnDeactivated()
-	{
-		if (this.Deactivated != null)
-		{
-			this.Deactivated(this);
-		}
-		else
-		{
-			Recycle();
-		}
-	}
-
-	public void Recycle()
-	{
-		LocomotionTeleport.RecycleTeleportDestination(this);
-	}
-
-	public virtual void UpdateTeleportDestination(bool isValidDestination, Vector3? position, Quaternion? rotation, Quaternion? landingRotation)
-	{
-		IsValidDestination = isValidDestination;
-		LandingRotation = landingRotation.GetValueOrDefault();
-		GameObject gameObject = PositionIndicator.gameObject;
-		bool activeInHierarchy = gameObject.activeInHierarchy;
-		if (!position.HasValue)
-		{
-			if (activeInHierarchy)
-			{
-				gameObject.SetActive(value: false);
-			}
-			return;
-		}
-		if (!activeInHierarchy)
-		{
-			gameObject.SetActive(value: true);
-		}
-		base.transform.position = position.GetValueOrDefault();
-		if (OrientationIndicator == null)
-		{
-			if (rotation.HasValue)
-			{
-				base.transform.rotation = rotation.GetValueOrDefault();
-			}
-			return;
-		}
-		GameObject gameObject2 = OrientationIndicator.gameObject;
-		bool activeInHierarchy2 = gameObject2.activeInHierarchy;
-		if (!rotation.HasValue)
-		{
-			if (activeInHierarchy2)
-			{
-				gameObject2.SetActive(value: false);
-			}
-			return;
-		}
-		OrientationIndicator.rotation = rotation.GetValueOrDefault();
-		if (!activeInHierarchy2)
-		{
-			gameObject2.SetActive(value: true);
-		}
-	}
 }

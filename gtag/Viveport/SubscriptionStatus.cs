@@ -1,30 +1,32 @@
+﻿using System;
 using System.Collections.Generic;
 
-namespace Viveport;
-
-public class SubscriptionStatus
+namespace Viveport
 {
-	public enum Platform
+	public class SubscriptionStatus
 	{
-		Windows,
-		Android
-	}
+		public List<SubscriptionStatus.Platform> Platforms { get; set; }
 
-	public enum TransactionType
-	{
-		Unknown,
-		Paid,
-		Redeem,
-		FreeTrial
-	}
+		public SubscriptionStatus.TransactionType Type { get; set; }
 
-	public List<Platform> Platforms { get; set; }
+		public SubscriptionStatus()
+		{
+			this.Platforms = new List<SubscriptionStatus.Platform>();
+			this.Type = SubscriptionStatus.TransactionType.Unknown;
+		}
 
-	public TransactionType Type { get; set; }
+		public enum Platform
+		{
+			Windows,
+			Android
+		}
 
-	public SubscriptionStatus()
-	{
-		Platforms = new List<Platform>();
-		Type = TransactionType.Unknown;
+		public enum TransactionType
+		{
+			Unknown,
+			Paid,
+			Redeem,
+			FreeTrial
+		}
 	}
 }

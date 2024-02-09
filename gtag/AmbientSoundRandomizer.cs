@@ -1,7 +1,38 @@
+﻿using System;
 using UnityEngine;
 
 public class AmbientSoundRandomizer : MonoBehaviour
 {
+	private void Button_Cache()
+	{
+		this.audioSources = base.GetComponentsInChildren<AudioSource>();
+	}
+
+	private void Awake()
+	{
+		this.SetTarget();
+	}
+
+	private void Update()
+	{
+		if (this.timer >= this.timerTarget)
+		{
+			int num = Random.Range(0, this.audioSources.Length);
+			int num2 = Random.Range(0, this.audioClips.Length);
+			this.audioSources[num].clip = this.audioClips[num2];
+			this.audioSources[num].Play();
+			this.SetTarget();
+			return;
+		}
+		this.timer += Time.deltaTime;
+	}
+
+	private void SetTarget()
+	{
+		this.timerTarget = this.baseTime + Random.Range(0f, this.randomModifier);
+		this.timer = 0f;
+	}
+
 	[SerializeField]
 	private AudioSource[] audioSources;
 
@@ -17,36 +48,4 @@ public class AmbientSoundRandomizer : MonoBehaviour
 	private float timer;
 
 	private float timerTarget;
-
-	private void Button_Cache()
-	{
-		audioSources = GetComponentsInChildren<AudioSource>();
-	}
-
-	private void Awake()
-	{
-		SetTarget();
-	}
-
-	private void Update()
-	{
-		if (timer >= timerTarget)
-		{
-			int num = Random.Range(0, audioSources.Length);
-			int num2 = Random.Range(0, audioClips.Length);
-			audioSources[num].clip = audioClips[num2];
-			audioSources[num].Play();
-			SetTarget();
-		}
-		else
-		{
-			timer += Time.deltaTime;
-		}
-	}
-
-	private void SetTarget()
-	{
-		timerTarget = baseTime + Random.Range(0f, randomModifier);
-		timer = 0f;
-	}
 }

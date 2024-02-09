@@ -1,7 +1,38 @@
+﻿using System;
+using Cinemachine;
+using GorillaLocomotion;
 using UnityEngine;
 
 public class GorillaCameraFollow : MonoBehaviour
 {
+	private void Start()
+	{
+		if (Application.platform == RuntimePlatform.Android)
+		{
+			this.cameraParent.SetActive(false);
+		}
+		if (this.cinemachineCamera != null)
+		{
+			this.cinemachineFollow = this.cinemachineCamera.GetCinemachineComponent<Cinemachine3rdPersonFollow>();
+			this.baseCameraRadius = this.cinemachineFollow.CameraRadius;
+			this.baseFollowDistance = this.cinemachineFollow.CameraDistance;
+			this.baseVerticalArmLength = this.cinemachineFollow.VerticalArmLength;
+			this.baseShoulderOffset = this.cinemachineFollow.ShoulderOffset;
+		}
+	}
+
+	private void LateUpdate()
+	{
+		if (this.cinemachineFollow != null)
+		{
+			float scale = Player.Instance.scale;
+			this.cinemachineFollow.CameraRadius = this.baseCameraRadius * scale;
+			this.cinemachineFollow.CameraDistance = this.baseFollowDistance * scale;
+			this.cinemachineFollow.VerticalArmLength = this.baseVerticalArmLength * scale;
+			this.cinemachineFollow.ShoulderOffset = this.baseShoulderOffset * scale;
+		}
+	}
+
 	public Transform playerHead;
 
 	public GameObject cameraParent;
@@ -10,23 +41,15 @@ public class GorillaCameraFollow : MonoBehaviour
 
 	public Vector3 eulerRotationOffset;
 
-	private void Start()
-	{
-		if (Application.platform == RuntimePlatform.Android)
-		{
-			cameraParent.SetActive(value: false);
-		}
-	}
+	public CinemachineVirtualCamera cinemachineCamera;
 
-	private void LateUpdate()
-	{
-		if (!(playerHead == null))
-		{
-			Vector3 vector = Vector3.ProjectOnPlane(playerHead.forward, Vector3.up);
-			float y = Vector3.SignedAngle(Vector3.forward, vector, Vector3.up);
-			Vector3 to = Vector3.ProjectOnPlane(playerHead.forward, Quaternion.AngleAxis(90f, Vector3.up) * vector);
-			float num = Vector3.SignedAngle(Vector3.up, to, Quaternion.AngleAxis(90f, Vector3.up) * vector);
-			base.transform.eulerAngles = new Vector3(num - 90f, y, 0f);
-		}
-	}
+	private Cinemachine3rdPersonFollow cinemachineFollow;
+
+	private float baseCameraRadius = 0.2f;
+
+	private float baseFollowDistance = 2f;
+
+	private float baseVerticalArmLength = 0.4f;
+
+	private Vector3 baseShoulderOffset = new Vector3(0.5f, -0.4f, 0f);
 }

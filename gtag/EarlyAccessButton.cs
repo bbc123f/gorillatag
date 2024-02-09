@@ -1,3 +1,4 @@
+﻿using System;
 using System.Collections;
 using GorillaNetworking;
 using UnityEngine;
@@ -13,9 +14,9 @@ public class EarlyAccessButton : GorillaPressableButton
 		if (PhotonNetworkController.Instance != null && PhotonNetworkController.Instance.wrongVersion)
 		{
 			base.enabled = false;
-			GetComponent<BoxCollider>().enabled = false;
-			buttonRenderer.material = pressedMaterial;
-			myText.text = "UNAVAILABLE";
+			base.GetComponent<BoxCollider>().enabled = false;
+			this.buttonRenderer.material = this.pressedMaterial;
+			this.myText.text = "UNAVAILABLE";
 		}
 	}
 
@@ -23,22 +24,23 @@ public class EarlyAccessButton : GorillaPressableButton
 	{
 		base.ButtonActivation();
 		CosmeticsController.instance.PressEarlyAccessButton();
-		StartCoroutine(ButtonColorUpdate());
+		base.StartCoroutine(this.ButtonColorUpdate());
 	}
 
 	public void AlreadyOwn()
 	{
 		base.enabled = false;
-		GetComponent<BoxCollider>().enabled = false;
-		buttonRenderer.material = pressedMaterial;
-		myText.text = "YOU OWN THE BUNDLE ALREADY! THANK YOU!";
+		base.GetComponent<BoxCollider>().enabled = false;
+		this.buttonRenderer.material = this.pressedMaterial;
+		this.myText.text = "YOU OWN THE BUNDLE ALREADY! THANK YOU!";
 	}
 
 	private IEnumerator ButtonColorUpdate()
 	{
 		Debug.Log("did this happen?");
-		buttonRenderer.material = pressedMaterial;
-		yield return new WaitForSeconds(debounceTime);
-		buttonRenderer.material = (isOn ? pressedMaterial : unpressedMaterial);
+		this.buttonRenderer.material = this.pressedMaterial;
+		yield return new WaitForSeconds(this.debounceTime);
+		this.buttonRenderer.material = (this.isOn ? this.pressedMaterial : this.unpressedMaterial);
+		yield break;
 	}
 }

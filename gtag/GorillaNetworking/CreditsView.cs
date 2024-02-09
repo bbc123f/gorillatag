@@ -1,120 +1,127 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using LitJson;
 using PlayFab;
 using UnityEngine;
 
-namespace GorillaNetworking;
-
-public class CreditsView : MonoBehaviour
+namespace GorillaNetworking
 {
-	private CreditsSection[] creditsSections;
-
-	public int pageSize = 7;
-
-	private int currentPage;
-
-	private const string PlayFabKey = "CreditsData";
-
-	private int TotalPages => creditsSections.Sum((CreditsSection section) => PagesPerSection(section));
-
-	private void Start()
+	public class CreditsView : MonoBehaviour
 	{
-		creditsSections = new CreditsSection[3]
+		private int TotalPages
 		{
-			new CreditsSection
+			get
 			{
-				Title = "DEV TEAM",
-				Entries = new List<string>
+				return this.creditsSections.Sum((CreditsSection section) => this.PagesPerSection(section));
+			}
+		}
+
+		private void Start()
+		{
+			this.creditsSections = new CreditsSection[]
+			{
+				new CreditsSection
 				{
-					"Anton \"NtsFranz\" Franzluebbers", "Carlo Grossi Jr", "Cody O'Quinn", "David Neubelt", "David \"AA_DavidY\" Yee", "Derek \"DunkTrain\" Arabian", "Elie Arabian", "John Sleeper", "Haunted Army", "Kerestell Smith",
-					"Keith \"ElectronicWall\" Taylor", "Laura \"Poppy\" Lorian", "Lilly Tothill", "Matt \"Crimity\" Ostgard", "Nick Taylor", "Ross Furmidge", "Sasha \"Kayze\" Sanders"
+					Title = "DEV TEAM",
+					Entries = new List<string>
+					{
+						"Anton \"NtsFranz\" Franzluebbers", "Carlo Grossi Jr", "Cody O'Quinn", "David Neubelt", "David \"AA_DavidY\" Yee", "Derek \"DunkTrain\" Arabian", "Elie Arabian", "John Sleeper", "Haunted Army", "Kerestell Smith",
+						"Keith \"ElectronicWall\" Taylor", "Laura \"Poppy\" Lorian", "Lilly Tothill", "Matt \"Crimity\" Ostgard", "Nick Taylor", "Ross Furmidge", "Sasha \"Kayze\" Sanders"
+					}
+				},
+				new CreditsSection
+				{
+					Title = "SPECIAL THANKS",
+					Entries = new List<string> { "The \"Sticks\"", "Alpha Squad", "Meta", "Scout House", "Mighty PR", "Caroline Arabian", "Clarissa & Declan", "Calum Haigh", "EZ ICE", "Gwen" }
+				},
+				new CreditsSection
+				{
+					Title = "MUSIC BY",
+					Entries = new List<string> { "Stunshine", "David Anderson Kirk", "Jaguar Jen", "Audiopfeil", "Owlobe" }
 				}
-			},
-			new CreditsSection
+			};
+			PlayFabTitleDataCache.Instance.GetTitleData("CreditsData", delegate(string result)
 			{
-				Title = "SPECIAL THANKS",
-				Entries = new List<string> { "The \"Sticks\"", "Alpha Squad", "Meta", "Scout House", "Mighty PR", "Caroline Arabian", "Clarissa & Declan", "Calum Haigh", "EZ ICE", "Gwen" }
-			},
-			new CreditsSection
+				this.creditsSections = JsonMapper.ToObject<CreditsSection[]>(result);
+			}, delegate(PlayFabError error)
 			{
-				Title = "MUSIC BY",
-				Entries = new List<string> { "Stunshine", "David Anderson Kirk", "Jaguar Jen", "Audiopfeil", "Owlobe" }
+				Debug.Log("Error fetching credits data: " + error.ErrorMessage);
+			});
+		}
+
+		private int PagesPerSection(CreditsSection section)
+		{
+			return (int)Math.Ceiling((double)section.Entries.Count / (double)this.pageSize);
+		}
+
+		private IEnumerable<string> PageOfSection(CreditsSection section, int page)
+		{
+			return section.Entries.Skip(this.pageSize * page).Take(this.pageSize);
+		}
+
+		[return: TupleElementNames(new string[] { "creditsSection", "subPage" })]
+		private ValueTuple<CreditsSection, int> GetPageEntries(int page)
+		{
+			int num = 0;
+			foreach (CreditsSection creditsSection in this.creditsSections)
+			{
+				int num2 = this.PagesPerSection(creditsSection);
+				if (num + num2 > page)
+				{
+					int num3 = page - num;
+					return new ValueTuple<CreditsSection, int>(creditsSection, num3);
+				}
+				num += num2;
 			}
-		};
-		PlayFabTitleDataCache.Instance.GetTitleData("CreditsData", delegate(string result)
-		{
-			creditsSections = JsonMapper.ToObject<CreditsSection[]>(result);
-		}, delegate(PlayFabError error)
-		{
-			Debug.Log("Error fetching credits data: " + error.ErrorMessage);
-		});
-	}
+			return new ValueTuple<CreditsSection, int>(this.creditsSections.First<CreditsSection>(), 0);
+		}
 
-	private int PagesPerSection(CreditsSection section)
-	{
-		return (int)Math.Ceiling((double)section.Entries.Count / (double)pageSize);
-	}
-
-	private IEnumerable<string> PageOfSection(CreditsSection section, int page)
-	{
-		return section.Entries.Skip(pageSize * page).Take(pageSize);
-	}
-
-	private (CreditsSection creditsSection, int subPage) GetPageEntries(int page)
-	{
-		int num = 0;
-		CreditsSection[] array = creditsSections;
-		foreach (CreditsSection creditsSection in array)
+		public void ProcessButtonPress(GorillaKeyboardButton buttonPressed)
 		{
-			int num2 = PagesPerSection(creditsSection);
-			if (num + num2 > page)
+			if (buttonPressed.characterString == "enter")
 			{
-				int item = page - num;
-				return (creditsSection: creditsSection, subPage: item);
+				this.currentPage++;
+				this.currentPage %= this.TotalPages;
 			}
-			num += num2;
 		}
-		return (creditsSection: creditsSections.First(), subPage: 0);
-	}
 
-	public void ProcessButtonPress(GorillaKeyboardButton buttonPressed)
-	{
-		string characterString = buttonPressed.characterString;
-		if (characterString == "enter")
+		public string GetScreenText()
 		{
-			currentPage++;
-			currentPage %= TotalPages;
+			return this.GetPage(this.currentPage);
 		}
-	}
 
-	public string GetScreenText()
-	{
-		return GetPage(currentPage);
-	}
-
-	private string GetPage(int page)
-	{
-		(CreditsSection creditsSection, int subPage) pageEntries = GetPageEntries(page);
-		CreditsSection item = pageEntries.creditsSection;
-		int item2 = pageEntries.subPage;
-		IEnumerable<string> enumerable = PageOfSection(item, item2);
-		string value = "CREDITS - " + ((item2 == 0) ? item.Title : (item.Title + " (CONT)"));
-		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.AppendLine(value);
-		stringBuilder.AppendLine();
-		foreach (string item3 in enumerable)
+		private string GetPage(int page)
 		{
-			stringBuilder.AppendLine(item3);
-		}
-		for (int i = 0; i < pageSize - enumerable.Count(); i++)
-		{
+			ValueTuple<CreditsSection, int> pageEntries = this.GetPageEntries(page);
+			CreditsSection item = pageEntries.Item1;
+			int item2 = pageEntries.Item2;
+			IEnumerable<string> enumerable = this.PageOfSection(item, item2);
+			string text = "CREDITS - " + ((item2 == 0) ? item.Title : (item.Title + " (CONT)"));
+			StringBuilder stringBuilder = new StringBuilder();
+			stringBuilder.AppendLine(text);
 			stringBuilder.AppendLine();
+			foreach (string text2 in enumerable)
+			{
+				stringBuilder.AppendLine(text2);
+			}
+			for (int i = 0; i < this.pageSize - enumerable.Count<string>(); i++)
+			{
+				stringBuilder.AppendLine();
+			}
+			stringBuilder.AppendLine();
+			stringBuilder.AppendLine("PRESS ENTER TO CHANGE PAGES");
+			return stringBuilder.ToString();
 		}
-		stringBuilder.AppendLine();
-		stringBuilder.AppendLine("PRESS ENTER TO CHANGE PAGES");
-		return stringBuilder.ToString();
+
+		private CreditsSection[] creditsSections;
+
+		public int pageSize = 7;
+
+		private int currentPage;
+
+		private const string PlayFabKey = "CreditsData";
 	}
 }

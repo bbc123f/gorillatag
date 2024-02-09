@@ -1,88 +1,103 @@
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Photon.Pun;
 using UnityEngine;
-using Utilities;
 
 [RequireComponent(typeof(PhotonView))]
 public class TappableManager : MonoBehaviourPun
 {
-	private static TappableManager gManager;
-
-	[SerializeField]
-	private List<Tappable> tappables = new List<Tappable>();
-
-	private HashSet<int> idSet = new HashSet<int>();
-
-	private static HashSet<Tappable> gRegistry = new HashSet<Tappable>();
-
 	private void Awake()
 	{
-		if (gManager == null)
+		if (TappableManager.gManager != null && TappableManager.gManager != this)
 		{
-			gManager = this;
+			GTDev.LogWarning("Instance of TappableManager already exists. Destroying.", null);
+			Object.Destroy(this);
+			return;
 		}
-		if (gRegistry.Count != 0)
+		if (TappableManager.gManager == null)
 		{
-			Tappable[] array = gRegistry.ToArray();
-			for (int i = 0; i < array.Length; i++)
+			TappableManager.gManager = this;
+		}
+		if (TappableManager.gRegistry.Count == 0)
+		{
+			return;
+		}
+		Tappable[] array = TappableManager.gRegistry.ToArray<Tappable>();
+		for (int i = 0; i < array.Length; i++)
+		{
+			if (!(array[i] == null))
 			{
-				RegisterInstance(array[i]);
+				this.RegisterInstance(array[i]);
 			}
-			gRegistry.Clear();
 		}
+		TappableManager.gRegistry.Clear();
 	}
 
 	private void RegisterInstance(Tappable t)
 	{
 		if (t == null)
 		{
-			GTDev.LogError("Tappable is null.");
+			GTDev.LogError("Tappable is null.", null);
 			return;
 		}
 		if (!t.useStaticId)
 		{
-			CalculateId(t);
+			TappableManager.CalculateId(t, false);
 		}
 		t.manager = this;
-		if (idSet.Add(t.tappableId))
+		if (this.idSet.Add(t.tappableId))
 		{
-			tappables.Add(t);
+			this.tappables.Add(t);
 		}
 	}
 
 	private void UnregisterInstance(Tappable t)
 	{
-		if (!(t == null) && idSet.Remove(t.tappableId))
+		if (t == null)
 		{
-			tappables.Remove(t);
-			t.manager = null;
+			return;
 		}
+		if (!this.idSet.Remove(t.tappableId))
+		{
+			return;
+		}
+		this.tappables.Remove(t);
+		t.manager = null;
 	}
 
 	public static void Register(Tappable t)
 	{
-		if (gManager != null)
+		if (TappableManager.gManager != null)
 		{
-			gManager.RegisterInstance(t);
+			TappableManager.gManager.RegisterInstance(t);
+			return;
 		}
-		else
-		{
-			gRegistry.Add(t);
-		}
+		TappableManager.gRegistry.Add(t);
 	}
 
 	public static void Unregister(Tappable t)
 	{
-		if (gManager != null)
+		if (TappableManager.gManager != null)
 		{
-			gManager.UnregisterInstance(t);
+			TappableManager.gManager.UnregisterInstance(t);
+			return;
 		}
-		else
+		TappableManager.gRegistry.Remove(t);
+	}
+
+	[Conditional("QATESTING")]
+	public void DebugTestTap()
+	{
+		if (this.tappables.Count > 0)
 		{
-			gRegistry.Remove(t);
+			int num = Random.Range(0, this.tappables.Count);
+			Debug.Log("Send TestTap to tappable index: " + num.ToString() + "/" + this.tappables.Count.ToString());
+			this.tappables[num].OnTap(10f, Time.time);
+			return;
 		}
+		Debug.Log("TappableManager: tappables array is empty.");
 	}
 
 	[PunRPC]
@@ -94,9 +109,9 @@ public class TappableManager : MonoBehaviourPun
 			return;
 		}
 		tapStrength = Mathf.Clamp(tapStrength, 0f, 1f);
-		for (int i = 0; i < tappables.Count; i++)
+		for (int i = 0; i < this.tappables.Count; i++)
 		{
-			Tappable tappable = tappables[i];
+			Tappable tappable = this.tappables[i];
 			if (tappable.tappableId == key)
 			{
 				tappable.OnTapLocal(tapStrength, Time.time);
@@ -119,25 +134,36 @@ public class TappableManager : MonoBehaviourPun
 			if (string.IsNullOrEmpty(t.staticId) || force)
 			{
 				Vector3 position = transform.position;
-				int i = StaticHash.Combine(position.x, position.y, position.z);
+				int num2 = StaticHash.Combine(position.x, position.y, position.z);
 				int instanceID = t.GetInstanceID();
-				int num2 = StaticHash.Combine(num, i, instanceID);
-				t.staticId = $"#ID_{num2:X8}";
+				int num3 = StaticHash.Combine(num, num2, instanceID);
+				t.staticId = string.Format("#ID_{0:X8}", num3);
 			}
 			t.tappableId = t.staticId.GetStaticHash();
+			return;
 		}
-		else
-		{
-			t.tappableId = (Application.isPlaying ? num : 0);
-		}
+		t.tappableId = (Application.isPlaying ? num : 0);
 	}
 
 	[Conditional("UNITY_EDITOR")]
 	private void OnValidate()
 	{
-		if (tappables != null && tappables.Count > 0)
+		if (Application.isPlaying)
 		{
-			tappables.Clear();
+			return;
+		}
+		if (this.tappables != null && this.tappables.Count > 0)
+		{
+			this.tappables.Clear();
 		}
 	}
+
+	private static TappableManager gManager;
+
+	[SerializeField]
+	private List<Tappable> tappables = new List<Tappable>();
+
+	private HashSet<int> idSet = new HashSet<int>();
+
+	private static HashSet<Tappable> gRegistry = new HashSet<Tappable>();
 }

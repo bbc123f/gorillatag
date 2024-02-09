@@ -1,11 +1,13 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using GorillaExtensions;
 using GorillaLocomotion;
+using GorillaLocomotion.Climbing;
 using GorillaLocomotion.Gameplay;
 using GorillaNetworking;
+using GorillaTag;
 using Photon.Pun;
 using Photon.Realtime;
 using Photon.Voice.PUN;
@@ -13,28 +15,1366 @@ using PlayFab;
 using PlayFab.ClientModels;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.XR;
 
-public class VRRig : MonoBehaviour, IGorillaSerializeable, IPunInstantiateMagicCallback, IOnPhotonViewPreNetDestroy, IPhotonViewCallback, IPreDisable
+public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCosmeticsCallback, IGuidedRefTarget, IGuidedRefMonoBehaviour, IGuidedRefObject
 {
-	public enum WearablePackedStateSlots
+	public int ActiveTransferrableObjectIndex(int idx)
 	{
-		Hat,
-		LeftHand,
-		RightHand
+		return this.reliableState.activeTransferrableObjectIndex[idx];
 	}
 
-	public struct VelocityTime
+	public int ActiveTransferrableObjectIndexLength()
 	{
-		public Vector3 vel;
+		return this.reliableState.activeTransferrableObjectIndex.Length;
+	}
 
-		public double time;
-
-		public VelocityTime(Vector3 velocity, double velTime)
+	public void SetActiveTransferrableObjectIndex(int idx, int v)
+	{
+		if (this.reliableState.activeTransferrableObjectIndex[idx] != v)
 		{
-			vel = velocity;
-			time = velTime;
+			this.reliableState.activeTransferrableObjectIndex[idx] = v;
+			this.reliableState.SetIsDirty();
 		}
 	}
+
+	public TransferrableObject.PositionState TransferrablePosStates(int idx)
+	{
+		return this.reliableState.transferrablePosStates[idx];
+	}
+
+	public void SetTransferrablePosStates(int idx, TransferrableObject.PositionState v)
+	{
+		if (this.reliableState.transferrablePosStates[idx] != v)
+		{
+			this.reliableState.transferrablePosStates[idx] = v;
+			this.reliableState.SetIsDirty();
+		}
+	}
+
+	public TransferrableObject.ItemStates TransferrableItemStates(int idx)
+	{
+		return this.reliableState.transferrableItemStates[idx];
+	}
+
+	public void SetTransferrableItemStates(int idx, TransferrableObject.ItemStates v)
+	{
+		if (this.reliableState.transferrableItemStates[idx] != v)
+		{
+			this.reliableState.transferrableItemStates[idx] = v;
+			this.reliableState.SetIsDirty();
+		}
+	}
+
+	public void SetTransferrableDockPosition(int idx, BodyDockPositions.DropPositions v)
+	{
+		if (this.reliableState.transferableDockPositions[idx] != v)
+		{
+			this.reliableState.transferableDockPositions[idx] = v;
+			this.reliableState.SetIsDirty();
+		}
+	}
+
+	public BodyDockPositions.DropPositions TransferrableDockPosition(int idx)
+	{
+		return this.reliableState.transferableDockPositions[idx];
+	}
+
+	public int WearablePackedStates
+	{
+		get
+		{
+			return this.reliableState.wearablesPackedStates;
+		}
+		set
+		{
+			if (this.reliableState.wearablesPackedStates != value)
+			{
+				this.reliableState.wearablesPackedStates = value;
+				this.reliableState.SetIsDirty();
+			}
+		}
+	}
+
+	public int LeftThrowableProjectileIndex
+	{
+		get
+		{
+			return this.reliableState.lThrowableProjectileIndex;
+		}
+		set
+		{
+			if (this.reliableState.lThrowableProjectileIndex != value)
+			{
+				this.reliableState.lThrowableProjectileIndex = value;
+				this.reliableState.SetIsDirty();
+			}
+		}
+	}
+
+	public int RightThrowableProjectileIndex
+	{
+		get
+		{
+			return this.reliableState.rThrowableProjectileIndex;
+		}
+		set
+		{
+			if (this.reliableState.rThrowableProjectileIndex != value)
+			{
+				this.reliableState.rThrowableProjectileIndex = value;
+				this.reliableState.SetIsDirty();
+			}
+		}
+	}
+
+	public Color LeftThrowableProjectileColor
+	{
+		get
+		{
+			return this.reliableState.lThrowableProjectileColor;
+		}
+		set
+		{
+			if (!this.reliableState.lThrowableProjectileColor.CompareAs255Unclamped(value))
+			{
+				this.reliableState.lThrowableProjectileColor = value;
+				this.reliableState.SetIsDirty();
+			}
+		}
+	}
+
+	public Color RightThrowableProjectileColor
+	{
+		get
+		{
+			return this.reliableState.rThrowableProjectileColor;
+		}
+		set
+		{
+			if (!this.reliableState.rThrowableProjectileColor.CompareAs255Unclamped(value))
+			{
+				this.reliableState.rThrowableProjectileColor = value;
+				this.reliableState.SetIsDirty();
+			}
+		}
+	}
+
+	public Color GetThrowableProjectileColor(bool isLeftHand)
+	{
+		if (!isLeftHand)
+		{
+			return this.RightThrowableProjectileColor;
+		}
+		return this.LeftThrowableProjectileColor;
+	}
+
+	public void SetThrowableProjectileColor(bool isLeftHand, Color color)
+	{
+		if (isLeftHand)
+		{
+			this.LeftThrowableProjectileColor = color;
+			return;
+		}
+		this.RightThrowableProjectileColor = color;
+	}
+
+	public void SetRandomThrowableModelIndex(int randModelIndex)
+	{
+		this.RandomThrowableIndex = randModelIndex;
+	}
+
+	public int GetRandomThrowableModelIndex()
+	{
+		return this.RandomThrowableIndex;
+	}
+
+	private int RandomThrowableIndex
+	{
+		get
+		{
+			return this.reliableState.randomThrowableIndex;
+		}
+		set
+		{
+			if (this.reliableState.randomThrowableIndex != value)
+			{
+				this.reliableState.randomThrowableIndex = value;
+				this.reliableState.SetIsDirty();
+			}
+		}
+	}
+
+	public int SizeLayerMask
+	{
+		get
+		{
+			return this.reliableState.sizeLayerMask;
+		}
+		set
+		{
+			if (this.reliableState.sizeLayerMask != value)
+			{
+				this.reliableState.sizeLayerMask = value;
+				this.reliableState.SetIsDirty();
+			}
+		}
+	}
+
+	internal bool Initialized
+	{
+		get
+		{
+			return this.initialized;
+		}
+	}
+
+	private void Awake()
+	{
+		this.GuidedRefInitialize();
+		this.fxSettings = Object.Instantiate<FXSystemSettings>(this.sharedFXSettings);
+		this.fxSettings.forLocalRig = this.isOfflineVRRig;
+		Dictionary<string, GameObject> dictionary = new Dictionary<string, GameObject>();
+		foreach (GameObject gameObject in this.cosmetics)
+		{
+			GameObject gameObject2;
+			if (!dictionary.TryGetValue(gameObject.name, out gameObject2))
+			{
+				dictionary.Add(gameObject.name, gameObject);
+			}
+		}
+		foreach (GameObject gameObject3 in this.overrideCosmetics)
+		{
+			GameObject gameObject2;
+			if (dictionary.TryGetValue(gameObject3.name, out gameObject2) && gameObject2.name == gameObject3.name)
+			{
+				gameObject2.name = "OVERRIDDEN";
+			}
+		}
+		this.cosmetics = this.cosmetics.Concat(this.overrideCosmetics).ToArray<GameObject>();
+		this.cosmeticsObjectRegistry.Initialize(this.cosmetics);
+		this.lastPosition = base.transform.position;
+		this.SharedStart();
+	}
+
+	private void Start()
+	{
+	}
+
+	private void EnsureInstantiatedMaterial()
+	{
+		if (this.didInstantiateMaterial)
+		{
+			return;
+		}
+		this.materialsToChangeTo[0] = Object.Instantiate<Material>(this.materialsToChangeTo[0]);
+		this.didInstantiateMaterial = true;
+	}
+
+	private void SharedStart()
+	{
+		if (this.isInitialized)
+		{
+			return;
+		}
+		this.isInitialized = true;
+		this.myBodyDockPositions = base.GetComponent<BodyDockPositions>();
+		this.reliableState.SharedStart(this.isOfflineVRRig, this.myBodyDockPositions);
+		Application.quitting += this.Quitting;
+		this.concatStringOfCosmeticsAllowed = "";
+		this.playerText.transform.parent.GetComponent<Canvas>().worldCamera = GorillaTagger.Instance.mainCamera.GetComponent<Camera>();
+		this.EnsureInstantiatedMaterial();
+		this.initialized = false;
+		this.currentState = TransferrableObject.PositionState.OnChest;
+		if (this.setMatIndex > -1 && this.setMatIndex < this.materialsToChangeTo.Length)
+		{
+			this.mainSkin.material = this.materialsToChangeTo[this.setMatIndex];
+		}
+		if (this.isOfflineVRRig)
+		{
+			CosmeticsController.instance.currentWornSet.LoadFromPlayerPreferences(CosmeticsController.instance);
+			if (Application.platform == RuntimePlatform.Android && this.spectatorSkin != null)
+			{
+				Object.Destroy(this.spectatorSkin);
+			}
+			base.StartCoroutine(this.OccasionalUpdate());
+		}
+		else if (!this.isOfflineVRRig)
+		{
+			if (this.spectatorSkin != null)
+			{
+				Object.Destroy(this.spectatorSkin);
+			}
+			this.head.syncPos = -this.headBodyOffset;
+		}
+		if (base.transform.parent == null)
+		{
+			base.transform.parent = GorillaParent.instance.transform;
+		}
+	}
+
+	private IEnumerator OccasionalUpdate()
+	{
+		for (;;)
+		{
+			try
+			{
+				if (RoomSystem.JoinedRoom && PhotonNetwork.IsMasterClient && GameMode.ActiveNetworkHandler.IsNull())
+				{
+					GameMode.LoadGameModeFromProperty();
+				}
+			}
+			catch
+			{
+			}
+			yield return new WaitForSeconds(1f);
+		}
+		yield break;
+	}
+
+	public bool IsItemAllowed(string itemName)
+	{
+		if (itemName == "Slingshot")
+		{
+			return PhotonNetwork.InRoom && GorillaGameManager.instance is GorillaBattleManager;
+		}
+		if (this.concatStringOfCosmeticsAllowed == null)
+		{
+			return false;
+		}
+		if (this.concatStringOfCosmeticsAllowed.Contains(itemName))
+		{
+			return true;
+		}
+		bool canTryOn = CosmeticsController.instance.GetItemFromDict(itemName).canTryOn;
+		return this.inTryOnRoom && canTryOn;
+	}
+
+	private void LateUpdate()
+	{
+		base.transform.localScale = Vector3.one * this.scaleFactor;
+		if (this.isOfflineVRRig)
+		{
+			if (GorillaGameManager.instance != null)
+			{
+				this.speedArray = GorillaGameManager.instance.LocalPlayerSpeed();
+				GorillaLocomotion.Player.Instance.jumpMultiplier = this.speedArray[1];
+				GorillaLocomotion.Player.Instance.maxJumpSpeed = this.speedArray[0];
+			}
+			else
+			{
+				GorillaLocomotion.Player.Instance.jumpMultiplier = 1.1f;
+				GorillaLocomotion.Player.Instance.maxJumpSpeed = 6.5f;
+			}
+			this.scaleFactor = GorillaLocomotion.Player.Instance.scale;
+			base.transform.localScale = Vector3.one * this.scaleFactor;
+			base.transform.eulerAngles = new Vector3(0f, this.mainCamera.transform.rotation.eulerAngles.y, 0f);
+			this.syncPos = this.mainCamera.transform.position + this.headConstraint.rotation * this.head.trackingPositionOffset * this.scaleFactor + base.transform.rotation * this.headBodyOffset * this.scaleFactor;
+			base.transform.position = this.syncPos;
+			this.head.MapMine(this.scaleFactor, this.playerOffsetTransform);
+			this.rightHand.MapMine(this.scaleFactor, this.playerOffsetTransform);
+			this.leftHand.MapMine(this.scaleFactor, this.playerOffsetTransform);
+			this.rightIndex.MapMyFinger(this.lerpValueFingers);
+			this.rightMiddle.MapMyFinger(this.lerpValueFingers);
+			this.rightThumb.MapMyFinger(this.lerpValueFingers);
+			this.leftIndex.MapMyFinger(this.lerpValueFingers);
+			this.leftMiddle.MapMyFinger(this.lerpValueFingers);
+			this.leftThumb.MapMyFinger(this.lerpValueFingers);
+			if (GorillaTagger.Instance.loadedDeviceName == "Oculus")
+			{
+				this.mainSkin.enabled = OVRManager.hasInputFocus;
+			}
+			this.mainSkin.enabled = !GorillaLocomotion.Player.Instance.inOverlay;
+		}
+		else
+		{
+			if (this.voiceAudio != null)
+			{
+				float num = (GorillaTagger.Instance.offlineVRRig.transform.localScale.x - base.transform.localScale.x) / this.pitchScale + this.pitchOffset;
+				float num2 = (this.UsingHauntedRing ? this.HauntedRingVoicePitch : num);
+				num2 = (this.IsHaunted ? this.HauntedVoicePitch : num2);
+				if (!Mathf.Approximately(this.voiceAudio.pitch, num2))
+				{
+					this.voiceAudio.pitch = num2;
+				}
+				bool isHaunted = GorillaTagger.Instance.offlineVRRig.IsHaunted;
+				if (isHaunted != this.playerWasHaunted)
+				{
+					if (isHaunted)
+					{
+						this.nonHauntedVolume = this.voiceAudio.volume;
+						this.voiceAudio.volume = this.HauntedHearingVolume;
+					}
+					else
+					{
+						this.voiceAudio.volume = this.nonHauntedVolume;
+					}
+					this.playerWasHaunted = isHaunted;
+				}
+			}
+			if (Time.time > this.timeSpawned + this.doNotLerpConstant)
+			{
+				base.transform.position = Vector3.Lerp(base.transform.position, this.syncPos, this.lerpValueBody * 0.66f);
+				if (this.currentRopeSwing && this.currentRopeSwingTarget)
+				{
+					Vector3 vector;
+					if (this.grabbedRopeIsLeft)
+					{
+						vector = this.currentRopeSwingTarget.position - this.leftHandTransform.position;
+					}
+					else
+					{
+						vector = this.currentRopeSwingTarget.position - this.rightHandTransform.position;
+					}
+					if (this.shouldLerpToRope)
+					{
+						base.transform.position += Vector3.Lerp(Vector3.zero, vector, this.lastRopeGrabTimer * 4f);
+						if (this.lastRopeGrabTimer < 1f)
+						{
+							this.lastRopeGrabTimer += Time.deltaTime;
+						}
+					}
+					else
+					{
+						base.transform.position += vector;
+					}
+				}
+				else if (this.currentHoldParent != null)
+				{
+					base.transform.position += this.currentHoldParent.TransformPoint(this.grabbedRopeOffset) - (this.grabbedRopeIsLeft ? this.leftHandTransform : this.rightHandTransform).position;
+				}
+			}
+			else
+			{
+				base.transform.position = this.syncPos;
+			}
+			base.transform.rotation = Quaternion.Lerp(base.transform.rotation, this.syncRotation, this.lerpValueBody);
+			base.transform.position = this.SanitizeVector3(base.transform.position);
+			base.transform.rotation = this.SanitizeQuaternion(base.transform.rotation);
+			this.head.syncPos = base.transform.rotation * -this.headBodyOffset * this.scaleFactor;
+			this.head.MapOther(this.lerpValueBody);
+			this.rightHand.MapOther(this.lerpValueBody);
+			this.leftHand.MapOther(this.lerpValueBody);
+			this.rightIndex.MapOtherFinger((float)(this.handSync % 10) / 10f, this.lerpValueFingers);
+			this.rightMiddle.MapOtherFinger((float)(this.handSync % 100) / 100f, this.lerpValueFingers);
+			this.rightThumb.MapOtherFinger((float)(this.handSync % 1000) / 1000f, this.lerpValueFingers);
+			this.leftIndex.MapOtherFinger((float)(this.handSync % 10000) / 10000f, this.lerpValueFingers);
+			this.leftMiddle.MapOtherFinger((float)(this.handSync % 100000) / 100000f, this.lerpValueFingers);
+			this.leftThumb.MapOtherFinger((float)(this.handSync % 1000000) / 1000000f, this.lerpValueFingers);
+			this.leftHandHoldableStatus = this.handSync % 10000000 / 1000000;
+			this.rightHandHoldableStatus = this.handSync % 100000000 / 10000000;
+		}
+		if (this.creator != null)
+		{
+			ScienceExperimentManager instance = ScienceExperimentManager.instance;
+			int num3;
+			if (instance != null && instance.GetMaterialIfPlayerInGame(this.creator.ActorNumber, out num3))
+			{
+				this.tempMatIndex = num3;
+			}
+			else
+			{
+				this.tempMatIndex = ((GorillaGameManager.instance != null) ? GorillaGameManager.instance.MyMatIndex(this.creator) : 0);
+			}
+			if (this.setMatIndex != this.tempMatIndex)
+			{
+				this.setMatIndex = this.tempMatIndex;
+				this.ChangeMaterialLocal(this.setMatIndex);
+			}
+		}
+	}
+
+	public void SetHeadBodyOffset()
+	{
+	}
+
+	public void VRRigResize(float ratioVar)
+	{
+		this.ratio *= ratioVar;
+	}
+
+	public int ReturnHandPosition()
+	{
+		return 0 + Mathf.FloorToInt(this.rightIndex.calcT * 9.99f) + Mathf.FloorToInt(this.rightMiddle.calcT * 9.99f) * 10 + Mathf.FloorToInt(this.rightThumb.calcT * 9.99f) * 100 + Mathf.FloorToInt(this.leftIndex.calcT * 9.99f) * 1000 + Mathf.FloorToInt(this.leftMiddle.calcT * 9.99f) * 10000 + Mathf.FloorToInt(this.leftThumb.calcT * 9.99f) * 100000 + this.leftHandHoldableStatus * 1000000 + this.rightHandHoldableStatus * 10000000;
+	}
+
+	public void OnDestroy()
+	{
+		if (this.currentRopeSwingTarget && this.currentRopeSwingTarget.gameObject)
+		{
+			Object.Destroy(this.currentRopeSwingTarget.gameObject);
+		}
+		if (this.isQuitting)
+		{
+			return;
+		}
+		this.ClearRopeData();
+	}
+
+	void IGorillaSerializeable.OnSerializeWrite(PhotonStream stream, PhotonMessageInfo info)
+	{
+		stream.SendNext(this.head.rigTarget.localRotation);
+		stream.SendNext(this.rightHand.rigTarget.localPosition);
+		stream.SendNext(this.rightHand.rigTarget.localRotation);
+		stream.SendNext(this.leftHand.rigTarget.localPosition);
+		stream.SendNext(this.leftHand.rigTarget.localRotation);
+		stream.SendNext(base.transform.position);
+		stream.SendNext(Mathf.RoundToInt(base.transform.rotation.eulerAngles.y));
+		stream.SendNext(this.ReturnHandPosition());
+		stream.SendNext(this.currentState);
+		stream.SendNext(this.grabbedRopeIndex);
+		if (this.grabbedRopeIndex > 0)
+		{
+			stream.SendNext(this.grabbedRopeBoneIndex);
+			stream.SendNext(this.grabbedRopeIsLeft);
+			stream.SendNext(this.grabbedRopeOffset);
+		}
+	}
+
+	void IGorillaSerializeable.OnSerializeRead(PhotonStream stream, PhotonMessageInfo info)
+	{
+		this.head.syncRotation = this.SanitizeQuaternion((Quaternion)stream.ReceiveNext());
+		this.rightHand.syncPos = this.SanitizeVector3((Vector3)stream.ReceiveNext());
+		this.rightHand.syncRotation = this.SanitizeQuaternion((Quaternion)stream.ReceiveNext());
+		this.leftHand.syncPos = this.SanitizeVector3((Vector3)stream.ReceiveNext());
+		this.leftHand.syncRotation = this.SanitizeQuaternion((Quaternion)stream.ReceiveNext());
+		this.syncPos = this.SanitizeVector3((Vector3)stream.ReceiveNext());
+		this.syncRotation.eulerAngles = this.SanitizeVector3(new Vector3(0f, (float)((int)stream.ReceiveNext()), 0f));
+		this.handSync = (int)stream.ReceiveNext();
+		this.currentState = (TransferrableObject.PositionState)stream.ReceiveNext();
+		this.lastPosition = this.syncPos;
+		this.grabbedRopeIndex = (int)stream.ReceiveNext();
+		if (this.grabbedRopeIndex > 0)
+		{
+			this.grabbedRopeBoneIndex = (int)stream.ReceiveNext();
+			this.grabbedRopeIsLeft = (bool)stream.ReceiveNext();
+			this.grabbedRopeOffset = this.SanitizeVector3((Vector3)stream.ReceiveNext());
+		}
+		this.UpdateRopeData();
+		this.AddVelocityToQueue(this.syncPos, info);
+	}
+
+	private void UpdateRopeData()
+	{
+		if (this.previousGrabbedRope == this.grabbedRopeIndex && this.previousGrabbedRopeBoneIndex == this.grabbedRopeBoneIndex && this.previousGrabbedRopeWasLeft == this.grabbedRopeIsLeft)
+		{
+			return;
+		}
+		this.ClearRopeData();
+		if (this.grabbedRopeIndex > 0)
+		{
+			PhotonView photonView = PhotonView.Find(this.grabbedRopeIndex);
+			GorillaRopeSwing gorillaRopeSwing;
+			GorillaClimbable gorillaClimbable;
+			if (photonView && photonView.TryGetComponent<GorillaRopeSwing>(out gorillaRopeSwing))
+			{
+				if (this.currentRopeSwingTarget == null || this.currentRopeSwingTarget.gameObject == null)
+				{
+					this.currentRopeSwingTarget = new GameObject("RopeSwingTarget").transform;
+				}
+				if (gorillaRopeSwing.AttachRemotePlayer(this.creator.ActorNumber, this.grabbedRopeBoneIndex, this.currentRopeSwingTarget, this.grabbedRopeOffset))
+				{
+					this.currentRopeSwing = gorillaRopeSwing;
+				}
+				this.lastRopeGrabTimer = 0f;
+			}
+			else if (photonView && photonView.TryGetComponent<GorillaClimbable>(out gorillaClimbable))
+			{
+				this.currentHoldParent = photonView.transform;
+			}
+		}
+		this.shouldLerpToRope = true;
+		this.previousGrabbedRope = this.grabbedRopeIndex;
+		this.previousGrabbedRopeBoneIndex = this.grabbedRopeBoneIndex;
+		this.previousGrabbedRopeWasLeft = this.grabbedRopeIsLeft;
+	}
+
+	public static void AttachLocalPlayerToPhotonView(PhotonView view, XRNode xrNode, Vector3 offset, Vector3 velocity)
+	{
+		if (GorillaTagger.hasInstance && GorillaTagger.Instance.offlineVRRig)
+		{
+			GorillaTagger.Instance.offlineVRRig.grabbedRopeIndex = view.ViewID;
+			GorillaTagger.Instance.offlineVRRig.grabbedRopeIsLeft = xrNode == XRNode.LeftHand;
+			GorillaTagger.Instance.offlineVRRig.grabbedRopeOffset = offset;
+		}
+	}
+
+	public static void DetachLocalPlayerFromPhotonView()
+	{
+		if (GorillaTagger.hasInstance && GorillaTagger.Instance.offlineVRRig)
+		{
+			GorillaTagger.Instance.offlineVRRig.grabbedRopeIndex = -1;
+		}
+	}
+
+	private void ClearRopeData()
+	{
+		if (this.currentRopeSwing)
+		{
+			this.currentRopeSwing.DetachRemotePlayer(this.creator.ActorNumber);
+		}
+		if (this.currentRopeSwingTarget)
+		{
+			this.currentRopeSwingTarget.SetParent(null);
+		}
+		this.currentRopeSwing = null;
+		this.currentHoldParent = null;
+	}
+
+	public void ChangeMaterial(int materialIndex, PhotonMessageInfo info)
+	{
+		if (info.Sender == PhotonNetwork.MasterClient)
+		{
+			this.ChangeMaterialLocal(materialIndex);
+		}
+	}
+
+	public void ChangeMaterialLocal(int materialIndex)
+	{
+		this.setMatIndex = materialIndex;
+		if (this.setMatIndex > -1 && this.setMatIndex < this.materialsToChangeTo.Length)
+		{
+			this.mainSkin.material = this.materialsToChangeTo[this.setMatIndex];
+		}
+		if (this.lavaParticleSystem != null)
+		{
+			if (!this.isOfflineVRRig && materialIndex == 2 && this.lavaParticleSystem.isStopped)
+			{
+				this.lavaParticleSystem.Play();
+			}
+			else if (!this.isOfflineVRRig && this.lavaParticleSystem.isPlaying)
+			{
+				this.lavaParticleSystem.Stop();
+			}
+		}
+		if (this.rockParticleSystem != null)
+		{
+			if (!this.isOfflineVRRig && materialIndex == 1 && this.rockParticleSystem.isStopped)
+			{
+				this.rockParticleSystem.Play();
+			}
+			else if (!this.isOfflineVRRig && this.rockParticleSystem.isPlaying)
+			{
+				this.rockParticleSystem.Stop();
+			}
+		}
+		if (this.iceParticleSystem != null)
+		{
+			if (!this.isOfflineVRRig && materialIndex == 3 && this.rockParticleSystem.isStopped)
+			{
+				this.iceParticleSystem.Play();
+				return;
+			}
+			if (!this.isOfflineVRRig && this.iceParticleSystem.isPlaying)
+			{
+				this.iceParticleSystem.Stop();
+			}
+		}
+	}
+
+	[PunRPC]
+	public void InitializeNoobMaterial(float red, float green, float blue, bool leftHanded, PhotonMessageInfo info)
+	{
+		this.IncrementRPC(info, "InitializeNoobMaterial");
+		if (info.Sender == this.photonView.Owner && (!this.initialized || (this.initialized && GorillaComputer.instance.friendJoinCollider.playerIDsCurrentlyTouching.Contains(info.Sender.UserId))))
+		{
+			this.initialized = true;
+			red = Mathf.Clamp(red, 0f, 1f);
+			green = Mathf.Clamp(green, 0f, 1f);
+			blue = Mathf.Clamp(blue, 0f, 1f);
+			this.InitializeNoobMaterialLocal(red, green, blue, leftHanded);
+		}
+		else
+		{
+			GorillaNot.instance.SendReport("inappropriate tag data being sent init noob", info.Sender.UserId, info.Sender.NickName);
+		}
+		this.playerLeftHanded = leftHanded;
+	}
+
+	public void InitializeNoobMaterialLocal(float red, float green, float blue, bool leftHanded)
+	{
+		Color color = new Color(red, green, blue);
+		this.EnsureInstantiatedMaterial();
+		this.materialsToChangeTo[0].color = color;
+		if (this.photonView != null)
+		{
+			this.playerText.text = this.NormalizeName(true, this.photonView.Owner.NickName);
+		}
+		else if (this.showName)
+		{
+			this.playerText.text = PlayerPrefs.GetString("playerName");
+		}
+		this.SetColor(color);
+	}
+
+	public string NormalizeName(bool doIt, string text)
+	{
+		if (doIt)
+		{
+			if (GorillaComputer.instance.CheckAutoBanListForName(text))
+			{
+				text = new string(Array.FindAll<char>(text.ToCharArray(), (char c) => char.IsLetterOrDigit(c)));
+				if (text.Length > 12)
+				{
+					text = text.Substring(0, 11);
+				}
+				text = text.ToUpper();
+			}
+			else
+			{
+				text = "BADGORILLA";
+			}
+		}
+		return text;
+	}
+
+	public void SetJumpLimitLocal(float maxJumpSpeed)
+	{
+		GorillaLocomotion.Player.Instance.maxJumpSpeed = maxJumpSpeed;
+	}
+
+	public void SetJumpMultiplierLocal(float jumpMultiplier)
+	{
+		GorillaLocomotion.Player.Instance.jumpMultiplier = jumpMultiplier;
+	}
+
+	[PunRPC]
+	public void RequestMaterialColor(Photon.Realtime.Player askingPlayer, bool noneBool, PhotonMessageInfo info)
+	{
+		this.IncrementRPC(info, "RequestMaterialColor");
+		if (this.photonView.IsMine)
+		{
+			this.photonView.RPC("InitializeNoobMaterial", info.Sender, new object[]
+			{
+				this.materialsToChangeTo[0].color.r,
+				this.materialsToChangeTo[0].color.g,
+				this.materialsToChangeTo[0].color.b,
+				GorillaComputer.instance.leftHanded
+			});
+		}
+	}
+
+	[PunRPC]
+	public void RequestCosmetics(PhotonMessageInfo info)
+	{
+		this.IncrementRPC(info, "RequestCosmetics");
+		if (this.photonView.IsMine && CosmeticsController.instance != null)
+		{
+			string[] array = CosmeticsController.instance.currentWornSet.ToDisplayNameArray();
+			string[] array2 = CosmeticsController.instance.tryOnSet.ToDisplayNameArray();
+			this.photonView.RPC("UpdateCosmeticsWithTryon", info.Sender, new object[] { array, array2 });
+		}
+	}
+
+	public void PlayTagSoundLocal(int soundIndex, float soundVolume)
+	{
+		if (soundIndex < 0 || soundIndex >= this.clipToPlay.Length)
+		{
+			return;
+		}
+		this.tagSound.volume = Mathf.Max(0.25f, soundVolume);
+		this.tagSound.PlayOneShot(this.clipToPlay[soundIndex]);
+	}
+
+	public void Bonk(int soundIndex, float bonkPercent, PhotonMessageInfo info)
+	{
+		if (info.Sender == this.photonView.Owner)
+		{
+			if (this.bonkTime + this.bonkCooldown < Time.time)
+			{
+				this.bonkTime = Time.time;
+				this.tagSound.volume = bonkPercent * 0.25f;
+				this.tagSound.PlayOneShot(this.clipToPlay[soundIndex]);
+				if (this.photonView.IsMine)
+				{
+					GorillaTagger.Instance.StartVibration(true, GorillaTagger.Instance.taggedHapticStrength, GorillaTagger.Instance.taggedHapticDuration);
+					GorillaTagger.Instance.StartVibration(false, GorillaTagger.Instance.taggedHapticStrength, GorillaTagger.Instance.taggedHapticDuration);
+					return;
+				}
+			}
+		}
+		else
+		{
+			GorillaNot.instance.SendReport("inappropriate tag data being sent bonk", info.Sender.UserId, info.Sender.NickName);
+		}
+	}
+
+	[PunRPC]
+	public void PlayDrum(int drumIndex, float drumVolume, PhotonMessageInfo info)
+	{
+		this.IncrementRPC(info, "PlayDrum");
+		this.senderRig = GorillaGameManager.StaticFindRigForPlayer(info.Sender);
+		if (this.senderRig == null || this.senderRig.muted)
+		{
+			return;
+		}
+		if (drumIndex < 0 || drumIndex >= this.musicDrums.Length || (this.senderRig.transform.position - base.transform.position).sqrMagnitude > 9f)
+		{
+			GorillaNot.instance.SendReport("inappropriate tag data being sent drum", info.Sender.UserId, info.Sender.NickName);
+			return;
+		}
+		AudioSource audioSource = (this.photonView.IsMine ? GorillaTagger.Instance.offlineVRRig.musicDrums[drumIndex] : this.musicDrums[drumIndex]);
+		if (!audioSource.gameObject.activeSelf)
+		{
+			return;
+		}
+		float instrumentVolume = GorillaComputer.instance.instrumentVolume;
+		audioSource.time = 0f;
+		audioSource.volume = Mathf.Max(Mathf.Min(instrumentVolume, drumVolume * instrumentVolume), 0f);
+		audioSource.Play();
+	}
+
+	[PunRPC]
+	public void PlaySelfOnlyInstrument(int selfOnlyIndex, int noteIndex, float instrumentVol, PhotonMessageInfo info)
+	{
+		this.IncrementRPC(info, "PlaySelfOnlyInstrument");
+		if (info.Sender == this.photonView.Owner && !this.muted)
+		{
+			if (selfOnlyIndex >= 0 && selfOnlyIndex < this.instrumentSelfOnly.Length && info.Sender == this.photonView.Owner)
+			{
+				if (this.instrumentSelfOnly[selfOnlyIndex].gameObject.activeSelf)
+				{
+					this.instrumentSelfOnly[selfOnlyIndex].PlayNote(noteIndex, Mathf.Max(Mathf.Min(GorillaComputer.instance.instrumentVolume, instrumentVol * GorillaComputer.instance.instrumentVolume), 0f) / 2f);
+					return;
+				}
+			}
+			else
+			{
+				GorillaNot.instance.SendReport("inappropriate tag data being sent self only instrument", info.Sender.UserId, info.Sender.NickName);
+			}
+		}
+	}
+
+	public void PlayHandTapLocal(int soundIndex, bool isLeftHand, float tapVolume)
+	{
+		if (soundIndex > -1 && soundIndex < GorillaLocomotion.Player.Instance.materialData.Count)
+		{
+			if (isLeftHand)
+			{
+				this.leftHandPlayer.volume = tapVolume;
+				this.leftHandPlayer.clip = (GorillaLocomotion.Player.Instance.materialData[soundIndex].overrideAudio ? GorillaLocomotion.Player.Instance.materialData[soundIndex].audio : GorillaLocomotion.Player.Instance.materialData[0].audio);
+				this.leftHandPlayer.PlayOneShot(this.leftHandPlayer.clip);
+				return;
+			}
+			this.rightHandPlayer.volume = tapVolume;
+			this.rightHandPlayer.clip = (GorillaLocomotion.Player.Instance.materialData[soundIndex].overrideAudio ? GorillaLocomotion.Player.Instance.materialData[soundIndex].audio : GorillaLocomotion.Player.Instance.materialData[0].audio);
+			this.rightHandPlayer.PlayOneShot(this.rightHandPlayer.clip);
+		}
+	}
+
+	[PunRPC]
+	public void PlaySplashEffect(Vector3 splashPosition, Quaternion splashRotation, float splashScale, float boundingRadius, bool bigSplash, bool enteringWater, PhotonMessageInfo info)
+	{
+		this.IncrementRPC(info, "PlaySplashEffect");
+		if (info.Sender == this.photonView.Owner && (splashPosition).IsValid() && (splashRotation).IsValid() && float.IsFinite(splashScale) && float.IsFinite(boundingRadius))
+		{
+			if ((base.transform.position - splashPosition).sqrMagnitude < 9f)
+			{
+				float time = Time.time;
+				int num = -1;
+				float num2 = time + 10f;
+				for (int i = 0; i < this.splashEffectTimes.Length; i++)
+				{
+					if (this.splashEffectTimes[i] < num2)
+					{
+						num2 = this.splashEffectTimes[i];
+						num = i;
+					}
+				}
+				if (time - 0.5f > num2)
+				{
+					this.splashEffectTimes[num] = time;
+					boundingRadius = Mathf.Clamp(boundingRadius, 0.0001f, 0.5f);
+					ObjectPools.instance.Instantiate(GorillaLocomotion.Player.Instance.waterParams.rippleEffect, splashPosition, splashRotation, GorillaLocomotion.Player.Instance.waterParams.rippleEffectScale * boundingRadius * 2f);
+					splashScale = Mathf.Clamp(splashScale, 1E-05f, 1f);
+					ObjectPools.instance.Instantiate(GorillaLocomotion.Player.Instance.waterParams.splashEffect, splashPosition, splashRotation, splashScale).GetComponent<WaterSplashEffect>().PlayEffect(bigSplash, enteringWater, splashScale, null);
+					return;
+				}
+			}
+		}
+		else
+		{
+			GorillaNot.instance.SendReport("inappropriate tag data being sent splash effect", info.Sender.UserId, info.Sender.NickName);
+		}
+	}
+
+	public void PlayGeodeEffect(Vector3 hitPosition)
+	{
+		if ((base.transform.position - hitPosition).sqrMagnitude < 9f && this.geodeCrackingSound)
+		{
+			this.geodeCrackingSound.Play();
+		}
+	}
+
+	public void PlayClimbSound(AudioClip clip, bool isLeftHand)
+	{
+		if (isLeftHand)
+		{
+			this.leftHandPlayer.volume = 0.1f;
+			this.leftHandPlayer.clip = clip;
+			this.leftHandPlayer.PlayOneShot(this.leftHandPlayer.clip);
+			return;
+		}
+		this.rightHandPlayer.volume = 0.1f;
+		this.rightHandPlayer.clip = clip;
+		this.rightHandPlayer.PlayOneShot(this.rightHandPlayer.clip);
+	}
+
+	[PunRPC]
+	public void UpdateCosmetics(string[] currentItems, PhotonMessageInfo info)
+	{
+		this.IncrementRPC(info, "UpdateCosmetics");
+		if (info.Sender == this.photonView.Owner)
+		{
+			CosmeticsController.CosmeticSet cosmeticSet = new CosmeticsController.CosmeticSet(currentItems, CosmeticsController.instance);
+			this.LocalUpdateCosmetics(cosmeticSet);
+			return;
+		}
+		GorillaNot.instance.SendReport("inappropriate tag data being sent update cosmetics", info.Sender.UserId, info.Sender.NickName);
+	}
+
+	[PunRPC]
+	public void UpdateCosmeticsWithTryon(string[] currentItems, string[] tryOnItems, PhotonMessageInfo info)
+	{
+		this.IncrementRPC(info, "UpdateCosmeticsWithTryon");
+		if (info.Sender == this.photonView.Owner)
+		{
+			CosmeticsController.CosmeticSet cosmeticSet = new CosmeticsController.CosmeticSet(currentItems, CosmeticsController.instance);
+			CosmeticsController.CosmeticSet cosmeticSet2 = new CosmeticsController.CosmeticSet(tryOnItems, CosmeticsController.instance);
+			this.LocalUpdateCosmeticsWithTryon(cosmeticSet, cosmeticSet2);
+			return;
+		}
+		GorillaNot.instance.SendReport("inappropriate tag data being sent update cosmetics with tryon", info.Sender.UserId, info.Sender.NickName);
+	}
+
+	public void LocalUpdateCosmetics(CosmeticsController.CosmeticSet newSet)
+	{
+		this.cosmeticSet = newSet;
+		if (this.initializedCosmetics)
+		{
+			this.SetCosmeticsActive();
+		}
+	}
+
+	public void LocalUpdateCosmeticsWithTryon(CosmeticsController.CosmeticSet newSet, CosmeticsController.CosmeticSet newTryOnSet)
+	{
+		this.cosmeticSet = newSet;
+		this.tryOnSet = newTryOnSet;
+		if (this.initializedCosmetics)
+		{
+			this.SetCosmeticsActive();
+		}
+	}
+
+	private void CheckForEarlyAccess()
+	{
+		if (this.concatStringOfCosmeticsAllowed.Contains("Early Access Supporter Pack"))
+		{
+			this.concatStringOfCosmeticsAllowed += "LBAAE.LFAAM.LFAAN.LHAAA.LHAAK.LHAAL.LHAAM.LHAAN.LHAAO.LHAAP.LHABA.LHABB.";
+		}
+		this.initializedCosmetics = true;
+	}
+
+	public void SetCosmeticsActive()
+	{
+		if (CosmeticsController.instance == null)
+		{
+			return;
+		}
+		this.prevSet.CopyItems(this.mergedSet);
+		this.mergedSet.MergeSets(this.inTryOnRoom ? this.tryOnSet : null, this.cosmeticSet);
+		BodyDockPositions component = base.GetComponent<BodyDockPositions>();
+		this.mergedSet.ActivateCosmetics(this.prevSet, this, component, CosmeticsController.instance.nullItem, this.cosmeticsObjectRegistry);
+	}
+
+	public void GetUserCosmeticsAllowed()
+	{
+		if (CosmeticsController.instance != null)
+		{
+			PlayFabClientAPI.GetUserInventory(new GetUserInventoryRequest(), delegate(GetUserInventoryResult result)
+			{
+				foreach (ItemInstance itemInstance in result.Inventory)
+				{
+					if (itemInstance.CatalogVersion == CosmeticsController.instance.catalog)
+					{
+						this.concatStringOfCosmeticsAllowed += itemInstance.ItemId;
+					}
+				}
+				Debug.Log("successful result. allowed cosmetics are: " + this.concatStringOfCosmeticsAllowed);
+				this.CheckForEarlyAccess();
+				this.SetCosmeticsActive();
+			}, delegate(PlayFabError error)
+			{
+				Debug.Log("Got error retrieving user data:");
+				Debug.Log(error.GenerateErrorReport());
+				this.initializedCosmetics = true;
+				this.SetCosmeticsActive();
+			}, null, null);
+		}
+		this.concatStringOfCosmeticsAllowed += "Slingshot";
+	}
+
+	private void Quitting()
+	{
+		this.isQuitting = true;
+	}
+
+	public void GenerateFingerAngleLookupTables()
+	{
+		this.GenerateTableIndex(ref this.leftIndex);
+		this.GenerateTableIndex(ref this.rightIndex);
+		this.GenerateTableMiddle(ref this.leftMiddle);
+		this.GenerateTableMiddle(ref this.rightMiddle);
+		this.GenerateTableThumb(ref this.leftThumb);
+		this.GenerateTableThumb(ref this.rightThumb);
+	}
+
+	private void GenerateTableThumb(ref VRMapThumb thumb)
+	{
+		thumb.angle1Table = new Quaternion[11];
+		thumb.angle2Table = new Quaternion[11];
+		for (int i = 0; i < thumb.angle1Table.Length; i++)
+		{
+			Debug.Log((float)i / 10f);
+			thumb.angle1Table[i] = Quaternion.Lerp(Quaternion.Euler(thumb.startingAngle1), Quaternion.Euler(thumb.closedAngle1), (float)i / 10f);
+			thumb.angle2Table[i] = Quaternion.Lerp(Quaternion.Euler(thumb.startingAngle2), Quaternion.Euler(thumb.closedAngle2), (float)i / 10f);
+		}
+	}
+
+	private void GenerateTableIndex(ref VRMapIndex index)
+	{
+		index.angle1Table = new Quaternion[11];
+		index.angle2Table = new Quaternion[11];
+		index.angle3Table = new Quaternion[11];
+		for (int i = 0; i < index.angle1Table.Length; i++)
+		{
+			index.angle1Table[i] = Quaternion.Lerp(Quaternion.Euler(index.startingAngle1), Quaternion.Euler(index.closedAngle1), (float)i / 10f);
+			index.angle2Table[i] = Quaternion.Lerp(Quaternion.Euler(index.startingAngle2), Quaternion.Euler(index.closedAngle2), (float)i / 10f);
+			index.angle3Table[i] = Quaternion.Lerp(Quaternion.Euler(index.startingAngle3), Quaternion.Euler(index.closedAngle3), (float)i / 10f);
+		}
+	}
+
+	private void GenerateTableMiddle(ref VRMapMiddle middle)
+	{
+		middle.angle1Table = new Quaternion[11];
+		middle.angle2Table = new Quaternion[11];
+		middle.angle3Table = new Quaternion[11];
+		for (int i = 0; i < middle.angle1Table.Length; i++)
+		{
+			middle.angle1Table[i] = Quaternion.Lerp(Quaternion.Euler(middle.startingAngle1), Quaternion.Euler(middle.closedAngle1), (float)i / 10f);
+			middle.angle2Table[i] = Quaternion.Lerp(Quaternion.Euler(middle.startingAngle2), Quaternion.Euler(middle.closedAngle2), (float)i / 10f);
+			middle.angle3Table[i] = Quaternion.Lerp(Quaternion.Euler(middle.startingAngle3), Quaternion.Euler(middle.closedAngle3), (float)i / 10f);
+		}
+	}
+
+	private Quaternion SanitizeQuaternion(Quaternion quat)
+	{
+		if (float.IsNaN(quat.w) || float.IsNaN(quat.x) || float.IsNaN(quat.y) || float.IsNaN(quat.z) || float.IsInfinity(quat.w) || float.IsInfinity(quat.x) || float.IsInfinity(quat.y) || float.IsInfinity(quat.z))
+		{
+			return Quaternion.identity;
+		}
+		return quat;
+	}
+
+	private Vector3 SanitizeVector3(Vector3 vec)
+	{
+		if (float.IsNaN(vec.x) || float.IsNaN(vec.y) || float.IsNaN(vec.z) || float.IsInfinity(vec.x) || float.IsInfinity(vec.y) || float.IsInfinity(vec.z))
+		{
+			return Vector3.zero;
+		}
+		return Vector3.ClampMagnitude(vec, 1000f);
+	}
+
+	private void IncrementRPC(PhotonMessageInfo info, string sourceCall)
+	{
+		if (GorillaGameManager.instance != null)
+		{
+			GorillaNot.IncrementRPCCall(info, sourceCall);
+		}
+	}
+
+	private void AddVelocityToQueue(Vector3 position, PhotonMessageInfo info)
+	{
+		Vector3 vector;
+		if (this.velocityHistoryList.Count == 0)
+		{
+			vector = Vector3.zero;
+			this.lastPosition = position;
+		}
+		else
+		{
+			vector = (position - this.lastPosition) / (float)(info.SentServerTime - this.velocityHistoryList[0].time);
+		}
+		this.velocityHistoryList.Insert(0, new VRRig.VelocityTime(vector, info.SentServerTime));
+		if (this.velocityHistoryList.Count > this.velocityHistoryMaxLength)
+		{
+			this.velocityHistoryList.RemoveRange(this.velocityHistoryMaxLength, this.velocityHistoryList.Count - this.velocityHistoryMaxLength);
+		}
+	}
+
+	private Vector3 ReturnVelocityAtTime(double timeToReturn)
+	{
+		if (this.velocityHistoryList.Count <= 1)
+		{
+			return Vector3.zero;
+		}
+		int num = 0;
+		int num2 = this.velocityHistoryList.Count - 1;
+		int num3 = 0;
+		if (num2 == num)
+		{
+			return this.velocityHistoryList[num].vel;
+		}
+		while (num2 - num > 1 && num3 < 1000)
+		{
+			num3++;
+			int num4 = (num2 - num) / 2;
+			if (this.velocityHistoryList[num4].time > timeToReturn)
+			{
+				num2 = num4;
+			}
+			else
+			{
+				num = num4;
+			}
+		}
+		float num5 = (float)(this.velocityHistoryList[num].time - timeToReturn);
+		double num6 = this.velocityHistoryList[num].time - this.velocityHistoryList[num2].time;
+		if (num6 == 0.0)
+		{
+			num6 = 0.001;
+		}
+		num5 /= (float)num6;
+		num5 = Mathf.Clamp(num5, 0f, 1f);
+		return Vector3.Lerp(this.velocityHistoryList[num].vel, this.velocityHistoryList[num2].vel, num5);
+	}
+
+	public bool CheckDistance(Vector3 position, float max)
+	{
+		max = max * max * this.scaleFactor;
+		return Vector3.SqrMagnitude(this.syncPos - position) < max;
+	}
+
+	public void SetColor(Color color)
+	{
+		Action<Color> action = this.onColorInitialized;
+		if (action != null)
+		{
+			action(color);
+		}
+		this.onColorInitialized = delegate(Color color1)
+		{
+		};
+		this.colorInitialized = true;
+		this.playerColor = color;
+	}
+
+	public void OnColorInitialized(Action<Color> action)
+	{
+		if (this.colorInitialized)
+		{
+			action(this.playerColor);
+			return;
+		}
+		this.onColorInitialized = (Action<Color>)Delegate.Combine(this.onColorInitialized, action);
+	}
+
+	private void OnEnable()
+	{
+		if (this.currentRopeSwingTarget != null)
+		{
+			this.currentRopeSwingTarget.SetParent(null);
+		}
+		if (!this.isOfflineVRRig)
+		{
+			PlayerCosmeticsSystem.RegisterCosmeticCallback(this.creator.ActorNumber, this);
+		}
+	}
+
+	void IPreDisable.PreDisable()
+	{
+		this.ClearRopeData();
+		if (this.currentRopeSwingTarget)
+		{
+			this.currentRopeSwingTarget.SetParent(base.transform);
+		}
+		this.EnableHuntWatch(false);
+		this.EnableBattleCosmetics(false);
+		this.concatStringOfCosmeticsAllowed = "";
+		this.rawCosmeticString = "";
+		if (this.cosmeticSet != null)
+		{
+			this.mergedSet.DeactivateAllCosmetcs(this.myBodyDockPositions, CosmeticsController.instance.nullItem, this.cosmeticsObjectRegistry);
+			this.mergedSet.ClearSet(CosmeticsController.instance.nullItem);
+			this.prevSet.ClearSet(CosmeticsController.instance.nullItem);
+			this.tryOnSet.ClearSet(CosmeticsController.instance.nullItem);
+			this.cosmeticSet.ClearSet(CosmeticsController.instance.nullItem);
+		}
+		if (!this.isOfflineVRRig)
+		{
+			PlayerCosmeticsSystem.RemoveCosmeticCallback(this.creator.ActorNumber);
+			this.pendingCosmeticUpdate = true;
+		}
+	}
+
+	private void OnDisable()
+	{
+		this.initialized = false;
+		this.muted = false;
+		this.photonView = null;
+		this.voiceAudio = null;
+		this.tempRig = null;
+		this.timeSpawned = 0f;
+		this.initializedCosmetics = false;
+		this.velocityHistoryList.Clear();
+		this.tempMatIndex = 0;
+		this.setMatIndex = 0;
+		this.ChangeMaterialLocal(this.setMatIndex);
+		this.currentCosmeticTries = 0;
+		this.creator = null;
+		try
+		{
+			CallLimitType<CallLimiter>[] callSettings = this.fxSettings.callSettings;
+			for (int i = 0; i < callSettings.Length; i++)
+			{
+				callSettings[i].CallLimitSettings.Reset();
+			}
+		}
+		catch
+		{
+			Debug.LogError("fxtype missing in fxSettings, please fix or remove this");
+		}
+	}
+
+	public void NetInitialize()
+	{
+		this.timeSpawned = Time.time;
+		if (PhotonNetwork.InRoom)
+		{
+			GorillaGameManager instance = GorillaGameManager.instance;
+			object obj;
+			if (instance != null)
+			{
+				if (instance is GorillaHuntManager || instance.GameModeName() == "HUNT")
+				{
+					this.EnableHuntWatch(true);
+				}
+				else if (instance is GorillaBattleManager || instance.GameModeName() == "BATTLE")
+				{
+					this.EnableBattleCosmetics(true);
+				}
+			}
+			else if (PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue("gameMode", out obj))
+			{
+				string text = obj.ToString();
+				if (text.Contains("HUNT"))
+				{
+					this.EnableHuntWatch(true);
+				}
+				else if (text.Contains("BATTLE"))
+				{
+					this.EnableBattleCosmetics(true);
+				}
+			}
+		}
+		if (this.photonView != null)
+		{
+			base.transform.position = this.photonView.gameObject.transform.position;
+			base.transform.rotation = this.photonView.gameObject.transform.rotation;
+		}
+		try
+		{
+			Action action = VRRig.newPlayerJoined;
+			if (action != null)
+			{
+				action();
+			}
+		}
+		catch (Exception ex)
+		{
+			Debug.LogError(ex);
+		}
+	}
+
+	public void EnableHuntWatch(bool on)
+	{
+		this.huntComputer.SetActive(on);
+	}
+
+	public void EnableBattleCosmetics(bool on)
+	{
+		this.battleBalloons.gameObject.SetActive(on);
+	}
+
+	bool IUserCosmeticsCallback.PendingUpdate
+	{
+		get
+		{
+			return this.pendingCosmeticUpdate;
+		}
+		set
+		{
+			this.pendingCosmeticUpdate = value;
+		}
+	}
+
+	bool IUserCosmeticsCallback.OnGetUserCosmetics(string cosmetics)
+	{
+		if (cosmetics == this.rawCosmeticString && this.currentCosmeticTries < this.cosmeticRetries)
+		{
+			this.currentCosmeticTries++;
+			return false;
+		}
+		this.rawCosmeticString = cosmetics ?? "";
+		this.concatStringOfCosmeticsAllowed = this.rawCosmeticString;
+		this.initializedCosmetics = true;
+		this.currentCosmeticTries = 0;
+		this.CheckForEarlyAccess();
+		this.SetCosmeticsActive();
+		this.myBodyDockPositions.RefreshTransferrableItems();
+		PhotonView photonView = this.photonView;
+		if (photonView != null)
+		{
+			photonView.RPC("RequestCosmetics", this.photonView.Owner, Array.Empty<object>());
+		}
+		return true;
+	}
+
+	GuidedRefTargetIdSO IGuidedRefTarget.GuidedRefTargetId
+	{
+		get
+		{
+			this.guidedRefTargetInfo.targetId == null;
+			return this.guidedRefTargetInfo.targetId;
+		}
+	}
+
+	Object IGuidedRefTarget.GuidedRefTargetObject
+	{
+		get
+		{
+			return this;
+		}
+	}
+
+	public void GuidedRefInitialize()
+	{
+		GuidedRefRelayHub.RegisterTargetWithParentRelays(this, this.guidedRefTargetInfo.hubIds, this);
+	}
+
+	Transform IGuidedRefMonoBehaviour.get_transform()
+	{
+		return base.transform;
+	}
+
+	int IGuidedRefObject.GetInstanceID()
+	{
+		return base.GetInstanceID();
+	}
+
+	public static Action newPlayerJoined;
+
+	public GuidedRefBasicTargetInfo guidedRefTargetInfo;
 
 	public VRMap head;
 
@@ -61,6 +1401,8 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPunInstantiateMagicC
 	private bool previousGrabbedRopeWasLeft;
 
 	private GorillaRopeSwing currentRopeSwing;
+
+	private Transform currentHoldParent;
 
 	private Transform currentRopeSwingTarget;
 
@@ -171,15 +1513,32 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPunInstantiateMagicC
 
 	public CosmeticsController.CosmeticSet prevSet;
 
+	private int cosmeticRetries = 2;
+
+	private int currentCosmeticTries;
+
 	public SizeManager sizeManager;
 
 	public float pitchScale = 0.3f;
 
 	public float pitchOffset = 1f;
 
+	[NonSerialized]
+	public bool IsHaunted;
+
+	public float HauntedVoicePitch = 0.5f;
+
+	public float HauntedHearingVolume = 0.15f;
+
+	[NonSerialized]
+	public bool UsingHauntedRing;
+
+	[NonSerialized]
+	public float HauntedRingVoicePitch;
+
 	public VRRigReliableState reliableState;
 
-	public static readonly GTBitOps.BitWriteInfo[] WearablePackedStatesBitWriteInfos = new GTBitOps.BitWriteInfo[3]
+	public static readonly GTBitOps.BitWriteInfo[] WearablePackedStatesBitWriteInfos = new GTBitOps.BitWriteInfo[]
 	{
 		new GTBitOps.BitWriteInfo(0, 1),
 		new GTBitOps.BitWriteInfo(1, 2),
@@ -266,7 +1625,7 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPunInstantiateMagicC
 
 	private bool isInitialized;
 
-	private List<VelocityTime> velocityHistoryList = new List<VelocityTime>();
+	private List<VRRig.VelocityTime> velocityHistoryList = new List<VRRig.VelocityTime>();
 
 	public int velocityHistoryMaxLength = 200;
 
@@ -289,7 +1648,11 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPunInstantiateMagicC
 	[NonSerialized]
 	public FXSystemSettings fxSettings;
 
-	public static Action newPlayerJoined;
+	private bool didInstantiateMaterial;
+
+	private bool playerWasHaunted;
+
+	private float nonHauntedVolume;
 
 	public Color playerColor;
 
@@ -297,1411 +1660,27 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPunInstantiateMagicC
 
 	private Action<Color> onColorInitialized;
 
-	public int WearablePackedStates
-	{
-		get
-		{
-			return reliableState.wearablesPackedStates;
-		}
-		set
-		{
-			if (reliableState.wearablesPackedStates != value)
-			{
-				reliableState.wearablesPackedStates = value;
-				reliableState.SetIsDirty();
-			}
-		}
-	}
-
-	public int LeftThrowableProjectileIndex
-	{
-		get
-		{
-			return reliableState.lThrowableProjectileIndex;
-		}
-		set
-		{
-			if (reliableState.lThrowableProjectileIndex != value)
-			{
-				reliableState.lThrowableProjectileIndex = value;
-				reliableState.SetIsDirty();
-			}
-		}
-	}
-
-	public int RightThrowableProjectileIndex
-	{
-		get
-		{
-			return reliableState.rThrowableProjectileIndex;
-		}
-		set
-		{
-			if (reliableState.rThrowableProjectileIndex != value)
-			{
-				reliableState.rThrowableProjectileIndex = value;
-				reliableState.SetIsDirty();
-			}
-		}
-	}
-
-	public Color LeftThrowableProjectileColor
-	{
-		get
-		{
-			return reliableState.lThrowableProjectileColor;
-		}
-		set
-		{
-			if (!reliableState.lThrowableProjectileColor.CompareAs255Unclamped(value))
-			{
-				reliableState.lThrowableProjectileColor = value;
-				reliableState.SetIsDirty();
-			}
-		}
-	}
-
-	public Color RightThrowableProjectileColor
-	{
-		get
-		{
-			return reliableState.rThrowableProjectileColor;
-		}
-		set
-		{
-			if (!reliableState.rThrowableProjectileColor.CompareAs255Unclamped(value))
-			{
-				reliableState.rThrowableProjectileColor = value;
-				reliableState.SetIsDirty();
-			}
-		}
-	}
-
-	public int SizeLayerMask
-	{
-		get
-		{
-			return reliableState.sizeLayerMask;
-		}
-		set
-		{
-			if (reliableState.sizeLayerMask != value)
-			{
-				reliableState.sizeLayerMask = value;
-				reliableState.SetIsDirty();
-			}
-		}
-	}
-
-	public int ActiveTransferrableObjectIndex(int idx)
-	{
-		return reliableState.activeTransferrableObjectIndex[idx];
-	}
-
-	public int ActiveTransferrableObjectIndexLength()
-	{
-		return reliableState.activeTransferrableObjectIndex.Length;
-	}
-
-	public void SetActiveTransferrableObjectIndex(int idx, int v)
-	{
-		if (reliableState.activeTransferrableObjectIndex[idx] != v)
-		{
-			reliableState.activeTransferrableObjectIndex[idx] = v;
-			reliableState.SetIsDirty();
-		}
-	}
-
-	public TransferrableObject.PositionState TransferrablePosStates(int idx)
-	{
-		return reliableState.transferrablePosStates[idx];
-	}
-
-	public void SetTransferrablePosStates(int idx, TransferrableObject.PositionState v)
-	{
-		if (reliableState.transferrablePosStates[idx] != v)
-		{
-			reliableState.transferrablePosStates[idx] = v;
-			reliableState.SetIsDirty();
-		}
-	}
-
-	public TransferrableObject.ItemStates TransferrableItemStates(int idx)
-	{
-		return reliableState.transferrableItemStates[idx];
-	}
-
-	public void SetTransferrableItemStates(int idx, TransferrableObject.ItemStates v)
-	{
-		if (reliableState.transferrableItemStates[idx] != v)
-		{
-			reliableState.transferrableItemStates[idx] = v;
-			reliableState.SetIsDirty();
-		}
-	}
-
-	public void SetTransferrableDockPosition(int idx, BodyDockPositions.DropPositions v)
-	{
-		if (reliableState.transferableDockPositions[idx] != v)
-		{
-			reliableState.transferableDockPositions[idx] = v;
-			reliableState.SetIsDirty();
-		}
-	}
-
-	public BodyDockPositions.DropPositions TransferrableDockPosition(int idx)
-	{
-		return reliableState.transferableDockPositions[idx];
-	}
-
-	public Color GetThrowableProjectileColor(bool isLeftHand)
-	{
-		if (!isLeftHand)
-		{
-			return RightThrowableProjectileColor;
-		}
-		return LeftThrowableProjectileColor;
-	}
-
-	public void SetThrowableProjectileColor(bool isLeftHand, Color color)
-	{
-		if (isLeftHand)
-		{
-			LeftThrowableProjectileColor = color;
-		}
-		else
-		{
-			RightThrowableProjectileColor = color;
-		}
-	}
-
-	private void Awake()
-	{
-		fxSettings = UnityEngine.Object.Instantiate(sharedFXSettings);
-		fxSettings.forLocalRig = isOfflineVRRig;
-		Dictionary<string, GameObject> dictionary = new Dictionary<string, GameObject>();
-		GameObject[] array = cosmetics;
-		GameObject value;
-		foreach (GameObject gameObject in array)
-		{
-			if (!dictionary.TryGetValue(gameObject.name, out value))
-			{
-				dictionary.Add(gameObject.name, gameObject);
-			}
-		}
-		array = overrideCosmetics;
-		foreach (GameObject gameObject2 in array)
-		{
-			if (dictionary.TryGetValue(gameObject2.name, out value) && value.name == gameObject2.name)
-			{
-				value.name = "OVERRIDDEN";
-			}
-		}
-		cosmetics = cosmetics.Concat(overrideCosmetics).ToArray();
-		cosmeticsObjectRegistry.Initialize(cosmetics);
-		lastPosition = base.transform.position;
-		SharedStart();
-	}
-
-	private void Start()
-	{
-	}
-
-	private void SharedStart()
-	{
-		if (isInitialized)
-		{
-			return;
-		}
-		isInitialized = true;
-		myBodyDockPositions = GetComponent<BodyDockPositions>();
-		reliableState.SharedStart(isOfflineVRRig, myBodyDockPositions);
-		Application.quitting += Quitting;
-		concatStringOfCosmeticsAllowed = "";
-		playerText.transform.parent.GetComponent<Canvas>().worldCamera = GorillaTagger.Instance.mainCamera.GetComponent<Camera>();
-		materialsToChangeTo[0] = UnityEngine.Object.Instantiate(materialsToChangeTo[0]);
-		initialized = false;
-		currentState = TransferrableObject.PositionState.OnChest;
-		if (setMatIndex > -1 && setMatIndex < materialsToChangeTo.Length)
-		{
-			mainSkin.material = materialsToChangeTo[setMatIndex];
-		}
-		if (isOfflineVRRig)
-		{
-			CosmeticsController.instance.currentWornSet.LoadFromPlayerPreferences(CosmeticsController.instance);
-			if (Application.platform == RuntimePlatform.Android && spectatorSkin != null)
-			{
-				UnityEngine.Object.Destroy(spectatorSkin);
-			}
-		}
-		else if (!isOfflineVRRig)
-		{
-			if (spectatorSkin != null)
-			{
-				UnityEngine.Object.Destroy(spectatorSkin);
-			}
-			head.syncPos = -headBodyOffset;
-		}
-		if (base.transform.parent == null)
-		{
-			base.transform.parent = GorillaParent.instance.transform;
-		}
-		StartCoroutine(OccasionalUpdate());
-	}
-
-	private IEnumerator OccasionalUpdate()
-	{
-		while (true)
-		{
-			try
-			{
-				if (!isOfflineVRRig)
-				{
-					if (PhotonNetwork.IsMasterClient && photonView != null && photonView.IsRoomView && photonView.IsMine)
-					{
-						Debug.Log("network deleting vrrig");
-						PhotonNetwork.Destroy(photonView.gameObject);
-					}
-					if (photonView.IsRoomView)
-					{
-						Debug.Log("local disabling vrrig");
-						photonView.gameObject.SetActive(value: false);
-					}
-					if (PhotonNetwork.IsMasterClient && GorillaGameManager.instance == null)
-					{
-						PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue("gameMode", out var value);
-						if (value.ToString().Contains("CASUAL") || value.ToString().Contains("INFECTION"))
-						{
-							PhotonNetwork.InstantiateRoomObject("GorillaPrefabs/Gorilla Tag Manager", base.transform.position, base.transform.rotation, 0);
-						}
-						else if (value.ToString().Contains("HUNT"))
-						{
-							PhotonNetwork.InstantiateRoomObject("GorillaPrefabs/Gorilla Hunt Manager", base.transform.position, base.transform.rotation, 0);
-						}
-						else if (value.ToString().Contains("BATTLE"))
-						{
-							PhotonNetwork.InstantiateRoomObject("GorillaPrefabs/Gorilla Battle Manager", base.transform.position, base.transform.rotation, 0);
-						}
-					}
-				}
-			}
-			catch
-			{
-			}
-			yield return new WaitForSeconds(1f);
-		}
-	}
-
-	public bool IsItemAllowed(string itemName)
-	{
-		if (itemName == "Slingshot" && PhotonNetwork.InRoom && GorillaGameManager.instance is GorillaBattleManager)
-		{
-			return true;
-		}
-		if (concatStringOfCosmeticsAllowed == null)
-		{
-			return false;
-		}
-		if (concatStringOfCosmeticsAllowed.Contains(itemName))
-		{
-			return true;
-		}
-		bool canTryOn = CosmeticsController.instance.GetItemFromDict(itemName).canTryOn;
-		if (inTryOnRoom && canTryOn)
-		{
-			return true;
-		}
-		return false;
-	}
-
-	private void LateUpdate()
-	{
-		base.transform.localScale = Vector3.one * scaleFactor;
-		if (isOfflineVRRig)
-		{
-			if (GorillaGameManager.instance != null)
-			{
-				speedArray = GorillaGameManager.instance.LocalPlayerSpeed();
-				GorillaLocomotion.Player.Instance.jumpMultiplier = speedArray[1];
-				GorillaLocomotion.Player.Instance.maxJumpSpeed = speedArray[0];
-			}
-			else
-			{
-				GorillaLocomotion.Player.Instance.jumpMultiplier = 1.1f;
-				GorillaLocomotion.Player.Instance.maxJumpSpeed = 6.5f;
-			}
-			scaleFactor = GorillaLocomotion.Player.Instance.scale;
-			base.transform.localScale = Vector3.one * scaleFactor;
-			base.transform.eulerAngles = new Vector3(0f, mainCamera.transform.rotation.eulerAngles.y, 0f);
-			base.transform.position = mainCamera.transform.position + headConstraint.rotation * head.trackingPositionOffset * scaleFactor + base.transform.rotation * headBodyOffset * scaleFactor;
-			head.MapMine(scaleFactor, playerOffsetTransform);
-			rightHand.MapMine(scaleFactor, playerOffsetTransform);
-			leftHand.MapMine(scaleFactor, playerOffsetTransform);
-			rightIndex.MapMyFinger(lerpValueFingers);
-			rightMiddle.MapMyFinger(lerpValueFingers);
-			rightThumb.MapMyFinger(lerpValueFingers);
-			leftIndex.MapMyFinger(lerpValueFingers);
-			leftMiddle.MapMyFinger(lerpValueFingers);
-			leftThumb.MapMyFinger(lerpValueFingers);
-			if (GorillaTagger.Instance.loadedDeviceName == "Oculus")
-			{
-				mainSkin.enabled = (OVRManager.hasInputFocus ? true : false);
-			}
-			mainSkin.enabled = !GorillaLocomotion.Player.Instance.inOverlay;
-		}
-		else
-		{
-			if (voiceAudio != null)
-			{
-				float num = (GorillaTagger.Instance.offlineVRRig.transform.localScale.x - base.transform.localScale.x) / pitchScale + pitchOffset;
-				if (!Mathf.Approximately(voiceAudio.pitch, num))
-				{
-					voiceAudio.pitch = num;
-				}
-			}
-			if (Time.time > timeSpawned + doNotLerpConstant)
-			{
-				base.transform.position = Vector3.Lerp(base.transform.position, syncPos, lerpValueBody * 0.66f);
-				if ((bool)currentRopeSwing && (bool)currentRopeSwingTarget)
-				{
-					Vector3 vector = ((!grabbedRopeIsLeft) ? (currentRopeSwingTarget.position - rightHandTransform.position) : (currentRopeSwingTarget.position - leftHandTransform.position));
-					if (shouldLerpToRope)
-					{
-						base.transform.position += Vector3.Lerp(Vector3.zero, vector, lastRopeGrabTimer * 4f);
-						if (lastRopeGrabTimer < 1f)
-						{
-							lastRopeGrabTimer += Time.deltaTime;
-						}
-					}
-					else
-					{
-						base.transform.position += vector;
-					}
-				}
-			}
-			else
-			{
-				base.transform.position = syncPos;
-			}
-			base.transform.rotation = Quaternion.Lerp(base.transform.rotation, syncRotation, lerpValueBody);
-			base.transform.position = SanitizeVector3(base.transform.position);
-			base.transform.rotation = SanitizeQuaternion(base.transform.rotation);
-			head.syncPos = base.transform.rotation * -headBodyOffset * scaleFactor;
-			head.MapOther(lerpValueBody);
-			rightHand.MapOther(lerpValueBody);
-			leftHand.MapOther(lerpValueBody);
-			rightIndex.MapOtherFinger((float)(handSync % 10) / 10f, lerpValueFingers);
-			rightMiddle.MapOtherFinger((float)(handSync % 100) / 100f, lerpValueFingers);
-			rightThumb.MapOtherFinger((float)(handSync % 1000) / 1000f, lerpValueFingers);
-			leftIndex.MapOtherFinger((float)(handSync % 10000) / 10000f, lerpValueFingers);
-			leftMiddle.MapOtherFinger((float)(handSync % 100000) / 100000f, lerpValueFingers);
-			leftThumb.MapOtherFinger((float)(handSync % 1000000) / 1000000f, lerpValueFingers);
-			leftHandHoldableStatus = handSync % 10000000 / 1000000;
-			rightHandHoldableStatus = handSync % 100000000 / 10000000;
-			if (!initializedCosmetics && GorillaGameManager.instance != null && photonView != null && GorillaGameManager.instance.playerCosmeticsLookup.TryGetValue(photonView.Owner.ActorNumber, out tempString))
-			{
-				initializedCosmetics = true;
-				concatStringOfCosmeticsAllowed = tempString;
-				CheckForEarlyAccess();
-				SetCosmeticsActive();
-				myBodyDockPositions.RefreshTransferrableItems();
-			}
-		}
-		if (creator != null)
-		{
-			tempMatIndex = ((GorillaGameManager.instance != null) ? GorillaGameManager.instance.MyMatIndex(creator) : 0);
-			if (setMatIndex != tempMatIndex)
-			{
-				setMatIndex = tempMatIndex;
-				ChangeMaterialLocal(setMatIndex);
-			}
-		}
-	}
-
-	public void SetHeadBodyOffset()
-	{
-	}
-
-	public void VRRigResize(float ratioVar)
-	{
-		ratio *= ratioVar;
-	}
-
-	public int ReturnHandPosition()
-	{
-		return 0 + Mathf.FloorToInt(rightIndex.calcT * 9.99f) + Mathf.FloorToInt(rightMiddle.calcT * 9.99f) * 10 + Mathf.FloorToInt(rightThumb.calcT * 9.99f) * 100 + Mathf.FloorToInt(leftIndex.calcT * 9.99f) * 1000 + Mathf.FloorToInt(leftMiddle.calcT * 9.99f) * 10000 + Mathf.FloorToInt(leftThumb.calcT * 9.99f) * 100000 + leftHandHoldableStatus * 1000000 + rightHandHoldableStatus * 10000000;
-	}
-
-	public void OnDestroy()
-	{
-		if ((bool)currentRopeSwingTarget && (bool)currentRopeSwingTarget.gameObject)
-		{
-			UnityEngine.Object.Destroy(currentRopeSwingTarget.gameObject);
-		}
-		if (!isQuitting)
-		{
-			if (GorillaParent.instance != null && GorillaParent.instance.vrrigDict != null && creator != null && GorillaParent.instance.vrrigDict.TryGetValue(creator, out var value) && value == this)
-			{
-				GorillaParent.instance.vrrigDict[creator] = null;
-				GorillaParent.instance.vrrigDict.Remove(creator);
-			}
-			if (photonView != null && photonView.IsMine && PhotonNetwork.InRoom && !photonView.IsRoomView)
-			{
-				isQuitting = true;
-				PhotonNetwork.Destroy(photonView);
-			}
-			ClearRopeData();
-		}
-	}
-
-	void IOnPhotonViewPreNetDestroy.OnPreNetDestroy(PhotonView rootView)
-	{
-		if (isQuitting || !PhotonNetwork.InRoom || creator == null)
-		{
-			return;
-		}
-		Dictionary<Photon.Realtime.Player, VRRig> dictionary = GorillaParent.instance?.vrrigDict;
-		if (dictionary != null && dictionary.TryGetValue(creator, out var value) && value == this)
-		{
-			isQuitting = true;
-			dictionary.Remove(creator);
-			if (rootView.IsMine)
-			{
-				PhotonNetwork.Destroy(rootView);
-			}
-		}
-	}
-
-	void IPunInstantiateMagicCallback.OnPhotonInstantiate(PhotonMessageInfo info)
-	{
-		creator = info.Sender;
-		if (creator != null && creator != info.photonView.Owner)
-		{
-			GorillaNot.instance.SendReport("creating rigs for someone else", creator.UserId, creator.NickName);
-			isQuitting = true;
-		}
-		if (photonView.IsRoomView)
-		{
-			isQuitting = true;
-			if (PhotonNetwork.IsMasterClient && photonView.IsMine)
-			{
-				PhotonNetwork.Destroy(base.gameObject);
-				Debug.Log("network deleting vrrig");
-			}
-			else
-			{
-				base.gameObject.SetActive(value: false);
-				Debug.Log("local setting vrrig false");
-			}
-			if (creator != null)
-			{
-				GorillaNot.instance.SendReport("creating rigs as room objects", creator.UserId, creator.NickName);
-			}
-			return;
-		}
-		if (isQuitting)
-		{
-			if (info.photonView.IsMine)
-			{
-				PhotonNetwork.Destroy(info.photonView);
-			}
-			else
-			{
-				base.gameObject.SetActive(value: false);
-			}
-			return;
-		}
-		timeSpawned = Time.time;
-		base.transform.parent = GorillaParent.instance.GetComponent<GorillaParent>().vrrigParent.transform;
-		GorillaParent.instance.vrrigs.Add(this);
-		if (object.Equals(creator, PhotonNetwork.LocalPlayer))
-		{
-			GorillaParent.ReplicatedClientReady();
-		}
-		if (creator != null && GorillaParent.instance.vrrigDict.TryGetValue(creator, out tempVRRig) && tempVRRig != null && tempVRRig != this)
-		{
-			GorillaNot.instance.SendReport("inappropriate tag data being sent creating multiple vrrigs", creator.UserId, creator.NickName);
-			tempVRRig.isQuitting = true;
-			UnityEngine.Object.Destroy(tempVRRig.gameObject);
-		}
-		if (GorillaParent.instance.vrrigDict.ContainsKey(creator))
-		{
-			GorillaParent.instance.vrrigDict[creator] = this;
-		}
-		else
-		{
-			GorillaParent.instance.vrrigDict.Add(creator, this);
-		}
-		info.photonView.AddCallbackTarget(this);
-		if (GorillaGameManager.instance != null && GorillaGameManager.instance.GetComponent<PhotonView>().IsMine)
-		{
-			object value;
-			bool didTutorial = photonView.Owner.CustomProperties.TryGetValue("didTutorial", out value) && !(bool)value;
-			Debug.Log("guy who just joined didnt do the tutorial already: " + didTutorial);
-			GorillaGameManager.instance.NewVRRig(photonView.Owner, photonView.ViewID, didTutorial);
-		}
-		Debug.Log(info.Sender.UserId, this);
-		SharedStart();
-		try
-		{
-			newPlayerJoined?.Invoke();
-		}
-		catch (Exception message)
-		{
-			Debug.LogError(message);
-		}
-	}
-
-	void IGorillaSerializeable.OnSerializeWrite(PhotonStream stream, PhotonMessageInfo info)
-	{
-		stream.SendNext(head.rigTarget.localRotation);
-		stream.SendNext(rightHand.rigTarget.localPosition);
-		stream.SendNext(rightHand.rigTarget.localRotation);
-		stream.SendNext(leftHand.rigTarget.localPosition);
-		stream.SendNext(leftHand.rigTarget.localRotation);
-		stream.SendNext(base.transform.position);
-		stream.SendNext(Mathf.RoundToInt(base.transform.rotation.eulerAngles.y));
-		stream.SendNext(ReturnHandPosition());
-		stream.SendNext(currentState);
-		stream.SendNext(grabbedRopeIndex);
-		if (grabbedRopeIndex > 0)
-		{
-			stream.SendNext(grabbedRopeBoneIndex);
-			stream.SendNext(grabbedRopeIsLeft);
-			stream.SendNext(grabbedRopeOffset);
-		}
-	}
-
-	void IGorillaSerializeable.OnSerializeRead(PhotonStream stream, PhotonMessageInfo info)
-	{
-		head.syncRotation = SanitizeQuaternion((Quaternion)stream.ReceiveNext());
-		rightHand.syncPos = SanitizeVector3((Vector3)stream.ReceiveNext());
-		rightHand.syncRotation = SanitizeQuaternion((Quaternion)stream.ReceiveNext());
-		leftHand.syncPos = SanitizeVector3((Vector3)stream.ReceiveNext());
-		leftHand.syncRotation = SanitizeQuaternion((Quaternion)stream.ReceiveNext());
-		syncPos = SanitizeVector3((Vector3)stream.ReceiveNext());
-		syncRotation.eulerAngles = SanitizeVector3(new Vector3(0f, (int)stream.ReceiveNext(), 0f));
-		handSync = (int)stream.ReceiveNext();
-		currentState = (TransferrableObject.PositionState)stream.ReceiveNext();
-		lastPosition = syncPos;
-		grabbedRopeIndex = (int)stream.ReceiveNext();
-		if (grabbedRopeIndex > 0)
-		{
-			grabbedRopeBoneIndex = (int)stream.ReceiveNext();
-			grabbedRopeIsLeft = (bool)stream.ReceiveNext();
-			grabbedRopeOffset = SanitizeVector3((Vector3)stream.ReceiveNext());
-		}
-		UpdateRopeData();
-		AddVelocityToQueue(syncPos, info);
-	}
-
-	private void UpdateRopeData()
-	{
-		if (previousGrabbedRope == grabbedRopeIndex && previousGrabbedRopeBoneIndex == grabbedRopeBoneIndex && previousGrabbedRopeWasLeft == grabbedRopeIsLeft)
-		{
-			return;
-		}
-		ClearRopeData();
-		if (grabbedRopeIndex > 0)
-		{
-			PhotonView photonView = PhotonView.Find(grabbedRopeIndex);
-			if ((bool)photonView && photonView.TryGetComponent<GorillaRopeSwing>(out var component))
-			{
-				if (currentRopeSwingTarget == null || currentRopeSwingTarget.gameObject == null)
-				{
-					currentRopeSwingTarget = new GameObject("RopeSwingTarget").transform;
-				}
-				if (component.AttachRemotePlayer(creator.ActorNumber, grabbedRopeBoneIndex, currentRopeSwingTarget, grabbedRopeOffset))
-				{
-					currentRopeSwing = component;
-				}
-				lastRopeGrabTimer = 0f;
-			}
-		}
-		shouldLerpToRope = true;
-		previousGrabbedRope = grabbedRopeIndex;
-		previousGrabbedRopeBoneIndex = grabbedRopeBoneIndex;
-		previousGrabbedRopeWasLeft = grabbedRopeIsLeft;
-	}
-
-	private void ClearRopeData()
-	{
-		if ((bool)currentRopeSwing)
-		{
-			currentRopeSwing.DetachRemotePlayer(creator.ActorNumber);
-		}
-		if ((bool)currentRopeSwingTarget)
-		{
-			currentRopeSwingTarget.SetParent(null);
-		}
-		currentRopeSwing = null;
-	}
-
-	public void ChangeMaterial(int materialIndex, PhotonMessageInfo info)
-	{
-		if (info.Sender == PhotonNetwork.MasterClient)
-		{
-			ChangeMaterialLocal(materialIndex);
-		}
-	}
-
-	public void ChangeMaterialLocal(int materialIndex)
-	{
-		setMatIndex = materialIndex;
-		if (setMatIndex > -1 && setMatIndex < materialsToChangeTo.Length)
-		{
-			mainSkin.material = materialsToChangeTo[setMatIndex];
-		}
-		if (lavaParticleSystem != null)
-		{
-			if (!isOfflineVRRig && materialIndex == 2 && lavaParticleSystem.isStopped)
-			{
-				lavaParticleSystem.Play();
-			}
-			else if (!isOfflineVRRig && lavaParticleSystem.isPlaying)
-			{
-				lavaParticleSystem.Stop();
-			}
-		}
-		if (rockParticleSystem != null)
-		{
-			if (!isOfflineVRRig && materialIndex == 1 && rockParticleSystem.isStopped)
-			{
-				rockParticleSystem.Play();
-			}
-			else if (!isOfflineVRRig && rockParticleSystem.isPlaying)
-			{
-				rockParticleSystem.Stop();
-			}
-		}
-		if (iceParticleSystem != null)
-		{
-			if (!isOfflineVRRig && materialIndex == 3 && rockParticleSystem.isStopped)
-			{
-				iceParticleSystem.Play();
-			}
-			else if (!isOfflineVRRig && iceParticleSystem.isPlaying)
-			{
-				iceParticleSystem.Stop();
-			}
-		}
-	}
-
-	[PunRPC]
-	public void InitializeNoobMaterial(float red, float green, float blue, bool leftHanded, PhotonMessageInfo info)
-	{
-		IncrementRPC(info, "InitializeNoobMaterial");
-		if (info.Sender == photonView.Owner && (!initialized || (initialized && GorillaComputer.instance.friendJoinCollider.playerIDsCurrentlyTouching.Contains(info.Sender.UserId))))
-		{
-			initialized = true;
-			red = Mathf.Clamp(red, 0f, 1f);
-			green = Mathf.Clamp(green, 0f, 1f);
-			blue = Mathf.Clamp(blue, 0f, 1f);
-			InitializeNoobMaterialLocal(red, green, blue, leftHanded);
-		}
-		else
-		{
-			GorillaNot.instance.SendReport("inappropriate tag data being sent init noob", info.Sender.UserId, info.Sender.NickName);
-		}
-		playerLeftHanded = leftHanded;
-	}
-
-	public void InitializeNoobMaterialLocal(float red, float green, float blue, bool leftHanded)
-	{
-		Color color = new Color(red, green, blue);
-		materialsToChangeTo[0].color = color;
-		if (photonView != null)
-		{
-			playerText.text = NormalizeName(doIt: true, photonView.Owner.NickName);
-		}
-		else if (showName)
-		{
-			playerText.text = PlayerPrefs.GetString("playerName");
-		}
-		SetColor(color);
-	}
-
-	public string NormalizeName(bool doIt, string text)
-	{
-		if (doIt)
-		{
-			if (GorillaComputer.instance.CheckAutoBanListForName(text))
-			{
-				text = new string(Array.FindAll(text.ToCharArray(), (char c) => char.IsLetterOrDigit(c)));
-				if (text.Length > 12)
-				{
-					text = text.Substring(0, 11);
-				}
-				text = text.ToUpper();
-			}
-			else
-			{
-				text = "BADGORILLA";
-			}
-		}
-		return text;
-	}
-
-	public void SetJumpLimitLocal(float maxJumpSpeed)
-	{
-		GorillaLocomotion.Player.Instance.maxJumpSpeed = maxJumpSpeed;
-	}
-
-	public void SetJumpMultiplierLocal(float jumpMultiplier)
-	{
-		GorillaLocomotion.Player.Instance.jumpMultiplier = jumpMultiplier;
-	}
-
-	[PunRPC]
-	public void SetTaggedTime(PhotonMessageInfo info)
-	{
-		IncrementRPC(info, "SetTaggedTime");
-		if (GorillaGameManager.instance != null)
-		{
-			if (info.Sender == PhotonNetwork.MasterClient)
-			{
-				GorillaTagger.Instance.ApplyStatusEffect(GorillaTagger.StatusEffect.Frozen, GorillaTagger.Instance.tagCooldown);
-				GorillaTagger.Instance.StartVibration(forLeftController: true, GorillaTagger.Instance.taggedHapticStrength, GorillaTagger.Instance.taggedHapticDuration);
-				GorillaTagger.Instance.StartVibration(forLeftController: false, GorillaTagger.Instance.taggedHapticStrength, GorillaTagger.Instance.taggedHapticDuration);
-			}
-			else
-			{
-				GorillaNot.instance.SendReport("inappropriate tag data being sent set tagged time", info.Sender.UserId, info.Sender.NickName);
-			}
-		}
-	}
-
-	[PunRPC]
-	public void SetSlowedTime(PhotonMessageInfo info)
-	{
-		IncrementRPC(info, "SetSlowedTime");
-		if (!(GorillaGameManager.instance != null))
-		{
-			return;
-		}
-		if (info.Sender == PhotonNetwork.MasterClient)
-		{
-			if (GorillaTagger.Instance.currentStatus != GorillaTagger.StatusEffect.Slowed)
-			{
-				GorillaTagger.Instance.StartVibration(forLeftController: true, GorillaTagger.Instance.taggedHapticStrength, GorillaTagger.Instance.taggedHapticDuration);
-				GorillaTagger.Instance.StartVibration(forLeftController: false, GorillaTagger.Instance.taggedHapticStrength, GorillaTagger.Instance.taggedHapticDuration);
-			}
-			GorillaTagger.Instance.ApplyStatusEffect(GorillaTagger.StatusEffect.Slowed, GorillaTagger.Instance.slowCooldown);
-		}
-		else
-		{
-			GorillaNot.instance.SendReport("inappropriate tag data being sent set slowed time", info.Sender.UserId, info.Sender.NickName);
-		}
-	}
-
-	[PunRPC]
-	public void SetJoinTaggedTime(PhotonMessageInfo info)
-	{
-		IncrementRPC(info, "SetJoinTaggedTime");
-		if (info.Sender == PhotonNetwork.MasterClient)
-		{
-			GorillaTagger.Instance.StartVibration(forLeftController: true, GorillaTagger.Instance.taggedHapticStrength, GorillaTagger.Instance.taggedHapticDuration);
-			GorillaTagger.Instance.StartVibration(forLeftController: false, GorillaTagger.Instance.taggedHapticStrength, GorillaTagger.Instance.taggedHapticDuration);
-		}
-		else
-		{
-			GorillaNot.instance.SendReport("inappropriate tag data being sent set join tagged time", info.Sender.UserId, info.Sender.NickName);
-		}
-	}
-
-	[PunRPC]
-	public void RequestMaterialColor(Photon.Realtime.Player askingPlayer, bool noneBool, PhotonMessageInfo info)
-	{
-		IncrementRPC(info, "RequestMaterialColor");
-		if (photonView.IsMine)
-		{
-			photonView.RPC("InitializeNoobMaterial", info.Sender, materialsToChangeTo[0].color.r, materialsToChangeTo[0].color.g, materialsToChangeTo[0].color.b, GorillaComputer.instance.leftHanded);
-		}
-	}
-
-	[PunRPC]
-	public void RequestCosmetics(PhotonMessageInfo info)
-	{
-		IncrementRPC(info, "RequestCosmetics");
-		if (photonView.IsMine && CosmeticsController.instance != null)
-		{
-			string[] array = CosmeticsController.instance.currentWornSet.ToDisplayNameArray();
-			string[] array2 = CosmeticsController.instance.tryOnSet.ToDisplayNameArray();
-			photonView.RPC("UpdateCosmeticsWithTryon", info.Sender, array, array2);
-		}
-	}
-
-	[PunRPC]
-	public void PlayTagSound(int soundIndex, float soundVolume, PhotonMessageInfo info)
-	{
-		IncrementRPC(info, "PlayTagSound");
-		if (info.Sender.IsMasterClient)
-		{
-			tagSound.volume = Mathf.Max(0.25f, soundVolume);
-			tagSound.PlayOneShot(clipToPlay[soundIndex]);
-		}
-		else
-		{
-			GorillaNot.instance.SendReport("inappropriate tag data being sent play tag sound", info.Sender.UserId, info.Sender.NickName);
-		}
-	}
-
-	public void Bonk(int soundIndex, float bonkPercent, PhotonMessageInfo info)
-	{
-		if (info.Sender == photonView.Owner)
-		{
-			if (bonkTime + bonkCooldown < Time.time)
-			{
-				bonkTime = Time.time;
-				tagSound.volume = bonkPercent * 0.25f;
-				tagSound.PlayOneShot(clipToPlay[soundIndex]);
-				if (photonView.IsMine)
-				{
-					GorillaTagger.Instance.StartVibration(forLeftController: true, GorillaTagger.Instance.taggedHapticStrength, GorillaTagger.Instance.taggedHapticDuration);
-					GorillaTagger.Instance.StartVibration(forLeftController: false, GorillaTagger.Instance.taggedHapticStrength, GorillaTagger.Instance.taggedHapticDuration);
-				}
-			}
-		}
-		else
-		{
-			GorillaNot.instance.SendReport("inappropriate tag data being sent bonk", info.Sender.UserId, info.Sender.NickName);
-		}
-	}
-
-	[PunRPC]
-	public void PlayDrum(int drumIndex, float drumVolume, PhotonMessageInfo info)
-	{
-		IncrementRPC(info, "PlayDrum");
-		senderRig = GorillaGameManager.StaticFindRigForPlayer(info.Sender);
-		if (senderRig == null || senderRig.muted)
-		{
-			return;
-		}
-		if (drumIndex < 0 || drumIndex >= musicDrums.Length || (senderRig.transform.position - base.transform.position).sqrMagnitude > 9f)
-		{
-			GorillaNot.instance.SendReport("inappropriate tag data being sent drum", info.Sender.UserId, info.Sender.NickName);
-			return;
-		}
-		AudioSource audioSource = (photonView.IsMine ? GorillaTagger.Instance.offlineVRRig.musicDrums[drumIndex] : musicDrums[drumIndex]);
-		if (audioSource.gameObject.activeSelf)
-		{
-			float instrumentVolume = GorillaComputer.instance.instrumentVolume;
-			audioSource.time = 0f;
-			audioSource.volume = Mathf.Max(Mathf.Min(instrumentVolume, drumVolume * instrumentVolume), 0f);
-			audioSource.Play();
-		}
-	}
-
-	[PunRPC]
-	public void PlaySelfOnlyInstrument(int selfOnlyIndex, int noteIndex, float instrumentVol, PhotonMessageInfo info)
-	{
-		IncrementRPC(info, "PlaySelfOnlyInstrument");
-		if (info.Sender != photonView.Owner || muted)
-		{
-			return;
-		}
-		if (selfOnlyIndex >= 0 && selfOnlyIndex < instrumentSelfOnly.Length && info.Sender == photonView.Owner)
-		{
-			if (instrumentSelfOnly[selfOnlyIndex].gameObject.activeSelf)
-			{
-				instrumentSelfOnly[selfOnlyIndex].PlayNote(noteIndex, Mathf.Max(Mathf.Min(GorillaComputer.instance.instrumentVolume, instrumentVol * GorillaComputer.instance.instrumentVolume), 0f) / 2f);
-			}
-		}
-		else
-		{
-			GorillaNot.instance.SendReport("inappropriate tag data being sent self only instrument", info.Sender.UserId, info.Sender.NickName);
-		}
-	}
-
-	[PunRPC]
-	public void PlayHandTap(int soundIndex, bool isLeftHand, float tapVolume, PhotonMessageInfo info)
-	{
-		IncrementRPC(info, "PlayHandTap");
-		if (info.Sender == photonView.Owner)
-		{
-			PlayHandTapLocal(soundIndex, isLeftHand, Mathf.Max(tapVolume, 0.1f));
-		}
-		else
-		{
-			GorillaNot.instance.SendReport("inappropriate tag data being sent hand tap", info.Sender.UserId, info.Sender.NickName);
-		}
-	}
-
-	public void PlayHandTapLocal(int soundIndex, bool isLeftHand, float tapVolume)
-	{
-		if (soundIndex > -1 && soundIndex < GorillaLocomotion.Player.Instance.materialData.Count)
-		{
-			if (isLeftHand)
-			{
-				leftHandPlayer.volume = tapVolume;
-				leftHandPlayer.clip = (GorillaLocomotion.Player.Instance.materialData[soundIndex].overrideAudio ? GorillaLocomotion.Player.Instance.materialData[soundIndex].audio : GorillaLocomotion.Player.Instance.materialData[0].audio);
-				leftHandPlayer.PlayOneShot(leftHandPlayer.clip);
-			}
-			else
-			{
-				rightHandPlayer.volume = tapVolume;
-				rightHandPlayer.clip = (GorillaLocomotion.Player.Instance.materialData[soundIndex].overrideAudio ? GorillaLocomotion.Player.Instance.materialData[soundIndex].audio : GorillaLocomotion.Player.Instance.materialData[0].audio);
-				rightHandPlayer.PlayOneShot(rightHandPlayer.clip);
-			}
-		}
-	}
-
-	[PunRPC]
-	public void PlaySplashEffect(Vector3 splashPosition, Quaternion splashRotation, float splashScale, float boundingRadius, bool bigSplash, bool enteringWater, PhotonMessageInfo info)
-	{
-		IncrementRPC(info, "PlaySplashEffect");
-		if (info.Sender == photonView.Owner)
-		{
-			if (!((base.transform.position - splashPosition).sqrMagnitude < 9f))
-			{
-				return;
-			}
-			float time = Time.time;
-			int num = -1;
-			float num2 = time + 10f;
-			for (int i = 0; i < splashEffectTimes.Length; i++)
-			{
-				if (splashEffectTimes[i] < num2)
-				{
-					num2 = splashEffectTimes[i];
-					num = i;
-				}
-			}
-			if (time - 0.5f > num2)
-			{
-				splashEffectTimes[num] = time;
-				boundingRadius = Mathf.Clamp(boundingRadius, 0.01f, 0.5f);
-				ObjectPools.instance.Instantiate(GorillaLocomotion.Player.Instance.waterParams.rippleEffect, splashPosition, splashRotation, GorillaLocomotion.Player.Instance.waterParams.rippleEffectScale * boundingRadius * 2f);
-				splashScale = Mathf.Clamp(splashScale, 0.01f, 1f);
-				ObjectPools.instance.Instantiate(GorillaLocomotion.Player.Instance.waterParams.splashEffect, splashPosition, splashRotation, splashScale).GetComponent<WaterSplashEffect>().PlayEffect(bigSplash, enteringWater);
-			}
-		}
-		else
-		{
-			GorillaNot.instance.SendReport("inappropriate tag data being sent splash effect", info.Sender.UserId, info.Sender.NickName);
-		}
-	}
-
-	[PunRPC]
-	public void PlaySlamEffects(Vector3 slamPosition, Quaternion slamRotation, PhotonMessageInfo info)
-	{
-		IncrementRPC(info, "PlaySlamEffects");
-		if (info.Sender == photonView.Owner)
-		{
-			GameObject fxEffects = ObjectPools.instance.Instantiate(GorillaLocomotion.Player.Instance.wizardStaffSlamEffects, slamPosition, slamRotation);
-			PlaySlamEffectsLocal(fxEffects);
-		}
-		else
-		{
-			GorillaNot.instance.SendReport("inappropriate tag data being sent slam effect", info.Sender.UserId, info.Sender.NickName);
-		}
-	}
-
-	public void PlaySlamEffectsLocal(GameObject fxEffects)
-	{
-		if ((bool)fxEffects)
-		{
-			fxEffects.SetActive(value: true);
-			if (fxEffects.TryGetComponent<SoundBankPlayer>(out var component))
-			{
-				component.Play();
-			}
-		}
-	}
-
-	[PunRPC]
-	public void PlayGeodeEffect(Vector3 hitPosition, PhotonMessageInfo info)
-	{
-		IncrementRPC(info, "PlayGeodeEffect");
-		if (info.Sender == photonView.Owner)
-		{
-			if ((base.transform.position - hitPosition).sqrMagnitude < 9f && (bool)geodeCrackingSound)
-			{
-				geodeCrackingSound.Play();
-			}
-		}
-		else
-		{
-			GorillaNot.instance.SendReport("inappropriate tag data being sent geode effect", info.Sender.UserId, info.Sender.NickName);
-		}
-	}
-
-	public void PlayClimbSound(AudioClip clip, bool isLeftHand)
-	{
-		if (isLeftHand)
-		{
-			leftHandPlayer.volume = 0.1f;
-			leftHandPlayer.clip = clip;
-			leftHandPlayer.PlayOneShot(leftHandPlayer.clip);
-		}
-		else
-		{
-			rightHandPlayer.volume = 0.1f;
-			rightHandPlayer.clip = clip;
-			rightHandPlayer.PlayOneShot(rightHandPlayer.clip);
-		}
-	}
-
-	[PunRPC]
-	public void UpdateCosmetics(string[] currentItems, PhotonMessageInfo info)
-	{
-		IncrementRPC(info, "UpdateCosmetics");
-		if (info.Sender == photonView.Owner)
-		{
-			CosmeticsController.CosmeticSet newSet = new CosmeticsController.CosmeticSet(currentItems, CosmeticsController.instance);
-			LocalUpdateCosmetics(newSet);
-		}
-		else
-		{
-			GorillaNot.instance.SendReport("inappropriate tag data being sent update cosmetics", info.Sender.UserId, info.Sender.NickName);
-		}
-	}
-
-	[PunRPC]
-	public void UpdateCosmeticsWithTryon(string[] currentItems, string[] tryOnItems, PhotonMessageInfo info)
-	{
-		IncrementRPC(info, "UpdateCosmeticsWithTryon");
-		if (info.Sender == photonView.Owner)
-		{
-			CosmeticsController.CosmeticSet newSet = new CosmeticsController.CosmeticSet(currentItems, CosmeticsController.instance);
-			CosmeticsController.CosmeticSet newTryOnSet = new CosmeticsController.CosmeticSet(tryOnItems, CosmeticsController.instance);
-			LocalUpdateCosmeticsWithTryon(newSet, newTryOnSet);
-		}
-		else
-		{
-			GorillaNot.instance.SendReport("inappropriate tag data being sent update cosmetics with tryon", info.Sender.UserId, info.Sender.NickName);
-		}
-	}
-
-	public void UpdateAllowedCosmetics()
-	{
-		if (GorillaGameManager.instance != null && GorillaGameManager.instance.playerCosmeticsLookup.TryGetValue(photonView.Owner.ActorNumber, out tempString))
-		{
-			concatStringOfCosmeticsAllowed = tempString;
-			CheckForEarlyAccess();
-		}
-	}
-
-	public void LocalUpdateCosmetics(CosmeticsController.CosmeticSet newSet)
-	{
-		cosmeticSet = newSet;
-		if (initializedCosmetics)
-		{
-			SetCosmeticsActive();
-		}
-	}
-
-	public void LocalUpdateCosmeticsWithTryon(CosmeticsController.CosmeticSet newSet, CosmeticsController.CosmeticSet newTryOnSet)
-	{
-		cosmeticSet = newSet;
-		tryOnSet = newTryOnSet;
-		if (initializedCosmetics)
-		{
-			SetCosmeticsActive();
-		}
-	}
-
-	private void CheckForEarlyAccess()
-	{
-		if (IsItemAllowed("Early Access Supporter Pack"))
-		{
-			concatStringOfCosmeticsAllowed += "LBAAE.LFAAM.LFAAN.LHAAA.LHAAK.LHAAL.LHAAM.LHAAN.LHAAO.LHAAP.LHABA.LHABB.";
-		}
-		initializedCosmetics = true;
-	}
-
-	public void SetCosmeticsActive()
-	{
-		if (!(CosmeticsController.instance == null))
-		{
-			prevSet.CopyItems(mergedSet);
-			mergedSet.MergeSets(inTryOnRoom ? tryOnSet : null, cosmeticSet);
-			BodyDockPositions component = GetComponent<BodyDockPositions>();
-			mergedSet.ActivateCosmetics(prevSet, this, component, CosmeticsController.instance.nullItem, cosmeticsObjectRegistry);
-		}
-	}
-
-	public void GetUserCosmeticsAllowed()
-	{
-		if (CosmeticsController.instance != null)
-		{
-			PlayFabClientAPI.GetUserInventory(new GetUserInventoryRequest(), delegate(GetUserInventoryResult result)
-			{
-				foreach (ItemInstance item in result.Inventory)
-				{
-					if (item.CatalogVersion == CosmeticsController.instance.catalog)
-					{
-						concatStringOfCosmeticsAllowed += item.ItemId;
-					}
-				}
-				Debug.Log("successful result. allowed cosmetics are: " + concatStringOfCosmeticsAllowed);
-				CheckForEarlyAccess();
-				SetCosmeticsActive();
-			}, delegate(PlayFabError error)
-			{
-				Debug.Log("Got error retrieving user data:");
-				Debug.Log(error.GenerateErrorReport());
-				initializedCosmetics = true;
-				SetCosmeticsActive();
-			});
-		}
-		concatStringOfCosmeticsAllowed += "Slingshot";
-	}
-
-	private void Quitting()
-	{
-		isQuitting = true;
-	}
-
-	public void GenerateFingerAngleLookupTables()
-	{
-		GenerateTableIndex(ref leftIndex);
-		GenerateTableIndex(ref rightIndex);
-		GenerateTableMiddle(ref leftMiddle);
-		GenerateTableMiddle(ref rightMiddle);
-		GenerateTableThumb(ref leftThumb);
-		GenerateTableThumb(ref rightThumb);
-	}
-
-	private void GenerateTableThumb(ref VRMapThumb thumb)
-	{
-		thumb.angle1Table = new Quaternion[11];
-		thumb.angle2Table = new Quaternion[11];
-		for (int i = 0; i < thumb.angle1Table.Length; i++)
-		{
-			Debug.Log((float)i / 10f);
-			thumb.angle1Table[i] = Quaternion.Lerp(Quaternion.Euler(thumb.startingAngle1), Quaternion.Euler(thumb.closedAngle1), (float)i / 10f);
-			thumb.angle2Table[i] = Quaternion.Lerp(Quaternion.Euler(thumb.startingAngle2), Quaternion.Euler(thumb.closedAngle2), (float)i / 10f);
-		}
-	}
-
-	private void GenerateTableIndex(ref VRMapIndex index)
-	{
-		index.angle1Table = new Quaternion[11];
-		index.angle2Table = new Quaternion[11];
-		index.angle3Table = new Quaternion[11];
-		for (int i = 0; i < index.angle1Table.Length; i++)
-		{
-			index.angle1Table[i] = Quaternion.Lerp(Quaternion.Euler(index.startingAngle1), Quaternion.Euler(index.closedAngle1), (float)i / 10f);
-			index.angle2Table[i] = Quaternion.Lerp(Quaternion.Euler(index.startingAngle2), Quaternion.Euler(index.closedAngle2), (float)i / 10f);
-			index.angle3Table[i] = Quaternion.Lerp(Quaternion.Euler(index.startingAngle3), Quaternion.Euler(index.closedAngle3), (float)i / 10f);
-		}
-	}
-
-	private void GenerateTableMiddle(ref VRMapMiddle middle)
-	{
-		middle.angle1Table = new Quaternion[11];
-		middle.angle2Table = new Quaternion[11];
-		middle.angle3Table = new Quaternion[11];
-		for (int i = 0; i < middle.angle1Table.Length; i++)
-		{
-			middle.angle1Table[i] = Quaternion.Lerp(Quaternion.Euler(middle.startingAngle1), Quaternion.Euler(middle.closedAngle1), (float)i / 10f);
-			middle.angle2Table[i] = Quaternion.Lerp(Quaternion.Euler(middle.startingAngle2), Quaternion.Euler(middle.closedAngle2), (float)i / 10f);
-			middle.angle3Table[i] = Quaternion.Lerp(Quaternion.Euler(middle.startingAngle3), Quaternion.Euler(middle.closedAngle3), (float)i / 10f);
-		}
-	}
-
-	private Quaternion SanitizeQuaternion(Quaternion quat)
-	{
-		if (float.IsNaN(quat.w) || float.IsNaN(quat.x) || float.IsNaN(quat.y) || float.IsNaN(quat.z) || float.IsInfinity(quat.w) || float.IsInfinity(quat.x) || float.IsInfinity(quat.y) || float.IsInfinity(quat.z))
-		{
-			return Quaternion.identity;
-		}
-		return quat;
-	}
-
-	private Vector3 SanitizeVector3(Vector3 vec)
-	{
-		if (float.IsNaN(vec.x) || float.IsNaN(vec.y) || float.IsNaN(vec.z) || float.IsInfinity(vec.x) || float.IsInfinity(vec.y) || float.IsInfinity(vec.z))
-		{
-			return Vector3.zero;
-		}
-		return Vector3.ClampMagnitude(vec, 1000f);
-	}
-
-	private void IncrementRPC(PhotonMessageInfo info, string sourceCall)
-	{
-		if (GorillaGameManager.instance != null)
-		{
-			GorillaNot.IncrementRPCCall(info, sourceCall);
-		}
-	}
-
-	private void AddVelocityToQueue(Vector3 position, PhotonMessageInfo info)
-	{
-		Vector3 velocity;
-		if (velocityHistoryList.Count == 0)
-		{
-			velocity = Vector3.zero;
-			lastPosition = position;
-		}
-		else
-		{
-			velocity = (position - lastPosition) / (float)(info.SentServerTime - velocityHistoryList[0].time);
-		}
-		velocityHistoryList.Insert(0, new VelocityTime(velocity, info.SentServerTime));
-		if (velocityHistoryList.Count > velocityHistoryMaxLength)
-		{
-			velocityHistoryList.RemoveRange(velocityHistoryMaxLength, velocityHistoryList.Count - velocityHistoryMaxLength);
-		}
-	}
-
-	private Vector3 ReturnVelocityAtTime(double timeToReturn)
-	{
-		if (velocityHistoryList.Count <= 1)
-		{
-			return Vector3.zero;
-		}
-		int num = 0;
-		int num2 = velocityHistoryList.Count - 1;
-		int num3 = 0;
-		if (num2 == num)
-		{
-			return velocityHistoryList[num].vel;
-		}
-		while (num2 - num > 1 && num3 < 1000)
-		{
-			num3++;
-			int num4 = (num2 - num) / 2;
-			if (velocityHistoryList[num4].time > timeToReturn)
-			{
-				num2 = num4;
-			}
-			else
-			{
-				num = num4;
-			}
-		}
-		float num5 = (float)(velocityHistoryList[num].time - timeToReturn);
-		double num6 = velocityHistoryList[num].time - velocityHistoryList[num2].time;
-		if (num6 == 0.0)
-		{
-			num6 = 0.001;
-		}
-		num5 /= (float)num6;
-		num5 = Mathf.Clamp(num5, 0f, 1f);
-		return Vector3.Lerp(velocityHistoryList[num].vel, velocityHistoryList[num2].vel, num5);
-	}
-
-	public void SetColor(Color color)
-	{
-		onColorInitialized?.Invoke(color);
-		onColorInitialized = delegate
-		{
-		};
-		colorInitialized = true;
-		playerColor = color;
-	}
-
-	public void OnColorInitialized(Action<Color> action)
-	{
-		if (colorInitialized)
-		{
-			action(playerColor);
-		}
-		else
-		{
-			onColorInitialized = (Action<Color>)Delegate.Combine(onColorInitialized, action);
-		}
-	}
-
-	private void OnEnable()
-	{
-		if (currentRopeSwingTarget != null)
-		{
-			currentRopeSwingTarget.SetParent(null);
-		}
-	}
+	private bool pendingCosmeticUpdate = true;
 
-	void IPreDisable.PreDisable()
-	{
-		ClearRopeData();
-		if ((bool)currentRopeSwingTarget)
-		{
-			currentRopeSwingTarget.SetParent(base.transform);
-		}
-		EnableHuntWatch(on: false);
-		EnableBattleCosmetics(on: false);
-		concatStringOfCosmeticsAllowed = "";
-		if (cosmeticSet != null)
-		{
-			mergedSet.DeactivateAllCosmetcs(myBodyDockPositions, CosmeticsController.instance.nullItem, cosmeticsObjectRegistry);
-			mergedSet.ClearSet(CosmeticsController.instance.nullItem);
-			prevSet.ClearSet(CosmeticsController.instance.nullItem);
-			tryOnSet.ClearSet(CosmeticsController.instance.nullItem);
-			cosmeticSet.ClearSet(CosmeticsController.instance.nullItem);
-		}
-	}
+	private string rawCosmeticString = "";
 
-	private void OnDisable()
+	public enum WearablePackedStateSlots
 	{
-		initialized = false;
-		muted = false;
-		photonView = null;
-		voiceAudio = null;
-		tempRig = null;
-		timeSpawned = 0f;
-		initializedCosmetics = false;
-		velocityHistoryList.Clear();
-		tempMatIndex = 0;
-		setMatIndex = 0;
-		ChangeMaterialLocal(setMatIndex);
-		creator = null;
+		Hat,
+		LeftHand,
+		RightHand
 	}
 
-	public void NetInitialize()
+	public struct VelocityTime
 	{
-		timeSpawned = Time.time;
-		if (PhotonNetwork.InRoom)
-		{
-			GorillaGameManager instance = GorillaGameManager.instance;
-			object value;
-			if (instance != null)
-			{
-				if (instance is GorillaHuntManager || instance.GameMode() == "HUNT")
-				{
-					EnableHuntWatch(on: true);
-				}
-				else if (instance is GorillaBattleManager || instance.GameMode() == "BATTLE")
-				{
-					EnableBattleCosmetics(on: true);
-				}
-			}
-			else if (PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue("gameMode", out value))
-			{
-				string text = value.ToString();
-				if (text.Contains("HUNT"))
-				{
-					EnableHuntWatch(on: true);
-				}
-				else if (text.Contains("BATTLE"))
-				{
-					EnableBattleCosmetics(on: true);
-				}
-			}
-		}
-		if (photonView != null)
+		public VelocityTime(Vector3 velocity, double velTime)
 		{
-			base.transform.position = photonView.gameObject.transform.position;
-			base.transform.rotation = photonView.gameObject.transform.rotation;
+			this.vel = velocity;
+			this.time = velTime;
 		}
-		try
-		{
-			newPlayerJoined?.Invoke();
-		}
-		catch (Exception message)
-		{
-			Debug.LogError(message);
-		}
-	}
 
-	public void EnableHuntWatch(bool on)
-	{
-		huntComputer.SetActive(on);
-	}
+		public Vector3 vel;
 
-	public void EnableBattleCosmetics(bool on)
-	{
-		battleBalloons.gameObject.SetActive(on);
+		public double time;
 	}
 }

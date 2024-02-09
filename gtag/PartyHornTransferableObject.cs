@@ -1,11 +1,157 @@
+﻿using System;
+using GorillaLocomotion;
+using Photon.Pun;
+using Photon.Voice.PUN;
+using Photon.Voice.Unity;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class PartyHornTransferableObject : TransferrableObject
 {
-	private enum PartyHornState
+	public override void OnEnable()
 	{
-		None = 1,
-		CoolingDown
+		base.OnEnable();
+		this.localHead = GorillaTagger.Instance.offlineVRRig.head.rigTarget.transform;
+		this.InitToDefault();
+	}
+
+	public override void ResetToDefaultState()
+	{
+		base.ResetToDefaultState();
+		this.InitToDefault();
+	}
+
+	protected Vector3 CalcMouthPiecePos()
+	{
+		Transform transform = base.transform;
+		Vector3 vector = transform.position;
+		if (this.mouthPiece)
+		{
+			vector += transform.InverseTransformPoint(this.mouthPiece.position);
+		}
+		else
+		{
+			vector += transform.forward * this.mouthPieceZOffset;
+		}
+		return vector;
+	}
+
+	protected override void LateUpdateLocal()
+	{
+		base.LateUpdateLocal();
+		if (!base.InHand())
+		{
+			return;
+		}
+		if (this.itemState != TransferrableObject.ItemStates.State0)
+		{
+			return;
+		}
+		if (!GorillaParent.hasInstance)
+		{
+			return;
+		}
+		Transform transform = base.transform;
+		Vector3 vector = this.CalcMouthPiecePos();
+		float num = this.mouthPieceRadius * this.mouthPieceRadius * Player.Instance.scale * Player.Instance.scale;
+		bool flag = (this.localHead.TransformPoint(this.mouthOffset) - vector).sqrMagnitude < num;
+		if (this.soundActivated && PhotonNetwork.InRoom)
+		{
+			bool flag2;
+			if (flag)
+			{
+				GorillaTagger instance = GorillaTagger.Instance;
+				if (instance == null)
+				{
+					flag2 = false;
+				}
+				else
+				{
+					Recorder myRecorder = instance.myRecorder;
+					bool? flag3 = ((myRecorder != null) ? new bool?(myRecorder.IsCurrentlyTransmitting) : null);
+					bool flag4 = true;
+					flag2 = (flag3.GetValueOrDefault() == flag4) & (flag3 != null);
+				}
+			}
+			else
+			{
+				flag2 = false;
+			}
+			flag = flag2;
+		}
+		for (int i = 0; i < GorillaParent.instance.vrrigs.Count; i++)
+		{
+			VRRig vrrig = GorillaParent.instance.vrrigs[i];
+			if (vrrig.head == null || vrrig.head.rigTarget == null || flag)
+			{
+				break;
+			}
+			flag = (vrrig.head.rigTarget.transform.TransformPoint(this.mouthOffset) - vector).sqrMagnitude < num;
+			if (this.soundActivated)
+			{
+				bool flag5;
+				if (flag)
+				{
+					RigContainer component = vrrig.GetComponent<RigContainer>();
+					if (component == null)
+					{
+						flag5 = false;
+					}
+					else
+					{
+						PhotonVoiceView voice = component.Voice;
+						bool? flag3 = ((voice != null) ? new bool?(voice.IsSpeaking) : null);
+						bool flag4 = true;
+						flag5 = (flag3.GetValueOrDefault() == flag4) & (flag3 != null);
+					}
+				}
+				else
+				{
+					flag5 = false;
+				}
+				flag = flag5;
+			}
+		}
+		this.itemState = (flag ? TransferrableObject.ItemStates.State1 : this.itemState);
+	}
+
+	protected override void LateUpdateShared()
+	{
+		base.LateUpdateShared();
+		if (TransferrableObject.ItemStates.State1 != this.itemState)
+		{
+			return;
+		}
+		if (!this.localWasActivated)
+		{
+			this.effectsGameObject.SetActive(true);
+			this.cooldownRemaining = this.cooldown;
+			this.localWasActivated = true;
+			UnityEvent onCooldownStart = this.OnCooldownStart;
+			if (onCooldownStart != null)
+			{
+				onCooldownStart.Invoke();
+			}
+		}
+		this.cooldownRemaining -= Time.deltaTime;
+		if (this.cooldownRemaining <= 0f)
+		{
+			this.InitToDefault();
+		}
+	}
+
+	private void InitToDefault()
+	{
+		this.itemState = TransferrableObject.ItemStates.State0;
+		this.effectsGameObject.SetActive(false);
+		this.cooldownRemaining = this.cooldown;
+		this.localWasActivated = false;
+		UnityEvent onCooldownReset = this.OnCooldownReset;
+		if (onCooldownReset == null)
+		{
+			return;
+		}
+		onCooldownReset.Invoke();
 	}
 
 	[Tooltip("This GameObject will activate when held to any gorilla's mouth.")]
@@ -17,75 +163,27 @@ public class PartyHornTransferableObject : TransferrableObject
 
 	public float mouthPieceRadius = 0.05f;
 
+	public Transform mouthPiece;
+
 	public Vector3 mouthOffset = new Vector3(0f, 0.02f, 0.17f);
+
+	public bool soundActivated;
+
+	public UnityEvent OnCooldownStart;
+
+	public UnityEvent OnCooldownReset;
 
 	private float cooldownRemaining;
 
 	private Transform localHead;
 
-	private PartyHornState partyHornStateLastFrame;
+	private PartyHornTransferableObject.PartyHornState partyHornStateLastFrame;
 
 	private bool localWasActivated;
 
-	public override void OnEnable()
+	private enum PartyHornState
 	{
-		base.OnEnable();
-		localHead = GorillaTagger.Instance.offlineVRRig.head.rigTarget.transform;
-		InitToDefault();
-	}
-
-	public override void ResetToDefaultState()
-	{
-		base.ResetToDefaultState();
-		InitToDefault();
-	}
-
-	protected override void LateUpdateLocal()
-	{
-		base.LateUpdateLocal();
-		if (!InHand() || itemState != ItemStates.State0 || !GorillaParent.hasInstance)
-		{
-			return;
-		}
-		Transform transform = base.transform;
-		Vector3 vector = transform.position + transform.forward * mouthPieceZOffset;
-		float num = mouthPieceRadius * mouthPieceRadius;
-		bool flag = (localHead.TransformPoint(mouthOffset) - vector).sqrMagnitude < num;
-		foreach (VRRig vrrig in GorillaParent.instance.vrrigs)
-		{
-			if (vrrig.head == null || vrrig.head.rigTarget == null || flag)
-			{
-				break;
-			}
-			flag = (vrrig.head.rigTarget.transform.TransformPoint(mouthOffset) - vector).sqrMagnitude < num;
-		}
-		itemState = (flag ? ItemStates.State1 : itemState);
-	}
-
-	protected override void LateUpdateShared()
-	{
-		base.LateUpdateShared();
-		if (ItemStates.State1 == itemState)
-		{
-			if (!localWasActivated)
-			{
-				effectsGameObject.SetActive(value: true);
-				cooldownRemaining = cooldown;
-				localWasActivated = true;
-			}
-			cooldownRemaining -= Time.deltaTime;
-			if (cooldownRemaining <= 0f)
-			{
-				InitToDefault();
-			}
-		}
-	}
-
-	private void InitToDefault()
-	{
-		itemState = ItemStates.State0;
-		effectsGameObject.SetActive(value: false);
-		cooldownRemaining = cooldown;
-		localWasActivated = false;
+		None = 1,
+		CoolingDown
 	}
 }

@@ -1,31 +1,31 @@
-using System;
+﻿using System;
 using UnityEngine;
 
 [Serializable]
 public class CallLimiterWithCooldown : CallLimiter
 {
-	[SerializeField]
-	private float spamCoolDown;
-
 	public CallLimiterWithCooldown(float coolDownSpam, int historyLength, float coolDown)
-		: base(historyLength, coolDown)
+		: base(historyLength, coolDown, 0.5f)
 	{
-		spamCoolDown = coolDownSpam;
+		this.spamCoolDown = coolDownSpam;
 	}
 
 	public CallLimiterWithCooldown(float coolDownSpam, int historyLength, float coolDown, float latencyMax)
 		: base(historyLength, coolDown, latencyMax)
 	{
-		spamCoolDown = coolDownSpam;
+		this.spamCoolDown = coolDownSpam;
 	}
 
 	public override bool CheckCallTime(float time)
 	{
-		if (blockCall && time < blockStartTime + spamCoolDown)
+		if (this.blockCall && time < this.blockStartTime + this.spamCoolDown)
 		{
-			blockStartTime = time;
+			this.blockStartTime = time;
 			return false;
 		}
 		return base.CheckCallTime(time);
 	}
+
+	[SerializeField]
+	private float spamCoolDown;
 }

@@ -1,3 +1,5 @@
+﻿using System;
+
 public enum GTZone
 {
 	forest,
@@ -7,5 +9,8 @@ public enum GTZone
 	beach,
 	mountain,
 	skyJungle,
-	cave
+	cave,
+	cityWithSkyJungle,
+	tutorial,
+	rotating
 }

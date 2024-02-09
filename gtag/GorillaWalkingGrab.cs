@@ -1,7 +1,42 @@
+﻿using System;
 using UnityEngine;
 
 public class GorillaWalkingGrab : MonoBehaviour
 {
+	private void Start()
+	{
+		this.thisRigidbody = base.gameObject.GetComponent<Rigidbody>();
+		this.positionHistory = new Vector3[this.historySteps];
+		this.historyIndex = 0;
+	}
+
+	private void FixedUpdate()
+	{
+		this.historyIndex++;
+		if (this.historyIndex >= this.historySteps)
+		{
+			this.historyIndex = 0;
+		}
+		this.positionHistory[this.historyIndex] = this.handToStickTo.transform.position;
+		this.thisRigidbody.MovePosition(this.handToStickTo.transform.position);
+		base.transform.rotation = this.handToStickTo.transform.rotation;
+	}
+
+	private bool MakeJump()
+	{
+		return false;
+	}
+
+	private void OnCollisionStay(Collision collision)
+	{
+		if (!this.MakeJump())
+		{
+			Vector3 vector = Vector3.ProjectOnPlane(this.positionHistory[(this.historyIndex != 0) ? (this.historyIndex - 1) : (this.historySteps - 1)] - this.handToStickTo.transform.position, collision.GetContact(0).normal);
+			Vector3 vector2 = this.thisRigidbody.transform.position - this.handToStickTo.transform.position;
+			this.playspaceRigidbody.MovePosition(this.playspaceRigidbody.transform.position + vector - vector2);
+		}
+	}
+
 	public GameObject handToStickTo;
 
 	public float ratioToUse;
@@ -21,38 +56,4 @@ public class GorillaWalkingGrab : MonoBehaviour
 	private Vector3[] positionHistory;
 
 	private int historyIndex;
-
-	private void Start()
-	{
-		thisRigidbody = base.gameObject.GetComponent<Rigidbody>();
-		positionHistory = new Vector3[historySteps];
-		historyIndex = 0;
-	}
-
-	private void FixedUpdate()
-	{
-		historyIndex++;
-		if (historyIndex >= historySteps)
-		{
-			historyIndex = 0;
-		}
-		positionHistory[historyIndex] = handToStickTo.transform.position;
-		thisRigidbody.MovePosition(handToStickTo.transform.position);
-		base.transform.rotation = handToStickTo.transform.rotation;
-	}
-
-	private bool MakeJump()
-	{
-		return false;
-	}
-
-	private void OnCollisionStay(Collision collision)
-	{
-		if (!MakeJump())
-		{
-			Vector3 vector = Vector3.ProjectOnPlane(positionHistory[(historyIndex != 0) ? (historyIndex - 1) : (historySteps - 1)] - handToStickTo.transform.position, collision.GetContact(0).normal);
-			Vector3 vector2 = thisRigidbody.transform.position - handToStickTo.transform.position;
-			playspaceRigidbody.MovePosition(playspaceRigidbody.transform.position + vector - vector2);
-		}
-	}
 }

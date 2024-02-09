@@ -1,8 +1,74 @@
+﻿using System;
 using GorillaLocomotion;
 using UnityEngine;
 
 public class ElderGorilla : MonoBehaviour
 {
+	private void Update()
+	{
+		if (Player.Instance == null)
+		{
+			return;
+		}
+		if (Player.Instance.inOverlay || !Player.Instance.isUserPresent)
+		{
+			return;
+		}
+		this.tHMD = Player.Instance.headCollider.transform;
+		this.tLeftHand = Player.Instance.leftControllerTransform;
+		this.tRightHand = Player.Instance.rightControllerTransform;
+		if (Time.time - this.timeLastValidArmDist > 1f)
+		{
+			this.CheckHandDistance(this.tLeftHand);
+			this.CheckHandDistance(this.tRightHand);
+		}
+		this.CheckHeight();
+		this.CheckMicVolume();
+	}
+
+	private void CheckHandDistance(Transform hand)
+	{
+		float num = Vector3.Distance(hand.localPosition, this.tHMD.localPosition);
+		if (num >= 1f)
+		{
+			return;
+		}
+		if (num >= 0.75f)
+		{
+			this.countValidArmDists++;
+			this.timeLastValidArmDist = Time.time;
+		}
+	}
+
+	private void CheckHeight()
+	{
+		float y = this.tHMD.localPosition.y;
+		if (!this.trackingHeadHeight)
+		{
+			this.trackedHeadHeight = y - 0.05f;
+			this.timerTrackedHeadHeight = 0f;
+		}
+		else if (this.trackedHeadHeight < y)
+		{
+			this.trackingHeadHeight = false;
+		}
+		if (this.trackingHeadHeight)
+		{
+			if (this.timerTrackedHeadHeight >= 1f)
+			{
+				this.savedHeadHeight = y;
+				this.trackingHeadHeight = false;
+				return;
+			}
+			this.timerTrackedHeadHeight += Time.deltaTime;
+		}
+	}
+
+	private void CheckMicVolume()
+	{
+		float currentPeakAmp = GorillaTagger.Instance.myRecorder.LevelMeter.CurrentPeakAmp;
+	}
+
 	private const float MAX_HAND_DIST = 1f;
 
 	private const float COOLDOWN_HAND_DIST = 1f;
@@ -28,63 +94,4 @@ public class ElderGorilla : MonoBehaviour
 	private float timerTrackedHeadHeight;
 
 	private float savedHeadHeight = 1.5f;
-
-	private void Update()
-	{
-		if (!(Player.Instance == null) && !Player.Instance.inOverlay && Player.Instance.isUserPresent)
-		{
-			tHMD = Player.Instance.headCollider.transform;
-			tLeftHand = Player.Instance.leftControllerTransform;
-			tRightHand = Player.Instance.rightControllerTransform;
-			if (Time.time - timeLastValidArmDist > 1f)
-			{
-				CheckHandDistance(tLeftHand);
-				CheckHandDistance(tRightHand);
-			}
-			CheckHeight();
-			CheckMicVolume();
-		}
-	}
-
-	private void CheckHandDistance(Transform hand)
-	{
-		float num = Vector3.Distance(hand.localPosition, tHMD.localPosition);
-		if (!(num >= 1f) && num >= 0.75f)
-		{
-			countValidArmDists++;
-			timeLastValidArmDist = Time.time;
-		}
-	}
-
-	private void CheckHeight()
-	{
-		float y = tHMD.localPosition.y;
-		if (!trackingHeadHeight)
-		{
-			trackedHeadHeight = y - 0.05f;
-			timerTrackedHeadHeight = 0f;
-		}
-		else if (trackedHeadHeight < y)
-		{
-			trackingHeadHeight = false;
-		}
-		if (trackingHeadHeight)
-		{
-			if (timerTrackedHeadHeight >= 1f)
-			{
-				savedHeadHeight = y;
-				trackingHeadHeight = false;
-			}
-			else
-			{
-				timerTrackedHeadHeight += Time.deltaTime;
-			}
-		}
-	}
-
-	private void CheckMicVolume()
-	{
-		_ = GorillaTagger.Instance.myRecorder.LevelMeter.CurrentPeakAmp;
-		_ = 10f;
-	}
 }

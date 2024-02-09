@@ -1,22 +1,23 @@
+﻿using System;
 using GorillaNetworking;
 using UnityEngine;
 
 public class CosmeticBoundaryTrigger : GorillaTriggerBox
 {
-	public VRRig rigRef;
-
 	public void OnTriggerEnter(Collider other)
 	{
-		if (!(other.attachedRigidbody == null))
+		if (other.attachedRigidbody == null)
 		{
-			rigRef = other.attachedRigidbody.gameObject.GetComponent<VRRig>();
-			if (!(rigRef == null))
-			{
-				rigRef.inTryOnRoom = true;
-				rigRef.LocalUpdateCosmeticsWithTryon(rigRef.cosmeticSet, rigRef.tryOnSet);
-				rigRef.myBodyDockPositions.RefreshTransferrableItems();
-			}
+			return;
 		}
+		this.rigRef = other.attachedRigidbody.gameObject.GetComponent<VRRig>();
+		if (this.rigRef == null)
+		{
+			return;
+		}
+		this.rigRef.inTryOnRoom = true;
+		this.rigRef.LocalUpdateCosmeticsWithTryon(this.rigRef.cosmeticSet, this.rigRef.tryOnSet);
+		this.rigRef.myBodyDockPositions.RefreshTransferrableItems();
 	}
 
 	public void OnTriggerExit(Collider other)
@@ -25,18 +26,22 @@ public class CosmeticBoundaryTrigger : GorillaTriggerBox
 		{
 			return;
 		}
-		rigRef = other.attachedRigidbody.gameObject.GetComponent<VRRig>();
-		if (!(rigRef == null))
+		this.rigRef = other.attachedRigidbody.gameObject.GetComponent<VRRig>();
+		if (this.rigRef == null)
 		{
-			rigRef.inTryOnRoom = false;
-			if (rigRef.isOfflineVRRig)
-			{
-				rigRef.tryOnSet.ClearSet(CosmeticsController.instance.nullItem);
-				CosmeticsController.instance.ClearCheckout();
-				CosmeticsController.instance.UpdateShoppingCart();
-			}
-			rigRef.LocalUpdateCosmeticsWithTryon(rigRef.cosmeticSet, rigRef.tryOnSet);
-			rigRef.myBodyDockPositions.RefreshTransferrableItems();
+			return;
 		}
+		this.rigRef.inTryOnRoom = false;
+		if (this.rigRef.isOfflineVRRig)
+		{
+			this.rigRef.tryOnSet.ClearSet(CosmeticsController.instance.nullItem);
+			CosmeticsController.instance.ClearCheckout();
+			CosmeticsController.instance.UpdateShoppingCart();
+			CosmeticsController.instance.UpdateWornCosmetics(true);
+		}
+		this.rigRef.LocalUpdateCosmeticsWithTryon(this.rigRef.cosmeticSet, this.rigRef.tryOnSet);
+		this.rigRef.myBodyDockPositions.RefreshTransferrableItems();
 	}
+
+	public VRRig rigRef;
 }

@@ -1,8 +1,258 @@
+﻿using System;
 using UnityEngine;
 using UnityEngine.XR;
+using Valve.VR;
 
 public class ControllerInputPoller : MonoBehaviour
 {
+	public GorillaControllerType controllerType { get; private set; }
+
+	private void Awake()
+	{
+		if (ControllerInputPoller.instance == null)
+		{
+			ControllerInputPoller.instance = this;
+			return;
+		}
+		if (ControllerInputPoller.instance != this)
+		{
+			Object.Destroy(base.gameObject);
+		}
+	}
+
+	private void Update()
+	{
+		InputDevice inputDevice = this.leftControllerDevice;
+		if (!this.leftControllerDevice.isValid)
+		{
+			this.leftControllerDevice = InputDevices.GetDeviceAtXRNode(XRNode.LeftHand);
+			if (this.leftControllerDevice.isValid)
+			{
+				this.controllerType = GorillaControllerType.OCULUS_DEFAULT;
+				if (this.leftControllerDevice.name.ToLower().Contains("knuckles"))
+				{
+					this.controllerType = GorillaControllerType.INDEX;
+				}
+				Debug.Log(string.Format("Found left controller: {0} ControllerType: {1}", this.leftControllerDevice.name, this.controllerType));
+			}
+		}
+		InputDevice inputDevice2 = this.rightControllerDevice;
+		if (!this.rightControllerDevice.isValid)
+		{
+			this.rightControllerDevice = InputDevices.GetDeviceAtXRNode(XRNode.RightHand);
+		}
+		InputDevice inputDevice3 = this.headDevice;
+		if (!this.headDevice.isValid)
+		{
+			this.headDevice = InputDevices.GetDeviceAtXRNode(XRNode.CenterEye);
+		}
+		InputDevice inputDevice4 = this.leftControllerDevice;
+		InputDevice inputDevice5 = this.rightControllerDevice;
+		InputDevice inputDevice6 = this.headDevice;
+		this.leftControllerDevice.TryGetFeatureValue(CommonUsages.primaryButton, out this.leftControllerPrimaryButton);
+		this.leftControllerDevice.TryGetFeatureValue(CommonUsages.secondaryButton, out this.leftControllerSecondaryButton);
+		this.leftControllerDevice.TryGetFeatureValue(CommonUsages.primaryTouch, out this.leftControllerPrimaryButtonTouch);
+		this.leftControllerDevice.TryGetFeatureValue(CommonUsages.secondaryTouch, out this.leftControllerSecondaryButtonTouch);
+		this.leftControllerDevice.TryGetFeatureValue(CommonUsages.grip, out this.leftControllerGripFloat);
+		this.leftControllerDevice.TryGetFeatureValue(CommonUsages.trigger, out this.leftControllerIndexFloat);
+		this.leftControllerDevice.TryGetFeatureValue(CommonUsages.devicePosition, out this.leftControllerPosition);
+		this.leftControllerDevice.TryGetFeatureValue(CommonUsages.deviceRotation, out this.leftControllerRotation);
+		this.rightControllerDevice.TryGetFeatureValue(CommonUsages.primaryButton, out this.rightControllerPrimaryButton);
+		this.rightControllerDevice.TryGetFeatureValue(CommonUsages.secondaryButton, out this.rightControllerSecondaryButton);
+		this.rightControllerDevice.TryGetFeatureValue(CommonUsages.primaryTouch, out this.rightControllerPrimaryButtonTouch);
+		this.rightControllerDevice.TryGetFeatureValue(CommonUsages.secondaryTouch, out this.rightControllerSecondaryButtonTouch);
+		this.rightControllerDevice.TryGetFeatureValue(CommonUsages.grip, out this.rightControllerGripFloat);
+		this.rightControllerDevice.TryGetFeatureValue(CommonUsages.trigger, out this.rightControllerIndexFloat);
+		this.rightControllerDevice.TryGetFeatureValue(CommonUsages.devicePosition, out this.rightControllerPosition);
+		this.rightControllerDevice.TryGetFeatureValue(CommonUsages.deviceRotation, out this.rightControllerRotation);
+		this.rightControllerDevice.TryGetFeatureValue(CommonUsages.primary2DAxis, out this.rightControllerPrimary2DAxis);
+		this.leftControllerPrimaryButton = SteamVR_Actions.gorillaTag_LeftPrimaryClick.GetState(SteamVR_Input_Sources.LeftHand);
+		this.leftControllerSecondaryButton = SteamVR_Actions.gorillaTag_LeftSecondaryClick.GetState(SteamVR_Input_Sources.LeftHand);
+		this.leftControllerPrimaryButtonTouch = SteamVR_Actions.gorillaTag_LeftPrimaryTouch.GetState(SteamVR_Input_Sources.LeftHand);
+		this.leftControllerSecondaryButtonTouch = SteamVR_Actions.gorillaTag_LeftSecondaryTouch.GetState(SteamVR_Input_Sources.LeftHand);
+		this.leftControllerGripFloat = SteamVR_Actions.gorillaTag_LeftGripFloat.GetAxis(SteamVR_Input_Sources.LeftHand);
+		this.leftControllerIndexFloat = SteamVR_Actions.gorillaTag_LeftTriggerFloat.GetAxis(SteamVR_Input_Sources.LeftHand);
+		this.rightControllerPrimaryButton = SteamVR_Actions.gorillaTag_RightPrimaryClick.GetState(SteamVR_Input_Sources.RightHand);
+		this.rightControllerSecondaryButton = SteamVR_Actions.gorillaTag_RightSecondaryClick.GetState(SteamVR_Input_Sources.RightHand);
+		this.rightControllerPrimaryButtonTouch = SteamVR_Actions.gorillaTag_RightPrimaryTouch.GetState(SteamVR_Input_Sources.RightHand);
+		this.rightControllerSecondaryButtonTouch = SteamVR_Actions.gorillaTag_RightSecondaryTouch.GetState(SteamVR_Input_Sources.RightHand);
+		this.rightControllerGripFloat = SteamVR_Actions.gorillaTag_RightGripFloat.GetAxis(SteamVR_Input_Sources.RightHand);
+		this.rightControllerIndexFloat = SteamVR_Actions.gorillaTag_RightTriggerFloat.GetAxis(SteamVR_Input_Sources.RightHand);
+		this.rightControllerPrimary2DAxis = SteamVR_Actions.gorillaTag_RightJoystick2DAxis.GetAxis(SteamVR_Input_Sources.RightHand);
+		this.headDevice.TryGetFeatureValue(CommonUsages.devicePosition, out this.headPosition);
+		this.headDevice.TryGetFeatureValue(CommonUsages.deviceRotation, out this.headRotation);
+		if (this.controllerType == GorillaControllerType.OCULUS_DEFAULT)
+		{
+			this.CalculateGrabState(this.leftControllerGripFloat, ref this.leftGrab, ref this.leftGrabRelease, 0.75f, 0.65f);
+			this.CalculateGrabState(this.rightControllerGripFloat, ref this.rightGrab, ref this.rightGrabRelease, 0.75f, 0.65f);
+			return;
+		}
+		if (this.controllerType == GorillaControllerType.INDEX)
+		{
+			this.CalculateGrabState(this.leftControllerGripFloat, ref this.leftGrab, ref this.leftGrabRelease, 0.1f, 0.01f);
+			this.CalculateGrabState(this.rightControllerGripFloat, ref this.rightGrab, ref this.rightGrabRelease, 0.1f, 0.01f);
+		}
+	}
+
+	private void CalculateGrabState(float grabValue, ref bool grab, ref bool grabRelease, float grabThreshold, float grabReleaseThreshold)
+	{
+		grab = grabValue >= grabThreshold;
+		grabRelease = grabValue <= grabReleaseThreshold;
+	}
+
+	public static bool GetGrab(XRNode node)
+	{
+		if (node == XRNode.LeftHand)
+		{
+			return ControllerInputPoller.instance.leftGrab;
+		}
+		return node == XRNode.RightHand && ControllerInputPoller.instance.rightGrab;
+	}
+
+	public static bool GetGrabRelease(XRNode node)
+	{
+		if (node == XRNode.LeftHand)
+		{
+			return ControllerInputPoller.instance.leftGrabRelease;
+		}
+		return node == XRNode.RightHand && ControllerInputPoller.instance.rightGrabRelease;
+	}
+
+	public static Vector2 Primary2DAxis(XRNode node)
+	{
+		return ControllerInputPoller.instance.rightControllerPrimary2DAxis;
+	}
+
+	public static bool PrimaryButtonPress(XRNode node)
+	{
+		if (node == XRNode.LeftHand)
+		{
+			return ControllerInputPoller.instance.leftControllerPrimaryButton;
+		}
+		return node == XRNode.RightHand && ControllerInputPoller.instance.rightControllerPrimaryButton;
+	}
+
+	public static bool SecondaryButtonPress(XRNode node)
+	{
+		if (node == XRNode.LeftHand)
+		{
+			return ControllerInputPoller.instance.leftControllerSecondaryButton;
+		}
+		return node == XRNode.RightHand && ControllerInputPoller.instance.rightControllerSecondaryButton;
+	}
+
+	public static bool PrimaryButtonTouch(XRNode node)
+	{
+		if (node == XRNode.LeftHand)
+		{
+			return ControllerInputPoller.instance.leftControllerPrimaryButtonTouch;
+		}
+		return node == XRNode.RightHand && ControllerInputPoller.instance.rightControllerPrimaryButtonTouch;
+	}
+
+	public static bool SecondaryButtonTouch(XRNode node)
+	{
+		if (node == XRNode.LeftHand)
+		{
+			return ControllerInputPoller.instance.leftControllerSecondaryButtonTouch;
+		}
+		return node == XRNode.RightHand && ControllerInputPoller.instance.rightControllerSecondaryButtonTouch;
+	}
+
+	public static float GripFloat(XRNode node)
+	{
+		if (node == XRNode.LeftHand)
+		{
+			return ControllerInputPoller.instance.leftControllerGripFloat;
+		}
+		if (node == XRNode.RightHand)
+		{
+			return ControllerInputPoller.instance.rightControllerGripFloat;
+		}
+		return 0f;
+	}
+
+	public static float TriggerFloat(XRNode node)
+	{
+		if (node == XRNode.LeftHand)
+		{
+			return ControllerInputPoller.instance.leftControllerIndexFloat;
+		}
+		if (node == XRNode.RightHand)
+		{
+			return ControllerInputPoller.instance.rightControllerIndexFloat;
+		}
+		return 0f;
+	}
+
+	public static float TriggerTouch(XRNode node)
+	{
+		if (node == XRNode.LeftHand)
+		{
+			return ControllerInputPoller.instance.leftControllerIndexTouch;
+		}
+		if (node == XRNode.RightHand)
+		{
+			return ControllerInputPoller.instance.rightControllerIndexTouch;
+		}
+		return 0f;
+	}
+
+	public static Vector3 DevicePosition(XRNode node)
+	{
+		if (node == XRNode.Head)
+		{
+			return ControllerInputPoller.instance.headPosition;
+		}
+		if (node == XRNode.LeftHand)
+		{
+			return ControllerInputPoller.instance.leftControllerPosition;
+		}
+		if (node == XRNode.RightHand)
+		{
+			return ControllerInputPoller.instance.rightControllerPosition;
+		}
+		return Vector3.zero;
+	}
+
+	public static Quaternion DeviceRotation(XRNode node)
+	{
+		if (node == XRNode.Head)
+		{
+			return ControllerInputPoller.instance.headRotation;
+		}
+		if (node == XRNode.LeftHand)
+		{
+			return ControllerInputPoller.instance.leftControllerRotation;
+		}
+		if (node == XRNode.RightHand)
+		{
+			return ControllerInputPoller.instance.rightControllerRotation;
+		}
+		return Quaternion.identity;
+	}
+
+	public static bool PositionValid(XRNode node)
+	{
+		if (node == XRNode.Head)
+		{
+			InputDevice inputDevice = ControllerInputPoller.instance.headDevice;
+			return ControllerInputPoller.instance.headDevice.isValid;
+		}
+		if (node == XRNode.LeftHand)
+		{
+			InputDevice inputDevice2 = ControllerInputPoller.instance.leftControllerDevice;
+			return ControllerInputPoller.instance.leftControllerDevice.isValid;
+		}
+		if (node == XRNode.RightHand)
+		{
+			InputDevice inputDevice3 = ControllerInputPoller.instance.rightControllerDevice;
+			return ControllerInputPoller.instance.rightControllerDevice.isValid;
+		}
+		return false;
+	}
+
+	[OnEnterPlay_SetNull]
 	public static volatile ControllerInputPoller instance;
 
 	public float leftControllerIndexFloat;
@@ -62,221 +312,4 @@ public class ControllerInputPoller : MonoBehaviour
 	public bool rightGrabRelease;
 
 	public Vector2 rightControllerPrimary2DAxis;
-
-	public GorillaControllerType controllerType { get; private set; }
-
-	private void Awake()
-	{
-		if (instance == null)
-		{
-			instance = this;
-		}
-		else if (instance != this)
-		{
-			Object.Destroy(base.gameObject);
-		}
-	}
-
-	private void Update()
-	{
-		_ = leftControllerDevice;
-		if (!leftControllerDevice.isValid)
-		{
-			leftControllerDevice = InputDevices.GetDeviceAtXRNode(XRNode.LeftHand);
-			if (leftControllerDevice.isValid)
-			{
-				controllerType = GorillaControllerType.OCULUS_DEFAULT;
-				if (leftControllerDevice.name.ToLower().Contains("knuckles"))
-				{
-					controllerType = GorillaControllerType.INDEX;
-				}
-				Debug.Log($"Found left controller: {leftControllerDevice.name} ControllerType: {controllerType}");
-			}
-		}
-		_ = rightControllerDevice;
-		if (!rightControllerDevice.isValid)
-		{
-			rightControllerDevice = InputDevices.GetDeviceAtXRNode(XRNode.RightHand);
-		}
-		_ = headDevice;
-		if (!headDevice.isValid)
-		{
-			headDevice = InputDevices.GetDeviceAtXRNode(XRNode.CenterEye);
-		}
-		_ = leftControllerDevice;
-		_ = rightControllerDevice;
-		_ = headDevice;
-		leftControllerDevice.TryGetFeatureValue(CommonUsages.primaryButton, out leftControllerPrimaryButton);
-		leftControllerDevice.TryGetFeatureValue(CommonUsages.secondaryButton, out leftControllerSecondaryButton);
-		leftControllerDevice.TryGetFeatureValue(CommonUsages.primaryTouch, out leftControllerPrimaryButtonTouch);
-		leftControllerDevice.TryGetFeatureValue(CommonUsages.secondaryTouch, out leftControllerSecondaryButtonTouch);
-		leftControllerDevice.TryGetFeatureValue(CommonUsages.grip, out leftControllerGripFloat);
-		leftControllerDevice.TryGetFeatureValue(CommonUsages.trigger, out leftControllerIndexFloat);
-		leftControllerDevice.TryGetFeatureValue(CommonUsages.devicePosition, out leftControllerPosition);
-		leftControllerDevice.TryGetFeatureValue(CommonUsages.deviceRotation, out leftControllerRotation);
-		rightControllerDevice.TryGetFeatureValue(CommonUsages.primaryButton, out rightControllerPrimaryButton);
-		rightControllerDevice.TryGetFeatureValue(CommonUsages.secondaryButton, out rightControllerSecondaryButton);
-		rightControllerDevice.TryGetFeatureValue(CommonUsages.primaryTouch, out rightControllerPrimaryButtonTouch);
-		rightControllerDevice.TryGetFeatureValue(CommonUsages.secondaryTouch, out rightControllerSecondaryButtonTouch);
-		rightControllerDevice.TryGetFeatureValue(CommonUsages.grip, out rightControllerGripFloat);
-		rightControllerDevice.TryGetFeatureValue(CommonUsages.trigger, out rightControllerIndexFloat);
-		rightControllerDevice.TryGetFeatureValue(CommonUsages.devicePosition, out rightControllerPosition);
-		rightControllerDevice.TryGetFeatureValue(CommonUsages.deviceRotation, out rightControllerRotation);
-		rightControllerDevice.TryGetFeatureValue(CommonUsages.primary2DAxis, out rightControllerPrimary2DAxis);
-		leftControllerDevice.TryGetFeatureValue(CommonUsages.indexTouch, out leftControllerIndexTouch);
-		rightControllerDevice.TryGetFeatureValue(CommonUsages.indexTouch, out rightControllerIndexTouch);
-		headDevice.TryGetFeatureValue(CommonUsages.devicePosition, out headPosition);
-		headDevice.TryGetFeatureValue(CommonUsages.deviceRotation, out headRotation);
-		if (controllerType == GorillaControllerType.OCULUS_DEFAULT)
-		{
-			CalculateGrabState(leftControllerGripFloat, ref leftGrab, ref leftGrabRelease, 0.75f, 0.65f);
-			CalculateGrabState(rightControllerGripFloat, ref rightGrab, ref rightGrabRelease, 0.75f, 0.65f);
-		}
-		else if (controllerType == GorillaControllerType.INDEX)
-		{
-			CalculateGrabState(leftControllerGripFloat, ref leftGrab, ref leftGrabRelease, 0.1f, 0.01f);
-			CalculateGrabState(rightControllerGripFloat, ref rightGrab, ref rightGrabRelease, 0.1f, 0.01f);
-		}
-	}
-
-	private void CalculateGrabState(float grabValue, ref bool grab, ref bool grabRelease, float grabThreshold, float grabReleaseThreshold)
-	{
-		grab = grabValue >= grabThreshold;
-		grabRelease = grabValue <= grabReleaseThreshold;
-	}
-
-	public static bool GetGrab(XRNode node)
-	{
-		return node switch
-		{
-			XRNode.LeftHand => instance.leftGrab, 
-			XRNode.RightHand => instance.rightGrab, 
-			_ => false, 
-		};
-	}
-
-	public static bool GetGrabRelease(XRNode node)
-	{
-		return node switch
-		{
-			XRNode.LeftHand => instance.leftGrabRelease, 
-			XRNode.RightHand => instance.rightGrabRelease, 
-			_ => false, 
-		};
-	}
-
-	public static Vector2 Primary2DAxis(XRNode node)
-	{
-		return instance.rightControllerPrimary2DAxis;
-	}
-
-	public static bool PrimaryButtonPress(XRNode node)
-	{
-		return node switch
-		{
-			XRNode.LeftHand => instance.leftControllerPrimaryButton, 
-			XRNode.RightHand => instance.rightControllerPrimaryButton, 
-			_ => false, 
-		};
-	}
-
-	public static bool SecondaryButtonPress(XRNode node)
-	{
-		return node switch
-		{
-			XRNode.LeftHand => instance.leftControllerSecondaryButton, 
-			XRNode.RightHand => instance.rightControllerSecondaryButton, 
-			_ => false, 
-		};
-	}
-
-	public static bool PrimaryButtonTouch(XRNode node)
-	{
-		return node switch
-		{
-			XRNode.LeftHand => instance.leftControllerPrimaryButtonTouch, 
-			XRNode.RightHand => instance.rightControllerPrimaryButtonTouch, 
-			_ => false, 
-		};
-	}
-
-	public static bool SecondaryButtonTouch(XRNode node)
-	{
-		return node switch
-		{
-			XRNode.LeftHand => instance.leftControllerSecondaryButtonTouch, 
-			XRNode.RightHand => instance.rightControllerSecondaryButtonTouch, 
-			_ => false, 
-		};
-	}
-
-	public static float GripFloat(XRNode node)
-	{
-		return node switch
-		{
-			XRNode.LeftHand => instance.leftControllerGripFloat, 
-			XRNode.RightHand => instance.rightControllerGripFloat, 
-			_ => 0f, 
-		};
-	}
-
-	public static float TriggerFloat(XRNode node)
-	{
-		return node switch
-		{
-			XRNode.LeftHand => instance.leftControllerIndexFloat, 
-			XRNode.RightHand => instance.rightControllerIndexFloat, 
-			_ => 0f, 
-		};
-	}
-
-	public static float TriggerTouch(XRNode node)
-	{
-		return node switch
-		{
-			XRNode.LeftHand => instance.leftControllerIndexTouch, 
-			XRNode.RightHand => instance.rightControllerIndexTouch, 
-			_ => 0f, 
-		};
-	}
-
-	public static Vector3 DevicePosition(XRNode node)
-	{
-		return node switch
-		{
-			XRNode.Head => instance.headPosition, 
-			XRNode.LeftHand => instance.leftControllerPosition, 
-			XRNode.RightHand => instance.rightControllerPosition, 
-			_ => Vector3.zero, 
-		};
-	}
-
-	public static Quaternion DeviceRotation(XRNode node)
-	{
-		return node switch
-		{
-			XRNode.Head => instance.headRotation, 
-			XRNode.LeftHand => instance.leftControllerRotation, 
-			XRNode.RightHand => instance.rightControllerRotation, 
-			_ => Quaternion.identity, 
-		};
-	}
-
-	public static bool PositionValid(XRNode node)
-	{
-		switch (node)
-		{
-		case XRNode.Head:
-			_ = instance.headDevice;
-			return instance.headDevice.isValid;
-		case XRNode.LeftHand:
-			_ = instance.leftControllerDevice;
-			return instance.leftControllerDevice.isValid;
-		case XRNode.RightHand:
-			_ = instance.rightControllerDevice;
-			return instance.rightControllerDevice.isValid;
-		default:
-			return false;
-		}
-	}
 }

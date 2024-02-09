@@ -1,3 +1,4 @@
+﻿using System;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "NewLegalAgreementAsset", menuName = "Gorilla Tag/Legal Agreement Asset")]

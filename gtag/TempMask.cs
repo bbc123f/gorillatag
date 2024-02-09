@@ -1,10 +1,54 @@
-using System;
+﻿using System;
 using System.Collections;
 using GorillaNetworking;
 using UnityEngine;
 
 public class TempMask : MonoBehaviour
 {
+	private void Awake()
+	{
+		this.dayOn = new DateTime(this.year, this.month, this.day);
+		this.myRig = base.GetComponentInParent<VRRig>();
+		if (this.myRig != null && this.myRig.photonView.IsMine && !this.myRig.isOfflineVRRig)
+		{
+			Object.Destroy(base.gameObject);
+		}
+	}
+
+	private void OnEnable()
+	{
+		base.StartCoroutine(this.MaskOnDuringDate());
+	}
+
+	private void OnDisable()
+	{
+		base.StopAllCoroutines();
+	}
+
+	private IEnumerator MaskOnDuringDate()
+	{
+		for (;;)
+		{
+			if (GorillaComputer.instance != null && GorillaComputer.instance.startupMillis != 0L)
+			{
+				this.myDate = new DateTime(GorillaComputer.instance.startupMillis * 10000L + (long)(Time.realtimeSinceStartup * 1000f * 10000f)).Subtract(TimeSpan.FromHours(7.0));
+				if (this.myDate.DayOfYear == this.dayOn.DayOfYear)
+				{
+					if (!this.myRenderer.enabled)
+					{
+						this.myRenderer.enabled = true;
+					}
+				}
+				else if (this.myRenderer.enabled)
+				{
+					this.myRenderer.enabled = false;
+				}
+			}
+			yield return new WaitForSeconds(1f);
+		}
+		yield break;
+	}
+
 	public int year;
 
 	public int month;
@@ -18,47 +62,4 @@ public class TempMask : MonoBehaviour
 	private DateTime myDate;
 
 	private VRRig myRig;
-
-	private void Awake()
-	{
-		dayOn = new DateTime(year, month, day);
-		myRig = GetComponentInParent<VRRig>();
-		if (myRig != null && myRig.photonView.IsMine && !myRig.isOfflineVRRig)
-		{
-			UnityEngine.Object.Destroy(base.gameObject);
-		}
-	}
-
-	private void OnEnable()
-	{
-		StartCoroutine(MaskOnDuringDate());
-	}
-
-	private void OnDisable()
-	{
-		StopAllCoroutines();
-	}
-
-	private IEnumerator MaskOnDuringDate()
-	{
-		while (true)
-		{
-			if (GorillaComputer.instance != null && GorillaComputer.instance.startupMillis != 0L)
-			{
-				myDate = new DateTime(GorillaComputer.instance.startupMillis * 10000 + (long)(Time.realtimeSinceStartup * 1000f * 10000f)).Subtract(TimeSpan.FromHours(7.0));
-				if (myDate.DayOfYear == dayOn.DayOfYear)
-				{
-					if (!myRenderer.enabled)
-					{
-						myRenderer.enabled = true;
-					}
-				}
-				else if (myRenderer.enabled)
-				{
-					myRenderer.enabled = false;
-				}
-			}
-			yield return new WaitForSeconds(1f);
-		}
-	}
 }

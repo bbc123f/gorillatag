@@ -1,10 +1,67 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using BoingKit;
 using UnityEngine;
 
 public class BushFieldReactorMain : MonoBehaviour
 {
+	public void Start()
+	{
+		Random.InitState(0);
+		for (int i = 0; i < this.NumBushes; i++)
+		{
+			GameObject gameObject = Object.Instantiate<GameObject>(this.Bush);
+			float num = Random.Range(this.BushScaleRange.x, this.BushScaleRange.y);
+			gameObject.transform.position = new Vector3(Random.Range(-0.5f * this.FieldBounds.x, 0.5f * this.FieldBounds.x), 0.2f * num, Random.Range(-0.5f * this.FieldBounds.y, 0.5f * this.FieldBounds.y));
+			gameObject.transform.rotation = Quaternion.Euler(0f, Random.Range(0f, 360f), 0f);
+			gameObject.transform.localScale = num * Vector3.one;
+			BoingBehavior component = gameObject.GetComponent<BoingBehavior>();
+			if (component != null)
+			{
+				component.Reboot();
+			}
+		}
+		for (int j = 0; j < this.NumBlossoms; j++)
+		{
+			GameObject gameObject2 = Object.Instantiate<GameObject>(this.Blossom);
+			float num2 = Random.Range(this.BlossomScaleRange.x, this.BlossomScaleRange.y);
+			gameObject2.transform.position = new Vector3(Random.Range(-0.5f * this.FieldBounds.x, 0.5f * this.FieldBounds.y), 0.2f * num2, Random.Range(-0.5f * this.FieldBounds.y, 0.5f * this.FieldBounds.y));
+			gameObject2.transform.rotation = Quaternion.Euler(0f, Random.Range(0f, 360f), 0f);
+			gameObject2.transform.localScale = num2 * Vector3.one;
+			BoingBehavior component2 = gameObject2.GetComponent<BoingBehavior>();
+			if (component2 != null)
+			{
+				component2.Reboot();
+			}
+		}
+		this.m_aSphere = new List<GameObject>(this.NumSpheresPerCircle * this.NumCircles);
+		for (int k = 0; k < this.NumCircles; k++)
+		{
+			for (int l = 0; l < this.NumSpheresPerCircle; l++)
+			{
+				this.m_aSphere.Add(Object.Instantiate<GameObject>(this.Sphere));
+			}
+		}
+		this.m_basePhase = 0f;
+	}
+
+	public void Update()
+	{
+		int num = 0;
+		for (int i = 0; i < this.NumCircles; i++)
+		{
+			float num2 = this.MaxCircleRadius / (float)(i + 1);
+			for (int j = 0; j < this.NumSpheresPerCircle; j++)
+			{
+				float num3 = this.m_basePhase + (float)j / (float)this.NumSpheresPerCircle * 2f * 3.1415927f;
+				num3 *= ((i % 2 == 0) ? 1f : (-1f));
+				this.m_aSphere[num].transform.position = new Vector3(num2 * Mathf.Cos(num3), 0.2f, num2 * Mathf.Sin(num3));
+				num++;
+			}
+		}
+		this.m_basePhase -= this.CircleSpeed / this.MaxCircleRadius * Time.deltaTime;
+	}
+
 	public GameObject Bush;
 
 	public GameObject Blossom;
@@ -32,61 +89,4 @@ public class BushFieldReactorMain : MonoBehaviour
 	private List<GameObject> m_aSphere;
 
 	private float m_basePhase;
-
-	public void Start()
-	{
-		UnityEngine.Random.InitState(0);
-		for (int i = 0; i < NumBushes; i++)
-		{
-			GameObject obj = UnityEngine.Object.Instantiate(Bush);
-			float num = UnityEngine.Random.Range(BushScaleRange.x, BushScaleRange.y);
-			obj.transform.position = new Vector3(UnityEngine.Random.Range(-0.5f * FieldBounds.x, 0.5f * FieldBounds.x), 0.2f * num, UnityEngine.Random.Range(-0.5f * FieldBounds.y, 0.5f * FieldBounds.y));
-			obj.transform.rotation = Quaternion.Euler(0f, UnityEngine.Random.Range(0f, 360f), 0f);
-			obj.transform.localScale = num * Vector3.one;
-			BoingBehavior component = obj.GetComponent<BoingBehavior>();
-			if (component != null)
-			{
-				component.Reboot();
-			}
-		}
-		for (int j = 0; j < NumBlossoms; j++)
-		{
-			GameObject obj2 = UnityEngine.Object.Instantiate(Blossom);
-			float num2 = UnityEngine.Random.Range(BlossomScaleRange.x, BlossomScaleRange.y);
-			obj2.transform.position = new Vector3(UnityEngine.Random.Range(-0.5f * FieldBounds.x, 0.5f * FieldBounds.y), 0.2f * num2, UnityEngine.Random.Range(-0.5f * FieldBounds.y, 0.5f * FieldBounds.y));
-			obj2.transform.rotation = Quaternion.Euler(0f, UnityEngine.Random.Range(0f, 360f), 0f);
-			obj2.transform.localScale = num2 * Vector3.one;
-			BoingBehavior component2 = obj2.GetComponent<BoingBehavior>();
-			if (component2 != null)
-			{
-				component2.Reboot();
-			}
-		}
-		m_aSphere = new List<GameObject>(NumSpheresPerCircle * NumCircles);
-		for (int k = 0; k < NumCircles; k++)
-		{
-			for (int l = 0; l < NumSpheresPerCircle; l++)
-			{
-				m_aSphere.Add(UnityEngine.Object.Instantiate(Sphere));
-			}
-		}
-		m_basePhase = 0f;
-	}
-
-	public void Update()
-	{
-		int num = 0;
-		for (int i = 0; i < NumCircles; i++)
-		{
-			float num2 = MaxCircleRadius / (float)(i + 1);
-			for (int j = 0; j < NumSpheresPerCircle; j++)
-			{
-				float num3 = m_basePhase + (float)j / (float)NumSpheresPerCircle * 2f * (float)Math.PI;
-				num3 *= ((i % 2 == 0) ? 1f : (-1f));
-				m_aSphere[num].transform.position = new Vector3(num2 * Mathf.Cos(num3), 0.2f, num2 * Mathf.Sin(num3));
-				num++;
-			}
-		}
-		m_basePhase -= CircleSpeed / MaxCircleRadius * Time.deltaTime;
-	}
 }

@@ -1,99 +1,261 @@
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Security;
+using System.Text;
+using BuildSafe;
 using UnityEngine;
-using Utilities;
 
 public static class GTDev
 {
-	[Serializable]
-	public struct LogEntry
+	[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSplashScreen)]
+	private static void InitializeOnLoad()
 	{
-		public int level;
-
-		public DateTime time;
-
-		public string message;
-
-		public int checksum;
+		GTDev.FetchDevID();
 	}
 
-	private const string kSlash = "/";
+	[GTDev.HideInCallStackAttribute]
+	public static void Log(string msg, string channel = null)
+	{
+		GTDev._Log(new Action<object>(Debug.Log), msg, null, channel, "Log");
+	}
 
-	private static int gDevID;
+	[GTDev.HideInCallStackAttribute]
+	public static void Log(string msg, Object context, string channel = null)
+	{
+		GTDev._Log(new Action<object>(Debug.Log), msg, context, channel, "Log");
+	}
 
-	private static bool gHasDevID;
+	[GTDev.HideInCallStackAttribute]
+	public static void LogError(string msg, string channel = null)
+	{
+		GTDev._Log(new Action<object>(Debug.LogError), msg, null, channel, "LogError");
+	}
+
+	[GTDev.HideInCallStackAttribute]
+	public static void LogError(string msg, Object context, string channel = null)
+	{
+		GTDev._Log(new Action<object>(Debug.LogError), msg, context, channel, "LogError");
+	}
+
+	[GTDev.HideInCallStackAttribute]
+	public static void LogWarning(string msg, string channel = null)
+	{
+		GTDev._Log(new Action<object>(Debug.LogWarning), msg, null, channel, "LogWarning");
+	}
+
+	[GTDev.HideInCallStackAttribute]
+	public static void LogWarning(string msg, Object context, string channel = null)
+	{
+		GTDev._Log(new Action<object>(Debug.LogWarning), msg, context, channel, "LogWarning");
+	}
+
+	[GTDev.HideInCallStackAttribute]
+	public static void LogSilent(string msg, string channel = null)
+	{
+		GTDev._Log(null, msg, null, channel, "LogSilent");
+	}
+
+	[GTDev.HideInCallStackAttribute]
+	public static void LogSilent(string msg, Object context, string channel = null)
+	{
+		GTDev._Log(null, msg, context, channel, "LogSilent");
+	}
+
+	[GTDev.HideInCallStackAttribute]
+	[Conditional("UNITY_EDITOR")]
+	public static void LogEditorOnly(string msg, string channel = null)
+	{
+		GTDev._Log(new Action<object>(Debug.Log), msg, null, channel, "LogEditorOnly");
+	}
+
+	[GTDev.HideInCallStackAttribute]
+	[Conditional("UNITY_EDITOR")]
+	public static void LogEditorOnly(string msg, Object context, string channel = null)
+	{
+		GTDev._Log(new Action<object>(Debug.Log), msg, context, channel, "LogEditorOnly");
+	}
+
+	[GTDev.HideInCallStackAttribute]
+	[Conditional("UNITY_EDITOR")]
+	public static void CallEditorOnly(Action call)
+	{
+		if (call != null)
+		{
+			call();
+		}
+	}
+
+	public static event Action<GTDev.LogEntry> OnLogEntry;
 
 	public static int DevID
 	{
 		get
 		{
-			if (gHasDevID)
-			{
-				return gDevID;
-			}
-			int staticHash = SystemInfo.deviceUniqueIdentifier.GetStaticHash();
-			int staticHash2 = Environment.UserDomainName.GetStaticHash();
-			int staticHash3 = Environment.UserName.GetStaticHash();
-			int staticHash4 = Application.unityVersion.GetStaticHash();
-			gDevID = (i1: staticHash, i2: staticHash2, i3: staticHash3, i4: staticHash4).GetStaticHash();
-			gHasDevID = true;
-			return gDevID;
+			return GTDev.FetchDevID();
 		}
 	}
 
-	public static event Action<LogEntry> OnLogEntry;
-
-	[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-	private static void InitializeOnLoad()
+	private static int FetchDevID()
 	{
+		if (GTDev.gHasDevID)
+		{
+			return GTDev.gDevID;
+		}
+		int num = StaticHash.Calculate(SystemInfo.deviceUniqueIdentifier);
+		int num2 = StaticHash.Calculate(Environment.UserDomainName);
+		int num3 = StaticHash.Calculate(Environment.UserName);
+		int num4 = StaticHash.Calculate(Application.unityVersion);
+		GTDev.gDevID = StaticHash.Combine(num, num2, num3, num4);
+		GTDev.gHasDevID = true;
+		return GTDev.gDevID;
 	}
 
-	public static void Log(string msg, string lvl = null)
+	private static void _Log(Action<object> call, string msg, Object ctx, string chl, [CallerMemberName] string clr = null)
 	{
-		_Log(UnityEngine.Debug.Log, msg, "Log" + "/" + (lvl ?? string.Empty));
-	}
-
-	public static void LogError(string msg, string lvl = null)
-	{
-		_Log(UnityEngine.Debug.LogError, msg, "LogError" + "/" + (lvl ?? string.Empty));
-	}
-
-	public static void LogWarning(string msg, string lvl = null)
-	{
-		_Log(UnityEngine.Debug.LogWarning, msg, "LogWarning" + "/" + (lvl ?? string.Empty));
-	}
-
-	public static void LogDebug(string msg, string lvl = null)
-	{
-		_Log(null, msg, "LogDebug" + "/" + (lvl ?? string.Empty));
-	}
-
-	public static void LogSilent(string msg, string lvl = null)
-	{
-		_Log(null, msg, "LogSilent" + "/" + (lvl ?? string.Empty));
-	}
-
-	[Conditional("UNITY_EDITOR")]
-	public static void LogEditorOnly(string msg, string lvl = null)
-	{
-		_Log(UnityEngine.Debug.Log, msg, "LogEditorOnly" + "/" + (lvl ?? string.Empty));
-	}
-
-	[Conditional("UNITY_EDITOR")]
-	public static void CallEditorOnly(Action call)
-	{
-		call?.Invoke();
-	}
-
-	private static void _Log(Action<object> call, string msg, string level = null)
-	{
-		call?.Invoke("[GTDev] " + msg);
-		GTDev.OnLogEntry?.Invoke(new LogEntry
+		string text = (string.IsNullOrWhiteSpace(chl) ? clr : (chl + "//" + clr));
+		StackTraceLogType stackTraceLogType = Application.stackTraceLogType;
+		Application.stackTraceLogType = StackTraceLogType.None;
+		string text2 = GTDev.ExtractFormattedStackTrace(new StackTrace(1, true));
+		if (call != null)
+		{
+			call(msg + "\n" + text2);
+		}
+		Application.stackTraceLogType = stackTraceLogType;
+		Action<GTDev.LogEntry> onLogEntry = GTDev.OnLogEntry;
+		if (onLogEntry == null)
+		{
+			return;
+		}
+		onLogEntry(new GTDev.LogEntry
 		{
 			time = DateTime.UtcNow,
 			message = msg,
-			level = StaticHash.Calculate(level),
-			checksum = StaticHash.Calculate(msg)
+			channel = text
 		});
+	}
+
+	private static string projectFolder
+	{
+		get
+		{
+			if (!GTDev.gProjectFolderSet)
+			{
+				GTDev.CacheProjectFolder();
+			}
+			return GTDev.gProjectFolder;
+		}
+	}
+
+	private static void CacheProjectFolder()
+	{
+		if (GTDev.gFetchProjectFolder == null)
+		{
+			GTDev.gFetchProjectFolder = typeof(StackTraceUtility).GetRuntimeFields().FirstOrDefault((FieldInfo f) => f.Name == "projectFolder");
+		}
+		FieldInfo fieldInfo = GTDev.gFetchProjectFolder;
+		GTDev.gProjectFolder = (string)((fieldInfo != null) ? fieldInfo.GetValue(null) : null);
+		GTDev.gProjectFolderSet = true;
+	}
+
+	private static bool IsIgnoredMethod(MethodBase method)
+	{
+		if (GTDev.gIgnoreMethods != null)
+		{
+			return GTDev.gIgnoreMethods.Contains(method);
+		}
+		GTDev.gIgnoreMethods = new HashSet<MethodBase>(Reflection.GetMethodsWithAttribute<GTDev.HideInCallStackAttribute>());
+		return GTDev.gIgnoreMethods.Contains(method);
+	}
+
+	[SecuritySafeCritical]
+	private static string ExtractFormattedStackTrace(StackTrace stackTrace)
+	{
+		StringBuilder stringBuilder = new StringBuilder(255);
+		for (int i = 0; i < stackTrace.FrameCount; i++)
+		{
+			StackFrame frame = stackTrace.GetFrame(i);
+			MethodBase method = frame.GetMethod();
+			if (!(method == null) && !GTDev.IsIgnoredMethod(method))
+			{
+				Type declaringType = method.DeclaringType;
+				if (!(declaringType == null))
+				{
+					string @namespace = declaringType.Namespace;
+					if (!string.IsNullOrEmpty(@namespace))
+					{
+						stringBuilder.Append(@namespace);
+						stringBuilder.Append(".");
+					}
+					stringBuilder.Append(declaringType.Name);
+					stringBuilder.Append(":");
+					stringBuilder.Append(method.Name);
+					stringBuilder.Append("(");
+					ParameterInfo[] parameters = method.GetParameters();
+					bool flag = true;
+					for (int j = 0; j < parameters.Length; j++)
+					{
+						if (!flag)
+						{
+							stringBuilder.Append(", ");
+						}
+						else
+						{
+							flag = false;
+						}
+						stringBuilder.Append(parameters[j].ParameterType.Name);
+					}
+					stringBuilder.Append(")");
+					string text = frame.GetFileName();
+					if (text != null && (declaringType.Name != "Debug" || declaringType.Namespace != "UnityEngine") && (declaringType.Name != "Logger" || declaringType.Namespace != "UnityEngine") && (declaringType.Name != "DebugLogHandler" || declaringType.Namespace != "UnityEngine") && (declaringType.Name != "Assert" || declaringType.Namespace != "UnityEngine.Assertions") && (method.Name != "print" || declaringType.Name != "MonoBehaviour" || declaringType.Namespace != "UnityEngine"))
+					{
+						stringBuilder.Append(" (at ");
+						if (!string.IsNullOrEmpty(GTDev.projectFolder) && text.Replace("\\", "/").StartsWith(GTDev.projectFolder))
+						{
+							text = text.Substring(GTDev.projectFolder.Length, text.Length - GTDev.projectFolder.Length);
+						}
+						stringBuilder.Append(text);
+						stringBuilder.Append(":");
+						stringBuilder.Append(frame.GetFileLineNumber().ToString());
+						stringBuilder.Append(")");
+					}
+					stringBuilder.Append("\n");
+				}
+			}
+		}
+		return stringBuilder.ToString();
+	}
+
+	[OnEnterPlay_Set(0)]
+	private static int gDevID;
+
+	[OnEnterPlay_Set(false)]
+	private static bool gHasDevID;
+
+	private static string gProjectFolder;
+
+	private static FieldInfo gFetchProjectFolder;
+
+	private static bool gProjectFolderSet;
+
+	private static HashSet<MethodBase> gIgnoreMethods;
+
+	public static readonly SessionState SessionState = SessionState.Shared;
+
+	public class HideInCallStackAttribute : Attribute
+	{
+	}
+
+	[Serializable]
+	public struct LogEntry
+	{
+		public string channel;
+
+		public DateTime time;
+
+		public string message;
 	}
 }

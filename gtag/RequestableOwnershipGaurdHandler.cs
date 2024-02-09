@@ -1,3 +1,4 @@
+﻿using System;
 using System.Collections.Generic;
 using ExitGames.Client.Photon;
 using Photon.Pun;
@@ -6,43 +7,36 @@ using UnityEngine;
 
 internal class RequestableOwnershipGaurdHandler : IPunOwnershipCallbacks, IInRoomCallbacks
 {
-	private static HashSet<PhotonView> gaurdedViews;
-
-	private static readonly RequestableOwnershipGaurdHandler callbackInstance;
-
-	private static Dictionary<PhotonView, RequestableOwnershipGuard> guardingLookup;
-
 	static RequestableOwnershipGaurdHandler()
 	{
-		gaurdedViews = new HashSet<PhotonView>();
-		callbackInstance = new RequestableOwnershipGaurdHandler();
-		guardingLookup = new Dictionary<PhotonView, RequestableOwnershipGuard>();
-		PhotonNetwork.AddCallbackTarget(callbackInstance);
+		PhotonNetwork.AddCallbackTarget(RequestableOwnershipGaurdHandler.callbackInstance);
 	}
 
 	internal static void RegisterView(PhotonView view, RequestableOwnershipGuard guard)
 	{
-		if (!(view == null) && !gaurdedViews.Contains(view))
+		if (view == null || RequestableOwnershipGaurdHandler.gaurdedViews.Contains(view))
 		{
-			gaurdedViews.Add(view);
-			guardingLookup.Add(view, guard);
+			return;
 		}
+		RequestableOwnershipGaurdHandler.gaurdedViews.Add(view);
+		RequestableOwnershipGaurdHandler.guardingLookup.Add(view, guard);
 	}
 
 	internal static void RemoveView(PhotonView view)
 	{
-		if (!(view == null))
+		if (view == null)
 		{
-			gaurdedViews.Remove(view);
-			guardingLookup.Remove(view);
+			return;
 		}
+		RequestableOwnershipGaurdHandler.gaurdedViews.Remove(view);
+		RequestableOwnershipGaurdHandler.guardingLookup.Remove(view);
 	}
 
 	internal static void RegisterViews(PhotonView[] views, RequestableOwnershipGuard guard)
 	{
 		for (int i = 0; i < views.Length; i++)
 		{
-			RegisterView(views[i], guard);
+			RequestableOwnershipGaurdHandler.RegisterView(views[i], guard);
 		}
 	}
 
@@ -50,17 +44,26 @@ internal class RequestableOwnershipGaurdHandler : IPunOwnershipCallbacks, IInRoo
 	{
 		for (int i = 0; i < views.Length; i++)
 		{
-			RemoveView(views[i]);
+			RequestableOwnershipGaurdHandler.RemoveView(views[i]);
 		}
 	}
 
 	void IPunOwnershipCallbacks.OnOwnershipTransfered(PhotonView targetView, Player previousOwner)
 	{
-		if (gaurdedViews.Contains(targetView) && guardingLookup.TryGetValue(targetView, out var value) && !object.Equals(previousOwner, value.currentOwner))
+		if (!RequestableOwnershipGaurdHandler.gaurdedViews.Contains(targetView))
+		{
+			return;
+		}
+		RequestableOwnershipGuard requestableOwnershipGuard;
+		if (!RequestableOwnershipGaurdHandler.guardingLookup.TryGetValue(targetView, out requestableOwnershipGuard))
+		{
+			return;
+		}
+		if (!object.Equals(previousOwner, requestableOwnershipGuard.currentOwner))
 		{
 			Debug.LogError("Ownership transferred but the previous owner didn't initiate the request, Switching back");
-			targetView.OwnerActorNr = value.currentOwner.ActorNumber;
-			targetView.ControllerActorNr = value.currentOwner.ActorNumber;
+			targetView.OwnerActorNr = requestableOwnershipGuard.currentOwner.ActorNumber;
+			targetView.ControllerActorNr = requestableOwnershipGuard.currentOwner.ActorNumber;
 		}
 	}
 
@@ -90,27 +93,34 @@ internal class RequestableOwnershipGaurdHandler : IPunOwnershipCallbacks, IInRoo
 
 	void IInRoomCallbacks.OnMasterClientSwitched(Player newMasterClient)
 	{
-		foreach (PhotonView gaurdedView in gaurdedViews)
+		foreach (PhotonView photonView in RequestableOwnershipGaurdHandler.gaurdedViews)
 		{
-			if (!guardingLookup.TryGetValue(gaurdedView, out var value))
+			RequestableOwnershipGuard requestableOwnershipGuard;
+			if (!RequestableOwnershipGaurdHandler.guardingLookup.TryGetValue(photonView, out requestableOwnershipGuard))
 			{
 				break;
 			}
-			if (gaurdedView.Owner == null)
+			if (photonView.Owner == null)
 			{
 				Debug.LogError("OnMasterClientSwitched changed the photon view without our permission. view Owner is null");
 				break;
 			}
-			if (value.currentOwner == null)
+			if (requestableOwnershipGuard.currentOwner == null)
 			{
 				Debug.LogError("OnMasterClientSwitched changed the photon view without our permission. current Owner is null");
 				break;
 			}
-			if (!object.Equals(gaurdedView.Owner, value.currentOwner))
+			if (!object.Equals(photonView.Owner, requestableOwnershipGuard.currentOwner))
 			{
-				gaurdedView.OwnerActorNr = value.currentOwner.ActorNumber;
-				gaurdedView.ControllerActorNr = value.currentOwner.ActorNumber;
+				photonView.OwnerActorNr = requestableOwnershipGuard.currentOwner.ActorNumber;
+				photonView.ControllerActorNr = requestableOwnershipGuard.currentOwner.ActorNumber;
 			}
 		}
 	}
+
+	private static HashSet<PhotonView> gaurdedViews = new HashSet<PhotonView>();
+
+	private static readonly RequestableOwnershipGaurdHandler callbackInstance = new RequestableOwnershipGaurdHandler();
+
+	private static Dictionary<PhotonView, RequestableOwnershipGuard> guardingLookup = new Dictionary<PhotonView, RequestableOwnershipGuard>();
 }

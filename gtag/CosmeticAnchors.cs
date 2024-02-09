@@ -1,7 +1,143 @@
+﻿using System;
 using UnityEngine;
 
 public class CosmeticAnchors : MonoBehaviour
 {
+	protected void Awake()
+	{
+		this.anchorEnabled = false;
+		this.vrRig = base.GetComponentInParent<VRRig>();
+		if (this.vrRig != null)
+		{
+			this.anchorOverrides = this.vrRig.gameObject.GetComponent<VRRigAnchorOverrides>();
+		}
+	}
+
+	private void OnEnable()
+	{
+		if (this.huntComputerAnchor)
+		{
+			CosmeticAnchorManager.RegisterCosmeticAnchor(this);
+		}
+	}
+
+	private void OnDisable()
+	{
+		if (this.huntComputerAnchor)
+		{
+			CosmeticAnchorManager.UnregisterCosmeticAnchor(this);
+		}
+	}
+
+	public void TryUpdate()
+	{
+		if (this.anchorEnabled && this.huntComputerAnchor && !GorillaTagger.Instance.offlineVRRig.huntComputer.activeSelf && this.anchorOverrides.HuntComputer.parent != this.anchorOverrides.HuntDefaultAnchor)
+		{
+			this.anchorOverrides.HuntComputer.parent = this.anchorOverrides.HuntDefaultAnchor;
+			return;
+		}
+		if (this.anchorEnabled && this.huntComputerAnchor && GorillaTagger.Instance.offlineVRRig.huntComputer.activeSelf && this.anchorOverrides.HuntComputer.parent == this.anchorOverrides.HuntDefaultAnchor)
+		{
+			this.SetHuntComputerAnchor(this.anchorEnabled);
+		}
+	}
+
+	public void EnableAnchor(bool enable)
+	{
+		this.anchorEnabled = enable;
+		if (this.anchorOverrides == null)
+		{
+			return;
+		}
+		if (this.leftArmAnchor)
+		{
+			this.anchorOverrides.OverrideAnchor(TransferrableObject.PositionState.OnLeftArm, enable ? this.leftArmAnchor.transform : null);
+		}
+		if (this.rightArmAnchor)
+		{
+			this.anchorOverrides.OverrideAnchor(TransferrableObject.PositionState.OnRightArm, enable ? this.rightArmAnchor.transform : null);
+		}
+		if (this.chestAnchor)
+		{
+			this.anchorOverrides.OverrideAnchor(TransferrableObject.PositionState.OnChest, enable ? this.chestAnchor.transform : null);
+		}
+		if (this.nameAnchor)
+		{
+			Transform nameTransform = this.anchorOverrides.NameTransform;
+			nameTransform.parent = (enable ? this.nameAnchor.transform : this.anchorOverrides.NameDefaultAnchor);
+			nameTransform.transform.localPosition = Vector3.zero;
+			nameTransform.transform.localRotation = Quaternion.identity;
+		}
+		if (this.huntComputerAnchor)
+		{
+			this.SetHuntComputerAnchor(enable);
+		}
+	}
+
+	private void SetHuntComputerAnchor(bool enable)
+	{
+		Transform huntComputer = this.anchorOverrides.HuntComputer;
+		if (!GorillaTagger.Instance.offlineVRRig.huntComputer.activeSelf || !enable)
+		{
+			huntComputer.parent = this.anchorOverrides.HuntDefaultAnchor;
+		}
+		else
+		{
+			huntComputer.parent = this.huntComputerAnchor.transform;
+		}
+		huntComputer.transform.localPosition = Vector3.zero;
+		huntComputer.transform.localRotation = Quaternion.identity;
+	}
+
+	public Transform GetPositionAnchor(TransferrableObject.PositionState pos)
+	{
+		if (pos != TransferrableObject.PositionState.OnLeftArm)
+		{
+			if (pos != TransferrableObject.PositionState.OnRightArm)
+			{
+				if (pos != TransferrableObject.PositionState.OnChest)
+				{
+					return null;
+				}
+				if (!this.chestAnchor)
+				{
+					return null;
+				}
+				return this.chestAnchor.transform;
+			}
+			else
+			{
+				if (!this.rightArmAnchor)
+				{
+					return null;
+				}
+				return this.rightArmAnchor.transform;
+			}
+		}
+		else
+		{
+			if (!this.leftArmAnchor)
+			{
+				return null;
+			}
+			return this.leftArmAnchor.transform;
+		}
+	}
+
+	public Transform GetNameAnchor()
+	{
+		if (!this.nameAnchor)
+		{
+			return null;
+		}
+		return this.nameAnchor.transform;
+	}
+
+	public bool AffectedByHunt()
+	{
+		return this.huntComputerAnchor != null;
+	}
+
 	[SerializeField]
 	protected GameObject nameAnchor;
 
@@ -22,108 +158,4 @@ public class CosmeticAnchors : MonoBehaviour
 	private VRRigAnchorOverrides anchorOverrides;
 
 	private bool anchorEnabled;
-
-	protected void Awake()
-	{
-		anchorEnabled = false;
-		vrRig = GetComponentInParent<VRRig>();
-		if (vrRig != null)
-		{
-			anchorOverrides = vrRig.gameObject.GetComponent<VRRigAnchorOverrides>();
-		}
-	}
-
-	protected void Update()
-	{
-		if (anchorEnabled && (bool)huntComputerAnchor && !GorillaTagger.Instance.offlineVRRig.huntComputer.activeSelf && anchorOverrides.HuntComputer.parent != anchorOverrides.HuntDefaultAnchor)
-		{
-			anchorOverrides.HuntComputer.parent = anchorOverrides.HuntDefaultAnchor;
-		}
-		else if (anchorEnabled && (bool)huntComputerAnchor && GorillaTagger.Instance.offlineVRRig.huntComputer.activeSelf && anchorOverrides.HuntComputer.parent == anchorOverrides.HuntDefaultAnchor)
-		{
-			SetHuntComputerAnchor(anchorEnabled);
-		}
-	}
-
-	public void EnableAnchor(bool enable)
-	{
-		anchorEnabled = enable;
-		if (!(anchorOverrides == null))
-		{
-			if ((bool)leftArmAnchor)
-			{
-				anchorOverrides.OverrideAnchor(TransferrableObject.PositionState.OnLeftArm, enable ? leftArmAnchor.transform : null);
-			}
-			if ((bool)rightArmAnchor)
-			{
-				anchorOverrides.OverrideAnchor(TransferrableObject.PositionState.OnRightArm, enable ? rightArmAnchor.transform : null);
-			}
-			if ((bool)chestAnchor)
-			{
-				anchorOverrides.OverrideAnchor(TransferrableObject.PositionState.OnChest, enable ? chestAnchor.transform : null);
-			}
-			if ((bool)nameAnchor)
-			{
-				Transform nameTransform = anchorOverrides.NameTransform;
-				nameTransform.parent = (enable ? nameAnchor.transform : anchorOverrides.NameDefaultAnchor);
-				nameTransform.transform.localPosition = Vector3.zero;
-				nameTransform.transform.localRotation = Quaternion.identity;
-			}
-			if ((bool)huntComputerAnchor)
-			{
-				SetHuntComputerAnchor(enable);
-			}
-		}
-	}
-
-	private void SetHuntComputerAnchor(bool enable)
-	{
-		Transform huntComputer = anchorOverrides.HuntComputer;
-		if (!GorillaTagger.Instance.offlineVRRig.huntComputer.activeSelf || !enable)
-		{
-			huntComputer.parent = anchorOverrides.HuntDefaultAnchor;
-		}
-		else
-		{
-			huntComputer.parent = huntComputerAnchor.transform;
-		}
-		huntComputer.transform.localPosition = Vector3.zero;
-		huntComputer.transform.localRotation = Quaternion.identity;
-	}
-
-	public Transform GetPositionAnchor(TransferrableObject.PositionState pos)
-	{
-		switch (pos)
-		{
-		case TransferrableObject.PositionState.OnLeftArm:
-			if (!leftArmAnchor)
-			{
-				return null;
-			}
-			return leftArmAnchor.transform;
-		case TransferrableObject.PositionState.OnRightArm:
-			if (!rightArmAnchor)
-			{
-				return null;
-			}
-			return rightArmAnchor.transform;
-		case TransferrableObject.PositionState.OnChest:
-			if (!chestAnchor)
-			{
-				return null;
-			}
-			return chestAnchor.transform;
-		default:
-			return null;
-		}
-	}
-
-	public Transform GetNameAnchor()
-	{
-		if (!nameAnchor)
-		{
-			return null;
-		}
-		return nameAnchor.transform;
-	}
 }

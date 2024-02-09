@@ -1,6 +1,7 @@
+﻿using System;
 using Photon.Pun;
 
-internal interface IGorillaSerializeable
+public interface IGorillaSerializeable
 {
 	void OnSerializeRead(PhotonStream stream, PhotonMessageInfo info);
 

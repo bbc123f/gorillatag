@@ -1,8 +1,60 @@
+﻿using System;
 using System.Linq;
 using UnityEngine;
 
 public class Firework : MonoBehaviour
 {
+	private void Launch()
+	{
+		if (!Application.isPlaying)
+		{
+			return;
+		}
+		if (this._controller)
+		{
+			this._controller.Launch(this);
+		}
+	}
+
+	private void OnValidate()
+	{
+		if (!this._controller)
+		{
+			this._controller = base.GetComponentInParent<FireworksController>();
+		}
+		if (!this._controller)
+		{
+			return;
+		}
+		Firework[] array = this._controller.fireworks;
+		if (array.Contains(this))
+		{
+			return;
+		}
+		array = (from x in array.Concat(new Firework[] { this })
+			where x != null
+			select x).ToArray<Firework>();
+		this._controller.fireworks = array;
+	}
+
+	private void OnDrawGizmos()
+	{
+		if (!this._controller)
+		{
+			return;
+		}
+		this._controller.RenderGizmo(this, Color.cyan);
+	}
+
+	private void OnDrawGizmosSelected()
+	{
+		if (!this._controller)
+		{
+			return;
+		}
+		this._controller.RenderGizmo(this, Color.yellow);
+	}
+
 	[SerializeField]
 	private FireworksController _controller;
 
@@ -33,48 +85,4 @@ public class Firework : MonoBehaviour
 	public bool doTrailAudio = true;
 
 	public bool doExplosion = true;
-
-	private void Launch()
-	{
-		if (Application.isPlaying && (bool)_controller)
-		{
-			_controller.Launch(this);
-		}
-	}
-
-	private void OnValidate()
-	{
-		if (!_controller)
-		{
-			_controller = GetComponentInParent<FireworksController>();
-		}
-		if (!_controller)
-		{
-			return;
-		}
-		Firework[] fireworks = _controller.fireworks;
-		if (!fireworks.Contains(this))
-		{
-			fireworks = (from x in fireworks.Concat(new Firework[1] { this })
-				where x != null
-				select x).ToArray();
-			_controller.fireworks = fireworks;
-		}
-	}
-
-	private void OnDrawGizmos()
-	{
-		if ((bool)_controller)
-		{
-			_controller.RenderGizmo(this, Color.cyan);
-		}
-	}
-
-	private void OnDrawGizmosSelected()
-	{
-		if ((bool)_controller)
-		{
-			_controller.RenderGizmo(this, Color.yellow);
-		}
-	}
 }

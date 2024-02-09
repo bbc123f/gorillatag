@@ -1,14 +1,16 @@
+﻿using System;
+
 public abstract class TeleportTransition : TeleportSupport
 {
 	protected override void AddEventHandlers()
 	{
-		base.LocomotionTeleport.EnterStateTeleporting += LocomotionTeleportOnEnterStateTeleporting;
+		base.LocomotionTeleport.EnterStateTeleporting += this.LocomotionTeleportOnEnterStateTeleporting;
 		base.AddEventHandlers();
 	}
 
 	protected override void RemoveEventHandlers()
 	{
-		base.LocomotionTeleport.EnterStateTeleporting -= LocomotionTeleportOnEnterStateTeleporting;
+		base.LocomotionTeleport.EnterStateTeleporting -= this.LocomotionTeleportOnEnterStateTeleporting;
 		base.RemoveEventHandlers();
 	}
 

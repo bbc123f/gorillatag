@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 [Serializable]
 internal struct BundleData

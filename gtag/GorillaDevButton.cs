@@ -1,7 +1,29 @@
+﻿using System;
 using UnityEngine;
 
 public class GorillaDevButton : GorillaPressableButton
 {
+	public bool on
+	{
+		get
+		{
+			return this.isOn;
+		}
+		set
+		{
+			if (this.isOn != value)
+			{
+				this.isOn = value;
+				this.UpdateColor();
+			}
+		}
+	}
+
+	public void OnEnable()
+	{
+		this.UpdateColor();
+	}
+
 	public DevButtonType Type;
 
 	public LogType levelType;
@@ -15,25 +37,4 @@ public class GorillaDevButton : GorillaPressableButton
 	public float holdForSeconds;
 
 	private Coroutine pressCoroutine;
-
-	public bool on
-	{
-		get
-		{
-			return isOn;
-		}
-		set
-		{
-			if (isOn != value)
-			{
-				isOn = value;
-				UpdateColor();
-			}
-		}
-	}
-
-	public void OnEnable()
-	{
-		UpdateColor();
-	}
 }

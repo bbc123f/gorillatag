@@ -1,32 +1,21 @@
+﻿using System;
+using BuildSafe;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
-public class BlinkingLight : MonoBehaviour
+public class BlinkingLight : SceneBakeTask
 {
-	public Material[] materialArray;
-
-	public float minTime;
-
-	public float maxTime;
-
-	private float nextChange;
-
-	private MeshRenderer meshRenderer;
-
-	private void Awake()
+	public override void OnSceneBake(Scene scene, SceneBakeMode mode)
 	{
-		nextChange = Random.Range(0f, maxTime);
-		meshRenderer = GetComponent<MeshRenderer>();
-	}
-
-	private void Update()
-	{
-		if (Time.time > nextChange)
+		MeshRenderer meshRenderer;
+		if (base.TryGetComponent<MeshRenderer>(out meshRenderer))
 		{
-			nextChange = Time.time + Random.Range(minTime, maxTime);
-			if (materialArray.Length != 0)
-			{
-				meshRenderer.material = materialArray[Random.Range(0, materialArray.Length)];
-			}
+			meshRenderer.material = this.materialArray[BlinkingLight.gColor.NextInt(this.materialArray.Length)];
 		}
 	}
+
+	[SerializeField]
+	private Material[] materialArray;
+
+	private static SRand gColor = new SRand("BlinkingLight");
 }

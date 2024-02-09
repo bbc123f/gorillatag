@@ -1,54 +1,57 @@
+﻿using System;
 using System.Collections;
 using UnityEngine;
 
 public class SmoothLoop : MonoBehaviour
 {
-	public AudioSource source;
-
-	public float delay;
-
-	public bool randomStart;
-
 	private void Start()
 	{
-		if (delay != 0f && !randomStart)
+		if (this.delay != 0f && !this.randomStart)
 		{
-			source.Stop();
-			StartCoroutine(DelayedStart());
+			this.source.Stop();
+			base.StartCoroutine(this.DelayedStart());
+			return;
 		}
-		else if (randomStart)
+		if (this.randomStart)
 		{
-			if (source.isActiveAndEnabled)
+			if (this.source.isActiveAndEnabled)
 			{
-				source.Play();
+				this.source.Play();
 			}
-			source.time = Random.Range(0f, source.clip.length);
+			this.source.time = Random.Range(0f, this.source.clip.length);
 		}
 	}
 
 	private void Update()
 	{
-		if (source.time > source.clip.length * 0.95f)
+		if (this.source.time > this.source.clip.length * 0.95f)
 		{
-			source.time = 0.1f;
+			this.source.time = 0.1f;
 		}
 	}
 
 	private void OnEnable()
 	{
-		if (randomStart)
+		if (this.randomStart)
 		{
-			if (source.isActiveAndEnabled)
+			if (this.source.isActiveAndEnabled)
 			{
-				source.Play();
+				this.source.Play();
 			}
-			source.time = Random.Range(0f, source.clip.length);
+			this.source.time = Random.Range(0f, this.source.clip.length);
 		}
 	}
 
 	public IEnumerator DelayedStart()
 	{
-		yield return new WaitForSeconds(delay);
-		source.Play();
+		yield return new WaitForSeconds(this.delay);
+		this.source.Play();
+		yield break;
 	}
+
+	public AudioSource source;
+
+	public float delay;
+
+	public bool randomStart;
 }

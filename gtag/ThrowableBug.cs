@@ -1,16 +1,322 @@
-using System;
+﻿using System;
 using GorillaExtensions;
 using UnityEngine;
 using UnityEngine.Serialization;
 
 public class ThrowableBug : TransferrableObject
 {
-	private enum AudioState
+	public new void Start()
 	{
-		JustGrabbed,
-		ContinuallyGrabbed,
-		JustReleased,
-		NotHeld
+		float num = Random.Range(0f, 6.2831855f);
+		this.targetVelocity = new Vector3(Mathf.Sin(num) * this.maxNaturalSpeed, 0f, Mathf.Cos(num) * this.maxNaturalSpeed);
+		this.currentState = TransferrableObject.PositionState.Dropped;
+		this.rayCastNonAllocColliders = new RaycastHit[5];
+		this.rayCastNonAllocColliders2 = new RaycastHit[5];
+	}
+
+	public override void OnEnable()
+	{
+		base.OnEnable();
+		ThrowableBugBeacon.OnCall += this.ThrowableBugBeacon_OnCall;
+		ThrowableBugBeacon.OnDismiss += this.ThrowableBugBeacon_OnDismiss;
+		ThrowableBugBeacon.OnLock += this.ThrowableBugBeacon_OnLock;
+		ThrowableBugBeacon.OnUnlock += this.ThrowableBugBeacon_OnUnlock;
+		ThrowableBugBeacon.OnChangeSpeedMultiplier += this.ThrowableBugBeacon_OnChangeSpeedMultiplier;
+	}
+
+	public override void OnDisable()
+	{
+		base.OnDisable();
+		ThrowableBugBeacon.OnCall -= this.ThrowableBugBeacon_OnCall;
+		ThrowableBugBeacon.OnDismiss -= this.ThrowableBugBeacon_OnDismiss;
+		ThrowableBugBeacon.OnLock -= this.ThrowableBugBeacon_OnLock;
+		ThrowableBugBeacon.OnUnlock -= this.ThrowableBugBeacon_OnUnlock;
+		ThrowableBugBeacon.OnChangeSpeedMultiplier -= this.ThrowableBugBeacon_OnChangeSpeedMultiplier;
+	}
+
+	private bool isValid(ThrowableBugBeacon tbb)
+	{
+		return tbb.BugName == this.bugName && (tbb.Range <= 0f || Vector3.Distance(tbb.transform.position, base.transform.position) <= tbb.Range);
+	}
+
+	private void ThrowableBugBeacon_OnCall(ThrowableBugBeacon tbb)
+	{
+		if (this.isValid(tbb))
+		{
+			this.reliableState.travelingDirection = tbb.transform.position - base.transform.position;
+		}
+	}
+
+	private void ThrowableBugBeacon_OnLock(ThrowableBugBeacon tbb)
+	{
+		if (this.isValid(tbb))
+		{
+			this.reliableState.travelingDirection = tbb.transform.position - base.transform.position;
+			this.lockedTarget = tbb.transform;
+			this.locked = true;
+		}
+	}
+
+	private void ThrowableBugBeacon_OnDismiss(ThrowableBugBeacon tbb)
+	{
+		if (this.isValid(tbb))
+		{
+			this.reliableState.travelingDirection = base.transform.position - tbb.transform.position;
+			this.locked = false;
+		}
+	}
+
+	private void ThrowableBugBeacon_OnUnlock(ThrowableBugBeacon tbb)
+	{
+		if (this.isValid(tbb))
+		{
+			this.locked = false;
+		}
+	}
+
+	private void ThrowableBugBeacon_OnChangeSpeedMultiplier(ThrowableBugBeacon tbb, float f)
+	{
+		if (this.isValid(tbb))
+		{
+			this.speedMultiplier = f;
+		}
+	}
+
+	public override bool ShouldBeKinematic()
+	{
+		return true;
+	}
+
+	protected override void LateUpdateShared()
+	{
+		base.LateUpdateShared();
+		bool flag = this.currentState == TransferrableObject.PositionState.InLeftHand || this.currentState == TransferrableObject.PositionState.InRightHand;
+		this.animator.SetBool("isHeld", flag);
+		if (!this.audioSource)
+		{
+			return;
+		}
+		switch (this.currentAudioState)
+		{
+		case ThrowableBug.AudioState.JustGrabbed:
+			if (!flag)
+			{
+				this.currentAudioState = ThrowableBug.AudioState.JustReleased;
+				return;
+			}
+			if (this.grabBugAudioClip && this.audioSource.clip != this.grabBugAudioClip)
+			{
+				this.audioSource.clip = this.grabBugAudioClip;
+				this.audioSource.time = 0f;
+				this.audioSource.Play();
+				return;
+			}
+			if (!this.audioSource.isPlaying)
+			{
+				this.currentAudioState = ThrowableBug.AudioState.ContinuallyGrabbed;
+				return;
+			}
+			break;
+		case ThrowableBug.AudioState.ContinuallyGrabbed:
+			if (!flag)
+			{
+				this.currentAudioState = ThrowableBug.AudioState.JustReleased;
+				return;
+			}
+			break;
+		case ThrowableBug.AudioState.JustReleased:
+			if (!flag)
+			{
+				if (this.releaseBugAudioClip && this.audioSource.clip != this.releaseBugAudioClip)
+				{
+					this.audioSource.clip = this.releaseBugAudioClip;
+					this.audioSource.time = 0f;
+					this.audioSource.Play();
+					return;
+				}
+				if (!this.audioSource.isPlaying)
+				{
+					this.currentAudioState = ThrowableBug.AudioState.NotHeld;
+					return;
+				}
+			}
+			else
+			{
+				this.currentAudioState = ThrowableBug.AudioState.JustGrabbed;
+			}
+			break;
+		case ThrowableBug.AudioState.NotHeld:
+			if (flag)
+			{
+				this.currentAudioState = ThrowableBug.AudioState.JustGrabbed;
+				return;
+			}
+			if (this.flyingBugAudioClip && !this.audioSource.isPlaying)
+			{
+				this.audioSource.clip = this.flyingBugAudioClip;
+				this.audioSource.time = 0f;
+				this.audioSource.Play();
+				return;
+			}
+			break;
+		default:
+			return;
+		}
+	}
+
+	protected override void LateUpdateLocal()
+	{
+		base.LateUpdateLocal();
+		if (!this.reliableState)
+		{
+			return;
+		}
+		if (this.currentState != TransferrableObject.PositionState.InLeftHand)
+		{
+			bool flag = this.currentState == TransferrableObject.PositionState.InRightHand;
+		}
+		if (this.currentState == TransferrableObject.PositionState.Dropped)
+		{
+			if (this.locked && Vector3.Distance(this.lockedTarget.position, base.transform.position) > 0.1f)
+			{
+				this.reliableState.travelingDirection = this.lockedTarget.position - base.transform.position;
+			}
+			if (this.slowingDownProgress < 1f)
+			{
+				this.slowingDownProgress += this.slowdownAcceleration * Time.deltaTime;
+				float num = Mathf.SmoothStep(0f, 1f, this.slowingDownProgress);
+				this.reliableState.travelingDirection = Vector3.Slerp(this.thrownVeloicity, this.targetVelocity, num);
+			}
+			else
+			{
+				this.reliableState.travelingDirection = this.reliableState.travelingDirection.normalized * this.maxNaturalSpeed;
+			}
+			this.bobingFrequency = (this.shouldRandomizeFrequency ? this.RandomizeBobingFrequency() : this.bobbingDefaultFrequency);
+			float num2 = this.bobingState + this.bobingSpeed * Time.deltaTime;
+			float num3 = Mathf.Sin(num2 / this.bobingFrequency) - Mathf.Sin(this.bobingState / this.bobingFrequency);
+			Vector3 vector = Vector3.up * (num3 * this.bobMagnintude);
+			this.bobingState = num2;
+			if (this.bobingState > 6.2831855f)
+			{
+				this.bobingState -= 6.2831855f;
+			}
+			vector += this.reliableState.travelingDirection * Time.deltaTime;
+			Debug.DrawLine(base.transform.position, base.transform.position + vector, Color.red, 5f, false);
+			int num4 = Physics.SphereCastNonAlloc(base.transform.position, this.collisionHitRadius, vector.normalized, this.rayCastNonAllocColliders, vector.magnitude, this.collisionCheckMask);
+			float num5 = this.maximumHeightOffOfTheGroundBeforeStartingDescent;
+			if (this.isTooHighTravelingDown)
+			{
+				num5 = this.minimumHeightOffOfTheGroundBeforeStoppingDescent;
+			}
+			float num6 = this.minimumHeightOffOfTheGroundBeforeStartingAscent;
+			if (this.isTooLowTravelingUp)
+			{
+				num6 = this.maximumHeightOffOfTheGroundBeforeStoppingAscent;
+			}
+			if (Physics.RaycastNonAlloc(base.transform.position, Vector3.down, this.rayCastNonAllocColliders2, num5, this.collisionCheckMask) > 0)
+			{
+				this.isTooHighTravelingDown = false;
+				if (this.descentSlerp > 0f)
+				{
+					this.descentSlerp = Mathf.Clamp01(this.descentSlerp - this.descentSlerpRate * Time.deltaTime);
+				}
+				RaycastHit raycastHit = this.rayCastNonAllocColliders2[0];
+				this.isTooLowTravelingUp = raycastHit.distance < num6;
+				if (this.isTooLowTravelingUp)
+				{
+					if (this.ascentSlerp < 1f)
+					{
+						this.ascentSlerp = Mathf.Clamp01(this.ascentSlerp + this.ascentSlerpRate * Time.deltaTime);
+					}
+				}
+				else if (this.ascentSlerp > 0f)
+				{
+					this.ascentSlerp = Mathf.Clamp01(this.ascentSlerp - this.ascentSlerpRate * Time.deltaTime);
+				}
+			}
+			else
+			{
+				this.isTooHighTravelingDown = true;
+				if (this.descentSlerp < 1f)
+				{
+					this.descentSlerp = Mathf.Clamp01(this.descentSlerp + this.descentSlerpRate * Time.deltaTime);
+				}
+			}
+			vector += Time.deltaTime * Mathf.SmoothStep(0f, 1f, this.descentSlerp) * this.descentRate * Vector3.down;
+			vector += Time.deltaTime * Mathf.SmoothStep(0f, 1f, this.ascentSlerp) * this.ascentRate * Vector3.up;
+			float num7;
+			Vector3 vector2;
+			Quaternion.FromToRotation(base.transform.rotation * Vector3.up, Quaternion.identity * Vector3.up).ToAngleAxis(out num7, out vector2);
+			Quaternion quaternion = Quaternion.AngleAxis(num7 * 0.02f, vector2);
+			float num8;
+			Vector3 vector3;
+			Quaternion.FromToRotation(base.transform.rotation * Vector3.forward, this.reliableState.travelingDirection.normalized).ToAngleAxis(out num8, out vector3);
+			Quaternion quaternion2 = Quaternion.AngleAxis(num8 * 0.005f, vector3);
+			quaternion = quaternion2 * quaternion;
+			vector = quaternion * quaternion * quaternion * quaternion * vector;
+			vector *= this.speedMultiplier;
+			if (this.speedMultiplier != 1f)
+			{
+				this.speedMultiplier = Mathf.MoveTowards(this.speedMultiplier, 1f, Time.deltaTime);
+			}
+			if (num4 > 0)
+			{
+				Vector3 normal = this.rayCastNonAllocColliders[0].normal;
+				this.reliableState.travelingDirection = Vector3.Reflect(this.reliableState.travelingDirection, normal).x0z();
+				base.transform.position += Vector3.Reflect(vector, normal);
+				this.thrownVeloicity = Vector3.Reflect(this.thrownVeloicity, normal);
+				this.targetVelocity = Vector3.Reflect(this.targetVelocity, normal).x0z();
+			}
+			else
+			{
+				base.transform.position += vector;
+			}
+			this.bugRotationalVelocity = quaternion * this.bugRotationalVelocity;
+			float num9;
+			Vector3 vector4;
+			this.bugRotationalVelocity.ToAngleAxis(out num9, out vector4);
+			this.bugRotationalVelocity = Quaternion.AngleAxis(num9 * 0.9f, vector4);
+			base.transform.rotation = this.bugRotationalVelocity * base.transform.rotation;
+		}
+	}
+
+	private float RandomizeBobingFrequency()
+	{
+		return Random.Range(this.minRandFrequency, this.maxRandFrequency);
+	}
+
+	public override bool OnRelease(DropZone zoneReleased, GameObject releasingHand)
+	{
+		if (!base.OnRelease(zoneReleased, releasingHand))
+		{
+			return false;
+		}
+		this.slowingDownProgress = 0f;
+		GorillaVelocityEstimator component = base.GetComponent<GorillaVelocityEstimator>();
+		Vector3 linearVelocity = component.linearVelocity;
+		this.thrownVeloicity = linearVelocity;
+		this.reliableState.travelingDirection = linearVelocity;
+		this.bugRotationalVelocity = Quaternion.Euler(component.angularVelocity);
+		this.startingSpeed = linearVelocity.magnitude;
+		Vector3 normalized = this.reliableState.travelingDirection.x0z().normalized;
+		this.targetVelocity = normalized * this.maxNaturalSpeed;
+		return true;
+	}
+
+	public void OnCollisionEnter(Collision collision)
+	{
+		this.reliableState.travelingDirection *= -1f;
+	}
+
+	private void Update()
+	{
+		if (this.updateMultiplier > 0)
+		{
+			for (int i = 0; i < this.updateMultiplier; i++)
+			{
+				this.LateUpdateLocal();
+			}
+		}
 	}
 
 	public ThrowableBugReliableState reliableState;
@@ -97,234 +403,29 @@ public class ThrowableBug : TransferrableObject
 
 	public int updateMultiplier;
 
-	private float velocity;
+	private ThrowableBug.AudioState currentAudioState;
 
-	private bool grabAudioPlayed;
+	private float speedMultiplier = 1f;
 
-	private AudioState currentAudioState;
+	[SerializeField]
+	private ThrowableBug.BugName bugName;
 
-	public new void Start()
+	private Transform lockedTarget;
+
+	private bool locked;
+
+	public enum BugName
 	{
-		float f = UnityEngine.Random.Range(0f, (float)Math.PI * 2f);
-		targetVelocity = new Vector3(Mathf.Sin(f) * maxNaturalSpeed, 0f, Mathf.Cos(f) * maxNaturalSpeed);
-		currentState = PositionState.Dropped;
-		rayCastNonAllocColliders = new RaycastHit[5];
-		rayCastNonAllocColliders2 = new RaycastHit[5];
+		NONE,
+		DougTheBug,
+		MattTheBat
 	}
 
-	public override bool ShouldBeKinematic()
+	private enum AudioState
 	{
-		return true;
-	}
-
-	protected override void LateUpdateShared()
-	{
-		base.LateUpdateShared();
-		bool flag = currentState == PositionState.InLeftHand || currentState == PositionState.InRightHand;
-		animator.SetBool("isHeld", flag);
-		if (!audioSource)
-		{
-			return;
-		}
-		switch (currentAudioState)
-		{
-		case AudioState.NotHeld:
-			if (!flag)
-			{
-				if ((bool)flyingBugAudioClip && !audioSource.isPlaying)
-				{
-					audioSource.clip = flyingBugAudioClip;
-					audioSource.time = 0f;
-					audioSource.Play();
-				}
-			}
-			else
-			{
-				currentAudioState = AudioState.JustGrabbed;
-			}
-			break;
-		case AudioState.JustGrabbed:
-			if (flag)
-			{
-				if ((bool)grabBugAudioClip && audioSource.clip != grabBugAudioClip)
-				{
-					audioSource.clip = grabBugAudioClip;
-					audioSource.time = 0f;
-					audioSource.Play();
-				}
-				else if (!audioSource.isPlaying)
-				{
-					currentAudioState = AudioState.ContinuallyGrabbed;
-				}
-			}
-			else
-			{
-				currentAudioState = AudioState.JustReleased;
-			}
-			break;
-		case AudioState.ContinuallyGrabbed:
-			if (!flag)
-			{
-				currentAudioState = AudioState.JustReleased;
-			}
-			break;
-		case AudioState.JustReleased:
-			if (!flag)
-			{
-				if ((bool)releaseBugAudioClip && audioSource.clip != releaseBugAudioClip)
-				{
-					audioSource.clip = releaseBugAudioClip;
-					audioSource.time = 0f;
-					audioSource.Play();
-				}
-				else if (!audioSource.isPlaying)
-				{
-					currentAudioState = AudioState.NotHeld;
-				}
-			}
-			else
-			{
-				currentAudioState = AudioState.JustGrabbed;
-			}
-			break;
-		}
-	}
-
-	protected override void LateUpdateLocal()
-	{
-		base.LateUpdateLocal();
-		if (!reliableState)
-		{
-			return;
-		}
-		if (currentState == PositionState.InLeftHand)
-		{
-			_ = 1;
-		}
-		else
-			_ = currentState == PositionState.InRightHand;
-		if (currentState != PositionState.Dropped)
-		{
-			return;
-		}
-		if (slowingDownProgress < 1f)
-		{
-			slowingDownProgress += slowdownAcceleration * Time.deltaTime;
-			float t = Mathf.SmoothStep(0f, 1f, slowingDownProgress);
-			reliableState.travelingDirection = Vector3.Slerp(thrownVeloicity, targetVelocity, t);
-		}
-		else
-		{
-			reliableState.travelingDirection = reliableState.travelingDirection.normalized * maxNaturalSpeed;
-		}
-		bobingFrequency = (shouldRandomizeFrequency ? RandomizeBobingFrequency() : bobbingDefaultFrequency);
-		float num = bobingState + bobingSpeed * Time.deltaTime;
-		float num2 = Mathf.Sin(num / bobingFrequency) - Mathf.Sin(bobingState / bobingFrequency);
-		Vector3 vector = Vector3.up * (num2 * bobMagnintude);
-		bobingState = num;
-		if (bobingState > (float)Math.PI * 2f)
-		{
-			bobingState -= (float)Math.PI * 2f;
-		}
-		vector += reliableState.travelingDirection * Time.deltaTime;
-		Debug.DrawLine(base.transform.position, base.transform.position + vector, Color.red, 5f, depthTest: false);
-		int num3 = Physics.SphereCastNonAlloc(base.transform.position, collisionHitRadius, vector.normalized, rayCastNonAllocColliders, vector.magnitude, collisionCheckMask);
-		float maxDistance = maximumHeightOffOfTheGroundBeforeStartingDescent;
-		if (isTooHighTravelingDown)
-		{
-			maxDistance = minimumHeightOffOfTheGroundBeforeStoppingDescent;
-		}
-		float num4 = minimumHeightOffOfTheGroundBeforeStartingAscent;
-		if (isTooLowTravelingUp)
-		{
-			num4 = maximumHeightOffOfTheGroundBeforeStoppingAscent;
-		}
-		if (Physics.RaycastNonAlloc(base.transform.position, Vector3.down, rayCastNonAllocColliders2, maxDistance, collisionCheckMask) > 0)
-		{
-			isTooHighTravelingDown = false;
-			if (descentSlerp > 0f)
-			{
-				descentSlerp = Mathf.Clamp01(descentSlerp - descentSlerpRate * Time.deltaTime);
-			}
-			RaycastHit raycastHit = rayCastNonAllocColliders2[0];
-			isTooLowTravelingUp = raycastHit.distance < num4;
-			if (isTooLowTravelingUp)
-			{
-				if (ascentSlerp < 1f)
-				{
-					ascentSlerp = Mathf.Clamp01(ascentSlerp + ascentSlerpRate * Time.deltaTime);
-				}
-			}
-			else if (ascentSlerp > 0f)
-			{
-				ascentSlerp = Mathf.Clamp01(ascentSlerp - ascentSlerpRate * Time.deltaTime);
-			}
-		}
-		else
-		{
-			isTooHighTravelingDown = true;
-			if (descentSlerp < 1f)
-			{
-				descentSlerp = Mathf.Clamp01(descentSlerp + descentSlerpRate * Time.deltaTime);
-			}
-		}
-		vector += Time.deltaTime * Mathf.SmoothStep(0f, 1f, descentSlerp) * descentRate * Vector3.down;
-		vector += Time.deltaTime * Mathf.SmoothStep(0f, 1f, ascentSlerp) * ascentRate * Vector3.up;
-		Quaternion.FromToRotation(base.transform.rotation * Vector3.up, Quaternion.identity * Vector3.up).ToAngleAxis(out var angle, out var axis);
-		Quaternion quaternion = Quaternion.AngleAxis(angle * 0.02f, axis);
-		Quaternion.FromToRotation(base.transform.rotation * Vector3.forward, reliableState.travelingDirection.normalized).ToAngleAxis(out var angle2, out var axis2);
-		Quaternion quaternion2 = Quaternion.AngleAxis(angle2 * 0.005f, axis2);
-		quaternion = quaternion2 * quaternion;
-		vector = quaternion * quaternion * quaternion * quaternion * vector;
-		if (num3 > 0)
-		{
-			Vector3 normal = rayCastNonAllocColliders[0].normal;
-			reliableState.travelingDirection = Vector3.Reflect(reliableState.travelingDirection, normal).x0z();
-			base.transform.position += Vector3.Reflect(vector, normal);
-			thrownVeloicity = Vector3.Reflect(thrownVeloicity, normal);
-			targetVelocity = Vector3.Reflect(targetVelocity, normal).x0z();
-		}
-		else
-		{
-			base.transform.position += vector;
-		}
-		bugRotationalVelocity = quaternion * bugRotationalVelocity;
-		bugRotationalVelocity.ToAngleAxis(out var angle3, out var axis3);
-		bugRotationalVelocity = Quaternion.AngleAxis(angle3 * 0.9f, axis3);
-		base.transform.rotation = bugRotationalVelocity * base.transform.rotation;
-	}
-
-	private float RandomizeBobingFrequency()
-	{
-		return UnityEngine.Random.Range(minRandFrequency, maxRandFrequency);
-	}
-
-	public override void OnRelease(DropZone zoneReleased, GameObject releasingHand)
-	{
-		base.OnRelease(zoneReleased, releasingHand);
-		slowingDownProgress = 0f;
-		GorillaVelocityEstimator component = GetComponent<GorillaVelocityEstimator>();
-		Vector3 travelingDirection = (thrownVeloicity = component.linearVelocity);
-		reliableState.travelingDirection = travelingDirection;
-		bugRotationalVelocity = Quaternion.Euler(component.angularVelocity);
-		startingSpeed = travelingDirection.magnitude;
-		Vector3 normalized = reliableState.travelingDirection.x0z().normalized;
-		targetVelocity = normalized * maxNaturalSpeed;
-	}
-
-	public void OnCollisionEnter(Collision collision)
-	{
-		reliableState.travelingDirection *= -1f;
-	}
-
-	private void Update()
-	{
-		if (updateMultiplier > 0)
-		{
-			for (int i = 0; i < updateMultiplier; i++)
-			{
-				LateUpdateLocal();
-			}
-		}
+		JustGrabbed,
+		ContinuallyGrabbed,
+		JustReleased,
+		NotHeld
 	}
 }

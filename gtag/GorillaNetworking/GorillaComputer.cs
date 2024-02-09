@@ -1,11 +1,11 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using Backtrace.Unity;
+using GorillaExtensions;
 using GorillaLocomotion;
 using Photon.Pun;
-using Photon.Realtime;
 using PlayFab;
 using PlayFab.ClientModels;
 using PlayFab.CloudScriptModels;
@@ -14,1576 +14,1506 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.XR.Interaction.Toolkit;
 
-namespace GorillaNetworking;
-
-public class GorillaComputer : MonoBehaviourPunCallbacks
+namespace GorillaNetworking
 {
-	public enum ComputerState
+	public class GorillaComputer : MonoBehaviourPunCallbacks
 	{
-		Startup,
-		Color,
-		Name,
-		Turn,
-		Mic,
-		Room,
-		Queue,
-		Group,
-		Voice,
-		Credits,
-		Visuals,
-		Time,
-		NameWarning,
-		Loading,
-		Support
-	}
+		public int systemUtilitySync { get; private set; }
 
-	private enum NameCheckResult
-	{
-		Success,
-		Warning,
-		Ban
-	}
-
-	public static volatile GorillaComputer instance;
-
-	public static bool hasInstance;
-
-	public bool tryGetTimeAgain;
-
-	public Material unpressedMaterial;
-
-	public Material pressedMaterial;
-
-	public string currentTextField;
-
-	public float buttonFadeTime;
-
-	public GorillaText offlineScoreboard;
-
-	public GorillaText screenText;
-
-	public GorillaText functionSelectText;
-
-	public GorillaText wallScreenText;
-
-	public GorillaText tutorialWallScreenText;
-
-	public Text offlineVRRigNametagText;
-
-	public string versionText = "";
-
-	public string versionMismatch = "PLEASE UPDATE TO THE LATEST VERSION OF GORILLA TAG. YOU'RE ON AN OLD VERSION. FEEL FREE TO RUN AROUND, BUT YOU WON'T BE ABLE TO PLAY WITH ANYONE ELSE.";
-
-	public string unableToConnect = "UNABLE TO CONNECT TO THE INTERNET. PLEASE CHECK YOUR CONNECTION AND RESTART THE GAME.";
-
-	public Material wrongVersionMaterial;
-
-	public MeshRenderer wallScreenRenderer;
-
-	public MeshRenderer tutorialWallScreenRenderer;
-
-	public MeshRenderer computerScreenRenderer;
-
-	public MeshRenderer scoreboardRenderer;
-
-	public GorillaLevelScreen[] levelScreens;
-
-	public long startupMillis;
-
-	public Text currentGameModeText;
-
-	public int includeUpdatedServerSynchTest;
-
-	public float updateCooldown = 1f;
-
-	public float lastUpdateTime;
-
-	public bool isConnectedToMaster;
-
-	public bool internetFailure;
-
-	public string[] allowedMapsToJoin;
-
-	private Stack<ComputerState> stateStack = new Stack<ComputerState>();
-
-	public bool stateUpdated;
-
-	public bool screenChanged;
-
-	private int usersBanned;
-
-	private float redValue;
-
-	private string redText;
-
-	private float blueValue;
-
-	private string blueText;
-
-	private float greenValue;
-
-	private string greenText;
-
-	private int colorCursorLine;
-
-	public string savedName;
-
-	public string currentName;
-
-	private string[] exactOneWeek;
-
-	private string[] anywhereOneWeek;
-
-	private string[] anywhereTwoWeek;
-
-	[SerializeField]
-	public TextAsset exactOneWeekFile;
-
-	public TextAsset anywhereOneWeekFile;
-
-	public TextAsset anywhereTwoWeekFile;
-
-	private string warningConfirmationInputString = string.Empty;
-
-	public string roomToJoin;
-
-	public bool roomFull;
-
-	public bool roomNotAllowed;
-
-	private int turnValue;
-
-	private string turnType;
-
-	private GorillaSnapTurn gorillaTurn;
-
-	public string pttType;
-
-	public string currentQueue;
-
-	public bool allowedInCompetitive;
-
-	public string groupMapJoin;
-
-	public int groupMapJoinIndex;
-
-	public GorillaFriendCollider friendJoinCollider;
-
-	public GorillaNetworkJoinTrigger caveMapTrigger;
-
-	public GorillaNetworkJoinTrigger forestMapTrigger;
-
-	public GorillaNetworkJoinTrigger canyonMapTrigger;
-
-	public GorillaNetworkJoinTrigger cityMapTrigger;
-
-	public GorillaNetworkJoinTrigger mountainMapTrigger;
-
-	public GorillaNetworkJoinTrigger skyjungleMapTrigger;
-
-	public GorillaNetworkJoinTrigger basementMapTrigger;
-
-	public GorillaNetworkJoinTrigger beachMapTrigger;
-
-	public string voiceChatOn;
-
-	public ModeSelectButton[] modeSelectButtons;
-
-	public string currentGameMode;
-
-	public string version;
-
-	public string buildDate;
-
-	public string buildCode;
-
-	public bool disableParticles;
-
-	public float instrumentVolume;
-
-	public CreditsView creditsView;
-
-	private bool displaySupport;
-
-	public bool leftHanded;
-
-	public ComputerState currentState => stateStack.Peek();
-
-	private bool CheckInternetConnection()
-	{
-		return Application.internetReachability != NetworkReachability.NotReachable;
-	}
-
-	private void Awake()
-	{
-		offlineScoreboard.Initialize(scoreboardRenderer, wrongVersionMaterial);
-		screenText.Initialize(computerScreenRenderer, wrongVersionMaterial);
-		functionSelectText.Initialize(computerScreenRenderer, wrongVersionMaterial);
-		wallScreenText.Initialize(wallScreenRenderer, wrongVersionMaterial);
-		tutorialWallScreenText.Initialize(tutorialWallScreenRenderer, wrongVersionMaterial);
-		if (instance == null)
+		public DateTime GetServerTime()
 		{
-			instance = this;
-			hasInstance = true;
+			return this.startupTime + TimeSpan.FromSeconds((double)Time.realtimeSinceStartup);
 		}
-		else if (instance != this)
-		{
-			UnityEngine.Object.Destroy(base.gameObject);
-		}
-		currentTextField = "";
-		roomToJoin = "";
-		redText = "";
-		blueText = "";
-		greenText = "";
-		currentName = "";
-		savedName = "";
-		SwitchState(ComputerState.Startup);
-		InitializeColorState();
-		InitializeNameState();
-		InitializeRoomState();
-		InitializeTurnState();
-		InitializeStartupState();
-		InitializeQueueState();
-		InitializeMicState();
-		InitializeGroupState();
-		InitializeVoiceState();
-		InitializeGameMode();
-		InitializeVisualsState();
-		InitializeCreditsState();
-		InitializeTimeState();
-		InitializeSupportState();
-	}
 
-	private IEnumerator Start()
-	{
-		yield return null;
-		if ((bool)BacktraceClient.Instance && includeUpdatedServerSynchTest == 1)
+		public GorillaComputer.ComputerState currentState
 		{
-			UnityEngine.Object.Destroy(BacktraceClient.Instance.gameObject);
-		}
-	}
-
-	protected void OnDestroy()
-	{
-		if (instance == this)
-		{
-			hasInstance = false;
-			instance = null;
-		}
-	}
-
-	private void Update()
-	{
-		stateUpdated = false;
-		if (!CheckInternetConnection())
-		{
-			UpdateFailureText("NO WIFI OR LAN CONNECTION DETECTED.");
-			internetFailure = true;
-		}
-		else if (internetFailure)
-		{
-			RestoreFromFailureState();
-			UpdateScreen();
-		}
-		else if (isConnectedToMaster && Time.time > lastUpdateTime + updateCooldown)
-		{
-			lastUpdateTime = Time.time;
-			UpdateScreen();
-		}
-	}
-
-	public void OnConnectedToMasterStuff()
-	{
-		if (!isConnectedToMaster)
-		{
-			isConnectedToMaster = true;
-			PlayFabClientAPI.ExecuteCloudScript(new ExecuteCloudScriptRequest
+			get
 			{
-				FunctionName = "ReturnCurrentVersionNew",
-				FunctionParameter = new
+				return this.stateStack.Peek();
+			}
+		}
+
+		private bool CheckInternetConnection()
+		{
+			return Application.internetReachability > NetworkReachability.NotReachable;
+		}
+
+		private void Awake()
+		{
+			this.offlineScoreboard.Initialize(this.scoreboardRenderer, this.wrongVersionMaterial);
+			this.screenText.Initialize(this.computerScreenRenderer, this.wrongVersionMaterial);
+			this.functionSelectText.Initialize(this.computerScreenRenderer, this.wrongVersionMaterial);
+			this.wallScreenText.Initialize(this.wallScreenRenderer, this.wrongVersionMaterial);
+			this.tutorialWallScreenText.Initialize(this.tutorialWallScreenRenderer, this.wrongVersionMaterial);
+			this.modeSelectButtons = Object.FindObjectsOfType<ModeSelectButton>(true);
+			if (GorillaComputer.instance == null)
+			{
+				GorillaComputer.instance = this;
+				GorillaComputer.hasInstance = true;
+			}
+			else if (GorillaComputer.instance != this)
+			{
+				Object.Destroy(base.gameObject);
+			}
+			this.systemUtilitySync = 1;
+			this.currentTextField = "";
+			this.roomToJoin = "";
+			this.redText = "";
+			this.blueText = "";
+			this.greenText = "";
+			this.currentName = "";
+			this.savedName = "";
+			this.SwitchState(GorillaComputer.ComputerState.Startup, true);
+			this.InitializeColorState();
+			this.InitializeNameState();
+			this.InitializeRoomState();
+			this.InitializeTurnState();
+			this.InitializeStartupState();
+			this.InitializeQueueState();
+			this.InitializeMicState();
+			this.InitializeGroupState();
+			this.InitializeVoiceState();
+			this.InitializeGameMode();
+			this.InitializeVisualsState();
+			this.InitializeCreditsState();
+			this.InitializeTimeState();
+			this.InitializeSupportState();
+		}
+
+		private IEnumerator Start()
+		{
+			yield return null;
+			if (BacktraceClient.Instance && this.includeUpdatedServerSynchTest == 1)
+			{
+				Object.Destroy(BacktraceClient.Instance.gameObject);
+			}
+			yield break;
+		}
+
+		protected void OnDestroy()
+		{
+			if (GorillaComputer.instance == this)
+			{
+				GorillaComputer.hasInstance = false;
+				GorillaComputer.instance = null;
+			}
+		}
+
+		private void Update()
+		{
+			this.stateUpdated = false;
+			if (!this.CheckInternetConnection())
+			{
+				this.UpdateFailureText("NO WIFI OR LAN CONNECTION DETECTED.");
+				this.internetFailure = true;
+				return;
+			}
+			if (this.internetFailure)
+			{
+				this.RestoreFromFailureState();
+				this.UpdateScreen();
+				return;
+			}
+			if (this.isConnectedToMaster && Time.time > this.lastUpdateTime + this.updateCooldown)
+			{
+				this.lastUpdateTime = Time.time;
+				this.UpdateScreen();
+			}
+		}
+
+		public void OnConnectedToMasterStuff()
+		{
+			if (!this.isConnectedToMaster)
+			{
+				this.isConnectedToMaster = true;
+				PlayFabClientAPI.ExecuteCloudScript(new ExecuteCloudScriptRequest
 				{
-					CurrentVersion = PhotonNetworkController.Instance.GameVersionString,
-					UpdatedSynchTest = includeUpdatedServerSynchTest
+					FunctionName = "ReturnCurrentVersionNew",
+					FunctionParameter = new
+					{
+						CurrentVersion = PhotonNetworkController.Instance.GameVersionString,
+						UpdatedSynchTest = this.includeUpdatedServerSynchTest
+					}
+				}, new Action<PlayFab.ClientModels.ExecuteCloudScriptResult>(this.OnReturnCurrentVersion), new Action<PlayFabError>(GorillaComputer.OnErrorShared), null, null);
+				if (this.startupMillis == 0L && !this.tryGetTimeAgain)
+				{
+					this.GetCurrentTime();
 				}
-			}, OnReturnCurrentVersion, OnErrorShared);
-			if (startupMillis == 0L && !tryGetTimeAgain)
-			{
-				GetCurrentTime();
+				RuntimePlatform platform = Application.platform;
+				this.SaveModAccountData();
 			}
-			_ = Application.platform;
-			_ = 11;
-			SaveModAccountData();
 		}
-	}
 
-	public void PressButton(GorillaKeyboardButton buttonPressed)
-	{
-		switch (currentState)
+		public void PressButton(GorillaKeyboardButton buttonPressed)
 		{
-		case ComputerState.Startup:
-			ProcessStartupState(buttonPressed);
-			break;
-		case ComputerState.Color:
-			ProcessColorState(buttonPressed);
-			break;
-		case ComputerState.Room:
-			ProcessRoomState(buttonPressed);
-			break;
-		case ComputerState.Name:
-			ProcessNameState(buttonPressed);
-			break;
-		case ComputerState.Turn:
-			ProcessTurnState(buttonPressed);
-			break;
-		case ComputerState.Mic:
-			ProcessMicState(buttonPressed);
-			break;
-		case ComputerState.Queue:
-			ProcessQueueState(buttonPressed);
-			break;
-		case ComputerState.Group:
-			ProcessGroupState(buttonPressed);
-			break;
-		case ComputerState.Voice:
-			ProcessVoiceState(buttonPressed);
-			break;
-		case ComputerState.Credits:
-			ProcessCreditsState(buttonPressed);
-			break;
-		case ComputerState.Support:
-			ProcessSupportState(buttonPressed);
-			break;
-		case ComputerState.Visuals:
-			ProcessVisualsState(buttonPressed);
-			break;
-		case ComputerState.NameWarning:
-			ProcessNameWarningState(buttonPressed);
-			break;
-		}
-		buttonPressed.GetComponent<MeshRenderer>().material = pressedMaterial;
-		buttonPressed.pressTime = Time.time;
-		StartCoroutine(ButtonColorUpdate(buttonPressed));
-	}
-
-	private IEnumerator ButtonColorUpdate(GorillaKeyboardButton button)
-	{
-		yield return new WaitForSeconds(buttonFadeTime);
-		if (button.pressTime != 0f && Time.time > buttonFadeTime + button.pressTime)
-		{
-			button.GetComponent<MeshRenderer>().material = unpressedMaterial;
-			button.pressTime = 0f;
-		}
-	}
-
-	private void InitializeStartupState()
-	{
-	}
-
-	private void InitializeRoomState()
-	{
-	}
-
-	private void InitializeColorState()
-	{
-		redValue = PlayerPrefs.GetFloat("redValue", 0f);
-		greenValue = PlayerPrefs.GetFloat("greenValue", 0f);
-		blueValue = PlayerPrefs.GetFloat("blueValue", 0f);
-		colorCursorLine = 0;
-		GorillaTagger.Instance.UpdateColor(redValue, greenValue, blueValue);
-	}
-
-	private void InitializeNameState()
-	{
-		savedName = PlayerPrefs.GetString("playerName", "gorilla");
-		PhotonNetwork.LocalPlayer.NickName = savedName;
-		currentName = savedName;
-		exactOneWeek = exactOneWeekFile.text.Split('\n');
-		anywhereOneWeek = anywhereOneWeekFile.text.Split('\n');
-		anywhereTwoWeek = anywhereTwoWeekFile.text.Split('\n');
-		for (int i = 0; i < exactOneWeek.Length; i++)
-		{
-			exactOneWeek[i] = exactOneWeek[i].ToLower().TrimEnd('\r', '\n');
-		}
-		for (int j = 0; j < anywhereOneWeek.Length; j++)
-		{
-			anywhereOneWeek[j] = anywhereOneWeek[j].ToLower().TrimEnd('\r', '\n');
-		}
-		for (int k = 0; k < anywhereTwoWeek.Length; k++)
-		{
-			anywhereTwoWeek[k] = anywhereTwoWeek[k].ToLower().TrimEnd('\r', '\n');
-		}
-	}
-
-	private void InitializeTurnState()
-	{
-		gorillaTurn = GorillaTagger.Instance.GetComponent<GorillaSnapTurn>();
-		string defaultValue = ((Application.platform == RuntimePlatform.Android) ? "NONE" : "SNAP");
-		turnType = PlayerPrefs.GetString("stickTurning", defaultValue);
-		turnValue = PlayerPrefs.GetInt("turnFactor", 4);
-		gorillaTurn.ChangeTurnMode(turnType, turnValue);
-	}
-
-	private void InitializeMicState()
-	{
-		pttType = PlayerPrefs.GetString("pttType", "ALL CHAT");
-	}
-
-	private void InitializeQueueState()
-	{
-		currentQueue = PlayerPrefs.GetString("currentQueue", "DEFAULT");
-		allowedInCompetitive = PlayerPrefs.GetInt("allowedInCompetitive", 0) == 1;
-		if (!allowedInCompetitive && currentQueue == "COMPETITIVE")
-		{
-			PlayerPrefs.SetString("currentQueue", "DEFAULT");
-			PlayerPrefs.Save();
-			currentQueue = "DEFAULT";
-		}
-	}
-
-	private void InitializeGroupState()
-	{
-		groupMapJoin = PlayerPrefs.GetString("groupMapJoin", "FOREST");
-		groupMapJoinIndex = PlayerPrefs.GetInt("groupMapJoinIndex", 0);
-		allowedMapsToJoin = friendJoinCollider.myAllowedMapsToJoin;
-	}
-
-	private void InitializeVoiceState()
-	{
-		voiceChatOn = PlayerPrefs.GetString("voiceChatOn", "TRUE");
-	}
-
-	private void InitializeGameMode()
-	{
-		currentGameMode = PlayerPrefs.GetString("currentGameMode", "INFECTION");
-		if (currentGameMode != "CASUAL" && currentGameMode != "INFECTION" && currentGameMode != "HUNT" && currentGameMode != "BATTLE")
-		{
-			PlayerPrefs.SetString("currentGameMode", "INFECTION");
-			PlayerPrefs.Save();
-			currentGameMode = "INFECTION";
-		}
-		leftHanded = PlayerPrefs.GetInt("leftHanded", 0) == 1;
-		OnModeSelectButtonPress(currentGameMode, leftHanded);
-	}
-
-	private void InitializeCreditsState()
-	{
-	}
-
-	private void InitializeTimeState()
-	{
-		BetterDayNightManager.instance.currentSetting = TimeSettings.Normal;
-	}
-
-	private void InitializeSupportState()
-	{
-		displaySupport = false;
-	}
-
-	private void InitializeVisualsState()
-	{
-		disableParticles = PlayerPrefs.GetString("disableParticles", "FALSE") == "TRUE";
-		GorillaTagger.Instance.ShowCosmeticParticles(!disableParticles);
-		instrumentVolume = PlayerPrefs.GetFloat("instrumentVolume", 0.1f);
-	}
-
-	private void SwitchState(ComputerState newState, bool clearStack = true)
-	{
-		if (clearStack)
-		{
-			stateStack.Clear();
-		}
-		stateStack.Push(newState);
-		UpdateScreen();
-	}
-
-	private void PopState()
-	{
-		if (stateStack.Count <= 1)
-		{
-			Debug.LogError("Can't pop into an empty stack");
-			return;
-		}
-		stateStack.Pop();
-		UpdateScreen();
-	}
-
-	private void SwitchToColorState()
-	{
-		blueText = Mathf.Floor(blueValue * 9f).ToString();
-		redText = Mathf.Floor(redValue * 9f).ToString();
-		greenText = Mathf.Floor(greenValue * 9f).ToString();
-		SwitchState(ComputerState.Color);
-	}
-
-	private void SwitchToRoomState()
-	{
-		SwitchState(ComputerState.Room);
-	}
-
-	private void SwitchToNameState()
-	{
-		SwitchState(ComputerState.Name);
-	}
-
-	private void SwitchToTurnState()
-	{
-		SwitchState(ComputerState.Turn);
-	}
-
-	private void SwitchToMicState()
-	{
-		SwitchState(ComputerState.Mic);
-	}
-
-	private void SwitchToQueueState()
-	{
-		SwitchState(ComputerState.Queue);
-	}
-
-	private void SwitchToGroupState()
-	{
-		SwitchState(ComputerState.Group);
-	}
-
-	private void SwitchToVoiceState()
-	{
-		SwitchState(ComputerState.Voice);
-	}
-
-	private void SwitchToCreditsState()
-	{
-		SwitchState(ComputerState.Credits);
-	}
-
-	private void SwitchToSupportState()
-	{
-		SwitchState(ComputerState.Support);
-	}
-
-	private void SwitchToVisualsState()
-	{
-		SwitchState(ComputerState.Visuals);
-	}
-
-	private void SwitchToWarningState()
-	{
-		warningConfirmationInputString = string.Empty;
-		SwitchState(ComputerState.NameWarning, clearStack: false);
-	}
-
-	private void SwitchToLoadingState()
-	{
-		SwitchState(ComputerState.Loading, clearStack: false);
-	}
-
-	private void ProcessStartupState(GorillaKeyboardButton buttonPressed)
-	{
-		_ = buttonPressed.characterString;
-		SwitchToRoomState();
-		UpdateScreen();
-	}
-
-	private void ProcessColorState(GorillaKeyboardButton buttonPressed)
-	{
-		if (int.TryParse(buttonPressed.characterString, out var result))
-		{
-			switch (colorCursorLine)
+			switch (this.currentState)
 			{
-			case 0:
-				redText = result.ToString();
+			case GorillaComputer.ComputerState.Startup:
+				this.ProcessStartupState(buttonPressed);
 				break;
-			case 1:
-				greenText = result.ToString();
+			case GorillaComputer.ComputerState.Color:
+				this.ProcessColorState(buttonPressed);
 				break;
-			case 2:
-				blueText = result.ToString();
+			case GorillaComputer.ComputerState.Name:
+				this.ProcessNameState(buttonPressed);
+				break;
+			case GorillaComputer.ComputerState.Turn:
+				this.ProcessTurnState(buttonPressed);
+				break;
+			case GorillaComputer.ComputerState.Mic:
+				this.ProcessMicState(buttonPressed);
+				break;
+			case GorillaComputer.ComputerState.Room:
+				this.ProcessRoomState(buttonPressed);
+				break;
+			case GorillaComputer.ComputerState.Queue:
+				this.ProcessQueueState(buttonPressed);
+				break;
+			case GorillaComputer.ComputerState.Group:
+				this.ProcessGroupState(buttonPressed);
+				break;
+			case GorillaComputer.ComputerState.Voice:
+				this.ProcessVoiceState(buttonPressed);
+				break;
+			case GorillaComputer.ComputerState.Credits:
+				this.ProcessCreditsState(buttonPressed);
+				break;
+			case GorillaComputer.ComputerState.Visuals:
+				this.ProcessVisualsState(buttonPressed);
+				break;
+			case GorillaComputer.ComputerState.NameWarning:
+				this.ProcessNameWarningState(buttonPressed);
+				break;
+			case GorillaComputer.ComputerState.Support:
+				this.ProcessSupportState(buttonPressed);
 				break;
 			}
-			if (int.TryParse(redText, out var result2))
-			{
-				redValue = (float)result2 / 9f;
-			}
-			if (int.TryParse(greenText, out result2))
-			{
-				greenValue = (float)result2 / 9f;
-			}
-			if (int.TryParse(blueText, out result2))
-			{
-				blueValue = (float)result2 / 9f;
-			}
-			PlayerPrefs.SetFloat("redValue", redValue);
-			PlayerPrefs.SetFloat("greenValue", greenValue);
-			PlayerPrefs.SetFloat("blueValue", blueValue);
-			GorillaTagger.Instance.UpdateColor(redValue, greenValue, blueValue);
-			PlayerPrefs.Save();
-			if (PhotonNetwork.InRoom)
-			{
-				GorillaTagger.Instance.myVRRig.RPC("InitializeNoobMaterial", RpcTarget.All, redValue, greenValue, blueValue, leftHanded);
-			}
+			buttonPressed.GetComponent<MeshRenderer>().material = this.pressedMaterial;
+			buttonPressed.pressTime = Time.time;
+			base.StartCoroutine(this.ButtonColorUpdate(buttonPressed));
 		}
-		else
-		{
-			switch (buttonPressed.characterString)
-			{
-			case "up":
-				SwitchToNameState();
-				break;
-			case "down":
-				SwitchToTurnState();
-				break;
-			case "option1":
-				colorCursorLine = 0;
-				break;
-			case "option2":
-				colorCursorLine = 1;
-				break;
-			case "option3":
-				colorCursorLine = 2;
-				break;
-			}
-		}
-		UpdateScreen();
-	}
 
-	public void ProcessNameState(GorillaKeyboardButton buttonPressed)
-	{
-		switch (buttonPressed.characterString)
+		private IEnumerator ButtonColorUpdate(GorillaKeyboardButton button)
 		{
-		case "up":
-			SwitchToRoomState();
-			break;
-		case "down":
-			SwitchToColorState();
-			break;
-		case "enter":
-			if (currentName != savedName && currentName != "")
+			yield return new WaitForSeconds(this.buttonFadeTime);
+			if (button.pressTime != 0f && Time.time > this.buttonFadeTime + button.pressTime)
 			{
-				CheckAutoBanList(currentName, forRoom: false);
+				button.GetComponent<MeshRenderer>().material = this.unpressedMaterial;
+				button.pressTime = 0f;
 			}
-			break;
-		case "delete":
-			if (currentName.Length > 0)
-			{
-				currentName = currentName.Substring(0, currentName.Length - 1);
-			}
-			break;
-		default:
-			if (currentName.Length < 12 && buttonPressed.characterString.Length == 1)
-			{
-				currentName += buttonPressed.characterString;
-			}
-			break;
+			yield break;
 		}
-		UpdateScreen();
-	}
 
-	private void ProcessRoomState(GorillaKeyboardButton buttonPressed)
-	{
-		switch (buttonPressed.characterString)
+		private void InitializeStartupState()
 		{
-		case "up":
-			SwitchToSupportState();
-			break;
-		case "down":
-			SwitchToNameState();
-			break;
-		case "option1":
-			PhotonNetworkController.Instance.AttemptDisconnect();
-			break;
-		case "enter":
-			if (roomToJoin != "")
-			{
-				CheckAutoBanList(roomToJoin, forRoom: true);
-			}
-			break;
-		case "delete":
-			if (roomToJoin.Length > 0)
-			{
-				roomToJoin = roomToJoin.Substring(0, roomToJoin.Length - 1);
-			}
-			break;
-		default:
-			if (roomToJoin.Length < 10)
-			{
-				roomToJoin += buttonPressed.characterString;
-			}
-			break;
-		case "option2":
-		case "option3":
-			break;
 		}
-		UpdateScreen();
-	}
 
-	private void ProcessTurnState(GorillaKeyboardButton buttonPressed)
-	{
-		if (int.TryParse(buttonPressed.characterString, out var result))
+		private void InitializeRoomState()
 		{
-			turnValue = result;
-			PlayerPrefs.SetInt("turnFactor", turnValue);
-			PlayerPrefs.Save();
-			gorillaTurn.ChangeTurnMode(turnType, turnValue);
 		}
-		else
+
+		private void InitializeColorState()
 		{
-			switch (buttonPressed.characterString)
+			this.redValue = PlayerPrefs.GetFloat("redValue", 0f);
+			this.greenValue = PlayerPrefs.GetFloat("greenValue", 0f);
+			this.blueValue = PlayerPrefs.GetFloat("blueValue", 0f);
+			this.colorCursorLine = 0;
+			GorillaTagger.Instance.UpdateColor(this.redValue, this.greenValue, this.blueValue);
+		}
+
+		private void InitializeNameState()
+		{
+			this.savedName = PlayerPrefs.GetString("playerName", "gorilla");
+			PhotonNetwork.LocalPlayer.NickName = this.savedName;
+			this.currentName = this.savedName;
+			this.exactOneWeek = this.exactOneWeekFile.text.Split('\n', StringSplitOptions.None);
+			this.anywhereOneWeek = this.anywhereOneWeekFile.text.Split('\n', StringSplitOptions.None);
+			this.anywhereTwoWeek = this.anywhereTwoWeekFile.text.Split('\n', StringSplitOptions.None);
+			for (int i = 0; i < this.exactOneWeek.Length; i++)
 			{
-			case "up":
-				SwitchToColorState();
-				break;
-			case "down":
-				SwitchToMicState();
-				break;
-			case "option1":
-				turnType = "SNAP";
-				PlayerPrefs.SetString("stickTurning", turnType);
+				this.exactOneWeek[i] = this.exactOneWeek[i].ToLower().TrimEnd(new char[] { '\r', '\n' });
+			}
+			for (int j = 0; j < this.anywhereOneWeek.Length; j++)
+			{
+				this.anywhereOneWeek[j] = this.anywhereOneWeek[j].ToLower().TrimEnd(new char[] { '\r', '\n' });
+			}
+			for (int k = 0; k < this.anywhereTwoWeek.Length; k++)
+			{
+				this.anywhereTwoWeek[k] = this.anywhereTwoWeek[k].ToLower().TrimEnd(new char[] { '\r', '\n' });
+			}
+		}
+
+		private void InitializeTurnState()
+		{
+			this.gorillaTurn = GorillaTagger.Instance.GetComponent<GorillaSnapTurn>();
+			string text = ((Application.platform == RuntimePlatform.Android) ? "NONE" : "SNAP");
+			this.turnType = PlayerPrefs.GetString("stickTurning", text);
+			this.turnValue = PlayerPrefs.GetInt("turnFactor", 4);
+			this.gorillaTurn.ChangeTurnMode(this.turnType, this.turnValue);
+		}
+
+		private void InitializeMicState()
+		{
+			this.pttType = PlayerPrefs.GetString("pttType", "ALL CHAT");
+		}
+
+		private void InitializeQueueState()
+		{
+			this.currentQueue = PlayerPrefs.GetString("currentQueue", "DEFAULT");
+			this.allowedInCompetitive = PlayerPrefs.GetInt("allowedInCompetitive", 0) == 1;
+			if (!this.allowedInCompetitive && this.currentQueue == "COMPETITIVE")
+			{
+				PlayerPrefs.SetString("currentQueue", "DEFAULT");
 				PlayerPrefs.Save();
-				gorillaTurn.ChangeTurnMode(turnType, turnValue);
-				break;
-			case "option2":
-				turnType = "SMOOTH";
-				PlayerPrefs.SetString("stickTurning", turnType);
+				this.currentQueue = "DEFAULT";
+			}
+		}
+
+		private void InitializeGroupState()
+		{
+			this.groupMapJoin = PlayerPrefs.GetString("groupMapJoin", "FOREST");
+			this.groupMapJoinIndex = PlayerPrefs.GetInt("groupMapJoinIndex", 0);
+			this.allowedMapsToJoin = this.friendJoinCollider.myAllowedMapsToJoin;
+		}
+
+		private void InitializeVoiceState()
+		{
+			this.voiceChatOn = PlayerPrefs.GetString("voiceChatOn", "TRUE");
+		}
+
+		private void InitializeGameMode()
+		{
+			this.currentGameMode = PlayerPrefs.GetString("currentGameMode", "INFECTION");
+			if (this.currentGameMode != "CASUAL" && this.currentGameMode != "INFECTION" && this.currentGameMode != "HUNT" && this.currentGameMode != "BATTLE")
+			{
+				PlayerPrefs.SetString("currentGameMode", "INFECTION");
 				PlayerPrefs.Save();
-				gorillaTurn.ChangeTurnMode(turnType, turnValue);
-				break;
-			case "option3":
-				turnType = "NONE";
-				PlayerPrefs.SetString("stickTurning", turnType);
-				PlayerPrefs.Save();
-				gorillaTurn.ChangeTurnMode(turnType, turnValue);
-				break;
+				this.currentGameMode = "INFECTION";
 			}
+			this.leftHanded = PlayerPrefs.GetInt("leftHanded", 0) == 1;
+			this.OnModeSelectButtonPress(this.currentGameMode, this.leftHanded);
+			GameModePages.SetSelectedGameModeShared(this.currentGameMode);
 		}
-		UpdateScreen();
-	}
 
-	private void ProcessMicState(GorillaKeyboardButton buttonPressed)
-	{
-		switch (buttonPressed.characterString)
+		private void InitializeCreditsState()
 		{
-		case "up":
-			SwitchToTurnState();
-			break;
-		case "down":
-			SwitchToQueueState();
-			break;
-		case "option1":
-			pttType = "ALL CHAT";
-			PlayerPrefs.SetString("pttType", pttType);
-			PlayerPrefs.Save();
-			break;
-		case "option2":
-			pttType = "PUSH TO TALK";
-			PlayerPrefs.SetString("pttType", pttType);
-			PlayerPrefs.Save();
-			break;
-		case "option3":
-			pttType = "PUSH TO MUTE";
-			PlayerPrefs.SetString("pttType", pttType);
-			PlayerPrefs.Save();
-			break;
 		}
-		UpdateScreen();
-	}
 
-	private void ProcessQueueState(GorillaKeyboardButton buttonPressed)
-	{
-		switch (buttonPressed.characterString)
+		private void InitializeTimeState()
 		{
-		case "up":
-			SwitchToMicState();
-			break;
-		case "down":
-			SwitchToGroupState();
-			break;
-		case "option1":
-			currentQueue = "DEFAULT";
-			PlayerPrefs.SetString("currentQueue", currentQueue);
-			PlayerPrefs.Save();
-			break;
-		case "option2":
-			currentQueue = "MINIGAMES";
-			PlayerPrefs.SetString("currentQueue", currentQueue);
-			PlayerPrefs.Save();
-			break;
-		case "option3":
-			if (allowedInCompetitive)
+			BetterDayNightManager.instance.currentSetting = TimeSettings.Normal;
+		}
+
+		private void InitializeSupportState()
+		{
+			this.displaySupport = false;
+		}
+
+		private void InitializeVisualsState()
+		{
+			this.disableParticles = PlayerPrefs.GetString("disableParticles", "FALSE") == "TRUE";
+			GorillaTagger.Instance.ShowCosmeticParticles(!this.disableParticles);
+			this.instrumentVolume = PlayerPrefs.GetFloat("instrumentVolume", 0.1f);
+		}
+
+		private void SwitchState(GorillaComputer.ComputerState newState, bool clearStack = true)
+		{
+			if (clearStack)
 			{
-				currentQueue = "COMPETITIVE";
-				PlayerPrefs.SetString("currentQueue", currentQueue);
-				PlayerPrefs.Save();
+				this.stateStack.Clear();
 			}
-			break;
+			this.stateStack.Push(newState);
+			this.UpdateScreen();
 		}
-		UpdateScreen();
-	}
 
-	private void ProcessGroupState(GorillaKeyboardButton buttonPressed)
-	{
-		switch (buttonPressed.characterString)
+		private void PopState()
 		{
-		case "up":
-			SwitchToQueueState();
-			break;
-		case "down":
-			SwitchToVoiceState();
-			break;
-		case "1":
-			groupMapJoin = "FOREST";
-			groupMapJoinIndex = 0;
-			PlayerPrefs.SetString("groupMapJoin", groupMapJoin);
-			PlayerPrefs.SetInt("groupMapJoinIndex", groupMapJoinIndex);
-			PlayerPrefs.Save();
-			break;
-		case "2":
-			groupMapJoin = "CAVE";
-			groupMapJoinIndex = 1;
-			PlayerPrefs.SetString("groupMapJoin", groupMapJoin);
-			PlayerPrefs.SetInt("groupMapJoinIndex", groupMapJoinIndex);
-			PlayerPrefs.Save();
-			break;
-		case "3":
-			groupMapJoin = "CANYON";
-			groupMapJoinIndex = 2;
-			PlayerPrefs.SetString("groupMapJoin", groupMapJoin);
-			PlayerPrefs.SetInt("groupMapJoinIndex", groupMapJoinIndex);
-			PlayerPrefs.Save();
-			break;
-		case "4":
-			groupMapJoin = "CITY";
-			groupMapJoinIndex = 3;
-			PlayerPrefs.SetString("groupMapJoin", groupMapJoin);
-			PlayerPrefs.SetInt("groupMapJoinIndex", groupMapJoinIndex);
-			PlayerPrefs.Save();
-			break;
-		case "enter":
-			OnGroupJoinButtonPress(Mathf.Min(allowedMapsToJoin.Length - 1, groupMapJoinIndex), friendJoinCollider);
-			break;
-		}
-		roomFull = false;
-		UpdateScreen();
-	}
-
-	private void ProcessVoiceState(GorillaKeyboardButton buttonPressed)
-	{
-		switch (buttonPressed.characterString)
-		{
-		case "up":
-			SwitchToGroupState();
-			break;
-		case "down":
-			SwitchToVisualsState();
-			break;
-		case "option1":
-			voiceChatOn = "TRUE";
-			PlayerPrefs.SetString("voiceChatOn", voiceChatOn);
-			PlayerPrefs.Save();
-			RigContainer.RefreshAllRigVoices();
-			break;
-		case "option2":
-			voiceChatOn = "FALSE";
-			PlayerPrefs.SetString("voiceChatOn", voiceChatOn);
-			PlayerPrefs.Save();
-			RigContainer.RefreshAllRigVoices();
-			break;
-		}
-		UpdateScreen();
-	}
-
-	private void ProcessVisualsState(GorillaKeyboardButton buttonPressed)
-	{
-		if (int.TryParse(buttonPressed.characterString, out var result))
-		{
-			instrumentVolume = (float)result / 50f;
-			PlayerPrefs.SetFloat("instrumentVolume", instrumentVolume);
-			PlayerPrefs.Save();
-		}
-		else
-		{
-			switch (buttonPressed.characterString)
+			if (this.stateStack.Count <= 1)
 			{
-			case "up":
-				SwitchToVoiceState();
-				break;
-			case "down":
-				SwitchToCreditsState();
-				break;
-			case "option1":
-				disableParticles = false;
-				PlayerPrefs.SetString("disableParticles", "FALSE");
-				PlayerPrefs.Save();
-				GorillaTagger.Instance.ShowCosmeticParticles(!disableParticles);
-				break;
-			case "option2":
-				disableParticles = true;
-				PlayerPrefs.SetString("disableParticles", "TRUE");
-				PlayerPrefs.Save();
-				GorillaTagger.Instance.ShowCosmeticParticles(!disableParticles);
-				break;
+				Debug.LogError("Can't pop into an empty stack");
+				return;
 			}
+			this.stateStack.Pop();
+			this.UpdateScreen();
 		}
-		UpdateScreen();
-	}
 
-	private void ProcessCreditsState(GorillaKeyboardButton buttonPressed)
-	{
-		switch (buttonPressed.characterString)
+		private void SwitchToColorState()
 		{
-		case "up":
-			SwitchToVisualsState();
-			break;
-		case "down":
-			SwitchToSupportState();
-			break;
-		case "enter":
-			creditsView.ProcessButtonPress(buttonPressed);
-			break;
+			this.blueText = Mathf.Floor(this.blueValue * 9f).ToString();
+			this.redText = Mathf.Floor(this.redValue * 9f).ToString();
+			this.greenText = Mathf.Floor(this.greenValue * 9f).ToString();
+			this.SwitchState(GorillaComputer.ComputerState.Color, true);
 		}
-		UpdateScreen();
-	}
 
-	private void ProcessSupportState(GorillaKeyboardButton buttonPressed)
-	{
-		switch (buttonPressed.characterString)
+		private void SwitchToRoomState()
 		{
-		case "up":
-			displaySupport = false;
-			SwitchToCreditsState();
-			break;
-		case "down":
-			displaySupport = false;
-			SwitchToRoomState();
-			break;
-		case "enter":
-			displaySupport = true;
-			break;
+			this.SwitchState(GorillaComputer.ComputerState.Room, true);
 		}
-		UpdateScreen();
-	}
 
-	private void ProcessNameWarningState(GorillaKeyboardButton buttonPressed)
-	{
-		if (warningConfirmationInputString.ToLower() == "yes")
+		private void SwitchToNameState()
 		{
-			PopState();
+			this.SwitchState(GorillaComputer.ComputerState.Name, true);
 		}
-		else
-		{
-			switch (buttonPressed.characterString)
-			{
-			case "delete":
-				if (warningConfirmationInputString.Length > 0)
-				{
-					warningConfirmationInputString = warningConfirmationInputString.Substring(0, warningConfirmationInputString.Length - 1);
-				}
-				break;
-			default:
-				if (warningConfirmationInputString.Length < 3)
-				{
-					warningConfirmationInputString += buttonPressed.characterString;
-				}
-				break;
-			case "up":
-			case "down":
-			case "option1":
-			case "option2":
-			case "option3":
-			case "enter":
-				break;
-			}
-		}
-		UpdateScreen();
-	}
 
-	public void UpdateScreen()
-	{
-		if (PhotonNetworkController.Instance != null && !PhotonNetworkController.Instance.wrongVersion)
+		private void SwitchToTurnState()
 		{
-			UpdateFunctionScreen();
-			switch (currentState)
+			this.SwitchState(GorillaComputer.ComputerState.Turn, true);
+		}
+
+		private void SwitchToMicState()
+		{
+			this.SwitchState(GorillaComputer.ComputerState.Mic, true);
+		}
+
+		private void SwitchToQueueState()
+		{
+			this.SwitchState(GorillaComputer.ComputerState.Queue, true);
+		}
+
+		private void SwitchToGroupState()
+		{
+			this.SwitchState(GorillaComputer.ComputerState.Group, true);
+		}
+
+		private void SwitchToVoiceState()
+		{
+			this.SwitchState(GorillaComputer.ComputerState.Voice, true);
+		}
+
+		private void SwitchToCreditsState()
+		{
+			this.SwitchState(GorillaComputer.ComputerState.Credits, true);
+		}
+
+		private void SwitchToSupportState()
+		{
+			this.SwitchState(GorillaComputer.ComputerState.Support, true);
+		}
+
+		private void SwitchToVisualsState()
+		{
+			this.SwitchState(GorillaComputer.ComputerState.Visuals, true);
+		}
+
+		private void SwitchToWarningState()
+		{
+			this.warningConfirmationInputString = string.Empty;
+			this.SwitchState(GorillaComputer.ComputerState.NameWarning, false);
+		}
+
+		private void SwitchToLoadingState()
+		{
+			this.SwitchState(GorillaComputer.ComputerState.Loading, false);
+		}
+
+		private void ProcessStartupState(GorillaKeyboardButton buttonPressed)
+		{
+			string characterString = buttonPressed.characterString;
+			this.SwitchToRoomState();
+			this.UpdateScreen();
+		}
+
+		private void ProcessColorState(GorillaKeyboardButton buttonPressed)
+		{
+			int num;
+			if (int.TryParse(buttonPressed.characterString, out num))
 			{
-			case ComputerState.Startup:
-				screenText.Text = "GORILLA OS\n\n" + PhotonNetworkController.Instance.TotalUsers() + " PLAYERS ONLINE\n\n" + usersBanned + " USERS BANNED YESTERDAY\n\nPRESS ANY KEY TO BEGIN";
-				break;
-			case ComputerState.Color:
-			{
-				screenText.Text = "USE THE OPTIONS BUTTONS TO SELECT THE COLOR TO UPDATE, THEN PRESS 0-9 TO SET A NEW VALUE.";
-				GorillaText gorillaText6 = screenText;
-				gorillaText6.Text = gorillaText6.Text + "\n\n  RED: " + Mathf.FloorToInt(redValue * 9f) + ((colorCursorLine == 0) ? "<--" : "");
-				GorillaText gorillaText7 = screenText;
-				gorillaText7.Text = gorillaText7.Text + "\n\nGREEN: " + Mathf.FloorToInt(greenValue * 9f) + ((colorCursorLine == 1) ? "<--" : "");
-				GorillaText gorillaText8 = screenText;
-				gorillaText8.Text = gorillaText8.Text + "\n\n BLUE: " + Mathf.FloorToInt(blueValue * 9f) + ((colorCursorLine == 2) ? "<--" : "");
-				break;
-			}
-			case ComputerState.Room:
-			{
-				screenText.Text = "PRESS ENTER TO JOIN OR CREATE A CUSTOM ROOM WITH THE ENTERED CODE. PRESS OPTION 1 TO DISCONNECT FROM THE CURRENT ROOM.\n\nCURRENT ROOM: ";
-				if (PhotonNetwork.InRoom)
+				switch (this.colorCursorLine)
 				{
-					screenText.Text += PhotonNetwork.CurrentRoom.Name;
-					GorillaText gorillaText3 = screenText;
-					gorillaText3.Text = gorillaText3.Text + "\n\nPLAYERS IN ROOM: " + PhotonNetwork.CurrentRoom.PlayerCount;
-				}
-				else
-				{
-					screenText.Text += "-NOT IN ROOM-";
-					GorillaText gorillaText4 = screenText;
-					gorillaText4.Text = gorillaText4.Text + "\n\nPLAYERS ONLINE: " + PhotonNetworkController.Instance.TotalUsers();
-				}
-				GorillaText gorillaText5 = screenText;
-				gorillaText5.Text = gorillaText5.Text + "\n\nROOM TO JOIN: " + roomToJoin;
-				if (roomFull)
-				{
-					screenText.Text += "\n\nROOM FULL. JOIN ROOM FAILED.";
-				}
-				else if (roomNotAllowed)
-				{
-					screenText.Text += "\n\nCANNOT JOIN ROOM TYPE FROM HERE.";
-				}
-				break;
-			}
-			case ComputerState.Name:
-			{
-				screenText.Text = "PRESS ENTER TO CHANGE YOUR NAME TO THE ENTERED NEW NAME.\n\nCURRENT NAME: " + savedName;
-				GorillaText gorillaText2 = screenText;
-				gorillaText2.Text = gorillaText2.Text + "\n\n    NEW NAME: " + currentName;
-				break;
-			}
-			case ComputerState.Turn:
-				screenText.Text = "PRESS OPTION 1 TO USE SNAP TURN. PRESS OPTION 2 TO USE SMOOTH TURN. PRESS OPTION 3 TO USE NO ARTIFICIAL TURNING. PRESS THE NUMBER KEYS TO CHOOSE A TURNING SPEED.\n CURRENT TURN TYPE: " + turnType + "\nCURRENT TURN SPEED: " + turnValue;
-				break;
-			case ComputerState.Queue:
-				if (allowedInCompetitive)
-				{
-					screenText.Text = "THIS OPTION AFFECTS WHO YOU PLAY WITH. DEFAULT IS FOR ANYONE TO PLAY NORMALLY. MINIGAMES IS FOR PEOPLE LOOKING TO PLAY WITH THEIR OWN MADE UP RULES.COMPETITIVE IS FOR PLAYERS WHO WANT TO PLAY THE GAME AND TRY AS HARD AS THEY CAN. PRESS OPTION 1 FOR DEFAULT, OPTION 2 FOR MINIGAMES, OR OPTION 3 FOR COMPETITIVE.\n\nCURRENT QUEUE: " + currentQueue;
-				}
-				else
-				{
-					screenText.Text = "THIS OPTION AFFECTS WHO YOU PLAY WITH. DEFAULT IS FOR ANYONE TO PLAY NORMALLY. MINIGAMES IS FOR PEOPLE LOOKING TO PLAY WITH THEIR OWN MADE UP RULES.BEAT THE OBSTACLE COURSE IN CITY TO ALLOW COMPETITIVE PLAY. PRESS OPTION 1 FOR DEFAULT, OR OPTION 2 FOR MINIGAMES\n\nCURRENT QUEUE: " + currentQueue;
-				}
-				break;
-			case ComputerState.Mic:
-				screenText.Text = "CHOOSE ALL CHAT, PUSH TO TALK, OR PUSH TO MUTE. THE BUTTONS FOR PUSH TO TALK AND PUSH TO MUTE ARE ANY OF THE FACE BUTTONS.\nPRESS OPTION 1 TO CHOOSE ALL CHAT.\nPRESS OPTION 2 TO CHOOSE PUSH TO TALK.\nPRESS OPTION 3 TO CHOOSE PUSH TO MUTE.\n\nCURRENT MIC SETTING: " + pttType;
-				break;
-			case ComputerState.Group:
-				if (allowedMapsToJoin.Length == 1)
-				{
-					screenText.Text = "USE THIS TO JOIN A PUBLIC ROOM WITH A GROUP OF FRIENDS. GET EVERYONE IN A PRIVATE ROOM. PRESS THE NUMBER KEYS TO SELECT THE MAP. 1 FOR " + allowedMapsToJoin[Mathf.Min(allowedMapsToJoin.Length - 1, groupMapJoinIndex)].ToUpper() + ". WHILE EVERYONE IS SITTING NEXT TO THE COMPUTER, PRESS ENTER. YOU WILL ALL JOIN A PUBLIC ROOM TOGETHER AS LONG AS EVERYONE IS NEXT TO THE COMPUTER.\nCURRENT MAP SELECTION : " + allowedMapsToJoin[Mathf.Min(allowedMapsToJoin.Length - 1, groupMapJoinIndex)].ToUpper();
-				}
-				else
-				{
-					screenText.Text = "USE THIS TO JOIN A PUBLIC ROOM WITH A GROUP OF FRIENDS. GET EVERYONE IN A PRIVATE ROOM. PRESS THE NUMBER KEYS TO SELECT THE MAP. 1 FOR FOREST, 2 FOR CAVE, AND 3 FOR CANYON, AND 4 FOR CITY. WHILE EVERYONE IS SITTING NEXT TO THE COMPUTER, PRESS ENTER. YOU WILL ALL JOIN A PUBLIC ROOM TOGETHER AS LONG AS EVERYONE IS NEXT TO THE COMPUTER.\nCURRENT MAP SELECTION : " + allowedMapsToJoin[Mathf.Min(allowedMapsToJoin.Length - 1, groupMapJoinIndex)].ToUpper();
-				}
-				break;
-			case ComputerState.Voice:
-				screenText.Text = "USE THIS TO ENABLE OR DISABLE VOICE CHAT.\nPRESS OPTION 1 TO ENABLE VOICE CHAT.\nPRESS OPTION 2 TO DISABLE VOICE CHAT.\n\nVOICE CHAT ON: " + voiceChatOn;
-				break;
-			case ComputerState.Visuals:
-				screenText.Text = "UPDATE ITEMS SETTINGS. PRESS OPTION 1 TO ENABLE ITEM PARTICLES. PRESS OPTION 2 TO DISABLE ITEM PARTICLES. PRESS 1-10 TO CHANGE INSTRUMENT VOLUME FOR OTHER PLAYERS.\n\nITEM PARTICLES ON: " + (disableParticles ? "FALSE" : "TRUE") + "\nINSTRUMENT VOLUME: " + Mathf.CeilToInt(instrumentVolume * 50f);
-				break;
-			case ComputerState.Credits:
-				screenText.Text = creditsView.GetScreenText();
-				break;
-			case ComputerState.Time:
-				screenText.Text = "UPDATE TIME SETTINGS. (LOCALLY ONLY). \nPRESS OPTION 1 FOR NORMAL MODE. \nPRESS OPTION 2 FOR STATIC MODE. \nPRESS 1-10 TO CHANGE TIME OF DAY. \nCURRENT MODE: " + BetterDayNightManager.instance.currentSetting.ToString().ToUpper() + ". \nTIME OF DAY: " + BetterDayNightManager.instance.currentTimeOfDay.ToUpper() + ". \n";
-				break;
-			case ComputerState.Support:
-				if (displaySupport)
-				{
-					string text = "OCULUS PC";
-					text = "STEAM";
-					screenText.Text = "SUPPORT\n\nPLAYERID   " + PlayFabAuthenticator.instance._playFabPlayerIdCache + "\nVERSION    " + version.ToUpper() + "\nPLATFORM   " + text + "\nBUILD DATE " + buildDate + "\n";
-				}
-				else
-				{
-					screenText.Text = "SUPPORT\n\n";
-					screenText.Text += "PRESS ENTER TO DISPLAY SUPPORT AND ACCOUNT INFORMATION\n\n\n\n";
-					screenText.Text += "<color=red>DO NOT SHARE ACCOUNT INFORMATION WITH ANYONE OTHER ";
-					screenText.Text += "THAN ANOTHER AXIOM SUPPORT</color>";
-				}
-				break;
-			case ComputerState.NameWarning:
-			{
-				screenText.Text = "<color=red>WARNING: PLEASE CHOOSE A BETTER NAME\n\nENTERING ANOTHER BAD NAME WILL RESULT IN A BAN</color>";
-				if (warningConfirmationInputString.ToLower() == "yes")
-				{
-					screenText.Text += "\n\nPRESS ANY KEY TO CONTINUE";
+				case 0:
+					this.redText = num.ToString();
+					break;
+				case 1:
+					this.greenText = num.ToString();
+					break;
+				case 2:
+					this.blueText = num.ToString();
 					break;
 				}
-				GorillaText gorillaText = screenText;
-				gorillaText.Text = gorillaText.Text + "\n\nTYPE 'YES' TO CONFIRM: " + warningConfirmationInputString;
-				break;
-			}
-			case ComputerState.Loading:
-				screenText.Text = "LOADING...";
-				break;
-			}
-		}
-		if (PhotonNetwork.InRoom)
-		{
-			if (GorillaGameManager.instance != null && GorillaGameManager.instance.GetComponent<GorillaTagManager>() != null)
-			{
-				if (!GorillaGameManager.instance.GetComponent<GorillaTagManager>().IsGameModeTag())
+				int num2;
+				if (int.TryParse(this.redText, out num2))
 				{
-					currentGameModeText.text = "CURRENT MODE\nCASUAL";
+					this.redValue = (float)num2 / 9f;
 				}
-				else
+				if (int.TryParse(this.greenText, out num2))
 				{
-					currentGameModeText.text = "CURRENT MODE\nINFECTION";
+					this.greenValue = (float)num2 / 9f;
 				}
-			}
-			else if (GorillaGameManager.instance != null && GorillaGameManager.instance.GetComponent<GorillaHuntManager>() != null)
-			{
-				currentGameModeText.text = "CURRENT MODE\nHUNT";
-			}
-			else if (GorillaGameManager.instance != null && GorillaGameManager.instance.GetComponent<GorillaBattleManager>() != null)
-			{
-				currentGameModeText.text = "CURRENT MODE\nPAINTBRAWL";
+				if (int.TryParse(this.blueText, out num2))
+				{
+					this.blueValue = (float)num2 / 9f;
+				}
+				PlayerPrefs.SetFloat("redValue", this.redValue);
+				PlayerPrefs.SetFloat("greenValue", this.greenValue);
+				PlayerPrefs.SetFloat("blueValue", this.blueValue);
+				GorillaTagger.Instance.UpdateColor(this.redValue, this.greenValue, this.blueValue);
+				PlayerPrefs.Save();
+				if (PhotonNetwork.InRoom)
+				{
+					GorillaTagger.Instance.myVRRig.RPC("InitializeNoobMaterial", RpcTarget.All, new object[] { this.redValue, this.greenValue, this.blueValue, this.leftHanded });
+				}
 			}
 			else
 			{
-				currentGameModeText.text = "CURRENT MODE\nERROR";
-			}
-		}
-		else
-		{
-			currentGameModeText.text = "CURRENT MODE\n-NOT IN ROOM-";
-		}
-	}
-
-	private void UpdateFunctionScreen()
-	{
-		functionSelectText.Text = "ROOM   " + ((currentState == ComputerState.Room) ? "<-" : "") + "\nNAME   " + ((currentState == ComputerState.Name) ? "<-" : "") + "\nCOLOR  " + ((currentState == ComputerState.Color) ? "<-" : "") + "\nTURN   " + ((currentState == ComputerState.Turn) ? "<-" : "") + "\nMIC    " + ((currentState == ComputerState.Mic) ? "<-" : "") + "\nQUEUE  " + ((currentState == ComputerState.Queue) ? "<-" : "") + "\nGROUP  " + ((currentState == ComputerState.Group) ? "<-" : "") + "\nVOICE  " + ((currentState == ComputerState.Voice) ? "<-" : "") + "\nITEMS  " + ((currentState == ComputerState.Visuals) ? "<-" : "") + "\nCREDITS" + ((currentState == ComputerState.Credits) ? "<-" : "") + "\nSUPPORT" + ((currentState == ComputerState.Support) ? "<-" : "");
-	}
-
-	private void OnReturnCurrentVersion(PlayFab.ClientModels.ExecuteCloudScriptResult result)
-	{
-		JsonObject jsonObject = (JsonObject)result.FunctionResult;
-		if (jsonObject != null)
-		{
-			if (jsonObject.TryGetValue("SynchTime", out var value))
-			{
-				Debug.Log("message value is: " + (string)value);
-			}
-			if (jsonObject.TryGetValue("Fail", out value) && (bool)value)
-			{
-				GeneralFailureMessage(versionMismatch);
-				return;
-			}
-			if (jsonObject.TryGetValue("ResultCode", out value) && (ulong)value != 0L)
-			{
-				GeneralFailureMessage(versionMismatch);
-				return;
-			}
-			if (jsonObject.TryGetValue("BannedUsers", out value))
-			{
-				usersBanned = int.Parse((string)value);
-			}
-			versionText = "WELCOME TO GORILLA TAG! HEAD OUTSIDE TO AUTOMATICALLY JOIN A PUBLIC GAME, OR USE THE TERMINAL TO JOIN A SPECIFIC ROOM OR ADJUST YOUR SETTINGS.";
-			UpdateScreen();
-		}
-		else
-		{
-			GeneralFailureMessage(versionMismatch);
-		}
-	}
-
-	private void OnRoomNameChecked(ExecuteFunctionResult result)
-	{
-		if (currentState == ComputerState.Loading)
-		{
-			PopState();
-		}
-		if (!((JsonObject)result.FunctionResult).TryGetValue("result", out var value))
-		{
-			return;
-		}
-		switch ((NameCheckResult)int.Parse(value.ToString()))
-		{
-		case NameCheckResult.Success:
-			PhotonNetworkController.Instance.AttemptToJoinSpecificRoom(roomToJoin);
-			break;
-		case NameCheckResult.Warning:
-			roomToJoin = "";
-			SwitchToWarningState();
-			break;
-		case NameCheckResult.Ban:
-		{
-			roomToJoin = "";
-			Application.Quit();
-			PhotonNetwork.Disconnect();
-			UnityEngine.Object.DestroyImmediate(PhotonNetworkController.Instance);
-			UnityEngine.Object.DestroyImmediate(GorillaLocomotion.Player.Instance);
-			GameObject[] array = UnityEngine.Object.FindObjectsOfType<GameObject>();
-			for (int i = 0; i < array.Length; i++)
-			{
-				UnityEngine.Object.Destroy(array[i]);
-			}
-			break;
-		}
-		}
-	}
-
-	private void OnPlayerNameChecked(ExecuteFunctionResult result)
-	{
-		if (currentState == ComputerState.Loading)
-		{
-			PopState();
-		}
-		if (((JsonObject)result.FunctionResult).TryGetValue("result", out var value))
-		{
-			switch ((NameCheckResult)int.Parse(value.ToString()))
-			{
-			case NameCheckResult.Success:
-				PhotonNetwork.LocalPlayer.NickName = currentName;
-				break;
-			case NameCheckResult.Warning:
-				PhotonNetwork.LocalPlayer.NickName = "gorilla";
-				currentName = "gorilla";
-				SwitchToWarningState();
-				break;
-			case NameCheckResult.Ban:
-			{
-				PhotonNetwork.LocalPlayer.NickName = "gorilla";
-				currentName = "gorilla";
-				Application.Quit();
-				PhotonNetwork.Disconnect();
-				UnityEngine.Object.DestroyImmediate(PhotonNetworkController.Instance);
-				UnityEngine.Object.DestroyImmediate(GorillaLocomotion.Player.Instance);
-				GameObject[] array = UnityEngine.Object.FindObjectsOfType<GameObject>();
-				for (int i = 0; i < array.Length; i++)
+				string characterString = buttonPressed.characterString;
+				if (!(characterString == "up"))
 				{
-					UnityEngine.Object.Destroy(array[i]);
-				}
-				break;
-			}
-			}
-		}
-		offlineVRRigNametagText.text = currentName;
-		savedName = currentName;
-		PlayerPrefs.SetString("playerName", currentName);
-		PlayerPrefs.Save();
-		if (PhotonNetwork.InRoom)
-		{
-			GorillaTagger.Instance.myVRRig.RPC("InitializeNoobMaterial", RpcTarget.All, redValue, greenValue, blueValue, leftHanded);
-		}
-	}
-
-	private void OnErrorNameCheck(PlayFabError error)
-	{
-		if (currentState == ComputerState.Loading)
-		{
-			PopState();
-		}
-		OnErrorShared(error);
-	}
-
-	private void CheckAutoBanList(string nameToCheck, bool forRoom)
-	{
-		if (forRoom)
-		{
-			PlayFabCloudScriptAPI.ExecuteFunction(new ExecuteFunctionRequest
-			{
-				Entity = new PlayFab.CloudScriptModels.EntityKey
-				{
-					Id = PlayFabSettings.staticPlayer.EntityId,
-					Type = PlayFabSettings.staticPlayer.EntityType
-				},
-				FunctionName = "CheckForBadName",
-				FunctionParameter = new Dictionary<string, string>
-				{
-					{ "name", nameToCheck },
+					if (!(characterString == "down"))
 					{
-						"forRoom",
-						forRoom.ToString()
-					}
-				},
-				GeneratePlayStreamEvent = false
-			}, OnRoomNameChecked, OnErrorNameCheck);
-		}
-		else
-		{
-			PlayFabCloudScriptAPI.ExecuteFunction(new ExecuteFunctionRequest
-			{
-				Entity = new PlayFab.CloudScriptModels.EntityKey
-				{
-					Id = PlayFabSettings.staticPlayer.EntityId,
-					Type = PlayFabSettings.staticPlayer.EntityType
-				},
-				FunctionName = "CheckForBadName",
-				FunctionParameter = new Dictionary<string, string>
-				{
-					{ "name", nameToCheck },
-					{
-						"forRoom",
-						forRoom.ToString()
-					}
-				},
-				GeneratePlayStreamEvent = false
-			}, OnPlayerNameChecked, OnErrorNameCheck);
-		}
-		SwitchToLoadingState();
-	}
-
-	public bool CheckAutoBanListForName(string nameToCheck)
-	{
-		nameToCheck = nameToCheck.ToLower();
-		nameToCheck = new string(Array.FindAll(nameToCheck.ToCharArray(), (char c) => char.IsLetterOrDigit(c)));
-		string[] array = anywhereTwoWeek;
-		foreach (string value in array)
-		{
-			if (nameToCheck.IndexOf(value) >= 0)
-			{
-				return false;
-			}
-		}
-		array = anywhereOneWeek;
-		foreach (string value2 in array)
-		{
-			if (nameToCheck.IndexOf(value2) >= 0 && !nameToCheck.Contains("fagol"))
-			{
-				return false;
-			}
-		}
-		array = exactOneWeek;
-		for (int i = 0; i < array.Length; i++)
-		{
-			if (array[i] == nameToCheck)
-			{
-				return false;
-			}
-		}
-		return true;
-	}
-
-	public void UpdateFailureText(string failMessage)
-	{
-		GorillaLevelScreen[] array = levelScreens;
-		for (int i = 0; i < array.Length; i++)
-		{
-			array[i].UpdateText(failMessage, setToGoodMaterial: false);
-		}
-		offlineScoreboard.EnableFailedState(failMessage);
-		screenText.EnableFailedState(failMessage);
-		functionSelectText.EnableFailedState(failMessage);
-		wallScreenText.EnableFailedState(failMessage);
-		tutorialWallScreenText.EnableFailedState(failMessage);
-	}
-
-	private void RestoreFromFailureState()
-	{
-		GorillaLevelScreen[] array = levelScreens;
-		foreach (GorillaLevelScreen obj in array)
-		{
-			obj.UpdateText(obj.startingText, setToGoodMaterial: true);
-		}
-		offlineScoreboard.DisableFailedState();
-		screenText.DisableFailedState();
-		functionSelectText.DisableFailedState();
-		wallScreenText.DisableFailedState();
-		tutorialWallScreenText.DisableFailedState();
-	}
-
-	public void GeneralFailureMessage(string failMessage)
-	{
-		isConnectedToMaster = false;
-		PhotonNetworkController.Instance.WrongVersion();
-		UpdateFailureText(failMessage);
-		UpdateScreen();
-	}
-
-	private static void OnErrorShared(PlayFabError error)
-	{
-		if (error.Error == PlayFabErrorCode.NotAuthenticated)
-		{
-			PlayFabAuthenticator.instance.AuthenticateWithPlayFab();
-		}
-		else if (error.Error == PlayFabErrorCode.AccountBanned)
-		{
-			Application.Quit();
-			PhotonNetwork.Disconnect();
-			UnityEngine.Object.DestroyImmediate(PhotonNetworkController.Instance);
-			UnityEngine.Object.DestroyImmediate(GorillaLocomotion.Player.Instance);
-			GameObject[] array = UnityEngine.Object.FindObjectsOfType<GameObject>();
-			for (int i = 0; i < array.Length; i++)
-			{
-				UnityEngine.Object.Destroy(array[i]);
-			}
-		}
-		if (error.ErrorMessage == "The account making this request is currently banned")
-		{
-			using (Dictionary<string, List<string>>.Enumerator enumerator = error.ErrorDetails.GetEnumerator())
-			{
-				if (enumerator.MoveNext())
-				{
-					KeyValuePair<string, List<string>> current = enumerator.Current;
-					if (current.Value[0] != "Indefinite")
-					{
-						instance.GeneralFailureMessage("YOUR ACCOUNT " + PlayFabAuthenticator.instance._playFabPlayerIdCache + " HAS BEEN BANNED. YOU WILL NOT BE ABLE TO PLAY UNTIL THE BAN EXPIRES.\nREASON: " + current.Key + "\nHOURS LEFT: " + (int)((DateTime.Parse(current.Value[0]) - DateTime.UtcNow).TotalHours + 1.0));
+						if (!(characterString == "option1"))
+						{
+							if (!(characterString == "option2"))
+							{
+								if (!(characterString == "option3"))
+								{
+									if (!(characterString == "enter"))
+									{
+									}
+								}
+								else
+								{
+									this.colorCursorLine = 2;
+								}
+							}
+							else
+							{
+								this.colorCursorLine = 1;
+							}
+						}
+						else
+						{
+							this.colorCursorLine = 0;
+						}
 					}
 					else
 					{
-						instance.GeneralFailureMessage("YOUR ACCOUNT " + PlayFabAuthenticator.instance._playFabPlayerIdCache + " HAS BEEN BANNED INDEFINITELY.\nREASON: " + current.Key);
+						this.SwitchToTurnState();
 					}
 				}
-				return;
+				else
+				{
+					this.SwitchToNameState();
+				}
 			}
+			this.UpdateScreen();
 		}
-		if (!(error.ErrorMessage == "The IP making this request is currently banned"))
+
+		public void ProcessNameState(GorillaKeyboardButton buttonPressed)
 		{
-			return;
-		}
-		using Dictionary<string, List<string>>.Enumerator enumerator = error.ErrorDetails.GetEnumerator();
-		if (enumerator.MoveNext())
-		{
-			KeyValuePair<string, List<string>> current2 = enumerator.Current;
-			if (current2.Value[0] != "Indefinite")
+			string characterString = buttonPressed.characterString;
+			if (!(characterString == "up"))
 			{
-				instance.GeneralFailureMessage("THIS IP HAS BEEN BANNED. YOU WILL NOT BE ABLE TO PLAY UNTIL THE BAN EXPIRES.\nREASON: " + current2.Key + "\nHOURS LEFT: " + (int)((DateTime.Parse(current2.Value[0]) - DateTime.UtcNow).TotalHours + 1.0));
+				if (!(characterString == "down"))
+				{
+					if (!(characterString == "enter"))
+					{
+						if (!(characterString == "delete"))
+						{
+							if (this.currentName.Length < 12 && buttonPressed.characterString.Length == 1)
+							{
+								this.currentName += buttonPressed.characterString;
+							}
+						}
+						else if (this.currentName.Length > 0)
+						{
+							this.currentName = this.currentName.Substring(0, this.currentName.Length - 1);
+						}
+					}
+					else if (this.currentName != this.savedName && this.currentName != "")
+					{
+						this.CheckAutoBanList(this.currentName, false);
+					}
+				}
+				else
+				{
+					this.SwitchToColorState();
+				}
 			}
 			else
 			{
-				instance.GeneralFailureMessage("THIS IP HAS BEEN BANNED INDEFINITELY.\nREASON: " + current2.Key);
+				this.SwitchToRoomState();
 			}
+			this.UpdateScreen();
 		}
-	}
 
-	private void GetCurrentTime()
-	{
-		tryGetTimeAgain = true;
-		PlayFabClientAPI.GetTime(new GetTimeRequest(), OnGetTimeSuccess, OnGetTimeFailure);
-	}
-
-	private void OnGetTimeSuccess(GetTimeResult result)
-	{
-		startupMillis = (long)(TimeSpan.FromTicks(result.Time.Ticks).TotalMilliseconds - (double)(Time.realtimeSinceStartup * 1000f));
-	}
-
-	private void OnGetTimeFailure(PlayFabError error)
-	{
-		startupMillis = (long)(TimeSpan.FromTicks(DateTime.UtcNow.Ticks).TotalMilliseconds - (double)(Time.realtimeSinceStartup * 1000f));
-		if (error.Error == PlayFabErrorCode.NotAuthenticated)
+		private void ProcessRoomState(GorillaKeyboardButton buttonPressed)
 		{
-			PlayFabAuthenticator.instance.AuthenticateWithPlayFab();
-		}
-		else if (error.Error == PlayFabErrorCode.AccountBanned)
-		{
-			Application.Quit();
-			PhotonNetwork.Disconnect();
-			UnityEngine.Object.DestroyImmediate(PhotonNetworkController.Instance);
-			UnityEngine.Object.DestroyImmediate(GorillaLocomotion.Player.Instance);
-			GameObject[] array = UnityEngine.Object.FindObjectsOfType<GameObject>();
-			for (int i = 0; i < array.Length; i++)
+			string characterString = buttonPressed.characterString;
+			uint num = <PrivateImplementationDetails>.ComputeStringHash(characterString);
+			if (num <= 1740784714U)
 			{
-				UnityEngine.Object.Destroy(array[i]);
-			}
-		}
-	}
-
-	public void OnModeSelectButtonPress(string gameMode, bool leftHand)
-	{
-		currentGameMode = gameMode;
-		PlayerPrefs.SetString("currentGameMode", gameMode);
-		if (leftHand != leftHanded)
-		{
-			PlayerPrefs.SetInt("leftHanded", leftHand ? 1 : 0);
-			leftHanded = leftHand;
-		}
-		PlayerPrefs.Save();
-		ModeSelectButton[] array = modeSelectButtons;
-		foreach (ModeSelectButton modeSelectButton in array)
-		{
-			modeSelectButton.buttonRenderer.material = ((currentGameMode == modeSelectButton.gameMode) ? modeSelectButton.pressedMaterial : modeSelectButton.unpressedMaterial);
-		}
-	}
-
-	public void OnGroupJoinButtonPress(int mapJoinIndex, GorillaFriendCollider chosenFriendJoinCollider)
-	{
-		if (mapJoinIndex >= allowedMapsToJoin.Length)
-		{
-			roomNotAllowed = true;
-			SwitchToRoomState();
-		}
-		else
-		{
-			if (!PhotonNetwork.InRoom || PhotonNetwork.CurrentRoom.IsVisible)
-			{
-				return;
-			}
-			PhotonNetworkController.Instance.friendIDList = new List<string>(chosenFriendJoinCollider.playerIDsCurrentlyTouching);
-			foreach (string friendID in PhotonNetworkController.Instance.friendIDList)
-			{
-				_ = friendID;
-			}
-			PhotonNetworkController.Instance.shuffler = UnityEngine.Random.Range(0, 99999999).ToString().PadLeft(8, '0');
-			PhotonNetworkController.Instance.keyStr = UnityEngine.Random.Range(0, 99999999).ToString().PadLeft(8, '0');
-			Photon.Realtime.Player[] playerList = PhotonNetwork.PlayerList;
-			foreach (Photon.Realtime.Player player in playerList)
-			{
-				if (chosenFriendJoinCollider.playerIDsCurrentlyTouching.Contains(player.UserId) && player != PhotonNetwork.LocalPlayer)
+				if (num != 1035581717U)
 				{
-					GorillaGameManager.instance.photonView.RPC("JoinPubWithFriends", player, PhotonNetworkController.Instance.shuffler, PhotonNetworkController.Instance.keyStr);
+					if (num != 1128467232U)
+					{
+						if (num == 1740784714U)
+						{
+							if (characterString == "delete")
+							{
+								if (this.roomToJoin.Length > 0)
+								{
+									this.roomToJoin = this.roomToJoin.Substring(0, this.roomToJoin.Length - 1);
+									goto IL_183;
+								}
+								goto IL_183;
+							}
+						}
+					}
+					else if (characterString == "up")
+					{
+						this.SwitchToSupportState();
+						goto IL_183;
+					}
+				}
+				else if (characterString == "down")
+				{
+					this.SwitchToNameState();
+					goto IL_183;
 				}
 			}
-			PhotonNetwork.SendAllOutgoingCommands();
-			GorillaNetworkJoinTrigger triggeredTrigger = null;
-			if (allowedMapsToJoin[mapJoinIndex] == "forest")
+			else if (num <= 2921858642U)
 			{
-				triggeredTrigger = forestMapTrigger;
+				if (num != 2905081023U)
+				{
+					if (num == 2921858642U)
+					{
+						if (characterString == "option2")
+						{
+							goto IL_183;
+						}
+					}
+				}
+				else if (characterString == "option1")
+				{
+					PhotonNetworkController.Instance.AttemptDisconnect();
+					goto IL_183;
+				}
 			}
-			else if (allowedMapsToJoin[mapJoinIndex] == "cave")
+			else if (num != 2938636261U)
 			{
-				triggeredTrigger = caveMapTrigger;
+				if (num == 3724402957U)
+				{
+					if (characterString == "enter")
+					{
+						if (this.roomToJoin != "")
+						{
+							this.CheckAutoBanList(this.roomToJoin, true);
+							goto IL_183;
+						}
+						goto IL_183;
+					}
+				}
 			}
-			else if (allowedMapsToJoin[mapJoinIndex] == "canyon")
+			else if (characterString == "option3")
 			{
-				triggeredTrigger = canyonMapTrigger;
+				goto IL_183;
 			}
-			else if (allowedMapsToJoin[mapJoinIndex] == "city")
+			if (this.roomToJoin.Length < 10)
 			{
-				triggeredTrigger = cityMapTrigger;
+				this.roomToJoin += buttonPressed.characterString;
 			}
-			else if (allowedMapsToJoin[mapJoinIndex] == "mountain")
-			{
-				triggeredTrigger = mountainMapTrigger;
-			}
-			else if (allowedMapsToJoin[mapJoinIndex] == "clouds")
-			{
-				triggeredTrigger = skyjungleMapTrigger;
-			}
-			else if (allowedMapsToJoin[mapJoinIndex] == "basement")
-			{
-				triggeredTrigger = basementMapTrigger;
-			}
-			else if (allowedMapsToJoin[mapJoinIndex] == "beach")
-			{
-				triggeredTrigger = beachMapTrigger;
-			}
-			PhotonNetworkController.Instance.AttemptJoinPublicWithFriends(triggeredTrigger);
-			SwitchToRoomState();
+			IL_183:
+			this.UpdateScreen();
 		}
-	}
 
-	public void SaveModAccountData()
-	{
-		string path = Application.persistentDataPath + "/DoNotShareWithAnyoneEVERNoMatterWhatTheySay.txt";
-		if (File.Exists(path))
+		private void ProcessTurnState(GorillaKeyboardButton buttonPressed)
 		{
-			return;
-		}
-		PlayFabClientAPI.ExecuteCloudScript(new ExecuteCloudScriptRequest
-		{
-			FunctionName = "ReturnMyOculusHash"
-		}, delegate(PlayFab.ClientModels.ExecuteCloudScriptResult result)
-		{
-			if (((JsonObject)result.FunctionResult).TryGetValue("oculusHash", out var value))
+			int num;
+			if (int.TryParse(buttonPressed.characterString, out num))
 			{
-				StreamWriter streamWriter = new StreamWriter(path);
-				streamWriter.Write(PlayFabAuthenticator.instance._playFabPlayerIdCache + "." + (string)value);
-				streamWriter.Close();
+				this.turnValue = num;
+				PlayerPrefs.SetInt("turnFactor", this.turnValue);
+				PlayerPrefs.Save();
+				this.gorillaTurn.ChangeTurnMode(this.turnType, this.turnValue);
 			}
-		}, delegate(PlayFabError error)
+			else
+			{
+				string characterString = buttonPressed.characterString;
+				uint num2 = <PrivateImplementationDetails>.ComputeStringHash(characterString);
+				if (num2 <= 1740784714U)
+				{
+					if (num2 != 1035581717U)
+					{
+						if (num2 != 1128467232U)
+						{
+							if (num2 == 1740784714U)
+							{
+								if (!(characterString == "delete"))
+								{
+								}
+							}
+						}
+						else if (characterString == "up")
+						{
+							this.SwitchToColorState();
+						}
+					}
+					else if (characterString == "down")
+					{
+						this.SwitchToMicState();
+					}
+				}
+				else if (num2 <= 2921858642U)
+				{
+					if (num2 != 2905081023U)
+					{
+						if (num2 == 2921858642U)
+						{
+							if (characterString == "option2")
+							{
+								this.turnType = "SMOOTH";
+								PlayerPrefs.SetString("stickTurning", this.turnType);
+								PlayerPrefs.Save();
+								this.gorillaTurn.ChangeTurnMode(this.turnType, this.turnValue);
+							}
+						}
+					}
+					else if (characterString == "option1")
+					{
+						this.turnType = "SNAP";
+						PlayerPrefs.SetString("stickTurning", this.turnType);
+						PlayerPrefs.Save();
+						this.gorillaTurn.ChangeTurnMode(this.turnType, this.turnValue);
+					}
+				}
+				else if (num2 != 2938636261U)
+				{
+					if (num2 == 3724402957U)
+					{
+						if (!(characterString == "enter"))
+						{
+						}
+					}
+				}
+				else if (characterString == "option3")
+				{
+					this.turnType = "NONE";
+					PlayerPrefs.SetString("stickTurning", this.turnType);
+					PlayerPrefs.Save();
+					this.gorillaTurn.ChangeTurnMode(this.turnType, this.turnValue);
+				}
+			}
+			this.UpdateScreen();
+		}
+
+		private void ProcessMicState(GorillaKeyboardButton buttonPressed)
+		{
+			string characterString = buttonPressed.characterString;
+			if (!(characterString == "up"))
+			{
+				if (!(characterString == "down"))
+				{
+					if (!(characterString == "option1"))
+					{
+						if (!(characterString == "option2"))
+						{
+							if (characterString == "option3")
+							{
+								this.pttType = "PUSH TO MUTE";
+								PlayerPrefs.SetString("pttType", this.pttType);
+								PlayerPrefs.Save();
+							}
+						}
+						else
+						{
+							this.pttType = "PUSH TO TALK";
+							PlayerPrefs.SetString("pttType", this.pttType);
+							PlayerPrefs.Save();
+						}
+					}
+					else
+					{
+						this.pttType = "ALL CHAT";
+						PlayerPrefs.SetString("pttType", this.pttType);
+						PlayerPrefs.Save();
+					}
+				}
+				else
+				{
+					this.SwitchToQueueState();
+				}
+			}
+			else
+			{
+				this.SwitchToTurnState();
+			}
+			this.UpdateScreen();
+		}
+
+		private void ProcessQueueState(GorillaKeyboardButton buttonPressed)
+		{
+			string characterString = buttonPressed.characterString;
+			if (!(characterString == "up"))
+			{
+				if (!(characterString == "down"))
+				{
+					if (!(characterString == "option1"))
+					{
+						if (!(characterString == "option2"))
+						{
+							if (characterString == "option3")
+							{
+								if (this.allowedInCompetitive)
+								{
+									this.currentQueue = "COMPETITIVE";
+									PlayerPrefs.SetString("currentQueue", this.currentQueue);
+									PlayerPrefs.Save();
+								}
+							}
+						}
+						else
+						{
+							this.currentQueue = "MINIGAMES";
+							PlayerPrefs.SetString("currentQueue", this.currentQueue);
+							PlayerPrefs.Save();
+						}
+					}
+					else
+					{
+						this.currentQueue = "DEFAULT";
+						PlayerPrefs.SetString("currentQueue", this.currentQueue);
+						PlayerPrefs.Save();
+					}
+				}
+				else
+				{
+					this.SwitchToGroupState();
+				}
+			}
+			else
+			{
+				this.SwitchToMicState();
+			}
+			this.UpdateScreen();
+		}
+
+		private void ProcessGroupState(GorillaKeyboardButton buttonPressed)
+		{
+			string characterString = buttonPressed.characterString;
+			uint num = <PrivateImplementationDetails>.ComputeStringHash(characterString);
+			if (num <= 906799682U)
+			{
+				if (num != 822911587U)
+				{
+					if (num != 873244444U)
+					{
+						if (num == 906799682U)
+						{
+							if (characterString == "3")
+							{
+								this.groupMapJoin = "CANYON";
+								this.groupMapJoinIndex = 2;
+								PlayerPrefs.SetString("groupMapJoin", this.groupMapJoin);
+								PlayerPrefs.SetInt("groupMapJoinIndex", this.groupMapJoinIndex);
+								PlayerPrefs.Save();
+							}
+						}
+					}
+					else if (characterString == "1")
+					{
+						this.groupMapJoin = "FOREST";
+						this.groupMapJoinIndex = 0;
+						PlayerPrefs.SetString("groupMapJoin", this.groupMapJoin);
+						PlayerPrefs.SetInt("groupMapJoinIndex", this.groupMapJoinIndex);
+						PlayerPrefs.Save();
+					}
+				}
+				else if (characterString == "4")
+				{
+					this.groupMapJoin = "CITY";
+					this.groupMapJoinIndex = 3;
+					PlayerPrefs.SetString("groupMapJoin", this.groupMapJoin);
+					PlayerPrefs.SetInt("groupMapJoinIndex", this.groupMapJoinIndex);
+					PlayerPrefs.Save();
+				}
+			}
+			else if (num <= 1035581717U)
+			{
+				if (num != 923577301U)
+				{
+					if (num == 1035581717U)
+					{
+						if (characterString == "down")
+						{
+							this.SwitchToVoiceState();
+						}
+					}
+				}
+				else if (characterString == "2")
+				{
+					this.groupMapJoin = "CAVE";
+					this.groupMapJoinIndex = 1;
+					PlayerPrefs.SetString("groupMapJoin", this.groupMapJoin);
+					PlayerPrefs.SetInt("groupMapJoinIndex", this.groupMapJoinIndex);
+					PlayerPrefs.Save();
+				}
+			}
+			else if (num != 1128467232U)
+			{
+				if (num == 3724402957U)
+				{
+					if (characterString == "enter")
+					{
+						this.OnGroupJoinButtonPress(Mathf.Min(this.allowedMapsToJoin.Length - 1, this.groupMapJoinIndex), this.friendJoinCollider);
+					}
+				}
+			}
+			else if (characterString == "up")
+			{
+				this.SwitchToQueueState();
+			}
+			this.roomFull = false;
+			this.UpdateScreen();
+		}
+
+		private void ProcessVoiceState(GorillaKeyboardButton buttonPressed)
+		{
+			string characterString = buttonPressed.characterString;
+			if (!(characterString == "up"))
+			{
+				if (!(characterString == "down"))
+				{
+					if (!(characterString == "option1"))
+					{
+						if (characterString == "option2")
+						{
+							this.voiceChatOn = "FALSE";
+							PlayerPrefs.SetString("voiceChatOn", this.voiceChatOn);
+							PlayerPrefs.Save();
+							RigContainer.RefreshAllRigVoices();
+						}
+					}
+					else
+					{
+						this.voiceChatOn = "TRUE";
+						PlayerPrefs.SetString("voiceChatOn", this.voiceChatOn);
+						PlayerPrefs.Save();
+						RigContainer.RefreshAllRigVoices();
+					}
+				}
+				else
+				{
+					this.SwitchToVisualsState();
+				}
+			}
+			else
+			{
+				this.SwitchToGroupState();
+			}
+			this.UpdateScreen();
+		}
+
+		private void ProcessVisualsState(GorillaKeyboardButton buttonPressed)
+		{
+			int num;
+			if (int.TryParse(buttonPressed.characterString, out num))
+			{
+				this.instrumentVolume = (float)num / 50f;
+				PlayerPrefs.SetFloat("instrumentVolume", this.instrumentVolume);
+				PlayerPrefs.Save();
+			}
+			else
+			{
+				string characterString = buttonPressed.characterString;
+				if (!(characterString == "up"))
+				{
+					if (!(characterString == "down"))
+					{
+						if (!(characterString == "option1"))
+						{
+							if (characterString == "option2")
+							{
+								this.disableParticles = true;
+								PlayerPrefs.SetString("disableParticles", "TRUE");
+								PlayerPrefs.Save();
+								GorillaTagger.Instance.ShowCosmeticParticles(!this.disableParticles);
+							}
+						}
+						else
+						{
+							this.disableParticles = false;
+							PlayerPrefs.SetString("disableParticles", "FALSE");
+							PlayerPrefs.Save();
+							GorillaTagger.Instance.ShowCosmeticParticles(!this.disableParticles);
+						}
+					}
+					else
+					{
+						this.SwitchToCreditsState();
+					}
+				}
+				else
+				{
+					this.SwitchToVoiceState();
+				}
+			}
+			this.UpdateScreen();
+		}
+
+		private void ProcessCreditsState(GorillaKeyboardButton buttonPressed)
+		{
+			string characterString = buttonPressed.characterString;
+			if (!(characterString == "up"))
+			{
+				if (!(characterString == "down"))
+				{
+					if (characterString == "enter")
+					{
+						this.creditsView.ProcessButtonPress(buttonPressed);
+					}
+				}
+				else
+				{
+					this.SwitchToSupportState();
+				}
+			}
+			else
+			{
+				this.SwitchToVisualsState();
+			}
+			this.UpdateScreen();
+		}
+
+		private void ProcessSupportState(GorillaKeyboardButton buttonPressed)
+		{
+			string characterString = buttonPressed.characterString;
+			if (!(characterString == "up"))
+			{
+				if (!(characterString == "down"))
+				{
+					if (characterString == "enter")
+					{
+						this.displaySupport = true;
+					}
+				}
+				else
+				{
+					this.displaySupport = false;
+					this.SwitchToRoomState();
+				}
+			}
+			else
+			{
+				this.displaySupport = false;
+				this.SwitchToCreditsState();
+			}
+			this.UpdateScreen();
+		}
+
+		private void ProcessNameWarningState(GorillaKeyboardButton buttonPressed)
+		{
+			if (this.warningConfirmationInputString.ToLower() == "yes")
+			{
+				this.PopState();
+			}
+			else
+			{
+				string characterString = buttonPressed.characterString;
+				uint num = <PrivateImplementationDetails>.ComputeStringHash(characterString);
+				if (num <= 1740784714U)
+				{
+					if (num != 1035581717U)
+					{
+						if (num != 1128467232U)
+						{
+							if (num == 1740784714U)
+							{
+								if (characterString == "delete")
+								{
+									if (this.warningConfirmationInputString.Length > 0)
+									{
+										this.warningConfirmationInputString = this.warningConfirmationInputString.Substring(0, this.warningConfirmationInputString.Length - 1);
+										goto IL_154;
+									}
+									goto IL_154;
+								}
+							}
+						}
+						else if (characterString == "up")
+						{
+							goto IL_154;
+						}
+					}
+					else if (characterString == "down")
+					{
+						goto IL_154;
+					}
+				}
+				else if (num <= 2921858642U)
+				{
+					if (num != 2905081023U)
+					{
+						if (num == 2921858642U)
+						{
+							if (characterString == "option2")
+							{
+								goto IL_154;
+							}
+						}
+					}
+					else if (characterString == "option1")
+					{
+						goto IL_154;
+					}
+				}
+				else if (num != 2938636261U)
+				{
+					if (num == 3724402957U)
+					{
+						if (characterString == "enter")
+						{
+							goto IL_154;
+						}
+					}
+				}
+				else if (characterString == "option3")
+				{
+					goto IL_154;
+				}
+				if (this.warningConfirmationInputString.Length < 3)
+				{
+					this.warningConfirmationInputString += buttonPressed.characterString;
+				}
+			}
+			IL_154:
+			this.UpdateScreen();
+		}
+
+		public void UpdateScreen()
+		{
+			if (PhotonNetworkController.Instance != null && !PhotonNetworkController.Instance.wrongVersion)
+			{
+				this.UpdateFunctionScreen();
+				switch (this.currentState)
+				{
+				case GorillaComputer.ComputerState.Startup:
+					this.screenText.Text = string.Concat(new string[]
+					{
+						"GORILLA OS\n\n",
+						PhotonNetworkController.Instance.TotalUsers().ToString(),
+						" PLAYERS ONLINE\n\n",
+						this.usersBanned.ToString(),
+						" USERS BANNED YESTERDAY\n\nPRESS ANY KEY TO BEGIN"
+					});
+					break;
+				case GorillaComputer.ComputerState.Color:
+				{
+					this.screenText.Text = "USE THE OPTIONS BUTTONS TO SELECT THE COLOR TO UPDATE, THEN PRESS 0-9 TO SET A NEW VALUE.";
+					GorillaText gorillaText = this.screenText;
+					gorillaText.Text = gorillaText.Text + "\n\n  RED: " + Mathf.FloorToInt(this.redValue * 9f).ToString() + ((this.colorCursorLine == 0) ? "<--" : "");
+					GorillaText gorillaText2 = this.screenText;
+					gorillaText2.Text = gorillaText2.Text + "\n\nGREEN: " + Mathf.FloorToInt(this.greenValue * 9f).ToString() + ((this.colorCursorLine == 1) ? "<--" : "");
+					GorillaText gorillaText3 = this.screenText;
+					gorillaText3.Text = gorillaText3.Text + "\n\n BLUE: " + Mathf.FloorToInt(this.blueValue * 9f).ToString() + ((this.colorCursorLine == 2) ? "<--" : "");
+					break;
+				}
+				case GorillaComputer.ComputerState.Name:
+				{
+					this.screenText.Text = "PRESS ENTER TO CHANGE YOUR NAME TO THE ENTERED NEW NAME.\n\nCURRENT NAME: " + this.savedName;
+					GorillaText gorillaText4 = this.screenText;
+					gorillaText4.Text = gorillaText4.Text + "\n\n    NEW NAME: " + this.currentName;
+					break;
+				}
+				case GorillaComputer.ComputerState.Turn:
+					this.screenText.Text = "PRESS OPTION 1 TO USE SNAP TURN. PRESS OPTION 2 TO USE SMOOTH TURN. PRESS OPTION 3 TO USE NO ARTIFICIAL TURNING. PRESS THE NUMBER KEYS TO CHOOSE A TURNING SPEED.\n CURRENT TURN TYPE: " + this.turnType + "\nCURRENT TURN SPEED: " + this.turnValue.ToString();
+					break;
+				case GorillaComputer.ComputerState.Mic:
+					this.screenText.Text = "CHOOSE ALL CHAT, PUSH TO TALK, OR PUSH TO MUTE. THE BUTTONS FOR PUSH TO TALK AND PUSH TO MUTE ARE ANY OF THE FACE BUTTONS.\nPRESS OPTION 1 TO CHOOSE ALL CHAT.\nPRESS OPTION 2 TO CHOOSE PUSH TO TALK.\nPRESS OPTION 3 TO CHOOSE PUSH TO MUTE.\n\nCURRENT MIC SETTING: " + this.pttType;
+					break;
+				case GorillaComputer.ComputerState.Room:
+				{
+					this.screenText.Text = "PRESS ENTER TO JOIN OR CREATE A CUSTOM ROOM WITH THE ENTERED CODE. PRESS OPTION 1 TO DISCONNECT FROM THE CURRENT ROOM.\n\nCURRENT ROOM: ";
+					if (PhotonNetwork.InRoom)
+					{
+						GorillaText gorillaText5 = this.screenText;
+						gorillaText5.Text += PhotonNetwork.CurrentRoom.Name;
+						GorillaText gorillaText6 = this.screenText;
+						gorillaText6.Text = gorillaText6.Text + "\n\nPLAYERS IN ROOM: " + PhotonNetwork.CurrentRoom.PlayerCount.ToString();
+					}
+					else
+					{
+						GorillaText gorillaText7 = this.screenText;
+						gorillaText7.Text += "-NOT IN ROOM-";
+						GorillaText gorillaText8 = this.screenText;
+						gorillaText8.Text = gorillaText8.Text + "\n\nPLAYERS ONLINE: " + PhotonNetworkController.Instance.TotalUsers().ToString();
+					}
+					GorillaText gorillaText9 = this.screenText;
+					gorillaText9.Text = gorillaText9.Text + "\n\nROOM TO JOIN: " + this.roomToJoin;
+					if (this.roomFull)
+					{
+						GorillaText gorillaText10 = this.screenText;
+						gorillaText10.Text += "\n\nROOM FULL. JOIN ROOM FAILED.";
+					}
+					else if (this.roomNotAllowed)
+					{
+						GorillaText gorillaText11 = this.screenText;
+						gorillaText11.Text += "\n\nCANNOT JOIN ROOM TYPE FROM HERE.";
+					}
+					break;
+				}
+				case GorillaComputer.ComputerState.Queue:
+					if (this.allowedInCompetitive)
+					{
+						this.screenText.Text = "THIS OPTION AFFECTS WHO YOU PLAY WITH. DEFAULT IS FOR ANYONE TO PLAY NORMALLY. MINIGAMES IS FOR PEOPLE LOOKING TO PLAY WITH THEIR OWN MADE UP RULES.COMPETITIVE IS FOR PLAYERS WHO WANT TO PLAY THE GAME AND TRY AS HARD AS THEY CAN. PRESS OPTION 1 FOR DEFAULT, OPTION 2 FOR MINIGAMES, OR OPTION 3 FOR COMPETITIVE.\n\nCURRENT QUEUE: " + this.currentQueue;
+					}
+					else
+					{
+						this.screenText.Text = "THIS OPTION AFFECTS WHO YOU PLAY WITH. DEFAULT IS FOR ANYONE TO PLAY NORMALLY. MINIGAMES IS FOR PEOPLE LOOKING TO PLAY WITH THEIR OWN MADE UP RULES.BEAT THE OBSTACLE COURSE IN CITY TO ALLOW COMPETITIVE PLAY. PRESS OPTION 1 FOR DEFAULT, OR OPTION 2 FOR MINIGAMES\n\nCURRENT QUEUE: " + this.currentQueue;
+					}
+					break;
+				case GorillaComputer.ComputerState.Group:
+					if (this.allowedMapsToJoin.Length == 1)
+					{
+						this.screenText.Text = "USE THIS TO JOIN A PUBLIC ROOM WITH A GROUP OF FRIENDS. GET EVERYONE IN A PRIVATE ROOM. PRESS THE NUMBER KEYS TO SELECT THE MAP. 1 FOR " + this.allowedMapsToJoin[Mathf.Min(this.allowedMapsToJoin.Length - 1, this.groupMapJoinIndex)].ToUpper() + ". WHILE EVERYONE IS SITTING NEXT TO THE COMPUTER, PRESS ENTER. YOU WILL ALL JOIN A PUBLIC ROOM TOGETHER AS LONG AS EVERYONE IS NEXT TO THE COMPUTER.\nCURRENT MAP SELECTION : " + this.allowedMapsToJoin[Mathf.Min(this.allowedMapsToJoin.Length - 1, this.groupMapJoinIndex)].ToUpper();
+					}
+					else
+					{
+						this.screenText.Text = "USE THIS TO JOIN A PUBLIC ROOM WITH A GROUP OF FRIENDS. GET EVERYONE IN A PRIVATE ROOM. PRESS THE NUMBER KEYS TO SELECT THE MAP. 1 FOR FOREST, 2 FOR CAVE, AND 3 FOR CANYON, AND 4 FOR CITY. WHILE EVERYONE IS SITTING NEXT TO THE COMPUTER, PRESS ENTER. YOU WILL ALL JOIN A PUBLIC ROOM TOGETHER AS LONG AS EVERYONE IS NEXT TO THE COMPUTER.\nCURRENT MAP SELECTION : " + this.allowedMapsToJoin[Mathf.Min(this.allowedMapsToJoin.Length - 1, this.groupMapJoinIndex)].ToUpper();
+					}
+					break;
+				case GorillaComputer.ComputerState.Voice:
+					this.screenText.Text = "USE THIS TO ENABLE OR DISABLE VOICE CHAT.\nPRESS OPTION 1 TO ENABLE VOICE CHAT.\nPRESS OPTION 2 TO DISABLE VOICE CHAT.\n\nVOICE CHAT ON: " + this.voiceChatOn;
+					break;
+				case GorillaComputer.ComputerState.Credits:
+					this.screenText.Text = this.creditsView.GetScreenText();
+					break;
+				case GorillaComputer.ComputerState.Visuals:
+					this.screenText.Text = "UPDATE ITEMS SETTINGS. PRESS OPTION 1 TO ENABLE ITEM PARTICLES. PRESS OPTION 2 TO DISABLE ITEM PARTICLES. PRESS 1-10 TO CHANGE INSTRUMENT VOLUME FOR OTHER PLAYERS.\n\nITEM PARTICLES ON: " + (this.disableParticles ? "FALSE" : "TRUE") + "\nINSTRUMENT VOLUME: " + Mathf.CeilToInt(this.instrumentVolume * 50f).ToString();
+					break;
+				case GorillaComputer.ComputerState.Time:
+					this.screenText.Text = string.Concat(new string[]
+					{
+						"UPDATE TIME SETTINGS. (LOCALLY ONLY). \nPRESS OPTION 1 FOR NORMAL MODE. \nPRESS OPTION 2 FOR STATIC MODE. \nPRESS 1-10 TO CHANGE TIME OF DAY. \nCURRENT MODE: ",
+						BetterDayNightManager.instance.currentSetting.ToString().ToUpper(),
+						". \nTIME OF DAY: ",
+						BetterDayNightManager.instance.currentTimeOfDay.ToUpper(),
+						". \n"
+					});
+					break;
+				case GorillaComputer.ComputerState.NameWarning:
+					this.screenText.Text = "<color=red>WARNING: PLEASE CHOOSE A BETTER NAME\n\nENTERING ANOTHER BAD NAME WILL RESULT IN A BAN</color>";
+					if (this.warningConfirmationInputString.ToLower() == "yes")
+					{
+						GorillaText gorillaText12 = this.screenText;
+						gorillaText12.Text += "\n\nPRESS ANY KEY TO CONTINUE";
+					}
+					else
+					{
+						GorillaText gorillaText13 = this.screenText;
+						gorillaText13.Text = gorillaText13.Text + "\n\nTYPE 'YES' TO CONFIRM: " + this.warningConfirmationInputString;
+					}
+					break;
+				case GorillaComputer.ComputerState.Loading:
+					this.screenText.Text = "LOADING...";
+					break;
+				case GorillaComputer.ComputerState.Support:
+					if (this.displaySupport)
+					{
+						string text = "STEAM";
+						this.screenText.Text = string.Concat(new string[]
+						{
+							"SUPPORT\n\nPLAYERID   ",
+							PlayFabAuthenticator.instance._playFabPlayerIdCache,
+							"\nVERSION    ",
+							this.version.ToUpper(),
+							"\nPLATFORM   ",
+							text,
+							"\nBUILD DATE ",
+							this.buildDate,
+							"\n"
+						});
+					}
+					else
+					{
+						this.screenText.Text = "SUPPORT\n\n";
+						GorillaText gorillaText14 = this.screenText;
+						gorillaText14.Text += "PRESS ENTER TO DISPLAY SUPPORT AND ACCOUNT INFORMATION\n\n\n\n";
+						GorillaText gorillaText15 = this.screenText;
+						gorillaText15.Text += "<color=red>DO NOT SHARE ACCOUNT INFORMATION WITH ANYONE OTHER ";
+						GorillaText gorillaText16 = this.screenText;
+						gorillaText16.Text += "THAN ANOTHER AXIOM SUPPORT</color>";
+					}
+					break;
+				}
+			}
+			if (!PhotonNetwork.InRoom)
+			{
+				this.currentGameModeText.text = "CURRENT MODE\n-NOT IN ROOM-";
+				return;
+			}
+			if (GameMode.ActiveGameMode.IsNotNull())
+			{
+				this.currentGameModeText.text = "CURRENT MODE\n" + GameMode.ActiveGameMode.GameModeName();
+				return;
+			}
+			this.currentGameModeText.text = "CURRENT MODE\nERROR";
+		}
+
+		private void UpdateFunctionScreen()
+		{
+			this.functionSelectText.Text = string.Concat(new string[]
+			{
+				"ROOM   ",
+				(this.currentState == GorillaComputer.ComputerState.Room) ? "<-" : "",
+				"\nNAME   ",
+				(this.currentState == GorillaComputer.ComputerState.Name) ? "<-" : "",
+				"\nCOLOR  ",
+				(this.currentState == GorillaComputer.ComputerState.Color) ? "<-" : "",
+				"\nTURN   ",
+				(this.currentState == GorillaComputer.ComputerState.Turn) ? "<-" : "",
+				"\nMIC    ",
+				(this.currentState == GorillaComputer.ComputerState.Mic) ? "<-" : "",
+				"\nQUEUE  ",
+				(this.currentState == GorillaComputer.ComputerState.Queue) ? "<-" : "",
+				"\nGROUP  ",
+				(this.currentState == GorillaComputer.ComputerState.Group) ? "<-" : "",
+				"\nVOICE  ",
+				(this.currentState == GorillaComputer.ComputerState.Voice) ? "<-" : "",
+				"\nITEMS  ",
+				(this.currentState == GorillaComputer.ComputerState.Visuals) ? "<-" : "",
+				"\nCREDITS",
+				(this.currentState == GorillaComputer.ComputerState.Credits) ? "<-" : "",
+				"\nSUPPORT",
+				(this.currentState == GorillaComputer.ComputerState.Support) ? "<-" : ""
+			});
+		}
+
+		private void OnReturnCurrentVersion(PlayFab.ClientModels.ExecuteCloudScriptResult result)
+		{
+			JsonObject jsonObject = (JsonObject)result.FunctionResult;
+			if (jsonObject == null)
+			{
+				this.GeneralFailureMessage(this.versionMismatch);
+				return;
+			}
+			object obj;
+			if (jsonObject.TryGetValue("SynchTime", out obj))
+			{
+				Debug.Log("message value is: " + (string)obj);
+			}
+			if (jsonObject.TryGetValue("Fail", out obj) && (bool)obj)
+			{
+				this.GeneralFailureMessage(this.versionMismatch);
+				return;
+			}
+			if (jsonObject.TryGetValue("ResultCode", out obj) && (ulong)obj != 0UL)
+			{
+				this.GeneralFailureMessage(this.versionMismatch);
+				return;
+			}
+			if (jsonObject.TryGetValue("BannedUsers", out obj))
+			{
+				this.usersBanned = int.Parse((string)obj);
+			}
+			this.versionText = "WELCOME TO GORILLA TAG! HEAD OUTSIDE TO AUTOMATICALLY JOIN A PUBLIC GAME, OR USE THE TERMINAL TO JOIN A SPECIFIC ROOM OR ADJUST YOUR SETTINGS.";
+			this.UpdateScreen();
+		}
+
+		private void OnRoomNameChecked(ExecuteFunctionResult result)
+		{
+			if (this.currentState == GorillaComputer.ComputerState.Loading)
+			{
+				this.PopState();
+			}
+			object obj;
+			if (((JsonObject)result.FunctionResult).TryGetValue("result", out obj))
+			{
+				switch (int.Parse(obj.ToString()))
+				{
+				case 0:
+					PhotonNetworkController.Instance.AttemptToJoinSpecificRoom(this.roomToJoin);
+					return;
+				case 1:
+					this.roomToJoin = "";
+					this.SwitchToWarningState();
+					return;
+				case 2:
+				{
+					this.roomToJoin = "";
+					Application.Quit();
+					PhotonNetwork.Disconnect();
+					Object.DestroyImmediate(PhotonNetworkController.Instance);
+					Object.DestroyImmediate(Player.Instance);
+					GameObject[] array = Object.FindObjectsOfType<GameObject>();
+					for (int i = 0; i < array.Length; i++)
+					{
+						Object.Destroy(array[i]);
+					}
+					break;
+				}
+				default:
+					return;
+				}
+			}
+		}
+
+		private void OnPlayerNameChecked(ExecuteFunctionResult result)
+		{
+			if (this.currentState == GorillaComputer.ComputerState.Loading)
+			{
+				this.PopState();
+			}
+			object obj;
+			if (((JsonObject)result.FunctionResult).TryGetValue("result", out obj))
+			{
+				switch (int.Parse(obj.ToString()))
+				{
+				case 0:
+					PhotonNetwork.LocalPlayer.NickName = this.currentName;
+					break;
+				case 1:
+					PhotonNetwork.LocalPlayer.NickName = "gorilla";
+					this.currentName = "gorilla";
+					this.SwitchToWarningState();
+					break;
+				case 2:
+				{
+					PhotonNetwork.LocalPlayer.NickName = "gorilla";
+					this.currentName = "gorilla";
+					Application.Quit();
+					PhotonNetwork.Disconnect();
+					Object.DestroyImmediate(PhotonNetworkController.Instance);
+					Object.DestroyImmediate(Player.Instance);
+					GameObject[] array = Object.FindObjectsOfType<GameObject>();
+					for (int i = 0; i < array.Length; i++)
+					{
+						Object.Destroy(array[i]);
+					}
+					break;
+				}
+				}
+			}
+			this.offlineVRRigNametagText.text = this.currentName;
+			this.savedName = this.currentName;
+			PlayerPrefs.SetString("playerName", this.currentName);
+			PlayerPrefs.Save();
+			if (PhotonNetwork.InRoom)
+			{
+				GorillaTagger.Instance.myVRRig.RPC("InitializeNoobMaterial", RpcTarget.All, new object[] { this.redValue, this.greenValue, this.blueValue, this.leftHanded });
+			}
+		}
+
+		private void OnErrorNameCheck(PlayFabError error)
+		{
+			if (this.currentState == GorillaComputer.ComputerState.Loading)
+			{
+				this.PopState();
+			}
+			GorillaComputer.OnErrorShared(error);
+		}
+
+		private void CheckAutoBanList(string nameToCheck, bool forRoom)
+		{
+			if (forRoom)
+			{
+				PlayFabCloudScriptAPI.ExecuteFunction(new ExecuteFunctionRequest
+				{
+					Entity = new PlayFab.CloudScriptModels.EntityKey
+					{
+						Id = PlayFabSettings.staticPlayer.EntityId,
+						Type = PlayFabSettings.staticPlayer.EntityType
+					},
+					FunctionName = "CheckForBadName",
+					FunctionParameter = new Dictionary<string, string>
+					{
+						{ "name", nameToCheck },
+						{
+							"forRoom",
+							forRoom.ToString()
+						}
+					},
+					GeneratePlayStreamEvent = new bool?(false)
+				}, new Action<ExecuteFunctionResult>(this.OnRoomNameChecked), new Action<PlayFabError>(this.OnErrorNameCheck), null, null);
+			}
+			else
+			{
+				PlayFabCloudScriptAPI.ExecuteFunction(new ExecuteFunctionRequest
+				{
+					Entity = new PlayFab.CloudScriptModels.EntityKey
+					{
+						Id = PlayFabSettings.staticPlayer.EntityId,
+						Type = PlayFabSettings.staticPlayer.EntityType
+					},
+					FunctionName = "CheckForBadName",
+					FunctionParameter = new Dictionary<string, string>
+					{
+						{ "name", nameToCheck },
+						{
+							"forRoom",
+							forRoom.ToString()
+						}
+					},
+					GeneratePlayStreamEvent = new bool?(false)
+				}, new Action<ExecuteFunctionResult>(this.OnPlayerNameChecked), new Action<PlayFabError>(this.OnErrorNameCheck), null, null);
+			}
+			this.SwitchToLoadingState();
+		}
+
+		public bool CheckAutoBanListForName(string nameToCheck)
+		{
+			nameToCheck = nameToCheck.ToLower();
+			nameToCheck = new string(Array.FindAll<char>(nameToCheck.ToCharArray(), (char c) => char.IsLetterOrDigit(c)));
+			foreach (string text in this.anywhereTwoWeek)
+			{
+				if (nameToCheck.IndexOf(text) >= 0)
+				{
+					return false;
+				}
+			}
+			foreach (string text2 in this.anywhereOneWeek)
+			{
+				if (nameToCheck.IndexOf(text2) >= 0 && !nameToCheck.Contains("fagol"))
+				{
+					return false;
+				}
+			}
+			string[] array = this.exactOneWeek;
+			for (int i = 0; i < array.Length; i++)
+			{
+				if (array[i] == nameToCheck)
+				{
+					return false;
+				}
+			}
+			return true;
+		}
+
+		public void UpdateFailureText(string failMessage)
+		{
+			GorillaLevelScreen[] array = this.levelScreens;
+			for (int i = 0; i < array.Length; i++)
+			{
+				array[i].UpdateText(failMessage, false);
+			}
+			this.offlineScoreboard.EnableFailedState(failMessage);
+			this.screenText.EnableFailedState(failMessage);
+			this.functionSelectText.EnableFailedState(failMessage);
+			this.wallScreenText.EnableFailedState(failMessage);
+			this.tutorialWallScreenText.EnableFailedState(failMessage);
+		}
+
+		private void RestoreFromFailureState()
+		{
+			foreach (GorillaLevelScreen gorillaLevelScreen in this.levelScreens)
+			{
+				gorillaLevelScreen.UpdateText(gorillaLevelScreen.startingText, true);
+			}
+			this.offlineScoreboard.DisableFailedState();
+			this.screenText.DisableFailedState();
+			this.functionSelectText.DisableFailedState();
+			this.wallScreenText.DisableFailedState();
+			this.tutorialWallScreenText.DisableFailedState();
+		}
+
+		public void GeneralFailureMessage(string failMessage)
+		{
+			this.isConnectedToMaster = false;
+			PhotonNetworkController.Instance.WrongVersion();
+			this.UpdateFailureText(failMessage);
+			this.UpdateScreen();
+		}
+
+		private static void OnErrorShared(PlayFabError error)
 		{
 			if (error.Error == PlayFabErrorCode.NotAuthenticated)
 			{
@@ -1593,21 +1523,424 @@ public class GorillaComputer : MonoBehaviourPunCallbacks
 			{
 				Application.Quit();
 				PhotonNetwork.Disconnect();
-				UnityEngine.Object.DestroyImmediate(PhotonNetworkController.Instance);
-				UnityEngine.Object.DestroyImmediate(GorillaLocomotion.Player.Instance);
-				GameObject[] array = UnityEngine.Object.FindObjectsOfType<GameObject>();
+				Object.DestroyImmediate(PhotonNetworkController.Instance);
+				Object.DestroyImmediate(Player.Instance);
+				GameObject[] array = Object.FindObjectsOfType<GameObject>();
 				for (int i = 0; i < array.Length; i++)
 				{
-					UnityEngine.Object.Destroy(array[i]);
+					Object.Destroy(array[i]);
 				}
 			}
-		});
-	}
+			if (error.ErrorMessage == "The account making this request is currently banned")
+			{
+				using (Dictionary<string, List<string>>.Enumerator enumerator = error.ErrorDetails.GetEnumerator())
+				{
+					if (!enumerator.MoveNext())
+					{
+						return;
+					}
+					KeyValuePair<string, List<string>> keyValuePair = enumerator.Current;
+					if (keyValuePair.Value[0] != "Indefinite")
+					{
+						GorillaComputer.instance.GeneralFailureMessage(string.Concat(new string[]
+						{
+							"YOUR ACCOUNT ",
+							PlayFabAuthenticator.instance._playFabPlayerIdCache,
+							" HAS BEEN BANNED. YOU WILL NOT BE ABLE TO PLAY UNTIL THE BAN EXPIRES.\nREASON: ",
+							keyValuePair.Key,
+							"\nHOURS LEFT: ",
+							((int)((DateTime.Parse(keyValuePair.Value[0]) - DateTime.UtcNow).TotalHours + 1.0)).ToString()
+						}));
+						return;
+					}
+					GorillaComputer.instance.GeneralFailureMessage("YOUR ACCOUNT " + PlayFabAuthenticator.instance._playFabPlayerIdCache + " HAS BEEN BANNED INDEFINITELY.\nREASON: " + keyValuePair.Key);
+					return;
+				}
+			}
+			if (error.ErrorMessage == "The IP making this request is currently banned")
+			{
+				using (Dictionary<string, List<string>>.Enumerator enumerator = error.ErrorDetails.GetEnumerator())
+				{
+					if (enumerator.MoveNext())
+					{
+						KeyValuePair<string, List<string>> keyValuePair2 = enumerator.Current;
+						if (keyValuePair2.Value[0] != "Indefinite")
+						{
+							GorillaComputer.instance.GeneralFailureMessage("THIS IP HAS BEEN BANNED. YOU WILL NOT BE ABLE TO PLAY UNTIL THE BAN EXPIRES.\nREASON: " + keyValuePair2.Key + "\nHOURS LEFT: " + ((int)((DateTime.Parse(keyValuePair2.Value[0]) - DateTime.UtcNow).TotalHours + 1.0)).ToString());
+						}
+						else
+						{
+							GorillaComputer.instance.GeneralFailureMessage("THIS IP HAS BEEN BANNED INDEFINITELY.\nREASON: " + keyValuePair2.Key);
+						}
+					}
+				}
+			}
+		}
 
-	public void CompQueueUnlockButtonPress()
-	{
-		allowedInCompetitive = true;
-		PlayerPrefs.SetInt("allowedInCompetitive", 1);
-		PlayerPrefs.Save();
+		private void GetCurrentTime()
+		{
+			this.tryGetTimeAgain = true;
+			PlayFabClientAPI.GetTime(new GetTimeRequest(), new Action<GetTimeResult>(this.OnGetTimeSuccess), new Action<PlayFabError>(this.OnGetTimeFailure), null, null);
+		}
+
+		private void OnGetTimeSuccess(GetTimeResult result)
+		{
+			this.startupMillis = (long)(TimeSpan.FromTicks(result.Time.Ticks).TotalMilliseconds - (double)(Time.realtimeSinceStartup * 1000f));
+			this.startupTime = result.Time - TimeSpan.FromSeconds((double)Time.realtimeSinceStartup);
+			Action onServerTimeUpdated = this.OnServerTimeUpdated;
+			if (onServerTimeUpdated == null)
+			{
+				return;
+			}
+			onServerTimeUpdated();
+		}
+
+		private void OnGetTimeFailure(PlayFabError error)
+		{
+			this.startupMillis = (long)(TimeSpan.FromTicks(DateTime.UtcNow.Ticks).TotalMilliseconds - (double)(Time.realtimeSinceStartup * 1000f));
+			this.startupTime = DateTime.UtcNow - TimeSpan.FromSeconds((double)Time.realtimeSinceStartup);
+			Action onServerTimeUpdated = this.OnServerTimeUpdated;
+			if (onServerTimeUpdated != null)
+			{
+				onServerTimeUpdated();
+			}
+			if (error.Error == PlayFabErrorCode.NotAuthenticated)
+			{
+				PlayFabAuthenticator.instance.AuthenticateWithPlayFab();
+				return;
+			}
+			if (error.Error == PlayFabErrorCode.AccountBanned)
+			{
+				Application.Quit();
+				PhotonNetwork.Disconnect();
+				Object.DestroyImmediate(PhotonNetworkController.Instance);
+				Object.DestroyImmediate(Player.Instance);
+				GameObject[] array = Object.FindObjectsOfType<GameObject>();
+				for (int i = 0; i < array.Length; i++)
+				{
+					Object.Destroy(array[i]);
+				}
+			}
+		}
+
+		public void OnModeSelectButtonPress(string gameMode, bool leftHand)
+		{
+			this.currentGameMode = gameMode;
+			PlayerPrefs.SetString("currentGameMode", gameMode);
+			if (leftHand != this.leftHanded)
+			{
+				PlayerPrefs.SetInt("leftHanded", leftHand ? 1 : 0);
+				this.leftHanded = leftHand;
+			}
+			PlayerPrefs.Save();
+			foreach (ModeSelectButton modeSelectButton in this.modeSelectButtons)
+			{
+				modeSelectButton.buttonRenderer.material = ((this.currentGameMode == modeSelectButton.gameMode) ? modeSelectButton.pressedMaterial : modeSelectButton.unpressedMaterial);
+			}
+		}
+
+		public void OnGroupJoinButtonPress(int mapJoinIndex, GorillaFriendCollider chosenFriendJoinCollider)
+		{
+			if (mapJoinIndex >= this.allowedMapsToJoin.Length)
+			{
+				this.roomNotAllowed = true;
+				this.SwitchToRoomState();
+				return;
+			}
+			if (PhotonNetwork.InRoom && !PhotonNetwork.CurrentRoom.IsVisible)
+			{
+				PhotonNetworkController.Instance.friendIDList = new List<string>(chosenFriendJoinCollider.playerIDsCurrentlyTouching);
+				foreach (string text in PhotonNetworkController.Instance.friendIDList)
+				{
+				}
+				PhotonNetworkController.Instance.shuffler = Random.Range(0, 99999999).ToString().PadLeft(8, '0');
+				PhotonNetworkController.Instance.keyStr = Random.Range(0, 99999999).ToString().PadLeft(8, '0');
+				RoomSystem.JoinPubWithFriends(chosenFriendJoinCollider, PhotonNetworkController.Instance.shuffler, PhotonNetworkController.Instance.keyStr);
+				PhotonNetwork.SendAllOutgoingCommands();
+				GorillaNetworkJoinTrigger gorillaNetworkJoinTrigger = null;
+				if (this.allowedMapsToJoin[mapJoinIndex] == "forest")
+				{
+					gorillaNetworkJoinTrigger = this.forestMapTrigger;
+				}
+				else if (this.allowedMapsToJoin[mapJoinIndex] == "cave")
+				{
+					gorillaNetworkJoinTrigger = this.caveMapTrigger;
+				}
+				else if (this.allowedMapsToJoin[mapJoinIndex] == "canyon")
+				{
+					gorillaNetworkJoinTrigger = this.canyonMapTrigger;
+				}
+				else if (this.allowedMapsToJoin[mapJoinIndex] == "city")
+				{
+					gorillaNetworkJoinTrigger = this.cityMapTrigger;
+				}
+				else if (this.allowedMapsToJoin[mapJoinIndex] == "mountain")
+				{
+					gorillaNetworkJoinTrigger = this.mountainMapTrigger;
+				}
+				else if (this.allowedMapsToJoin[mapJoinIndex] == "clouds")
+				{
+					gorillaNetworkJoinTrigger = this.skyjungleMapTrigger;
+				}
+				else if (this.allowedMapsToJoin[mapJoinIndex] == "basement")
+				{
+					gorillaNetworkJoinTrigger = this.basementMapTrigger;
+				}
+				else if (this.allowedMapsToJoin[mapJoinIndex] == "beach")
+				{
+					gorillaNetworkJoinTrigger = this.beachMapTrigger;
+				}
+				else if (this.allowedMapsToJoin[mapJoinIndex] == "rotating")
+				{
+					gorillaNetworkJoinTrigger = this.rotatingMapTrigger;
+				}
+				PhotonNetworkController.Instance.AttemptJoinPublicWithFriends(gorillaNetworkJoinTrigger);
+				this.SwitchToRoomState();
+			}
+		}
+
+		public void SaveModAccountData()
+		{
+			string path = Application.persistentDataPath + "/DoNotShareWithAnyoneEVERNoMatterWhatTheySay.txt";
+			if (File.Exists(path))
+			{
+				return;
+			}
+			ExecuteCloudScriptRequest executeCloudScriptRequest = new ExecuteCloudScriptRequest();
+			executeCloudScriptRequest.FunctionName = "ReturnMyOculusHash";
+			PlayFabClientAPI.ExecuteCloudScript(executeCloudScriptRequest, delegate(PlayFab.ClientModels.ExecuteCloudScriptResult result)
+			{
+				object obj;
+				if (((JsonObject)result.FunctionResult).TryGetValue("oculusHash", out obj))
+				{
+					StreamWriter streamWriter = new StreamWriter(path);
+					streamWriter.Write(PlayFabAuthenticator.instance._playFabPlayerIdCache + "." + (string)obj);
+					streamWriter.Close();
+				}
+			}, delegate(PlayFabError error)
+			{
+				if (error.Error == PlayFabErrorCode.NotAuthenticated)
+				{
+					PlayFabAuthenticator.instance.AuthenticateWithPlayFab();
+					return;
+				}
+				if (error.Error == PlayFabErrorCode.AccountBanned)
+				{
+					Application.Quit();
+					PhotonNetwork.Disconnect();
+					Object.DestroyImmediate(PhotonNetworkController.Instance);
+					Object.DestroyImmediate(Player.Instance);
+					GameObject[] array = Object.FindObjectsOfType<GameObject>();
+					for (int i = 0; i < array.Length; i++)
+					{
+						Object.Destroy(array[i]);
+					}
+				}
+			}, null, null);
+		}
+
+		public void CompQueueUnlockButtonPress()
+		{
+			this.allowedInCompetitive = true;
+			PlayerPrefs.SetInt("allowedInCompetitive", 1);
+			PlayerPrefs.Save();
+		}
+
+		[OnEnterPlay_SetNull]
+		public static volatile GorillaComputer instance;
+
+		[OnEnterPlay_Set(false)]
+		public static bool hasInstance;
+
+		public bool tryGetTimeAgain;
+
+		public Material unpressedMaterial;
+
+		public Material pressedMaterial;
+
+		public string currentTextField;
+
+		public float buttonFadeTime;
+
+		public GorillaText offlineScoreboard;
+
+		public GorillaText screenText;
+
+		public GorillaText functionSelectText;
+
+		public GorillaText wallScreenText;
+
+		public GorillaText tutorialWallScreenText;
+
+		public Text offlineVRRigNametagText;
+
+		public string versionText = "";
+
+		public string versionMismatch = "PLEASE UPDATE TO THE LATEST VERSION OF GORILLA TAG. YOU'RE ON AN OLD VERSION. FEEL FREE TO RUN AROUND, BUT YOU WON'T BE ABLE TO PLAY WITH ANYONE ELSE.";
+
+		public string unableToConnect = "UNABLE TO CONNECT TO THE INTERNET. PLEASE CHECK YOUR CONNECTION AND RESTART THE GAME.";
+
+		public Material wrongVersionMaterial;
+
+		public MeshRenderer wallScreenRenderer;
+
+		public MeshRenderer tutorialWallScreenRenderer;
+
+		public MeshRenderer computerScreenRenderer;
+
+		public MeshRenderer scoreboardRenderer;
+
+		public GorillaLevelScreen[] levelScreens;
+
+		public long startupMillis;
+
+		public DateTime startupTime;
+
+		public Text currentGameModeText;
+
+		public int includeUpdatedServerSynchTest;
+
+		public float updateCooldown = 1f;
+
+		public float lastUpdateTime;
+
+		public bool isConnectedToMaster;
+
+		public bool internetFailure;
+
+		public string[] allowedMapsToJoin;
+
+		private Stack<GorillaComputer.ComputerState> stateStack = new Stack<GorillaComputer.ComputerState>();
+
+		public bool stateUpdated;
+
+		public bool screenChanged;
+
+		private int usersBanned;
+
+		private float redValue;
+
+		private string redText;
+
+		private float blueValue;
+
+		private string blueText;
+
+		private float greenValue;
+
+		private string greenText;
+
+		private int colorCursorLine;
+
+		public string savedName;
+
+		public string currentName;
+
+		private string[] exactOneWeek;
+
+		private string[] anywhereOneWeek;
+
+		private string[] anywhereTwoWeek;
+
+		[SerializeField]
+		public TextAsset exactOneWeekFile;
+
+		public TextAsset anywhereOneWeekFile;
+
+		public TextAsset anywhereTwoWeekFile;
+
+		private string warningConfirmationInputString = string.Empty;
+
+		public string roomToJoin;
+
+		public bool roomFull;
+
+		public bool roomNotAllowed;
+
+		private int turnValue;
+
+		private string turnType;
+
+		private GorillaSnapTurn gorillaTurn;
+
+		public string pttType;
+
+		public string currentQueue;
+
+		public bool allowedInCompetitive;
+
+		public string groupMapJoin;
+
+		public int groupMapJoinIndex;
+
+		public GorillaFriendCollider friendJoinCollider;
+
+		public GorillaNetworkJoinTrigger caveMapTrigger;
+
+		public GorillaNetworkJoinTrigger forestMapTrigger;
+
+		public GorillaNetworkJoinTrigger canyonMapTrigger;
+
+		public GorillaNetworkJoinTrigger cityMapTrigger;
+
+		public GorillaNetworkJoinTrigger mountainMapTrigger;
+
+		public GorillaNetworkJoinTrigger skyjungleMapTrigger;
+
+		public GorillaNetworkJoinTrigger basementMapTrigger;
+
+		public GorillaNetworkJoinTrigger beachMapTrigger;
+
+		public GorillaNetworkJoinTrigger rotatingMapTrigger;
+
+		public string voiceChatOn;
+
+		public ModeSelectButton[] modeSelectButtons;
+
+		public string currentGameMode;
+
+		public string version;
+
+		public string buildDate;
+
+		public string buildCode;
+
+		public bool disableParticles;
+
+		public float instrumentVolume;
+
+		public CreditsView creditsView;
+
+		private bool displaySupport;
+
+		public bool leftHanded;
+
+		public Action OnServerTimeUpdated;
+
+		public enum ComputerState
+		{
+			Startup,
+			Color,
+			Name,
+			Turn,
+			Mic,
+			Room,
+			Queue,
+			Group,
+			Voice,
+			Credits,
+			Visuals,
+			Time,
+			NameWarning,
+			Loading,
+			Support
+		}
+
+		private enum NameCheckResult
+		{
+			Success,
+			Warning,
+			Ban
+		}
 	}
 }

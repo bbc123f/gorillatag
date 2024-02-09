@@ -1,16 +1,17 @@
+﻿using System;
 using Photon.Pun;
 using UnityEngine;
 
 public class GorillaJoinTeamBox : GorillaTriggerBox
 {
-	public bool joinRedTeam;
-
 	public override void OnBoxTriggered()
 	{
 		base.OnBoxTriggered();
 		if (GameObject.FindGameObjectWithTag("GorillaGameManager").GetComponent<GorillaGameManager>() != null)
 		{
-			_ = PhotonNetwork.InRoom;
+			bool inRoom = PhotonNetwork.InRoom;
 		}
 	}
+
+	public bool joinRedTeam;
 }

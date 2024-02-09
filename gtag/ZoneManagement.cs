@@ -1,51 +1,61 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 public class ZoneManagement : MonoBehaviour
 {
-	private static ZoneManagement instance;
-
-	[SerializeField]
-	private ZoneData[] zones;
-
-	private GameObject[] allObjects;
-
-	private bool[] objectActivationState;
+	public bool hasInstance { get; private set; }
 
 	private void Awake()
 	{
-		if (instance == null)
+		if (ZoneManagement.instance == null)
 		{
-			Initialize();
+			this.Initialize();
+			return;
 		}
-		else if (instance != this)
+		if (ZoneManagement.instance != this)
 		{
-			UnityEngine.Object.Destroy(base.gameObject);
+			Object.Destroy(base.gameObject);
 		}
 	}
 
 	public static void SetActiveZone(GTZone zone)
 	{
-		SetActiveZones(new GTZone[1] { zone });
+		ZoneManagement.SetActiveZones(new GTZone[] { zone });
 	}
 
 	public static void SetActiveZones(GTZone[] zones)
 	{
-		if (instance == null)
+		if (ZoneManagement.instance == null)
 		{
-			FindInstance();
+			ZoneManagement.FindInstance();
 		}
-		if (zones != null && zones.Length != 0)
+		if (zones == null || zones.Length == 0)
 		{
-			instance.SetZones(zones);
+			return;
 		}
+		ZoneManagement.instance.SetZones(zones);
+	}
+
+	public static bool IsInZone(GTZone zone)
+	{
+		if (ZoneManagement.instance == null)
+		{
+			ZoneManagement.FindInstance();
+		}
+		ZoneData zoneData = ZoneManagement.instance.GetZoneData(zone);
+		return zoneData != null && zoneData.rootGameObjects.Length != 0 && zoneData.rootGameObjects[0].activeSelf;
+	}
+
+	public GameObject GetPrimaryGameObject(GTZone zone)
+	{
+		return this.GetZoneData(zone).rootGameObjects[0];
 	}
 
 	private static void FindInstance()
 	{
-		ZoneManagement zoneManagement = UnityEngine.Object.FindObjectOfType<ZoneManagement>();
+		ZoneManagement zoneManagement = Object.FindObjectOfType<ZoneManagement>();
 		if (zoneManagement == null)
 		{
 			throw new NullReferenceException("Unable to find ZoneManagement object in scene.");
@@ -56,62 +66,88 @@ public class ZoneManagement : MonoBehaviour
 
 	private void Initialize()
 	{
-		instance = this;
+		ZoneManagement.instance = this;
+		this.hasInstance = true;
 		HashSet<GameObject> hashSet = new HashSet<GameObject>();
-		for (int i = 0; i < zones.Length; i++)
+		List<GameObject> list = new List<GameObject>(8);
+		for (int i = 0; i < this.zones.Length; i++)
 		{
-			ZoneData zoneData = zones[i];
+			list.Clear();
+			ZoneData zoneData = this.zones[i];
 			if (zoneData != null && zoneData.rootGameObjects != null)
 			{
-				hashSet.UnionWith(zoneData.rootGameObjects);
+				for (int j = 0; j < zoneData.rootGameObjects.Length; j++)
+				{
+					GameObject gameObject = zoneData.rootGameObjects[j];
+					if (!(gameObject == null))
+					{
+						list.Add(gameObject);
+					}
+				}
+				hashSet.UnionWith(list);
 			}
 		}
 		hashSet.Remove(null);
-		allObjects = hashSet.ToArray();
-		objectActivationState = new bool[allObjects.Length];
+		this.allObjects = hashSet.ToArray<GameObject>();
+		this.objectActivationState = new bool[this.allObjects.Length];
 	}
 
 	private void SetZones(GTZone[] zones)
 	{
-		for (int i = 0; i < objectActivationState.Length; i++)
+		for (int i = 0; i < this.objectActivationState.Length; i++)
 		{
-			objectActivationState[i] = false;
+			this.objectActivationState[i] = false;
 		}
 		for (int j = 0; j < zones.Length; j++)
 		{
-			ZoneData zoneData = GetZoneData(zones[j]);
-			if (zoneData == null || zoneData.rootGameObjects == null)
+			ZoneData zoneData = this.GetZoneData(zones[j]);
+			if (zoneData != null && zoneData.rootGameObjects != null)
 			{
-				continue;
-			}
-			GameObject[] rootGameObjects = zoneData.rootGameObjects;
-			foreach (GameObject gameObject in rootGameObjects)
-			{
-				for (int l = 0; l < allObjects.Length; l++)
+				foreach (GameObject gameObject in zoneData.rootGameObjects)
 				{
-					if (gameObject == allObjects[l])
+					if (!(gameObject == null))
 					{
-						objectActivationState[l] = true;
-						break;
+						for (int l = 0; l < this.allObjects.Length; l++)
+						{
+							if (gameObject == this.allObjects[l])
+							{
+								this.objectActivationState[l] = true;
+								break;
+							}
+						}
 					}
 				}
 			}
 		}
-		for (int m = 0; m < objectActivationState.Length; m++)
+		for (int m = 0; m < this.objectActivationState.Length; m++)
 		{
-			allObjects[m].SetActive(objectActivationState[m]);
+			if (!(this.allObjects[m] == null))
+			{
+				this.allObjects[m].SetActive(this.objectActivationState[m]);
+			}
 		}
 	}
 
 	private ZoneData GetZoneData(GTZone zone)
 	{
-		for (int i = 0; i < zones.Length; i++)
+		for (int i = 0; i < this.zones.Length; i++)
 		{
-			if (zones[i].zone == zone)
+			if (this.zones[i].zone == zone)
 			{
-				return zones[i];
+				return this.zones[i];
 			}
 		}
 		return null;
 	}
+
+	public static ZoneManagement instance;
+
+	[SerializeField]
+	private ZoneData[] zones;
+
+	private GameObject[] allObjects;
+
+	private bool[] objectActivationState;
+
+	private GTZone activeZone;
 }

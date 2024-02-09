@@ -1,435 +1,451 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Text;
 
-namespace LitJson;
-
-public class JsonWriter
+namespace LitJson
 {
-	private static NumberFormatInfo number_format;
-
-	private WriterContext context;
-
-	private Stack<WriterContext> ctx_stack;
-
-	private bool has_reached_end;
-
-	private char[] hex_seq;
-
-	private int indentation;
-
-	private int indent_value;
-
-	private StringBuilder inst_string_builder;
-
-	private bool pretty_print;
-
-	private bool validate;
-
-	private TextWriter writer;
-
-	public int IndentValue
+	public class JsonWriter
 	{
-		get
+		public int IndentValue
 		{
-			return indent_value;
-		}
-		set
-		{
-			indentation = indentation / indent_value * value;
-			indent_value = value;
-		}
-	}
-
-	public bool PrettyPrint
-	{
-		get
-		{
-			return pretty_print;
-		}
-		set
-		{
-			pretty_print = value;
-		}
-	}
-
-	public TextWriter TextWriter => writer;
-
-	public bool Validate
-	{
-		get
-		{
-			return validate;
-		}
-		set
-		{
-			validate = value;
-		}
-	}
-
-	static JsonWriter()
-	{
-		number_format = NumberFormatInfo.InvariantInfo;
-	}
-
-	public JsonWriter()
-	{
-		inst_string_builder = new StringBuilder();
-		writer = new StringWriter(inst_string_builder);
-		Init();
-	}
-
-	public JsonWriter(StringBuilder sb)
-		: this(new StringWriter(sb))
-	{
-	}
-
-	public JsonWriter(TextWriter writer)
-	{
-		if (writer == null)
-		{
-			throw new ArgumentNullException("writer");
-		}
-		this.writer = writer;
-		Init();
-	}
-
-	private void DoValidation(Condition cond)
-	{
-		if (!context.ExpectingValue)
-		{
-			context.Count++;
-		}
-		if (!validate)
-		{
-			return;
-		}
-		if (has_reached_end)
-		{
-			throw new JsonException("A complete JSON symbol has already been written");
-		}
-		switch (cond)
-		{
-		case Condition.InArray:
-			if (!context.InArray)
+			get
 			{
-				throw new JsonException("Can't close an array here");
+				return this.indent_value;
 			}
-			break;
-		case Condition.InObject:
-			if (!context.InObject || context.ExpectingValue)
+			set
 			{
-				throw new JsonException("Can't close an object here");
+				this.indentation = this.indentation / this.indent_value * value;
+				this.indent_value = value;
 			}
-			break;
-		case Condition.NotAProperty:
-			if (context.InObject && !context.ExpectingValue)
-			{
-				throw new JsonException("Expected a property");
-			}
-			break;
-		case Condition.Property:
-			if (!context.InObject || context.ExpectingValue)
-			{
-				throw new JsonException("Can't add a property here");
-			}
-			break;
-		case Condition.Value:
-			if (!context.InArray && (!context.InObject || !context.ExpectingValue))
-			{
-				throw new JsonException("Can't add a value here");
-			}
-			break;
 		}
-	}
 
-	private void Init()
-	{
-		has_reached_end = false;
-		hex_seq = new char[4];
-		indentation = 0;
-		indent_value = 4;
-		pretty_print = false;
-		validate = true;
-		ctx_stack = new Stack<WriterContext>();
-		context = new WriterContext();
-		ctx_stack.Push(context);
-	}
-
-	private static void IntToHex(int n, char[] hex)
-	{
-		for (int i = 0; i < 4; i++)
+		public bool PrettyPrint
 		{
-			int num = n % 16;
-			if (num < 10)
+			get
 			{
-				hex[3 - i] = (char)(48 + num);
+				return this.pretty_print;
+			}
+			set
+			{
+				this.pretty_print = value;
+			}
+		}
+
+		public TextWriter TextWriter
+		{
+			get
+			{
+				return this.writer;
+			}
+		}
+
+		public bool Validate
+		{
+			get
+			{
+				return this.validate;
+			}
+			set
+			{
+				this.validate = value;
+			}
+		}
+
+		public JsonWriter()
+		{
+			this.inst_string_builder = new StringBuilder();
+			this.writer = new StringWriter(this.inst_string_builder);
+			this.Init();
+		}
+
+		public JsonWriter(StringBuilder sb)
+			: this(new StringWriter(sb))
+		{
+		}
+
+		public JsonWriter(TextWriter writer)
+		{
+			if (writer == null)
+			{
+				throw new ArgumentNullException("writer");
+			}
+			this.writer = writer;
+			this.Init();
+		}
+
+		private void DoValidation(Condition cond)
+		{
+			if (!this.context.ExpectingValue)
+			{
+				this.context.Count++;
+			}
+			if (!this.validate)
+			{
+				return;
+			}
+			if (this.has_reached_end)
+			{
+				throw new JsonException("A complete JSON symbol has already been written");
+			}
+			switch (cond)
+			{
+			case Condition.InArray:
+				if (!this.context.InArray)
+				{
+					throw new JsonException("Can't close an array here");
+				}
+				break;
+			case Condition.InObject:
+				if (!this.context.InObject || this.context.ExpectingValue)
+				{
+					throw new JsonException("Can't close an object here");
+				}
+				break;
+			case Condition.NotAProperty:
+				if (this.context.InObject && !this.context.ExpectingValue)
+				{
+					throw new JsonException("Expected a property");
+				}
+				break;
+			case Condition.Property:
+				if (!this.context.InObject || this.context.ExpectingValue)
+				{
+					throw new JsonException("Can't add a property here");
+				}
+				break;
+			case Condition.Value:
+				if (!this.context.InArray && (!this.context.InObject || !this.context.ExpectingValue))
+				{
+					throw new JsonException("Can't add a value here");
+				}
+				break;
+			default:
+				return;
+			}
+		}
+
+		private void Init()
+		{
+			this.has_reached_end = false;
+			this.hex_seq = new char[4];
+			this.indentation = 0;
+			this.indent_value = 4;
+			this.pretty_print = false;
+			this.validate = true;
+			this.ctx_stack = new Stack<WriterContext>();
+			this.context = new WriterContext();
+			this.ctx_stack.Push(this.context);
+		}
+
+		private static void IntToHex(int n, char[] hex)
+		{
+			for (int i = 0; i < 4; i++)
+			{
+				int num = n % 16;
+				if (num < 10)
+				{
+					hex[3 - i] = (char)(48 + num);
+				}
+				else
+				{
+					hex[3 - i] = (char)(65 + (num - 10));
+				}
+				n >>= 4;
+			}
+		}
+
+		private void Indent()
+		{
+			if (this.pretty_print)
+			{
+				this.indentation += this.indent_value;
+			}
+		}
+
+		private void Put(string str)
+		{
+			if (this.pretty_print && !this.context.ExpectingValue)
+			{
+				for (int i = 0; i < this.indentation; i++)
+				{
+					this.writer.Write(' ');
+				}
+			}
+			this.writer.Write(str);
+		}
+
+		private void PutNewline()
+		{
+			this.PutNewline(true);
+		}
+
+		private void PutNewline(bool add_comma)
+		{
+			if (add_comma && !this.context.ExpectingValue && this.context.Count > 1)
+			{
+				this.writer.Write(',');
+			}
+			if (this.pretty_print && !this.context.ExpectingValue)
+			{
+				this.writer.Write('\n');
+			}
+		}
+
+		private void PutString(string str)
+		{
+			this.Put(string.Empty);
+			this.writer.Write('"');
+			int length = str.Length;
+			int i = 0;
+			while (i < length)
+			{
+				char c = str[i];
+				switch (c)
+				{
+				case '\b':
+					this.writer.Write("\\b");
+					break;
+				case '\t':
+					this.writer.Write("\\t");
+					break;
+				case '\n':
+					this.writer.Write("\\n");
+					break;
+				case '\v':
+					goto IL_E4;
+				case '\f':
+					this.writer.Write("\\f");
+					break;
+				case '\r':
+					this.writer.Write("\\r");
+					break;
+				default:
+					if (c != '"' && c != '\\')
+					{
+						goto IL_E4;
+					}
+					this.writer.Write('\\');
+					this.writer.Write(str[i]);
+					break;
+				}
+				IL_141:
+				i++;
+				continue;
+				IL_E4:
+				if (str[i] >= ' ' && str[i] <= '~')
+				{
+					this.writer.Write(str[i]);
+					goto IL_141;
+				}
+				JsonWriter.IntToHex((int)str[i], this.hex_seq);
+				this.writer.Write("\\u");
+				this.writer.Write(this.hex_seq);
+				goto IL_141;
+			}
+			this.writer.Write('"');
+		}
+
+		private void Unindent()
+		{
+			if (this.pretty_print)
+			{
+				this.indentation -= this.indent_value;
+			}
+		}
+
+		public override string ToString()
+		{
+			if (this.inst_string_builder == null)
+			{
+				return string.Empty;
+			}
+			return this.inst_string_builder.ToString();
+		}
+
+		public void Reset()
+		{
+			this.has_reached_end = false;
+			this.ctx_stack.Clear();
+			this.context = new WriterContext();
+			this.ctx_stack.Push(this.context);
+			if (this.inst_string_builder != null)
+			{
+				this.inst_string_builder.Remove(0, this.inst_string_builder.Length);
+			}
+		}
+
+		public void Write(bool boolean)
+		{
+			this.DoValidation(Condition.Value);
+			this.PutNewline();
+			this.Put(boolean ? "true" : "false");
+			this.context.ExpectingValue = false;
+		}
+
+		public void Write(decimal number)
+		{
+			this.DoValidation(Condition.Value);
+			this.PutNewline();
+			this.Put(Convert.ToString(number, JsonWriter.number_format));
+			this.context.ExpectingValue = false;
+		}
+
+		public void Write(double number)
+		{
+			this.DoValidation(Condition.Value);
+			this.PutNewline();
+			string text = Convert.ToString(number, JsonWriter.number_format);
+			this.Put(text);
+			if (text.IndexOf('.') == -1 && text.IndexOf('E') == -1)
+			{
+				this.writer.Write(".0");
+			}
+			this.context.ExpectingValue = false;
+		}
+
+		public void Write(int number)
+		{
+			this.DoValidation(Condition.Value);
+			this.PutNewline();
+			this.Put(Convert.ToString(number, JsonWriter.number_format));
+			this.context.ExpectingValue = false;
+		}
+
+		public void Write(long number)
+		{
+			this.DoValidation(Condition.Value);
+			this.PutNewline();
+			this.Put(Convert.ToString(number, JsonWriter.number_format));
+			this.context.ExpectingValue = false;
+		}
+
+		public void Write(string str)
+		{
+			this.DoValidation(Condition.Value);
+			this.PutNewline();
+			if (str == null)
+			{
+				this.Put("null");
 			}
 			else
 			{
-				hex[3 - i] = (char)(65 + (num - 10));
+				this.PutString(str);
 			}
-			n >>= 4;
+			this.context.ExpectingValue = false;
 		}
-	}
 
-	private void Indent()
-	{
-		if (pretty_print)
+		public void Write(ulong number)
 		{
-			indentation += indent_value;
+			this.DoValidation(Condition.Value);
+			this.PutNewline();
+			this.Put(Convert.ToString(number, JsonWriter.number_format));
+			this.context.ExpectingValue = false;
 		}
-	}
 
-	private void Put(string str)
-	{
-		if (pretty_print && !context.ExpectingValue)
+		public void WriteArrayEnd()
 		{
-			for (int i = 0; i < indentation; i++)
+			this.DoValidation(Condition.InArray);
+			this.PutNewline(false);
+			this.ctx_stack.Pop();
+			if (this.ctx_stack.Count == 1)
 			{
-				writer.Write(' ');
+				this.has_reached_end = true;
 			}
-		}
-		writer.Write(str);
-	}
-
-	private void PutNewline()
-	{
-		PutNewline(add_comma: true);
-	}
-
-	private void PutNewline(bool add_comma)
-	{
-		if (add_comma && !context.ExpectingValue && context.Count > 1)
-		{
-			writer.Write(',');
-		}
-		if (pretty_print && !context.ExpectingValue)
-		{
-			writer.Write('\n');
-		}
-	}
-
-	private void PutString(string str)
-	{
-		Put(string.Empty);
-		writer.Write('"');
-		int length = str.Length;
-		for (int i = 0; i < length; i++)
-		{
-			switch (str[i])
+			else
 			{
-			case '\n':
-				writer.Write("\\n");
-				continue;
-			case '\r':
-				writer.Write("\\r");
-				continue;
-			case '\t':
-				writer.Write("\\t");
-				continue;
-			case '"':
-			case '\\':
-				writer.Write('\\');
-				writer.Write(str[i]);
-				continue;
-			case '\f':
-				writer.Write("\\f");
-				continue;
-			case '\b':
-				writer.Write("\\b");
-				continue;
+				this.context = this.ctx_stack.Peek();
+				this.context.ExpectingValue = false;
 			}
-			if (str[i] >= ' ' && str[i] <= '~')
+			this.Unindent();
+			this.Put("]");
+		}
+
+		public void WriteArrayStart()
+		{
+			this.DoValidation(Condition.NotAProperty);
+			this.PutNewline();
+			this.Put("[");
+			this.context = new WriterContext();
+			this.context.InArray = true;
+			this.ctx_stack.Push(this.context);
+			this.Indent();
+		}
+
+		public void WriteObjectEnd()
+		{
+			this.DoValidation(Condition.InObject);
+			this.PutNewline(false);
+			this.ctx_stack.Pop();
+			if (this.ctx_stack.Count == 1)
 			{
-				writer.Write(str[i]);
-				continue;
+				this.has_reached_end = true;
 			}
-			IntToHex(str[i], hex_seq);
-			writer.Write("\\u");
-			writer.Write(hex_seq);
-		}
-		writer.Write('"');
-	}
-
-	private void Unindent()
-	{
-		if (pretty_print)
-		{
-			indentation -= indent_value;
-		}
-	}
-
-	public override string ToString()
-	{
-		if (inst_string_builder == null)
-		{
-			return string.Empty;
-		}
-		return inst_string_builder.ToString();
-	}
-
-	public void Reset()
-	{
-		has_reached_end = false;
-		ctx_stack.Clear();
-		context = new WriterContext();
-		ctx_stack.Push(context);
-		if (inst_string_builder != null)
-		{
-			inst_string_builder.Remove(0, inst_string_builder.Length);
-		}
-	}
-
-	public void Write(bool boolean)
-	{
-		DoValidation(Condition.Value);
-		PutNewline();
-		Put(boolean ? "true" : "false");
-		context.ExpectingValue = false;
-	}
-
-	public void Write(decimal number)
-	{
-		DoValidation(Condition.Value);
-		PutNewline();
-		Put(Convert.ToString(number, number_format));
-		context.ExpectingValue = false;
-	}
-
-	public void Write(double number)
-	{
-		DoValidation(Condition.Value);
-		PutNewline();
-		string text = Convert.ToString(number, number_format);
-		Put(text);
-		if (text.IndexOf('.') == -1 && text.IndexOf('E') == -1)
-		{
-			writer.Write(".0");
-		}
-		context.ExpectingValue = false;
-	}
-
-	public void Write(int number)
-	{
-		DoValidation(Condition.Value);
-		PutNewline();
-		Put(Convert.ToString(number, number_format));
-		context.ExpectingValue = false;
-	}
-
-	public void Write(long number)
-	{
-		DoValidation(Condition.Value);
-		PutNewline();
-		Put(Convert.ToString(number, number_format));
-		context.ExpectingValue = false;
-	}
-
-	public void Write(string str)
-	{
-		DoValidation(Condition.Value);
-		PutNewline();
-		if (str == null)
-		{
-			Put("null");
-		}
-		else
-		{
-			PutString(str);
-		}
-		context.ExpectingValue = false;
-	}
-
-	public void Write(ulong number)
-	{
-		DoValidation(Condition.Value);
-		PutNewline();
-		Put(Convert.ToString(number, number_format));
-		context.ExpectingValue = false;
-	}
-
-	public void WriteArrayEnd()
-	{
-		DoValidation(Condition.InArray);
-		PutNewline(add_comma: false);
-		ctx_stack.Pop();
-		if (ctx_stack.Count == 1)
-		{
-			has_reached_end = true;
-		}
-		else
-		{
-			context = ctx_stack.Peek();
-			context.ExpectingValue = false;
-		}
-		Unindent();
-		Put("]");
-	}
-
-	public void WriteArrayStart()
-	{
-		DoValidation(Condition.NotAProperty);
-		PutNewline();
-		Put("[");
-		context = new WriterContext();
-		context.InArray = true;
-		ctx_stack.Push(context);
-		Indent();
-	}
-
-	public void WriteObjectEnd()
-	{
-		DoValidation(Condition.InObject);
-		PutNewline(add_comma: false);
-		ctx_stack.Pop();
-		if (ctx_stack.Count == 1)
-		{
-			has_reached_end = true;
-		}
-		else
-		{
-			context = ctx_stack.Peek();
-			context.ExpectingValue = false;
-		}
-		Unindent();
-		Put("}");
-	}
-
-	public void WriteObjectStart()
-	{
-		DoValidation(Condition.NotAProperty);
-		PutNewline();
-		Put("{");
-		context = new WriterContext();
-		context.InObject = true;
-		ctx_stack.Push(context);
-		Indent();
-	}
-
-	public void WritePropertyName(string property_name)
-	{
-		DoValidation(Condition.Property);
-		PutNewline();
-		PutString(property_name);
-		if (pretty_print)
-		{
-			if (property_name.Length > context.Padding)
+			else
 			{
-				context.Padding = property_name.Length;
+				this.context = this.ctx_stack.Peek();
+				this.context.ExpectingValue = false;
 			}
-			for (int num = context.Padding - property_name.Length; num >= 0; num--)
-			{
-				writer.Write(' ');
-			}
-			writer.Write(": ");
+			this.Unindent();
+			this.Put("}");
 		}
-		else
+
+		public void WriteObjectStart()
 		{
-			writer.Write(':');
+			this.DoValidation(Condition.NotAProperty);
+			this.PutNewline();
+			this.Put("{");
+			this.context = new WriterContext();
+			this.context.InObject = true;
+			this.ctx_stack.Push(this.context);
+			this.Indent();
 		}
-		context.ExpectingValue = true;
+
+		public void WritePropertyName(string property_name)
+		{
+			this.DoValidation(Condition.Property);
+			this.PutNewline();
+			this.PutString(property_name);
+			if (this.pretty_print)
+			{
+				if (property_name.Length > this.context.Padding)
+				{
+					this.context.Padding = property_name.Length;
+				}
+				for (int i = this.context.Padding - property_name.Length; i >= 0; i--)
+				{
+					this.writer.Write(' ');
+				}
+				this.writer.Write(": ");
+			}
+			else
+			{
+				this.writer.Write(':');
+			}
+			this.context.ExpectingValue = true;
+		}
+
+		private static NumberFormatInfo number_format = NumberFormatInfo.InvariantInfo;
+
+		private WriterContext context;
+
+		private Stack<WriterContext> ctx_stack;
+
+		private bool has_reached_end;
+
+		private char[] hex_seq;
+
+		private int indentation;
+
+		private int indent_value;
+
+		private StringBuilder inst_string_builder;
+
+		private bool pretty_print;
+
+		private bool validate;
+
+		private TextWriter writer;
 	}
 }

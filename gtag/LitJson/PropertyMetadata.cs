@@ -1,13 +1,14 @@
-using System;
+﻿using System;
 using System.Reflection;
 
-namespace LitJson;
-
-internal struct PropertyMetadata
+namespace LitJson
 {
-	public MemberInfo Info;
+	internal struct PropertyMetadata
+	{
+		public MemberInfo Info;
 
-	public bool IsField;
+		public bool IsField;
 
-	public Type Type;
+		public Type Type;
+	}
 }

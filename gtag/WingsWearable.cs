@@ -1,7 +1,27 @@
+﻿using System;
 using UnityEngine;
 
 public class WingsWearable : MonoBehaviour
 {
+	private void Awake()
+	{
+		this.xform = this.animator.transform;
+	}
+
+	private void OnEnable()
+	{
+		this.oldPos = this.xform.localPosition;
+	}
+
+	private void Update()
+	{
+		Vector3 position = this.xform.position;
+		float num = (position - this.oldPos).magnitude / Time.deltaTime;
+		float num2 = this.flapSpeedCurve.Evaluate(Mathf.Abs(num));
+		this.animator.SetFloat(this.flapSpeedParamID, num2);
+		this.oldPos = position;
+	}
+
 	[Tooltip("This animator must have a parameter called 'FlapSpeed'")]
 	public Animator animator;
 
@@ -13,23 +33,4 @@ public class WingsWearable : MonoBehaviour
 	private Vector3 oldPos;
 
 	private readonly int flapSpeedParamID = Animator.StringToHash("FlapSpeed");
-
-	private void Awake()
-	{
-		xform = animator.transform;
-	}
-
-	private void OnEnable()
-	{
-		oldPos = xform.localPosition;
-	}
-
-	private void Update()
-	{
-		Vector3 position = xform.position;
-		float f = (position - oldPos).magnitude / Time.deltaTime;
-		float value = flapSpeedCurve.Evaluate(Mathf.Abs(f));
-		animator.SetFloat(flapSpeedParamID, value);
-		oldPos = position;
-	}
 }

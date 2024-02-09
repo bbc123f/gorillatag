@@ -1,14 +1,17 @@
-namespace LitJson;
+﻿using System;
 
-internal class WriterContext
+namespace LitJson
 {
-	public int Count;
+	internal class WriterContext
+	{
+		public int Count;
 
-	public bool InArray;
+		public bool InArray;
 
-	public bool InObject;
+		public bool InObject;
 
-	public bool ExpectingValue;
+		public bool ExpectingValue;
 
-	public int Padding;
+		public int Padding;
+	}
 }

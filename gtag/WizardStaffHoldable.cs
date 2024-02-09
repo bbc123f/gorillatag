@@ -1,9 +1,105 @@
+﻿using System;
 using GorillaTag;
-using Photon.Pun;
 using UnityEngine;
 
 public class WizardStaffHoldable : TransferrableObject
 {
+	protected override void Awake()
+	{
+		base.Awake();
+		this.tipTargetLocalPosition = this.tipTransform.localPosition;
+		this.hasEffectsGameObject = this.effectsGameObject != null;
+		this.effectsHaveBeenPlayed = false;
+	}
+
+	public override void OnEnable()
+	{
+		base.OnEnable();
+		this.InitToDefault();
+	}
+
+	public override void ResetToDefaultState()
+	{
+		base.ResetToDefaultState();
+		this.InitToDefault();
+	}
+
+	private void InitToDefault()
+	{
+		this.cooldownRemaining = 0f;
+		if (this.hasEffectsGameObject && this.effectsHaveBeenPlayed)
+		{
+			this.effectsGameObject.SetActive(false);
+		}
+		this.effectsHaveBeenPlayed = false;
+	}
+
+	protected override void LateUpdateLocal()
+	{
+		base.LateUpdateLocal();
+		if (!base.InHand() || this.itemState == TransferrableObject.ItemStates.State1 || !GorillaParent.hasInstance || !this.hitLastFrame)
+		{
+			return;
+		}
+		if (this.velocityEstimator.linearVelocity.magnitude < this.minSlamVelocity)
+		{
+			return;
+		}
+		Vector3 up = this.tipTransform.up;
+		Vector3 up2 = Vector3.up;
+		if (Vector3.Angle(up, up2) > this.minSlamAngle)
+		{
+			return;
+		}
+		this.itemState = TransferrableObject.ItemStates.State1;
+		this.cooldownRemaining = this.cooldown;
+	}
+
+	protected override void LateUpdateShared()
+	{
+		base.LateUpdateShared();
+		this.cooldownRemaining -= Time.deltaTime;
+		if (this.cooldownRemaining <= 0f)
+		{
+			this.itemState = TransferrableObject.ItemStates.State0;
+			if (this.hasEffectsGameObject)
+			{
+				this.effectsGameObject.SetActive(false);
+			}
+			this.effectsHaveBeenPlayed = false;
+		}
+		if (base.InHand())
+		{
+			Vector3 position = base.transform.position;
+			Vector3 vector = base.transform.TransformPoint(this.tipTargetLocalPosition);
+			RaycastHit raycastHit;
+			if (Physics.Linecast(position, vector, out raycastHit, this.tipCollisionLayerMask))
+			{
+				this.tipTransform.position = raycastHit.point;
+				this.hitLastFrame = true;
+			}
+			else
+			{
+				this.tipTransform.localPosition = this.tipTargetLocalPosition;
+				this.hitLastFrame = false;
+			}
+			if (this.itemState == TransferrableObject.ItemStates.State1 && this.hasEffectsGameObject && !this.effectsHaveBeenPlayed)
+			{
+				this.effectsGameObject.SetActive(true);
+				this.effectsHaveBeenPlayed = true;
+			}
+		}
+	}
+
+	protected override void LateUpdateReplicated()
+	{
+		base.LateUpdateReplicated();
+		if (this.itemState == TransferrableObject.ItemStates.State1 && !this.effectsHaveBeenPlayed)
+		{
+			this.cooldownRemaining = this.cooldown;
+		}
+	}
+
 	[Tooltip("This GameObject will activate when the staff hits the ground with enough force.")]
 	public GameObject effectsGameObject;
 
@@ -36,88 +132,4 @@ public class WizardStaffHoldable : TransferrableObject
 	private bool hasEffectsGameObject;
 
 	private bool effectsHaveBeenPlayed;
-
-	protected override void Awake()
-	{
-		base.Awake();
-		tipTargetLocalPosition = tipTransform.localPosition;
-		hasEffectsGameObject = effectsGameObject != null;
-		effectsHaveBeenPlayed = false;
-	}
-
-	public override void OnEnable()
-	{
-		base.OnEnable();
-		InitToDefault();
-	}
-
-	public override void ResetToDefaultState()
-	{
-		base.ResetToDefaultState();
-		InitToDefault();
-	}
-
-	private void InitToDefault()
-	{
-		cooldownRemaining = 0f;
-		effectsHaveBeenPlayed = false;
-	}
-
-	protected override void LateUpdateLocal()
-	{
-		base.LateUpdateLocal();
-		if (InHand() && itemState != ItemStates.State1 && GorillaParent.hasInstance && hitLastFrame && !(velocityEstimator.linearVelocity.magnitude < minSlamVelocity))
-		{
-			Vector3 up = tipTransform.up;
-			Vector3 up2 = Vector3.up;
-			if (!(Vector3.Angle(up, up2) > minSlamAngle))
-			{
-				itemState = ItemStates.State1;
-				cooldownRemaining = cooldown;
-			}
-		}
-	}
-
-	protected override void LateUpdateShared()
-	{
-		base.LateUpdateShared();
-		cooldownRemaining -= Time.deltaTime;
-		if (cooldownRemaining <= 0f)
-		{
-			itemState = ItemStates.State0;
-			if (hasEffectsGameObject)
-			{
-				effectsGameObject.SetActive(value: false);
-			}
-			effectsHaveBeenPlayed = false;
-		}
-		if (InHand())
-		{
-			Vector3 position = base.transform.position;
-			Vector3 end = base.transform.TransformPoint(tipTargetLocalPosition);
-			if (Physics.Linecast(position, end, out var hitInfo, tipCollisionLayerMask))
-			{
-				tipTransform.position = hitInfo.point;
-				hitLastFrame = true;
-			}
-			else
-			{
-				tipTransform.localPosition = tipTargetLocalPosition;
-				hitLastFrame = false;
-			}
-		}
-		if (itemState == ItemStates.State1)
-		{
-			if (PhotonNetwork.InRoom && GorillaGameManager.instance != null && !effectsHaveBeenPlayed)
-			{
-				GorillaGameManager.instance.FindVRRigForPlayer(PhotonNetwork.LocalPlayer).RPC("PlaySlamEffects", RpcTarget.All, tipTransform.position, tipTransform.rotation);
-				effectsHaveBeenPlayed = true;
-			}
-			if (!PhotonNetwork.InRoom && !effectsHaveBeenPlayed)
-			{
-				myRig.PlaySlamEffectsLocal(effectsGameObject);
-				effectsHaveBeenPlayed = true;
-			}
-		}
-	}
 }

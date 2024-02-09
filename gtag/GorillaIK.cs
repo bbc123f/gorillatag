@@ -1,7 +1,54 @@
+﻿using System;
 using UnityEngine;
 
 public class GorillaIK : MonoBehaviour
 {
+	private void Awake()
+	{
+		if (Application.isPlaying && !this.testInEditor)
+		{
+			this.dU = (this.leftUpperArm.position - this.leftLowerArm.position).magnitude;
+			this.dL = (this.leftLowerArm.position - this.leftHand.position).magnitude;
+			this.dMax = this.dU + this.dL - this.eps;
+			this.initialUpperLeft = this.leftUpperArm.localRotation;
+			this.initialLowerLeft = this.leftLowerArm.localRotation;
+			this.initialUpperRight = this.rightUpperArm.localRotation;
+			this.initialLowerRight = this.rightLowerArm.localRotation;
+		}
+	}
+
+	private void OnEnable()
+	{
+		GorillaIKMgr.Instance.RegisterIK(this);
+	}
+
+	private void OnDisable()
+	{
+		GorillaIKMgr.Instance.DeregisterIK(this);
+	}
+
+	private void ArmIK(ref Transform upperArm, ref Transform lowerArm, ref Transform hand, Quaternion initRotUpper, Quaternion initRotLower, Transform target)
+	{
+		upperArm.localRotation = initRotUpper;
+		lowerArm.localRotation = initRotLower;
+		float num = Mathf.Clamp((target.position - upperArm.position).magnitude, this.eps, this.dMax);
+		float num2 = Mathf.Acos(Mathf.Clamp(Vector3.Dot((hand.position - upperArm.position).normalized, (lowerArm.position - upperArm.position).normalized), -1f, 1f));
+		float num3 = Mathf.Acos(Mathf.Clamp(Vector3.Dot((upperArm.position - lowerArm.position).normalized, (hand.position - lowerArm.position).normalized), -1f, 1f));
+		float num4 = Mathf.Acos(Mathf.Clamp(Vector3.Dot((hand.position - upperArm.position).normalized, (target.position - upperArm.position).normalized), -1f, 1f));
+		float num5 = Mathf.Acos(Mathf.Clamp((this.dL * this.dL - this.dU * this.dU - num * num) / (-2f * this.dU * num), -1f, 1f));
+		float num6 = Mathf.Acos(Mathf.Clamp((num * num - this.dU * this.dU - this.dL * this.dL) / (-2f * this.dU * this.dL), -1f, 1f));
+		Vector3 normalized = Vector3.Cross(hand.position - upperArm.position, lowerArm.position - upperArm.position).normalized;
+		Vector3 normalized2 = Vector3.Cross(hand.position - upperArm.position, target.position - upperArm.position).normalized;
+		Quaternion quaternion = Quaternion.AngleAxis((num5 - num2) * 57.29578f, Quaternion.Inverse(upperArm.rotation) * normalized);
+		Quaternion quaternion2 = Quaternion.AngleAxis((num6 - num3) * 57.29578f, Quaternion.Inverse(lowerArm.rotation) * normalized);
+		Quaternion quaternion3 = Quaternion.AngleAxis(num4 * 57.29578f, Quaternion.Inverse(upperArm.rotation) * normalized2);
+		this.newRotationUpper = upperArm.localRotation * quaternion3 * quaternion;
+		this.newRotationLower = lowerArm.localRotation * quaternion2;
+		upperArm.localRotation = this.newRotationUpper;
+		lowerArm.localRotation = this.newRotationLower;
+		hand.rotation = target.rotation;
+	}
+
 	public Transform headBone;
 
 	public Transform leftUpperArm;
@@ -53,50 +100,4 @@ public class GorillaIK : MonoBehaviour
 	public float upperArmAngle;
 
 	public float elbowAngle;
-
-	private void Awake()
-	{
-		if (Application.isPlaying && !testInEditor)
-		{
-			dU = (leftUpperArm.position - leftLowerArm.position).magnitude;
-			dL = (leftLowerArm.position - leftHand.position).magnitude;
-			dMax = dU + dL - eps;
-			initialUpperLeft = leftUpperArm.localRotation;
-			initialLowerLeft = leftLowerArm.localRotation;
-			initialUpperRight = rightUpperArm.localRotation;
-			initialLowerRight = rightLowerArm.localRotation;
-		}
-	}
-
-	private void OnEnable()
-	{
-		GorillaIKMgr.Instance.RegisterIK(this);
-	}
-
-	private void OnDisable()
-	{
-		GorillaIKMgr.Instance.DeregisterIK(this);
-	}
-
-	private void ArmIK(ref Transform upperArm, ref Transform lowerArm, ref Transform hand, Quaternion initRotUpper, Quaternion initRotLower, Transform target)
-	{
-		upperArm.localRotation = initRotUpper;
-		lowerArm.localRotation = initRotLower;
-		float num = Mathf.Clamp((target.position - upperArm.position).magnitude, eps, dMax);
-		float num2 = Mathf.Acos(Mathf.Clamp(Vector3.Dot((hand.position - upperArm.position).normalized, (lowerArm.position - upperArm.position).normalized), -1f, 1f));
-		float num3 = Mathf.Acos(Mathf.Clamp(Vector3.Dot((upperArm.position - lowerArm.position).normalized, (hand.position - lowerArm.position).normalized), -1f, 1f));
-		float num4 = Mathf.Acos(Mathf.Clamp(Vector3.Dot((hand.position - upperArm.position).normalized, (target.position - upperArm.position).normalized), -1f, 1f));
-		float num5 = Mathf.Acos(Mathf.Clamp((dL * dL - dU * dU - num * num) / (-2f * dU * num), -1f, 1f));
-		float num6 = Mathf.Acos(Mathf.Clamp((num * num - dU * dU - dL * dL) / (-2f * dU * dL), -1f, 1f));
-		Vector3 normalized = Vector3.Cross(hand.position - upperArm.position, lowerArm.position - upperArm.position).normalized;
-		Vector3 normalized2 = Vector3.Cross(hand.position - upperArm.position, target.position - upperArm.position).normalized;
-		Quaternion quaternion = Quaternion.AngleAxis((num5 - num2) * 57.29578f, Quaternion.Inverse(upperArm.rotation) * normalized);
-		Quaternion quaternion2 = Quaternion.AngleAxis((num6 - num3) * 57.29578f, Quaternion.Inverse(lowerArm.rotation) * normalized);
-		Quaternion quaternion3 = Quaternion.AngleAxis(num4 * 57.29578f, Quaternion.Inverse(upperArm.rotation) * normalized2);
-		newRotationUpper = upperArm.localRotation * quaternion3 * quaternion;
-		newRotationLower = lowerArm.localRotation * quaternion2;
-		upperArm.localRotation = newRotationUpper;
-		lowerArm.localRotation = newRotationLower;
-		hand.rotation = target.rotation;
-	}
 }

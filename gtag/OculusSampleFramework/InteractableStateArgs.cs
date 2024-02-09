@@ -1,25 +1,26 @@
-using System;
+﻿using System;
 
-namespace OculusSampleFramework;
-
-public class InteractableStateArgs : EventArgs
+namespace OculusSampleFramework
 {
-	public readonly Interactable Interactable;
-
-	public readonly InteractableTool Tool;
-
-	public readonly InteractableState OldInteractableState;
-
-	public readonly InteractableState NewInteractableState;
-
-	public readonly ColliderZoneArgs ColliderArgs;
-
-	public InteractableStateArgs(Interactable interactable, InteractableTool tool, InteractableState newInteractableState, InteractableState oldState, ColliderZoneArgs colliderArgs)
+	public class InteractableStateArgs : EventArgs
 	{
-		Interactable = interactable;
-		Tool = tool;
-		NewInteractableState = newInteractableState;
-		OldInteractableState = oldState;
-		ColliderArgs = colliderArgs;
+		public InteractableStateArgs(Interactable interactable, InteractableTool tool, InteractableState newInteractableState, InteractableState oldState, ColliderZoneArgs colliderArgs)
+		{
+			this.Interactable = interactable;
+			this.Tool = tool;
+			this.NewInteractableState = newInteractableState;
+			this.OldInteractableState = oldState;
+			this.ColliderArgs = colliderArgs;
+		}
+
+		public readonly Interactable Interactable;
+
+		public readonly InteractableTool Tool;
+
+		public readonly InteractableState OldInteractableState;
+
+		public readonly InteractableState NewInteractableState;
+
+		public readonly ColliderZoneArgs ColliderArgs;
 	}
 }

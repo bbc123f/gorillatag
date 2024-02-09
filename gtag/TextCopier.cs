@@ -1,22 +1,23 @@
+﻿using System;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class TextCopier : MonoBehaviour
 {
-	public Text textToCopy;
-
-	private Text myText;
-
 	private void Start()
 	{
-		myText = GetComponent<Text>();
+		this.myText = base.GetComponent<Text>();
 	}
 
 	private void Update()
 	{
-		if (myText.text != textToCopy.text)
+		if (this.myText.text != this.textToCopy.text)
 		{
-			myText.text = textToCopy.text;
+			this.myText.text = this.textToCopy.text;
 		}
 	}
+
+	public Text textToCopy;
+
+	private Text myText;
 }

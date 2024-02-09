@@ -1,13 +1,8 @@
+﻿using System;
 using UnityEngine;
 
 public class Monkeye_LazerFX : MonoBehaviour
 {
-	private Transform[] eyeBones;
-
-	private VRRig rig;
-
-	public LineRenderer[] lines;
-
 	private void Awake()
 	{
 		base.enabled = false;
@@ -15,16 +10,17 @@ public class Monkeye_LazerFX : MonoBehaviour
 
 	public void EnableLazer(Transform[] eyes_, VRRig rig_)
 	{
-		if (!(rig_ == rig))
+		if (rig_ == this.rig)
 		{
-			eyeBones = eyes_;
-			rig = rig_;
-			base.enabled = true;
-			LineRenderer[] array = lines;
-			for (int i = 0; i < array.Length; i++)
-			{
-				array[i].positionCount = 2;
-			}
+			return;
+		}
+		this.eyeBones = eyes_;
+		this.rig = rig_;
+		base.enabled = true;
+		LineRenderer[] array = this.lines;
+		for (int i = 0; i < array.Length; i++)
+		{
+			array[i].positionCount = 2;
 		}
 	}
 
@@ -33,7 +29,7 @@ public class Monkeye_LazerFX : MonoBehaviour
 		if (base.enabled)
 		{
 			base.enabled = false;
-			LineRenderer[] array = lines;
+			LineRenderer[] array = this.lines;
 			for (int i = 0; i < array.Length; i++)
 			{
 				array[i].positionCount = 0;
@@ -43,10 +39,16 @@ public class Monkeye_LazerFX : MonoBehaviour
 
 	private void Update()
 	{
-		for (int i = 0; i < lines.Length; i++)
+		for (int i = 0; i < this.lines.Length; i++)
 		{
-			lines[i].SetPosition(0, eyeBones[i].transform.position);
-			lines[i].SetPosition(1, rig.transform.position);
+			this.lines[i].SetPosition(0, this.eyeBones[i].transform.position);
+			this.lines[i].SetPosition(1, this.rig.transform.position);
 		}
 	}
+
+	private Transform[] eyeBones;
+
+	private VRRig rig;
+
+	public LineRenderer[] lines;
 }

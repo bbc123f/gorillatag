@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
@@ -12,536 +12,542 @@ using UnityEngine.Networking;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
-namespace GorillaNetworking;
-
-public class PlayFabAuthenticator : MonoBehaviour
+namespace GorillaNetworking
 {
-	[Serializable]
-	public class CachePlayFabIdRequest
+	public class PlayFabAuthenticator : MonoBehaviour
 	{
-		public string Platform;
-
-		public string SessionTicket;
-
-		public string PlayFabId;
-	}
-
-	[Serializable]
-	public class PlayfabAuthRequestData
-	{
-		public string CustomId;
-
-		public string AppId;
-
-		public string AppVersion;
-
-		public string Nonce;
-
-		public string OculusId;
-
-		public string Platform;
-	}
-
-	[Serializable]
-	public class PlayfabAuthResponseData
-	{
-		public string SessionTicket;
-
-		public string EntityToken;
-
-		public string PlayFabId;
-
-		public string EntityId;
-
-		public string EntityType;
-	}
-
-	public class BanInfo
-	{
-		public string BanMessage;
-
-		public string BanExpirationTime;
-	}
-
-	public static volatile PlayFabAuthenticator instance;
-
-	public const string Playfab_TitleId_Prod = "63FDD";
-
-	public const string Playfab_TitleId_Dev = "195C0";
-
-	public const string Playfab_Auth_API = "https://auth-prod.gtag-cf.com";
-
-	public string _playFabPlayerIdCache;
-
-	private string _sessionTicket;
-
-	private string _playFabId;
-
-	private string _displayName;
-
-	private string _nonce;
-
-	private string _orgScopedId;
-
-	public string userID;
-
-	private string userToken;
-
-	private string platform;
-
-	private byte[] m_Ticket;
-
-	private uint m_pcbTicket;
-
-	public Text debugText;
-
-	public bool screenDebugMode;
-
-	public bool loginFailed;
-
-	[FormerlySerializedAs("loginDisplayID")]
-	public string oculusID = "";
-
-	public GameObject emptyObject;
-
-	private int playFabAuthRetryCount;
-
-	private int playFabMaxRetries = 5;
-
-	private int playFabCacheRetryCount;
-
-	private int playFabCacheMaxRetries = 5;
-
-	private HAuthTicket m_HAuthTicket;
-
-	private byte[] ticketBlob = new byte[1024];
-
-	private uint ticketSize;
-
-	protected Callback<GetAuthSessionTicketResponse_t> m_GetAuthSessionTicketResponse;
-
-	public GorillaComputer gorillaComputer => GorillaComputer.instance;
-
-	public void Awake()
-	{
-		if (instance == null)
+		public GorillaComputer gorillaComputer
 		{
-			instance = this;
-		}
-		else if (instance != this)
-		{
-			UnityEngine.Object.Destroy(base.gameObject);
-		}
-		PlayFabSettings.CompressApiData = false;
-		_ = new byte[1];
-		if (screenDebugMode)
-		{
-			debugText.text = "";
-		}
-		Debug.Log("doing steam thing");
-		m_GetAuthSessionTicketResponse = Callback<GetAuthSessionTicketResponse_t>.Create(OnGetAuthSessionTicketResponse);
-		platform = "Steam";
-		Debug.Log("Environment is *************** PRODUCTION *******************");
-		PlayFabSettings.TitleId = "63FDD";
-		AuthenticateWithPlayFab();
-		PlayFabSettings.DisableFocusTimeCollection = true;
-	}
-
-	public void AuthenticateWithPlayFab()
-	{
-		if (!loginFailed)
-		{
-			Debug.Log("authenticating with playFab!");
-			if (SteamManager.Initialized)
+			get
 			{
-				Debug.Log("trying to auth with steam");
-				m_HAuthTicket = SteamUser.GetAuthSessionTicket(ticketBlob, ticketBlob.Length, out ticketSize);
+				return GorillaComputer.instance;
 			}
-			else if (gorillaComputer != null)
+		}
+
+		public void Awake()
+		{
+			if (PlayFabAuthenticator.instance == null)
 			{
-				gorillaComputer.GeneralFailureMessage("UNABLE TO AUTHENTICATE YOUR STEAM ACCOUNT! PLEASE MAKE SURE STEAM IS RUNNING AND YOU ARE LAUNCHING THE GAME DIRECTLY FROM STEAM.");
-				gorillaComputer.screenText.Text = "UNABLE TO AUTHENTICATE YOUR STEAM ACCOUNT! PLEASE MAKE SURE STEAM IS RUNNING AND YOU ARE LAUNCHING THE GAME DIRECTLY FROM STEAM.";
+				PlayFabAuthenticator.instance = this;
+			}
+			else if (PlayFabAuthenticator.instance != this)
+			{
+				Object.Destroy(base.gameObject);
+			}
+			PlayFabSettings.CompressApiData = false;
+			new byte[1];
+			if (this.screenDebugMode)
+			{
+				this.debugText.text = "";
+			}
+			Debug.Log("doing steam thing");
+			this.m_GetAuthSessionTicketResponse = Callback<GetAuthSessionTicketResponse_t>.Create(new Callback<GetAuthSessionTicketResponse_t>.DispatchDelegate(this.OnGetAuthSessionTicketResponse));
+			this.platform = "Steam";
+			Debug.Log("Environment is *************** PRODUCTION *******************");
+			PlayFabSettings.TitleId = "63FDD";
+			this.AuthenticateWithPlayFab();
+			PlayFabSettings.DisableFocusTimeCollection = true;
+		}
+
+		public void AuthenticateWithPlayFab()
+		{
+			if (!this.loginFailed)
+			{
+				Debug.Log("authenticating with playFab!");
+				if (SteamManager.Initialized)
+				{
+					Debug.Log("trying to auth with steam");
+					this.m_HAuthTicket = SteamUser.GetAuthSessionTicket(this.ticketBlob, this.ticketBlob.Length, out this.ticketSize);
+					return;
+				}
+				base.StartCoroutine(this.DisplayGeneralFailureMessageOnGorillaComputerAfter1Frame());
+			}
+		}
+
+		private IEnumerator DisplayGeneralFailureMessageOnGorillaComputerAfter1Frame()
+		{
+			yield return null;
+			if (this.gorillaComputer != null)
+			{
+				this.gorillaComputer.GeneralFailureMessage("UNABLE TO AUTHENTICATE YOUR STEAM ACCOUNT! PLEASE MAKE SURE STEAM IS RUNNING AND YOU ARE LAUNCHING THE GAME DIRECTLY FROM STEAM.");
+				this.gorillaComputer.screenText.Text = "UNABLE TO AUTHENTICATE YOUR STEAM ACCOUNT! PLEASE MAKE SURE STEAM IS RUNNING AND YOU ARE LAUNCHING THE GAME DIRECTLY FROM STEAM.";
 				Debug.Log("Couldn't authenticate steam account");
 			}
 			else
 			{
 				Debug.LogError("PlayFabAuthenticator: gorillaComputer is null, so could not set GeneralFailureMessage notifying user that the steam account could not be authenticated.", this);
 			}
+			yield break;
 		}
-	}
 
-	private void OnGetAuthSessionTicketResponse(GetAuthSessionTicketResponse_t pCallback)
-	{
-		Debug.Log("Got steam auth session ticket!");
-		oculusID = SteamUser.GetSteamID().ToString();
-		PlayFabClientAPI.LoginWithSteam(new LoginWithSteamRequest
+		private void OnGetAuthSessionTicketResponse(GetAuthSessionTicketResponse_t pCallback)
 		{
-			CreateAccount = true,
-			SteamTicket = GetSteamAuthTicket()
-		}, OnLoginWithSteamResponse, OnPlayFabError);
-	}
-
-	private void OnLoginWithSteamResponse(LoginResult obj)
-	{
-		_playFabId = obj.PlayFabId;
-		_sessionTicket = obj.SessionTicket;
-		StartCoroutine(CachePlayFabId(new CachePlayFabIdRequest
-		{
-			Platform = platform,
-			SessionTicket = _sessionTicket,
-			PlayFabId = _playFabId
-		}, OnCachePlayFabIdRequest));
-	}
-
-	private void OnCachePlayFabIdRequest(bool success)
-	{
-		if (success)
-		{
-			Debug.Log("Successfully cached PlayFab Id.  Continuing!");
-			AdvanceLogin();
+			Debug.Log("Got steam auth session ticket!");
+			this.oculusID = SteamUser.GetSteamID().ToString();
+			PlayFabClientAPI.LoginWithSteam(new LoginWithSteamRequest
+			{
+				CreateAccount = new bool?(true),
+				SteamTicket = this.GetSteamAuthTicket()
+			}, new Action<LoginResult>(this.OnLoginWithSteamResponse), new Action<PlayFabError>(this.OnPlayFabError), null, null);
 		}
-		else
+
+		private void OnLoginWithSteamResponse(LoginResult obj)
 		{
+			this._playFabId = obj.PlayFabId;
+			this._sessionTicket = obj.SessionTicket;
+			base.StartCoroutine(this.CachePlayFabId(new PlayFabAuthenticator.CachePlayFabIdRequest
+			{
+				Platform = this.platform,
+				SessionTicket = this._sessionTicket,
+				PlayFabId = this._playFabId
+			}, new Action<bool>(this.OnCachePlayFabIdRequest)));
+		}
+
+		private void OnCachePlayFabIdRequest(bool success)
+		{
+			if (success)
+			{
+				Debug.Log("Successfully cached PlayFab Id.  Continuing!");
+				this.AdvanceLogin();
+				return;
+			}
 			Debug.LogError("Could not cache PlayFab Id.  Cannot continue.");
 		}
-	}
 
-	private void MaybeGetNonce(LoginResult obj)
-	{
-		_playFabId = obj.PlayFabId;
-		_sessionTicket = obj.SessionTicket;
-		AdvanceLogin();
-	}
-
-	private void AdvanceLogin()
-	{
-		RequestPhotonToken(_playFabId, _sessionTicket);
-	}
-
-	private void RequestPhotonToken(string playFabId, string sessionTicket)
-	{
-		LogMessage("Received Title Data. Requesting photon token for app ID: " + PhotonNetwork.PhotonServerSettings.AppSettings.AppIdRealtime + " and title ID: " + PlayFabSettings.TitleId);
-		_playFabPlayerIdCache = playFabId;
-		_sessionTicket = sessionTicket;
-		LogMessage("Using photon app id: " + PhotonNetwork.PhotonServerSettings.AppSettings.AppIdRealtime + " and PlayFab ID: " + PlayFabSettings.TitleId);
-		PlayFabClientAPI.GetPhotonAuthenticationToken(new GetPhotonAuthenticationTokenRequest
+		private void MaybeGetNonce(LoginResult obj)
 		{
-			PhotonApplicationId = PhotonNetwork.PhotonServerSettings.AppSettings.AppIdRealtime
-		}, AuthenticateWithPhoton, OnPlayFabError);
-	}
-
-	private void AuthenticateWithPhoton(GetPhotonAuthenticationTokenResult photonTokenResult)
-	{
-		AuthenticationValues obj = new AuthenticationValues(PlayFabSettings.DeviceUniqueIdentifier)
-		{
-			AuthType = CustomAuthenticationType.Custom
-		};
-		_ = _playFabPlayerIdCache;
-		string photonCustomAuthenticationToken = photonTokenResult.PhotonCustomAuthenticationToken;
-		obj.AddAuthParameter("username", _playFabPlayerIdCache);
-		obj.AddAuthParameter("token", photonTokenResult.PhotonCustomAuthenticationToken);
-		Dictionary<string, object> authPostData = new Dictionary<string, object>
-		{
-			{
-				"AppId",
-				PlayFabSettings.TitleId
-			},
-			{
-				"AppVersion",
-				PhotonNetwork.AppVersion ?? "-1"
-			},
-			{ "Ticket", _sessionTicket },
-			{ "Token", photonCustomAuthenticationToken },
-			{ "Nonce", _nonce }
-		};
-		obj.SetAuthPostData(authPostData);
-		Debug.Log("Set Photon auth data. Appversion is: " + PhotonNetwork.AppVersion);
-		PhotonNetwork.AuthValues = obj;
-		GetPlayerDisplayName(_playFabPlayerIdCache);
-		PlayFabClientAPI.ExecuteCloudScript(new ExecuteCloudScriptRequest
-		{
-			FunctionName = "AddOrRemoveDLCOwnership",
-			FunctionParameter = new { }
-		}, delegate
-		{
-			Debug.Log("got results! updating!");
-			if (GorillaTagger.Instance != null)
-			{
-				GorillaTagger.Instance.offlineVRRig.GetUserCosmeticsAllowed();
-			}
-		}, delegate(PlayFabError error)
-		{
-			Debug.Log("Got error retrieving user data:");
-			Debug.Log(error.GenerateErrorReport());
-			if (GorillaTagger.Instance != null)
-			{
-				GorillaTagger.Instance.offlineVRRig.GetUserCosmeticsAllowed();
-			}
-		});
-		if (CosmeticsController.instance != null)
-		{
-			Debug.Log("initializing cosmetics");
-			CosmeticsController.instance.Initialize();
+			this._playFabId = obj.PlayFabId;
+			this._sessionTicket = obj.SessionTicket;
+			this.AdvanceLogin();
 		}
-		if (gorillaComputer != null)
-		{
-			gorillaComputer.OnConnectedToMasterStuff();
-		}
-		if (PhotonNetworkController.Instance != null)
-		{
-			PhotonNetworkController.Instance.InitiateConnection();
-		}
-	}
 
-	private void OnPlayFabError(PlayFabError obj)
-	{
-		LogMessage(obj.ErrorMessage);
-		Debug.Log("OnPlayFabError(): " + obj.ErrorMessage);
-		loginFailed = true;
-		if (obj.ErrorMessage == "The account making this request is currently banned")
+		private void AdvanceLogin()
 		{
-			using (Dictionary<string, List<string>>.Enumerator enumerator = obj.ErrorDetails.GetEnumerator())
+			this.RequestPhotonToken(this._playFabId, this._sessionTicket);
+		}
+
+		private void RequestPhotonToken(string playFabId, string sessionTicket)
+		{
+			this.LogMessage("Received Title Data. Requesting photon token for app ID: " + PhotonNetwork.PhotonServerSettings.AppSettings.AppIdRealtime + " and title ID: " + PlayFabSettings.TitleId);
+			this._playFabPlayerIdCache = playFabId;
+			this._sessionTicket = sessionTicket;
+			this.LogMessage("Using photon app id: " + PhotonNetwork.PhotonServerSettings.AppSettings.AppIdRealtime + " and PlayFab ID: " + PlayFabSettings.TitleId);
+			PlayFabClientAPI.GetPhotonAuthenticationToken(new GetPhotonAuthenticationTokenRequest
 			{
-				if (enumerator.MoveNext())
+				PhotonApplicationId = PhotonNetwork.PhotonServerSettings.AppSettings.AppIdRealtime
+			}, new Action<GetPhotonAuthenticationTokenResult>(this.AuthenticateWithPhoton), new Action<PlayFabError>(this.OnPlayFabError), null, null);
+		}
+
+		private void AuthenticateWithPhoton(GetPhotonAuthenticationTokenResult photonTokenResult)
+		{
+			AuthenticationValues authenticationValues = new AuthenticationValues(PlayFabSettings.DeviceUniqueIdentifier);
+			authenticationValues.AuthType = CustomAuthenticationType.Custom;
+			string playFabPlayerIdCache = this._playFabPlayerIdCache;
+			string photonCustomAuthenticationToken = photonTokenResult.PhotonCustomAuthenticationToken;
+			authenticationValues.AddAuthParameter("username", this._playFabPlayerIdCache);
+			authenticationValues.AddAuthParameter("token", photonTokenResult.PhotonCustomAuthenticationToken);
+			Dictionary<string, object> dictionary = new Dictionary<string, object>
+			{
 				{
-					KeyValuePair<string, List<string>> current = enumerator.Current;
-					if (current.Value[0] != "Indefinite")
-					{
-						gorillaComputer.GeneralFailureMessage("YOUR ACCOUNT HAS BEEN BANNED. YOU WILL NOT BE ABLE TO PLAY UNTIL THE BAN EXPIRES.\nREASON: " + current.Key + "\nHOURS LEFT: " + (int)((DateTime.Parse(current.Value[0]) - DateTime.UtcNow).TotalHours + 1.0));
-					}
-					else
-					{
-						gorillaComputer.GeneralFailureMessage("YOUR ACCOUNT HAS BEEN BANNED INDEFINITELY.\nREASON: " + current.Key);
-					}
-				}
-				return;
-			}
-		}
-		if (obj.ErrorMessage == "The IP making this request is currently banned")
-		{
-			using (Dictionary<string, List<string>>.Enumerator enumerator = obj.ErrorDetails.GetEnumerator())
-			{
-				if (enumerator.MoveNext())
+					"AppId",
+					PlayFabSettings.TitleId
+				},
 				{
-					KeyValuePair<string, List<string>> current2 = enumerator.Current;
-					if (current2.Value[0] != "Indefinite")
-					{
-						gorillaComputer.GeneralFailureMessage("THIS IP HAS BEEN BANNED. YOU WILL NOT BE ABLE TO PLAY UNTIL THE BAN EXPIRES.\nREASON: " + current2.Key + "\nHOURS LEFT: " + (int)((DateTime.Parse(current2.Value[0]) - DateTime.UtcNow).TotalHours + 1.0));
-					}
-					else
-					{
-						gorillaComputer.GeneralFailureMessage("THIS IP HAS BEEN BANNED INDEFINITELY.\nREASON: " + current2.Key);
-					}
+					"AppVersion",
+					PhotonNetwork.AppVersion ?? "-1"
+				},
+				{ "Ticket", this._sessionTicket },
+				{ "Token", photonCustomAuthenticationToken },
+				{ "Nonce", this._nonce }
+			};
+			authenticationValues.SetAuthPostData(dictionary);
+			Debug.Log("Set Photon auth data. Appversion is: " + PhotonNetwork.AppVersion);
+			PhotonNetwork.AuthValues = authenticationValues;
+			this.GetPlayerDisplayName(this._playFabPlayerIdCache);
+			ExecuteCloudScriptRequest executeCloudScriptRequest = new ExecuteCloudScriptRequest();
+			executeCloudScriptRequest.FunctionName = "AddOrRemoveDLCOwnership";
+			executeCloudScriptRequest.FunctionParameter = new { };
+			PlayFabClientAPI.ExecuteCloudScript(executeCloudScriptRequest, delegate(ExecuteCloudScriptResult result)
+			{
+				Debug.Log("got results! updating!");
+				if (GorillaTagger.Instance != null)
+				{
+					GorillaTagger.Instance.offlineVRRig.GetUserCosmeticsAllowed();
 				}
-				return;
+			}, delegate(PlayFabError error)
+			{
+				Debug.Log("Got error retrieving user data:");
+				Debug.Log(error.GenerateErrorReport());
+				if (GorillaTagger.Instance != null)
+				{
+					GorillaTagger.Instance.offlineVRRig.GetUserCosmeticsAllowed();
+				}
+			}, null, null);
+			if (CosmeticsController.instance != null)
+			{
+				Debug.Log("initializing cosmetics");
+				CosmeticsController.instance.Initialize();
+			}
+			if (this.gorillaComputer != null)
+			{
+				this.gorillaComputer.OnConnectedToMasterStuff();
+			}
+			if (PhotonNetworkController.Instance != null)
+			{
+				PhotonNetworkController.Instance.InitiateConnection();
 			}
 		}
-		if (gorillaComputer != null)
-		{
-			gorillaComputer.GeneralFailureMessage(gorillaComputer.unableToConnect);
-		}
-	}
 
-	private static void AddGenericId(string serviceName, string userId)
-	{
-		PlayFabClientAPI.AddGenericID(new AddGenericIDRequest
+		private void OnPlayFabError(PlayFabError obj)
 		{
-			GenericId = new GenericServiceId
+			this.LogMessage(obj.ErrorMessage);
+			Debug.Log("OnPlayFabError(): " + obj.ErrorMessage);
+			this.loginFailed = true;
+			if (obj.ErrorMessage == "The account making this request is currently banned")
+			{
+				using (Dictionary<string, List<string>>.Enumerator enumerator = obj.ErrorDetails.GetEnumerator())
+				{
+					if (!enumerator.MoveNext())
+					{
+						return;
+					}
+					KeyValuePair<string, List<string>> keyValuePair = enumerator.Current;
+					if (keyValuePair.Value[0] != "Indefinite")
+					{
+						this.gorillaComputer.GeneralFailureMessage("YOUR ACCOUNT HAS BEEN BANNED. YOU WILL NOT BE ABLE TO PLAY UNTIL THE BAN EXPIRES.\nREASON: " + keyValuePair.Key + "\nHOURS LEFT: " + ((int)((DateTime.Parse(keyValuePair.Value[0]) - DateTime.UtcNow).TotalHours + 1.0)).ToString());
+						return;
+					}
+					this.gorillaComputer.GeneralFailureMessage("YOUR ACCOUNT HAS BEEN BANNED INDEFINITELY.\nREASON: " + keyValuePair.Key);
+					return;
+				}
+			}
+			if (obj.ErrorMessage == "The IP making this request is currently banned")
+			{
+				using (Dictionary<string, List<string>>.Enumerator enumerator = obj.ErrorDetails.GetEnumerator())
+				{
+					if (!enumerator.MoveNext())
+					{
+						return;
+					}
+					KeyValuePair<string, List<string>> keyValuePair2 = enumerator.Current;
+					if (keyValuePair2.Value[0] != "Indefinite")
+					{
+						this.gorillaComputer.GeneralFailureMessage("THIS IP HAS BEEN BANNED. YOU WILL NOT BE ABLE TO PLAY UNTIL THE BAN EXPIRES.\nREASON: " + keyValuePair2.Key + "\nHOURS LEFT: " + ((int)((DateTime.Parse(keyValuePair2.Value[0]) - DateTime.UtcNow).TotalHours + 1.0)).ToString());
+						return;
+					}
+					this.gorillaComputer.GeneralFailureMessage("THIS IP HAS BEEN BANNED INDEFINITELY.\nREASON: " + keyValuePair2.Key);
+					return;
+				}
+			}
+			if (this.gorillaComputer != null)
+			{
+				this.gorillaComputer.GeneralFailureMessage(this.gorillaComputer.unableToConnect);
+			}
+		}
+
+		private static void AddGenericId(string serviceName, string userId)
+		{
+			AddGenericIDRequest addGenericIDRequest = new AddGenericIDRequest();
+			addGenericIDRequest.GenericId = new GenericServiceId
 			{
 				ServiceName = serviceName,
 				UserId = userId
-			}
-		}, delegate
-		{
-		}, delegate
-		{
-			Debug.LogError("Error setting generic id");
-		});
-	}
+			};
+			PlayFabClientAPI.AddGenericID(addGenericIDRequest, delegate(AddGenericIDResult _)
+			{
+			}, delegate(PlayFabError _)
+			{
+				Debug.LogError("Error setting generic id");
+			}, null, null);
+		}
 
-	public void LogMessage(string message)
-	{
-	}
-
-	private void GetPlayerDisplayName(string playFabId)
-	{
-		PlayFabClientAPI.GetPlayerProfile(new GetPlayerProfileRequest
+		public void LogMessage(string message)
 		{
-			PlayFabId = playFabId,
-			ProfileConstraints = new PlayerProfileViewConstraints
+		}
+
+		private void GetPlayerDisplayName(string playFabId)
+		{
+			GetPlayerProfileRequest getPlayerProfileRequest = new GetPlayerProfileRequest();
+			getPlayerProfileRequest.PlayFabId = playFabId;
+			getPlayerProfileRequest.ProfileConstraints = new PlayerProfileViewConstraints
 			{
 				ShowDisplayName = true
-			}
-		}, delegate(GetPlayerProfileResult result)
-		{
-			_displayName = result.PlayerProfile.DisplayName;
-		}, delegate(PlayFabError error)
-		{
-			Debug.LogError(error.GenerateErrorReport());
-		});
-	}
-
-	public void SetDisplayName(string playerName)
-	{
-		if (_displayName == null || (_displayName.Length > 4 && _displayName.Substring(0, _displayName.Length - 4) != playerName))
-		{
-			PlayFabClientAPI.UpdateUserTitleDisplayName(new UpdateUserTitleDisplayNameRequest
+			};
+			PlayFabClientAPI.GetPlayerProfile(getPlayerProfileRequest, delegate(GetPlayerProfileResult result)
 			{
-				DisplayName = playerName
-			}, delegate
-			{
-				_displayName = playerName;
+				this._displayName = result.PlayerProfile.DisplayName;
 			}, delegate(PlayFabError error)
 			{
 				Debug.LogError(error.GenerateErrorReport());
-			});
+			}, null, null);
 		}
-	}
 
-	public void ScreenDebug(string debugString)
-	{
-		Debug.Log(debugString);
-		if (screenDebugMode)
+		public void SetDisplayName(string playerName)
 		{
-			Text text = debugText;
-			text.text = text.text + debugString + "\n";
-		}
-	}
-
-	public void ScreenDebugClear()
-	{
-		debugText.text = "";
-	}
-
-	public string GetSteamAuthTicket()
-	{
-		Array.Resize(ref ticketBlob, (int)ticketSize);
-		StringBuilder stringBuilder = new StringBuilder();
-		byte[] array = ticketBlob;
-		foreach (byte b in array)
-		{
-			stringBuilder.AppendFormat("{0:x2}", b);
-		}
-		return stringBuilder.ToString();
-	}
-
-	public IEnumerator PlayfabAuthenticate(PlayfabAuthRequestData data, Action<PlayfabAuthResponseData> callback)
-	{
-		UnityWebRequest request = new UnityWebRequest("https://auth-prod.gtag-cf.com/api/PlayFabAuthentication", "POST");
-		byte[] bytes = Encoding.UTF8.GetBytes(JsonUtility.ToJson(data));
-		bool retry = false;
-		request.uploadHandler = new UploadHandlerRaw(bytes);
-		request.downloadHandler = new DownloadHandlerBuffer();
-		request.SetRequestHeader("Content-Type", "application/json");
-		yield return request.SendWebRequest();
-		if (!request.isNetworkError && !request.isHttpError)
-		{
-			PlayfabAuthResponseData obj = JsonUtility.FromJson<PlayfabAuthResponseData>(request.downloadHandler.text);
-			callback(obj);
-		}
-		else
-		{
-			if (request.responseCode == 403)
+			if (this._displayName == null || (this._displayName.Length > 4 && this._displayName.Substring(0, this._displayName.Length - 4) != playerName))
 			{
-				Debug.LogError($"HTTP {request.responseCode}: {request.error}, with body: {request.downloadHandler.text}");
-				BanInfo banInfo = JsonUtility.FromJson<BanInfo>(request.downloadHandler.text);
-				ShowBanMessage(banInfo);
-				callback(null);
+				UpdateUserTitleDisplayNameRequest updateUserTitleDisplayNameRequest = new UpdateUserTitleDisplayNameRequest();
+				updateUserTitleDisplayNameRequest.DisplayName = playerName;
+				PlayFabClientAPI.UpdateUserTitleDisplayName(updateUserTitleDisplayNameRequest, delegate(UpdateUserTitleDisplayNameResult result)
+				{
+					this._displayName = playerName;
+				}, delegate(PlayFabError error)
+				{
+					Debug.LogError(error.GenerateErrorReport());
+				}, null, null);
 			}
-			if (request.isHttpError && request.responseCode != 400)
+		}
+
+		public void ScreenDebug(string debugString)
+		{
+			Debug.Log(debugString);
+			if (this.screenDebugMode)
+			{
+				Text text = this.debugText;
+				text.text = text.text + debugString + "\n";
+			}
+		}
+
+		public void ScreenDebugClear()
+		{
+			this.debugText.text = "";
+		}
+
+		public string GetSteamAuthTicket()
+		{
+			Array.Resize<byte>(ref this.ticketBlob, (int)this.ticketSize);
+			StringBuilder stringBuilder = new StringBuilder();
+			foreach (byte b in this.ticketBlob)
+			{
+				stringBuilder.AppendFormat("{0:x2}", b);
+			}
+			return stringBuilder.ToString();
+		}
+
+		public IEnumerator PlayfabAuthenticate(PlayFabAuthenticator.PlayfabAuthRequestData data, Action<PlayFabAuthenticator.PlayfabAuthResponseData> callback)
+		{
+			UnityWebRequest request = new UnityWebRequest("https://auth-prod.gtag-cf.com/api/PlayFabAuthentication", "POST");
+			byte[] bytes = Encoding.UTF8.GetBytes(JsonUtility.ToJson(data));
+			bool retry = false;
+			request.uploadHandler = new UploadHandlerRaw(bytes);
+			request.downloadHandler = new DownloadHandlerBuffer();
+			request.SetRequestHeader("Content-Type", "application/json");
+			yield return request.SendWebRequest();
+			if (!request.isNetworkError && !request.isHttpError)
+			{
+				PlayFabAuthenticator.PlayfabAuthResponseData playfabAuthResponseData = JsonUtility.FromJson<PlayFabAuthenticator.PlayfabAuthResponseData>(request.downloadHandler.text);
+				callback(playfabAuthResponseData);
+			}
+			else
+			{
+				if (request.responseCode == 403L)
+				{
+					Debug.LogError(string.Format("HTTP {0}: {1}, with body: {2}", request.responseCode, request.error, request.downloadHandler.text));
+					PlayFabAuthenticator.BanInfo banInfo = JsonUtility.FromJson<PlayFabAuthenticator.BanInfo>(request.downloadHandler.text);
+					this.ShowBanMessage(banInfo);
+					callback(null);
+				}
+				if (request.isHttpError && request.responseCode != 400L)
+				{
+					retry = true;
+					Debug.LogError(string.Format("HTTP {0} error: {1}", request.responseCode, request.error));
+				}
+				else if (request.isNetworkError)
+				{
+					retry = true;
+				}
+			}
+			if (retry)
+			{
+				if (this.playFabAuthRetryCount < this.playFabMaxRetries)
+				{
+					int num = (int)Mathf.Pow(2f, (float)(this.playFabAuthRetryCount + 1));
+					Debug.LogWarning(string.Format("Retrying PlayFab auth... Retry attempt #{0}, waiting for {1} seconds", this.playFabAuthRetryCount + 1, num));
+					this.playFabAuthRetryCount++;
+					yield return new WaitForSeconds((float)num);
+				}
+				else
+				{
+					Debug.LogError("Maximum retries attempted. Please check your network connection.");
+					callback(null);
+				}
+			}
+			yield break;
+		}
+
+		private void ShowBanMessage(PlayFabAuthenticator.BanInfo banInfo)
+		{
+			try
+			{
+				if (banInfo.BanExpirationTime != null && banInfo.BanMessage != null)
+				{
+					if (banInfo.BanExpirationTime != "Indefinite")
+					{
+						this.gorillaComputer.GeneralFailureMessage("YOUR ACCOUNT HAS BEEN BANNED. YOU WILL NOT BE ABLE TO PLAY UNTIL THE BAN EXPIRES.\nREASON: " + banInfo.BanMessage + "\nHOURS LEFT: " + ((int)((DateTime.Parse(banInfo.BanExpirationTime) - DateTime.UtcNow).TotalHours + 1.0)).ToString());
+					}
+					else
+					{
+						this.gorillaComputer.GeneralFailureMessage("YOUR ACCOUNT HAS BEEN BANNED INDEFINITELY.\nREASON: " + banInfo.BanMessage);
+					}
+				}
+			}
+			catch (Exception)
+			{
+			}
+		}
+
+		public IEnumerator CachePlayFabId(PlayFabAuthenticator.CachePlayFabIdRequest data, Action<bool> callback)
+		{
+			Debug.Log("Trying to cache playfab Id");
+			UnityWebRequest request = new UnityWebRequest("https://auth-prod.gtag-cf.com/api/CachePlayFabId", "POST");
+			byte[] bytes = Encoding.UTF8.GetBytes(JsonUtility.ToJson(data));
+			bool retry = false;
+			request.uploadHandler = new UploadHandlerRaw(bytes);
+			request.downloadHandler = new DownloadHandlerBuffer();
+			request.SetRequestHeader("Content-Type", "application/json");
+			yield return request.SendWebRequest();
+			if (!request.isNetworkError && !request.isHttpError)
+			{
+				if (request.responseCode == 200L)
+				{
+					callback(true);
+				}
+			}
+			else if (request.isHttpError && request.responseCode != 400L)
 			{
 				retry = true;
-				Debug.LogError($"HTTP {request.responseCode} error: {request.error}");
+				Debug.LogError(string.Format("HTTP {0} error: {1}", request.responseCode, request.error));
 			}
 			else if (request.isNetworkError)
 			{
 				retry = true;
 			}
-		}
-		if (retry)
-		{
-			if (playFabAuthRetryCount < playFabMaxRetries)
+			if (retry)
 			{
-				int num = (int)Mathf.Pow(2f, playFabAuthRetryCount + 1);
-				Debug.LogWarning($"Retrying PlayFab auth... Retry attempt #{playFabAuthRetryCount + 1}, waiting for {num} seconds");
-				playFabAuthRetryCount++;
-				yield return new WaitForSeconds(num);
-			}
-			else
-			{
-				Debug.LogError("Maximum retries attempted. Please check your network connection.");
-				callback(null);
-			}
-		}
-	}
-
-	private void ShowBanMessage(BanInfo banInfo)
-	{
-		try
-		{
-			if (banInfo.BanExpirationTime != null && banInfo.BanMessage != null)
-			{
-				if (banInfo.BanExpirationTime != "Indefinite")
+				if (this.playFabCacheRetryCount < this.playFabCacheMaxRetries)
 				{
-					gorillaComputer.GeneralFailureMessage("YOUR ACCOUNT HAS BEEN BANNED. YOU WILL NOT BE ABLE TO PLAY UNTIL THE BAN EXPIRES.\nREASON: " + banInfo.BanMessage + "\nHOURS LEFT: " + (int)((DateTime.Parse(banInfo.BanExpirationTime) - DateTime.UtcNow).TotalHours + 1.0));
+					int num = (int)Mathf.Pow(2f, (float)(this.playFabCacheRetryCount + 1));
+					Debug.LogWarning(string.Format("Retrying PlayFab auth... Retry attempt #{0}, waiting for {1} seconds", this.playFabCacheRetryCount + 1, num));
+					this.playFabCacheRetryCount++;
+					yield return new WaitForSeconds((float)num);
+					base.StartCoroutine(this.CachePlayFabId(new PlayFabAuthenticator.CachePlayFabIdRequest
+					{
+						Platform = this.platform,
+						SessionTicket = this._sessionTicket,
+						PlayFabId = this._playFabId
+					}, new Action<bool>(this.OnCachePlayFabIdRequest)));
 				}
 				else
 				{
-					gorillaComputer.GeneralFailureMessage("YOUR ACCOUNT HAS BEEN BANNED INDEFINITELY.\nREASON: " + banInfo.BanMessage);
+					Debug.LogError("Maximum retries attempted. Please check your network connection.");
+					callback(false);
 				}
 			}
+			yield break;
 		}
-		catch (Exception)
-		{
-		}
-	}
 
-	public IEnumerator CachePlayFabId(CachePlayFabIdRequest data, Action<bool> callback)
-	{
-		Debug.Log("Trying to cache playfab Id");
-		UnityWebRequest request = new UnityWebRequest("https://auth-prod.gtag-cf.com/api/CachePlayFabId", "POST");
-		byte[] bytes = Encoding.UTF8.GetBytes(JsonUtility.ToJson(data));
-		bool retry = false;
-		request.uploadHandler = new UploadHandlerRaw(bytes);
-		request.downloadHandler = new DownloadHandlerBuffer();
-		request.SetRequestHeader("Content-Type", "application/json");
-		yield return request.SendWebRequest();
-		if (!request.isNetworkError && !request.isHttpError)
+		public static volatile PlayFabAuthenticator instance;
+
+		public const string Playfab_TitleId_Prod = "63FDD";
+
+		public const string Playfab_TitleId_Dev = "195C0";
+
+		public const string Playfab_Auth_API = "https://auth-prod.gtag-cf.com";
+
+		public string _playFabPlayerIdCache;
+
+		private string _sessionTicket;
+
+		private string _playFabId;
+
+		private string _displayName;
+
+		private string _nonce;
+
+		private string _orgScopedId;
+
+		public string userID;
+
+		private string userToken;
+
+		private string platform;
+
+		private byte[] m_Ticket;
+
+		private uint m_pcbTicket;
+
+		public Text debugText;
+
+		public bool screenDebugMode;
+
+		public bool loginFailed;
+
+		[FormerlySerializedAs("loginDisplayID")]
+		public string oculusID = "";
+
+		public GameObject emptyObject;
+
+		private int playFabAuthRetryCount;
+
+		private int playFabMaxRetries = 5;
+
+		private int playFabCacheRetryCount;
+
+		private int playFabCacheMaxRetries = 5;
+
+		private HAuthTicket m_HAuthTicket;
+
+		private byte[] ticketBlob = new byte[1024];
+
+		private uint ticketSize;
+
+		protected Callback<GetAuthSessionTicketResponse_t> m_GetAuthSessionTicketResponse;
+
+		[Serializable]
+		public class CachePlayFabIdRequest
 		{
-			if (request.responseCode == 200)
-			{
-				callback(obj: true);
-			}
+			public string Platform;
+
+			public string SessionTicket;
+
+			public string PlayFabId;
 		}
-		else if (request.isHttpError && request.responseCode != 400)
+
+		[Serializable]
+		public class PlayfabAuthRequestData
 		{
-			retry = true;
-			Debug.LogError($"HTTP {request.responseCode} error: {request.error}");
+			public string CustomId;
+
+			public string AppId;
+
+			public string AppVersion;
+
+			public string Nonce;
+
+			public string OculusId;
+
+			public string Platform;
 		}
-		else if (request.isNetworkError)
+
+		[Serializable]
+		public class PlayfabAuthResponseData
 		{
-			retry = true;
+			public string SessionTicket;
+
+			public string EntityToken;
+
+			public string PlayFabId;
+
+			public string EntityId;
+
+			public string EntityType;
 		}
-		if (retry)
+
+		public class BanInfo
 		{
-			if (playFabCacheRetryCount < playFabCacheMaxRetries)
-			{
-				int num = (int)Mathf.Pow(2f, playFabCacheRetryCount + 1);
-				Debug.LogWarning($"Retrying PlayFab auth... Retry attempt #{playFabCacheRetryCount + 1}, waiting for {num} seconds");
-				playFabCacheRetryCount++;
-				yield return new WaitForSeconds(num);
-				StartCoroutine(CachePlayFabId(new CachePlayFabIdRequest
-				{
-					Platform = platform,
-					SessionTicket = _sessionTicket,
-					PlayFabId = _playFabId
-				}, OnCachePlayFabIdRequest));
-			}
-			else
-			{
-				Debug.LogError("Maximum retries attempted. Please check your network connection.");
-				callback(obj: false);
-			}
+			public string BanMessage;
+
+			public string BanExpirationTime;
 		}
 	}
 }

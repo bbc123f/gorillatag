@@ -1,27 +1,30 @@
+﻿using System;
 using BoingKit;
 using UnityEngine;
 
 public class JellyfishUFOCamera : MonoBehaviour
 {
-	public Transform Target;
-
-	private Vector3Spring m_spring;
-
 	private void Start()
 	{
-		if (!(Target == null))
+		if (this.Target == null)
 		{
-			m_spring.Reset(Target.transform.position);
+			return;
 		}
+		this.m_spring.Reset(this.Target.transform.position);
 	}
 
 	private void FixedUpdate()
 	{
-		if (!(Target == null))
+		if (this.Target == null)
 		{
-			m_spring.TrackExponential(Target.transform.position, 0.5f, Time.fixedDeltaTime);
-			Vector3 normalized = (m_spring.Value - base.transform.position).normalized;
-			base.transform.rotation = Quaternion.LookRotation(normalized);
+			return;
 		}
+		this.m_spring.TrackExponential(this.Target.transform.position, 0.5f, Time.fixedDeltaTime);
+		Vector3 normalized = (this.m_spring.Value - base.transform.position).normalized;
+		base.transform.rotation = Quaternion.LookRotation(normalized);
 	}
+
+	public Transform Target;
+
+	private Vector3Spring m_spring;
 }

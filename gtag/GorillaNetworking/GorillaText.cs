@@ -1,66 +1,67 @@
-using System;
+﻿using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace GorillaNetworking;
-
-[Serializable]
-public class GorillaText
+namespace GorillaNetworking
 {
-	[SerializeField]
-	private Text text;
-
-	private string failureText;
-
-	private string originalText;
-
-	private bool failedState;
-
-	private Material[] originalMaterials;
-
-	private Material failureMaterial;
-
-	private MeshRenderer meshRenderer;
-
-	public string Text
+	[Serializable]
+	public class GorillaText
 	{
-		get
+		public void Initialize(MeshRenderer meshRenderer_, Material failureMaterial_)
 		{
-			return originalText;
+			this.meshRenderer = meshRenderer_;
+			this.failureMaterial = failureMaterial_;
+			this.originalMaterials = this.meshRenderer.materials;
+			this.originalText = this.text.text;
 		}
-		set
+
+		public string Text
 		{
-			originalText = value;
-			if (!failedState)
+			get
 			{
-				text.text = value;
+				return this.originalText;
+			}
+			set
+			{
+				this.originalText = value;
+				if (!this.failedState)
+				{
+					this.text.text = value;
+				}
 			}
 		}
-	}
 
-	public void Initialize(MeshRenderer meshRenderer_, Material failureMaterial_)
-	{
-		meshRenderer = meshRenderer_;
-		failureMaterial = failureMaterial_;
-		originalMaterials = meshRenderer.materials;
-		originalText = text.text;
-	}
+		public void EnableFailedState(string failText)
+		{
+			this.failedState = true;
+			this.text.text = failText;
+			this.failureText = failText;
+			Material[] materials = this.meshRenderer.materials;
+			materials[0] = this.failureMaterial;
+			this.meshRenderer.materials = materials;
+		}
 
-	public void EnableFailedState(string failText)
-	{
-		failedState = true;
-		text.text = failText;
-		failureText = failText;
-		Material[] materials = meshRenderer.materials;
-		materials[0] = failureMaterial;
-		meshRenderer.materials = materials;
-	}
+		public void DisableFailedState()
+		{
+			this.failedState = true;
+			this.text.text = this.originalText;
+			this.failureText = "";
+			this.meshRenderer.materials = this.originalMaterials;
+		}
 
-	public void DisableFailedState()
-	{
-		failedState = true;
-		text.text = originalText;
-		failureText = "";
-		meshRenderer.materials = originalMaterials;
+		[SerializeField]
+		private Text text;
+
+		private string failureText;
+
+		private string originalText;
+
+		private bool failedState;
+
+		private Material[] originalMaterials;
+
+		private Material failureMaterial;
+
+		private MeshRenderer meshRenderer;
 	}
 }

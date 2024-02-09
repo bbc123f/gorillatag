@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Text;
 using Steamworks;
 using UnityEngine;
@@ -6,27 +6,25 @@ using UnityEngine;
 [DisallowMultipleComponent]
 public class SteamManager : MonoBehaviour
 {
-	protected static bool s_EverInitialized;
-
-	protected static SteamManager s_instance;
-
-	protected bool m_bInitialized;
-
-	protected SteamAPIWarningMessageHook_t m_SteamAPIWarningMessageHook;
-
 	protected static SteamManager Instance
 	{
 		get
 		{
-			if (s_instance == null)
+			if (SteamManager.s_instance == null)
 			{
 				return new GameObject("SteamManager").AddComponent<SteamManager>();
 			}
-			return s_instance;
+			return SteamManager.s_instance;
 		}
 	}
 
-	public static bool Initialized => Instance.m_bInitialized;
+	public static bool Initialized
+	{
+		get
+		{
+			return SteamManager.Instance.m_bInitialized;
+		}
+	}
 
 	protected static void SteamAPIDebugTextHook(int nSeverity, StringBuilder pchDebugText)
 	{
@@ -35,17 +33,17 @@ public class SteamManager : MonoBehaviour
 
 	protected virtual void Awake()
 	{
-		if (s_instance != null)
+		if (SteamManager.s_instance != null)
 		{
-			UnityEngine.Object.Destroy(base.gameObject);
+			Object.Destroy(base.gameObject);
 			return;
 		}
-		s_instance = this;
-		if (s_EverInitialized)
+		SteamManager.s_instance = this;
+		if (SteamManager.s_EverInitialized)
 		{
 			throw new Exception("Tried to Initialize the SteamAPI twice in one session!");
 		}
-		UnityEngine.Object.DontDestroyOnLoad(base.gameObject);
+		Object.DontDestroyOnLoad(base.gameObject);
 		if (!Packsize.Test())
 		{
 			Debug.LogError("[Steamworks.NET] Packsize Test returned false, the wrong version of Steamworks.NET is being run in this platform.", this);
@@ -64,51 +62,66 @@ public class SteamManager : MonoBehaviour
 		}
 		catch (DllNotFoundException ex)
 		{
-			Debug.LogError("[Steamworks.NET] Could not load [lib]steam_api.dll/so/dylib. It's likely not in the correct location. Refer to the README for more details.\n" + ex, this);
+			string text = "[Steamworks.NET] Could not load [lib]steam_api.dll/so/dylib. It's likely not in the correct location. Refer to the README for more details.\n";
+			DllNotFoundException ex2 = ex;
+			Debug.LogError(text + ((ex2 != null) ? ex2.ToString() : null), this);
 			Application.Quit();
 			return;
 		}
-		m_bInitialized = SteamAPI.Init();
-		if (!m_bInitialized)
+		this.m_bInitialized = SteamAPI.Init();
+		if (!this.m_bInitialized)
 		{
 			Debug.LogError("[Steamworks.NET] SteamAPI_Init() failed. Refer to Valve's documentation or the comment above this line for more information.", this);
+			return;
 		}
-		else
-		{
-			s_EverInitialized = true;
-		}
+		SteamManager.s_EverInitialized = true;
 	}
 
 	protected virtual void OnEnable()
 	{
-		if (s_instance == null)
+		if (SteamManager.s_instance == null)
 		{
-			s_instance = this;
+			SteamManager.s_instance = this;
 		}
-		if (m_bInitialized && m_SteamAPIWarningMessageHook == null)
+		if (!this.m_bInitialized)
 		{
-			m_SteamAPIWarningMessageHook = SteamAPIDebugTextHook;
-			SteamClient.SetWarningMessageHook(m_SteamAPIWarningMessageHook);
+			return;
+		}
+		if (this.m_SteamAPIWarningMessageHook == null)
+		{
+			this.m_SteamAPIWarningMessageHook = new SteamAPIWarningMessageHook_t(SteamManager.SteamAPIDebugTextHook);
+			SteamClient.SetWarningMessageHook(this.m_SteamAPIWarningMessageHook);
 		}
 	}
 
 	protected virtual void OnDestroy()
 	{
-		if (!(s_instance != this))
+		if (SteamManager.s_instance != this)
 		{
-			s_instance = null;
-			if (m_bInitialized)
-			{
-				SteamAPI.Shutdown();
-			}
+			return;
 		}
+		SteamManager.s_instance = null;
+		if (!this.m_bInitialized)
+		{
+			return;
+		}
+		SteamAPI.Shutdown();
 	}
 
 	protected virtual void Update()
 	{
-		if (m_bInitialized)
+		if (!this.m_bInitialized)
 		{
-			SteamAPI.RunCallbacks();
+			return;
 		}
+		SteamAPI.RunCallbacks();
 	}
+
+	protected static bool s_EverInitialized;
+
+	protected static SteamManager s_instance;
+
+	protected bool m_bInitialized;
+
+	protected SteamAPIWarningMessageHook_t m_SteamAPIWarningMessageHook;
 }

@@ -1,26 +1,28 @@
+﻿using System;
 using UnityEngine;
 
-namespace GorillaNetworking;
-
-public class GorillaNetworkLobbyJoinTrigger : GorillaTriggerBox
+namespace GorillaNetworking
 {
-	public GameObject[] makeSureThisIsDisabled;
+	public class GorillaNetworkLobbyJoinTrigger : GorillaTriggerBox
+	{
+		public GameObject[] makeSureThisIsDisabled;
 
-	public GameObject[] makeSureThisIsEnabled;
+		public GameObject[] makeSureThisIsEnabled;
 
-	public string gameModeName;
+		public string gameModeName;
 
-	public PhotonNetworkController photonNetworkController;
+		public PhotonNetworkController photonNetworkController;
 
-	public string componentTypeToRemove;
+		public string componentTypeToRemove;
 
-	public GameObject componentRemoveTarget;
+		public GameObject componentRemoveTarget;
 
-	public string componentTypeToAdd;
+		public string componentTypeToAdd;
 
-	public GameObject componentAddTarget;
+		public GameObject componentAddTarget;
 
-	public GameObject gorillaParent;
+		public GameObject gorillaParent;
 
-	public GameObject joinFailedBlock;
+		public GameObject joinFailedBlock;
+	}
 }

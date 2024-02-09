@@ -1,17 +1,12 @@
+﻿using System;
 using UnityEngine;
 using UnityEngine.Playables;
 
 public class LocalChestController : MonoBehaviour
 {
-	public PlayableDirector director;
-
-	public MazePlayerCollection playerCollectionVolume;
-
-	private bool isOpen;
-
 	private void OnTriggerEnter(Collider other)
 	{
-		if (isOpen)
+		if (this.isOpen)
 		{
 			return;
 		}
@@ -21,14 +16,26 @@ public class LocalChestController : MonoBehaviour
 			return;
 		}
 		Transform transformToFollow = component.transformToFollow;
-		if (!(transformToFollow == null))
+		if (transformToFollow == null)
 		{
-			VRRig componentInParent = transformToFollow.GetComponentInParent<VRRig>();
-			if (!(componentInParent == null) && (!(playerCollectionVolume != null) || playerCollectionVolume.containedRigs.Contains(componentInParent)))
-			{
-				isOpen = true;
-				director.Play();
-			}
+			return;
 		}
+		VRRig componentInParent = transformToFollow.GetComponentInParent<VRRig>();
+		if (componentInParent == null)
+		{
+			return;
+		}
+		if (this.playerCollectionVolume != null && !this.playerCollectionVolume.containedRigs.Contains(componentInParent))
+		{
+			return;
+		}
+		this.isOpen = true;
+		this.director.Play();
 	}
+
+	public PlayableDirector director;
+
+	public MazePlayerCollection playerCollectionVolume;
+
+	private bool isOpen;
 }

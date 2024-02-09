@@ -1,12 +1,222 @@
-using System;
+﻿using System;
 using GorillaExtensions;
 using GorillaTag;
 using Photon.Pun;
+using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.Serialization;
 
 public class RubberDuck : TransferrableObject
 {
+	public bool fxActive
+	{
+		get
+		{
+			return this.hasParticleFX && this._fxActive;
+		}
+		set
+		{
+			if (!this.hasParticleFX)
+			{
+				return;
+			}
+			this.pFXEmissionModule.enabled = value;
+			this._fxActive = value;
+		}
+	}
+
+	protected override void Awake()
+	{
+		base.Awake();
+		if (this.skinRenderer == null)
+		{
+			this.skinRenderer = base.GetComponentInChildren<SkinnedMeshRenderer>(true);
+		}
+		this.hasSkinRenderer = this.skinRenderer != null;
+		this.myThreshold = 0.7f;
+		this.hysterisis = 0.3f;
+		this.hasParticleFX = this.particleFX != null;
+		if (this.hasParticleFX)
+		{
+			this.pFXEmissionModule = this.particleFX.emission;
+			this.pFXEmissionModule.rateOverTime = this.particleFXEmissionIdle;
+		}
+		this.fxActive = false;
+	}
+
+	public override void OnEnable()
+	{
+		base.OnEnable();
+		if (this._events == null)
+		{
+			this._events = base.gameObject.GetOrAddComponent<RubberDuckEvents>();
+			RubberDuckEvents events = this._events;
+			VRRig myOnlineRig = this.myOnlineRig;
+			Player player;
+			if ((player = ((myOnlineRig != null) ? myOnlineRig.creator : null)) == null)
+			{
+				VRRig myRig = this.myRig;
+				player = ((myRig != null) ? myRig.creator : null);
+			}
+			events.Init(player);
+		}
+		if (this._events != null)
+		{
+			this._events.Activate += this.OnSqueezeActivate;
+			this._events.Deactivate += this.OnSqueezeDeactivate;
+		}
+	}
+
+	public override void OnDisable()
+	{
+		base.OnDisable();
+		if (this._events != null)
+		{
+			Object.Destroy(this._events);
+		}
+	}
+
+	private void OnSqueezeActivate(int sender, int target, object[] args)
+	{
+		if (sender != target)
+		{
+			return;
+		}
+		float num = this.particleFXEmissionSqueeze;
+		this.PlayParticleFX(num);
+		if (this._sfxActivate && !this._sfxActivate.isPlaying)
+		{
+			this._sfxActivate.PlayNext(0f, 1f);
+		}
+	}
+
+	private void OnSqueezeDeactivate(int sender, int target, object[] args)
+	{
+		if (sender != target)
+		{
+			return;
+		}
+		float num = this.particleFXEmissionIdle;
+		this.PlayParticleFX(num);
+	}
+
+	public override void LateUpdate()
+	{
+		base.LateUpdate();
+		float num = 0f;
+		if (base.InHand())
+		{
+			this.tempHandPos = ((this.myOnlineRig != null) ? this.myOnlineRig.ReturnHandPosition() : this.myRig.ReturnHandPosition());
+			if (this.currentState == TransferrableObject.PositionState.InLeftHand)
+			{
+				num = (float)Mathf.FloorToInt((float)(this.tempHandPos % 10000) / 1000f);
+			}
+			else
+			{
+				num = (float)Mathf.FloorToInt((float)(this.tempHandPos % 10) / 1f);
+			}
+		}
+		if (this.hasSkinRenderer)
+		{
+			this.skinRenderer.SetBlendShapeWeight(0, Mathf.Lerp(this.skinRenderer.GetBlendShapeWeight(0), num * 11.1f, this.blendShapeMaxWeight));
+		}
+		if (this.fxActive)
+		{
+			this.squeezeTimeElapsed += Time.deltaTime;
+			this.pFXEmissionModule.rateOverTime = Mathf.Lerp(this.particleFXEmissionIdle, this.particleFXEmissionSqueeze, this.particleFXEmissionCooldownCurve.Evaluate(this.squeezeTimeElapsed));
+			if (this.squeezeTimeElapsed > this.particleFXEmissionSqueeze)
+			{
+				this.fxActive = false;
+			}
+		}
+	}
+
+	public override void OnActivate()
+	{
+		base.OnActivate();
+		if (this.IsMyItem())
+		{
+			bool flag = this.currentState == TransferrableObject.PositionState.InLeftHand;
+			RigContainer localRig = VRRigCache.Instance.localRig;
+			localRig.Rig.PlayHandTapLocal(this.squeezeSound, flag, 0.33f);
+			if (localRig.photonView)
+			{
+				localRig.photonView.RPC("PlayHandTap", RpcTarget.Others, new object[] { this.squeezeSound, flag, 0.33f });
+			}
+			GorillaTagger.Instance.StartVibration(flag, this.squeezeStrength, Time.deltaTime);
+		}
+		if (this._raiseActivate)
+		{
+			RubberDuckEvents events = this._events;
+			if (events == null)
+			{
+				return;
+			}
+			PhotonEvent activate = events.Activate;
+			if (activate == null)
+			{
+				return;
+			}
+			activate.RaiseAll(new object[] { this.particleFXEmissionSqueeze });
+		}
+	}
+
+	public override void OnDeactivate()
+	{
+		base.OnDeactivate();
+		if (this.IsMyItem())
+		{
+			bool flag = this.currentState == TransferrableObject.PositionState.InLeftHand;
+			if (GorillaGameManager.instance)
+			{
+				GorillaGameManager.instance.FindVRRigForPlayer(PhotonNetwork.LocalPlayer).RPC("PlayHandTap", RpcTarget.All, new object[] { this.squeezeReleaseSound, flag, 0.33f });
+			}
+			GorillaTagger.Instance.StartVibration(flag, this.releaseStrength, Time.deltaTime);
+		}
+		if (this._raiseDeactivate)
+		{
+			RubberDuckEvents events = this._events;
+			if (events == null)
+			{
+				return;
+			}
+			PhotonEvent deactivate = events.Deactivate;
+			if (deactivate == null)
+			{
+				return;
+			}
+			deactivate.RaiseAll(new object[] { this.particleFXEmissionIdle });
+		}
+	}
+
+	public void PlayParticleFX(float rate)
+	{
+		if (!this.hasParticleFX)
+		{
+			return;
+		}
+		if (this.currentState != TransferrableObject.PositionState.InLeftHand && this.currentState != TransferrableObject.PositionState.InRightHand)
+		{
+			return;
+		}
+		if (!this.fxActive)
+		{
+			this.fxActive = true;
+		}
+		this.squeezeTimeElapsed = 0f;
+		this.pFXEmissionModule.rateOverTime = rate;
+	}
+
+	public override bool CanActivate()
+	{
+		return !this.disableActivation;
+	}
+
+	public override bool CanDeactivate()
+	{
+		return !this.disableDeactivation;
+	}
+
 	[DebugOption]
 	public bool disableActivation;
 
@@ -63,172 +273,4 @@ public class RubberDuck : TransferrableObject
 
 	[SerializeField]
 	private bool _fxActive;
-
-	public bool fxActive
-	{
-		get
-		{
-			if (hasParticleFX)
-			{
-				return _fxActive;
-			}
-			return false;
-		}
-		set
-		{
-			if (hasParticleFX)
-			{
-				pFXEmissionModule.enabled = value;
-				_fxActive = value;
-			}
-		}
-	}
-
-	protected override void Awake()
-	{
-		base.Awake();
-		if (skinRenderer == null)
-		{
-			skinRenderer = GetComponentInChildren<SkinnedMeshRenderer>(includeInactive: true);
-		}
-		hasSkinRenderer = skinRenderer != null;
-		myThreshold = 0.7f;
-		hysterisis = 0.3f;
-		hasParticleFX = particleFX != null;
-		if (hasParticleFX)
-		{
-			pFXEmissionModule = particleFX.emission;
-			pFXEmissionModule.rateOverTime = particleFXEmissionIdle;
-		}
-		fxActive = false;
-	}
-
-	public override void OnEnable()
-	{
-		base.OnEnable();
-		if (_events == null)
-		{
-			_events = base.gameObject.GetOrAddComponent<RubberDuckEvents>();
-			_events.Init(myOnlineRig?.creator ?? myRig?.creator);
-		}
-		if (_events != null)
-		{
-			_events.Activate += new Action<int, int, object[]>(OnSqueezeActivate);
-			_events.Deactivate += new Action<int, int, object[]>(OnSqueezeDeactivate);
-		}
-	}
-
-	public override void OnDisable()
-	{
-		base.OnDisable();
-		if (_events != null)
-		{
-			UnityEngine.Object.Destroy(_events);
-		}
-	}
-
-	private void OnSqueezeActivate(int sender, int target, object[] args)
-	{
-		if (sender == target)
-		{
-			float rate = particleFXEmissionSqueeze;
-			PlayParticleFX(rate);
-			if ((bool)_sfxActivate && !_sfxActivate.isPlaying)
-			{
-				_sfxActivate.PlayNext();
-			}
-		}
-	}
-
-	private void OnSqueezeDeactivate(int sender, int target, object[] args)
-	{
-		if (sender == target)
-		{
-			float rate = particleFXEmissionIdle;
-			PlayParticleFX(rate);
-		}
-	}
-
-	protected override void LateUpdate()
-	{
-		base.LateUpdate();
-		float num = 0f;
-		if (InHand())
-		{
-			tempHandPos = ((myOnlineRig != null) ? myOnlineRig.ReturnHandPosition() : myRig.ReturnHandPosition());
-			num = ((currentState != PositionState.InLeftHand) ? ((float)Mathf.FloorToInt((float)(tempHandPos % 10) / 1f)) : ((float)Mathf.FloorToInt((float)(tempHandPos % 10000) / 1000f)));
-		}
-		if (hasSkinRenderer)
-		{
-			skinRenderer.SetBlendShapeWeight(0, Mathf.Lerp(skinRenderer.GetBlendShapeWeight(0), num * 11.1f, blendShapeMaxWeight));
-		}
-		if (fxActive)
-		{
-			squeezeTimeElapsed += Time.deltaTime;
-			pFXEmissionModule.rateOverTime = Mathf.Lerp(particleFXEmissionIdle, particleFXEmissionSqueeze, particleFXEmissionCooldownCurve.Evaluate(squeezeTimeElapsed));
-			if (squeezeTimeElapsed > particleFXEmissionSqueeze)
-			{
-				fxActive = false;
-			}
-		}
-	}
-
-	public override void OnActivate()
-	{
-		base.OnActivate();
-		if (IsMyItem())
-		{
-			bool flag = currentState == PositionState.InLeftHand;
-			if ((bool)GorillaGameManager.instance)
-			{
-				GorillaGameManager.instance.FindVRRigForPlayer(PhotonNetwork.LocalPlayer).RPC("PlayHandTap", RpcTarget.All, squeezeSound, flag, 0.33f);
-			}
-			GorillaTagger.Instance.StartVibration(flag, squeezeStrength, Time.deltaTime);
-		}
-		if (_raiseActivate)
-		{
-			_events?.Activate?.RaiseAll(particleFXEmissionSqueeze);
-		}
-	}
-
-	public override void OnDeactivate()
-	{
-		base.OnDeactivate();
-		if (IsMyItem())
-		{
-			bool flag = currentState == PositionState.InLeftHand;
-			if ((bool)GorillaGameManager.instance)
-			{
-				GorillaGameManager.instance.FindVRRigForPlayer(PhotonNetwork.LocalPlayer).RPC("PlayHandTap", RpcTarget.All, squeezeReleaseSound, flag, 0.33f);
-			}
-			GorillaTagger.Instance.StartVibration(flag, releaseStrength, Time.deltaTime);
-		}
-		if (_raiseDeactivate)
-		{
-			_events?.Deactivate?.RaiseAll(particleFXEmissionIdle);
-		}
-	}
-
-	public void PlayParticleFX(float rate)
-	{
-		if (hasParticleFX && (currentState == PositionState.InLeftHand || currentState == PositionState.InRightHand))
-		{
-			if (!fxActive)
-			{
-				fxActive = true;
-			}
-			squeezeTimeElapsed = 0f;
-			pFXEmissionModule.rateOverTime = rate;
-		}
-	}
-
-	public override bool CanActivate()
-	{
-		return !disableActivation;
-	}
-
-	public override bool CanDeactivate()
-	{
-		return !disableDeactivation;
-	}
 }

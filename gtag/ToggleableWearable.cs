@@ -1,10 +1,106 @@
+﻿using System;
 using UnityEngine;
 using UnityEngine.XR;
 using UnityEngine.XR.Interaction.Toolkit;
 
 public class ToggleableWearable : MonoBehaviour
 {
+	protected void Awake()
+	{
+		this.ownerRig = base.GetComponentInParent<VRRig>();
+		if (this.ownerRig == null)
+		{
+			GorillaTagger componentInParent = base.GetComponentInParent<GorillaTagger>();
+			if (componentInParent != null)
+			{
+				this.ownerRig = componentInParent.offlineVRRig;
+				this.ownerIsLocal = this.ownerRig != null;
+			}
+		}
+		if (this.ownerRig == null)
+		{
+			Debug.LogError("TriggerToggler: Disabling cannot find VRRig.");
+			base.enabled = false;
+			return;
+		}
+		foreach (Renderer renderer in this.renderers)
+		{
+			if (renderer == null)
+			{
+				Debug.LogError("TriggerToggler: Disabling because a renderer is null.");
+				base.enabled = false;
+				break;
+			}
+			renderer.enabled = this.startOn;
+		}
+		this.hasAudioSource = this.audioSource != null;
+		this.assignedSlotBitIndex = (int)this.assignedSlot;
+	}
+
+	protected void LateUpdate()
+	{
+		if (this.ownerIsLocal)
+		{
+			this.toggleCooldownTimer -= Time.deltaTime;
+			Transform transform = base.transform;
+			if (Physics.OverlapSphereNonAlloc(transform.TransformPoint(this.triggerOffset), this.triggerRadius * transform.localScale.x, this.colliders, this.layerMask) > 0)
+			{
+				if (this.toggleCooldownTimer < 0f)
+				{
+					XRController componentInParent = this.colliders[0].GetComponentInParent<XRController>();
+					if (componentInParent != null)
+					{
+						this.LocalToggle(componentInParent.controllerNode == XRNode.LeftHand);
+					}
+				}
+				this.toggleCooldownTimer = 0.2f;
+			}
+		}
+		else
+		{
+			bool flag = (this.ownerRig.WearablePackedStates & (1 << this.assignedSlotBitIndex)) != 0;
+			if (this.isOn != flag)
+			{
+				this.SharedSetState(flag);
+			}
+		}
+		this.progress = Mathf.MoveTowards(this.progress, this.isOn ? 1f : 0f, Time.deltaTime / this.animationTransitionDuration);
+		Animator[] array = this.animators;
+		for (int i = 0; i < array.Length; i++)
+		{
+			array[i].SetFloat(ToggleableWearable.animParam_Progress, this.progress);
+		}
+	}
+
+	private void LocalToggle(bool isLeftHand)
+	{
+		this.ownerRig.WearablePackedStates ^= 1 << this.assignedSlotBitIndex;
+		this.SharedSetState((this.ownerRig.WearablePackedStates & (1 << this.assignedSlotBitIndex)) != 0);
+		if (GorillaTagger.Instance)
+		{
+			GorillaTagger.Instance.StartVibration(isLeftHand, this.isOn ? this.turnOnVibrationDuration : this.turnOffVibrationDuration, this.isOn ? this.turnOnVibrationStrength : this.turnOffVibrationStrength);
+		}
+	}
+
+	private void SharedSetState(bool state)
+	{
+		this.isOn = state;
+		Renderer[] array = this.renderers;
+		for (int i = 0; i < array.Length; i++)
+		{
+			array[i].enabled = this.isOn;
+		}
+		if (this.hasAudioSource)
+		{
+			this.audioSource.PlayOneShot(this.isOn ? this.toggleOnSound : this.toggleOffSound);
+		}
+	}
+
 	public Renderer[] renderers;
+
+	public Animator[] animators;
+
+	public float animationTransitionDuration = 1f;
 
 	[Tooltip("Whether the wearable state is toggled on by default.")]
 	public bool startOn;
@@ -57,90 +153,7 @@ public class ToggleableWearable : MonoBehaviour
 
 	private int assignedSlotBitIndex;
 
-	protected void Awake()
-	{
-		ownerRig = GetComponentInParent<VRRig>();
-		if (ownerRig == null)
-		{
-			GorillaTagger componentInParent = GetComponentInParent<GorillaTagger>();
-			if (componentInParent != null)
-			{
-				ownerRig = componentInParent.offlineVRRig;
-				ownerIsLocal = ownerRig != null;
-			}
-		}
-		if (ownerRig == null)
-		{
-			Debug.LogError("TriggerToggler: Disabling cannot find VRRig.");
-			base.enabled = false;
-			return;
-		}
-		Renderer[] array = renderers;
-		foreach (Renderer renderer in array)
-		{
-			if (renderer == null)
-			{
-				Debug.LogError("TriggerToggler: Disabling because a renderer is null.");
-				base.enabled = false;
-				break;
-			}
-			renderer.enabled = startOn;
-		}
-		hasAudioSource = audioSource != null;
-		assignedSlotBitIndex = (int)assignedSlot;
-	}
+	private static readonly int animParam_Progress = Animator.StringToHash("Progress");
 
-	protected void LateUpdate()
-	{
-		if (ownerIsLocal)
-		{
-			toggleCooldownTimer -= Time.deltaTime;
-			Transform transform = base.transform;
-			if (Physics.OverlapSphereNonAlloc(transform.TransformPoint(triggerOffset), triggerRadius * transform.localScale.x, colliders, layerMask) <= 0)
-			{
-				return;
-			}
-			if (toggleCooldownTimer < 0f)
-			{
-				XRController componentInParent = colliders[0].GetComponentInParent<XRController>();
-				if (componentInParent != null)
-				{
-					LocalToggle(componentInParent.controllerNode == XRNode.LeftHand);
-				}
-			}
-			toggleCooldownTimer = 0.2f;
-		}
-		else
-		{
-			bool flag = (ownerRig.WearablePackedStates & (1 << assignedSlotBitIndex)) != 0;
-			if (isOn != flag)
-			{
-				SharedSetState(flag);
-			}
-		}
-	}
-
-	private void LocalToggle(bool isLeftHand)
-	{
-		ownerRig.WearablePackedStates ^= 1 << assignedSlotBitIndex;
-		SharedSetState((ownerRig.WearablePackedStates & (1 << assignedSlotBitIndex)) != 0);
-		if ((bool)GorillaTagger.Instance)
-		{
-			GorillaTagger.Instance.StartVibration(isLeftHand, isOn ? turnOnVibrationDuration : turnOffVibrationDuration, isOn ? turnOnVibrationStrength : turnOffVibrationStrength);
-		}
-	}
-
-	private void SharedSetState(bool state)
-	{
-		isOn = state;
-		Renderer[] array = renderers;
-		for (int i = 0; i < array.Length; i++)
-		{
-			array[i].enabled = isOn;
-		}
-		if (hasAudioSource)
-		{
-			audioSource.PlayOneShot(isOn ? toggleOnSound : toggleOffSound);
-		}
-	}
+	private float progress;
 }

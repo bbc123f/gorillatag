@@ -1,20 +1,22 @@
+﻿using System;
 using UnityEngine;
 
-namespace CjLib;
-
-[ExecuteInEditMode]
-public class DrawLine : DrawBase
+namespace CjLib
 {
-	public Vector3 LocalEndVector = Vector3.right;
-
-	private void OnValidate()
+	[ExecuteInEditMode]
+	public class DrawLine : DrawBase
 	{
-		Wireframe = true;
-		Style = DebugUtil.Style.Wireframe;
-	}
+		private void OnValidate()
+		{
+			this.Wireframe = true;
+			this.Style = DebugUtil.Style.Wireframe;
+		}
 
-	protected override void Draw(Color color, DebugUtil.Style style, bool depthTest)
-	{
-		DebugUtil.DrawLine(base.transform.position, base.transform.position + base.transform.TransformVector(LocalEndVector), color, depthTest);
+		protected override void Draw(Color color, DebugUtil.Style style, bool depthTest)
+		{
+			DebugUtil.DrawLine(base.transform.position, base.transform.position + base.transform.TransformVector(this.LocalEndVector), color, depthTest);
+		}
+
+		public Vector3 LocalEndVector = Vector3.right;
 	}
 }
