@@ -1,6 +1,7 @@
 ﻿using System;
 using GorillaExtensions;
 using Photon.Pun;
+using Photon.Realtime;
 using UnityEngine;
 
 [RequireComponent(typeof(PhotonView))]
@@ -20,7 +21,7 @@ internal class GorillaSerializer : MonoBehaviour, IPunObservable, IPunInstantiat
 		this.serializeTarget.OnSerializeWrite(stream, info);
 	}
 
-	void IPunInstantiateMagicCallback.OnPhotonInstantiate(PhotonMessageInfo info)
+	public virtual void OnPhotonInstantiate(PhotonMessageInfo info)
 	{
 		if (this.photonView == null)
 		{
@@ -80,6 +81,17 @@ internal class GorillaSerializer : MonoBehaviour, IPunObservable, IPunInstantiat
 		this.photonView.RefreshRpcMonoBehaviourCache();
 		t.SetClassTarget(this.serializeTarget, this);
 		return t;
+	}
+
+	public void SendRPC(string rpcName, bool targetOthers, params object[] data)
+	{
+		RpcTarget rpcTarget = (targetOthers ? RpcTarget.Others : RpcTarget.MasterClient);
+		this.photonView.RPC(rpcName, rpcTarget, data);
+	}
+
+	public void SendRPC(string rpcName, Player targetPlayer, params object[] data)
+	{
+		this.photonView.RPC(rpcName, targetPlayer, data);
 	}
 
 	protected bool successfullInstantiate;

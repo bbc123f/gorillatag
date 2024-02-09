@@ -47,7 +47,7 @@ internal class VRRigCache : MonoBehaviourPunCallbacks
 
 	public void InitializeVRRigCache()
 	{
-		if (this.isInitialized)
+		if (this.isInitialized || ApplicationQuittingState.IsQuitting)
 		{
 			return;
 		}
@@ -100,6 +100,10 @@ internal class VRRigCache : MonoBehaviourPunCallbacks
 	internal bool TryGetVrrig(Player targetPlayer, out RigContainer playerRig)
 	{
 		playerRig = null;
+		if (ApplicationQuittingState.IsQuitting)
+		{
+			return false;
+		}
 		if (targetPlayer == null)
 		{
 			Debug.LogWarning("Player for rig is null");

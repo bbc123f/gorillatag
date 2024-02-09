@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using CjLib;
 using ExitGames.Client.Photon;
+using GorillaExtensions;
 using GorillaLocomotion;
 using GorillaLocomotion.Swimming;
 using Photon.Pun;
@@ -12,7 +13,7 @@ using UnityEngine;
 
 namespace GorillaTag
 {
-	public class ScienceExperimentManager : MonoBehaviourPun, IPunObservable, IInRoomCallbacks
+	public class ScienceExperimentManager : MonoBehaviourPun, IPunObservable, IInRoomCallbacks, ITickSystemTick
 	{
 		private bool RefreshWaterAvailable
 		{
@@ -68,6 +69,8 @@ namespace GorillaTag
 				this.riseTimeLookup = new float[] { this.riseTimeFast, this.riseTimeMedium, this.riseTimeSlow, this.riseTimeExtraSlow };
 				this.riseTime = this.riseTimeLookup[(int)this.nextRoundRiseSpeed];
 				this.allPlayersInRoom = PhotonNetwork.PlayerList;
+				GorillaGameManager.OnTouch += this.OnPlayerTagged;
+				RoomSystem.LeftRoomEvent = (Action)Delegate.Combine(RoomSystem.LeftRoomEvent, new Action(this.OnLeftRoom));
 				this.rotatingRings = new ScienceExperimentManager.RotatingRingState[this.ringParent.childCount];
 				for (int i = 0; i < this.rotatingRings.Length; i++)
 				{
@@ -95,20 +98,26 @@ namespace GorillaTag
 				{
 					this.sodaWaterProjectileTriggerNotifier.OnProjectileTriggerEnter += this.OnProjectileEnteredSodaWater;
 				}
-				GorillaGameManager.OnTouch += this.OnPlayerTagged;
 				float num = Vector3.Distance(this.drainBlockerClosedPosition.position, this.drainBlockerOpenPosition.position);
 				this.drainBlockerSlideSpeed = num / this.drainBlockerSlideTime;
-				this.fizzParticleEmission = this.sodaFizzParticles.emission;
-				this.sodaFizzParticles.gameObject.SetActive(false);
-				this.sodaEruptionParticles.gameObject.SetActive(false);
-				RoomSystem.LeftRoomEvent = (Action)Delegate.Combine(RoomSystem.LeftRoomEvent, new Action(this.OnLeftRoom));
 				return;
 			}
 			Object.Destroy(this);
 		}
 
+		private void OnEnable()
+		{
+			TickSystem<object>.AddTickCallback(this);
+		}
+
+		private void OnDisable()
+		{
+			TickSystem<object>.RemoveTickCallback(this);
+		}
+
 		private void OnDestroy()
 		{
+			GorillaGameManager.OnTouch -= this.OnPlayerTagged;
 			if (this.gameAreaTriggerNotifier != null)
 			{
 				this.gameAreaTriggerNotifier.CompositeTriggerEnter -= this.OnColliderEnteredVolume;
@@ -138,13 +147,55 @@ namespace GorillaTag
 			{
 				this.sodaWaterProjectileTriggerNotifier.OnProjectileTriggerEnter -= this.OnProjectileEnteredSodaWater;
 			}
-			GorillaGameManager.OnTouch -= this.OnPlayerTagged;
 		}
 
-		private void Update()
+		public void InitElements(ScienceExperimentSceneElements elements)
+		{
+			this.elements = elements;
+			this.fizzParticleEmission = elements.sodaFizzParticles.emission;
+			elements.sodaFizzParticles.gameObject.SetActive(false);
+			elements.sodaEruptionParticles.gameObject.SetActive(false);
+		}
+
+		public void DeInitElements()
+		{
+			this.elements = null;
+		}
+
+		public Transform GetElement(ScienceExperimentElementID elementID)
+		{
+			switch (elementID)
+			{
+			case ScienceExperimentElementID.Platform1:
+				return this.rotatingRings[0].ringTransform;
+			case ScienceExperimentElementID.Platform2:
+				return this.rotatingRings[1].ringTransform;
+			case ScienceExperimentElementID.Platform3:
+				return this.rotatingRings[2].ringTransform;
+			case ScienceExperimentElementID.Platform4:
+				return this.rotatingRings[3].ringTransform;
+			case ScienceExperimentElementID.Platform5:
+				return this.rotatingRings[4].ringTransform;
+			case ScienceExperimentElementID.LiquidMesh:
+				return this.liquidMeshTransform;
+			case ScienceExperimentElementID.EntryChamberLiquidMesh:
+				return this.entryWayLiquidMeshTransform;
+			case ScienceExperimentElementID.EntryChamberBridgeQuad:
+				return this.entryWayBridgeQuadTransform;
+			case ScienceExperimentElementID.DrainBlocker:
+				return this.drainBlocker;
+			default:
+				Debug.LogError(string.Format("Unhandled ScienceExperiment element ID! {0}", elementID));
+				return null;
+			}
+		}
+
+		bool ITickSystemTick.TickRunning { get; set; }
+
+		void ITickSystemTick.Tick()
 		{
 			this.prevTime = this.currentTime;
-			this.currentTime = (PhotonNetwork.InRoom ? PhotonNetwork.Time : ((double)Time.time));
+			this.currentTime = (PhotonNetwork.InRoom ? PhotonNetwork.Time : Time.unscaledTimeAsDouble);
 			this.lastInfrequentUpdateTime = ((this.lastInfrequentUpdateTime > this.currentTime) ? this.currentTime : this.lastInfrequentUpdateTime);
 			if (this.currentTime > this.lastInfrequentUpdateTime + (double)this.infrequentUpdatePeriod)
 			{
@@ -259,7 +310,7 @@ namespace GorillaTag
 			{
 			default:
 			{
-				if (this.<UpdateReliableState>g__GetAlivePlayerCount|98_0() > 0 && syncData.activationProgress > 1.0)
+				if (this.<UpdateReliableState>g__GetAlivePlayerCount|105_0() > 0 && syncData.activationProgress > 1.0)
 				{
 					syncData.state = ScienceExperimentManager.RisingLiquidState.Erupting;
 					syncData.stateStartTime = currentTime;
@@ -282,7 +333,7 @@ namespace GorillaTag
 				}
 				break;
 			case ScienceExperimentManager.RisingLiquidState.Rising:
-				if (this.<UpdateReliableState>g__GetAlivePlayerCount|98_0() <= 0)
+				if (this.<UpdateReliableState>g__GetAlivePlayerCount|105_0() <= 0)
 				{
 					this.UpdateWinner();
 					syncData.stateStartLiquidProgressLinear = Mathf.Clamp01((float)((currentTime - syncData.stateStartTime) / (double)this.riseTime));
@@ -299,7 +350,7 @@ namespace GorillaTag
 				}
 				break;
 			case ScienceExperimentManager.RisingLiquidState.Full:
-				if (this.<UpdateReliableState>g__GetAlivePlayerCount|98_0() <= 0 || currentTime > syncData.stateStartTime + (double)this.maxFullTime)
+				if (this.<UpdateReliableState>g__GetAlivePlayerCount|105_0() <= 0 || currentTime > syncData.stateStartTime + (double)this.maxFullTime)
 				{
 					this.UpdateWinner();
 					syncData.stateStartLiquidProgressLinear = 1f;
@@ -454,33 +505,47 @@ namespace GorillaTag
 				this.eruptionAudioSource.Stop();
 				this.drainAudioSource.Stop();
 				this.rotatingRingsAudioSource.Stop();
-				this.sodaEruptionParticles.gameObject.SetActive(false);
-				this.sodaFizzParticles.gameObject.SetActive(true);
-				if (this.reliableState.activationProgress > 0.0010000000474974513)
+				if (this.elements != null)
 				{
-					this.fizzParticleEmission.rateOverTimeMultiplier = Mathf.Lerp(this.sodaFizzParticleEmissionMinMax.x, this.sodaFizzParticleEmissionMinMax.y, (float)this.reliableState.activationProgress);
+					this.elements.sodaEruptionParticles.gameObject.SetActive(false);
+					this.elements.sodaFizzParticles.gameObject.SetActive(true);
+					if (this.reliableState.activationProgress > 0.0010000000474974513)
+					{
+						this.fizzParticleEmission.rateOverTimeMultiplier = Mathf.Lerp(this.sodaFizzParticleEmissionMinMax.x, this.sodaFizzParticleEmissionMinMax.y, (float)this.reliableState.activationProgress);
+						return;
+					}
+					this.fizzParticleEmission.rateOverTimeMultiplier = 0f;
 					return;
 				}
-				this.fizzParticleEmission.rateOverTimeMultiplier = 0f;
-				return;
+				break;
 			case ScienceExperimentManager.RisingLiquidState.Erupting:
 				if (!this.hasPlayedEruptionEffects)
 				{
 					this.eruptionAudioSource.loop = true;
 					this.eruptionAudioSource.Play();
 					this.hasPlayedEruptionEffects = true;
-					this.sodaEruptionParticles.gameObject.SetActive(true);
-					this.fizzParticleEmission.rateOverTimeMultiplier = this.sodaFizzParticleEmissionMinMax.y;
-					return;
+					if (this.elements != null)
+					{
+						this.elements.sodaEruptionParticles.gameObject.SetActive(true);
+						this.fizzParticleEmission.rateOverTimeMultiplier = this.sodaFizzParticleEmissionMinMax.y;
+						return;
+					}
 				}
 				break;
 			case ScienceExperimentManager.RisingLiquidState.Rising:
-				this.fizzParticleEmission.rateOverTimeMultiplier = 0f;
-				return;
+				if (this.elements != null)
+				{
+					this.fizzParticleEmission.rateOverTimeMultiplier = 0f;
+					return;
+				}
+				break;
 			default:
-				this.sodaFizzParticles.gameObject.SetActive(false);
-				this.sodaEruptionParticles.gameObject.SetActive(false);
-				this.fizzParticleEmission.rateOverTimeMultiplier = 0f;
+				if (this.elements != null)
+				{
+					this.elements.sodaFizzParticles.gameObject.SetActive(false);
+					this.elements.sodaEruptionParticles.gameObject.SetActive(false);
+					this.fizzParticleEmission.rateOverTimeMultiplier = 0f;
+				}
 				this.hasPlayedEruptionEffects = false;
 				this.hasPlayedDrainEffects = false;
 				this.eruptionAudioSource.Stop();
@@ -490,9 +555,12 @@ namespace GorillaTag
 			case ScienceExperimentManager.RisingLiquidState.Draining:
 				this.hasPlayedEruptionEffects = false;
 				this.eruptionAudioSource.Stop();
-				this.sodaFizzParticles.gameObject.SetActive(false);
-				this.sodaEruptionParticles.gameObject.SetActive(false);
-				this.fizzParticleEmission.rateOverTimeMultiplier = 0f;
+				if (this.elements != null)
+				{
+					this.elements.sodaFizzParticles.gameObject.SetActive(false);
+					this.elements.sodaEruptionParticles.gameObject.SetActive(false);
+					this.fizzParticleEmission.rateOverTimeMultiplier = 0f;
+				}
 				if (!this.hasPlayedDrainEffects)
 				{
 					this.drainAudioSource.loop = true;
@@ -507,25 +575,29 @@ namespace GorillaTag
 
 		private void DisableObjectsInContactWithLava(float lavaScale)
 		{
+			if (this.elements == null)
+			{
+				return;
+			}
 			Plane plane = new Plane(this.liquidSurfacePlane.up, this.liquidSurfacePlane.position);
 			if (this.reliableState.state == ScienceExperimentManager.RisingLiquidState.Rising)
 			{
-				for (int i = 0; i < this.disableByLiquidList.Count; i++)
+				for (int i = 0; i < this.elements.disableByLiquidList.Count; i++)
 				{
-					if (!plane.GetSide(this.disableByLiquidList[i].target.position + this.disableByLiquidList[i].heightOffset * Vector3.up))
+					if (!plane.GetSide(this.elements.disableByLiquidList[i].target.position + this.elements.disableByLiquidList[i].heightOffset * Vector3.up))
 					{
-						this.disableByLiquidList[i].target.gameObject.SetActive(false);
+						this.elements.disableByLiquidList[i].target.gameObject.SetActive(false);
 					}
 				}
 				return;
 			}
 			if (this.reliableState.state == ScienceExperimentManager.RisingLiquidState.Draining)
 			{
-				for (int j = 0; j < this.disableByLiquidList.Count; j++)
+				for (int j = 0; j < this.elements.disableByLiquidList.Count; j++)
 				{
-					if (plane.GetSide(this.disableByLiquidList[j].target.position + this.disableByLiquidList[j].heightOffset * Vector3.up))
+					if (plane.GetSide(this.elements.disableByLiquidList[j].target.position + this.elements.disableByLiquidList[j].heightOffset * Vector3.up))
 					{
-						this.disableByLiquidList[j].target.gameObject.SetActive(true);
+						this.elements.disableByLiquidList[j].target.gameObject.SetActive(true);
 					}
 				}
 			}
@@ -878,11 +950,11 @@ namespace GorillaTag
 			int num = this.lastWinnerId;
 			ScienceExperimentManager.RiseSpeed riseSpeed = this.nextRoundRiseSpeed;
 			this.reliableState.state = (ScienceExperimentManager.RisingLiquidState)((int)stream.ReceiveNext());
-			this.reliableState.stateStartTime = (double)stream.ReceiveNext();
-			this.reliableState.stateStartLiquidProgressLinear = (float)stream.ReceiveNext();
-			this.reliableState.activationProgress = (double)stream.ReceiveNext();
+			this.reliableState.stateStartTime = ((double)stream.ReceiveNext()).GetFinite();
+			this.reliableState.stateStartLiquidProgressLinear = ((float)stream.ReceiveNext()).ClampSafe(0f, 1f);
+			this.reliableState.activationProgress = ((double)stream.ReceiveNext()).GetFinite();
 			this.nextRoundRiseSpeed = (ScienceExperimentManager.RiseSpeed)((int)stream.ReceiveNext());
-			this.riseTime = (float)stream.ReceiveNext();
+			this.riseTime = ((float)stream.ReceiveNext()).GetFinite();
 			this.lastWinnerId = (int)stream.ReceiveNext();
 			this.inGamePlayerCount = (int)stream.ReceiveNext();
 			this.inGamePlayerCount = Mathf.Clamp(this.inGamePlayerCount, 0, 10);
@@ -890,12 +962,12 @@ namespace GorillaTag
 			{
 				this.inGamePlayerStates[k].playerId = (int)stream.ReceiveNext();
 				this.inGamePlayerStates[k].touchedLiquid = (bool)stream.ReceiveNext();
-				this.inGamePlayerStates[k].touchedLiquidAtProgress = (float)stream.ReceiveNext();
+				this.inGamePlayerStates[k].touchedLiquidAtProgress = ((float)stream.ReceiveNext()).ClampSafe(0f, 1f);
 			}
 			for (int l = 0; l < this.rotatingRings.Length; l++)
 			{
-				this.rotatingRings[l].initialAngle = (float)stream.ReceiveNext();
-				this.rotatingRings[l].resultingAngle = (float)stream.ReceiveNext();
+				this.rotatingRings[l].initialAngle = ((float)stream.ReceiveNext()).GetFinite();
+				this.rotatingRings[l].resultingAngle = ((float)stream.ReceiveNext()).GetFinite();
 			}
 			float num2 = this.riseProgress;
 			this.UpdateLocalState((double)((float)PhotonNetwork.Time), this.reliableState);
@@ -1064,10 +1136,6 @@ namespace GorillaTag
 			}
 		}
 
-		public void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
-		{
-		}
-
 		public void OnPlayerLeftRoom(Photon.Realtime.Player otherPlayer)
 		{
 			this.PlayerExitedGameArea(otherPlayer.ActorNumber);
@@ -1087,6 +1155,27 @@ namespace GorillaTag
 			}
 		}
 
+		public void OnMasterClientSwitched(Photon.Realtime.Player newMasterClient)
+		{
+			if (!PhotonNetwork.IsMasterClient)
+			{
+				return;
+			}
+			for (int i = 0; i < this.inGamePlayerCount; i++)
+			{
+				if (!Utils.PlayerInRoom(this.inGamePlayerStates[i].playerId))
+				{
+					this.inGamePlayerStates[i] = this.inGamePlayerStates[this.inGamePlayerCount - 1];
+					this.inGamePlayerCount--;
+					i--;
+				}
+			}
+		}
+
+		public void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
+		{
+		}
+
 		public void OnRoomPropertiesUpdate(Hashtable propertiesThatChanged)
 		{
 		}
@@ -1095,12 +1184,8 @@ namespace GorillaTag
 		{
 		}
 
-		public void OnMasterClientSwitched(Photon.Realtime.Player newMasterClient)
-		{
-		}
-
 		[CompilerGenerated]
-		private int <UpdateReliableState>g__GetAlivePlayerCount|98_0()
+		private int <UpdateReliableState>g__GetAlivePlayerCount|105_0()
 		{
 			int num = 0;
 			for (int i = 0; i < this.inGamePlayerCount; i++)
@@ -1208,66 +1293,7 @@ namespace GorillaTag
 		[SerializeField]
 		private bool debugDrawPlayerGameState;
 
-		[Header("Scene References")]
-		[SerializeField]
-		private Transform liquidMeshTransform;
-
-		[SerializeField]
-		private Transform liquidSurfacePlane;
-
-		[SerializeField]
-		private Transform entryWayLiquidMeshTransform;
-
-		[SerializeField]
-		private Transform entryWayBridgeQuadTransform;
-
-		[SerializeField]
-		private Transform ringParent;
-
-		[SerializeField]
-		private Transform drainBlocker;
-
-		[SerializeField]
-		private Transform drainBlockerClosedPosition;
-
-		[SerializeField]
-		private Transform drainBlockerOpenPosition;
-
-		[SerializeField]
-		private WaterVolume liquidVolume;
-
-		[SerializeField]
-		private WaterVolume entryLiquidVolume;
-
-		[SerializeField]
-		private WaterVolume bottleLiquidVolume;
-
-		[SerializeField]
-		private WaterVolume refreshWaterVolume;
-
-		[SerializeField]
-		private CompositeTriggerEvents gameAreaTriggerNotifier;
-
-		[SerializeField]
-		public SlingshotProjectileHitNotifier sodaWaterProjectileTriggerNotifier;
-
-		[SerializeField]
-		private List<ScienceExperimentManager.DisableByLiquidData> disableByLiquidList = new List<ScienceExperimentManager.DisableByLiquidData>();
-
-		[SerializeField]
-		private AudioSource eruptionAudioSource;
-
-		[SerializeField]
-		private AudioSource drainAudioSource;
-
-		[SerializeField]
-		private AudioSource rotatingRingsAudioSource;
-
-		[SerializeField]
-		private ParticleSystem sodaFizzParticles;
-
-		[SerializeField]
-		private ParticleSystem sodaEruptionParticles;
+		private ScienceExperimentSceneElements elements;
 
 		private Photon.Realtime.Player[] allPlayersInRoom;
 
@@ -1310,6 +1336,41 @@ namespace GorillaTag
 		private float drainBlockerSlideSpeed;
 
 		private float[] riseTimeLookup;
+
+		[Header("Scene References")]
+		public Transform ringParent;
+
+		public Transform liquidMeshTransform;
+
+		public Transform liquidSurfacePlane;
+
+		public Transform entryWayLiquidMeshTransform;
+
+		public Transform entryWayBridgeQuadTransform;
+
+		public Transform drainBlocker;
+
+		public Transform drainBlockerClosedPosition;
+
+		public Transform drainBlockerOpenPosition;
+
+		public WaterVolume liquidVolume;
+
+		public WaterVolume entryLiquidVolume;
+
+		public WaterVolume bottleLiquidVolume;
+
+		public WaterVolume refreshWaterVolume;
+
+		public CompositeTriggerEvents gameAreaTriggerNotifier;
+
+		public SlingshotProjectileHitNotifier sodaWaterProjectileTriggerNotifier;
+
+		public AudioSource eruptionAudioSource;
+
+		public AudioSource drainAudioSource;
+
+		public AudioSource rotatingRingsAudioSource;
 
 		private ParticleSystem.EmissionModule fizzParticleEmission;
 

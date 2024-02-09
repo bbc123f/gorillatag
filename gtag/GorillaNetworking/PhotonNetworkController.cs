@@ -120,6 +120,7 @@ namespace GorillaNetworking
 			this.roomCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789";
 			this.playersInRegion = new int[this.serverRegions.Length];
 			this.pingInRegion = new int[this.serverRegions.Length];
+			this.currentState = PhotonNetworkController.ConnectionState.Initialization;
 		}
 
 		public override void OnCustomAuthenticationFailed(string debugMessage)
@@ -135,7 +136,6 @@ namespace GorillaNetworking
 		public void Start()
 		{
 			base.StartCoroutine(this.DisableOnStart());
-			this.currentState = PhotonNetworkController.ConnectionState.Initialization;
 			PhotonNetwork.EnableCloseConnection = false;
 			PhotonNetwork.NetworkingClient.LoadBalancingPeer.ReuseEventInstance = true;
 		}
@@ -702,7 +702,12 @@ namespace GorillaNetworking
 			Hashtable hashtable = new Hashtable();
 			if (this.currentJoinTrigger.gameModeName != "city" && this.currentJoinTrigger.gameModeName != "basement")
 			{
-				hashtable.Add("gameMode", this.currentJoinTrigger.gameModeName + GorillaComputer.instance.currentQueue + GorillaComputer.instance.currentGameMode);
+				Dictionary<object, object> dictionary = hashtable;
+				object obj = "gameMode";
+				string gameModeName = this.currentJoinTrigger.gameModeName;
+				string currentQueue = GorillaComputer.instance.currentQueue;
+				WatchableStringSO currentGameMode = GorillaComputer.instance.currentGameMode;
+				dictionary.Add(obj, gameModeName + currentQueue + ((currentGameMode != null) ? currentGameMode.ToString() : null));
 			}
 			else
 			{
@@ -743,7 +748,7 @@ namespace GorillaNetworking
 				}
 			}
 			this.attemptingToConnect = true;
-			if (GorillaComputer.instance != null)
+			if (GorillaComputer.instance != null && !ApplicationQuittingState.IsQuitting)
 			{
 				foreach (GorillaLevelScreen gorillaLevelScreen in GorillaComputer.instance.levelScreens)
 				{
@@ -856,18 +861,20 @@ namespace GorillaNetworking
 
 		private void CreatePublicRoom(bool joinWithFriends)
 		{
-			Hashtable hashtable;
+			Hashtable hashtable2;
 			if (this.currentJoinTrigger.gameModeName != "city" && this.currentJoinTrigger.gameModeName != "basement")
 			{
-				hashtable = new Hashtable { 
-				{
-					"gameMode",
-					this.currentJoinTrigger.gameModeName + GorillaComputer.instance.currentQueue + GorillaComputer.instance.currentGameMode
-				} };
+				Hashtable hashtable = new Hashtable();
+				object obj = "gameMode";
+				string gameModeName = this.currentJoinTrigger.gameModeName;
+				string currentQueue = GorillaComputer.instance.currentQueue;
+				WatchableStringSO currentGameMode = GorillaComputer.instance.currentGameMode;
+				hashtable.Add(obj, gameModeName + currentQueue + ((currentGameMode != null) ? currentGameMode.ToString() : null));
+				hashtable2 = hashtable;
 			}
 			else
 			{
-				hashtable = new Hashtable { 
+				hashtable2 = new Hashtable { 
 				{
 					"gameMode",
 					this.currentJoinTrigger.gameModeName + GorillaComputer.instance.currentQueue + "CASUAL"
@@ -877,7 +884,7 @@ namespace GorillaNetworking
 			roomOptions.IsVisible = true;
 			roomOptions.IsOpen = true;
 			roomOptions.MaxPlayers = this.GetRoomSize(this.currentJoinTrigger.gameModeName);
-			roomOptions.CustomRoomProperties = hashtable;
+			roomOptions.CustomRoomProperties = hashtable2;
 			roomOptions.PublishUserId = true;
 			roomOptions.CustomRoomPropertiesForLobby = new string[] { "gameMode" };
 			if (joinWithFriends)
@@ -895,16 +902,18 @@ namespace GorillaNetworking
 		private void CreatePrivateRoom()
 		{
 			this.currentJoinTrigger = this.privateTrigger;
-			Hashtable hashtable = new Hashtable { 
-			{
-				"gameMode",
-				this.currentJoinTrigger.gameModeName + GorillaComputer.instance.currentQueue + GorillaComputer.instance.currentGameMode
-			} };
+			Hashtable hashtable = new Hashtable();
+			object obj = "gameMode";
+			string gameModeName = this.currentJoinTrigger.gameModeName;
+			string currentQueue = GorillaComputer.instance.currentQueue;
+			WatchableStringSO currentGameMode = GorillaComputer.instance.currentGameMode;
+			hashtable.Add(obj, gameModeName + currentQueue + ((currentGameMode != null) ? currentGameMode.ToString() : null));
+			Hashtable hashtable2 = hashtable;
 			Photon.Realtime.RoomOptions roomOptions = new Photon.Realtime.RoomOptions();
 			roomOptions.IsVisible = false;
 			roomOptions.IsOpen = true;
 			roomOptions.MaxPlayers = this.GetRoomSize(this.currentJoinTrigger.gameModeName);
-			roomOptions.CustomRoomProperties = hashtable;
+			roomOptions.CustomRoomProperties = hashtable2;
 			roomOptions.PublishUserId = true;
 			roomOptions.CustomRoomPropertiesForLobby = new string[] { "gameMode" };
 			PhotonNetwork.CreateRoom(this.customRoomID, roomOptions, null, null);
@@ -1178,7 +1187,7 @@ namespace GorillaNetworking
 
 		private int minorVersion = 1;
 
-		private int minorVersion2 = 70;
+		private int minorVersion2 = 71;
 
 		private string _gameVersionString = "";
 

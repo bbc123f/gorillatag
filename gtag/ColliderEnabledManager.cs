@@ -7,6 +7,12 @@ public class ColliderEnabledManager : MonoBehaviour
 	{
 		this.floorEnabled = true;
 		this.floorCollidersEnabled = true;
+		ColliderEnabledManager.instance = this;
+	}
+
+	private void OnDestroy()
+	{
+		ColliderEnabledManager.instance = null;
 	}
 
 	public void DisableFloorForFrame()
@@ -53,6 +59,8 @@ public class ColliderEnabledManager : MonoBehaviour
 		this.floorCollidersEnabled = false;
 		this.timeDisabled = Time.time;
 	}
+
+	public static ColliderEnabledManager instance;
 
 	public Collider[] floorCollider;
 

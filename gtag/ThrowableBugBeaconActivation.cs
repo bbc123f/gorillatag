@@ -7,7 +7,6 @@ public class ThrowableBugBeaconActivation : MonoBehaviour
 	private void Awake()
 	{
 		this.tbb = base.GetComponent<ThrowableBugBeacon>();
-		this.ps = base.GetComponent<ParticleSystem>();
 	}
 
 	private void OnEnable()
@@ -38,10 +37,6 @@ public class ThrowableBugBeaconActivation : MonoBehaviour
 				this.tbb.Lock();
 				break;
 			}
-			if (this.ps != null)
-			{
-				this.ps.Play();
-			}
 			uint num = count;
 			count = num + 1U;
 		}
@@ -61,8 +56,6 @@ public class ThrowableBugBeaconActivation : MonoBehaviour
 	private ThrowableBugBeaconActivation.ActivationMode mode;
 
 	private ThrowableBugBeacon tbb;
-
-	private ParticleSystem ps;
 
 	private enum ActivationMode
 	{

@@ -1,4 +1,5 @@
 ﻿using System;
+using GorillaExtensions;
 using Photon.Pun;
 using Photon.Realtime;
 using Photon.Voice.PUN;
@@ -170,11 +171,11 @@ internal class VRRigSerializer : GorillaSerializer, IOnPhotonViewPreNetDestroy, 
 	public void PlayHandTap(int soundIndex, bool isLeftHand, float tapVolume, PhotonMessageInfo info)
 	{
 		GorillaNot.IncrementRPCCall(info, "PlayHandTap");
-		if (info.Sender == this.photonView.Owner)
+		if (info.Sender == this.photonView.Owner && float.IsFinite(tapVolume))
 		{
 			this.handTapArgs.soundIndex = soundIndex;
 			this.handTapArgs.isLeftHand = isLeftHand;
-			this.handTapArgs.tapVolume = Mathf.Max(tapVolume, 0.1f);
+			this.handTapArgs.tapVolume = Mathf.Clamp(tapVolume, 0f, 0.1f);
 			FXSystem.PlayFX<HandTapArgs>(FXType.PlayHandTap, this, this.handTapArgs, info);
 			return;
 		}
@@ -223,7 +224,7 @@ internal class VRRigSerializer : GorillaSerializer, IOnPhotonViewPreNetDestroy, 
 	public void PlayGeodeEffect(Vector3 hitPosition, PhotonMessageInfo info)
 	{
 		GorillaNot.IncrementRPCCall(info, "PlayGeodeEffect");
-		if (info.Sender == this.photonView.Owner)
+		if (info.Sender == this.photonView.Owner && (hitPosition).IsValid())
 		{
 			this.geoSoundArg.position = hitPosition;
 			FXSystem.PlayFX<GeoSoundArg>(FXType.PlayHandTap, this, this.geoSoundArg, info);

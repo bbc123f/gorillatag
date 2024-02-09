@@ -42,10 +42,6 @@ public class TappableManager : MonoBehaviourPun
 			GTDev.LogError("Tappable is null.", null);
 			return;
 		}
-		if (!t.useStaticId)
-		{
-			TappableManager.CalculateId(t, false);
-		}
 		t.manager = this;
 		if (this.idSet.Add(t.tappableId))
 		{
@@ -104,7 +100,7 @@ public class TappableManager : MonoBehaviourPun
 	public void SendOnTapRPC(int key, float tapStrength, PhotonMessageInfo info)
 	{
 		GorillaNot.IncrementRPCCall(info, "SendOnTapRPC");
-		if (key == 0)
+		if (key == 0 || !float.IsFinite(tapStrength))
 		{
 			return;
 		}
@@ -117,32 +113,6 @@ public class TappableManager : MonoBehaviourPun
 				tappable.OnTapLocal(tapStrength, Time.time);
 			}
 		}
-	}
-
-	public static void CalculateId(Tappable t, bool force = false)
-	{
-		if (t == null)
-		{
-			return;
-		}
-		Transform transform = t.transform;
-		int staticHash = TransformUtils.GetScenePath(transform).GetStaticHash();
-		int staticHash2 = t.GetType().Name.GetStaticHash();
-		int num = StaticHash.Combine(staticHash, staticHash2);
-		if (t.useStaticId)
-		{
-			if (string.IsNullOrEmpty(t.staticId) || force)
-			{
-				Vector3 position = transform.position;
-				int num2 = StaticHash.Combine(position.x, position.y, position.z);
-				int instanceID = t.GetInstanceID();
-				int num3 = StaticHash.Combine(num, num2, instanceID);
-				t.staticId = string.Format("#ID_{0:X8}", num3);
-			}
-			t.tappableId = t.staticId.GetStaticHash();
-			return;
-		}
-		t.tappableId = (Application.isPlaying ? num : 0);
 	}
 
 	[Conditional("UNITY_EDITOR")]

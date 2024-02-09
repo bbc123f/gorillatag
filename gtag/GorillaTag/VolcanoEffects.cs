@@ -1,19 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using GorillaExtensions;
+using GorillaTag.GuidedRefs;
 using UnityEngine;
 using UnityEngine.Serialization;
 
 namespace GorillaTag
 {
-	public class VolcanoEffects : MonoBehaviour
+	public class VolcanoEffects : BaseGuidedRefTargetMono
 	{
-		protected void Awake()
+		protected override void Awake()
 		{
-			if (this.RemoveNullsFromArray<Renderer>(ref this.renderers))
-			{
-				this.LogNullsFoundInArray("renderers");
-			}
+			base.Awake();
 			if (this.RemoveNullsFromArray<ParticleSystem>(ref this.lavaSpewParticleSystems))
 			{
 				this.LogNullsFoundInArray("lavaSpewParticleSystems");
@@ -281,10 +279,6 @@ namespace GorillaTag
 		[Tooltip("This will be faded in while lava is rising.")]
 		[SerializeField]
 		private AudioSource[] lavaSurfaceAudioSrcs;
-
-		[Tooltip("The renderers that will have shader properties changed.")]
-		[SerializeField]
-		private Renderer[] renderers;
 
 		[Tooltip("Emission will be adjusted for these particles during eruption.")]
 		[SerializeField]

@@ -8,6 +8,7 @@ using GorillaLocomotion.Climbing;
 using GorillaLocomotion.Gameplay;
 using GorillaNetworking;
 using GorillaTag;
+using GorillaTag.GuidedRefs;
 using Photon.Pun;
 using Photon.Realtime;
 using Photon.Voice.PUN;
@@ -17,7 +18,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.XR;
 
-public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCosmeticsCallback, IGuidedRefTarget, IGuidedRefMonoBehaviour, IGuidedRefObject
+public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCosmeticsCallback, IGuidedRefTargetMono, IGuidedRefMonoBehaviour, IGuidedRefObject, IGuidedRefReceiverMono
 {
 	public int ActiveTransferrableObjectIndex(int idx)
 	{
@@ -205,6 +206,22 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		}
 	}
 
+	public bool IsMicEnabled
+	{
+		get
+		{
+			return this.reliableState.isMicEnabled;
+		}
+		set
+		{
+			if (this.reliableState.isMicEnabled != value)
+			{
+				this.reliableState.isMicEnabled = value;
+				this.reliableState.SetIsDirty();
+			}
+		}
+	}
+
 	public int SizeLayerMask
 	{
 		get
@@ -231,7 +248,6 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 
 	private void Awake()
 	{
-		this.GuidedRefInitialize();
 		this.fxSettings = Object.Instantiate<FXSystemSettings>(this.sharedFXSettings);
 		this.fxSettings.forLocalRig = this.isOfflineVRRig;
 		Dictionary<string, GameObject> dictionary = new Dictionary<string, GameObject>();
@@ -280,7 +296,6 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		this.isInitialized = true;
 		this.myBodyDockPositions = base.GetComponent<BodyDockPositions>();
 		this.reliableState.SharedStart(this.isOfflineVRRig, this.myBodyDockPositions);
-		Application.quitting += this.Quitting;
 		this.concatStringOfCosmeticsAllowed = "";
 		this.playerText.transform.parent.GetComponent<Canvas>().worldCamera = GorillaTagger.Instance.mainCamera.GetComponent<Camera>();
 		this.EnsureInstantiatedMaterial();
@@ -500,13 +515,14 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 
 	public void OnDestroy()
 	{
+		if (ApplicationQuittingState.IsQuitting)
+		{
+			return;
+		}
+		GuidedRefHub.UnregisterTarget<VRRig>(this, true);
 		if (this.currentRopeSwingTarget && this.currentRopeSwingTarget.gameObject)
 		{
 			Object.Destroy(this.currentRopeSwingTarget.gameObject);
-		}
-		if (this.isQuitting)
-		{
-			return;
 		}
 		this.ClearRopeData();
 	}
@@ -679,9 +695,9 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		if (info.Sender == this.photonView.Owner && (!this.initialized || (this.initialized && GorillaComputer.instance.friendJoinCollider.playerIDsCurrentlyTouching.Contains(info.Sender.UserId))))
 		{
 			this.initialized = true;
-			red = Mathf.Clamp(red, 0f, 1f);
-			green = Mathf.Clamp(green, 0f, 1f);
-			blue = Mathf.Clamp(blue, 0f, 1f);
+			red = red.ClampSafe(0f, 1f);
+			green = green.ClampSafe(0f, 1f);
+			blue = blue.ClampSafe(0f, 1f);
 			this.InitializeNoobMaterialLocal(red, green, blue, leftHanded);
 		}
 		else
@@ -772,7 +788,7 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		{
 			return;
 		}
-		this.tagSound.volume = Mathf.Max(0.25f, soundVolume);
+		this.tagSound.volume = Mathf.Min(0.25f, soundVolume);
 		this.tagSound.PlayOneShot(this.clipToPlay[soundIndex]);
 	}
 
@@ -808,7 +824,7 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		{
 			return;
 		}
-		if (drumIndex < 0 || drumIndex >= this.musicDrums.Length || (this.senderRig.transform.position - base.transform.position).sqrMagnitude > 9f)
+		if (drumIndex < 0 || drumIndex >= this.musicDrums.Length || (this.senderRig.transform.position - base.transform.position).sqrMagnitude > 9f || !float.IsFinite(drumVolume))
 		{
 			GorillaNot.instance.SendReport("inappropriate tag data being sent drum", info.Sender.UserId, info.Sender.NickName);
 			return;
@@ -830,7 +846,7 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		this.IncrementRPC(info, "PlaySelfOnlyInstrument");
 		if (info.Sender == this.photonView.Owner && !this.muted)
 		{
-			if (selfOnlyIndex >= 0 && selfOnlyIndex < this.instrumentSelfOnly.Length && info.Sender == this.photonView.Owner)
+			if (selfOnlyIndex >= 0 && selfOnlyIndex < this.instrumentSelfOnly.Length && info.Sender == this.photonView.Owner && float.IsFinite(instrumentVol))
 			{
 				if (this.instrumentSelfOnly[selfOnlyIndex].gameObject.activeSelf)
 				{
@@ -1012,11 +1028,6 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 			}, null, null);
 		}
 		this.concatStringOfCosmeticsAllowed += "Slingshot";
-	}
-
-	private void Quitting()
-	{
-		this.isQuitting = true;
 	}
 
 	public void GenerateFingerAngleLookupTables()
@@ -1340,16 +1351,30 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		return true;
 	}
 
-	GuidedRefTargetIdSO IGuidedRefTarget.GuidedRefTargetId
+	int IGuidedRefObject.GetInstanceID()
+	{
+		return base.GetInstanceID();
+	}
+
+	void IGuidedRefObject.GuidedRefInitialize()
+	{
+		GuidedRefHub.RegisterTarget<VRRig>(this, this.guidedRefTargetInfo.hubIds, this);
+		GuidedRefHub.ReceiverFullyRegistered<VRRig>(this);
+	}
+
+	GuidedRefBasicTargetInfo IGuidedRefTargetMono.GRefTargetInfo
 	{
 		get
 		{
-			this.guidedRefTargetInfo.targetId == null;
-			return this.guidedRefTargetInfo.targetId;
+			return this.guidedRefTargetInfo;
+		}
+		set
+		{
+			this.guidedRefTargetInfo = value;
 		}
 	}
 
-	Object IGuidedRefTarget.GuidedRefTargetObject
+	Object IGuidedRefTargetMono.GuidedRefTargetObject
 	{
 		get
 		{
@@ -1357,9 +1382,19 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		}
 	}
 
-	public void GuidedRefInitialize()
+	int IGuidedRefReceiverMono.GuidedRefsWaitingToResolveCount { get; set; }
+
+	bool IGuidedRefReceiverMono.GuidedRefTryResolveReference(GuidedRefTryResolveInfo target)
 	{
-		GuidedRefRelayHub.RegisterTargetWithParentRelays(this, this.guidedRefTargetInfo.hubIds, this);
+		return false;
+	}
+
+	void IGuidedRefReceiverMono.OnAllGuidedRefsResolved()
+	{
+	}
+
+	public void OnGuidedRefTargetDestroyed(int fieldId)
+	{
 	}
 
 	Transform IGuidedRefMonoBehaviour.get_transform()
@@ -1367,14 +1402,7 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		return base.transform;
 	}
 
-	int IGuidedRefObject.GetInstanceID()
-	{
-		return base.GetInstanceID();
-	}
-
 	public static Action newPlayerJoined;
-
-	public GuidedRefBasicTargetInfo guidedRefTargetInfo;
 
 	public VRMap head;
 
@@ -1605,8 +1633,6 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 
 	public float bonkCooldown = 2f;
 
-	public bool isQuitting;
-
 	private VRRig tempVRRig;
 
 	public GameObject huntComputer;
@@ -1663,6 +1689,9 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 	private bool pendingCosmeticUpdate = true;
 
 	private string rawCosmeticString = "";
+
+	[SerializeField]
+	private GuidedRefBasicTargetInfo guidedRefTargetInfo;
 
 	public enum WearablePackedStateSlots
 	{

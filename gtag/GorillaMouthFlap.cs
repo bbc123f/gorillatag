@@ -13,46 +13,69 @@ public class GorillaMouthFlap : MonoBehaviour
 		float num = 0f;
 		if (component.IsSpeaking)
 		{
-			num = component.Louddess;
+			num = component.Loudness;
 		}
-		this.CheckMouthflapChange(num);
-		this.UpdateMouthFlapFlipbook();
+		this.CheckMouthflapChange(component.IsMicEnabled, num);
+		MouthFlapLevel mouthFlapLevel = this.noMicFace;
+		if (this.useMicEnabled)
+		{
+			mouthFlapLevel = this.mouthFlapLevels[this.activeFlipbookIndex];
+		}
+		this.UpdateMouthFlapFlipbook(mouthFlapLevel);
 	}
 
-	private void CheckMouthflapChange(float currentLoudness)
+	private void CheckMouthflapChange(bool isMicEnabled, float currentLoudness)
 	{
-		int num = this.mouthFlapLevels.Length - 1;
-		while (num >= 0 && currentLoudness < this.mouthFlapLevels[num].maxRequiredVolume)
+		if (isMicEnabled)
 		{
-			if (currentLoudness > this.mouthFlapLevels[num].minRequiredVolume)
+			this.useMicEnabled = true;
+			int i = this.mouthFlapLevels.Length - 1;
+			while (i >= 0)
 			{
-				if (this.activeFlipbookIndex != num)
+				if (currentLoudness >= this.mouthFlapLevels[i].maxRequiredVolume)
 				{
-					this.activeFlipbookIndex = num;
-					this.activeFlipbookPlayTime = 0f;
 					return;
 				}
-				break;
+				if (currentLoudness > this.mouthFlapLevels[i].minRequiredVolume)
+				{
+					if (this.activeFlipbookIndex != i)
+					{
+						this.activeFlipbookIndex = i;
+						this.activeFlipbookPlayTime = 0f;
+						return;
+					}
+					return;
+				}
+				else
+				{
+					i--;
+				}
 			}
-			else
-			{
-				num--;
-			}
+			return;
+		}
+		if (this.useMicEnabled)
+		{
+			this.useMicEnabled = false;
+			this.activeFlipbookPlayTime = 0f;
 		}
 	}
 
-	private void UpdateMouthFlapFlipbook()
+	private void UpdateMouthFlapFlipbook(MouthFlapLevel mouthFlap)
 	{
 		Material material = this.targetFace.GetComponent<Renderer>().material;
 		this.activeFlipbookPlayTime += Time.deltaTime;
-		this.activeFlipbookPlayTime %= this.mouthFlapLevels[this.activeFlipbookIndex].cycleDuration;
-		int num = Mathf.FloorToInt(this.activeFlipbookPlayTime * (float)this.mouthFlapLevels[this.activeFlipbookIndex].faces.Length / this.mouthFlapLevels[this.activeFlipbookIndex].cycleDuration);
-		material.SetTextureOffset(this._MouthMap, this.mouthFlapLevels[this.activeFlipbookIndex].faces[num]);
+		this.activeFlipbookPlayTime %= mouthFlap.cycleDuration;
+		int num = Mathf.FloorToInt(this.activeFlipbookPlayTime * (float)mouthFlap.faces.Length / mouthFlap.cycleDuration);
+		material.SetTextureOffset(this._MouthMap, mouthFlap.faces[num]);
 	}
 
 	public GameObject targetFace;
 
 	public MouthFlapLevel[] mouthFlapLevels;
+
+	public MouthFlapLevel noMicFace;
+
+	private bool useMicEnabled;
 
 	private int activeFlipbookIndex;
 

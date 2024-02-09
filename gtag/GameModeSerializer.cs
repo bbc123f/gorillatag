@@ -79,12 +79,6 @@ internal class GameModeSerializer : GorillaSerializerMasterOnly, IOnPhotonViewPr
 		GameMode.RemoveNetworkLink(this);
 	}
 
-	public void SendRPC(string rpcName, bool targetOthers, params object[] data)
-	{
-		RpcTarget rpcTarget = (targetOthers ? RpcTarget.Others : RpcTarget.MasterClient);
-		this.photonView.RPC(rpcName, rpcTarget, data);
-	}
-
 	[PunRPC]
 	private void ReportTagRPC(Player taggedPlayer, PhotonMessageInfo info)
 	{

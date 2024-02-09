@@ -47,7 +47,12 @@ public class CompositeTriggerEvents : MonoBehaviour
 		}
 		int num2 = this.SetMaskIndexTrue(0, notifier.maskIndex);
 		this.overlapMask.Add(other, num2);
-		this.CompositeTriggerEnter(other);
+		CompositeTriggerEvents.TriggerEvent compositeTriggerEnter = this.CompositeTriggerEnter;
+		if (compositeTriggerEnter == null)
+		{
+			return;
+		}
+		compositeTriggerEnter(other);
 	}
 
 	public void TriggerExitReceiver(TriggerEventNotifier notifier, Collider other)
@@ -59,10 +64,18 @@ public class CompositeTriggerEvents : MonoBehaviour
 			if (num == 0)
 			{
 				this.overlapMask.Remove(other);
-				this.CompositeTriggerExit(other);
+				CompositeTriggerEvents.TriggerEvent compositeTriggerExit = this.CompositeTriggerExit;
+				if (compositeTriggerExit == null)
+				{
+					return;
+				}
+				compositeTriggerExit(other);
 				return;
 			}
-			this.overlapMask[other] = num;
+			else
+			{
+				this.overlapMask[other] = num;
+			}
 		}
 	}
 

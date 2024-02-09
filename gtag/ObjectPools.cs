@@ -113,18 +113,10 @@ public class ObjectPools : MonoBehaviour
 		this.GetPoolByObjectType(obj).Destroy(obj);
 	}
 
-	private void OnApplicationQuit()
-	{
-		this.isQuitting = true;
-		Debug.Log("Application Quitting");
-	}
-
 	public static ObjectPools instance;
 
 	[SerializeField]
 	private List<SinglePool> pools;
 
 	private Dictionary<int, SinglePool> lookUp;
-
-	public bool isQuitting;
 }

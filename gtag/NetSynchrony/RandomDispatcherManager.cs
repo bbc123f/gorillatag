@@ -8,6 +8,10 @@ namespace NetSynchrony
 	{
 		private void OnDisable()
 		{
+			if (ApplicationQuittingState.IsQuitting)
+			{
+				return;
+			}
 			GorillaComputer instance = GorillaComputer.instance;
 			instance.OnServerTimeUpdated = (Action)Delegate.Remove(instance.OnServerTimeUpdated, new Action(this.OnTimeChanged));
 		}

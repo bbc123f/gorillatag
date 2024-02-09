@@ -25,6 +25,7 @@ public class Bubbler : TransferrableObject
 		this.itemState = TransferrableObject.ItemStates.State0;
 		this.hasBubblerAudio = this.bubblerAudio != null && this.bubblerAudio.clip != null;
 		this.hasPopBubbleAudio = this.popBubbleAudio != null && this.popBubbleAudio.clip != null;
+		this.hasFan = this.fan != null;
 	}
 
 	private void InitToDefault()
@@ -106,8 +107,11 @@ public class Bubbler : TransferrableObject
 					GorillaTagger.Instance.StartVibration(flag, this.ongoingStrength, Time.deltaTime);
 				}
 			}
-			float num = this.fan.transform.localEulerAngles.z + this.rotationSpeed * Time.fixedDeltaTime;
-			this.fan.transform.localEulerAngles = new Vector3(0f, 0f, num);
+			if (this.hasFan)
+			{
+				float num = this.fan.transform.localEulerAngles.z + this.rotationSpeed * Time.fixedDeltaTime;
+				this.fan.transform.localEulerAngles = new Vector3(0f, 0f, num);
+			}
 		}
 		if (this.hasParticleSystem && (!this.allBubblesPopped || this.itemState == TransferrableObject.ItemStates.State1))
 		{
@@ -211,6 +215,8 @@ public class Bubbler : TransferrableObject
 	public Behaviour[] behavioursToEnableWhenTriggerPressed;
 
 	private bool hasParticleSystem;
+
+	private bool hasFan;
 
 	private enum BubblerState
 	{

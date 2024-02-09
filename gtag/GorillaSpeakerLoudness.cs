@@ -1,6 +1,7 @@
 ﻿using System;
 using GorillaNetworking;
 using GorillaTag.Audio;
+using Oculus.VoiceSDK.Dictation.Utilities;
 using Photon.Voice.PUN;
 using Photon.Voice.Unity;
 using UnityEngine;
@@ -15,11 +16,19 @@ public class GorillaSpeakerLoudness : MonoBehaviour
 		}
 	}
 
-	public float Louddess
+	public float Loudness
 	{
 		get
 		{
 			return this.loudness;
+		}
+	}
+
+	public bool IsMicEnabled
+	{
+		get
+		{
+			return this.isMicEnabled;
 		}
 	}
 
@@ -38,8 +47,31 @@ public class GorillaSpeakerLoudness : MonoBehaviour
 
 	private void Update()
 	{
+		this.UpdateMicEnabled();
 		this.UpdateLoudness();
 		this.UpdateSmoothedLoudness();
+	}
+
+	private void UpdateMicEnabled()
+	{
+		if (this.rigContainer == null)
+		{
+			return;
+		}
+		VRRig rig = this.rigContainer.Rig;
+		if (rig.isOfflineVRRig)
+		{
+			bool flag = MicPermissionsManager.HasMicPermission();
+			bool flag2 = true;
+			if (flag && Microphone.devices != null)
+			{
+				flag2 = Microphone.devices.Length != 0;
+			}
+			this.isMicEnabled = flag && flag2;
+			rig.IsMicEnabled = this.isMicEnabled;
+			return;
+		}
+		this.isMicEnabled = rig.IsMicEnabled;
 	}
 
 	private void UpdateLoudness()
@@ -126,6 +158,8 @@ public class GorillaSpeakerLoudness : MonoBehaviour
 	private bool isSpeaking;
 
 	private float loudness;
+
+	private bool isMicEnabled;
 
 	private RigContainer rigContainer;
 

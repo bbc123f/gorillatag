@@ -97,6 +97,10 @@ public class BodyDockPositions : MonoBehaviourPunCallbacks
 
 	public void DeallocateSharableInstances()
 	{
+		if (ApplicationQuittingState.IsQuitting)
+		{
+			return;
+		}
 		if (this.rightBackShareableItem != null)
 		{
 			this.rightBackShareableItem.ResetViews();

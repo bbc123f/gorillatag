@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using ExitGames.Client.Photon;
 using GorillaLocomotion;
+using GorillaTag;
 using Photon.Pun;
 using Photon.Realtime;
 using PlayFab;
@@ -16,6 +17,17 @@ namespace GorillaNetworking
 {
 	public class CosmeticsController : MonoBehaviour
 	{
+		public void AddWardrobeInstance(WardrobeInstance instance)
+		{
+			this.wardrobes.Add(instance);
+			this.UpdateWardrobeModelsAndButtons();
+		}
+
+		public void RemoveWardrobeInstance(WardrobeInstance instance)
+		{
+			this.wardrobes.Remove(instance);
+		}
+
 		public void Awake()
 		{
 			if (CosmeticsController.instance == null)
@@ -395,6 +407,36 @@ namespace GorillaNetworking
 			this.ProcessPurchaseItemState(null, false);
 		}
 
+		public void DelayedRemoveItemFromCheckout(CosmeticsController.CosmeticItem cosmeticItem)
+		{
+			base.StartCoroutine(this.DelayedRemoveItemFromCartCoroutine(cosmeticItem));
+		}
+
+		private IEnumerator DelayedRemoveItemFromCartCoroutine(CosmeticsController.CosmeticItem cosmeticItem)
+		{
+			this.searchIndex = this.currentCart.IndexOf(cosmeticItem);
+			if (this.searchIndex != -1)
+			{
+				yield return new WaitForSeconds(60f);
+				this.searchIndex = this.currentCart.IndexOf(cosmeticItem);
+				if (this.searchIndex != -1)
+				{
+					this.currentCart.RemoveAt(this.searchIndex);
+					for (int i = 0; i < 10; i++)
+					{
+						if (cosmeticItem.itemName == this.tryOnSet.items[i].itemName)
+						{
+							this.tryOnSet.items[i] = this.nullItem;
+						}
+					}
+					this.ClearCheckout();
+					this.UpdateShoppingCart();
+					this.UpdateWornCosmetics(true);
+				}
+			}
+			yield break;
+		}
+
 		public void PressCheckoutCartButton(CheckoutCartButton pressedCheckoutCartButton, bool isLeftHand)
 		{
 			if (this.currentPurchaseItemStage != CosmeticsController.PurchaseItemStages.Buying)
@@ -729,23 +771,23 @@ namespace GorillaNetworking
 
 		public void UpdateWardrobeModelsAndButtons()
 		{
-			foreach (CosmeticsController.Wardrobe wardrobe in this.wardrobes)
+			foreach (WardrobeInstance wardrobeInstance in this.wardrobes)
 			{
-				wardrobe.wardrobeItemButtons[0].currentCosmeticItem = ((this.cosmeticsPages[this.wardrobeType] * 3 < this.itemLists[this.wardrobeType].Count) ? this.itemLists[this.wardrobeType][this.cosmeticsPages[this.wardrobeType] * 3] : this.nullItem);
-				wardrobe.wardrobeItemButtons[1].currentCosmeticItem = ((this.cosmeticsPages[this.wardrobeType] * 3 + 1 < this.itemLists[this.wardrobeType].Count) ? this.itemLists[this.wardrobeType][this.cosmeticsPages[this.wardrobeType] * 3 + 1] : this.nullItem);
-				wardrobe.wardrobeItemButtons[2].currentCosmeticItem = ((this.cosmeticsPages[this.wardrobeType] * 3 + 2 < this.itemLists[this.wardrobeType].Count) ? this.itemLists[this.wardrobeType][this.cosmeticsPages[this.wardrobeType] * 3 + 2] : this.nullItem);
+				wardrobeInstance.wardrobeItemButtons[0].currentCosmeticItem = ((this.cosmeticsPages[this.wardrobeType] * 3 < this.itemLists[this.wardrobeType].Count) ? this.itemLists[this.wardrobeType][this.cosmeticsPages[this.wardrobeType] * 3] : this.nullItem);
+				wardrobeInstance.wardrobeItemButtons[1].currentCosmeticItem = ((this.cosmeticsPages[this.wardrobeType] * 3 + 1 < this.itemLists[this.wardrobeType].Count) ? this.itemLists[this.wardrobeType][this.cosmeticsPages[this.wardrobeType] * 3 + 1] : this.nullItem);
+				wardrobeInstance.wardrobeItemButtons[2].currentCosmeticItem = ((this.cosmeticsPages[this.wardrobeType] * 3 + 2 < this.itemLists[this.wardrobeType].Count) ? this.itemLists[this.wardrobeType][this.cosmeticsPages[this.wardrobeType] * 3 + 2] : this.nullItem);
 				this.iterator = 0;
-				while (this.iterator < wardrobe.wardrobeItemButtons.Length)
+				while (this.iterator < wardrobeInstance.wardrobeItemButtons.Length)
 				{
-					CosmeticsController.CosmeticItem currentCosmeticItem = wardrobe.wardrobeItemButtons[this.iterator].currentCosmeticItem;
-					wardrobe.wardrobeItemButtons[this.iterator].isOn = !currentCosmeticItem.isNullItem && this.AnyMatch(this.currentWornSet, currentCosmeticItem);
-					wardrobe.wardrobeItemButtons[this.iterator].UpdateColor();
+					CosmeticsController.CosmeticItem currentCosmeticItem = wardrobeInstance.wardrobeItemButtons[this.iterator].currentCosmeticItem;
+					wardrobeInstance.wardrobeItemButtons[this.iterator].isOn = !currentCosmeticItem.isNullItem && this.AnyMatch(this.currentWornSet, currentCosmeticItem);
+					wardrobeInstance.wardrobeItemButtons[this.iterator].UpdateColor();
 					this.iterator++;
 				}
-				wardrobe.wardrobeItemButtons[0].controlledModel.SetCosmeticActive(wardrobe.wardrobeItemButtons[0].currentCosmeticItem.displayName, false);
-				wardrobe.wardrobeItemButtons[1].controlledModel.SetCosmeticActive(wardrobe.wardrobeItemButtons[1].currentCosmeticItem.displayName, false);
-				wardrobe.wardrobeItemButtons[2].controlledModel.SetCosmeticActive(wardrobe.wardrobeItemButtons[2].currentCosmeticItem.displayName, false);
-				wardrobe.selfDoll.SetCosmeticActiveArray(this.currentWornSet.ToDisplayNameArray(), this.currentWornSet.ToOnRightSideArray());
+				wardrobeInstance.wardrobeItemButtons[0].controlledModel.SetCosmeticActive(wardrobeInstance.wardrobeItemButtons[0].currentCosmeticItem.displayName, false);
+				wardrobeInstance.wardrobeItemButtons[1].controlledModel.SetCosmeticActive(wardrobeInstance.wardrobeItemButtons[1].currentCosmeticItem.displayName, false);
+				wardrobeInstance.wardrobeItemButtons[2].controlledModel.SetCosmeticActive(wardrobeInstance.wardrobeItemButtons[2].currentCosmeticItem.displayName, false);
+				wardrobeInstance.selfDoll.SetCosmeticActiveArray(this.currentWornSet.ToDisplayNameArray(), this.currentWornSet.ToOnRightSideArray());
 			}
 		}
 
@@ -977,11 +1019,19 @@ namespace GorillaNetworking
 									displayName = catalogItem.DisplayName,
 									cost = (int)num,
 									itemPicture = this.allCosmetics[this.searchIndex].itemPicture,
+									itemPictureResourceString = this.allCosmetics[this.searchIndex].itemPictureResourceString,
 									itemCategory = this.allCosmetics[this.searchIndex].itemCategory,
 									bundledItems = this.tempStringArray,
 									canTryOn = this.hasPrice,
 									bothHandsHoldable = this.allCosmetics[this.searchIndex].bothHandsHoldable,
-									overrideDisplayName = this.allCosmetics[this.searchIndex].overrideDisplayName
+									overrideDisplayName = this.allCosmetics[this.searchIndex].overrideDisplayName,
+									bLoadsFromResources = this.allCosmetics[this.searchIndex].bLoadsFromResources,
+									bUsesMeshAtlas = this.allCosmetics[this.searchIndex].bUsesMeshAtlas,
+									rotationOffset = this.allCosmetics[this.searchIndex].rotationOffset,
+									positionOffset = this.allCosmetics[this.searchIndex].positionOffset,
+									meshAtlasResourceString = this.allCosmetics[this.searchIndex].meshAtlasResourceString,
+									meshResourceString = this.allCosmetics[this.searchIndex].meshResourceString,
+									materialResourceString = this.allCosmetics[this.searchIndex].materialResourceString
 								};
 								this.allCosmeticsDict[this.allCosmetics[this.searchIndex].itemName] = this.allCosmetics[this.searchIndex];
 								this.allCosmeticsItemIDsfromDisplayNamesDict[this.allCosmetics[this.searchIndex].displayName] = this.allCosmetics[this.searchIndex].itemName;
@@ -1528,7 +1578,7 @@ namespace GorillaNetworking
 
 		private CosmeticsController.CosmeticSet cachedSet = new CosmeticsController.CosmeticSet();
 
-		public CosmeticsController.Wardrobe[] wardrobes;
+		private List<WardrobeInstance> wardrobes = new List<WardrobeInstance>();
 
 		public List<CosmeticsController.CosmeticItem> unlockedCosmetics = new List<CosmeticsController.CosmeticItem>();
 
@@ -1609,9 +1659,9 @@ namespace GorillaNetworking
 
 		private BundleList bundleList = new BundleList();
 
-		public string BundleSkuName = "2023_holiday_fir_pack";
+		public string BundleSkuName = "2024_i_lava_you_pack";
 
-		public string BundlePlayfabItemName = "LSABE.";
+		public string BundlePlayfabItemName = "LSABG.";
 
 		public int BundleShinyRocks = 10000;
 
@@ -1641,14 +1691,6 @@ namespace GorillaNetworking
 			Buying,
 			Success,
 			Failure
-		}
-
-		[Serializable]
-		public struct Wardrobe
-		{
-			public WardrobeItemButton[] wardrobeItemButtons;
-
-			public HeadModel selfDoll;
 		}
 
 		public enum ATMStages
@@ -2053,23 +2095,50 @@ namespace GorillaNetworking
 		[Serializable]
 		public struct CosmeticItem
 		{
+			[Tooltip("Should match the spreadsheet item name.")]
 			public string itemName;
 
+			[Tooltip("Determines what wardrobe section the item will show up in.")]
 			public CosmeticsController.CosmeticCategory itemCategory;
 
+			[Tooltip("Icon shown in the store menus & hunt watch.")]
 			public Sprite itemPicture;
 
 			public string displayName;
 
+			public string itemPictureResourceString;
+
+			[Tooltip("The name shown on the store checkout screen.")]
 			public string overrideDisplayName;
 
+			[DebugReadout]
+			[NonSerialized]
 			public int cost;
 
+			[DebugReadout]
+			[NonSerialized]
 			public string[] bundledItems;
 
+			[DebugReadout]
+			[NonSerialized]
 			public bool canTryOn;
 
+			[Tooltip("Set to true if the item takes up both left and right wearable hand slots at the same time. Used for things like mittens/gloves.")]
 			public bool bothHandsHoldable;
+
+			public bool bLoadsFromResources;
+
+			public bool bUsesMeshAtlas;
+
+			public Vector3 rotationOffset;
+
+			public Vector3 positionOffset;
+
+			public string meshAtlasResourceString;
+
+			public string meshResourceString;
+
+			public string materialResourceString;
 
 			[HideInInspector]
 			public bool isNullItem;

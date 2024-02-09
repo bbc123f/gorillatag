@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class ZoneManagement : MonoBehaviour
 {
@@ -53,6 +54,24 @@ public class ZoneManagement : MonoBehaviour
 		return this.GetZoneData(zone).rootGameObjects[0];
 	}
 
+	public static void AddSceneToForceStayLoaded(string sceneName)
+	{
+		if (ZoneManagement.instance == null)
+		{
+			ZoneManagement.FindInstance();
+		}
+		ZoneManagement.instance.sceneForceStayLoaded.Add(sceneName);
+	}
+
+	public static void RemoveSceneFromForceStayLoaded(string sceneName)
+	{
+		if (ZoneManagement.instance == null)
+		{
+			ZoneManagement.FindInstance();
+		}
+		ZoneManagement.instance.sceneForceStayLoaded.Remove(sceneName);
+	}
+
 	private static void FindInstance()
 	{
 		ZoneManagement zoneManagement = Object.FindObjectOfType<ZoneManagement>();
@@ -76,6 +95,7 @@ public class ZoneManagement : MonoBehaviour
 			ZoneData zoneData = this.zones[i];
 			if (zoneData != null && zoneData.rootGameObjects != null)
 			{
+				hashSet.UnionWith(zoneData.rootGameObjects);
 				for (int j = 0; j < zoneData.rootGameObjects.Length; j++)
 				{
 					GameObject gameObject = zoneData.rootGameObjects[j];
@@ -98,11 +118,17 @@ public class ZoneManagement : MonoBehaviour
 		{
 			this.objectActivationState[i] = false;
 		}
+		this.scenesRequested.Clear();
+		this.scenesRequested.Add("GorillaTag");
 		for (int j = 0; j < zones.Length; j++)
 		{
 			ZoneData zoneData = this.GetZoneData(zones[j]);
 			if (zoneData != null && zoneData.rootGameObjects != null)
 			{
+				if (!string.IsNullOrEmpty(zoneData.sceneName))
+				{
+					this.scenesRequested.Add(zoneData.sceneName);
+				}
 				foreach (GameObject gameObject in zoneData.rootGameObjects)
 				{
 					if (!(gameObject == null))
@@ -119,11 +145,37 @@ public class ZoneManagement : MonoBehaviour
 				}
 			}
 		}
-		for (int m = 0; m < this.objectActivationState.Length; m++)
+		int loadedSceneCount = SceneManager.loadedSceneCount;
+		for (int m = 0; m < loadedSceneCount; m++)
 		{
-			if (!(this.allObjects[m] == null))
+			this.scenesLoaded.Add(SceneManager.GetSceneAt(m).name);
+		}
+		foreach (string text in this.scenesRequested)
+		{
+			if (!this.scenesLoaded.Contains(text))
 			{
-				this.allObjects[m].SetActive(this.objectActivationState[m]);
+				this.scenesLoaded.Add(text);
+				SceneManager.LoadSceneAsync(text, LoadSceneMode.Additive);
+			}
+		}
+		this.scenesToUnload.Clear();
+		foreach (string text2 in this.scenesLoaded)
+		{
+			if (!this.scenesRequested.Contains(text2) && !this.sceneForceStayLoaded.Contains(text2))
+			{
+				this.scenesToUnload.Add(text2);
+			}
+		}
+		foreach (string text3 in this.scenesToUnload)
+		{
+			this.scenesLoaded.Remove(text3);
+			SceneManager.UnloadSceneAsync(text3);
+		}
+		for (int n = 0; n < this.objectActivationState.Length; n++)
+		{
+			if (!(this.allObjects[n] == null))
+			{
+				this.allObjects[n].SetActive(this.objectActivationState[n]);
 			}
 		}
 	}
@@ -149,5 +201,11 @@ public class ZoneManagement : MonoBehaviour
 
 	private bool[] objectActivationState;
 
-	private GTZone activeZone;
+	private HashSet<string> scenesLoaded = new HashSet<string>();
+
+	private HashSet<string> scenesRequested = new HashSet<string>();
+
+	private HashSet<string> sceneForceStayLoaded = new HashSet<string>(8);
+
+	private List<string> scenesToUnload = new List<string>();
 }

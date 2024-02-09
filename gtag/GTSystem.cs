@@ -74,7 +74,7 @@ public abstract class GTSystem<T> : MonoBehaviour, IReadOnlyList<T>, IEnumerable
 		{
 			return false;
 		}
-		this._instances.Add(instance);
+		this._instances.Remove(instance);
 		this.OnUnregister(instance);
 		return true;
 	}

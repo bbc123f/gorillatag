@@ -88,6 +88,48 @@ public class TransferrableObject : HoldableObject, ISelfValidator, IRequestableO
 
 	protected virtual void Awake()
 	{
+		if (!this.isSceneObject)
+		{
+			VRRig vrrig = this.myRig;
+			VRRig vrrig2 = this.myOnlineRig;
+			VRRig componentInParent = base.GetComponentInParent<VRRig>();
+			if (componentInParent == null)
+			{
+				Debug.Log("Disabling TransferrableObject because could not find VRRig! \"" + base.transform.GetPath() + "\"", this);
+				base.enabled = false;
+				return;
+			}
+			this.myRig = ((componentInParent != null && componentInParent.isOfflineVRRig) ? componentInParent : null);
+			this.myOnlineRig = ((componentInParent != null && !componentInParent.isOfflineVRRig) ? componentInParent : null);
+			if (this.myRig != vrrig)
+			{
+				Debug.LogError(string.Concat(new string[]
+				{
+					"myRig doesn't match original value, restoring old value. Info:\n- affected transferable = \"",
+					base.transform.GetPath(),
+					"\"\n- assigned rig = \"",
+					this.myRig.transform.GetPath(),
+					"\"\n- original rig = \"",
+					vrrig.transform.GetPath(),
+					"\"\n"
+				}), this);
+				this.myRig = vrrig;
+			}
+			if (this.myOnlineRig != vrrig2)
+			{
+				Debug.LogError(string.Concat(new string[]
+				{
+					"myOnlineRig doesn't match original value, restoring old value. Info:\n- affected transferable = \"",
+					base.transform.GetPath(),
+					"\"\n- assigned rig = \"",
+					this.myOnlineRig.transform.GetPath(),
+					"\"\n- original rig = \"",
+					vrrig2.transform.GetPath(),
+					"\"\n"
+				}), this);
+				this.myOnlineRig = vrrig2;
+			}
+		}
 		if (this.rigidbodyInstance == null)
 		{
 			this.rigidbodyInstance = base.GetComponent<Rigidbody>();
@@ -410,6 +452,10 @@ public class TransferrableObject : HoldableObject, ISelfValidator, IRequestableO
 
 	public override void OnLeftRoom()
 	{
+		if (ApplicationQuittingState.IsQuitting)
+		{
+			return;
+		}
 		base.OnLeftRoom();
 		if (this.isSceneObject)
 		{

@@ -19,6 +19,7 @@ internal class PlayerCosmeticsSystem : MonoBehaviour, ITickSystemPre
 		if (PlayerCosmeticsSystem.instance == null)
 		{
 			PlayerCosmeticsSystem.instance = this;
+			base.transform.SetParent(null, true);
 			Object.DontDestroyOnLoad(this);
 			PhotonNetwork.NetworkingClient.EventReceived += this.OnEvent;
 			return;

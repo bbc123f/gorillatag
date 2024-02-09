@@ -5,15 +5,16 @@ using System.Runtime.CompilerServices;
 using ExitGames.Client.Photon;
 using GorillaLocomotion;
 using GorillaNetworking;
-using GorillaTag;
+using GorillaTag.GuidedRefs;
 using Photon.Pun;
 using Photon.Realtime;
 using Photon.Voice.Unity;
 using Steamworks;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.XR;
 
-public class GorillaTagger : MonoBehaviour, IGuidedRefReceiver, IGuidedRefMonoBehaviour, IGuidedRefObject
+public class GorillaTagger : MonoBehaviour, IGuidedRefReceiverMono, IGuidedRefMonoBehaviour, IGuidedRefObject
 {
 	public static GorillaTagger Instance
 	{
@@ -46,6 +47,7 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiver, IGuidedRefMonoBe
 	protected void Awake()
 	{
 		this.GuidedRefInitialize();
+		this.MirrorCameraCullingMask = new Watchable<int>(this.BaseMirrorCameraCullingMask);
 		if (GorillaTagger._instance != null && GorillaTagger._instance != this)
 		{
 			Object.Destroy(base.gameObject);
@@ -244,19 +246,19 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiver, IGuidedRefMonoBe
 		this.touchedPlayer = null;
 		float num4 = this.sphereCastRadius * GorillaLocomotion.Player.Instance.scale;
 		this.nonAllocHits = Physics.SphereCastNonAlloc(this.lastLeftHandPositionForTag, num4, this.leftRaycastSweep.normalized, this.nonAllocRaycastHits, Mathf.Max(this.leftRaycastSweep.magnitude, num4), this.gorillaTagColliderLayerMask, QueryTriggerInteraction.Collide);
-		this.<LateUpdate>g__TryTaggingAllHits|96_0(false);
+		this.<LateUpdate>g__TryTaggingAllHits|97_0(false);
 		this.nonAllocHits = Physics.SphereCastNonAlloc(this.headCollider.transform.position, num4, this.leftHeadRaycastSweep.normalized, this.nonAllocRaycastHits, Mathf.Max(this.leftHeadRaycastSweep.magnitude, num4), this.gorillaTagColliderLayerMask, QueryTriggerInteraction.Collide);
-		this.<LateUpdate>g__TryTaggingAllHits|96_0(false);
+		this.<LateUpdate>g__TryTaggingAllHits|97_0(false);
 		this.nonAllocHits = Physics.SphereCastNonAlloc(this.lastRightHandPositionForTag, num4, this.rightRaycastSweep.normalized, this.nonAllocRaycastHits, Mathf.Max(this.rightRaycastSweep.magnitude, num4), this.gorillaTagColliderLayerMask, QueryTriggerInteraction.Collide);
-		this.<LateUpdate>g__TryTaggingAllHits|96_0(false);
+		this.<LateUpdate>g__TryTaggingAllHits|97_0(false);
 		this.nonAllocHits = Physics.SphereCastNonAlloc(this.headCollider.transform.position, num4, this.rightHeadRaycastSweep.normalized, this.nonAllocRaycastHits, Mathf.Max(this.rightHeadRaycastSweep.magnitude, num4), this.gorillaTagColliderLayerMask, QueryTriggerInteraction.Collide);
-		this.<LateUpdate>g__TryTaggingAllHits|96_0(false);
+		this.<LateUpdate>g__TryTaggingAllHits|97_0(false);
 		this.nonAllocHits = Physics.SphereCastNonAlloc(this.headCollider.transform.position, this.headCollider.radius * this.headCollider.transform.localScale.x * GorillaLocomotion.Player.Instance.scale, this.headRaycastSweep.normalized, this.nonAllocRaycastHits, Mathf.Max(this.headRaycastSweep.magnitude, num4), this.gorillaTagColliderLayerMask, QueryTriggerInteraction.Collide);
-		this.<LateUpdate>g__TryTaggingAllHits|96_0(true);
+		this.<LateUpdate>g__TryTaggingAllHits|97_0(true);
 		this.topVector = this.lastBodyPositionForTag + this.bodyVector;
 		this.bottomVector = this.lastBodyPositionForTag - this.bodyVector;
 		this.nonAllocHits = Physics.CapsuleCastNonAlloc(this.topVector, this.bottomVector, this.bodyCollider.radius * 2f * GorillaLocomotion.Player.Instance.scale, this.bodyRaycastSweep.normalized, this.nonAllocRaycastHits, Mathf.Max(this.bodyRaycastSweep.magnitude, num4), this.gorillaTagColliderLayerMask, QueryTriggerInteraction.Collide);
-		this.<LateUpdate>g__TryTaggingAllHits|96_0(true);
+		this.<LateUpdate>g__TryTaggingAllHits|97_0(true);
 		if (this.otherPlayer != null)
 		{
 			Debug.Log("tagging someone yeet");
@@ -486,11 +488,11 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiver, IGuidedRefMonoBe
 		if (showParticles)
 		{
 			this.mainCamera.GetComponent<Camera>().cullingMask |= UnityLayer.GorillaCosmeticParticle.ToLayerMask();
-			this.mirrorCamera.cullingMask |= UnityLayer.GorillaCosmeticParticle.ToLayerMask();
+			this.MirrorCameraCullingMask.value |= UnityLayer.GorillaCosmeticParticle.ToLayerMask();
 			return;
 		}
 		this.mainCamera.GetComponent<Camera>().cullingMask &= ~UnityLayer.GorillaCosmeticParticle.ToLayerMask();
-		this.mirrorCamera.cullingMask &= ~UnityLayer.GorillaCosmeticParticle.ToLayerMask();
+		this.MirrorCameraCullingMask.value &= ~UnityLayer.GorillaCosmeticParticle.ToLayerMask();
 	}
 
 	public void ApplyStatusEffect(GorillaTagger.StatusEffect newStatus, float duration)
@@ -554,18 +556,28 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiver, IGuidedRefMonoBe
 
 	public void GuidedRefInitialize()
 	{
-		this.offlineVRRig_guidedRef.fieldId = GuidedRefRelayHub.RegisterReceiverFieldWithParentHub(this, "offlineVRRig", this.offlineVRRig_guidedRef.targetId, this.offlineVRRig_guidedRef.hubId);
+		GuidedRefHub.RegisterReceiverField<GorillaTagger>(this, "offlineVRRig", ref this.offlineVRRig_gRef);
+		GuidedRefHub.ReceiverFullyRegistered<GorillaTagger>(this);
 	}
 
-	public bool GuidRefResolveReference(int fieldId, IGuidedRefTarget target)
+	int IGuidedRefReceiverMono.GuidedRefsWaitingToResolveCount { get; set; }
+
+	bool IGuidedRefReceiverMono.GuidedRefTryResolveReference(GuidedRefTryResolveInfo target)
 	{
-		Debug.Log("poop target.GuidedRefTargetObject=" + target.GuidedRefTargetObject.name);
-		if (this.offlineVRRig_guidedRef.fieldId == fieldId && this.offlineVRRig == null)
+		if (this.offlineVRRig_gRef.fieldId == target.fieldId && this.offlineVRRig == null)
 		{
-			this.offlineVRRig = target.GuidedRefTargetObject as VRRig;
+			this.offlineVRRig = target.targetMono.GuidedRefTargetObject as VRRig;
 			return this.offlineVRRig != null;
 		}
 		return false;
+	}
+
+	void IGuidedRefReceiverMono.OnAllGuidedRefsResolved()
+	{
+	}
+
+	void IGuidedRefReceiverMono.OnGuidedRefTargetDestroyed(int fieldId)
+	{
 	}
 
 	Transform IGuidedRefMonoBehaviour.get_transform()
@@ -579,7 +591,7 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiver, IGuidedRefMonoBe
 	}
 
 	[CompilerGenerated]
-	private void <LateUpdate>g__TryTaggingAllHits|96_0(bool isBodyTag)
+	private void <LateUpdate>g__TryTaggingAllHits|97_0(bool isBodyTag)
 	{
 		for (int i = 0; i < this.nonAllocHits; i++)
 		{
@@ -649,7 +661,8 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiver, IGuidedRefMonoBe
 
 	public VRRig offlineVRRig;
 
-	public GuidedRefBasicReceiverFieldInfo offlineVRRig_guidedRef;
+	[FormerlySerializedAs("offlineVRRig_guidedRef")]
+	public GuidedRefReceiverFieldInfo offlineVRRig_gRef = new GuidedRefReceiverFieldInfo(false);
 
 	public GameObject thirdPersonCamera;
 
@@ -664,8 +677,6 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiver, IGuidedRefMonoBe
 	public GameObject leftHandTriggerCollider;
 
 	public GameObject rightHandTriggerCollider;
-
-	public Camera mirrorCamera;
 
 	public AudioSource leftHandSlideSource;
 
@@ -740,6 +751,11 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiver, IGuidedRefMonoBe
 	private bool xrSubsystemIsActive;
 
 	public string loadedDeviceName = "";
+
+	[SerializeField]
+	private LayerMask BaseMirrorCameraCullingMask;
+
+	public Watchable<int> MirrorCameraCullingMask;
 
 	private Callback<GameOverlayActivated_t> gameOverlayActivatedCb;
 

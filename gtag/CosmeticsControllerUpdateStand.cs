@@ -27,26 +27,6 @@ public class CosmeticsControllerUpdateStand : MonoBehaviour
 		return gameObject;
 	}
 
-	public void UpdateInventoryHeadModels()
-	{
-		foreach (HeadModel headModel in this.inventoryHeadModels)
-		{
-			for (int j = 0; j < headModel.transform.childCount; j++)
-			{
-				for (int k = 0; k < headModel.transform.GetChild(j).gameObject.transform.childCount; k++)
-				{
-					for (int l = 0; l < headModel.transform.GetChild(j).gameObject.transform.GetChild(k).gameObject.transform.childCount; l++)
-					{
-						if (!headModel.transform.GetChild(j).gameObject.transform.GetChild(k).gameObject.transform.GetChild(l).gameObject.activeInHierarchy)
-						{
-							headModel.transform.GetChild(j).gameObject.transform.GetChild(k).gameObject.transform.GetChild(l).gameObject.SetActive(true);
-						}
-					}
-				}
-			}
-		}
-	}
-
 	public CosmeticsController cosmeticsController;
 
 	public bool FailEntitlement;
@@ -70,4 +50,6 @@ public class CosmeticsControllerUpdateStand : MonoBehaviour
 	private CosmeticsController.CosmeticItem outItem;
 
 	public HeadModel[] inventoryHeadModels;
+
+	public string headModelsPrefabPath;
 }

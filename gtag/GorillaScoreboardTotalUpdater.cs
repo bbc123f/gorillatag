@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using ExitGames.Client.Photon;
+using GorillaNetworking;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
@@ -104,24 +105,37 @@ public class GorillaScoreboardTotalUpdater : MonoBehaviour, IInRoomCallbacks, IM
 		}
 	}
 
+	public void SetOfflineFailureText(string failureText)
+	{
+		this.offlineTextErrorString = failureText;
+		this.UpdateActiveScoreboards();
+	}
+
+	public void ClearOfflineFailureText()
+	{
+		this.offlineTextErrorString = null;
+		this.UpdateActiveScoreboards();
+	}
+
 	public void UpdateScoreboard(GorillaScoreBoard sB)
 	{
 		sB.SetSleepState(this.joinedRoom);
+		if (GorillaComputer.instance == null)
+		{
+			return;
+		}
 		if (!this.joinedRoom)
 		{
 			if (sB.notInRoomText != null)
 			{
-				sB.notInRoomText.SetActive(true);
+				sB.notInRoomText.gameObject.SetActive(true);
+				sB.notInRoomText.text = ((this.offlineTextErrorString != null) ? this.offlineTextErrorString : GorillaComputer.instance.offlineTextInitialString);
 			}
 			return;
 		}
 		if (sB.notInRoomText != null)
 		{
-			GameObject notInRoomText = sB.notInRoomText;
-			if (notInRoomText != null)
-			{
-				notInRoomText.SetActive(false);
-			}
+			sB.notInRoomText.gameObject.SetActive(false);
 		}
 		for (int i = 0; i < sB.lines.Count; i++)
 		{
@@ -261,6 +275,8 @@ public class GorillaScoreboardTotalUpdater : MonoBehaviour, IInRoomCallbacks, IM
 	private bool wasGameManagerNull;
 
 	public bool forOverlay;
+
+	public string offlineTextErrorString;
 
 	public Dictionary<int, GorillaScoreboardTotalUpdater.PlayerReports> reportDict = new Dictionary<int, GorillaScoreboardTotalUpdater.PlayerReports>();
 

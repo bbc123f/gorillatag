@@ -48,4 +48,39 @@ public static class ComponentUtils
 	{
 		return unityObject != null && unityObject.GetHashCode() != 0;
 	}
+
+	public static bool GetComponentAndSetFieldIfNullElseLogAndDisable<T>(this Behaviour c, ref T fieldRef, string fieldName, string fieldTypeName, string msgSuffix = "Disabling.", [CallerMemberName] string caller = "__UNKNOWN_CALLER__") where T : Component
+	{
+		if (c.GetComponentAndSetFieldIfNullElseLog(ref fieldRef, fieldName, fieldTypeName, msgSuffix, caller))
+		{
+			return true;
+		}
+		c.enabled = false;
+		return false;
+	}
+
+	public static bool GetComponentAndSetFieldIfNullElseLog<T>(this Behaviour c, ref T fieldRef, string fieldName, string fieldTypeName, string msgSuffix = "", [CallerMemberName] string caller = "__UNKNOWN_CALLER__") where T : Component
+	{
+		if (fieldRef != null)
+		{
+			return true;
+		}
+		fieldRef = c.GetComponent<T>();
+		if (fieldRef != null)
+		{
+			return true;
+		}
+		Debug.LogError(string.Concat(new string[] { caller, ": Could not find ", fieldTypeName, " \"", fieldName, "\" on \"", c.name, "\". ", msgSuffix }), c);
+		return false;
+	}
+
+	public static bool DisableIfNull<T>(this Behaviour c, T fieldRef, string fieldName, string fieldTypeName, [CallerMemberName] string caller = "__UNKNOWN_CALLER__") where T : Object
+	{
+		if (fieldRef != null)
+		{
+			return true;
+		}
+		c.enabled = false;
+		return false;
+	}
 }

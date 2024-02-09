@@ -116,6 +116,7 @@ internal class RoomSystem : MonoBehaviour, IInRoomCallbacks, IMatchmakingCallbac
 
 	private void Awake()
 	{
+		base.transform.SetParent(null, true);
 		Object.DontDestroyOnLoad(this);
 		PhotonNetwork.AddCallbackTarget(this);
 		PhotonNetwork.NetworkingClient.EventReceived += RoomSystem.OnEvent;
@@ -199,6 +200,10 @@ internal class RoomSystem : MonoBehaviour, IInRoomCallbacks, IMatchmakingCallbac
 
 	void IMatchmakingCallbacks.OnLeftRoom()
 	{
+		if (ApplicationQuittingState.IsQuitting)
+		{
+			return;
+		}
 		RoomSystem.joinedRoom = false;
 		RoomSystem.playersInRoom.Clear();
 		RoomSystem.roomGameMode = "";
@@ -681,6 +686,33 @@ internal class RoomSystem : MonoBehaviour, IInRoomCallbacks, IMatchmakingCallbac
 		RoomSystem.SendEvent(b, obj, RoomSystem.reoOthers, RoomSystem.soUnreliable);
 	}
 
+	internal static void OnPlayerEffect(RoomSystem.PlayerEffect effect, Player target)
+	{
+	}
+
+	private static void DeserializePlayerEffect(object[] data, PhotonMessageInfo info)
+	{
+		GorillaNot.IncrementRPCCall(info, "DeserializePlayerEffect");
+		if (!RoomSystem.callbackInstance.roomSettings.SoundEffectOtherLimiter.CheckCallServerTime(info.SentServerTime))
+		{
+			return;
+		}
+		RoomSystem.PlayerEffect playerEffect = (RoomSystem.PlayerEffect)data[0];
+		Player player = (Player)data[1];
+		RoomSystem.OnPlayerEffect(playerEffect, player);
+	}
+
+	private static void SendPlayerEffect(RoomSystem.PlayerEffect effect, Player target)
+	{
+		RoomSystem.OnPlayerEffect(effect, target);
+		if (!RoomSystem.joinedRoom)
+		{
+			return;
+		}
+		RoomSystem.playerEffectData[0] = target;
+		RoomSystem.playerEffectData[1] = effect;
+	}
+
 	private static RoomSystem.ImpactFxContainer impactEffect = new RoomSystem.ImpactFxContainer();
 
 	private static RoomSystem.LaunchProjectileContainer launchProjectile = new RoomSystem.LaunchProjectileContainer();
@@ -770,6 +802,8 @@ internal class RoomSystem : MonoBehaviour, IInRoomCallbacks, IMatchmakingCallbac
 
 	public static Action<RoomSystem.SoundEffect, Player> soundEffectCallback;
 
+	private static object[] playerEffectData = new object[2];
+
 	private class ImpactFxContainer : IFXContext
 	{
 		public FXSystemSettings settings
@@ -833,6 +867,8 @@ internal class RoomSystem : MonoBehaviour, IInRoomCallbacks, IMatchmakingCallbac
 		public const byte GROUP_JOIN = 4;
 
 		public const byte PLAYER_TOUCHED = 5;
+
+		public const byte PLAYER_EFFECT = 6;
 	}
 
 	public enum StatusEffects
@@ -854,5 +890,10 @@ internal class RoomSystem : MonoBehaviour, IInRoomCallbacks, IMatchmakingCallbac
 		public int id;
 
 		public float volume;
+	}
+
+	internal enum PlayerEffect
+	{
+
 	}
 }

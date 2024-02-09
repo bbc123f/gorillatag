@@ -106,16 +106,15 @@ public class GameMode : MonoBehaviour
 
 	private static string FindGameModeInString(string gmString)
 	{
-		string text = null;
 		for (int i = 0; i < GameMode.gameModeNames.Count; i++)
 		{
-			text = GameMode.gameModeNames[i];
+			string text = GameMode.gameModeNames[i];
 			if (gmString.Contains(text))
 			{
-				break;
+				return text;
 			}
 		}
-		return text;
+		return null;
 	}
 
 	public static bool LoadGameMode(string gameMode)

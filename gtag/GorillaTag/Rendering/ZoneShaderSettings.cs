@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
+using GorillaExtensions;
+using GorillaTag.GuidedRefs;
 using UnityEngine;
 
 namespace GorillaTag.Rendering
 {
-	[ExecuteInEditMode]
-	public class ZoneShaderSettings : MonoBehaviour
+	public class ZoneShaderSettings : BaseGuidedRefTargetMono, ITickSystemPost
 	{
 		[DebugReadout]
 		public static ZoneShaderSettings defaultsInstance { get; private set; }
@@ -16,6 +16,14 @@ namespace GorillaTag.Rendering
 		public static ZoneShaderSettings activeInstance { get; private set; }
 
 		public static bool hasActiveInstance { get; private set; }
+
+		public bool isActiveInstance
+		{
+			get
+			{
+				return ZoneShaderSettings.activeInstance == this;
+			}
+		}
 
 		[DebugReadout]
 		private float GroundFogDepthFadeSq
@@ -81,158 +89,48 @@ namespace GorillaTag.Rendering
 
 		public static int shaderParam_ZoneLiquidPosRadiusSq { get; private set; } = Shader.PropertyToID("_ZoneLiquidPosRadiusSq");
 
-		protected void Awake()
+		protected override void Awake()
 		{
-			if (base.gameObject.scene.name == null)
-			{
-				return;
-			}
-			if (!this.isDefaultValues)
-			{
-				return;
-			}
-			if (ZoneShaderSettings.hasDefaultsInstance && Application.isPlaying)
-			{
-				Object.Destroy(base.gameObject);
-				return;
-			}
-			ZoneShaderSettings.defaultsInstance = this;
-			ZoneShaderSettings.hasDefaultsInstance = true;
-			if (!Application.isPlaying)
-			{
-				return;
-			}
-			Application.quitting += delegate
-			{
-				ZoneShaderSettings.appIsQuitting = true;
-				ZoneShaderSettings.hasDefaultsInstance = false;
-				ZoneShaderSettings.hasActiveInstance = false;
-			};
-			ZoneShaderSettings.ApplyDefaultValues();
-			ZoneShaderSettings.isInitialized = true;
-		}
-
-		protected void OnDestroy()
-		{
-			if (base.gameObject.scene.name == null)
-			{
-				return;
-			}
-			if (ZoneShaderSettings.defaultsInstance == this)
-			{
-				ZoneShaderSettings.hasDefaultsInstance = false;
-			}
+			base.Awake();
+			this.hasMainWaterSurfacePlane = this.mainWaterSurfacePlane != null && (this.mainWaterSurfacePlane_overrideMode == ZoneShaderSettings.EOverrideMode.ApplyNewValue || this.isDefaultValues);
+			this.hasDynamicWaterSurfacePlane = this.hasMainWaterSurfacePlane && !this.mainWaterSurfacePlane.gameObject.isStatic;
+			this.hasLiquidBottomTransform = this.liquidBottomTransform != null && (this.liquidBottomTransform_overrideMode == ZoneShaderSettings.EOverrideMode.ApplyNewValue || this.isDefaultValues);
+			this.CheckDefaultsInstance();
 		}
 
 		protected void OnEnable()
 		{
-			this.hasMainWaterSurfacePlane = (this.mainWaterSurfacePlane_overrideMode == ZoneShaderSettings.EOverrideMode.ApplyNewValue || this.isDefaultValues) && this.mainWaterSurfacePlane != null;
-			this.hasLiquidBottomTransform = (this.liquidBottomTransform_overrideMode == ZoneShaderSettings.EOverrideMode.ApplyNewValue || this.isDefaultValues) && this.liquidBottomTransform != null;
-			if (this.isDefaultValues || ZoneShaderSettings.appIsQuitting)
+			if (this.hasDynamicWaterSurfacePlane)
 			{
-				return;
+				TickSystem<object>.AddPostTickCallback(this);
 			}
-			if (!ZoneShaderSettings.activeInstanceQueue.Contains(this))
-			{
-				ZoneShaderSettings.activeInstanceQueue.Add(this);
-			}
-			ZoneShaderSettings.hasActiveInstance = ZoneShaderSettings.activeInstance != null;
-			if (ZoneShaderSettings.hasActiveInstance && GorillaTagger.hasInstance)
-			{
-				Vector3 position = GorillaTagger.Instance.transform.position;
-				float sqrMagnitude = (base.transform.position - position).sqrMagnitude;
-				float sqrMagnitude2 = (ZoneShaderSettings.activeInstance.transform.position - position).sqrMagnitude;
-				ZoneShaderSettings.activeInstance = ((sqrMagnitude < sqrMagnitude2) ? this : ZoneShaderSettings.activeInstance);
-			}
-			else
-			{
-				ZoneShaderSettings.activeInstance = this;
-			}
-			ZoneShaderSettings.hasActiveInstance = ZoneShaderSettings.activeInstance != null;
-			if (!Application.isPlaying)
-			{
-				return;
-			}
-			ZoneShaderSettings.activeInstance.ApplyValues();
 		}
 
 		protected void OnDisable()
 		{
-			if (base.gameObject.scene.name == null)
+			TickSystem<object>.RemovePostTickCallback(this);
+		}
+
+		protected override void OnDestroy()
+		{
+			if (ZoneShaderSettings.defaultsInstance == this)
 			{
-				return;
+				ZoneShaderSettings.hasDefaultsInstance = false;
 			}
-			if (this.isDefaultValues || ZoneShaderSettings.appIsQuitting)
-			{
-				return;
-			}
-			int num = ZoneShaderSettings.activeInstanceQueue.IndexOf(this);
-			if (num >= 0)
-			{
-				ZoneShaderSettings.activeInstanceQueue.RemoveAt(num);
-			}
-			if (!Application.isPlaying)
-			{
-				return;
-			}
-			ZoneShaderSettings zoneShaderSettings;
-			if (ZoneShaderSettings.TryGetClosestActiveInstanceToPlayer(out zoneShaderSettings))
-			{
-				ZoneShaderSettings.hasActiveInstance = true;
-				ZoneShaderSettings.activeInstance = zoneShaderSettings;
-			}
-			else
+			if (ZoneShaderSettings.activeInstance == this)
 			{
 				ZoneShaderSettings.hasActiveInstance = false;
-				ZoneShaderSettings.activeInstance = null;
-			}
-			if (!ZoneShaderSettings.hasActiveInstance && ZoneShaderSettings.hasDefaultsInstance)
-			{
-				ZoneShaderSettings.activeInstance = ZoneShaderSettings.defaultsInstance;
-				ZoneShaderSettings.hasActiveInstance = ZoneShaderSettings.defaultsInstance != null;
-			}
-			if (ZoneShaderSettings.hasActiveInstance)
-			{
-				ZoneShaderSettings.activeInstance.ApplyValues();
 			}
 		}
 
-		private static bool TryGetClosestActiveInstanceToPlayer(out ZoneShaderSettings closest)
-		{
-			closest = null;
-			float num = float.MaxValue;
-			if (!GorillaTagger.hasInstance)
-			{
-				return false;
-			}
-			Vector3 position = GorillaTagger.Instance.transform.position;
-			for (int i = ZoneShaderSettings.activeInstanceQueue.Count - 1; i >= 0; i--)
-			{
-				ZoneShaderSettings zoneShaderSettings = ZoneShaderSettings.activeInstanceQueue[i];
-				if (zoneShaderSettings == null)
-				{
-					ZoneShaderSettings.activeInstanceQueue.RemoveAt(i);
-				}
-				else
-				{
-					float sqrMagnitude = (zoneShaderSettings.transform.position - position).sqrMagnitude;
-					if (sqrMagnitude < num)
-					{
-						closest = zoneShaderSettings;
-						num = sqrMagnitude;
-					}
-				}
-			}
-			return closest != null;
-		}
+		bool ITickSystemPost.PostTickRunning { get; set; }
 
-		protected void LateUpdate()
+		void ITickSystemPost.PostTick()
 		{
-			if (!this.hasMainWaterSurfacePlane || this.mainWaterSurfacePlane.gameObject.isStatic || !ZoneShaderSettings.hasDefaultsInstance || ZoneShaderSettings.appIsQuitting || ZoneShaderSettings.activeInstance != this)
+			if (ZoneShaderSettings.activeInstance == this && Application.isPlaying && !ApplicationQuittingState.IsQuitting)
 			{
-				return;
+				this.UpdateMainPlaneShaderProperty();
 			}
-			this.UpdateMainPlaneShaderProperty();
 		}
 
 		private void UpdateMainPlaneShaderProperty()
@@ -304,23 +202,67 @@ namespace GorillaTag.Rendering
 			}
 		}
 
+		private void CheckDefaultsInstance()
+		{
+			if (!this.isDefaultValues)
+			{
+				return;
+			}
+			if (ZoneShaderSettings.hasDefaultsInstance && ZoneShaderSettings.defaultsInstance != null && ZoneShaderSettings.defaultsInstance != this)
+			{
+				string path = ZoneShaderSettings.defaultsInstance.transform.GetPath();
+				Debug.LogError(string.Concat(new string[]
+				{
+					"ZoneShaderSettings: Destroying conflicting defaults instance.\n- keeping: \"",
+					path,
+					"\"\n- destroying (this): \"",
+					base.transform.GetPath(),
+					"\""
+				}), this);
+				Object.Destroy(base.gameObject);
+				return;
+			}
+			ZoneShaderSettings.defaultsInstance = this;
+			ZoneShaderSettings.hasDefaultsInstance = true;
+			this.BecomeActiveInstance();
+		}
+
+		public void BecomeActiveInstance()
+		{
+			if (ZoneShaderSettings.activeInstance == this)
+			{
+				return;
+			}
+			this.ApplyValues();
+			ZoneShaderSettings.activeInstance = this;
+			ZoneShaderSettings.hasActiveInstance = true;
+		}
+
+		public static void ActivateDefaultSettings()
+		{
+			if (ZoneShaderSettings.hasDefaultsInstance)
+			{
+				ZoneShaderSettings.defaultsInstance.BecomeActiveInstance();
+			}
+		}
+
 		private void ApplyValues()
 		{
-			if (!ZoneShaderSettings.hasDefaultsInstance || ZoneShaderSettings.appIsQuitting)
+			if (!ZoneShaderSettings.hasDefaultsInstance || ApplicationQuittingState.IsQuitting)
 			{
 				return;
 			}
 			this.ApplyColor(ZoneShaderSettings.groundFogColor_shaderProp, this.groundFogColor_overrideMode, this.groundFogColor, ZoneShaderSettings.defaultsInstance.groundFogColor);
-			this.ApplyFloat(ZoneShaderSettings.groundFogDepthFadeSq_shaderProp, this.groundFogHeightFade_overrideMode, this.GroundFogDepthFadeSq, ZoneShaderSettings.defaultsInstance.GroundFogDepthFadeSq);
+			this.ApplyFloat(ZoneShaderSettings.groundFogDepthFadeSq_shaderProp, this.groundFogDepthFade_overrideMode, this.GroundFogDepthFadeSq, ZoneShaderSettings.defaultsInstance.GroundFogDepthFadeSq);
 			this.ApplyFloat(ZoneShaderSettings.groundFogHeight_shaderProp, this.groundFogHeight_overrideMode, this.groundFogHeight, ZoneShaderSettings.defaultsInstance.groundFogHeight);
 			this.ApplyFloat(ZoneShaderSettings.groundFogHeightFade_shaderProp, this.groundFogHeightFade_overrideMode, this.GroundFogHeightFade, ZoneShaderSettings.defaultsInstance.GroundFogHeightFade);
 			if (this.zoneLiquidType_overrideMode != ZoneShaderSettings.EOverrideMode.LeaveUnchanged)
 			{
 				ZoneShaderSettings.EZoneLiquidType ezoneLiquidType = ((this.zoneLiquidType_overrideMode == ZoneShaderSettings.EOverrideMode.ApplyNewValue) ? this.zoneLiquidType : ZoneShaderSettings.defaultsInstance.zoneLiquidType);
-				if (ezoneLiquidType != this.liquidType_previousValue || !ZoneShaderSettings.isInitialized)
+				if (ezoneLiquidType != ZoneShaderSettings.liquidType_previousValue || !ZoneShaderSettings.isInitialized)
 				{
 					this.SetZoneLiquidTypeKeywordEnum(ezoneLiquidType);
-					this.liquidType_previousValue = this.zoneLiquidType;
+					ZoneShaderSettings.liquidType_previousValue = ezoneLiquidType;
 				}
 			}
 			if (this.liquidShape_overrideMode != ZoneShaderSettings.EOverrideMode.LeaveUnchanged)
@@ -332,80 +274,17 @@ namespace GorillaTag.Rendering
 					ZoneShaderSettings.liquidShape_previousValue = eliquidShape;
 				}
 			}
-			if (this.zoneLiquidUVScale_overrideMode == ZoneShaderSettings.EOverrideMode.ApplyNewValue || this.isDefaultValues)
-			{
-				Shader.SetGlobalFloat(ZoneShaderSettings.shaderParam_GlobalZoneLiquidUVScale, this.zoneLiquidUVScale);
-			}
-			else if (this.zoneLiquidUVScale_overrideMode == ZoneShaderSettings.EOverrideMode.ApplyDefaultValue)
-			{
-				Shader.SetGlobalFloat(ZoneShaderSettings.shaderParam_GlobalZoneLiquidUVScale, this.zoneLiquidUVScale);
-			}
-			if (this.underwaterTintColor_overrideMode == ZoneShaderSettings.EOverrideMode.ApplyNewValue || this.isDefaultValues)
-			{
-				Shader.SetGlobalColor(ZoneShaderSettings.shaderParam_GlobalWaterTintColor, this.underwaterTintColor.linear);
-			}
-			else if (this.underwaterTintColor_overrideMode == ZoneShaderSettings.EOverrideMode.ApplyDefaultValue)
-			{
-				Shader.SetGlobalColor(ZoneShaderSettings.shaderParam_GlobalWaterTintColor, ZoneShaderSettings.defaultsInstance.underwaterTintColor.linear);
-			}
-			if (this.underwaterFogColor_overrideMode == ZoneShaderSettings.EOverrideMode.ApplyNewValue || this.isDefaultValues)
-			{
-				Shader.SetGlobalColor(ZoneShaderSettings.shaderParam_GlobalUnderwaterFogColor, this.underwaterFogColor.linear);
-			}
-			else if (this.underwaterFogColor_overrideMode == ZoneShaderSettings.EOverrideMode.ApplyDefaultValue)
-			{
-				Shader.SetGlobalColor(ZoneShaderSettings.shaderParam_GlobalUnderwaterFogColor, ZoneShaderSettings.defaultsInstance.underwaterFogColor.linear);
-			}
-			if (this.underwaterFogParams_overrideMode == ZoneShaderSettings.EOverrideMode.ApplyNewValue || this.isDefaultValues)
-			{
-				Shader.SetGlobalVector(ZoneShaderSettings.shaderParam_GlobalUnderwaterFogParams, this.underwaterFogParams);
-			}
-			else if (this.underwaterFogParams_overrideMode == ZoneShaderSettings.EOverrideMode.ApplyDefaultValue)
-			{
-				Shader.SetGlobalVector(ZoneShaderSettings.shaderParam_GlobalUnderwaterFogParams, ZoneShaderSettings.defaultsInstance.underwaterFogParams);
-			}
-			if (this.underwaterCausticsParams_overrideMode == ZoneShaderSettings.EOverrideMode.ApplyNewValue || this.isDefaultValues)
-			{
-				Shader.SetGlobalVector(ZoneShaderSettings.shaderParam_GlobalUnderwaterCausticsParams, this.underwaterCausticsParams);
-			}
-			else if (this.underwaterCausticsParams_overrideMode == ZoneShaderSettings.EOverrideMode.ApplyDefaultValue)
-			{
-				Shader.SetGlobalVector(ZoneShaderSettings.shaderParam_GlobalUnderwaterCausticsParams, ZoneShaderSettings.defaultsInstance.underwaterCausticsParams);
-			}
-			if (this.underwaterCausticsTexture_overrideMode == ZoneShaderSettings.EOverrideMode.ApplyNewValue || this.isDefaultValues)
-			{
-				Shader.SetGlobalTexture(ZoneShaderSettings.shaderParam_GlobalUnderwaterCausticsTex, this.underwaterCausticsTexture);
-			}
-			else if (this.underwaterCausticsTexture_overrideMode == ZoneShaderSettings.EOverrideMode.ApplyDefaultValue)
-			{
-				Shader.SetGlobalTexture(ZoneShaderSettings.shaderParam_GlobalUnderwaterCausticsTex, ZoneShaderSettings.defaultsInstance.underwaterCausticsTexture);
-			}
-			if (this.underwaterEffectsDistanceToSurfaceFade_overrideMode == ZoneShaderSettings.EOverrideMode.ApplyNewValue || this.isDefaultValues)
-			{
-				Shader.SetGlobalVector(ZoneShaderSettings.shaderParam_GlobalUnderwaterEffectsDistanceToSurfaceFade, this.underwaterEffectsDistanceToSurfaceFade);
-			}
-			else if (this.underwaterEffectsDistanceToSurfaceFade_overrideMode == ZoneShaderSettings.EOverrideMode.ApplyDefaultValue)
-			{
-				Shader.SetGlobalVector(ZoneShaderSettings.shaderParam_GlobalUnderwaterEffectsDistanceToSurfaceFade, ZoneShaderSettings.defaultsInstance.underwaterEffectsDistanceToSurfaceFade);
-			}
-			if (this.liquidResidueTex_overrideMode == ZoneShaderSettings.EOverrideMode.ApplyNewValue || this.isDefaultValues)
-			{
-				Shader.SetGlobalTexture(ZoneShaderSettings.shaderParam_GlobalLiquidResidueTex, this.liquidResidueTex);
-			}
-			else if (this.liquidResidueTex_overrideMode == ZoneShaderSettings.EOverrideMode.ApplyDefaultValue)
-			{
-				Shader.SetGlobalTexture(ZoneShaderSettings.shaderParam_GlobalLiquidResidueTex, ZoneShaderSettings.defaultsInstance.liquidResidueTex);
-			}
+			this.ApplyFloat(ZoneShaderSettings.shaderParam_GlobalZoneLiquidUVScale, this.zoneLiquidUVScale_overrideMode, this.zoneLiquidUVScale, ZoneShaderSettings.defaultsInstance.zoneLiquidUVScale);
+			this.ApplyColor(ZoneShaderSettings.shaderParam_GlobalWaterTintColor, this.underwaterTintColor_overrideMode, this.underwaterTintColor, ZoneShaderSettings.defaultsInstance.underwaterTintColor);
+			this.ApplyColor(ZoneShaderSettings.shaderParam_GlobalUnderwaterFogColor, this.underwaterFogColor_overrideMode, this.underwaterFogColor, ZoneShaderSettings.defaultsInstance.underwaterFogColor);
+			this.ApplyVector(ZoneShaderSettings.shaderParam_GlobalUnderwaterFogParams, this.underwaterFogParams_overrideMode, this.underwaterFogParams, ZoneShaderSettings.defaultsInstance.underwaterFogParams);
+			this.ApplyVector(ZoneShaderSettings.shaderParam_GlobalUnderwaterCausticsParams, this.underwaterCausticsParams_overrideMode, this.underwaterCausticsParams, ZoneShaderSettings.defaultsInstance.underwaterCausticsParams);
+			this.ApplyTexture(ZoneShaderSettings.shaderParam_GlobalUnderwaterCausticsTex, this.underwaterCausticsTexture_overrideMode, this.underwaterCausticsTexture, ZoneShaderSettings.defaultsInstance.underwaterCausticsTexture);
+			this.ApplyVector(ZoneShaderSettings.shaderParam_GlobalUnderwaterEffectsDistanceToSurfaceFade, this.underwaterEffectsDistanceToSurfaceFade_overrideMode, this.underwaterEffectsDistanceToSurfaceFade, ZoneShaderSettings.defaultsInstance.underwaterEffectsDistanceToSurfaceFade);
+			this.ApplyTexture(ZoneShaderSettings.shaderParam_GlobalLiquidResidueTex, this.liquidResidueTex_overrideMode, this.liquidResidueTex, ZoneShaderSettings.defaultsInstance.liquidResidueTex);
+			this.ApplyFloat(ZoneShaderSettings.shaderParam_ZoneWeatherMapDissolveProgress, this.zoneWeatherMapDissolveProgress_overrideMode, this.zoneWeatherMapDissolveProgress, ZoneShaderSettings.defaultsInstance.zoneWeatherMapDissolveProgress);
 			this.UpdateMainPlaneShaderProperty();
-		}
-
-		public static void ApplyDefaultValues()
-		{
-			if (!ZoneShaderSettings.hasDefaultsInstance || ZoneShaderSettings.appIsQuitting)
-			{
-				return;
-			}
-			ZoneShaderSettings.defaultsInstance.ApplyValues();
+			ZoneShaderSettings.isInitialized = true;
 		}
 
 		private void ApplyColor(int shaderProp, ZoneShaderSettings.EOverrideMode overrideMode, Color value, Color defaultValue)
@@ -434,15 +313,60 @@ namespace GorillaTag.Rendering
 			}
 		}
 
-		[OnEnterPlay_Set(false)]
-		private static bool appIsQuitting;
+		private void ApplyVector(int shaderProp, ZoneShaderSettings.EOverrideMode overrideMode, Vector2 value, Vector2 defaultValue)
+		{
+			if (overrideMode == ZoneShaderSettings.EOverrideMode.ApplyNewValue || this.isDefaultValues)
+			{
+				Shader.SetGlobalVector(shaderProp, value);
+				return;
+			}
+			if (overrideMode == ZoneShaderSettings.EOverrideMode.ApplyDefaultValue)
+			{
+				Shader.SetGlobalVector(shaderProp, defaultValue);
+			}
+		}
+
+		private void ApplyVector(int shaderProp, ZoneShaderSettings.EOverrideMode overrideMode, Vector3 value, Vector3 defaultValue)
+		{
+			if (overrideMode == ZoneShaderSettings.EOverrideMode.ApplyNewValue || this.isDefaultValues)
+			{
+				Shader.SetGlobalVector(shaderProp, value);
+				return;
+			}
+			if (overrideMode == ZoneShaderSettings.EOverrideMode.ApplyDefaultValue)
+			{
+				Shader.SetGlobalVector(shaderProp, defaultValue);
+			}
+		}
+
+		private void ApplyVector(int shaderProp, ZoneShaderSettings.EOverrideMode overrideMode, Vector4 value, Vector4 defaultValue)
+		{
+			if (overrideMode == ZoneShaderSettings.EOverrideMode.ApplyNewValue || this.isDefaultValues)
+			{
+				Shader.SetGlobalVector(shaderProp, value);
+				return;
+			}
+			if (overrideMode == ZoneShaderSettings.EOverrideMode.ApplyDefaultValue)
+			{
+				Shader.SetGlobalVector(shaderProp, defaultValue);
+			}
+		}
+
+		private void ApplyTexture(int shaderProp, ZoneShaderSettings.EOverrideMode overrideMode, Texture2D value, Texture2D defaultValue)
+		{
+			if (overrideMode == ZoneShaderSettings.EOverrideMode.ApplyNewValue || this.isDefaultValues)
+			{
+				Shader.SetGlobalTexture(shaderProp, value);
+				return;
+			}
+			if (overrideMode == ZoneShaderSettings.EOverrideMode.ApplyDefaultValue)
+			{
+				Shader.SetGlobalTexture(shaderProp, defaultValue);
+			}
+		}
 
 		[OnEnterPlay_Set(false)]
 		private static bool isInitialized;
-
-		[DebugReadout]
-		[NonSerialized]
-		public static List<ZoneShaderSettings> activeInstanceQueue = new List<ZoneShaderSettings>(32);
 
 		[Tooltip("These values will be used as the default global values that will be fallen back to when not in a zone and that the other scripts will reference.")]
 		public bool isDefaultValues;
@@ -485,7 +409,11 @@ namespace GorillaTag.Rendering
 		[SerializeField]
 		private ZoneShaderSettings.EZoneLiquidType zoneLiquidType = ZoneShaderSettings.EZoneLiquidType.Water;
 
-		private ZoneShaderSettings.EZoneLiquidType liquidType_previousValue;
+		[OnEnterPlay_Set(ZoneShaderSettings.EZoneLiquidType.None)]
+		private static ZoneShaderSettings.EZoneLiquidType liquidType_previousValue = ZoneShaderSettings.EZoneLiquidType.None;
+
+		[OnEnterPlay_Set(false)]
+		private static bool didEverSetLiquidShape;
 
 		[SerializeField]
 		private ZoneShaderSettings.EOverrideMode liquidShape_overrideMode;
@@ -592,12 +520,24 @@ namespace GorillaTag.Rendering
 
 		private bool hasMainWaterSurfacePlane;
 
+		private bool hasDynamicWaterSurfacePlane;
+
 		[SerializeField]
 		private ZoneShaderSettings.EOverrideMode mainWaterSurfacePlane_overrideMode;
 
 		[Tooltip("TODO: remove this when there is a way to precalculate the nearest triangle plane per vertex so it will work better for rivers.")]
 		[SerializeField]
 		private Transform mainWaterSurfacePlane;
+
+		private static readonly int shaderParam_ZoneWeatherMapDissolveProgress = Shader.PropertyToID("_ZoneWeatherMapDissolveProgress");
+
+		[SerializeField]
+		private ZoneShaderSettings.EOverrideMode zoneWeatherMapDissolveProgress_overrideMode;
+
+		[Tooltip("Fog params are: start, distance (end - start), unused, unused")]
+		[Range(0f, 1f)]
+		[SerializeField]
+		private float zoneWeatherMapDissolveProgress = 1f;
 
 		public enum EOverrideMode
 		{

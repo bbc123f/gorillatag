@@ -6,12 +6,18 @@ public class GorillaLevelScreen : MonoBehaviour
 {
 	private void Awake()
 	{
-		this.startingText = this.myText.text;
+		if (this.myText != null)
+		{
+			this.startingText = this.myText.text;
+		}
 	}
 
 	public void UpdateText(string newText, bool setToGoodMaterial)
 	{
-		this.myText.text = newText;
+		if (this.myText != null)
+		{
+			this.myText.text = newText;
+		}
 		Material[] materials = base.GetComponent<MeshRenderer>().materials;
 		materials[0] = (setToGoodMaterial ? this.goodMaterial : this.badMaterial);
 		base.GetComponent<MeshRenderer>().materials = materials;

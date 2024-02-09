@@ -12,7 +12,9 @@ namespace GorillaTag.Sports
 	{
 		private void Awake()
 		{
+			SportScoreboard.Instance = this;
 			this.audioSource = base.GetComponent<AudioSource>();
+			this.scoreVisuals = new SportScoreboardVisuals[this.teamParameters.Count];
 			for (int i = 0; i < this.teamParameters.Count; i++)
 			{
 				this.teamScores.Add(0);
@@ -20,18 +22,27 @@ namespace GorillaTag.Sports
 			}
 		}
 
+		public void RegisterTeamVisual(int TeamIndex, SportScoreboardVisuals visuals)
+		{
+			this.scoreVisuals[TeamIndex] = visuals;
+			this.UpdateScoreboard();
+		}
+
 		private void UpdateScoreboard()
 		{
 			for (int i = 0; i < this.teamParameters.Count; i++)
 			{
-				int num = this.teamScores[i];
-				if (this.teamParameters[i].teamScoreDisplayColumn0)
+				if (!(this.scoreVisuals[i] == null))
 				{
-					this.teamParameters[i].teamScoreDisplayColumn0.SetUVOffset(num % 10);
-				}
-				if (this.teamParameters[i].teamScoreDisplayColumn1 != null)
-				{
-					this.teamParameters[i].teamScoreDisplayColumn1.SetUVOffset(num / 10 % 10);
+					int num = this.teamScores[i];
+					if (this.scoreVisuals[i].score1s != null)
+					{
+						this.scoreVisuals[i].score1s.SetUVOffset(num % 10);
+					}
+					if (this.scoreVisuals[i].score10s != null)
+					{
+						this.scoreVisuals[i].score10s.SetUVOffset(num / 10 % 10);
+					}
 				}
 			}
 		}
@@ -114,6 +125,9 @@ namespace GorillaTag.Sports
 			this.OnScoreUpdated();
 		}
 
+		[OnEnterPlay_SetNull]
+		public static SportScoreboard Instance;
+
 		[SerializeField]
 		private List<SportScoreboard.TeamParameters> teamParameters = new List<SportScoreboard.TeamParameters>();
 
@@ -131,15 +145,11 @@ namespace GorillaTag.Sports
 
 		private AudioSource audioSource;
 
+		private SportScoreboardVisuals[] scoreVisuals;
+
 		[Serializable]
 		private class TeamParameters
 		{
-			[SerializeField]
-			public MaterialUVOffsetListSetter teamScoreDisplayColumn0;
-
-			[SerializeField]
-			public MaterialUVOffsetListSetter teamScoreDisplayColumn1;
-
 			[SerializeField]
 			public AudioClip matchWonAudio;
 

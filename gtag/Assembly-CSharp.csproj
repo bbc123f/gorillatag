@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{564AC852-2184-4870-B5BB-E54074628F77}</ProjectGuid>
+    <ProjectGuid>{8464B888-5345-4766-86EC-AB98ADE7C8C1}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>Assembly-CSharp</RootNamespace>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -47,6 +47,9 @@
     </Reference>
     <Reference Include="netstandard">
       <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Gorilla Tag\Gorilla Tag_Data\Managed\netstandard.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Gorilla Tag\Gorilla Tag_Data\Managed\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Oculus.Platform">
       <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Gorilla Tag\Gorilla Tag_Data\Managed\Oculus.Platform.dll</HintPath>
@@ -162,6 +165,9 @@
     <Reference Include="UnityEngine.XRModule">
       <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Gorilla Tag\Gorilla Tag_Data\Managed\UnityEngine.XRModule.dll</HintPath>
     </Reference>
+    <Reference Include="VoiceSDK.Dictation.Runtime">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Gorilla Tag\Gorilla Tag_Data\Managed\VoiceSDK.Dictation.Runtime.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <AppDesigner Include="Properties\" />
@@ -177,6 +183,7 @@
     <Compile Include="AnchorUIManager.cs" />
     <Compile Include="AnimationCurves.cs" />
     <Compile Include="AppDeeplinkUI.cs" />
+    <Compile Include="ApplicationQuittingState.cs" />
     <Compile Include="ApplyMaterialProperty.cs" />
     <Compile Include="AprilFools.cs" />
     <Compile Include="ArrayUtils.cs" />
@@ -321,7 +328,6 @@
     <Compile Include="CosmeticAnchorManager.cs" />
     <Compile Include="CosmeticAnchors.cs" />
     <Compile Include="CosmeticBoundaryTrigger.cs" />
-    <Compile Include="CosmeticItem.cs" />
     <Compile Include="CosmeticPlaySoundOnColision.cs" />
     <Compile Include="CosmeticsControllerUpdateStand.cs" />
     <Compile Include="CosmeticStand.cs" />
@@ -412,6 +418,7 @@
     <Compile Include="FPSController.cs" />
     <Compile Include="FrameStamp.cs" />
     <Compile Include="FurnitureSpawner.cs" />
+    <Compile Include="FXP\CosmeticItemPrefab.cs" />
     <Compile Include="FXSArgs.cs" />
     <Compile Include="FXSystem.cs" />
     <Compile Include="FXSystemSettings.cs" />
@@ -448,6 +455,7 @@
     <Compile Include="GorillaEnemySpawner.cs" />
     <Compile Include="GorillaExtensions\GorillaMath.cs" />
     <Compile Include="GorillaExtensions\GTExt.cs" />
+    <Compile Include="GorillaExtensions\GTStringBuilderExtensions.cs" />
     <Compile Include="GorillaEyeExpressions.cs" />
     <Compile Include="GorillaFireball.cs" />
     <Compile Include="GorillaFireballControllerManager.cs" />
@@ -486,6 +494,7 @@
     <Compile Include="GorillaLocomotion\Gameplay\IGorillaGrabable.cs" />
     <Compile Include="GorillaLocomotion\Gameplay\NoncontrollableBroomstick.cs" />
     <Compile Include="GorillaLocomotion\Gameplay\OldGorillaRopeSwing.cs" />
+    <Compile Include="GorillaLocomotion\Gameplay\RopeSwingManager.cs" />
     <Compile Include="GorillaLocomotion\Gameplay\SolveRopeJob.cs" />
     <Compile Include="GorillaLocomotion\Gameplay\TestRopePerf.cs" />
     <Compile Include="GorillaLocomotion\Gameplay\TraverseSpline.cs" />
@@ -524,6 +533,9 @@
     <Compile Include="GorillaNetworking\PhotonNetworkController.cs" />
     <Compile Include="GorillaNetworking\PlayFabAuthenticator.cs" />
     <Compile Include="GorillaNetworking\PlayFabTitleDataCache.cs" />
+    <Compile Include="GorillaNetworking\Store\StoreItem.cs" />
+    <Compile Include="GorillaNetworking\Store\StoreUpdateEvent.cs" />
+    <Compile Include="GorillaNetworking\Store\StoreUpdater.cs" />
     <Compile Include="GorillaNetworkLeaveTutorialTrigger.cs" />
     <Compile Include="GorillaNetworkPublicTestJoin2.cs" />
     <Compile Include="GorillaNetworkPublicTestsJoin.cs" />
@@ -547,6 +559,7 @@
     <Compile Include="GorillaScoreCounter.cs" />
     <Compile Include="GorillaSerializer.cs" />
     <Compile Include="GorillaSerializerMasterOnly.cs" />
+    <Compile Include="GorillaSerializerScene.cs" />
     <Compile Include="GorillaSetZoneTrigger.cs" />
     <Compile Include="GorillaSoundLookupAttribute.cs" />
     <Compile Include="GorillaSpeakerLoudness.cs" />
@@ -564,10 +577,16 @@
     <Compile Include="GorillaTagScripts\MenorahCandle.cs" />
     <Compile Include="GorillaTagScripts\RandomBucketThrowable.cs" />
     <Compile Include="GorillaTag\AssignInCorePrefabAttribute.cs" />
+    <Compile Include="GorillaTag\Audio\GTAudioOneShot.cs" />
     <Compile Include="GorillaTag\Audio\PlanarSound.cs" />
     <Compile Include="GorillaTag\Audio\ProcessVoiceDataToLoudness.cs" />
     <Compile Include="GorillaTag\Audio\VoiceToLoudness.cs" />
     <Compile Include="GorillaTag\ContainerLiquid.cs" />
+    <Compile Include="GorillaTag\CosmeticSystem\CosmeticsAllSeasonsSO.cs" />
+    <Compile Include="GorillaTag\CosmeticSystem\CosmeticSO.cs" />
+    <Compile Include="GorillaTag\CosmeticSystem\CosmeticsSeasonSO.cs" />
+    <Compile Include="GorillaTag\CosmeticSystem\OldPoop_CosmeticInfoSO.cs" />
+    <Compile Include="GorillaTag\CosmeticSystem\OldPoop_SeasonInfoSO.cs" />
     <Compile Include="GorillaTag\Cosmetics\CompassNeedleRotator.cs" />
     <Compile Include="GorillaTag\Cosmetics\ConfettiPopperHoldable.cs" />
     <Compile Include="GorillaTag\Cosmetics\Dreidel.cs" />
@@ -585,23 +604,36 @@
     <Compile Include="GorillaTag\DrinkableHoldable.cs" />
     <Compile Include="GorillaTag\GTAppState.cs" />
     <Compile Include="GorillaTag\GTColor.cs" />
-    <Compile Include="GorillaTag\GuidedRefBasicReceiverFieldInfo.cs" />
-    <Compile Include="GorillaTag\GuidedRefBasicTargetInfo.cs" />
-    <Compile Include="GorillaTag\GuidedRefIdBaseSO.cs" />
-    <Compile Include="GorillaTag\GuidedRefRelayHub.cs" />
-    <Compile Include="GorillaTag\GuidedRefRelayHubIdSO.cs" />
-    <Compile Include="GorillaTag\GuidedRefTargetGameObject.cs" />
-    <Compile Include="GorillaTag\GuidedRefTargetIdSO.cs" />
+    <Compile Include="GorillaTag\GTLogErrorLimiter.cs" />
+    <Compile Include="GorillaTag\GuidedRefs\BaseGuidedRefTargetMono.cs" />
+    <Compile Include="GorillaTag\GuidedRefs\GRef.cs" />
+    <Compile Include="GorillaTag\GuidedRefs\GuidedRefBasicTargetInfo.cs" />
+    <Compile Include="GorillaTag\GuidedRefs\GuidedRefHub.cs" />
+    <Compile Include="GorillaTag\GuidedRefs\GuidedRefHubIdSO.cs" />
+    <Compile Include="GorillaTag\GuidedRefs\GuidedRefIdBaseSO.cs" />
+    <Compile Include="GorillaTag\GuidedRefs\GuidedRefReceiverArrayInfo.cs" />
+    <Compile Include="GorillaTag\GuidedRefs\GuidedRefReceiverFieldInfo.cs" />
+    <Compile Include="GorillaTag\GuidedRefs\GuidedRefTargetIdSO.cs" />
+    <Compile Include="GorillaTag\GuidedRefs\GuidedRefTargetMonoComponent.cs" />
+    <Compile Include="GorillaTag\GuidedRefs\GuidedRefTargetMonoGameObject.cs" />
+    <Compile Include="GorillaTag\GuidedRefs\GuidedRefTargetMonoTransform.cs" />
+    <Compile Include="GorillaTag\GuidedRefs\GuidedRefTryResolveInfo.cs" />
+    <Compile Include="GorillaTag\GuidedRefs\IGuidedRefMonoBehaviour.cs" />
+    <Compile Include="GorillaTag\GuidedRefs\IGuidedRefObject.cs" />
+    <Compile Include="GorillaTag\GuidedRefs\IGuidedRefReceiverMono.cs" />
+    <Compile Include="GorillaTag\GuidedRefs\IGuidedRefTargetMono.cs" />
+    <Compile Include="GorillaTag\GuidedRefs\Internal\RelayInfo.cs" />
+    <Compile Include="GorillaTag\GuidedRefs\RegisteredReceiverFieldInfo.cs" />
     <Compile Include="GorillaTag\HeartRingCosmetic.cs" />
     <Compile Include="GorillaTag\IDynamicFloat.cs" />
-    <Compile Include="GorillaTag\IGuidedRefMonoBehaviour.cs" />
-    <Compile Include="GorillaTag\IGuidedRefObject.cs" />
-    <Compile Include="GorillaTag\IGuidedRefReceiver.cs" />
-    <Compile Include="GorillaTag\IGuidedRefTarget.cs" />
     <Compile Include="GorillaTag\InfectionLavaController.cs" />
     <Compile Include="GorillaTag\InspectorNote.cs" />
     <Compile Include="GorillaTag\IResettableItem.cs" />
     <Compile Include="GorillaTag\MaterialDatasSO.cs" />
+    <Compile Include="GorillaTag\Reactions\FireExtinguishReaction.cs" />
+    <Compile Include="GorillaTag\Reactions\FireExtinguishReactionManager.cs" />
+    <Compile Include="GorillaTag\Reactions\GorillaMaterialReaction.cs" />
+    <Compile Include="GorillaTag\Reactions\ParticleCollisionWatcher.cs" />
     <Compile Include="GorillaTag\Reactions\ShakeReaction.cs" />
     <Compile Include="GorillaTag\Rendering\FirstPersonMeshCullingDisabler.cs" />
     <Compile Include="GorillaTag\Rendering\MeshCombiner\EdDoNotMeshCombine.cs" />
@@ -623,16 +655,20 @@
     <Compile Include="GorillaTag\StaticLodGroup.cs" />
     <Compile Include="GorillaTag\StaticLodGroupExcluder.cs" />
     <Compile Include="GorillaTag\StaticLodManager.cs" />
+    <Compile Include="GorillaTag\SturdyAssetRef.cs" />
     <Compile Include="GorillaTag\TextureTransitioner.cs" />
     <Compile Include="GorillaTag\TextureTransitionerManager.cs" />
     <Compile Include="GorillaTag\VectorLabelTextAttribute.cs" />
     <Compile Include="GorillaTag\VolcanoEffects.cs" />
+    <Compile Include="GorillaTag\WatchableGameObjectSO.cs" />
+    <Compile Include="GorillaTag\WatchableIntSO.cs" />
     <Compile Include="GorillaThrowable.cs" />
     <Compile Include="GorillaThrowableController.cs" />
     <Compile Include="GorillaThrowingRock.cs" />
     <Compile Include="GorillaTrigger.cs" />
     <Compile Include="GorillaTriggerBox.cs" />
     <Compile Include="GorillaTriggerBoxGameFlag.cs" />
+    <Compile Include="GorillaTriggerBoxShaderSettings.cs" />
     <Compile Include="GorillaTriggerBoxTeleport.cs" />
     <Compile Include="GorillaTriggerColliderHandIndicator.cs" />
     <Compile Include="GorillaTurning.cs" />
@@ -677,7 +713,8 @@
     <Compile Include="HeadModel.cs" />
     <Compile Include="HeightVolume.cs" />
     <Compile Include="HitChecker.cs" />
-    <Compile Include="HitTargetWithScoreCounter.cs" />
+    <Compile Include="HitTargetNetworkState.cs" />
+    <Compile Include="HitTargetScoreDisplay.cs" />
     <Compile Include="HoldableLeftHandReference.cs" />
     <Compile Include="HoldableObject.cs" />
     <Compile Include="HoldableRightHandReference.cs" />
@@ -691,6 +728,7 @@
     <Compile Include="IFXContext.cs" />
     <Compile Include="IFXContextParems.cs" />
     <Compile Include="IGorillaSerializeable.cs" />
+    <Compile Include="IGorillaSerializeableScene.cs" />
     <Compile Include="ImplosionExplosionMain.cs" />
     <Compile Include="InteractionPoint.cs" />
     <Compile Include="InteractionPointManager.cs" />
@@ -770,6 +808,7 @@
     <Compile Include="MathUtils.cs" />
     <Compile Include="MazePlayerCollection.cs" />
     <Compile Include="MediaPlayerImage.cs" />
+    <Compile Include="Microsoft\CodeAnalysis\EmbeddedAttribute.cs" />
     <Compile Include="MirrorCameraScript.cs" />
     <Compile Include="ModeSelectButton.cs" />
     <Compile Include="MonkeCandle.cs" />
@@ -843,6 +882,7 @@
     <Compile Include="OculusSampleFramework\TrainTrack.cs" />
     <Compile Include="OculusSampleFramework\WindmillBladesController.cs" />
     <Compile Include="OculusSampleFramework\WindmillController.cs" />
+    <Compile Include="OnEnterPlaySystem.cs" />
     <Compile Include="OnEnterPlay_Attribute.cs" />
     <Compile Include="OnEnterPlay_Clear.cs" />
     <Compile Include="OnEnterPlay_Run.cs" />
@@ -881,6 +921,7 @@
     <Compile Include="PassthroughProjectionSurface.cs" />
     <Compile Include="PassthroughStyler.cs" />
     <Compile Include="PassthroughSurface.cs" />
+    <Compile Include="PerSceneRenderData.cs" />
     <Compile Include="PhotonEvent.cs" />
     <Compile Include="PhotonPrefabPool.cs" />
     <Compile Include="PhotonTag.cs" />
@@ -930,6 +971,9 @@
     <Compile Include="SceneSampler.cs" />
     <Compile Include="SceneSettings.cs" />
     <Compile Include="ScheduledTimelinePlayer.cs" />
+    <Compile Include="ScienceExperimentElementID.cs" />
+    <Compile Include="ScienceExperimentSceneElement.cs" />
+    <Compile Include="ScienceExperimentSceneElements.cs" />
     <Compile Include="SelectivePassthroughExperience.cs" />
     <Compile Include="ShaderGroup.cs" />
     <Compile Include="ShaderHashId.cs" />
@@ -988,6 +1032,7 @@
     <Compile Include="SplineDecorator.cs" />
     <Compile Include="SplineWalker.cs" />
     <Compile Include="SplineWalkerMode.cs" />
+    <Compile Include="SportScoreboardVisuals.cs" />
     <Compile Include="SPPquad.cs" />
     <Compile Include="SquashAndStretchComparison.cs" />
     <Compile Include="SRand.cs" />
@@ -1007,6 +1052,7 @@
     <Compile Include="SubSplineGrabPoint.cs" />
     <Compile Include="SurfaceImpactFX.cs" />
     <Compile Include="SynchedMusicController.cs" />
+    <Compile Include="System\Runtime\CompilerServices\NullableAttribute.cs" />
     <Compile Include="Tappable.cs" />
     <Compile Include="TappableManager.cs" />
     <Compile Include="TappableSystem.cs" />
@@ -1035,7 +1081,7 @@
     <Compile Include="TempMask.cs" />
     <Compile Include="TestJoinPrivateRoomButton.cs" />
     <Compile Include="TestScript.cs" />
-    <Compile Include="TextCopier.cs" />
+    <Compile Include="TextWatcher.cs" />
     <Compile Include="ThermalManager.cs" />
     <Compile Include="ThermalReceiver.cs" />
     <Compile Include="ThermalSourceVolume.cs" />
@@ -1149,8 +1195,12 @@
     <Compile Include="VRRigSerializer.cs" />
     <Compile Include="WanderingGhost.cs" />
     <Compile Include="WardrobeFunctionButton.cs" />
+    <Compile Include="WardrobeInstance.cs" />
     <Compile Include="WardrobeItemButton.cs" />
     <Compile Include="WASD.cs" />
+    <Compile Include="Watchable.cs" />
+    <Compile Include="WatchableGenericSO.cs" />
+    <Compile Include="WatchableStringSO.cs" />
     <Compile Include="WaterRippleEffect.cs" />
     <Compile Include="WaterSplashEffect.cs" />
     <Compile Include="WaterSurfaceMaterialController.cs" />
@@ -1163,8 +1213,10 @@
     <Compile Include="XfToXfLine.cs" />
     <Compile Include="YorickLook.cs" />
     <Compile Include="ZoneBasedObject.cs" />
+    <Compile Include="ZoneConditionalVisibility.cs" />
     <Compile Include="ZoneData.cs" />
     <Compile Include="ZoneManagement.cs" />
+    <Compile Include="ZoneRootRegister.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

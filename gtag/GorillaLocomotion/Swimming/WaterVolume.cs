@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using CjLib;
 using GorillaLocomotion.Climbing;
+using GorillaTag.GuidedRefs;
 using UnityEngine;
 
 namespace GorillaLocomotion.Swimming
 {
 	[RequireComponent(typeof(Collider))]
-	public class WaterVolume : MonoBehaviour
+	public class WaterVolume : BaseGuidedRefTargetMono
 	{
 		public event WaterVolume.WaterVolumeEvent ColliderEnteredVolume;
 
@@ -200,8 +201,9 @@ namespace GorillaLocomotion.Swimming
 			return false;
 		}
 
-		private void Awake()
+		protected override void Awake()
 		{
+			base.Awake();
 			this.triggerCollider = base.GetComponent<Collider>();
 			if (this.volumeColliders == null || this.volumeColliders.Count < 1)
 			{
@@ -229,6 +231,10 @@ namespace GorillaLocomotion.Swimming
 
 		private void OnDisable()
 		{
+			if (ApplicationQuittingState.IsQuitting)
+			{
+				return;
+			}
 			for (int i = 0; i < this.persistentColliders.Count; i++)
 			{
 				WaterOverlappingCollider waterOverlappingCollider = this.persistentColliders[i];
@@ -290,6 +296,10 @@ namespace GorillaLocomotion.Swimming
 
 		private void RemoveCollidersOutsideVolume(float currentTime)
 		{
+			if (ApplicationQuittingState.IsQuitting)
+			{
+				return;
+			}
 			for (int i = this.persistentColliders.Count - 1; i >= 0; i--)
 			{
 				WaterOverlappingCollider waterOverlappingCollider = this.persistentColliders[i];
@@ -625,6 +635,10 @@ namespace GorillaLocomotion.Swimming
 		private Collider triggerCollider;
 
 		private List<WaterOverlappingCollider> persistentColliders = new List<WaterOverlappingCollider>(16);
+
+		private GuidedRefTargetIdSO _guidedRefTargetId;
+
+		private Object _guidedRefTargetObject;
 
 		public struct SurfaceQuery
 		{

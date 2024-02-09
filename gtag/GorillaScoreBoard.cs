@@ -132,7 +132,7 @@ public class GorillaScoreBoard : MonoBehaviour
 
 	public bool needsUpdate;
 
-	public GameObject notInRoomText;
+	public Text notInRoomText;
 
 	public string initialGameMode;
 

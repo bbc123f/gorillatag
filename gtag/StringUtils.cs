@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using UnityEngine;
 
 public static class StringUtils
@@ -69,6 +70,23 @@ public static class StringUtils
 			stringBuilder.Append(values);
 		}
 		return stringBuilder.ToString();
+	}
+
+	public static string ToUpperCamelCase(this string input)
+	{
+		if (string.IsNullOrWhiteSpace(input))
+		{
+			return string.Empty;
+		}
+		string[] array = Regex.Split(input, "[^A-Za-z0-9]+");
+		for (int i = 0; i < array.Length; i++)
+		{
+			if (array[i].Length > 0)
+			{
+				array[i] = char.ToUpper(array[i][0]).ToString() + ((array[i].Length > 1) ? array[i].Substring(1).ToLower() : "");
+			}
+		}
+		return string.Join("", array);
 	}
 
 	public const string kForwardSlash = "/";

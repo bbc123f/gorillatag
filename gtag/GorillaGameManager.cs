@@ -250,6 +250,10 @@ public abstract class GorillaGameManager : MonoBehaviour, IInRoomCallbacks, IGor
 
 	public virtual void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
 	{
+		if (changedProps.ContainsKey(255))
+		{
+			GorillaScoreboardTotalUpdater.instance.UpdateActiveScoreboards();
+		}
 	}
 
 	public Room currentRoom;

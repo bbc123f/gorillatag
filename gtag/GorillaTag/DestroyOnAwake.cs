@@ -7,7 +7,35 @@ namespace GorillaTag
 	{
 		protected void Awake()
 		{
-			Object.Destroy(base.gameObject);
+			try
+			{
+				Object.Destroy(base.gameObject);
+			}
+			catch
+			{
+			}
+		}
+
+		protected void OnEnable()
+		{
+			try
+			{
+				Object.Destroy(base.gameObject);
+			}
+			catch
+			{
+			}
+		}
+
+		protected void Update()
+		{
+			try
+			{
+				Object.Destroy(base.gameObject);
+			}
+			catch
+			{
+			}
 		}
 	}
 }

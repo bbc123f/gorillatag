@@ -6,6 +6,16 @@ using UnityEngine;
 
 public class BetterDayNightManager : MonoBehaviour, ITimeOfDaySystem
 {
+	public static void Register(PerSceneRenderData data)
+	{
+		BetterDayNightManager.allScenesRenderData.Add(data);
+	}
+
+	public static void Unregister(PerSceneRenderData data)
+	{
+		BetterDayNightManager.allScenesRenderData.Remove(data);
+	}
+
 	public string currentTimeOfDay { get; private set; }
 
 	double ITimeOfDaySystem.currentTimeInSeconds
@@ -97,7 +107,7 @@ public class BetterDayNightManager : MonoBehaviour, ITimeOfDaySystem
 					{
 						this.computerInit = true;
 						this.initialDayCycles = (long)(TimeSpan.FromMilliseconds((double)GorillaComputer.instance.startupMillis).TotalSeconds * this.timeMultiplier / this.totalSeconds);
-						this.currentWeatherIndex = (int)(this.initialDayCycles * (long)this.dayNightLightmaps.Length) % this.weatherCycle.Length;
+						this.currentWeatherIndex = (int)(this.initialDayCycles * (long)this.dayNightLightmapNames.Length) % this.weatherCycle.Length;
 						this.baseSeconds = TimeSpan.FromMilliseconds((double)GorillaComputer.instance.startupMillis).TotalSeconds * this.timeMultiplier % this.totalSeconds;
 						this.currentTime = (this.baseSeconds + (double)Time.realtimeSinceStartup * this.timeMultiplier) % this.totalSeconds;
 						this.currentIndexSeconds = 0.0;
@@ -115,7 +125,7 @@ public class BetterDayNightManager : MonoBehaviour, ITimeOfDaySystem
 					else if (!this.computerInit && this.baseSeconds == 0.0)
 					{
 						this.initialDayCycles = (long)(TimeSpan.FromTicks(DateTime.UtcNow.Ticks).TotalSeconds * this.timeMultiplier / this.totalSeconds);
-						this.currentWeatherIndex = (int)(this.initialDayCycles * (long)this.dayNightLightmaps.Length) % this.weatherCycle.Length;
+						this.currentWeatherIndex = (int)(this.initialDayCycles * (long)this.dayNightLightmapNames.Length) % this.weatherCycle.Length;
 						this.baseSeconds = TimeSpan.FromTicks(DateTime.UtcNow.Ticks).TotalSeconds * this.timeMultiplier % this.totalSeconds;
 						this.currentTime = this.baseSeconds % this.totalSeconds;
 						this.currentIndexSeconds = 0.0;
@@ -153,7 +163,7 @@ public class BetterDayNightManager : MonoBehaviour, ITimeOfDaySystem
 					this.currentLerp = (float)(1.0 - (this.currentIndexSeconds - this.currentTime) / (this.timeOfDayRange[this.currentTimeIndex] * 3600.0));
 					this.ChangeLerps(this.currentLerp);
 					this.lastIndex = this.currentTimeIndex;
-					this.currentTimeOfDay = this.dayNightLightmaps[this.currentTimeIndex].name;
+					this.currentTimeOfDay = this.dayNightLightmapNames[this.currentTimeIndex];
 				}
 				catch (Exception ex)
 				{
@@ -198,30 +208,25 @@ public class BetterDayNightManager : MonoBehaviour, ITimeOfDaySystem
 		this.toWeatherIndex = (this.currentWeatherIndex + 1) % this.weatherCycle.Length;
 		if (this.weatherCycle[this.fromWeatherIndex] == BetterDayNightManager.WeatherType.Raining)
 		{
-			this.fromMap = this.dayNightWeatherLightmaps[fromIndex];
 			this.fromSky = this.dayNightWeatherSkyboxTextures[fromIndex];
 		}
 		else
 		{
-			this.fromMap = this.dayNightLightmaps[fromIndex];
 			this.fromSky = this.dayNightSkyboxTextures[fromIndex];
 		}
 		this.fromSky2 = this.cloudsDayNightSkyboxTextures[fromIndex];
 		this.fromSky3 = this.beachDayNightSkyboxTextures[fromIndex];
 		if (this.weatherCycle[this.toWeatherIndex] == BetterDayNightManager.WeatherType.Raining)
 		{
-			this.toMap = this.dayNightWeatherLightmaps[toIndex];
 			this.toSky = this.dayNightWeatherSkyboxTextures[toIndex];
 		}
 		else
 		{
-			this.toMap = this.dayNightLightmaps[toIndex];
 			this.toSky = this.dayNightSkyboxTextures[toIndex];
 		}
 		this.toSky2 = this.cloudsDayNightSkyboxTextures[toIndex];
 		this.toSky3 = this.beachDayNightSkyboxTextures[toIndex];
-		Shader.SetGlobalTexture(this._GlobalDayNightLightmap1, this.fromMap);
-		Shader.SetGlobalTexture(this._GlobalDayNightLightmap2, this.toMap);
+		this.PopulateAllLightmaps(fromIndex, toIndex);
 		Shader.SetGlobalTexture(this._GlobalDayNightSkyTex1, this.fromSky);
 		Shader.SetGlobalTexture(this._GlobalDayNightSkyTex2, this.toSky);
 		Shader.SetGlobalTexture(this._GlobalDayNightSky2Tex1, this.fromSky2);
@@ -232,6 +237,66 @@ public class BetterDayNightManager : MonoBehaviour, ITimeOfDaySystem
 		this.colorTo = this.standardUnlitColor[toIndex];
 		this.colorFromDarker = this.standardUnlitColorWithPremadeColorDarker[fromIndex];
 		this.colorToDarker = this.standardUnlitColorWithPremadeColorDarker[toIndex];
+	}
+
+	private void Update()
+	{
+		if (!this.shouldRepopulate)
+		{
+			using (List<PerSceneRenderData>.Enumerator enumerator = BetterDayNightManager.allScenesRenderData.GetEnumerator())
+			{
+				while (enumerator.MoveNext())
+				{
+					if (enumerator.Current.CheckShouldRepopulate())
+					{
+						this.shouldRepopulate = true;
+					}
+				}
+			}
+		}
+		if (this.shouldRepopulate)
+		{
+			this.PopulateAllLightmaps();
+			this.shouldRepopulate = false;
+		}
+	}
+
+	public void RequestRepopulateLightmaps()
+	{
+		this.shouldRepopulate = true;
+	}
+
+	public void PopulateAllLightmaps()
+	{
+		this.PopulateAllLightmaps(this.currentTimeIndex, (this.currentTimeIndex + 1) % this.timeOfDayRange.Length);
+	}
+
+	public void PopulateAllLightmaps(int fromIndex, int toIndex)
+	{
+		string text;
+		if (this.weatherCycle[this.fromWeatherIndex] == BetterDayNightManager.WeatherType.Raining)
+		{
+			text = this.dayNightWeatherLightmapNames[fromIndex];
+		}
+		else
+		{
+			text = this.dayNightLightmapNames[fromIndex];
+		}
+		string text2;
+		if (this.weatherCycle[this.toWeatherIndex] == BetterDayNightManager.WeatherType.Raining)
+		{
+			text2 = this.dayNightWeatherLightmapNames[toIndex];
+		}
+		else
+		{
+			text2 = this.dayNightLightmapNames[toIndex];
+		}
+		LightmapData[] lightmaps = LightmapSettings.lightmaps;
+		foreach (PerSceneRenderData perSceneRenderData in BetterDayNightManager.allScenesRenderData)
+		{
+			perSceneRenderData.PopulateLightmaps(text, text2, lightmaps);
+		}
+		LightmapSettings.lightmaps = lightmaps;
 	}
 
 	public BetterDayNightManager.WeatherType CurrentWeather()
@@ -251,7 +316,7 @@ public class BetterDayNightManager : MonoBehaviour, ITimeOfDaySystem
 
 	private void GenerateWeatherEventTimes()
 	{
-		this.weatherCycle = new BetterDayNightManager.WeatherType[100 * this.dayNightLightmaps.Length];
+		this.weatherCycle = new BetterDayNightManager.WeatherType[100 * this.dayNightLightmapNames.Length];
 		this.rainChance = this.rainChance * 2f / (float)this.maxRainDuration;
 		for (int i = 1; i < this.weatherCycle.Length; i++)
 		{
@@ -297,7 +362,7 @@ public class BetterDayNightManager : MonoBehaviour, ITimeOfDaySystem
 		this.overrideIndex = index;
 		this.currentWeatherIndex = this.overrideIndex;
 		this.currentTimeIndex = this.overrideIndex;
-		this.currentTimeOfDay = this.dayNightLightmaps[this.currentTimeIndex].name;
+		this.currentTimeOfDay = this.dayNightLightmapNames[this.currentTimeIndex];
 		this.ChangeMaps(this.currentTimeIndex, (this.currentTimeIndex + 1) % this.timeOfDayRange.Length);
 	}
 
@@ -354,6 +419,9 @@ public class BetterDayNightManager : MonoBehaviour, ITimeOfDaySystem
 	[OnEnterPlay_SetNull]
 	public static volatile BetterDayNightManager instance;
 
+	[OnEnterPlay_Clear]
+	public static List<PerSceneRenderData> allScenesRenderData = new List<PerSceneRenderData>();
+
 	public Shader standard;
 
 	public Shader standardCutout;
@@ -370,9 +438,9 @@ public class BetterDayNightManager : MonoBehaviour, ITimeOfDaySystem
 
 	public Material[] dayNightSupportedMaterialsCutout;
 
-	public Texture2D[] dayNightLightmaps;
+	public string[] dayNightLightmapNames;
 
-	public Texture2D[] dayNightWeatherLightmaps;
+	public string[] dayNightWeatherLightmapNames;
 
 	public Texture2D[] dayNightSkyboxTextures;
 
@@ -454,15 +522,11 @@ public class BetterDayNightManager : MonoBehaviour, ITimeOfDaySystem
 
 	private int toWeatherIndex;
 
-	private Texture2D fromMap;
-
 	private Texture2D fromSky;
 
 	private Texture2D fromSky2;
 
 	private Texture2D fromSky3;
-
-	private Texture2D toMap;
 
 	private Texture2D toSky;
 
@@ -485,10 +549,6 @@ public class BetterDayNightManager : MonoBehaviour, ITimeOfDaySystem
 
 	private ShaderHashId _GlobalDayNightLerpValue = "_GlobalDayNightLerpValue";
 
-	private ShaderHashId _GlobalDayNightLightmap1 = "_GlobalDayNightLightmap1";
-
-	private ShaderHashId _GlobalDayNightLightmap2 = "_GlobalDayNightLightmap2";
-
 	private ShaderHashId _GlobalDayNightSkyTex1 = "_GlobalDayNightSkyTex1";
 
 	private ShaderHashId _GlobalDayNightSkyTex2 = "_GlobalDayNightSkyTex2";
@@ -500,6 +560,8 @@ public class BetterDayNightManager : MonoBehaviour, ITimeOfDaySystem
 	private ShaderHashId _GlobalDayNightSky3Tex1 = "_GlobalDayNightSky3Tex1";
 
 	private ShaderHashId _GlobalDayNightSky3Tex2 = "_GlobalDayNightSky3Tex2";
+
+	private bool shouldRepopulate;
 
 	private Coroutine animatingLightFlash;
 

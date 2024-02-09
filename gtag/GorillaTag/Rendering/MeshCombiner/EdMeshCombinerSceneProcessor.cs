@@ -24,7 +24,7 @@ namespace GorillaTag.Rendering.MeshCombiner
 
 		public const int kMaxVertCount = 65535;
 
-		public const bool kDebugAllowMeshCombining = true;
+		public const bool kDebugAllowMeshCombining = false;
 
 		private static Dictionary<Hash128, Mesh> meshCache;
 

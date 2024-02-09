@@ -181,6 +181,34 @@ public class EdibleHoldable : TransferrableObject
 		}
 		this.edibleMeshObjects[num4].SetActive(false);
 		this.edibleMeshObjects[num3].SetActive(true);
+		if ((this.itemState != TransferrableObject.ItemStates.State0 && this.onBiteView != null) || this.onBiteWorld != null)
+		{
+			VRRig vrrig = null;
+			float num5 = float.PositiveInfinity;
+			for (int j = 0; j < GorillaParent.instance.vrrigs.Count; j++)
+			{
+				VRRig vrrig2 = GorillaParent.instance.vrrigs[j];
+				if (vrrig2.head == null || vrrig2.head.rigTarget == null)
+				{
+					break;
+				}
+				Transform transform = vrrig2.head.rigTarget.transform;
+				float sqrMagnitude = (transform.position + transform.rotation * this.biteOffset - this.biteSpot.position).sqrMagnitude;
+				if (sqrMagnitude < num5)
+				{
+					num5 = sqrMagnitude;
+					vrrig = vrrig2;
+				}
+			}
+			if (vrrig != null)
+			{
+				EdibleHoldable.BiteEvent biteEvent = (vrrig.isOfflineVRRig ? this.onBiteView : this.onBiteWorld);
+				if (biteEvent != null)
+				{
+					biteEvent.Invoke(vrrig, (int)this.itemState);
+				}
+			}
+		}
 		this.eatSoundSource.PlayOneShot(this.eatSounds[num3], num2);
 		if (this.IsMyItem())
 		{

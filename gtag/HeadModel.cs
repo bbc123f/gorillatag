@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using GorillaNetworking;
 using UnityEngine;
 
 public class HeadModel : MonoBehaviour
@@ -43,6 +44,25 @@ public class HeadModel : MonoBehaviour
 			this.SetChildRendererWithOverride(gameObject, false, forRightSide);
 		}
 		this.currentActiveObjects.Clear();
+		this.ClearDynamicallyLoadedActiveObjects();
+		CosmeticsController.CosmeticItem itemFromDict = CosmeticsController.instance.GetItemFromDict(activeCosmeticName);
+		if (!itemFromDict.isNullItem && itemFromDict.bLoadsFromResources)
+		{
+			GameObject gameObject2 = Object.Instantiate(Resources.Load(itemFromDict.meshResourceString), base.transform) as GameObject;
+			gameObject2.transform.localRotation = Quaternion.Euler(itemFromDict.rotationOffset);
+			gameObject2.transform.localPosition = itemFromDict.positionOffset;
+			if (itemFromDict.materialResourceString != string.Empty)
+			{
+				Resources.Load<Material>(itemFromDict.materialResourceString);
+				MeshRenderer[] componentsInChildren = gameObject2.GetComponentsInChildren<MeshRenderer>();
+				for (int i = 0; i < componentsInChildren.Length; i++)
+				{
+					componentsInChildren[i].sharedMaterial = Resources.Load<Material>(itemFromDict.materialResourceString);
+				}
+			}
+			this.currentDynamicallyLoadedActiveObjects.Add(gameObject2);
+			return;
+		}
 		if (this.cosmeticDict.TryGetValue(activeCosmeticName, out this.objRef))
 		{
 			this.currentActiveObjects.Add(this.objRef);
@@ -57,14 +77,41 @@ public class HeadModel : MonoBehaviour
 			this.SetChildRendererWithOverride(gameObject, false, false);
 		}
 		this.currentActiveObjects.Clear();
+		this.ClearDynamicallyLoadedActiveObjects();
 		for (int i = 0; i < activeCosmeticNames.Length; i++)
 		{
-			if (this.cosmeticDict.TryGetValue(activeCosmeticNames[i], out this.objRef))
+			CosmeticsController.CosmeticItem itemFromDict = CosmeticsController.instance.GetItemFromDict(activeCosmeticNames[i]);
+			if (!itemFromDict.isNullItem && itemFromDict.bLoadsFromResources)
+			{
+				GameObject gameObject2 = Object.Instantiate(Resources.Load(itemFromDict.meshResourceString), base.transform) as GameObject;
+				gameObject2.transform.localRotation = Quaternion.Euler(itemFromDict.rotationOffset);
+				gameObject2.transform.localPosition = itemFromDict.positionOffset;
+				if (itemFromDict.materialResourceString != string.Empty)
+				{
+					Resources.Load<Material>(itemFromDict.materialResourceString);
+					MeshRenderer[] componentsInChildren = gameObject2.GetComponentsInChildren<MeshRenderer>();
+					for (int j = 0; j < componentsInChildren.Length; j++)
+					{
+						componentsInChildren[j].sharedMaterial = Resources.Load<Material>(itemFromDict.materialResourceString);
+					}
+				}
+				this.currentDynamicallyLoadedActiveObjects.Add(gameObject2);
+			}
+			else if (this.cosmeticDict.TryGetValue(activeCosmeticNames[i], out this.objRef))
 			{
 				this.currentActiveObjects.Add(this.objRef);
 				this.SetChildRendererWithOverride(this.objRef, true, forRightSideArray[i]);
 			}
 		}
+	}
+
+	public void ClearDynamicallyLoadedActiveObjects()
+	{
+		foreach (GameObject gameObject in this.currentDynamicallyLoadedActiveObjects)
+		{
+			Object.Destroy(gameObject);
+		}
+		this.currentDynamicallyLoadedActiveObjects.Clear();
 	}
 
 	private void SetChildRendererWithOverride(GameObject obj, bool setEnabled, bool forRightSide)
@@ -111,6 +158,8 @@ public class HeadModel : MonoBehaviour
 	private List<GameObject> currentActiveObjects = new List<GameObject>();
 
 	private Dictionary<string, GameObject> cosmeticDict = new Dictionary<string, GameObject>();
+
+	private List<GameObject> currentDynamicallyLoadedActiveObjects = new List<GameObject>();
 
 	private bool initialized;
 }

@@ -9,6 +9,20 @@ public class MirrorCameraScript : MonoBehaviour
 		{
 			this.mainCamera = Camera.main;
 		}
+		GorillaTagger.Instance.MirrorCameraCullingMask.AddCallback(new Action<int>(this.MirrorCullingMaskChanged), true);
+	}
+
+	private void OnDestroy()
+	{
+		if (GorillaTagger.Instance != null)
+		{
+			GorillaTagger.Instance.MirrorCameraCullingMask.RemoveCallback(new Action<int>(this.MirrorCullingMaskChanged));
+		}
+	}
+
+	private void MirrorCullingMaskChanged(int newMask)
+	{
+		this.mirrorCamera.cullingMask = newMask;
 	}
 
 	private void LateUpdate()

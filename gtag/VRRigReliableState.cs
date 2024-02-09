@@ -70,6 +70,7 @@ public class VRRigReliableState : MonoBehaviourPunCallbacks, IGorillaSerializeab
 		stream.SendNext(this.rThrowableProjectileColor.r);
 		stream.SendNext(this.rThrowableProjectileColor.g);
 		stream.SendNext(this.rThrowableProjectileColor.b);
+		stream.SendNext(this.isMicEnabled);
 		stream.SendNext(this.sizeLayerMask);
 		stream.SendNext(this.randomThrowableIndex);
 	}
@@ -92,6 +93,7 @@ public class VRRigReliableState : MonoBehaviourPunCallbacks, IGorillaSerializeab
 		this.rThrowableProjectileColor.r = (float)stream.ReceiveNext();
 		this.rThrowableProjectileColor.g = (float)stream.ReceiveNext();
 		this.rThrowableProjectileColor.b = (float)stream.ReceiveNext();
+		this.isMicEnabled = (bool)stream.ReceiveNext();
 		this.sizeLayerMask = (int)stream.ReceiveNext();
 		this.randomThrowableIndex = (int)stream.ReceiveNext();
 		this.bDock.RefreshTransferrableItems();
@@ -126,6 +128,9 @@ public class VRRigReliableState : MonoBehaviourPunCallbacks, IGorillaSerializeab
 
 	[NonSerialized]
 	public int randomThrowableIndex;
+
+	[NonSerialized]
+	public bool isMicEnabled;
 
 	private bool isOfflineVRRig;
 

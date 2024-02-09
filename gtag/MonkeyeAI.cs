@@ -316,18 +316,18 @@ public class MonkeyeAI : MonoBehaviour
 		{
 			this.SetDefaultState();
 		}
-		if (!this.replState.floorEnabled)
+		if (ColliderEnabledManager.instance != null && !this.replState.floorEnabled)
 		{
 			if (!PhotonNetwork.InRoom)
 			{
 				if (this.replState.userId == "-1")
 				{
-					this.collMan.DisableFloorForFrame();
+					ColliderEnabledManager.instance.DisableFloorForFrame();
 				}
 			}
 			else if (this.replState.userId == PhotonNetwork.LocalPlayer.UserId)
 			{
-				this.collMan.DisableFloorForFrame();
+				ColliderEnabledManager.instance.DisableFloorForFrame();
 			}
 		}
 		if (this.portalFx.activeSelf != this.replState.portalEnabled)
@@ -691,8 +691,6 @@ public class MonkeyeAI : MonoBehaviour
 	public PlayerCollection playersInRoomCollection;
 
 	private List<VRRig> validRigs = new List<VRRig>();
-
-	public ColliderEnabledManager collMan;
 
 	public GameObject portalFx;
 

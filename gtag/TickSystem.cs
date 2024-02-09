@@ -7,6 +7,7 @@ internal abstract class TickSystem<T> : MonoBehaviour
 {
 	private void Awake()
 	{
+		base.transform.SetParent(null, true);
 		Object.DontDestroyOnLoad(this);
 	}
 
@@ -19,6 +20,16 @@ internal abstract class TickSystem<T> : MonoBehaviour
 	private void LateUpdate()
 	{
 		TickSystem<T>.postTickCallbacks.TryRunCallbacks();
+	}
+
+	private static void OnEnterPlay()
+	{
+		TickSystem<T>.preTickCallbacks.Clear();
+		TickSystem<T>.preTickWrapperTable.Clear();
+		TickSystem<T>.tickCallbacks.Clear();
+		TickSystem<T>.tickWrapperTable.Clear();
+		TickSystem<T>.postTickCallbacks.Clear();
+		TickSystem<T>.postTickWrapperTable.Clear();
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -168,26 +179,20 @@ internal abstract class TickSystem<T> : MonoBehaviour
 
 	private static readonly ObjectPool<TickSystem<T>.TickCallbackWrapperPre> preTickWrapperPool = new ObjectPool<TickSystem<T>.TickCallbackWrapperPre>(100);
 
-	[OnEnterPlay_Clear]
 	private static readonly CallbackContainer<TickSystem<T>.TickCallbackWrapperPre> preTickCallbacks = new CallbackContainer<TickSystem<T>.TickCallbackWrapperPre>();
 
-	[OnEnterPlay_Clear]
 	private static readonly Dictionary<ITickSystemPre, TickSystem<T>.TickCallbackWrapperPre> preTickWrapperTable = new Dictionary<ITickSystemPre, TickSystem<T>.TickCallbackWrapperPre>(100);
 
 	private static readonly ObjectPool<TickSystem<T>.TickCallbackWrapperTick> tickWrapperPool = new ObjectPool<TickSystem<T>.TickCallbackWrapperTick>(100);
 
-	[OnEnterPlay_Clear]
 	private static readonly CallbackContainer<TickSystem<T>.TickCallbackWrapperTick> tickCallbacks = new CallbackContainer<TickSystem<T>.TickCallbackWrapperTick>();
 
-	[OnEnterPlay_Clear]
 	private static readonly Dictionary<ITickSystemTick, TickSystem<T>.TickCallbackWrapperTick> tickWrapperTable = new Dictionary<ITickSystemTick, TickSystem<T>.TickCallbackWrapperTick>(100);
 
 	private static readonly ObjectPool<TickSystem<T>.TickCallbackWrapperPost> postTickWrapperPool = new ObjectPool<TickSystem<T>.TickCallbackWrapperPost>(100);
 
-	[OnEnterPlay_Clear]
 	private static readonly CallbackContainer<TickSystem<T>.TickCallbackWrapperPost> postTickCallbacks = new CallbackContainer<TickSystem<T>.TickCallbackWrapperPost>();
 
-	[OnEnterPlay_Clear]
 	private static readonly Dictionary<ITickSystemPost, TickSystem<T>.TickCallbackWrapperPost> postTickWrapperTable = new Dictionary<ITickSystemPost, TickSystem<T>.TickCallbackWrapperPost>(100);
 
 	private class TickCallbackWrapper<U> : ObjectPoolEvents, ICallBack where U : class

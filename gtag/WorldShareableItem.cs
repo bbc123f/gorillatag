@@ -90,6 +90,10 @@ public class WorldShareableItem : MonoBehaviourPunCallbacks, IPunInstantiateMagi
 
 	public void ResetViews()
 	{
+		if (ApplicationQuittingState.IsQuitting)
+		{
+			return;
+		}
 		PhotonView[] components = base.GetComponents<PhotonView>();
 		PhotonView photonView = components[0];
 		PhotonView photonView2 = components[1];

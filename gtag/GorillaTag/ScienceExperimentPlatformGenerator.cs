@@ -1,20 +1,40 @@
 ﻿using System;
 using System.Collections.Generic;
+using GorillaExtensions;
+using GorillaTag.GuidedRefs;
 using Photon.Pun;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace GorillaTag
 {
-	public class ScienceExperimentPlatformGenerator : MonoBehaviourPun
+	public class ScienceExperimentPlatformGenerator : MonoBehaviourPun, ITickSystemPost, IGuidedRefReceiverMono, IGuidedRefMonoBehaviour, IGuidedRefObject
 	{
 		private void Awake()
 		{
+			((IGuidedRefObject)this).GuidedRefInitialize();
 			this.scienceExperimentManager = base.GetComponent<ScienceExperimentManager>();
 		}
 
-		private void Update()
+		private void OnEnable()
 		{
-			double num = (PhotonNetwork.InRoom ? PhotonNetwork.Time : ((double)Time.time));
+			if (((IGuidedRefReceiverMono)this).GuidedRefsWaitingToResolveCount > 0)
+			{
+				return;
+			}
+			TickSystem<object>.AddPostTickCallback(this);
+		}
+
+		protected void OnDisable()
+		{
+			TickSystem<object>.RemovePostTickCallback(this);
+		}
+
+		bool ITickSystemPost.PostTickRunning { get; set; }
+
+		void ITickSystemPost.PostTick()
+		{
+			double num = (PhotonNetwork.InRoom ? PhotonNetwork.Time : Time.unscaledTimeAsDouble);
 			this.UpdateTrails(num);
 			this.RemoveExpiredBubbles(num);
 			this.SpawnNewBubbles(num);
@@ -37,16 +57,23 @@ namespace GorillaTag
 		{
 			if (base.photonView.IsMine && this.scienceExperimentManager.GameState == ScienceExperimentManager.RisingLiquidState.Rising)
 			{
-				int num = (int)(this.rockCountVsLavaProgress.Evaluate(this.scienceExperimentManager.RiseProgressLinear) * this.rockCountMultiplier) - this.activeBubbles.Count;
-				for (int i = 0; i < num; i++)
+				int num = Mathf.Min((int)(this.rockCountVsLavaProgress.Evaluate(this.scienceExperimentManager.RiseProgressLinear) * this.bubbleCountMultiplier), this.maxBubbleCount) - this.activeBubbles.Count;
+				if (this.activeBubbles.Count < this.maxBubbleCount)
 				{
-					this.SpawnRockAuthority(currentTime, this.scienceExperimentManager.RiseProgressLinear);
+					for (int i = 0; i < num; i++)
+					{
+						this.SpawnRockAuthority(currentTime, this.scienceExperimentManager.RiseProgressLinear);
+					}
 				}
 			}
 		}
 
 		private void UpdateActiveBubbles(double currentTime)
 		{
+			if (this.liquidSurfacePlane == null)
+			{
+				return;
+			}
 			float y = this.liquidSurfacePlane.transform.position.y;
 			float num = this.bubblePopWobbleAmplitude * Mathf.Sin(this.bubblePopWobbleFrequency * 0.5f * 3.1415927f * Time.time);
 			for (int i = 0; i < this.activeBubbles.Count; i++)
@@ -161,23 +188,26 @@ namespace GorillaTag
 
 		private void SpawnSodaBubbleLocal(Vector2 surfacePosLocal, float spawnSize, float lifetime, double spawnTime, bool addAsTrail = false, Vector3 direction = default(Vector3))
 		{
-			Vector3 vector = this.liquidSurfacePlane.transform.position + new Vector3(surfacePosLocal.x, 0f, surfacePosLocal.y);
-			ScienceExperimentPlatformGenerator.BubbleData bubbleData = new ScienceExperimentPlatformGenerator.BubbleData
+			if (this.activeBubbles.Count < this.maxBubbleCount)
 			{
-				position = vector,
-				spawnSize = spawnSize,
-				lifetime = lifetime,
-				spawnTime = spawnTime,
-				isTrail = false
-			};
-			bubbleData.bubble = ObjectPools.instance.Instantiate(this.spawnedPrefab, bubbleData.position, Quaternion.identity, 0f).GetComponent<SodaBubble>();
-			if (base.photonView.IsMine && addAsTrail)
-			{
-				bubbleData.direction = direction;
-				bubbleData.isTrail = true;
-				this.trailHeads.Add(bubbleData);
+				Vector3 vector = this.liquidSurfacePlane.transform.position + new Vector3(surfacePosLocal.x, 0f, surfacePosLocal.y);
+				ScienceExperimentPlatformGenerator.BubbleData bubbleData = new ScienceExperimentPlatformGenerator.BubbleData
+				{
+					position = vector,
+					spawnSize = spawnSize,
+					lifetime = lifetime,
+					spawnTime = spawnTime,
+					isTrail = false
+				};
+				bubbleData.bubble = ObjectPools.instance.Instantiate(this.spawnedPrefab, bubbleData.position, Quaternion.identity, 0f).GetComponent<SodaBubble>();
+				if (base.photonView.IsMine && addAsTrail)
+				{
+					bubbleData.direction = direction;
+					bubbleData.isTrail = true;
+					this.trailHeads.Add(bubbleData);
+				}
+				this.activeBubbles.Add(bubbleData);
 			}
-			this.activeBubbles.Add(bubbleData);
 		}
 
 		[PunRPC]
@@ -186,6 +216,16 @@ namespace GorillaTag
 			GorillaNot.IncrementRPCCall(info, "SpawnSodaBubbleRPC");
 			if (info.Sender == PhotonNetwork.MasterClient)
 			{
+				if (!float.IsFinite(spawnSize) || !float.IsFinite(lifetime) || !double.IsFinite(spawnTime))
+				{
+					return;
+				}
+				float num = Mathf.Clamp01(this.scienceExperimentManager.RiseProgressLinear);
+				(ref surfacePosLocal).ClampThisMagnitudeSafe(this.surfaceRadiusSpawnRange.y);
+				spawnSize = Mathf.Clamp(spawnSize, this.sizeRange.x, this.sizeRange.y * this.rockMaxSizeMultiplierVsLavaProgress.Evaluate(num));
+				lifetime = Mathf.Clamp(lifetime, this.lifetimeRange.x, this.lifetimeRange.y * this.rockLifetimeMultiplierVsLavaProgress.Evaluate(num));
+				double num2 = (PhotonNetwork.InRoom ? PhotonNetwork.Time : Time.unscaledTimeAsDouble);
+				spawnTime = ((Mathf.Abs((float)(spawnTime - num2)) < 10f) ? spawnTime : num2);
 				this.SpawnSodaBubbleLocal(surfacePosLocal, spawnSize, lifetime, spawnTime, false, default(Vector3));
 			}
 		}
@@ -220,6 +260,43 @@ namespace GorillaTag
 			return vector;
 		}
 
+		void IGuidedRefObject.GuidedRefInitialize()
+		{
+			GuidedRefHub.RegisterReceiverField<ScienceExperimentPlatformGenerator>(this, "liquidSurfacePlane", ref this.liquidSurfacePlane_gRef);
+			GuidedRefHub.ReceiverFullyRegistered<ScienceExperimentPlatformGenerator>(this);
+		}
+
+		int IGuidedRefReceiverMono.GuidedRefsWaitingToResolveCount { get; set; }
+
+		bool IGuidedRefReceiverMono.GuidedRefTryResolveReference(GuidedRefTryResolveInfo target)
+		{
+			return GuidedRefHub.TryResolveField<ScienceExperimentPlatformGenerator, Transform>(this, ref this.liquidSurfacePlane, this.liquidSurfacePlane_gRef, target);
+		}
+
+		void IGuidedRefReceiverMono.OnAllGuidedRefsResolved()
+		{
+			if (!base.enabled)
+			{
+				return;
+			}
+			TickSystem<object>.AddPostTickCallback(this);
+		}
+
+		void IGuidedRefReceiverMono.OnGuidedRefTargetDestroyed(int fieldId)
+		{
+			TickSystem<object>.RemovePostTickCallback(this);
+		}
+
+		Transform IGuidedRefMonoBehaviour.get_transform()
+		{
+			return base.transform;
+		}
+
+		int IGuidedRefObject.GetInstanceID()
+		{
+			return base.GetInstanceID();
+		}
+
 		[SerializeField]
 		private GameObject spawnedPrefab;
 
@@ -240,7 +317,11 @@ namespace GorillaTag
 		private AnimationCurve rockCountVsLavaProgress = AnimationCurve.Linear(0f, 0f, 1f, 1f);
 
 		[SerializeField]
-		private float rockCountMultiplier = 65f;
+		[FormerlySerializedAs("rockCountMultiplier")]
+		private float bubbleCountMultiplier = 80f;
+
+		[SerializeField]
+		private int maxBubbleCount = 100;
 
 		[SerializeField]
 		private AnimationCurve rockLifetimeMultiplierVsLavaProgress = AnimationCurve.Linear(0f, 1f, 1f, 1f);
@@ -298,9 +379,11 @@ namespace GorillaTag
 		[SerializeField]
 		private float bubblePopWobbleAmplitude = 0.01f;
 
-		[Header("Scene References")]
 		[SerializeField]
 		private Transform liquidSurfacePlane;
+
+		[SerializeField]
+		private GuidedRefReceiverFieldInfo liquidSurfacePlane_gRef = new GuidedRefReceiverFieldInfo(true);
 
 		private List<ScienceExperimentPlatformGenerator.BubbleData> activeBubbles = new List<ScienceExperimentPlatformGenerator.BubbleData>();
 

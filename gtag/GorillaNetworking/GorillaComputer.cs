@@ -40,11 +40,9 @@ namespace GorillaNetworking
 
 		private void Awake()
 		{
-			this.offlineScoreboard.Initialize(this.scoreboardRenderer, this.wrongVersionMaterial);
 			this.screenText.Initialize(this.computerScreenRenderer, this.wrongVersionMaterial);
 			this.functionSelectText.Initialize(this.computerScreenRenderer, this.wrongVersionMaterial);
 			this.wallScreenText.Initialize(this.wallScreenRenderer, this.wrongVersionMaterial);
-			this.tutorialWallScreenText.Initialize(this.tutorialWallScreenRenderer, this.wrongVersionMaterial);
 			this.modeSelectButtons = Object.FindObjectsOfType<ModeSelectButton>(true);
 			if (GorillaComputer.instance == null)
 			{
@@ -283,16 +281,16 @@ namespace GorillaNetworking
 
 		private void InitializeGameMode()
 		{
-			this.currentGameMode = PlayerPrefs.GetString("currentGameMode", "INFECTION");
-			if (this.currentGameMode != "CASUAL" && this.currentGameMode != "INFECTION" && this.currentGameMode != "HUNT" && this.currentGameMode != "BATTLE")
+			string text = PlayerPrefs.GetString("currentGameMode", "INFECTION");
+			if (text != "CASUAL" && text != "INFECTION" && text != "HUNT" && text != "BATTLE")
 			{
 				PlayerPrefs.SetString("currentGameMode", "INFECTION");
 				PlayerPrefs.Save();
-				this.currentGameMode = "INFECTION";
+				text = "INFECTION";
 			}
 			this.leftHanded = PlayerPrefs.GetInt("leftHanded", 0) == 1;
-			this.OnModeSelectButtonPress(this.currentGameMode, this.leftHanded);
-			GameModePages.SetSelectedGameModeShared(this.currentGameMode);
+			this.OnModeSelectButtonPress(text, this.leftHanded);
+			GameModePages.SetSelectedGameModeShared(text);
 		}
 
 		private void InitializeCreditsState()
@@ -1238,15 +1236,15 @@ namespace GorillaNetworking
 			}
 			if (!PhotonNetwork.InRoom)
 			{
-				this.currentGameModeText.text = "CURRENT MODE\n-NOT IN ROOM-";
+				this.currentGameModeText.Value = "CURRENT MODE\n-NOT IN ROOM-";
 				return;
 			}
 			if (GameMode.ActiveGameMode.IsNotNull())
 			{
-				this.currentGameModeText.text = "CURRENT MODE\n" + GameMode.ActiveGameMode.GameModeName();
+				this.currentGameModeText.Value = "CURRENT MODE\n" + GameMode.ActiveGameMode.GameModeName();
 				return;
 			}
-			this.currentGameModeText.text = "CURRENT MODE\nERROR";
+			this.currentGameModeText.Value = "CURRENT MODE\nERROR";
 		}
 
 		private void UpdateFunctionScreen()
@@ -1485,11 +1483,10 @@ namespace GorillaNetworking
 			{
 				array[i].UpdateText(failMessage, false);
 			}
-			this.offlineScoreboard.EnableFailedState(failMessage);
+			GorillaScoreboardTotalUpdater.instance.SetOfflineFailureText(failMessage);
 			this.screenText.EnableFailedState(failMessage);
 			this.functionSelectText.EnableFailedState(failMessage);
 			this.wallScreenText.EnableFailedState(failMessage);
-			this.tutorialWallScreenText.EnableFailedState(failMessage);
 		}
 
 		private void RestoreFromFailureState()
@@ -1498,11 +1495,10 @@ namespace GorillaNetworking
 			{
 				gorillaLevelScreen.UpdateText(gorillaLevelScreen.startingText, true);
 			}
-			this.offlineScoreboard.DisableFailedState();
+			GorillaScoreboardTotalUpdater.instance.ClearOfflineFailureText();
 			this.screenText.DisableFailedState();
 			this.functionSelectText.DisableFailedState();
 			this.wallScreenText.DisableFailedState();
-			this.tutorialWallScreenText.DisableFailedState();
 		}
 
 		public void GeneralFailureMessage(string failMessage)
@@ -1625,7 +1621,7 @@ namespace GorillaNetworking
 
 		public void OnModeSelectButtonPress(string gameMode, bool leftHand)
 		{
-			this.currentGameMode = gameMode;
+			this.currentGameMode.Value = gameMode;
 			PlayerPrefs.SetString("currentGameMode", gameMode);
 			if (leftHand != this.leftHanded)
 			{
@@ -1633,10 +1629,6 @@ namespace GorillaNetworking
 				this.leftHanded = leftHand;
 			}
 			PlayerPrefs.Save();
-			foreach (ModeSelectButton modeSelectButton in this.modeSelectButtons)
-			{
-				modeSelectButton.buttonRenderer.material = ((this.currentGameMode == modeSelectButton.gameMode) ? modeSelectButton.pressedMaterial : modeSelectButton.unpressedMaterial);
-			}
 		}
 
 		public void OnGroupJoinButtonPress(int mapJoinIndex, GorillaFriendCollider chosenFriendJoinCollider)
@@ -1762,15 +1754,13 @@ namespace GorillaNetworking
 
 		public float buttonFadeTime;
 
-		public GorillaText offlineScoreboard;
+		public string offlineTextInitialString;
 
 		public GorillaText screenText;
 
 		public GorillaText functionSelectText;
 
 		public GorillaText wallScreenText;
-
-		public GorillaText tutorialWallScreenText;
 
 		public Text offlineVRRigNametagText;
 
@@ -1784,11 +1774,7 @@ namespace GorillaNetworking
 
 		public MeshRenderer wallScreenRenderer;
 
-		public MeshRenderer tutorialWallScreenRenderer;
-
 		public MeshRenderer computerScreenRenderer;
-
-		public MeshRenderer scoreboardRenderer;
 
 		public GorillaLevelScreen[] levelScreens;
 
@@ -1796,7 +1782,9 @@ namespace GorillaNetworking
 
 		public DateTime startupTime;
 
-		public Text currentGameModeText;
+		public WatchableStringSO currentGameMode;
+
+		public WatchableStringSO currentGameModeText;
 
 		public int includeUpdatedServerSynchTest;
 
@@ -1896,8 +1884,6 @@ namespace GorillaNetworking
 		public string voiceChatOn;
 
 		public ModeSelectButton[] modeSelectButtons;
-
-		public string currentGameMode;
 
 		public string version;
 

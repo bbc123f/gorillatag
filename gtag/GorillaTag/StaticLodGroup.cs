@@ -21,6 +21,11 @@ namespace GorillaTag
 			StaticLodManager.SetEnabled(this.index, false);
 		}
 
+		private void OnDestroy()
+		{
+			StaticLodManager.Unregister(this.index);
+		}
+
 		private int index;
 
 		public float collisionEnableDistance = 3f;

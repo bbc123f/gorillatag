@@ -16,7 +16,7 @@ public class GorillaEyeExpressions : MonoBehaviour
 
 	private void CheckEyeEffects()
 	{
-		if (this.loudness.IsSpeaking && this.loudness.Louddess > this.screamVolume)
+		if (this.loudness.IsSpeaking && this.loudness.Loudness > this.screamVolume)
 		{
 			this.IsEyeExpressionOverriden = true;
 			this.overrideDuration = this.screamDuration;

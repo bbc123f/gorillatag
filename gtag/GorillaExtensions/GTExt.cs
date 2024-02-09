@@ -257,6 +257,18 @@ namespace GorillaExtensions
 			return list;
 		}
 
+		public static T GetComponentByName<T>(this Transform xform, string name, bool includeInactive = true) where T : Component
+		{
+			foreach (T t in xform.GetComponentsInChildren<T>(includeInactive))
+			{
+				if (t.name == name)
+				{
+					return t;
+				}
+			}
+			return default(T);
+		}
+
 		public static string GetPath(this Transform transform)
 		{
 			string text = transform.name;
@@ -266,6 +278,23 @@ namespace GorillaExtensions
 				text = transform.name + "/" + text;
 			}
 			return "/" + text;
+		}
+
+		public static void GetPath(this Transform transform, ref StringBuilder stringBuilderToAddTo)
+		{
+			stringBuilderToAddTo.Append('"');
+			int length = stringBuilderToAddTo.Length;
+			do
+			{
+				if (stringBuilderToAddTo.Length > length)
+				{
+					stringBuilderToAddTo.Insert(length, '/');
+				}
+				stringBuilderToAddTo.Insert(length, transform.name);
+				transform = transform.parent;
+			}
+			while (transform != null);
+			stringBuilderToAddTo.Append('"');
 		}
 
 		public static string GetPath(this Transform transform, int maxDepth)
@@ -295,6 +324,11 @@ namespace GorillaExtensions
 		public static string GetPath(this GameObject gameObject)
 		{
 			return gameObject.transform.GetPath();
+		}
+
+		public static void GetPath(this GameObject gameObject, ref StringBuilder stringBuilderToAddTo)
+		{
+			gameObject.transform.GetPath(ref stringBuilderToAddTo);
 		}
 
 		public static string GetPath(this GameObject gameObject, int limit)
@@ -496,9 +530,7 @@ namespace GorillaExtensions
 		public static void SetLossyScale(this Transform transform, Vector3 scale)
 		{
 			scale = transform.InverseTransformVector(scale);
-			Debug.Log(scale);
 			Vector3 lossyScale = transform.lossyScale;
-			Debug.Log(scale);
 			transform.localScale = new Vector3(scale.x / lossyScale.x, scale.y / lossyScale.y, scale.z / lossyScale.z);
 		}
 
@@ -753,34 +785,320 @@ namespace GorillaExtensions
 			return GTExt.Matrix4X4LerpNoScale(a, b, t);
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static bool IsNaN(this Vector3 vector)
 		{
 			return float.IsNaN(vector.x) || float.IsNaN(vector.y) || float.IsNaN(vector.z);
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static bool IsNan(this Quaternion quat)
 		{
 			return float.IsNaN(quat.x) || float.IsNaN(quat.y) || float.IsNaN(quat.z) || float.IsNaN(quat.w);
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static bool IsInfinity(this Vector3 vector)
 		{
 			return float.IsInfinity(vector.x) || float.IsInfinity(vector.y) || float.IsInfinity(vector.z);
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static bool IsInfinity(this Quaternion quat)
 		{
 			return float.IsInfinity(quat.x) || float.IsInfinity(quat.y) || float.IsInfinity(quat.z) || float.IsInfinity(quat.w);
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static bool IsValid(this Vector3 vector)
 		{
 			return !(vector).IsNaN() && !(vector).IsInfinity();
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static bool IsValid(this Quaternion quat)
 		{
 			return !(quat).IsNan() && !(quat).IsInfinity() && (quat.x != 0f || quat.y != 0f || quat.z != 0f || quat.w != 0f);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Vector2 ClampMagnitudeSafe(this Vector2 v2, float magnitude)
+		{
+			if (!float.IsFinite(v2.x))
+			{
+				v2.x = 0f;
+			}
+			if (!float.IsFinite(v2.y))
+			{
+				v2.y = 0f;
+			}
+			if (!float.IsFinite(magnitude))
+			{
+				magnitude = 0f;
+			}
+			return Vector2.ClampMagnitude(v2, magnitude);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void ClampThisMagnitudeSafe(this Vector2 v2, float magnitude)
+		{
+			if (!float.IsFinite(v2.x))
+			{
+				v2.x = 0f;
+			}
+			if (!float.IsFinite(v2.y))
+			{
+				v2.y = 0f;
+			}
+			if (!float.IsFinite(magnitude))
+			{
+				magnitude = 0f;
+			}
+			v2 = Vector2.ClampMagnitude(v2, magnitude);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Vector3 ClampMagnitudeSafe(this Vector3 v3, float magnitude)
+		{
+			if (!float.IsFinite(v3.x))
+			{
+				v3.x = 0f;
+			}
+			if (!float.IsFinite(v3.y))
+			{
+				v3.y = 0f;
+			}
+			if (!float.IsFinite(v3.z))
+			{
+				v3.z = 0f;
+			}
+			if (!float.IsFinite(magnitude))
+			{
+				magnitude = 0f;
+			}
+			return Vector3.ClampMagnitude(v3, magnitude);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void ClampThisMagnitudeSafe(this Vector3 v3, float magnitude)
+		{
+			if (!float.IsFinite(v3.x))
+			{
+				v3.x = 0f;
+			}
+			if (!float.IsFinite(v3.y))
+			{
+				v3.y = 0f;
+			}
+			if (!float.IsFinite(v3.z))
+			{
+				v3.z = 0f;
+			}
+			if (!float.IsFinite(magnitude))
+			{
+				magnitude = 0f;
+			}
+			v3 = Vector3.ClampMagnitude(v3, magnitude);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static float MinSafe(this float value, float min)
+		{
+			if (!float.IsFinite(value))
+			{
+				value = 0f;
+			}
+			if (!float.IsFinite(min))
+			{
+				min = 0f;
+			}
+			if (value >= min)
+			{
+				return min;
+			}
+			return value;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void ThisMinSafe(this float value, float min)
+		{
+			if (!float.IsFinite(value))
+			{
+				value = 0f;
+			}
+			if (!float.IsFinite(min))
+			{
+				min = 0f;
+			}
+			value = ((value < min) ? value : min);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static double MinSafe(this double value, float min)
+		{
+			if (!double.IsFinite(value))
+			{
+				value = 0.0;
+			}
+			if (!double.IsFinite((double)min))
+			{
+				min = 0f;
+			}
+			if (value >= (double)min)
+			{
+				return (double)min;
+			}
+			return value;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void ThisMinSafe(this double value, float min)
+		{
+			if (!double.IsFinite(value))
+			{
+				value = 0.0;
+			}
+			if (!double.IsFinite((double)min))
+			{
+				min = 0f;
+			}
+			value = ((value < (double)min) ? value : ((double)min));
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static float MaxSafe(this float value, float max)
+		{
+			if (!float.IsFinite(value))
+			{
+				value = 0f;
+			}
+			if (!float.IsFinite(max))
+			{
+				max = 0f;
+			}
+			if (value <= max)
+			{
+				return max;
+			}
+			return value;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void ThisMaxSafe(this float value, float max)
+		{
+			if (!float.IsFinite(value))
+			{
+				value = 0f;
+			}
+			if (!float.IsFinite(max))
+			{
+				max = 0f;
+			}
+			value = ((value > max) ? value : max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static double MaxSafe(this double value, float max)
+		{
+			if (!double.IsFinite(value))
+			{
+				value = 0.0;
+			}
+			if (!double.IsFinite((double)max))
+			{
+				max = 0f;
+			}
+			if (value <= (double)max)
+			{
+				return (double)max;
+			}
+			return value;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void ThisMaxSafe(this double value, float max)
+		{
+			if (!double.IsFinite(value))
+			{
+				value = 0.0;
+			}
+			if (!double.IsFinite((double)max))
+			{
+				max = 0f;
+			}
+			value = ((value > (double)max) ? value : ((double)max));
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static float ClampSafe(this float value, float min, float max)
+		{
+			if (!float.IsFinite(value))
+			{
+				value = 0f;
+			}
+			if (!float.IsFinite(min))
+			{
+				min = 0f;
+			}
+			if (!float.IsFinite(max))
+			{
+				max = 0f;
+			}
+			if (value > max)
+			{
+				return max;
+			}
+			if (value >= min)
+			{
+				return value;
+			}
+			return min;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static double ClampSafe(this double value, double min, double max)
+		{
+			if (!double.IsFinite(value))
+			{
+				value = 0.0;
+			}
+			if (!double.IsFinite(min))
+			{
+				min = 0.0;
+			}
+			if (!double.IsFinite(max))
+			{
+				max = 0.0;
+			}
+			if (value > max)
+			{
+				return max;
+			}
+			if (value >= min)
+			{
+				return value;
+			}
+			return min;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static float GetFinite(this float value)
+		{
+			if (!float.IsFinite(value))
+			{
+				return 0f;
+			}
+			return value;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static double GetFinite(this double value)
+		{
+			if (!double.IsFinite(value))
+			{
+				return 0.0;
+			}
+			return value;
 		}
 
 		public static Matrix4x4 Matrix4X4LerpHandleNegativeScale(Matrix4x4 a, Matrix4x4 b, float t)
@@ -1497,6 +1815,48 @@ namespace GorillaExtensions
 		public static bool IsNotNull(this Object mono)
 		{
 			return !mono.IsNull();
+		}
+
+		public static GameObject FindByPath(this Scene scene, string path)
+		{
+			if (string.IsNullOrEmpty(path))
+			{
+				return null;
+			}
+			string[] array = path.Split('/', StringSplitOptions.RemoveEmptyEntries);
+			foreach (GameObject gameObject in scene.GetRootGameObjects())
+			{
+				if (!(gameObject.name != array[0]))
+				{
+					GameObject gameObject2 = GTExt.FindByPath(gameObject, array, 0);
+					if (gameObject2 != null)
+					{
+						return gameObject2;
+					}
+				}
+			}
+			return null;
+		}
+
+		private static GameObject FindByPath(GameObject current, string[] splitPath, int index)
+		{
+			if (index != splitPath.Length - 1)
+			{
+				foreach (object obj in current.transform)
+				{
+					Transform transform = (Transform)obj;
+					if (transform.name == splitPath[index + 1])
+					{
+						return GTExt.FindByPath(transform.gameObject, splitPath, index + 1);
+					}
+				}
+				return null;
+			}
+			if (!(current.name == splitPath[index]))
+			{
+				return null;
+			}
+			return current;
 		}
 
 		[CompilerGenerated]

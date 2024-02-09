@@ -11,7 +11,6 @@ namespace GorillaTag
 		private void Awake()
 		{
 			StaticLodManager.gorillaInteractableLayer = UnityLayer.GorillaInteractable;
-			Application.quitting += this.HandleApplicationQuitting;
 		}
 
 		private void OnEnable()
@@ -20,14 +19,8 @@ namespace GorillaTag
 			this.hasMainCamera = this.mainCamera != null;
 		}
 
-		private void HandleApplicationQuitting()
-		{
-			StaticLodManager.isApplicationQuitting = true;
-		}
-
 		public static int Register(StaticLodGroup lodGroup)
 		{
-			StaticLodManager.groupMonoBehaviours.Add(lodGroup);
 			StaticLodGroupExcluder componentInParent = lodGroup.GetComponentInParent<StaticLodGroupExcluder>();
 			Text[] array = lodGroup.GetComponentsInChildren<Text>(true);
 			List<Text> list = new List<Text>(array.Length);
@@ -74,8 +67,9 @@ namespace GorillaTag
 			{
 				bounds.Encapsulate(collider2.bounds);
 			}
-			StaticLodManager.groupInfos.Add(new StaticLodManager.GroupInfo
+			StaticLodManager.GroupInfo groupInfo = new StaticLodManager.GroupInfo
 			{
+				isLoaded = true,
 				componentEnabled = lodGroup.isActiveAndEnabled,
 				center = bounds.center,
 				radiusSq = bounds.extents.sqrMagnitude,
@@ -85,13 +79,32 @@ namespace GorillaTag
 				collidersEnabled = true,
 				collisionEnableDistanceSq = lodGroup.collisionEnableDistance * lodGroup.collisionEnableDistance,
 				interactableColliders = list2.ToArray()
-			});
-			return StaticLodManager.groupMonoBehaviours.Count - 1;
+			};
+			int count;
+			if (StaticLodManager.freeSlots.TryPop(out count))
+			{
+				StaticLodManager.groupMonoBehaviours[count] = lodGroup;
+				StaticLodManager.groupInfos[count] = groupInfo;
+			}
+			else
+			{
+				count = StaticLodManager.groupMonoBehaviours.Count;
+				StaticLodManager.groupMonoBehaviours.Add(lodGroup);
+				StaticLodManager.groupInfos.Add(groupInfo);
+			}
+			return count;
+		}
+
+		public static void Unregister(int lodGroupIndex)
+		{
+			StaticLodManager.groupMonoBehaviours[lodGroupIndex] = null;
+			StaticLodManager.groupInfos[lodGroupIndex] = default(StaticLodManager.GroupInfo);
+			StaticLodManager.freeSlots.Push(lodGroupIndex);
 		}
 
 		public static void SetEnabled(int index, bool enable)
 		{
-			if (!StaticLodManager.isApplicationQuitting)
+			if (ApplicationQuittingState.IsQuitting)
 			{
 				return;
 			}
@@ -110,7 +123,7 @@ namespace GorillaTag
 			for (int i = 0; i < StaticLodManager.groupInfos.Count; i++)
 			{
 				StaticLodManager.GroupInfo groupInfo = StaticLodManager.groupInfos[i];
-				if (groupInfo.componentEnabled)
+				if (groupInfo.isLoaded && groupInfo.componentEnabled)
 				{
 					float num = Mathf.Max(0f, (groupInfo.center - position).sqrMagnitude - groupInfo.radiusSq);
 					float num2 = (groupInfo.uiEnabled ? 0.010000001f : 0f);
@@ -152,9 +165,10 @@ namespace GorillaTag
 		[OnEnterPlay_Clear]
 		private static readonly List<StaticLodManager.GroupInfo> groupInfos = new List<StaticLodManager.GroupInfo>(32);
 
-		private static UnityLayer gorillaInteractableLayer;
+		[OnEnterPlay_Clear]
+		private static readonly Stack<int> freeSlots = new Stack<int>();
 
-		private static bool isApplicationQuitting;
+		private static UnityLayer gorillaInteractableLayer;
 
 		private Camera mainCamera;
 
@@ -162,6 +176,8 @@ namespace GorillaTag
 
 		private struct GroupInfo
 		{
+			public bool isLoaded;
+
 			public bool componentEnabled;
 
 			public Vector3 center;

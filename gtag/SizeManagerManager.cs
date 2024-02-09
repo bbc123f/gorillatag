@@ -61,9 +61,12 @@ public class SizeManagerManager : MonoBehaviour
 		}
 	}
 
+	[OnEnterPlay_SetNull]
 	public static SizeManagerManager instance;
 
+	[OnEnterPlay_Set(false)]
 	public static bool hasInstance = false;
 
+	[OnEnterPlay_Clear]
 	public static List<SizeManager> allSM = new List<SizeManager>();
 }

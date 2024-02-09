@@ -1,7 +1,8 @@
 ﻿using System;
+using GorillaTag.GuidedRefs;
 using UnityEngine;
 
-public class SlingshotProjectileHitNotifier : MonoBehaviour
+public class SlingshotProjectileHitNotifier : BaseGuidedRefTargetMono
 {
 	public event SlingshotProjectileHitNotifier.ProjectileHitEvent OnProjectileHit;
 
@@ -39,7 +40,7 @@ public class SlingshotProjectileHitNotifier : MonoBehaviour
 		onProjectileTriggerEnter(projectile, collider);
 	}
 
-	private void OnDestroy()
+	private new void OnDestroy()
 	{
 		this.OnProjectileHit = null;
 		this.OnProjectileCollisionStay = null;

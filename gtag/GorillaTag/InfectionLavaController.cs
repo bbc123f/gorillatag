@@ -1,14 +1,15 @@
 ﻿using System;
-using ExitGames.Client.Photon;
+using GorillaExtensions;
 using GorillaLocomotion;
 using GorillaLocomotion.Swimming;
+using GorillaTag.GuidedRefs;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
 
 namespace GorillaTag
 {
-	public class InfectionLavaController : MonoBehaviourPun, IPunObservable, IPunInstantiateMagicCallback, IOnPhotonViewPreNetDestroy, IPhotonViewCallback
+	public class InfectionLavaController : MonoBehaviourPun, IPunObservable, ITickSystemPost, IGuidedRefReceiverMono, IGuidedRefMonoBehaviour, IGuidedRefObject
 	{
 		public static InfectionLavaController Instance
 		{
@@ -61,42 +62,21 @@ namespace GorillaTag
 			get
 			{
 				object obj;
-				return PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue("gameMode", out obj) && obj.ToString().Contains("COMPETITIVE");
-			}
-		}
-
-		void IPunInstantiateMagicCallback.OnPhotonInstantiate(PhotonMessageInfo info)
-		{
-			if (!(InfectionLavaController.instance != null) || !(InfectionLavaController.instance != this))
-			{
-				InfectionLavaController.instance = this;
-				base.photonView.AddCallbackTarget(this);
-				if (GorillaParent.instance != null && base.transform != null)
-				{
-					base.transform.parent = GorillaParent.instance.transform;
-				}
-				return;
-			}
-			if (PhotonNetwork.InRoom && PhotonNetwork.IsMasterClient)
-			{
-				Debug.Log("Existing InfectionLavaController! I'm host. Destroying newly created manager");
-				PhotonNetwork.Destroy(base.gameObject);
-				return;
-			}
-			Debug.Log("Existing PhotonNetwork! I'm not host. Destroying newly created manager");
-			Object.Destroy(base.gameObject);
-		}
-
-		void IOnPhotonViewPreNetDestroy.OnPreNetDestroy(PhotonView rootView)
-		{
-			if (InfectionLavaController.instance == this)
-			{
-				InfectionLavaController.instance = null;
+				return PhotonNetwork.CurrentRoom != null && PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue("gameMode", out obj) && obj.ToString().Contains("COMPETITIVE");
 			}
 		}
 
 		private void Awake()
 		{
+			if (InfectionLavaController.instance.IsNotNull())
+			{
+				Object.Destroy(base.gameObject);
+				return;
+			}
+			InfectionLavaController.instance = this;
+			RoomSystem.LeftRoomEvent = (Action)Delegate.Combine(RoomSystem.LeftRoomEvent, new Action(this.OnLeftRoom));
+			RoomSystem.PlayerLeftEvent = (Action<Photon.Realtime.Player>)Delegate.Combine(RoomSystem.PlayerLeftEvent, new Action<Photon.Realtime.Player>(this.OnPlayerLeftRoom));
+			((IGuidedRefObject)this).GuidedRefInitialize();
 			if (this.lavaVolume != null)
 			{
 				this.lavaVolume.ColliderEnteredWater += this.OnColliderEnteredLava;
@@ -108,6 +88,21 @@ namespace GorillaTag
 		}
 
 		protected void OnEnable()
+		{
+			if (!this.guidedRefsFullyResolved)
+			{
+				return;
+			}
+			this.VerifyReferences();
+			TickSystem<object>.AddPostTickCallback(this);
+		}
+
+		protected void OnDisable()
+		{
+			TickSystem<object>.RemovePostTickCallback(this);
+		}
+
+		private void VerifyReferences()
 		{
 			this.IfNullThenLogAndDisableSelf(this.lavaMeshTransform, "lavaMeshTransform", -1);
 			this.IfNullThenLogAndDisableSelf(this.lavaSurfacePlaneTransform, "lavaSurfacePlaneTransform", -1);
@@ -135,6 +130,11 @@ namespace GorillaTag
 
 		private void OnDestroy()
 		{
+			if (InfectionLavaController.instance == this)
+			{
+				InfectionLavaController.instance = null;
+			}
+			TickSystem<object>.RemovePostTickCallback(this);
 			this.UpdateLava(0f);
 			if (this.lavaVolume != null)
 			{
@@ -146,10 +146,12 @@ namespace GorillaTag
 			}
 		}
 
-		private void Update()
+		bool ITickSystemPost.PostTickRunning { get; set; }
+
+		void ITickSystemPost.PostTick()
 		{
 			this.prevTime = this.currentTime;
-			this.currentTime = (PhotonNetwork.InRoom ? PhotonNetwork.Time : ((double)Time.time));
+			this.currentTime = (PhotonNetwork.InRoom ? PhotonNetwork.Time : Time.unscaledTimeAsDouble);
 			if (base.photonView.IsMine)
 			{
 				this.UpdateReliableState(this.currentTime, ref this.reliableState);
@@ -455,8 +457,8 @@ namespace GorillaTag
 				return;
 			}
 			this.reliableState.state = (InfectionLavaController.RisingLavaState)((int)stream.ReceiveNext());
-			this.reliableState.stateStartTime = (double)stream.ReceiveNext();
-			this.reliableState.activationProgress = (double)stream.ReceiveNext();
+			this.reliableState.stateStartTime = ((double)stream.ReceiveNext()).GetFinite();
+			this.reliableState.activationProgress = ((double)stream.ReceiveNext()).ClampSafe(0.0, 2.0);
 			this.lavaActivationVoteCount = (int)stream.ReceiveNext();
 			this.lavaActivationVotePlayerIds[0] = (int)stream.ReceiveNext();
 			this.lavaActivationVotePlayerIds[1] = (int)stream.ReceiveNext();
@@ -473,25 +475,63 @@ namespace GorillaTag
 			this.localLagLavaProgressOffset = num - this.lavaProgressSmooth;
 		}
 
-		public void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
-		{
-		}
-
 		public void OnPlayerLeftRoom(Photon.Realtime.Player otherPlayer)
 		{
 			this.RemoveVoteForVolcanoActivation(otherPlayer.ActorNumber);
 		}
 
-		public void OnRoomPropertiesUpdate(Hashtable propertiesThatChanged)
+		private void OnLeftRoom()
 		{
+			for (int i = 0; i < this.lavaActivationVotePlayerIds.Length; i++)
+			{
+				if (this.lavaActivationVotePlayerIds[i] != PhotonNetwork.LocalPlayer.ActorNumber)
+				{
+					this.RemoveVoteForVolcanoActivation(this.lavaActivationVotePlayerIds[i]);
+				}
+			}
 		}
 
-		public void OnPlayerPropertiesUpdate(Photon.Realtime.Player targetPlayer, Hashtable changedProps)
+		int IGuidedRefReceiverMono.GuidedRefsWaitingToResolveCount { get; set; }
+
+		void IGuidedRefReceiverMono.OnAllGuidedRefsResolved()
 		{
+			this.guidedRefsFullyResolved = true;
+			this.VerifyReferences();
+			TickSystem<object>.AddPostTickCallback(this);
 		}
 
-		public void OnMasterClientSwitched(Photon.Realtime.Player newMasterClient)
+		public void OnGuidedRefTargetDestroyed(int fieldId)
 		{
+			this.guidedRefsFullyResolved = false;
+			TickSystem<object>.RemovePostTickCallback(this);
+		}
+
+		void IGuidedRefObject.GuidedRefInitialize()
+		{
+			GuidedRefHub.RegisterReceiverField<InfectionLavaController>(this, "lavaMeshTransform_gRef", ref this.lavaMeshTransform_gRef);
+			GuidedRefHub.RegisterReceiverField<InfectionLavaController>(this, "lavaSurfacePlaneTransform_gRef", ref this.lavaSurfacePlaneTransform_gRef);
+			GuidedRefHub.RegisterReceiverField<InfectionLavaController>(this, "lavaVolume_gRef", ref this.lavaVolume_gRef);
+			GuidedRefHub.RegisterReceiverField<InfectionLavaController>(this, "lavaActivationRenderer_gRef", ref this.lavaActivationRenderer_gRef);
+			GuidedRefHub.RegisterReceiverField<InfectionLavaController>(this, "lavaActivationStartPos_gRef", ref this.lavaActivationStartPos_gRef);
+			GuidedRefHub.RegisterReceiverField<InfectionLavaController>(this, "lavaActivationEndPos_gRef", ref this.lavaActivationEndPos_gRef);
+			GuidedRefHub.RegisterReceiverField<InfectionLavaController>(this, "lavaActivationProjectileHitNotifier_gRef", ref this.lavaActivationProjectileHitNotifier_gRef);
+			GuidedRefHub.RegisterReceiverArray<InfectionLavaController, VolcanoEffects>(this, "volcanoEffects_gRefs", ref this.volcanoEffects, ref this.volcanoEffects_gRefs);
+			GuidedRefHub.ReceiverFullyRegistered<InfectionLavaController>(this);
+		}
+
+		bool IGuidedRefReceiverMono.GuidedRefTryResolveReference(GuidedRefTryResolveInfo target)
+		{
+			return GuidedRefHub.TryResolveField<InfectionLavaController, Transform>(this, ref this.lavaMeshTransform, this.lavaMeshTransform_gRef, target) || GuidedRefHub.TryResolveField<InfectionLavaController, Transform>(this, ref this.lavaSurfacePlaneTransform, this.lavaSurfacePlaneTransform_gRef, target) || GuidedRefHub.TryResolveField<InfectionLavaController, WaterVolume>(this, ref this.lavaVolume, this.lavaVolume_gRef, target) || GuidedRefHub.TryResolveField<InfectionLavaController, MeshRenderer>(this, ref this.lavaActivationRenderer, this.lavaActivationRenderer_gRef, target) || GuidedRefHub.TryResolveField<InfectionLavaController, Transform>(this, ref this.lavaActivationStartPos, this.lavaActivationStartPos_gRef, target) || GuidedRefHub.TryResolveField<InfectionLavaController, Transform>(this, ref this.lavaActivationEndPos, this.lavaActivationEndPos_gRef, target) || GuidedRefHub.TryResolveField<InfectionLavaController, SlingshotProjectileHitNotifier>(this, ref this.lavaActivationProjectileHitNotifier, this.lavaActivationProjectileHitNotifier_gRef, target) || GuidedRefHub.TryResolveArrayItem<InfectionLavaController, VolcanoEffects>(this, this.volcanoEffects, this.volcanoEffects_gRefs, target);
+		}
+
+		Transform IGuidedRefMonoBehaviour.get_transform()
+		{
+			return base.transform;
+		}
+
+		int IGuidedRefObject.GetInstanceID()
+		{
+			return base.GetInstanceID();
 		}
 
 		[OnEnterPlay_SetNull]
@@ -550,25 +590,49 @@ namespace GorillaTag
 		private Transform lavaMeshTransform;
 
 		[SerializeField]
+		private GuidedRefReceiverFieldInfo lavaMeshTransform_gRef = new GuidedRefReceiverFieldInfo(true);
+
+		[SerializeField]
 		private Transform lavaSurfacePlaneTransform;
+
+		[SerializeField]
+		private GuidedRefReceiverFieldInfo lavaSurfacePlaneTransform_gRef = new GuidedRefReceiverFieldInfo(true);
 
 		[SerializeField]
 		private WaterVolume lavaVolume;
 
 		[SerializeField]
+		private GuidedRefReceiverFieldInfo lavaVolume_gRef = new GuidedRefReceiverFieldInfo(true);
+
+		[SerializeField]
 		private MeshRenderer lavaActivationRenderer;
+
+		[SerializeField]
+		private GuidedRefReceiverFieldInfo lavaActivationRenderer_gRef = new GuidedRefReceiverFieldInfo(true);
 
 		[SerializeField]
 		private Transform lavaActivationStartPos;
 
 		[SerializeField]
+		private GuidedRefReceiverFieldInfo lavaActivationStartPos_gRef = new GuidedRefReceiverFieldInfo(true);
+
+		[SerializeField]
 		private Transform lavaActivationEndPos;
+
+		[SerializeField]
+		private GuidedRefReceiverFieldInfo lavaActivationEndPos_gRef = new GuidedRefReceiverFieldInfo(true);
 
 		[SerializeField]
 		private SlingshotProjectileHitNotifier lavaActivationProjectileHitNotifier;
 
 		[SerializeField]
+		private GuidedRefReceiverFieldInfo lavaActivationProjectileHitNotifier_gRef = new GuidedRefReceiverFieldInfo(true);
+
+		[SerializeField]
 		private VolcanoEffects[] volcanoEffects;
+
+		[SerializeField]
+		private GuidedRefReceiverArrayInfo volcanoEffects_gRefs = new GuidedRefReceiverArrayInfo(true);
 
 		private InfectionLavaController.LavaSyncData reliableState;
 
@@ -591,6 +655,8 @@ namespace GorillaTag
 		private double prevTime;
 
 		private float activationProgessSmooth;
+
+		private bool guidedRefsFullyResolved;
 
 		public enum RisingLavaState
 		{

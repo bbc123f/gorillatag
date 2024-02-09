@@ -9,8 +9,13 @@ using UnityEngine.XR;
 
 namespace GorillaLocomotion.Gameplay
 {
-	public class GorillaRopeSwing : MonoBehaviourPun
+	public class GorillaRopeSwing : MonoBehaviour
 	{
+		private void EdRecalculateId()
+		{
+			this.CalculateId(true);
+		}
+
 		public bool isIdle { get; private set; }
 
 		public bool isFullyIdle { get; private set; }
@@ -38,6 +43,20 @@ namespace GorillaLocomotion.Gameplay
 			this.SetIsIdle(true, false);
 		}
 
+		private void Start()
+		{
+			if (!this.useStaticId)
+			{
+				this.CalculateId(false);
+			}
+			RopeSwingManager.Register(this);
+		}
+
+		private void OnDestroy()
+		{
+			RopeSwingManager.Unregister(this);
+		}
+
 		private void OnEnable()
 		{
 			VectorizedCustomRopeSimulation.Register(this);
@@ -50,6 +69,28 @@ namespace GorillaLocomotion.Gameplay
 				this.SetIsIdle(true, true);
 			}
 			VectorizedCustomRopeSimulation.Unregister(this);
+		}
+
+		internal void CalculateId(bool force = false)
+		{
+			Transform transform = base.transform;
+			int staticHash = TransformUtils.GetScenePath(transform).GetStaticHash();
+			int staticHash2 = base.GetType().Name.GetStaticHash();
+			int num = StaticHash.Combine(staticHash, staticHash2);
+			if (this.useStaticId)
+			{
+				if (string.IsNullOrEmpty(this.staticId) || force)
+				{
+					Vector3 position = transform.position;
+					int num2 = StaticHash.Combine(position.x, position.y, position.z);
+					int instanceID = transform.GetInstanceID();
+					int num3 = StaticHash.Combine(num, num2, instanceID);
+					this.staticId = string.Format("#ID_{0:X8}", num3);
+				}
+				this.ropeId = this.staticId.GetStaticHash();
+				return;
+			}
+			this.ropeId = (Application.isPlaying ? num : 0);
 		}
 
 		private void Update()
@@ -162,7 +203,7 @@ namespace GorillaLocomotion.Gameplay
 			velocity *= this.settings.inheritVelocityMultiplier;
 			if (GorillaTagger.hasInstance && GorillaTagger.Instance.offlineVRRig)
 			{
-				GorillaTagger.Instance.offlineVRRig.grabbedRopeIndex = base.photonView.ViewID;
+				GorillaTagger.Instance.offlineVRRig.grabbedRopeIndex = this.ropeId;
 				GorillaTagger.Instance.offlineVRRig.grabbedRopeBoneIndex = boneIndex;
 				GorillaTagger.Instance.offlineVRRig.grabbedRopeIsLeft = xrNode == XRNode.LeftHand;
 				GorillaTagger.Instance.offlineVRRig.grabbedRopeOffset = offset;
@@ -179,7 +220,7 @@ namespace GorillaLocomotion.Gameplay
 			velocity.y = 0f;
 			if (Time.time - this.lastGrabTime > 1f && (this.remotePlayers.Count == 0 || velocity.magnitude > 2.5f))
 			{
-				this.SetVelocity_RPC(boneIndex, velocity, true);
+				RopeSwingManager.instance.SendSetVelocity_RPC(this.ropeId, boneIndex, velocity, true);
 			}
 			this.lastGrabTime = Time.time;
 			this.ropeCreakSFX.transform.parent = this.GetBone(Math.Max(0, boneIndex - 3)).transform;
@@ -258,23 +299,8 @@ namespace GorillaLocomotion.Gameplay
 			this.RefreshAllBonesMass();
 		}
 
-		public void SetVelocity_RPC(int boneIndex, Vector3 velocity, bool wholeRope)
-		{
-			if (PhotonNetwork.InRoom)
-			{
-				base.photonView.RPC("SetVelocity", RpcTarget.All, new object[] { boneIndex, velocity, wholeRope });
-				return;
-			}
-			this.SetVelocity(boneIndex, velocity, wholeRope, default(PhotonMessageInfo));
-		}
-
-		[PunRPC]
 		public void SetVelocity(int boneIndex, Vector3 velocity, bool wholeRope, PhotonMessageInfo info)
 		{
-			if (info.Sender != null)
-			{
-				GorillaNot.IncrementRPCCall(info, "SetVelocity");
-			}
 			if (!base.isActiveAndEnabled)
 			{
 				return;
@@ -306,6 +332,12 @@ namespace GorillaLocomotion.Gameplay
 				VectorizedCustomRopeSimulation.instance.SetVelocity(this, velocity, wholeRope, boneIndex);
 			}
 		}
+
+		public int ropeId;
+
+		public string staticId;
+
+		public bool useStaticId;
 
 		public const float ropeBitGenOffset = 1f;
 
