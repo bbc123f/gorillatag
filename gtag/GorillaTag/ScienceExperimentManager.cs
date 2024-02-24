@@ -836,7 +836,7 @@ namespace GorillaTag
 
 		private void OnColliderEnteredSoda(WaterVolume volume, Collider collider)
 		{
-			if (collider == GorillaLocomotion.Player.Instance.bodyCollider)
+			if (collider == global::GorillaLocomotion.Player.Instance.bodyCollider)
 			{
 				if (base.photonView.IsMine)
 				{
@@ -853,7 +853,7 @@ namespace GorillaTag
 
 		private void OnColliderEnteredRefreshWater(WaterVolume volume, Collider collider)
 		{
-			if (collider == GorillaLocomotion.Player.Instance.bodyCollider)
+			if (collider == global::GorillaLocomotion.Player.Instance.bodyCollider)
 			{
 				if (base.photonView.IsMine)
 				{
@@ -1100,7 +1100,7 @@ namespace GorillaTag
 
 		private void ValidateLocalPlayerWaterBalloonHit(int playerId)
 		{
-			if (playerId == PhotonNetwork.LocalPlayer.ActorNumber && !GorillaLocomotion.Player.Instance.InWater)
+			if (playerId == PhotonNetwork.LocalPlayer.ActorNumber && !global::GorillaLocomotion.Player.Instance.InWater)
 			{
 				if (base.photonView.IsMine)
 				{

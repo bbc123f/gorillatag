@@ -74,7 +74,7 @@ public class GorillaHuntComputer : MonoBehaviour
 						Photon.Realtime.Player creator = this.myRig.creator;
 						array[num] = this.NormalizeName(flag, (creator != null) ? creator.NickName : null);
 						array[2] = "\nDISTANCE: ";
-						array[3] = Mathf.CeilToInt((GorillaLocomotion.Player.Instance.headCollider.transform.position - this.myRig.transform.position).magnitude).ToString();
+						array[3] = Mathf.CeilToInt((global::GorillaLocomotion.Player.Instance.headCollider.transform.position - this.myRig.transform.position).magnitude).ToString();
 						array[4] = "M";
 						text.text = string.Concat(array);
 						this.SetImage(this.myRig.cosmeticSet.items[0].displayName, ref this.hat);

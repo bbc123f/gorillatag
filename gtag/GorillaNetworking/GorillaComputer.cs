@@ -108,6 +108,7 @@ namespace GorillaNetworking
 			}
 			if (this.internetFailure)
 			{
+				this.internetFailure = false;
 				this.RestoreFromFailureState();
 				this.UpdateScreen();
 				return;
@@ -132,7 +133,7 @@ namespace GorillaNetworking
 						CurrentVersion = PhotonNetworkController.Instance.GameVersionString,
 						UpdatedSynchTest = this.includeUpdatedServerSynchTest
 					}
-				}, new Action<PlayFab.ClientModels.ExecuteCloudScriptResult>(this.OnReturnCurrentVersion), new Action<PlayFabError>(GorillaComputer.OnErrorShared), null, null);
+				}, new Action<global::PlayFab.ClientModels.ExecuteCloudScriptResult>(this.OnReturnCurrentVersion), new Action<PlayFabError>(GorillaComputer.OnErrorShared), null, null);
 				if (this.startupMillis == 0L && !this.tryGetTimeAgain)
 				{
 					this.GetCurrentTime();
@@ -1116,7 +1117,7 @@ namespace GorillaNetworking
 					this.screenText.Text = "PRESS OPTION 1 TO USE SNAP TURN. PRESS OPTION 2 TO USE SMOOTH TURN. PRESS OPTION 3 TO USE NO ARTIFICIAL TURNING. PRESS THE NUMBER KEYS TO CHOOSE A TURNING SPEED.\n CURRENT TURN TYPE: " + this.turnType + "\nCURRENT TURN SPEED: " + this.turnValue.ToString();
 					break;
 				case GorillaComputer.ComputerState.Mic:
-					this.screenText.Text = "CHOOSE ALL CHAT, PUSH TO TALK, OR PUSH TO MUTE. THE BUTTONS FOR PUSH TO TALK AND PUSH TO MUTE ARE ANY OF THE FACE BUTTONS.\nPRESS OPTION 1 TO CHOOSE ALL CHAT.\nPRESS OPTION 2 TO CHOOSE PUSH TO TALK.\nPRESS OPTION 3 TO CHOOSE PUSH TO MUTE.\n\nCURRENT MIC SETTING: " + this.pttType;
+					this.screenText.Text = "PRESS OPTION 1 = ALL CHAT.\nPRESS OPTION 2 = PUSH TO TALK.\nPRESS OPTION 3 = PUSH TO MUTE.\n\nCURRENT MIC SETTING: " + this.pttType + "\n\nPUSH TO TALK AND PUSH TO MUTE WORK WITH ANY FACE BUTTON";
 					break;
 				case GorillaComputer.ComputerState.Room:
 				{
@@ -1170,7 +1171,7 @@ namespace GorillaNetworking
 					}
 					break;
 				case GorillaComputer.ComputerState.Voice:
-					this.screenText.Text = "USE THIS TO ENABLE OR DISABLE VOICE CHAT.\nPRESS OPTION 1 TO ENABLE VOICE CHAT.\nPRESS OPTION 2 TO DISABLE VOICE CHAT.\n\nVOICE CHAT ON: " + this.voiceChatOn;
+					this.screenText.Text = "CHOOSE WHICH TYPE OF VOICE YOU WANT TO HEAR AND SPEAK. \nPRESS OPTION 1 = HUMAN VOICES. \nPRESS OPTION 2 = MONKE VOICES. \n\nVOICE TYPE: " + ((this.voiceChatOn == "TRUE") ? "HUMAN" : ((this.voiceChatOn == "FALSE") ? "MONKE" : "OFF"));
 					break;
 				case GorillaComputer.ComputerState.Credits:
 					this.screenText.Text = this.creditsView.GetScreenText();
@@ -1276,7 +1277,7 @@ namespace GorillaNetworking
 			});
 		}
 
-		private void OnReturnCurrentVersion(PlayFab.ClientModels.ExecuteCloudScriptResult result)
+		private void OnReturnCurrentVersion(global::PlayFab.ClientModels.ExecuteCloudScriptResult result)
 		{
 			JsonObject jsonObject = (JsonObject)result.FunctionResult;
 			if (jsonObject == null)
@@ -1406,7 +1407,7 @@ namespace GorillaNetworking
 			{
 				PlayFabCloudScriptAPI.ExecuteFunction(new ExecuteFunctionRequest
 				{
-					Entity = new PlayFab.CloudScriptModels.EntityKey
+					Entity = new global::PlayFab.CloudScriptModels.EntityKey
 					{
 						Id = PlayFabSettings.staticPlayer.EntityId,
 						Type = PlayFabSettings.staticPlayer.EntityType
@@ -1427,7 +1428,7 @@ namespace GorillaNetworking
 			{
 				PlayFabCloudScriptAPI.ExecuteFunction(new ExecuteFunctionRequest
 				{
-					Entity = new PlayFab.CloudScriptModels.EntityKey
+					Entity = new global::PlayFab.CloudScriptModels.EntityKey
 					{
 						Id = PlayFabSettings.staticPlayer.EntityId,
 						Type = PlayFabSettings.staticPlayer.EntityType
@@ -1700,7 +1701,7 @@ namespace GorillaNetworking
 			}
 			ExecuteCloudScriptRequest executeCloudScriptRequest = new ExecuteCloudScriptRequest();
 			executeCloudScriptRequest.FunctionName = "ReturnMyOculusHash";
-			PlayFabClientAPI.ExecuteCloudScript(executeCloudScriptRequest, delegate(PlayFab.ClientModels.ExecuteCloudScriptResult result)
+			PlayFabClientAPI.ExecuteCloudScript(executeCloudScriptRequest, delegate(global::PlayFab.ClientModels.ExecuteCloudScriptResult result)
 			{
 				object obj;
 				if (((JsonObject)result.FunctionResult).TryGetValue("oculusHash", out obj))

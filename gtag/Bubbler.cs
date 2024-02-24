@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using GorillaLocomotion;
 using UnityEngine;
 
 public class Bubbler : TransferrableObject
@@ -61,6 +62,15 @@ public class Bubbler : TransferrableObject
 	{
 		base.ResetToDefaultState();
 		this.InitToDefault();
+	}
+
+	protected override void LateUpdateLocal()
+	{
+		base.LateUpdateLocal();
+		if (!this._worksInWater && Player.Instance.InWater)
+		{
+			this.itemState = TransferrableObject.ItemStates.State0;
+		}
 	}
 
 	protected override void LateUpdateShared()
@@ -175,6 +185,9 @@ public class Bubbler : TransferrableObject
 	{
 		return !this.disableDeactivation;
 	}
+
+	[SerializeField]
+	private bool _worksInWater = true;
 
 	public ParticleSystem bubbleParticleSystem;
 

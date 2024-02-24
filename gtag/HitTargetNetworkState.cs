@@ -85,13 +85,20 @@ public class HitTargetNetworkState : MonoBehaviourPunCallbacks, IPunObservable
 
 	public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
 	{
+		if (!info.Sender.IsMasterClient)
+		{
+			return;
+		}
 		if (stream.IsWriting)
 		{
 			stream.SendNext(this.networkedScore.Value);
 			return;
 		}
 		int num = (int)stream.ReceiveNext();
-		this.PlayAudio(this.networkedScore.Value, num);
+		if (num != this.networkedScore.Value)
+		{
+			this.PlayAudio(this.networkedScore.Value, num);
+		}
 		this.networkedScore.Value = num;
 	}
 

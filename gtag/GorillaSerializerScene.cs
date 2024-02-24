@@ -3,8 +3,16 @@ using GorillaExtensions;
 using Photon.Pun;
 using UnityEngine;
 
-internal class GorillaSerializerScene : GorillaSerializerMasterOnly, IOnPhotonViewPreNetDestroy, IPhotonViewCallback
+internal class GorillaSerializerScene : GorillaSerializer, IOnPhotonViewPreNetDestroy, IPhotonViewCallback
 {
+	internal bool HasAuthority
+	{
+		get
+		{
+			return this.photonView.IsMine;
+		}
+	}
+
 	protected virtual void Start()
 	{
 		if (!this.targetComponent.IsNull())
@@ -35,6 +43,7 @@ internal class GorillaSerializerScene : GorillaSerializerMasterOnly, IOnPhotonVi
 			this.validDisable = true;
 			return;
 		}
+		this.OnValidEnable();
 	}
 
 	protected virtual void OnValidEnable()
@@ -71,6 +80,18 @@ internal class GorillaSerializerScene : GorillaSerializerMasterOnly, IOnPhotonVi
 	{
 		this.validDisable = false;
 	}
+
+	protected override bool ValidOnSerialize(PhotonStream stream, in PhotonMessageInfo info)
+	{
+		if (!this.transferrable)
+		{
+			return info.Sender == PhotonNetwork.MasterClient;
+		}
+		return base.ValidOnSerialize(stream, info);
+	}
+
+	[SerializeField]
+	private bool transferrable;
 
 	[SerializeField]
 	private MonoBehaviour targetComponent;

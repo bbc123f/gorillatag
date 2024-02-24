@@ -12,6 +12,7 @@ using GorillaTag.GuidedRefs;
 using Photon.Pun;
 using Photon.Realtime;
 using Photon.Voice.PUN;
+using Photon.Voice.Unity;
 using PlayFab;
 using PlayFab.ClientModels;
 using UnityEngine;
@@ -246,6 +247,14 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		}
 	}
 
+	public float SpeakingLoudness
+	{
+		get
+		{
+			return this.speakingLoudness;
+		}
+	}
+
 	private void Awake()
 	{
 		this.fxSettings = Object.Instantiate<FXSystemSettings>(this.sharedFXSettings);
@@ -373,15 +382,15 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 			if (GorillaGameManager.instance != null)
 			{
 				this.speedArray = GorillaGameManager.instance.LocalPlayerSpeed();
-				GorillaLocomotion.Player.Instance.jumpMultiplier = this.speedArray[1];
-				GorillaLocomotion.Player.Instance.maxJumpSpeed = this.speedArray[0];
+				global::GorillaLocomotion.Player.Instance.jumpMultiplier = this.speedArray[1];
+				global::GorillaLocomotion.Player.Instance.maxJumpSpeed = this.speedArray[0];
 			}
 			else
 			{
-				GorillaLocomotion.Player.Instance.jumpMultiplier = 1.1f;
-				GorillaLocomotion.Player.Instance.maxJumpSpeed = 6.5f;
+				global::GorillaLocomotion.Player.Instance.jumpMultiplier = 1.1f;
+				global::GorillaLocomotion.Player.Instance.maxJumpSpeed = 6.5f;
 			}
-			this.scaleFactor = GorillaLocomotion.Player.Instance.scale;
+			this.scaleFactor = global::GorillaLocomotion.Player.Instance.scale;
 			base.transform.localScale = Vector3.one * this.scaleFactor;
 			base.transform.eulerAngles = new Vector3(0f, this.mainCamera.transform.rotation.eulerAngles.y, 0f);
 			this.syncPos = this.mainCamera.transform.position + this.headConstraint.rotation * this.head.trackingPositionOffset * this.scaleFactor + base.transform.rotation * this.headBodyOffset * this.scaleFactor;
@@ -399,18 +408,45 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 			{
 				this.mainSkin.enabled = OVRManager.hasInputFocus;
 			}
-			this.mainSkin.enabled = !GorillaLocomotion.Player.Instance.inOverlay;
+			this.mainSkin.enabled = !global::GorillaLocomotion.Player.Instance.inOverlay;
+			this.speakingLoudness = 0f;
+			if (this.shouldSendSpeakingLoudness && this.photonView)
+			{
+				PhotonVoiceView component = this.photonView.GetComponent<PhotonVoiceView>();
+				if (component && component.RecorderInUse)
+				{
+					MicWrapper micWrapper = component.RecorderInUse.InputSource as MicWrapper;
+					if (micWrapper != null)
+					{
+						int num = this.replacementVoiceDetectionDelay;
+						float[] array = new float[num];
+						if (micWrapper.Mic.samples >= num && micWrapper.Mic.GetData(array, micWrapper.Mic.samples - num))
+						{
+							float num2 = 0f;
+							for (int i = 0; i < num; i++)
+							{
+								float num3 = Mathf.Sqrt(array[i]);
+								if (num3 > num2)
+								{
+									num2 = num3;
+								}
+							}
+							this.speakingLoudness = num2;
+						}
+					}
+				}
+			}
 		}
 		else
 		{
 			if (this.voiceAudio != null)
 			{
-				float num = (GorillaTagger.Instance.offlineVRRig.transform.localScale.x - base.transform.localScale.x) / this.pitchScale + this.pitchOffset;
-				float num2 = (this.UsingHauntedRing ? this.HauntedRingVoicePitch : num);
-				num2 = (this.IsHaunted ? this.HauntedVoicePitch : num2);
-				if (!Mathf.Approximately(this.voiceAudio.pitch, num2))
+				float num4 = (GorillaTagger.Instance.offlineVRRig.transform.localScale.x - base.transform.localScale.x) / this.pitchScale + this.pitchOffset;
+				float num5 = (this.UsingHauntedRing ? this.HauntedRingVoicePitch : num4);
+				num5 = (this.IsHaunted ? this.HauntedVoicePitch : num5);
+				if (!Mathf.Approximately(this.voiceAudio.pitch, num5))
 				{
-					this.voiceAudio.pitch = num2;
+					this.voiceAudio.pitch = num5;
 				}
 				bool isHaunted = GorillaTagger.Instance.offlineVRRig.IsHaunted;
 				if (isHaunted != this.playerWasHaunted)
@@ -482,10 +518,10 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		if (this.creator != null)
 		{
 			ScienceExperimentManager instance = ScienceExperimentManager.instance;
-			int num3;
-			if (instance != null && instance.GetMaterialIfPlayerInGame(this.creator.ActorNumber, out num3))
+			int num6;
+			if (instance != null && instance.GetMaterialIfPlayerInGame(this.creator.ActorNumber, out num6))
 			{
-				this.tempMatIndex = num3;
+				this.tempMatIndex = num6;
 			}
 			else
 			{
@@ -538,6 +574,8 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		stream.SendNext(Mathf.RoundToInt(base.transform.rotation.eulerAngles.y));
 		stream.SendNext(this.ReturnHandPosition());
 		stream.SendNext(this.currentState);
+		stream.SendNext(this.remoteUseReplacementVoice);
+		stream.SendNext(this.speakingLoudness);
 		stream.SendNext(this.grabbedRopeIndex);
 		if (this.grabbedRopeIndex > 0)
 		{
@@ -559,6 +597,9 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		this.handSync = (int)stream.ReceiveNext();
 		this.currentState = (TransferrableObject.PositionState)stream.ReceiveNext();
 		this.lastPosition = this.syncPos;
+		this.remoteUseReplacementVoice = (bool)stream.ReceiveNext();
+		this.speakingLoudness = (float)stream.ReceiveNext();
+		this.UpdateReplacementVoice();
 		this.grabbedRopeIndex = (int)stream.ReceiveNext();
 		if (this.grabbedRopeIndex > 0)
 		{
@@ -746,12 +787,12 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 
 	public void SetJumpLimitLocal(float maxJumpSpeed)
 	{
-		GorillaLocomotion.Player.Instance.maxJumpSpeed = maxJumpSpeed;
+		global::GorillaLocomotion.Player.Instance.maxJumpSpeed = maxJumpSpeed;
 	}
 
 	public void SetJumpMultiplierLocal(float jumpMultiplier)
 	{
-		GorillaLocomotion.Player.Instance.jumpMultiplier = jumpMultiplier;
+		global::GorillaLocomotion.Player.Instance.jumpMultiplier = jumpMultiplier;
 	}
 
 	[PunRPC]
@@ -863,17 +904,17 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 
 	public void PlayHandTapLocal(int soundIndex, bool isLeftHand, float tapVolume)
 	{
-		if (soundIndex > -1 && soundIndex < GorillaLocomotion.Player.Instance.materialData.Count)
+		if (soundIndex > -1 && soundIndex < global::GorillaLocomotion.Player.Instance.materialData.Count)
 		{
 			if (isLeftHand)
 			{
 				this.leftHandPlayer.volume = tapVolume;
-				this.leftHandPlayer.clip = (GorillaLocomotion.Player.Instance.materialData[soundIndex].overrideAudio ? GorillaLocomotion.Player.Instance.materialData[soundIndex].audio : GorillaLocomotion.Player.Instance.materialData[0].audio);
+				this.leftHandPlayer.clip = (global::GorillaLocomotion.Player.Instance.materialData[soundIndex].overrideAudio ? global::GorillaLocomotion.Player.Instance.materialData[soundIndex].audio : global::GorillaLocomotion.Player.Instance.materialData[0].audio);
 				this.leftHandPlayer.PlayOneShot(this.leftHandPlayer.clip);
 				return;
 			}
 			this.rightHandPlayer.volume = tapVolume;
-			this.rightHandPlayer.clip = (GorillaLocomotion.Player.Instance.materialData[soundIndex].overrideAudio ? GorillaLocomotion.Player.Instance.materialData[soundIndex].audio : GorillaLocomotion.Player.Instance.materialData[0].audio);
+			this.rightHandPlayer.clip = (global::GorillaLocomotion.Player.Instance.materialData[soundIndex].overrideAudio ? global::GorillaLocomotion.Player.Instance.materialData[soundIndex].audio : global::GorillaLocomotion.Player.Instance.materialData[0].audio);
 			this.rightHandPlayer.PlayOneShot(this.rightHandPlayer.clip);
 		}
 	}
@@ -901,9 +942,9 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 				{
 					this.splashEffectTimes[num] = time;
 					boundingRadius = Mathf.Clamp(boundingRadius, 0.0001f, 0.5f);
-					ObjectPools.instance.Instantiate(GorillaLocomotion.Player.Instance.waterParams.rippleEffect, splashPosition, splashRotation, GorillaLocomotion.Player.Instance.waterParams.rippleEffectScale * boundingRadius * 2f);
+					ObjectPools.instance.Instantiate(global::GorillaLocomotion.Player.Instance.waterParams.rippleEffect, splashPosition, splashRotation, global::GorillaLocomotion.Player.Instance.waterParams.rippleEffectScale * boundingRadius * 2f);
 					splashScale = Mathf.Clamp(splashScale, 1E-05f, 1f);
-					ObjectPools.instance.Instantiate(GorillaLocomotion.Player.Instance.waterParams.splashEffect, splashPosition, splashRotation, splashScale).GetComponent<WaterSplashEffect>().PlayEffect(bigSplash, enteringWater, splashScale, null);
+					ObjectPools.instance.Instantiate(global::GorillaLocomotion.Player.Instance.waterParams.splashEffect, splashPosition, splashRotation, splashScale).GetComponent<WaterSplashEffect>().PlayEffect(bigSplash, enteringWater, splashScale, null);
 					return;
 				}
 			}
@@ -1317,6 +1358,21 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		this.battleBalloons.gameObject.SetActive(on);
 	}
 
+	private void UpdateReplacementVoice()
+	{
+		if (this.remoteUseReplacementVoice || this.localUseReplacementVoice || GorillaComputer.instance.voiceChatOn != "TRUE")
+		{
+			this.voiceAudio.mute = true;
+			return;
+		}
+		this.voiceAudio.mute = false;
+	}
+
+	public bool ShouldPlayReplacementVoice()
+	{
+		return this.photonView && !this.photonView.IsMine && !(GorillaComputer.instance.voiceChatOn == "OFF") && (this.remoteUseReplacementVoice || this.localUseReplacementVoice || GorillaComputer.instance.voiceChatOn == "FALSE") && this.speakingLoudness > this.replacementVoiceLoudnessThreshold;
+	}
+
 	bool IUserCosmeticsCallback.PendingUpdate
 	{
 		get
@@ -1664,6 +1720,18 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 	private float[] splashEffectTimes = new float[4];
 
 	internal AudioSource voiceAudio;
+
+	public bool remoteUseReplacementVoice;
+
+	public bool localUseReplacementVoice;
+
+	private float speakingLoudness;
+
+	public bool shouldSendSpeakingLoudness = true;
+
+	public float replacementVoiceLoudnessThreshold = 0.05f;
+
+	public int replacementVoiceDetectionDelay = 128;
 
 	[SerializeField]
 	internal PhotonView photonView;

@@ -9,6 +9,83 @@ namespace GorillaTag.Reactions
 {
 	public class GorillaMaterialReaction : MonoBehaviour, ITickSystemPost
 	{
+		public void PopulateRuntimeLookupArrays()
+		{
+			this._momentEnumCount = ((GorillaMaterialReaction.EMomentInState[])Enum.GetValues(typeof(GorillaMaterialReaction.EMomentInState))).Length;
+			this._matCount = this._ownerVRRig.materialsToChangeTo.Length;
+			this._mat_x_moment_x_activeBool_to_gObjs = new GameObject[this._momentEnumCount * this._matCount * 2][];
+			for (int i = 0; i < this._matCount; i++)
+			{
+				for (int j = 0; j < this._momentEnumCount; j++)
+				{
+					GorillaMaterialReaction.EMomentInState emomentInState = (GorillaMaterialReaction.EMomentInState)j;
+					List<GameObject> list = new List<GameObject>();
+					List<GameObject> list2 = new List<GameObject>();
+					foreach (GorillaMaterialReaction.ReactionEntry reactionEntry in this._statusEffectReactions)
+					{
+						int[] statusMaterialIndexes = reactionEntry.statusMaterialIndexes;
+						for (int l = 0; l < statusMaterialIndexes.Length; l++)
+						{
+							if (statusMaterialIndexes[l] == i)
+							{
+								foreach (GorillaMaterialReaction.GameObjectStates gameObjectStates2 in reactionEntry.gameObjectStates)
+								{
+									switch (emomentInState)
+									{
+									case GorillaMaterialReaction.EMomentInState.OnEnter:
+										if (gameObjectStates2.onEnter.change)
+										{
+											if (gameObjectStates2.onEnter.activeState)
+											{
+												list.Add(base.gameObject);
+											}
+											else
+											{
+												list2.Add(base.gameObject);
+											}
+										}
+										break;
+									case GorillaMaterialReaction.EMomentInState.OnStay:
+										if (gameObjectStates2.onStay.change)
+										{
+											if (gameObjectStates2.onEnter.activeState)
+											{
+												list.Add(base.gameObject);
+											}
+											else
+											{
+												list2.Add(base.gameObject);
+											}
+										}
+										break;
+									case GorillaMaterialReaction.EMomentInState.OnExit:
+										if (gameObjectStates2.onExit.change)
+										{
+											if (gameObjectStates2.onEnter.activeState)
+											{
+												list.Add(base.gameObject);
+											}
+											else
+											{
+												list2.Add(base.gameObject);
+											}
+										}
+										break;
+									default:
+										Debug.LogError(string.Format("Unhandled enum value for {0}: {1}", "EMomentInState", emomentInState));
+										break;
+									}
+								}
+							}
+						}
+					}
+					int num = i * this._momentEnumCount * 2 + j * 2;
+					this._mat_x_moment_x_activeBool_to_gObjs[num] = list2.ToArray();
+					this._mat_x_moment_x_activeBool_to_gObjs[num + 1] = list.ToArray();
+				}
+			}
+		}
+
 		protected void Awake()
 		{
 			this.RemoveAndReportNulls();
@@ -155,83 +232,6 @@ namespace GorillaTag.Reactions
 						}
 					}
 					this._statusEffectReactions[i].gameObjectStates = array2;
-				}
-			}
-		}
-
-		public void PopulateRuntimeLookupArrays()
-		{
-			this._momentEnumCount = ((GorillaMaterialReaction.EMomentInState[])Enum.GetValues(typeof(GorillaMaterialReaction.EMomentInState))).Length;
-			this._matCount = this._ownerVRRig.materialsToChangeTo.Length;
-			this._mat_x_moment_x_activeBool_to_gObjs = new GameObject[this._momentEnumCount * this._matCount * 2][];
-			for (int i = 0; i < this._matCount; i++)
-			{
-				for (int j = 0; j < this._momentEnumCount; j++)
-				{
-					GorillaMaterialReaction.EMomentInState emomentInState = (GorillaMaterialReaction.EMomentInState)j;
-					List<GameObject> list = new List<GameObject>();
-					List<GameObject> list2 = new List<GameObject>();
-					foreach (GorillaMaterialReaction.ReactionEntry reactionEntry in this._statusEffectReactions)
-					{
-						int[] statusMaterialIndexes = reactionEntry.statusMaterialIndexes;
-						for (int l = 0; l < statusMaterialIndexes.Length; l++)
-						{
-							if (statusMaterialIndexes[l] == i)
-							{
-								foreach (GorillaMaterialReaction.GameObjectStates gameObjectStates2 in reactionEntry.gameObjectStates)
-								{
-									switch (emomentInState)
-									{
-									case GorillaMaterialReaction.EMomentInState.OnEnter:
-										if (gameObjectStates2.onEnter.change)
-										{
-											if (gameObjectStates2.onEnter.activeState)
-											{
-												list.Add(base.gameObject);
-											}
-											else
-											{
-												list2.Add(base.gameObject);
-											}
-										}
-										break;
-									case GorillaMaterialReaction.EMomentInState.OnStay:
-										if (gameObjectStates2.onStay.change)
-										{
-											if (gameObjectStates2.onEnter.activeState)
-											{
-												list.Add(base.gameObject);
-											}
-											else
-											{
-												list2.Add(base.gameObject);
-											}
-										}
-										break;
-									case GorillaMaterialReaction.EMomentInState.OnExit:
-										if (gameObjectStates2.onExit.change)
-										{
-											if (gameObjectStates2.onEnter.activeState)
-											{
-												list.Add(base.gameObject);
-											}
-											else
-											{
-												list2.Add(base.gameObject);
-											}
-										}
-										break;
-									default:
-										Debug.LogError(string.Format("Unhandled enum value for {0}: {1}", "EMomentInState", emomentInState));
-										break;
-									}
-								}
-							}
-						}
-					}
-					int num = i * this._momentEnumCount * 2 + j * 2;
-					this._mat_x_moment_x_activeBool_to_gObjs[num] = list2.ToArray();
-					this._mat_x_moment_x_activeBool_to_gObjs[num + 1] = list.ToArray();
 				}
 			}
 		}

@@ -172,7 +172,7 @@ public class Slingshot : TransferrableObject
 		Vector3 position = this.dummyProjectile.transform.position;
 		Vector3 vector = this.centerOrigin.position - this.center.position;
 		vector /= num3;
-		Vector3 currentVelocity = GorillaLocomotion.Player.Instance.currentVelocity;
+		Vector3 currentVelocity = global::GorillaLocomotion.Player.Instance.currentVelocity;
 		Vector3 vector2 = Mathf.Min(this.springConstant * this.maxDraw, vector.magnitude * this.springConstant) * vector.normalized;
 		vector2 *= num3;
 		vector2 += currentVelocity;

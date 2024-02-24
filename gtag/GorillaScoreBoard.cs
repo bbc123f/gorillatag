@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using Photon.Pun;
 using UnityEngine;
 using UnityEngine.UI;
@@ -38,8 +39,9 @@ public class GorillaScoreBoard : MonoBehaviour
 
 	public void RedrawPlayerLines()
 	{
-		this.boardText.text = this.GetBeginningString();
-		this.buttonText.text = "";
+		this.stringBuilder.Clear();
+		this.stringBuilder.Append(this.GetBeginningString());
+		this.buttonStringBuilder.Clear();
 		for (int i = 0; i < this.lines.Count; i++)
 		{
 			try
@@ -49,25 +51,24 @@ public class GorillaScoreBoard : MonoBehaviour
 					this.lines[i].gameObject.GetComponent<RectTransform>().localPosition = new Vector3(0f, (float)(this.startingYValue - this.lineHeight * i), 0f);
 					if (this.lines[i].linePlayer != null)
 					{
+						this.stringBuilder.Append("\n ");
+						this.stringBuilder.Append(this.NormalizeName(true, this.lines[i].linePlayer.NickName));
 						Text text = this.boardText;
 						text.text = text.text + "\n " + this.NormalizeName(true, this.lines[i].linePlayer.NickName);
 						if (this.lines[i].linePlayer != PhotonNetwork.LocalPlayer)
 						{
 							if (this.lines[i].reportButton.isActiveAndEnabled)
 							{
-								Text text2 = this.buttonText;
-								text2.text += "MUTE                                REPORT\n";
+								this.buttonStringBuilder.Append(" MUTE                                REPORT\n");
 							}
 							else
 							{
-								Text text3 = this.buttonText;
-								text3.text += "MUTE                HATE SPEECH    TOXICITY      CHEATING      CANCEL\n";
+								this.buttonStringBuilder.Append(" MUTE                HATE SPEECH    TOXICITY      CHEATING      CANCEL\n");
 							}
 						}
 						else
 						{
-							Text text4 = this.buttonText;
-							text4.text += "\n";
+							this.buttonStringBuilder.Append("\n");
 						}
 					}
 				}
@@ -76,6 +77,8 @@ public class GorillaScoreBoard : MonoBehaviour
 			{
 			}
 		}
+		this.boardText.text = this.stringBuilder.ToString();
+		this.buttonText.text = this.buttonStringBuilder.ToString();
 	}
 
 	public string NormalizeName(bool doIt, string text)
@@ -143,4 +146,8 @@ public class GorillaScoreBoard : MonoBehaviour
 	private const string error = "ERROR";
 
 	private List<string> gmNames;
+
+	private StringBuilder stringBuilder = new StringBuilder(220);
+
+	private StringBuilder buttonStringBuilder = new StringBuilder(720);
 }

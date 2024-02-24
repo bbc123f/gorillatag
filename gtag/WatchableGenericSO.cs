@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class WatchableGenericSO<T> : ScriptableObject
 {
+	[DebugReadOnly]
 	private T _value { get; set; }
 
 	public T Value

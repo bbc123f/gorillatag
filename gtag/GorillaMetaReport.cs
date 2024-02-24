@@ -96,19 +96,28 @@ public class GorillaMetaReport : MonoBehaviour
 
 	private void ToggleLevelVisibility(bool state)
 	{
-		foreach (KeyValuePair<MeshRenderer, bool> keyValuePair in this.levelRenderers)
+		for (int i = 0; i < this.levelRenderers.Count; i++)
 		{
-			keyValuePair.Key.enabled = state;
+			MeshRenderer meshRenderer = this.levelRenderers[i];
+			if (!(meshRenderer == null))
+			{
+				meshRenderer.enabled = state;
+			}
 		}
 	}
 
 	private void GetLevelVisibility()
 	{
-		foreach (MeshRenderer meshRenderer in this.tempLevel.GetComponentsInChildren<MeshRenderer>())
+		this.levelRenderers.Clear();
+		ZoneRootRegister[] array = Object.FindObjectsOfType<ZoneRootRegister>();
+		for (int i = 0; i < array.Length; i++)
 		{
-			if (meshRenderer.enabled)
+			foreach (MeshRenderer meshRenderer in array[i].GetComponentsInChildren<MeshRenderer>())
 			{
-				this.levelRenderers.Add(meshRenderer, true);
+				if (meshRenderer.enabled)
+				{
+					this.levelRenderers.Add(meshRenderer);
+				}
 			}
 		}
 	}
@@ -323,7 +332,7 @@ public class GorillaMetaReport : MonoBehaviour
 
 	private bool canPress = true;
 
-	private Dictionary<MeshRenderer, bool> levelRenderers = new Dictionary<MeshRenderer, bool>();
+	private List<MeshRenderer> levelRenderers = new List<MeshRenderer>(30000);
 
 	public GameObject buttons;
 

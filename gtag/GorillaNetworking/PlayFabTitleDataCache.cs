@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using LitJson;
@@ -99,21 +98,37 @@ namespace GorillaNetworking
 		{
 			this.LoadDataFromFile();
 			this.LoadKey();
-			Dictionary<string, string> dictionary = this.titleData.ToDictionary((KeyValuePair<string, string> keyValuePair) => keyValuePair.Key, (KeyValuePair<string, string> keyValuePair) => PlayFabTitleDataCache.MD5(keyValuePair.Value));
-			string text = JsonMapper.ToJson(new Dictionary<string, object>
+			Dictionary<string, string> dictionary = this.titleData;
+			Dictionary<string, string> dictionary2 = new Dictionary<string, string>((dictionary != null) ? dictionary.Count : 0);
+			if (this.titleData != null)
+			{
+				foreach (KeyValuePair<string, string> keyValuePair in this.titleData)
+				{
+					string text;
+					string text2;
+					keyValuePair.Deconstruct(out text, out text2);
+					string text3 = text;
+					string text4 = text2;
+					if (text3 != null)
+					{
+						dictionary2[text3] = ((text4 != null) ? PlayFabTitleDataCache.MD5(text4) : null);
+					}
+				}
+			}
+			string text5 = JsonMapper.ToJson(new Dictionary<string, object>
 			{
 				{
 					"version",
 					Application.version
 				},
 				{ "key", this.titleDataKey },
-				{ "data", dictionary }
+				{ "data", dictionary2 }
 			});
 			Stopwatch sw = Stopwatch.StartNew();
-			Dictionary<string, JsonData> dictionary2;
+			Dictionary<string, JsonData> dictionary3;
 			using (UnityWebRequest www = new UnityWebRequest("https://title-data.gtag-cf.com", "POST"))
 			{
-				byte[] bytes = new UTF8Encoding(true).GetBytes(text);
+				byte[] bytes = new UTF8Encoding(true).GetBytes(text5);
 				www.uploadHandler = new UploadHandlerRaw(bytes);
 				www.downloadHandler = new DownloadHandlerBuffer();
 				www.SetRequestHeader("Content-Type", "application/json");
@@ -124,11 +139,11 @@ namespace GorillaNetworking
 					this.ClearRequestWithError(null);
 					yield break;
 				}
-				dictionary2 = JsonMapper.ToObject<Dictionary<string, JsonData>>(www.downloadHandler.text);
+				dictionary3 = JsonMapper.ToObject<Dictionary<string, JsonData>>(www.downloadHandler.text);
 			}
 			UnityWebRequest www = null;
 			Debug.Log(string.Format("TitleData fetched: {0:N5}", sw.Elapsed.TotalSeconds));
-			foreach (KeyValuePair<string, JsonData> keyValuePair2 in dictionary2)
+			foreach (KeyValuePair<string, JsonData> keyValuePair2 in dictionary3)
 			{
 				PlayFabTitleDataCache.DataUpdate onTitleDataUpdate = this.OnTitleDataUpdate;
 				if (onTitleDataUpdate != null)
@@ -144,16 +159,16 @@ namespace GorillaNetworking
 					this.titleData.AddOrUpdate(keyValuePair2.Key, JsonMapper.ToJson(keyValuePair2.Value));
 				}
 			}
-			if (dictionary2.Keys.Count > 0)
+			if (dictionary3.Keys.Count > 0)
 			{
 				this.SaveDataToFile(PlayFabTitleDataCache.FilePath);
 			}
 			this.requests.RemoveAll(delegate(PlayFabTitleDataCache.DataRequest request)
 			{
-				string text2;
-				if (this.titleData.TryGetValue(request.Name, out text2))
+				string text6;
+				if (this.titleData.TryGetValue(request.Name, out text6))
 				{
-					request.Callback.SafeInvoke(text2);
+					request.Callback.SafeInvoke(text6);
 					return true;
 				}
 				return false;

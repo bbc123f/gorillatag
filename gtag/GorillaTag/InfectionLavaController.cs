@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace GorillaTag
 {
-	public class InfectionLavaController : MonoBehaviourPun, IPunObservable, ITickSystemPost, IGuidedRefReceiverMono, IGuidedRefMonoBehaviour, IGuidedRefObject
+	public class InfectionLavaController : MonoBehaviour, IGorillaSerializeableScene, IGorillaSerializeable, ITickSystemPost, IGuidedRefReceiverMono, IGuidedRefMonoBehaviour, IGuidedRefObject
 	{
 		public static InfectionLavaController Instance
 		{
@@ -97,6 +97,11 @@ namespace GorillaTag
 			TickSystem<object>.AddPostTickCallback(this);
 		}
 
+		void IGorillaSerializeableScene.OnSceneLinking(GorillaSerializerScene netObj)
+		{
+			this.networkObject = netObj;
+		}
+
 		protected void OnDisable()
 		{
 			TickSystem<object>.RemovePostTickCallback(this);
@@ -151,8 +156,8 @@ namespace GorillaTag
 		void ITickSystemPost.PostTick()
 		{
 			this.prevTime = this.currentTime;
-			this.currentTime = (PhotonNetwork.InRoom ? PhotonNetwork.Time : Time.unscaledTimeAsDouble);
-			if (base.photonView.IsMine)
+			this.currentTime = (PhotonNetwork.InRoom ? PhotonNetwork.Time : Time.timeAsDouble);
+			if (this.networkObject.HasAuthority)
 			{
 				this.UpdateReliableState(this.currentTime, ref this.reliableState);
 			}
@@ -161,6 +166,76 @@ namespace GorillaTag
 			this.UpdateLava(this.lavaProgressSmooth + this.localLagLavaProgressOffset);
 			this.UpdateVolcanoActivationLava((float)this.reliableState.activationProgress);
 			this.CheckLocalPlayerAgainstLava(this.currentTime);
+		}
+
+		private void JumpToState(InfectionLavaController.RisingLavaState state)
+		{
+			this.reliableState.state = state;
+			switch (state)
+			{
+			case InfectionLavaController.RisingLavaState.Drained:
+			{
+				for (int i = 0; i < this.volcanoEffects.Length; i++)
+				{
+					VolcanoEffects volcanoEffects = this.volcanoEffects[i];
+					if (volcanoEffects != null)
+					{
+						volcanoEffects.SetDrainedState();
+					}
+				}
+				return;
+			}
+			case InfectionLavaController.RisingLavaState.Erupting:
+			{
+				for (int j = 0; j < this.volcanoEffects.Length; j++)
+				{
+					VolcanoEffects volcanoEffects2 = this.volcanoEffects[j];
+					if (volcanoEffects2 != null)
+					{
+						volcanoEffects2.SetEruptingState();
+					}
+				}
+				return;
+			}
+			case InfectionLavaController.RisingLavaState.Rising:
+			{
+				for (int k = 0; k < this.volcanoEffects.Length; k++)
+				{
+					VolcanoEffects volcanoEffects3 = this.volcanoEffects[k];
+					if (volcanoEffects3 != null)
+					{
+						volcanoEffects3.SetRisingState();
+					}
+				}
+				return;
+			}
+			case InfectionLavaController.RisingLavaState.Full:
+			{
+				for (int l = 0; l < this.volcanoEffects.Length; l++)
+				{
+					VolcanoEffects volcanoEffects4 = this.volcanoEffects[l];
+					if (volcanoEffects4 != null)
+					{
+						volcanoEffects4.SetFullState();
+					}
+				}
+				return;
+			}
+			case InfectionLavaController.RisingLavaState.Draining:
+			{
+				for (int m = 0; m < this.volcanoEffects.Length; m++)
+				{
+					VolcanoEffects volcanoEffects5 = this.volcanoEffects[m];
+					if (volcanoEffects5 != null)
+					{
+						volcanoEffects5.SetDrainingState();
+					}
+				}
+				return;
+			}
+			default:
+				return;
+			}
 		}
 
 		private void UpdateReliableState(double currentTime, ref InfectionLavaController.LavaSyncData syncData)
@@ -187,6 +262,14 @@ namespace GorillaTag
 						syncData.state = InfectionLavaController.RisingLavaState.Erupting;
 						syncData.stateStartTime = currentTime;
 						syncData.activationProgress = 1.0;
+						for (int j = 0; j < this.volcanoEffects.Length; j++)
+						{
+							VolcanoEffects volcanoEffects = this.volcanoEffects[j];
+							if (volcanoEffects != null)
+							{
+								volcanoEffects.SetEruptingState();
+							}
+						}
 						return;
 					}
 				}
@@ -198,9 +281,9 @@ namespace GorillaTag
 					if (activationProgress > 0.0 && syncData.activationProgress <= 5E-324)
 					{
 						VolcanoEffects[] array = this.volcanoEffects;
-						for (int j = 0; j < array.Length; j++)
+						for (int k = 0; k < array.Length; k++)
 						{
-							array[j].OnVolcanoBellyEmpty();
+							array[k].OnVolcanoBellyEmpty();
 						}
 						return;
 					}
@@ -211,6 +294,14 @@ namespace GorillaTag
 				{
 					syncData.state = InfectionLavaController.RisingLavaState.Rising;
 					syncData.stateStartTime = currentTime;
+					for (int l = 0; l < this.volcanoEffects.Length; l++)
+					{
+						VolcanoEffects volcanoEffects2 = this.volcanoEffects[l];
+						if (volcanoEffects2 != null)
+						{
+							volcanoEffects2.SetRisingState();
+						}
+					}
 					return;
 				}
 				break;
@@ -219,6 +310,14 @@ namespace GorillaTag
 				{
 					syncData.state = InfectionLavaController.RisingLavaState.Full;
 					syncData.stateStartTime = currentTime;
+					for (int m = 0; m < this.volcanoEffects.Length; m++)
+					{
+						VolcanoEffects volcanoEffects3 = this.volcanoEffects[m];
+						if (volcanoEffects3 != null)
+						{
+							volcanoEffects3.SetFullState();
+						}
+					}
 					return;
 				}
 				break;
@@ -227,6 +326,14 @@ namespace GorillaTag
 				{
 					syncData.state = InfectionLavaController.RisingLavaState.Draining;
 					syncData.stateStartTime = currentTime;
+					for (int n = 0; n < this.volcanoEffects.Length; n++)
+					{
+						VolcanoEffects volcanoEffects4 = this.volcanoEffects[n];
+						if (volcanoEffects4 != null)
+						{
+							volcanoEffects4.SetDrainingState();
+						}
+					}
 					return;
 				}
 				break;
@@ -236,6 +343,14 @@ namespace GorillaTag
 				{
 					syncData.state = InfectionLavaController.RisingLavaState.Drained;
 					syncData.stateStartTime = currentTime;
+					for (int num4 = 0; num4 < this.volcanoEffects.Length; num4++)
+					{
+						VolcanoEffects volcanoEffects5 = this.volcanoEffects[num4];
+						if (volcanoEffects5 != null)
+						{
+							volcanoEffects5.SetDrainedState();
+						}
+					}
 				}
 				break;
 			}
@@ -324,23 +439,23 @@ namespace GorillaTag
 
 		private void UpdateLava(float fillProgress)
 		{
-			float num = Mathf.Lerp(this.lavaMeshMinScale, this.lavaMeshMaxScale, fillProgress);
+			this.lavaScale = Mathf.Lerp(this.lavaMeshMinScale, this.lavaMeshMaxScale, fillProgress);
 			if (this.lavaMeshTransform != null)
 			{
-				this.lavaMeshTransform.localScale = new Vector3(this.lavaMeshTransform.localScale.x, this.lavaMeshTransform.localScale.y, num);
+				this.lavaMeshTransform.localScale = new Vector3(this.lavaMeshTransform.localScale.x, this.lavaMeshTransform.localScale.y, this.lavaScale);
 			}
 		}
 
 		private void UpdateVolcanoActivationLava(float activationProgress)
 		{
 			this.activationProgessSmooth = Mathf.MoveTowards(this.activationProgessSmooth, activationProgress, this.lavaActivationVisualMovementProgressPerSecond * Time.deltaTime);
-			this.lavaActivationRenderer.material.SetColor("_BaseColor", this.lavaActivationGradient.Evaluate(activationProgress));
+			this.lavaActivationRenderer.material.SetColor(InfectionLavaController.shaderProp_BaseColor, this.lavaActivationGradient.Evaluate(activationProgress));
 			this.lavaActivationRenderer.transform.position = Vector3.Lerp(this.lavaActivationStartPos.position, this.lavaActivationEndPos.position, this.activationProgessSmooth);
 		}
 
 		private void CheckLocalPlayerAgainstLava(double currentTime)
 		{
-			if (GorillaLocomotion.Player.Instance.InWater && GorillaLocomotion.Player.Instance.CurrentWaterVolume == this.lavaVolume)
+			if (global::GorillaLocomotion.Player.Instance.InWater && global::GorillaLocomotion.Player.Instance.CurrentWaterVolume == this.lavaVolume)
 			{
 				this.LocalPlayerInLava(currentTime, false);
 			}
@@ -348,9 +463,9 @@ namespace GorillaTag
 
 		private void OnColliderEnteredLava(WaterVolume volume, Collider collider)
 		{
-			if (collider == GorillaLocomotion.Player.Instance.bodyCollider)
+			if (collider == global::GorillaLocomotion.Player.Instance.bodyCollider)
 			{
-				this.LocalPlayerInLava(PhotonNetwork.InRoom ? PhotonNetwork.Time : ((double)Time.time), true);
+				this.LocalPlayerInLava(PhotonNetwork.InRoom ? PhotonNetwork.Time : Time.timeAsDouble, true);
 			}
 		}
 
@@ -366,7 +481,7 @@ namespace GorillaTag
 
 		public void OnActivationLavaProjectileHit(SlingshotProjectile projectile, Collision collision)
 		{
-			if (projectile.gameObject.CompareTag(this.lavaRockProjectileTag))
+			if (projectile.gameObject.CompareTag("LavaRockProjectile"))
 			{
 				this.AddLavaRock(projectile.projectileOwner.ActorNumber);
 			}
@@ -374,7 +489,7 @@ namespace GorillaTag
 
 		private void AddLavaRock(int playerId)
 		{
-			if (base.photonView.IsMine && this.reliableState.state == InfectionLavaController.RisingLavaState.Drained)
+			if (this.networkObject.HasAuthority && this.reliableState.state == InfectionLavaController.RisingLavaState.Drained)
 			{
 				float num = this.lavaActivationRockProgressVsPlayerCount.Evaluate((float)this.PlayerCount);
 				this.reliableState.activationProgress = this.reliableState.activationProgress + (double)num;
@@ -389,7 +504,7 @@ namespace GorillaTag
 
 		private void AddVoteForVolcanoActivation(int playerId)
 		{
-			if (base.photonView.IsMine && this.lavaActivationVoteCount < 10)
+			if (this.networkObject.HasAuthority && this.lavaActivationVoteCount < 10)
 			{
 				bool flag = false;
 				for (int i = 0; i < this.lavaActivationVoteCount; i++)
@@ -409,7 +524,7 @@ namespace GorillaTag
 
 		private void RemoveVoteForVolcanoActivation(int playerId)
 		{
-			if (base.photonView.IsMine)
+			if (this.networkObject.HasAuthority)
 			{
 				for (int i = 0; i < this.lavaActivationVoteCount; i++)
 				{
@@ -423,40 +538,27 @@ namespace GorillaTag
 			}
 		}
 
-		private void StartEruption()
+		void IGorillaSerializeable.OnSerializeWrite(PhotonStream stream, PhotonMessageInfo info)
 		{
-			if (base.photonView.IsMine && this.reliableState.state == InfectionLavaController.RisingLavaState.Drained)
-			{
-				this.reliableState.state = InfectionLavaController.RisingLavaState.Erupting;
-				this.reliableState.stateStartTime = (PhotonNetwork.InRoom ? PhotonNetwork.Time : ((double)Time.time));
-			}
+			stream.SendNext((int)this.reliableState.state);
+			stream.SendNext(this.reliableState.stateStartTime);
+			stream.SendNext(this.reliableState.activationProgress);
+			stream.SendNext(this.lavaActivationVoteCount);
+			stream.SendNext(this.lavaActivationVotePlayerIds[0]);
+			stream.SendNext(this.lavaActivationVotePlayerIds[1]);
+			stream.SendNext(this.lavaActivationVotePlayerIds[2]);
+			stream.SendNext(this.lavaActivationVotePlayerIds[3]);
+			stream.SendNext(this.lavaActivationVotePlayerIds[4]);
+			stream.SendNext(this.lavaActivationVotePlayerIds[5]);
+			stream.SendNext(this.lavaActivationVotePlayerIds[6]);
+			stream.SendNext(this.lavaActivationVotePlayerIds[7]);
+			stream.SendNext(this.lavaActivationVotePlayerIds[8]);
+			stream.SendNext(this.lavaActivationVotePlayerIds[9]);
 		}
 
-		public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+		void IGorillaSerializeable.OnSerializeRead(PhotonStream stream, PhotonMessageInfo info)
 		{
-			if (info.Sender != PhotonNetwork.MasterClient)
-			{
-				return;
-			}
-			if (stream.IsWriting)
-			{
-				stream.SendNext((int)this.reliableState.state);
-				stream.SendNext(this.reliableState.stateStartTime);
-				stream.SendNext(this.reliableState.activationProgress);
-				stream.SendNext(this.lavaActivationVoteCount);
-				stream.SendNext(this.lavaActivationVotePlayerIds[0]);
-				stream.SendNext(this.lavaActivationVotePlayerIds[1]);
-				stream.SendNext(this.lavaActivationVotePlayerIds[2]);
-				stream.SendNext(this.lavaActivationVotePlayerIds[3]);
-				stream.SendNext(this.lavaActivationVotePlayerIds[4]);
-				stream.SendNext(this.lavaActivationVotePlayerIds[5]);
-				stream.SendNext(this.lavaActivationVotePlayerIds[6]);
-				stream.SendNext(this.lavaActivationVotePlayerIds[7]);
-				stream.SendNext(this.lavaActivationVotePlayerIds[8]);
-				stream.SendNext(this.lavaActivationVotePlayerIds[9]);
-				return;
-			}
-			this.reliableState.state = (InfectionLavaController.RisingLavaState)((int)stream.ReceiveNext());
+			InfectionLavaController.RisingLavaState risingLavaState = (InfectionLavaController.RisingLavaState)((int)stream.ReceiveNext());
 			this.reliableState.stateStartTime = ((double)stream.ReceiveNext()).GetFinite();
 			this.reliableState.activationProgress = ((double)stream.ReceiveNext()).ClampSafe(0.0, 2.0);
 			this.lavaActivationVoteCount = (int)stream.ReceiveNext();
@@ -471,6 +573,10 @@ namespace GorillaTag
 			this.lavaActivationVotePlayerIds[8] = (int)stream.ReceiveNext();
 			this.lavaActivationVotePlayerIds[9] = (int)stream.ReceiveNext();
 			float num = this.lavaProgressSmooth;
+			if (risingLavaState != this.reliableState.state)
+			{
+				this.JumpToState(risingLavaState);
+			}
 			this.UpdateLocalState((double)((float)PhotonNetwork.Time), this.reliableState);
 			this.localLagLavaProgressOffset = num - this.lavaProgressSmooth;
 		}
@@ -489,6 +595,14 @@ namespace GorillaTag
 					this.RemoveVoteForVolcanoActivation(this.lavaActivationVotePlayerIds[i]);
 				}
 			}
+		}
+
+		void IGorillaSerializeableScene.OnNetworkObjectDisable()
+		{
+		}
+
+		void IGorillaSerializeableScene.OnNetworkObjectEnable()
+		{
 		}
 
 		int IGuidedRefReceiverMono.GuidedRefsWaitingToResolveCount { get; set; }
@@ -538,10 +652,11 @@ namespace GorillaTag
 		private static InfectionLavaController instance;
 
 		[SerializeField]
-		private float lavaMeshMinScale = 1f;
+		private float lavaMeshMinScale = 3.17f;
 
+		[Tooltip("If you throw rocks into the volcano quickly enough, then it will raise to this height.")]
 		[SerializeField]
-		private float lavaMeshMaxScale = 10f;
+		private float lavaMeshMaxScale = 8.941086f;
 
 		[SerializeField]
 		private float eruptTime = 3f;
@@ -634,6 +749,7 @@ namespace GorillaTag
 		[SerializeField]
 		private GuidedRefReceiverArrayInfo volcanoEffects_gRefs = new GuidedRefReceiverArrayInfo(true);
 
+		[DebugReadout]
 		private InfectionLavaController.LavaSyncData reliableState;
 
 		private int[] lavaActivationVotePlayerIds = new int[10];
@@ -642,19 +758,27 @@ namespace GorillaTag
 
 		private float localLagLavaProgressOffset;
 
+		[DebugReadout]
 		private float lavaProgressLinear;
 
+		[DebugReadout]
 		private float lavaProgressSmooth;
 
 		private double lastTagSelfRPCTime;
 
-		private string lavaRockProjectileTag = "LavaRockProjectile";
+		private const string lavaRockProjectileTag = "LavaRockProjectile";
 
 		private double currentTime;
 
 		private double prevTime;
 
 		private float activationProgessSmooth;
+
+		private float lavaScale;
+
+		private static readonly int shaderProp_BaseColor = Shader.PropertyToID("_BaseColor");
+
+		private GorillaSerializerScene networkObject;
 
 		private bool guidedRefsFullyResolved;
 

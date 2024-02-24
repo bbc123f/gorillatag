@@ -71,12 +71,12 @@ public class ObjectPools : MonoBehaviour
 
 	public GameObject Instantiate(GameObject obj)
 	{
-		return this.GetPoolByObjectType(obj).Instantiate();
+		return this.GetPoolByObjectType(obj).Instantiate(true);
 	}
 
 	public GameObject Instantiate(int hash)
 	{
-		return this.GetPoolByHash(hash).Instantiate();
+		return this.GetPoolByHash(hash).Instantiate(true);
 	}
 
 	public GameObject Instantiate(GameObject obj, Vector3 position)

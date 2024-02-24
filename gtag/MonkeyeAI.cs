@@ -368,7 +368,7 @@ public class MonkeyeAI : MonoBehaviour
 		}
 		if (GorillaTagger.Instance.offlineVRRig == rig && this.replState.freezePlayer)
 		{
-			GorillaLocomotion.Player.Instance.SetMaximumSlipThisFrame();
+			global::GorillaLocomotion.Player.Instance.SetMaximumSlipThisFrame();
 			Rigidbody rigidbody = GorillaTagger.Instance.rigidbody;
 			Vector3 vector = rigidbody.velocity;
 			rigidbody.velocity = new Vector3(vector.x * Time.deltaTime * 4f, Mathf.Min(vector.y, 0f), vector.x * Time.deltaTime * 4f);

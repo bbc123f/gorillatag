@@ -11,6 +11,7 @@ public class SinglePool
 		for (int i = count; i < count + this.initAmountToPool; i++)
 		{
 			GameObject gameObject = Object.Instantiate<GameObject>(this.objectToPool, this.gameObject.transform, true);
+			gameObject.name = this.objectToPool.name + "(PoolIndex=" + i.ToString() + ")";
 			gameObject.SetActive(false);
 			this.inactivePool.Push(gameObject);
 			int instanceID = gameObject.GetInstanceID();
@@ -27,7 +28,7 @@ public class SinglePool
 		this.PrivAllocPooledObjects();
 	}
 
-	public GameObject Instantiate()
+	public GameObject Instantiate(bool setActive = true)
 	{
 		if (this.inactivePool.Count == 0)
 		{
@@ -36,7 +37,7 @@ public class SinglePool
 		}
 		GameObject gameObject = this.inactivePool.Pop();
 		int instanceID = gameObject.GetInstanceID();
-		gameObject.SetActive(true);
+		gameObject.SetActive(setActive);
 		this.activePool.Add(instanceID, gameObject);
 		return gameObject;
 	}
@@ -62,6 +63,21 @@ public class SinglePool
 	public int PoolGUID()
 	{
 		return PoolUtils.GameObjHashCode(this.objectToPool);
+	}
+
+	public int GetTotalCount()
+	{
+		return this.pooledObjects.Count;
+	}
+
+	public int GetActiveCount()
+	{
+		return this.activePool.Count;
+	}
+
+	public int GetInactiveCount()
+	{
+		return this.inactivePool.Count;
 	}
 
 	public GameObject objectToPool;

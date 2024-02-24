@@ -100,7 +100,7 @@ internal class PlayerCosmeticsSystem : MonoBehaviour, ITickSystemPre
 					Application.Quit();
 					PhotonNetwork.Disconnect();
 					Object.DestroyImmediate(PhotonNetworkController.Instance);
-					Object.DestroyImmediate(GorillaLocomotion.Player.Instance);
+					Object.DestroyImmediate(global::GorillaLocomotion.Player.Instance);
 					GameObject[] array = Object.FindObjectsOfType<GameObject>();
 					for (int i = 0; i < array.Length; i++)
 					{

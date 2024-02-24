@@ -96,6 +96,10 @@ namespace GorillaTag.Rendering
 			this.hasDynamicWaterSurfacePlane = this.hasMainWaterSurfacePlane && !this.mainWaterSurfacePlane.gameObject.isStatic;
 			this.hasLiquidBottomTransform = this.liquidBottomTransform != null && (this.liquidBottomTransform_overrideMode == ZoneShaderSettings.EOverrideMode.ApplyNewValue || this.isDefaultValues);
 			this.CheckDefaultsInstance();
+			if (this._activateOnAwake)
+			{
+				this.BecomeActiveInstance();
+			}
 		}
 
 		protected void OnEnable()
@@ -367,6 +371,10 @@ namespace GorillaTag.Rendering
 
 		[OnEnterPlay_Set(false)]
 		private static bool isInitialized;
+
+		[Tooltip("Set this to true for cases like it is the first ZoneShaderSettings that should be activated when entering a scene.")]
+		[SerializeField]
+		private bool _activateOnAwake;
 
 		[Tooltip("These values will be used as the default global values that will be fallen back to when not in a zone and that the other scripts will reference.")]
 		public bool isDefaultValues;

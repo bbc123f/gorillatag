@@ -177,7 +177,7 @@ namespace FXP
 			TimeSpan timeSpan = default(TimeSpan);
 			if (this.currentUpdateEvent != null)
 			{
-				timeSpan = this.currentUpdateEvent.EndTimeUTC - DateTime.Now;
+				timeSpan = this.currentUpdateEvent.EndTimeUTC.ToUniversalTime() - StoreUpdater.instance.DateTimeNowServerAdjusted;
 				if (timeSpan.Days > 0)
 				{
 					this.clockTextMesh.text = timeSpan.ToString("dd\\ hh\\:mm\\:ss");
@@ -285,6 +285,7 @@ namespace FXP
 				this.goAttractModeVFX.Play();
 			}
 			this.currentUpdateEvent = storeUpdateEvent;
+			Debug.Log("StoreUpdater - SetStoreUpdateEvent - storeUpdateEvent.ItemName: " + storeUpdateEvent.ItemName);
 			this.SetCosmeticItemFromCosmeticController(CosmeticsController.instance.GetItemFromDict(storeUpdateEvent.ItemName));
 			if (base.isActiveAndEnabled)
 			{
@@ -295,7 +296,7 @@ namespace FXP
 
 		private IEnumerator PlayCountdownTimer()
 		{
-			yield return new WaitForSeconds(Mathf.Clamp((float)((this.currentUpdateEvent.EndTimeUTC - DateTime.Now).TotalSeconds - 10.0), 0f, float.MaxValue));
+			yield return new WaitForSeconds(Mathf.Clamp((float)((this.currentUpdateEvent.EndTimeUTC.ToUniversalTime() - StoreUpdater.instance.DateTimeNowServerAdjusted).TotalSeconds - 10.0), 0f, float.MaxValue));
 			this.PlaySFX();
 			yield break;
 		}
@@ -315,7 +316,7 @@ namespace FXP
 		{
 			if (this.currentUpdateEvent != null)
 			{
-				TimeSpan timeSpan = this.currentUpdateEvent.EndTimeUTC - DateTime.Now;
+				TimeSpan timeSpan = this.currentUpdateEvent.EndTimeUTC.ToUniversalTime() - StoreUpdater.instance.DateTimeNowServerAdjusted;
 				if (timeSpan.TotalSeconds >= 10.0)
 				{
 					this.CountdownSFX.time = 0f;

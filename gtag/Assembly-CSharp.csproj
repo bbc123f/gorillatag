@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{8464B888-5345-4766-86EC-AB98ADE7C8C1}</ProjectGuid>
+    <ProjectGuid>{7D5CD1A8-CE45-4D1D-9512-D5EE8A5C4BDB}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>Assembly-CSharp</RootNamespace>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -605,6 +605,7 @@
     <Compile Include="GorillaTag\GTAppState.cs" />
     <Compile Include="GorillaTag\GTColor.cs" />
     <Compile Include="GorillaTag\GTLogErrorLimiter.cs" />
+    <Compile Include="GorillaTag\GTTime.cs" />
     <Compile Include="GorillaTag\GuidedRefs\BaseGuidedRefTargetMono.cs" />
     <Compile Include="GorillaTag\GuidedRefs\GRef.cs" />
     <Compile Include="GorillaTag\GuidedRefs\GuidedRefBasicTargetInfo.cs" />
@@ -630,10 +631,10 @@
     <Compile Include="GorillaTag\InspectorNote.cs" />
     <Compile Include="GorillaTag\IResettableItem.cs" />
     <Compile Include="GorillaTag\MaterialDatasSO.cs" />
-    <Compile Include="GorillaTag\Reactions\FireExtinguishReaction.cs" />
-    <Compile Include="GorillaTag\Reactions\FireExtinguishReactionManager.cs" />
+    <Compile Include="GorillaTag\Reactions\FireInstance.cs" />
+    <Compile Include="GorillaTag\Reactions\FireManager.cs" />
+    <Compile Include="GorillaTag\Reactions\FlameThrowerParticleCollisionHandler.cs" />
     <Compile Include="GorillaTag\Reactions\GorillaMaterialReaction.cs" />
-    <Compile Include="GorillaTag\Reactions\ParticleCollisionWatcher.cs" />
     <Compile Include="GorillaTag\Reactions\ShakeReaction.cs" />
     <Compile Include="GorillaTag\Rendering\FirstPersonMeshCullingDisabler.cs" />
     <Compile Include="GorillaTag\Rendering\MeshCombiner\EdDoNotMeshCombine.cs" />
@@ -952,6 +953,7 @@
     <Compile Include="PurchaseItemButton.cs" />
     <Compile Include="RandomizeTest.cs" />
     <Compile Include="RandomLocalColliders.cs" />
+    <Compile Include="ReplacementVoice.cs" />
     <Compile Include="ReportForwardHit.cs" />
     <Compile Include="ReportTargetHit.cs" />
     <Compile Include="RequestableOwnershipGaurdHandler.cs" />

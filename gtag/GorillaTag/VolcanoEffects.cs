@@ -55,6 +55,7 @@ namespace GorillaTag
 			this.InitState(this.risingStateFX);
 			this.InitState(this.fullStateFX);
 			this.InitState(this.drainingStateFX);
+			this.currentStateFX = this.drainedStateFX;
 			this.UpdateDrainedState(0f);
 		}
 
@@ -105,109 +106,159 @@ namespace GorillaTag
 			}
 		}
 
-		private void ResetState(VolcanoEffects.LavaStateFX fx)
+		private void SetLavaAudioEnabled(bool toEnable)
 		{
-			fx.startSoundPlayed = false;
-			fx.endSoundPlayed = false;
+			AudioSource[] array = this.lavaSurfaceAudioSrcs;
+			for (int i = 0; i < array.Length; i++)
+			{
+				array[i].gameObject.SetActive(toEnable);
+			}
 		}
 
-		private void UpdateState(VolcanoEffects.LavaStateFX fx, float time, float timeRemaining, float progress)
+		private void SetLavaAudioEnabled(bool toEnable, float volume)
 		{
-			if (fx.startSoundExists && !fx.startSoundPlayed && time >= fx.startSoundDelay)
+			foreach (AudioSource audioSource in this.lavaSurfaceAudioSrcs)
 			{
-				fx.startSoundPlayed = true;
-				fx.startSoundAudioSrc.gameObject.SetActive(true);
-				fx.startSoundAudioSrc.PlayOneShot(fx.startSound, fx.startSoundVol);
+				audioSource.volume = volume;
+				audioSource.gameObject.SetActive(toEnable);
 			}
-			if (fx.endSoundExists && !fx.endSoundPlayed && timeRemaining <= fx.endSound.length + fx.endSoundPadTime)
+		}
+
+		private void ResetState()
+		{
+			this.currentStateFX.startSoundPlayed = false;
+			this.currentStateFX.endSoundPlayed = false;
+			if (this.currentStateFX.startSoundExists)
 			{
-				fx.endSoundPlayed = true;
-				fx.endSoundAudioSrc.gameObject.SetActive(true);
-				fx.endSoundAudioSrc.PlayOneShot(fx.endSound, fx.endSoundVol);
+				this.currentStateFX.startSoundAudioSrc.gameObject.SetActive(false);
 			}
-			if (fx.loop1Exists)
+			if (this.currentStateFX.endSoundExists)
 			{
-				fx.loop1AudioSrc.volume = fx.loop1VolAnim.Evaluate(progress) * fx.loop1DefaultVolume;
-				if (!fx.loop1AudioSrc.isPlaying)
+				this.currentStateFX.endSoundAudioSrc.gameObject.SetActive(false);
+			}
+			if (this.currentStateFX.loop1Exists)
+			{
+				this.currentStateFX.loop1AudioSrc.gameObject.SetActive(false);
+			}
+			if (this.currentStateFX.loop2Exists)
+			{
+				this.currentStateFX.loop2AudioSrc.gameObject.SetActive(false);
+			}
+		}
+
+		private void UpdateState(float time, float timeRemaining, float progress)
+		{
+			if (this.currentStateFX.startSoundExists && !this.currentStateFX.startSoundPlayed && time >= this.currentStateFX.startSoundDelay)
+			{
+				this.currentStateFX.startSoundPlayed = true;
+				this.currentStateFX.startSoundAudioSrc.gameObject.SetActive(true);
+				this.currentStateFX.startSoundAudioSrc.PlayOneShot(this.currentStateFX.startSound, this.currentStateFX.startSoundVol);
+			}
+			if (this.currentStateFX.endSoundExists && !this.currentStateFX.endSoundPlayed && timeRemaining <= this.currentStateFX.endSound.length + this.currentStateFX.endSoundPadTime)
+			{
+				this.currentStateFX.endSoundPlayed = true;
+				this.currentStateFX.endSoundAudioSrc.gameObject.SetActive(true);
+				this.currentStateFX.endSoundAudioSrc.PlayOneShot(this.currentStateFX.endSound, this.currentStateFX.endSoundVol);
+			}
+			if (this.currentStateFX.loop1Exists)
+			{
+				this.currentStateFX.loop1AudioSrc.volume = this.currentStateFX.loop1VolAnim.Evaluate(progress) * this.currentStateFX.loop1DefaultVolume;
+				if (!this.currentStateFX.loop1AudioSrc.isPlaying)
 				{
-					fx.loop1AudioSrc.gameObject.SetActive(true);
-					fx.loop1AudioSrc.Play();
+					this.currentStateFX.loop1AudioSrc.gameObject.SetActive(true);
+					this.currentStateFX.loop1AudioSrc.Play();
 				}
 			}
-			if (fx.loop2Exists)
+			if (this.currentStateFX.loop2Exists)
 			{
-				fx.loop2AudioSrc.volume = fx.loop2VolAnim.Evaluate(progress) * fx.loop2DefaultVolume;
-				if (!fx.loop2AudioSrc.isPlaying)
+				this.currentStateFX.loop2AudioSrc.volume = this.currentStateFX.loop2VolAnim.Evaluate(progress) * this.currentStateFX.loop2DefaultVolume;
+				if (!this.currentStateFX.loop2AudioSrc.isPlaying)
 				{
-					fx.loop2AudioSrc.gameObject.SetActive(true);
-					fx.loop2AudioSrc.Play();
+					this.currentStateFX.loop2AudioSrc.gameObject.SetActive(true);
+					this.currentStateFX.loop2AudioSrc.Play();
 				}
 			}
 			for (int i = 0; i < this.smokeMainModules.Length; i++)
 			{
-				this.smokeMainModules[i].startColor = fx.smokeStartColorAnim.Evaluate(progress);
-				this.smokeEmissionModules[i].rateOverTimeMultiplier = fx.smokeEmissionAnim.Evaluate(progress) * this.smokeEmissionDefaultRateMultipliers[i];
+				this.smokeMainModules[i].startColor = this.currentStateFX.smokeStartColorAnim.Evaluate(progress);
+				this.smokeEmissionModules[i].rateOverTimeMultiplier = this.currentStateFX.smokeEmissionAnim.Evaluate(progress) * this.smokeEmissionDefaultRateMultipliers[i];
 			}
-			this.SetParticleEmissionRateAndBurst(fx.lavaSpewEmissionAnim.Evaluate(progress), this.lavaSpewEmissionModules, this.lavaSpewEmissionDefaultRateMultipliers, this.lavaSpewDefaultEmitBursts, this.lavaSpewAdjustedEmitBursts);
+			this.SetParticleEmissionRateAndBurst(this.currentStateFX.lavaSpewEmissionAnim.Evaluate(progress), this.lavaSpewEmissionModules, this.lavaSpewEmissionDefaultRateMultipliers, this.lavaSpewDefaultEmitBursts, this.lavaSpewAdjustedEmitBursts);
 			if (this.applyShaderGlobals)
 			{
-				Shader.SetGlobalColor(this.shaderProp_ZoneLiquidLightColor, fx.lavaLightColor.Evaluate(progress) * fx.lavaLightIntensityAnim.Evaluate(progress));
-				Shader.SetGlobalFloat(this.shaderProp_ZoneLiquidLightDistScale, fx.lavaLightAttenuationAnim.Evaluate(progress));
+				Shader.SetGlobalColor(this.shaderProp_ZoneLiquidLightColor, this.currentStateFX.lavaLightColor.Evaluate(progress) * this.currentStateFX.lavaLightIntensityAnim.Evaluate(progress));
+				Shader.SetGlobalFloat(this.shaderProp_ZoneLiquidLightDistScale, this.currentStateFX.lavaLightAttenuationAnim.Evaluate(progress));
 			}
+		}
+
+		public void SetDrainedState()
+		{
+			this.ResetState();
+			this.SetLavaAudioEnabled(false);
+			this.currentStateFX = this.drainedStateFX;
 		}
 
 		public void UpdateDrainedState(float time)
 		{
-			this.ResetState(this.drainingStateFX);
-			this.UpdateState(this.drainedStateFX, time, float.MaxValue, float.MinValue);
-			AudioSource[] array = this.lavaSurfaceAudioSrcs;
-			for (int i = 0; i < array.Length; i++)
-			{
-				array[i].gameObject.SetActive(false);
-			}
+			this.ResetState();
+			this.UpdateState(time, float.MaxValue, float.MinValue);
+		}
+
+		public void SetEruptingState()
+		{
+			this.ResetState();
+			this.SetLavaAudioEnabled(false, 0f);
+			this.currentStateFX = this.eruptingStateFX;
 		}
 
 		public void UpdateEruptingState(float time, float timeRemaining, float progress)
 		{
-			this.ResetState(this.drainedStateFX);
-			this.UpdateState(this.eruptingStateFX, time, timeRemaining, progress);
-			foreach (AudioSource audioSource in this.lavaSurfaceAudioSrcs)
-			{
-				audioSource.volume = 0f;
-				audioSource.gameObject.SetActive(false);
-			}
+			this.UpdateState(time, timeRemaining, progress);
+		}
+
+		public void SetRisingState()
+		{
+			this.ResetState();
+			this.SetLavaAudioEnabled(true, 0f);
+			this.currentStateFX = this.risingStateFX;
 		}
 
 		public void UpdateRisingState(float time, float timeRemaining, float progress)
 		{
-			this.ResetState(this.eruptingStateFX);
-			this.UpdateState(this.risingStateFX, time, timeRemaining, progress);
-			foreach (AudioSource audioSource in this.lavaSurfaceAudioSrcs)
+			this.UpdateState(time, timeRemaining, progress);
+			AudioSource[] array = this.lavaSurfaceAudioSrcs;
+			for (int i = 0; i < array.Length; i++)
 			{
-				audioSource.volume = Mathf.Lerp(0f, 1f, Mathf.Clamp01(time));
-				audioSource.gameObject.SetActive(true);
+				array[i].volume = Mathf.Lerp(0f, 1f, Mathf.Clamp01(time));
 			}
+		}
+
+		public void SetFullState()
+		{
+			this.ResetState();
+			this.SetLavaAudioEnabled(true, 1f);
+			this.currentStateFX = this.fullStateFX;
 		}
 
 		public void UpdateFullState(float time, float timeRemaining, float progress)
 		{
-			this.ResetState(this.risingStateFX);
-			this.UpdateState(this.fullStateFX, time, timeRemaining, progress);
-			foreach (AudioSource audioSource in this.lavaSurfaceAudioSrcs)
-			{
-				audioSource.volume = 1f;
-				audioSource.gameObject.SetActive(true);
-			}
+			this.UpdateState(time, timeRemaining, progress);
+		}
+
+		public void SetDrainingState()
+		{
+			this.ResetState();
+			this.SetLavaAudioEnabled(true, 1f);
+			this.currentStateFX = this.drainingStateFX;
 		}
 
 		public void UpdateDrainingState(float time, float timeRemaining, float progress)
 		{
-			this.ResetState(this.fullStateFX);
-			this.UpdateState(this.drainingStateFX, time, timeRemaining, progress);
-			foreach (AudioSource audioSource in this.lavaSurfaceAudioSrcs)
+			this.UpdateState(time, timeRemaining, progress);
+			AudioSource[] array = this.lavaSurfaceAudioSrcs;
+			for (int i = 0; i < array.Length; i++)
 			{
-				audioSource.volume = Mathf.Lerp(1f, 0f, progress);
-				audioSource.gameObject.SetActive(true);
+				array[i].volume = Mathf.Lerp(1f, 0f, progress);
 			}
 		}
 
@@ -302,6 +353,8 @@ namespace GorillaTag
 
 		[SerializeField]
 		private VolcanoEffects.LavaStateFX drainingStateFX;
+
+		private VolcanoEffects.LavaStateFX currentStateFX;
 
 		private ParticleSystem.EmissionModule[] lavaSpewEmissionModules;
 

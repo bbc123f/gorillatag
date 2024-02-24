@@ -11,6 +11,14 @@ namespace GorillaNetworking.Store
 {
 	public class StoreUpdater : MonoBehaviourPunCallbacks
 	{
+		public DateTime DateTimeNowServerAdjusted
+		{
+			get
+			{
+				return GorillaComputer.instance.GetServerTime();
+			}
+		}
+
 		public void Awake()
 		{
 			if (StoreUpdater.instance == null)
@@ -45,9 +53,20 @@ namespace GorillaNetworking.Store
 			if (this.bLoadFromJSON)
 			{
 				base.StartCoroutine(this.InitializeTitleData());
-				return;
 			}
-			this.GeneratePlaceHolderEventDictionary();
+		}
+
+		private void ServerTimeUpdater()
+		{
+			base.StartCoroutine(this.InitializeTitleData());
+		}
+
+		public void OnDestroy()
+		{
+			OVRManager.HMDMounted -= this.HandleHMDMounted;
+			OVRManager.HMDUnmounted -= this.HandleHMDUnmounted;
+			OVRManager.HMDLost -= this.HandleHMDUnmounted;
+			OVRManager.HMDAcquired -= this.HandleHMDMounted;
 		}
 
 		private void HandleHMDUnmounted()
@@ -74,15 +93,10 @@ namespace GorillaNetworking.Store
 			{
 				if (this.cosmeticItemPrefabsDictionary[text] != null && this.pedestalUpdateEvents.ContainsKey(text) && this.cosmeticItemPrefabsDictionary[text].gameObject.activeInHierarchy)
 				{
-					this.CheckEvents(this.pedestalUpdateEvents[text]);
+					this.CheckEventsOnResume(this.pedestalUpdateEvents[text]);
 					this.StartNextEvent(text, false);
 				}
 			}
-		}
-
-		private void GeneratePlaceHolderEventDictionary()
-		{
-			this.GetStoreUpdateEventsPlaceHolder("Pedestal1");
 		}
 
 		private void FindAllCosmeticItemPrefabs()
@@ -101,32 +115,39 @@ namespace GorillaNetworking.Store
 			}
 		}
 
-		private void OnNewTitleDataAdded(string key)
-		{
-			Debug.Log("StoreUpdater - Saw New Title Data Added : " + key);
-			if (key == "TOTD")
-			{
-				this.GetEventsFromTitleData();
-			}
-		}
-
-		private IEnumerator StartPedestalUpdate(string PedestalID, int delay)
-		{
-			yield return new WaitForSeconds((float)delay);
-			this.GetStoreUpdateEventsPlaceHolder(PedestalID);
-			this.StartNextEvent(PedestalID, true);
-			yield break;
-		}
-
 		private IEnumerator HandlePedestalUpdate(StoreUpdateEvent updateEvent, bool playFX)
 		{
 			this.cosmeticItemPrefabsDictionary[updateEvent.PedestalID].SetStoreUpdateEvent(updateEvent, playFX);
-			yield return new WaitForSeconds((float)(updateEvent.EndTimeUTC - DateTime.Now).TotalSeconds);
-			CosmeticsController.instance.DelayedRemoveItemFromCheckout(CosmeticsController.instance.GetItemFromDict(updateEvent.ItemName));
+			yield return new WaitForSeconds((float)(updateEvent.EndTimeUTC.ToUniversalTime() - this.DateTimeNowServerAdjusted).TotalSeconds);
+			if (this.pedestalClearCartCoroutines.ContainsKey(updateEvent.PedestalID))
+			{
+				if (this.pedestalClearCartCoroutines[updateEvent.PedestalID] != null)
+				{
+					base.StopCoroutine(this.pedestalClearCartCoroutines[updateEvent.PedestalID]);
+				}
+				this.pedestalClearCartCoroutines[updateEvent.PedestalID] = base.StartCoroutine(this.HandleClearCart(updateEvent));
+			}
+			else
+			{
+				this.pedestalClearCartCoroutines.Add(updateEvent.PedestalID, base.StartCoroutine(this.HandleClearCart(updateEvent)));
+			}
 			if (this.cosmeticItemPrefabsDictionary[updateEvent.PedestalID].gameObject.activeInHierarchy)
 			{
 				this.pedestalUpdateEvents[updateEvent.PedestalID].RemoveAt(0);
 				this.StartNextEvent(updateEvent.PedestalID, true);
+			}
+			yield break;
+		}
+
+		private IEnumerator HandleClearCart(StoreUpdateEvent updateEvent)
+		{
+			float num = Math.Clamp((float)(updateEvent.EndTimeUTC.ToUniversalTime() - this.DateTimeNowServerAdjusted).TotalSeconds + 60f, 0f, 60f);
+			yield return new WaitForSeconds(num);
+			if (CosmeticsController.instance.RemoveItemFromCart(CosmeticsController.instance.GetItemFromDict(updateEvent.ItemName)))
+			{
+				CosmeticsController.instance.ClearCheckout();
+				CosmeticsController.instance.UpdateShoppingCart();
+				CosmeticsController.instance.UpdateWornCosmetics(true);
 			}
 			yield break;
 		}
@@ -161,36 +182,6 @@ namespace GorillaNetworking.Store
 			}
 		}
 
-		private void StartNextEventPlayFab(string PedestalID)
-		{
-			if (this.pedestalUpdateEvents[PedestalID].Count > 0)
-			{
-				Coroutine coroutine = base.StartCoroutine(this.HandlePedestalUpdate(this.pedestalUpdateEvents[PedestalID].First<StoreUpdateEvent>(), true));
-				if (this.pedestalUpdateCoroutines.ContainsKey(PedestalID))
-				{
-					if (this.pedestalUpdateCoroutines[PedestalID] != null && this.pedestalUpdateCoroutines[PedestalID] != null)
-					{
-						base.StopCoroutine(this.pedestalUpdateCoroutines[PedestalID]);
-					}
-					this.pedestalUpdateCoroutines[PedestalID] = coroutine;
-				}
-				if (this.pedestalUpdateEvents[PedestalID].Count == 0)
-				{
-					this.GetStoreUpdateEventsPlaceHolder(PedestalID);
-					return;
-				}
-			}
-			else
-			{
-				this.GetStoreUpdateEventsPlaceHolder(PedestalID);
-				this.StartNextEvent(PedestalID, true);
-			}
-		}
-
-		private void GetNewPlayfabEvents()
-		{
-		}
-
 		private void GetStoreUpdateEventsPlaceHolder(string PedestalID)
 		{
 			List<StoreUpdateEvent> list = new List<StoreUpdateEvent>();
@@ -208,11 +199,46 @@ namespace GorillaNetworking.Store
 		{
 			for (int i = 0; i < updateEvents.Count; i++)
 			{
-				if (updateEvents[i].EndTimeUTC < DateTime.Now)
+				if (updateEvents[i].EndTimeUTC.ToUniversalTime() < this.DateTimeNowServerAdjusted)
 				{
 					updateEvents.RemoveAt(i);
 					i--;
 				}
+			}
+		}
+
+		private void CheckEventsOnResume(List<StoreUpdateEvent> updateEvents)
+		{
+			bool flag = false;
+			for (int i = 0; i < updateEvents.Count; i++)
+			{
+				if (updateEvents[i].EndTimeUTC.ToUniversalTime() < this.DateTimeNowServerAdjusted)
+				{
+					if (Math.Clamp((float)(updateEvents[i].EndTimeUTC.ToUniversalTime() - this.DateTimeNowServerAdjusted).TotalSeconds + 60f, 0f, 60f) <= 0f)
+					{
+						flag ^= CosmeticsController.instance.RemoveItemFromCart(CosmeticsController.instance.GetItemFromDict(updateEvents[i].ItemName));
+					}
+					else if (this.pedestalClearCartCoroutines.ContainsKey(updateEvents[i].PedestalID))
+					{
+						if (this.pedestalClearCartCoroutines[updateEvents[i].PedestalID] != null)
+						{
+							base.StopCoroutine(this.pedestalClearCartCoroutines[updateEvents[i].PedestalID]);
+						}
+						this.pedestalClearCartCoroutines[updateEvents[i].PedestalID] = base.StartCoroutine(this.HandleClearCart(updateEvents[i]));
+					}
+					else
+					{
+						this.pedestalClearCartCoroutines.Add(updateEvents[i].PedestalID, base.StartCoroutine(this.HandleClearCart(updateEvents[i])));
+					}
+					updateEvents.RemoveAt(i);
+					i--;
+				}
+			}
+			if (flag)
+			{
+				CosmeticsController.instance.ClearCheckout();
+				CosmeticsController.instance.UpdateShoppingCart();
+				CosmeticsController.instance.UpdateWornCosmetics(true);
 			}
 		}
 
@@ -230,7 +256,7 @@ namespace GorillaNetworking.Store
 			Debug.Log("StoreUpdater - GetEventsFromTitleData");
 			if (this.bUsePlaceHolderJSON)
 			{
-				DateTime dateTime = new DateTime(2024, 2, 8, 13, 10, 0, DateTimeKind.Utc);
+				DateTime dateTime = new DateTime(2024, 2, 13, 16, 0, 0, DateTimeKind.Utc);
 				List<StoreUpdateEvent> list = StoreUpdateEvent.DeserializeFromJSonList(StoreUpdateEvent.SerializeArrayAsJSon(this.CreateTempEvents("Pedestal1", 2, 120, dateTime).ToArray()));
 				this.HandleRecievingEventsFromTitleData(list);
 				return;
@@ -286,14 +312,6 @@ namespace GorillaNetworking.Store
 					this.StartNextEvent(text2, false);
 				}
 			}
-		}
-
-		private string CreatePlaceHolderJSON()
-		{
-			DateTime dateTime = new DateTime(2024, 2, 8, 10, 0, 0, DateTimeKind.Utc);
-			List<StoreUpdateEvent> list = this.CreateTempEvents("Pedestal1", 5, 288, dateTime);
-			list.AddRange(this.CreateTempEvents("TreeHouse_Pedestal1", 5, 288, dateTime));
-			return StoreUpdateEvent.SerializeArrayAsJSon(list.ToArray());
 		}
 
 		private void PrintJSONEvents()
@@ -363,7 +381,7 @@ namespace GorillaNetworking.Store
 			}
 			if (this.pedestalUpdateEvents.ContainsKey(pedestal.PedestalID))
 			{
-				this.CheckEvents(this.pedestalUpdateEvents[pedestal.PedestalID]);
+				this.CheckEventsOnResume(this.pedestalUpdateEvents[pedestal.PedestalID]);
 				this.StartNextEvent(pedestal.PedestalID, false);
 			}
 		}
@@ -371,8 +389,6 @@ namespace GorillaNetworking.Store
 		public static volatile StoreUpdater instance;
 
 		private DateTime StoreItemsChangeTimeUTC;
-
-		private TimeSpan offsetFromPlayfab;
 
 		private bool bRecievedStoreChangeTimeUTC;
 
@@ -383,6 +399,8 @@ namespace GorillaNetworking.Store
 		private Dictionary<string, List<StoreUpdateEvent>> pedestalUpdateEvents = new Dictionary<string, List<StoreUpdateEvent>>();
 
 		private Dictionary<string, Coroutine> pedestalUpdateCoroutines = new Dictionary<string, Coroutine>();
+
+		private Dictionary<string, Coroutine> pedestalClearCartCoroutines = new Dictionary<string, Coroutine>();
 
 		private string tempJson;
 

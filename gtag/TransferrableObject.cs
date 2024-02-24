@@ -84,6 +84,8 @@ public class TransferrableObject : HoldableObject, ISelfValidator, IRequestableO
 		}
 	}
 
+	public bool isRigidbodySet { get; private set; }
+
 	private protected bool appIsQuitting { protected get; private set; }
 
 	protected virtual void Awake()
@@ -1808,8 +1810,6 @@ public class TransferrableObject : HoldableObject, ISelfValidator, IRequestableO
 	public bool isSceneObject;
 
 	public Rigidbody rigidbodyInstance;
-
-	public bool isRigidbodySet;
 
 	public bool canDrop;
 

@@ -61,6 +61,11 @@ namespace GorillaExtensions
 			return scene.GetComponentsInHierarchy(includeInactive, capacity);
 		}
 
+		public static List<T> GetComponentsInHierarchyUntil<T, TStop1>(this Scene scene, bool includeInactive = false, bool stopAtRoot = true, int capacity = 64) where T : Component where TStop1 : Component
+		{
+			return scene.GetComponentsInHierarchyUntil(includeInactive, stopAtRoot, capacity);
+		}
+
 		public static List<T> GetComponentsInHierarchyUntil<T, TStop1, TStop2, TStop3>(this Scene scene, bool includeInactive = false, bool stopAtRoot = true, int capacity = 64) where T : Component where TStop1 : Component where TStop2 : Component where TStop3 : Component
 		{
 			List<T> list = new List<T>(capacity);
@@ -75,7 +80,7 @@ namespace GorillaExtensions
 
 		public static List<T> GetComponentsInChildrenUntil<T, TStop1, TStop2, TStop3>(this Component root, bool includeInactive = false, bool stopAtRoot = true, int capacity = 64) where T : Component where TStop1 : Component where TStop2 : Component where TStop3 : Component
 		{
-			GTExt.<>c__DisplayClass5_0<T, TStop1, TStop2, TStop3> CS$<>8__locals1;
+			GTExt.<>c__DisplayClass6_0<T, TStop1, TStop2, TStop3> CS$<>8__locals1;
 			CS$<>8__locals1.includeInactive = includeInactive;
 			List<T> list = new List<T>(capacity);
 			if (stopAtRoot && (root.GetComponent<TStop1>() != null || root.GetComponent<TStop2>() != null || root.GetComponent<TStop3>() != null))
@@ -87,7 +92,7 @@ namespace GorillaExtensions
 			{
 				list.Add(component);
 			}
-			GTExt.<GetComponentsInChildrenUntil>g__GetRecursive|5_0<T, TStop1, TStop2, TStop3>(root.transform, ref list, ref CS$<>8__locals1);
+			GTExt.<GetComponentsInChildrenUntil>g__GetRecursive|6_0<T, TStop1, TStop2, TStop3>(root.transform, ref list, ref CS$<>8__locals1);
 			return list;
 		}
 
@@ -1860,7 +1865,7 @@ namespace GorillaExtensions
 		}
 
 		[CompilerGenerated]
-		internal static void <GetComponentsInChildrenUntil>g__GetRecursive|5_0<T, TStop1, TStop2, TStop3>(Transform currentTransform, ref List<T> components, ref GTExt.<>c__DisplayClass5_0<T, TStop1, TStop2, TStop3> A_2) where T : Component where TStop1 : Component where TStop2 : Component where TStop3 : Component
+		internal static void <GetComponentsInChildrenUntil>g__GetRecursive|6_0<T, TStop1, TStop2, TStop3>(Transform currentTransform, ref List<T> components, ref GTExt.<>c__DisplayClass6_0<T, TStop1, TStop2, TStop3> A_2) where T : Component where TStop1 : Component where TStop2 : Component where TStop3 : Component
 		{
 			foreach (object obj in currentTransform)
 			{
@@ -1872,7 +1877,7 @@ namespace GorillaExtensions
 					{
 						components.Add(component);
 					}
-					GTExt.<GetComponentsInChildrenUntil>g__GetRecursive|5_0<T, TStop1, TStop2, TStop3>(transform, ref components, ref A_2);
+					GTExt.<GetComponentsInChildrenUntil>g__GetRecursive|6_0<T, TStop1, TStop2, TStop3>(transform, ref components, ref A_2);
 				}
 			}
 		}

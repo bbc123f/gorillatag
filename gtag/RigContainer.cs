@@ -35,6 +35,14 @@ internal class RigContainer : MonoBehaviour
 		}
 	}
 
+	public AudioSource ReplacementVoiceSource
+	{
+		get
+		{
+			return this.replacementVoiceSource;
+		}
+	}
+
 	public PhotonVoiceView Voice
 	{
 		get
@@ -172,6 +180,7 @@ internal class RigContainer : MonoBehaviour
 			return;
 		}
 		this.photonVoiceView.SpeakerInUse.enabled = !this.forceMute && this.enableVoice && GorillaComputer.instance.voiceChatOn == "TRUE";
+		this.replacementVoiceSource.mute = this.forceMute || !this.enableVoice || GorillaComputer.instance.voiceChatOn == "OFF";
 	}
 
 	public static void RefreshAllRigVoices()
@@ -198,6 +207,9 @@ internal class RigContainer : MonoBehaviour
 
 	[SerializeField]
 	private Transform speakerHead;
+
+	[SerializeField]
+	private AudioSource replacementVoiceSource;
 
 	private PhotonVoiceView photonVoiceView;
 

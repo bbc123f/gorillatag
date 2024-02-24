@@ -407,34 +407,22 @@ namespace GorillaNetworking
 			this.ProcessPurchaseItemState(null, false);
 		}
 
-		public void DelayedRemoveItemFromCheckout(CosmeticsController.CosmeticItem cosmeticItem)
-		{
-			base.StartCoroutine(this.DelayedRemoveItemFromCartCoroutine(cosmeticItem));
-		}
-
-		private IEnumerator DelayedRemoveItemFromCartCoroutine(CosmeticsController.CosmeticItem cosmeticItem)
+		public bool RemoveItemFromCart(CosmeticsController.CosmeticItem cosmeticItem)
 		{
 			this.searchIndex = this.currentCart.IndexOf(cosmeticItem);
 			if (this.searchIndex != -1)
 			{
-				yield return new WaitForSeconds(60f);
-				this.searchIndex = this.currentCart.IndexOf(cosmeticItem);
-				if (this.searchIndex != -1)
+				this.currentCart.RemoveAt(this.searchIndex);
+				for (int i = 0; i < 10; i++)
 				{
-					this.currentCart.RemoveAt(this.searchIndex);
-					for (int i = 0; i < 10; i++)
+					if (cosmeticItem.itemName == this.tryOnSet.items[i].itemName)
 					{
-						if (cosmeticItem.itemName == this.tryOnSet.items[i].itemName)
-						{
-							this.tryOnSet.items[i] = this.nullItem;
-						}
+						this.tryOnSet.items[i] = this.nullItem;
 					}
-					this.ClearCheckout();
-					this.UpdateShoppingCart();
-					this.UpdateWornCosmetics(true);
 				}
+				return true;
 			}
-			yield break;
+			return false;
 		}
 
 		public void PressCheckoutCartButton(CheckoutCartButton pressedCheckoutCartButton, bool isLeftHand)
@@ -756,7 +744,7 @@ namespace GorillaNetworking
 						Application.Quit();
 						PhotonNetwork.Disconnect();
 						Object.DestroyImmediate(PhotonNetworkController.Instance);
-						Object.DestroyImmediate(GorillaLocomotion.Player.Instance);
+						Object.DestroyImmediate(global::GorillaLocomotion.Player.Instance);
 						GameObject[] array = Object.FindObjectsOfType<GameObject>();
 						for (int i = 0; i < array.Length; i++)
 						{
@@ -897,7 +885,7 @@ namespace GorillaNetworking
 					Application.Quit();
 					PhotonNetwork.Disconnect();
 					Object.DestroyImmediate(PhotonNetworkController.Instance);
-					Object.DestroyImmediate(GorillaLocomotion.Player.Instance);
+					Object.DestroyImmediate(global::GorillaLocomotion.Player.Instance);
 					GameObject[] array = Object.FindObjectsOfType<GameObject>();
 					for (int i = 0; i < array.Length; i++)
 					{
@@ -968,7 +956,7 @@ namespace GorillaNetworking
 					Application.Quit();
 					PhotonNetwork.Disconnect();
 					Object.DestroyImmediate(PhotonNetworkController.Instance);
-					Object.DestroyImmediate(GorillaLocomotion.Player.Instance);
+					Object.DestroyImmediate(global::GorillaLocomotion.Player.Instance);
 					GameObject[] array = Object.FindObjectsOfType<GameObject>();
 					for (int i = 0; i < array.Length; i++)
 					{
@@ -1163,7 +1151,7 @@ namespace GorillaNetworking
 						Application.Quit();
 						PhotonNetwork.Disconnect();
 						Object.DestroyImmediate(PhotonNetworkController.Instance);
-						Object.DestroyImmediate(GorillaLocomotion.Player.Instance);
+						Object.DestroyImmediate(global::GorillaLocomotion.Player.Instance);
 						GameObject[] array3 = Object.FindObjectsOfType<GameObject>();
 						for (int k = 0; k < array3.Length; k++)
 						{
@@ -1187,7 +1175,7 @@ namespace GorillaNetworking
 					Application.Quit();
 					PhotonNetwork.Disconnect();
 					Object.DestroyImmediate(PhotonNetworkController.Instance);
-					Object.DestroyImmediate(GorillaLocomotion.Player.Instance);
+					Object.DestroyImmediate(global::GorillaLocomotion.Player.Instance);
 					GameObject[] array4 = Object.FindObjectsOfType<GameObject>();
 					for (int l = 0; l < array4.Length; l++)
 					{
@@ -1241,7 +1229,7 @@ namespace GorillaNetworking
 						Application.Quit();
 						PhotonNetwork.Disconnect();
 						Object.DestroyImmediate(PhotonNetworkController.Instance);
-						Object.DestroyImmediate(GorillaLocomotion.Player.Instance);
+						Object.DestroyImmediate(global::GorillaLocomotion.Player.Instance);
 						GameObject[] array = Object.FindObjectsOfType<GameObject>();
 						for (int i = 0; i < array.Length; i++)
 						{
@@ -1263,7 +1251,7 @@ namespace GorillaNetworking
 					Application.Quit();
 					PhotonNetwork.Disconnect();
 					Object.DestroyImmediate(PhotonNetworkController.Instance);
-					Object.DestroyImmediate(GorillaLocomotion.Player.Instance);
+					Object.DestroyImmediate(global::GorillaLocomotion.Player.Instance);
 					GameObject[] array2 = Object.FindObjectsOfType<GameObject>();
 					for (int j = 0; j < array2.Length; j++)
 					{
@@ -1486,7 +1474,7 @@ namespace GorillaNetworking
 					Application.Quit();
 					PhotonNetwork.Disconnect();
 					Object.DestroyImmediate(PhotonNetworkController.Instance);
-					Object.DestroyImmediate(GorillaLocomotion.Player.Instance);
+					Object.DestroyImmediate(global::GorillaLocomotion.Player.Instance);
 					GameObject[] array = Object.FindObjectsOfType<GameObject>();
 					for (int i = 0; i < array.Length; i++)
 					{

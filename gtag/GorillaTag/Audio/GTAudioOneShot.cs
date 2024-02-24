@@ -5,6 +5,7 @@ namespace GorillaTag.Audio
 {
 	internal static class GTAudioOneShot
 	{
+		[OnEnterPlay_Set(false)]
 		internal static bool isInitialized { get; private set; }
 
 		[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
@@ -28,6 +29,10 @@ namespace GorillaTag.Audio
 
 		internal static void Play(AudioClip clip, Vector3 position, float volume = 1f, float pitch = 1f)
 		{
+			if (ApplicationQuittingState.IsQuitting || !GTAudioOneShot.isInitialized)
+			{
+				return;
+			}
 			GTAudioOneShot.audioSource.pitch = pitch;
 			GTAudioOneShot.audioSource.transform.position = position;
 			GTAudioOneShot.audioSource.PlayOneShot(clip, volume);
@@ -35,13 +40,19 @@ namespace GorillaTag.Audio
 
 		internal static void Play(AudioClip clip, Vector3 position, AnimationCurve curve, float volume = 1f, float pitch = 1f)
 		{
+			if (ApplicationQuittingState.IsQuitting || !GTAudioOneShot.isInitialized)
+			{
+				return;
+			}
 			GTAudioOneShot.audioSource.SetCustomCurve(AudioSourceCurveType.CustomRolloff, curve);
 			GTAudioOneShot.Play(clip, position, volume, pitch);
 			GTAudioOneShot.audioSource.SetCustomCurve(AudioSourceCurveType.CustomRolloff, GTAudioOneShot.defaultCurve);
 		}
 
+		[OnEnterPlay_SetNull]
 		internal static AudioSource audioSource;
 
+		[OnEnterPlay_SetNull]
 		internal static AnimationCurve defaultCurve;
 	}
 }

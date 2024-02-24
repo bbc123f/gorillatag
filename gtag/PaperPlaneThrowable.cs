@@ -112,7 +112,7 @@ public class PaperPlaneThrowable : TransferrableObject
 		{
 			return false;
 		}
-		GorillaVelocityTracker gorillaVelocityTracker = ((releasingHand == EquipmentInteractor.instance.rightHand) ? GorillaLocomotion.Player.Instance.rightInteractPointVelocityTracker : GorillaLocomotion.Player.Instance.leftInteractPointVelocityTracker);
+		GorillaVelocityTracker gorillaVelocityTracker = ((releasingHand == EquipmentInteractor.instance.rightHand) ? global::GorillaLocomotion.Player.Instance.rightInteractPointVelocityTracker : global::GorillaLocomotion.Player.Instance.leftInteractPointVelocityTracker);
 		Vector3 vector = base.transform.TransformPoint(Vector3.zero);
 		Vector3 averageVelocity = gorillaVelocityTracker.GetAverageVelocity(true, 0.15f, false);
 		int num = PaperPlaneThrowable.FetchViewID(this);

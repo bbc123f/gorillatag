@@ -92,6 +92,13 @@ public class GorillaSpeakerLoudness : MonoBehaviour
 		{
 			this.recorder = PhotonNetworkController.Instance.GetComponent<Recorder>();
 		}
+		VRRig rig = this.rigContainer.Rig;
+		if ((rig.remoteUseReplacementVoice || rig.localUseReplacementVoice || GorillaComputer.instance.voiceChatOn == "FALSE") && rig.SpeakingLoudness > 0f)
+		{
+			this.isSpeaking = true;
+			this.loudness = rig.SpeakingLoudness;
+			return;
+		}
 		if (this.voiceView != null && this.voiceView.IsSpeaking)
 		{
 			this.isSpeaking = true;

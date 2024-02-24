@@ -45,7 +45,7 @@ public class GorillaScoreboardSpawner : MonoBehaviourPunCallbacks
 		{
 			return this.controllingParentGameObject.activeSelf;
 		}
-		return GorillaLocomotion.Player.Instance.inOverlay;
+		return global::GorillaLocomotion.Player.Instance.inOverlay;
 	}
 
 	private IEnumerator UpdateBoard()

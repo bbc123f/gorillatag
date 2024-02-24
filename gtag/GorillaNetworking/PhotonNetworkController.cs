@@ -148,9 +148,9 @@ namespace GorillaNetworking
 
 		public void FixedUpdate()
 		{
-			this.headRightHandDistance = (GorillaLocomotion.Player.Instance.headCollider.transform.position - GorillaLocomotion.Player.Instance.rightControllerTransform.position).magnitude;
-			this.headLeftHandDistance = (GorillaLocomotion.Player.Instance.headCollider.transform.position - GorillaLocomotion.Player.Instance.leftControllerTransform.position).magnitude;
-			this.headQuat = GorillaLocomotion.Player.Instance.headCollider.transform.rotation;
+			this.headRightHandDistance = (global::GorillaLocomotion.Player.Instance.headCollider.transform.position - global::GorillaLocomotion.Player.Instance.rightControllerTransform.position).magnitude;
+			this.headLeftHandDistance = (global::GorillaLocomotion.Player.Instance.headCollider.transform.position - global::GorillaLocomotion.Player.Instance.leftControllerTransform.position).magnitude;
+			this.headQuat = global::GorillaLocomotion.Player.Instance.headCollider.transform.rotation;
 			if (!this.disableAFKKick && Quaternion.Angle(this.headQuat, this.lastHeadQuat) <= 0.01f && Mathf.Abs(this.headRightHandDistance - this.lastHeadRightHandDistance) < 0.001f && Mathf.Abs(this.headLeftHandDistance - this.lastHeadLeftHandDistance) < 0.001f && this.pauseTime + this.disconnectTime < Time.realtimeSinceStartup)
 			{
 				this.pauseTime = Time.realtimeSinceStartup;
@@ -755,8 +755,8 @@ namespace GorillaNetworking
 					gorillaLevelScreen.UpdateText(gorillaLevelScreen.startingText, true);
 				}
 			}
-			GorillaLocomotion.Player.Instance.maxJumpSpeed = 6.5f;
-			GorillaLocomotion.Player.Instance.jumpMultiplier = 1.1f;
+			global::GorillaLocomotion.Player.Instance.maxJumpSpeed = 6.5f;
+			global::GorillaLocomotion.Player.Instance.jumpMultiplier = 1.1f;
 			GorillaNot.instance.currentMasterClient = null;
 			GorillaTagger.Instance.offlineVRRig.huntComputer.SetActive(false);
 			this.initialGameMode = "";
@@ -1187,7 +1187,7 @@ namespace GorillaNetworking
 
 		private int minorVersion = 1;
 
-		private int minorVersion2 = 71;
+		private int minorVersion2 = 72;
 
 		private string _gameVersionString = "";
 

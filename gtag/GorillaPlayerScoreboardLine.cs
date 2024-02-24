@@ -25,13 +25,15 @@ public class GorillaPlayerScoreboardLine : MonoBehaviour
 		this.UpdatePlayerText();
 		if (this.linePlayer == PhotonNetwork.LocalPlayer)
 		{
-			GorillaPlayerLineButton[] componentsInChildren = base.GetComponentsInChildren<GorillaPlayerLineButton>(true);
-			for (int i = 0; i < componentsInChildren.Length; i++)
-			{
-				componentsInChildren[i].gameObject.SetActive(false);
-			}
+			this.muteButton.gameObject.SetActive(false);
+			this.reportButton.gameObject.SetActive(false);
+			this.hateSpeechButton.SetActive(false);
+			this.toxicityButton.SetActive(false);
+			this.cheatingButton.SetActive(false);
+			this.cancelButton.SetActive(false);
 			return;
 		}
+		this.muteButton.gameObject.SetActive(true);
 		if (GorillaScoreboardTotalUpdater.instance != null && GorillaScoreboardTotalUpdater.instance.reportDict.ContainsKey(this.playerActorNumber))
 		{
 			GorillaScoreboardTotalUpdater.PlayerReports playerReports = GorillaScoreboardTotalUpdater.instance.reportDict[this.playerActorNumber];
@@ -49,10 +51,9 @@ public class GorillaPlayerScoreboardLine : MonoBehaviour
 		}
 		this.reportButton.isOn = this.reportedCheating || this.reportedHateSpeech || this.reportedToxicity;
 		this.reportButton.UpdateColor();
-		this.SetReportState(this.reportInProgress, GorillaPlayerLineButton.ButtonType.Cancel);
+		this.SwapToReportState(this.reportInProgress);
 		this.muteButton.gameObject.SetActive(true);
 		this.mute = PlayerPrefs.GetInt(this.linePlayer.UserId, 0);
-		PlayerPrefs.SetInt(this.linePlayer.UserId, this.mute);
 		this.muteButton.isOn = this.mute != 0;
 		this.muteButton.UpdateColor();
 		if (this.rigContainer != null)
@@ -63,6 +64,10 @@ public class GorillaPlayerScoreboardLine : MonoBehaviour
 
 	public void SetLineData(Player player)
 	{
+		if (player == this.linePlayer)
+		{
+			return;
+		}
 		if (this.playerActorNumber != player.ActorNumber)
 		{
 			this.initTime = Time.time;
@@ -128,9 +133,27 @@ public class GorillaPlayerScoreboardLine : MonoBehaviour
 					{
 						this.myRecorder = PhotonNetworkController.Instance.GetComponent<Recorder>();
 					}
-					if ((this.playerVRRig != null && this.myVoiceView != null && this.myVoiceView.IsSpeaking) || (this.playerVRRig.photonView.IsMine && this.myRecorder != null && this.myRecorder.IsCurrentlyTransmitting))
+					if (this.playerVRRig != null)
 					{
-						this.speakerIcon.enabled = true;
+						if (this.playerVRRig.remoteUseReplacementVoice || this.playerVRRig.localUseReplacementVoice || GorillaComputer.instance.voiceChatOn == "FALSE")
+						{
+							if (this.playerVRRig.SpeakingLoudness > this.playerVRRig.replacementVoiceLoudnessThreshold && !this.rigContainer.ForceMute && !this.rigContainer.Muted)
+							{
+								this.speakerIcon.enabled = true;
+							}
+							else
+							{
+								this.speakerIcon.enabled = false;
+							}
+						}
+						else if ((this.myVoiceView != null && this.myVoiceView.IsSpeaking) || (this.playerVRRig.photonView.IsMine && this.myRecorder != null && this.myRecorder.IsCurrentlyTransmitting))
+						{
+							this.speakerIcon.enabled = true;
+						}
+						else
+						{
+							this.speakerIcon.enabled = false;
+						}
 					}
 					else
 					{
@@ -195,17 +218,11 @@ public class GorillaPlayerScoreboardLine : MonoBehaviour
 		this.reportInProgress = reportState;
 		if (reportState)
 		{
-			foreach (GorillaPlayerLineButton gorillaPlayerLineButton in base.GetComponentsInChildren<GorillaPlayerLineButton>(true))
-			{
-				gorillaPlayerLineButton.gameObject.SetActive(gorillaPlayerLineButton.buttonType != GorillaPlayerLineButton.ButtonType.Report);
-			}
+			this.SwapToReportState(true);
 		}
 		else
 		{
-			foreach (GorillaPlayerLineButton gorillaPlayerLineButton2 in base.GetComponentsInChildren<GorillaPlayerLineButton>(true))
-			{
-				gorillaPlayerLineButton2.gameObject.SetActive(gorillaPlayerLineButton2.buttonType == GorillaPlayerLineButton.ButtonType.Report || gorillaPlayerLineButton2.buttonType == GorillaPlayerLineButton.ButtonType.Mute);
-			}
+			this.SwapToReportState(false);
 			if (this.linePlayer != null && buttonType != GorillaPlayerLineButton.ButtonType.Cancel)
 			{
 				if ((!this.reportedHateSpeech && buttonType == GorillaPlayerLineButton.ButtonType.HateSpeech) || (!this.reportedToxicity && buttonType == GorillaPlayerLineButton.ButtonType.Toxicity) || (!this.reportedCheating && buttonType == GorillaPlayerLineButton.ButtonType.Cheating))
@@ -312,6 +329,15 @@ public class GorillaPlayerScoreboardLine : MonoBehaviour
 		GorillaScoreboardTotalUpdater.UnregisterSL(this);
 	}
 
+	private void SwapToReportState(bool reportInProgress)
+	{
+		this.reportButton.gameObject.SetActive(!reportInProgress);
+		this.hateSpeechButton.SetActive(reportInProgress);
+		this.toxicityButton.SetActive(reportInProgress);
+		this.cheatingButton.SetActive(reportInProgress);
+		this.cancelButton.SetActive(reportInProgress);
+	}
+
 	private static int[] targetActors = new int[] { -1 };
 
 	public Text playerName;
@@ -341,6 +367,14 @@ public class GorillaPlayerScoreboardLine : MonoBehaviour
 	public GorillaPlayerLineButton muteButton;
 
 	public GorillaPlayerLineButton reportButton;
+
+	public GameObject hateSpeechButton;
+
+	public GameObject toxicityButton;
+
+	public GameObject cheatingButton;
+
+	public GameObject cancelButton;
 
 	public SpriteRenderer speakerIcon;
 

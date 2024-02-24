@@ -76,6 +76,10 @@ public class EquipmentInteractor : MonoBehaviour
 
 	private void LateUpdate()
 	{
+		if (ApplicationQuittingState.IsQuitting)
+		{
+			return;
+		}
 		this.CheckInputValue(true);
 		this.isLeftGrabbing = (this.wasLeftGrabPressed && this.grabValue > this.grabThreshold - this.grabHysteresis) || (!this.wasLeftGrabPressed && this.grabValue > this.grabThreshold + this.grabHysteresis);
 		if (this.leftClimber && this.leftClimber.isClimbing)
