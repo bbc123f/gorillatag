@@ -9,4 +9,7 @@ public class ZoneData
 	public string sceneName;
 
 	public GameObject[] rootGameObjects;
+
+	[NonSerialized]
+	public bool active;
 }

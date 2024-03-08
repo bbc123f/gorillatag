@@ -46,7 +46,7 @@ namespace GorillaNetworking
 				this.nullItem.isNullItem = true;
 				this.allCosmeticsDict[this.nullItem.itemName] = this.nullItem;
 				this.allCosmeticsItemIDsfromDisplayNamesDict[this.nullItem.displayName] = this.nullItem.itemName;
-				for (int i = 0; i < 10; i++)
+				for (int i = 0; i < 11; i++)
 				{
 					this.tryOnSet.items[i] = this.nullItem;
 				}
@@ -88,9 +88,10 @@ namespace GorillaNetworking
 				return CosmeticsController.CosmeticSlots.Badge;
 			case CosmeticsController.CosmeticCategory.Face:
 				return CosmeticsController.CosmeticSlots.Face;
-			default:
-				return CosmeticsController.CosmeticSlots.Count;
+			case CosmeticsController.CosmeticCategory.Skin:
+				return CosmeticsController.CosmeticSlots.Skin;
 			}
+			return CosmeticsController.CosmeticSlots.Count;
 		}
 
 		private CosmeticsController.CosmeticSlots DropPositionToCosmeticSlot(BodyDockPositions.DropPositions pos)
@@ -145,7 +146,7 @@ namespace GorillaNetworking
 
 		public void SaveCurrentItemPreferences()
 		{
-			for (int i = 0; i < 10; i++)
+			for (int i = 0; i < 11; i++)
 			{
 				CosmeticsController.CosmeticSlots cosmeticSlots = (CosmeticsController.CosmeticSlots)i;
 				this.SaveItemPreference(cosmeticSlots, i, this.currentWornSet.items[i]);
@@ -256,7 +257,7 @@ namespace GorillaNetworking
 		public void RemoveCosmeticItemFromSet(CosmeticsController.CosmeticSet set, string itemName, bool applyToPlayerPrefs)
 		{
 			this.cachedSet.CopyItems(set);
-			for (int i = 0; i < 10; i++)
+			for (int i = 0; i < 11; i++)
 			{
 				if (set.items[i].displayName == itemName)
 				{
@@ -286,7 +287,7 @@ namespace GorillaNetworking
 			{
 				this.currentCart.RemoveAt(this.searchIndex);
 				pressedStand.isOn = false;
-				for (int i = 0; i < 10; i++)
+				for (int i = 0; i < 11; i++)
 				{
 					if (pressedStand.thisCosmeticItem.itemName == this.tryOnSet.items[i].itemName)
 					{
@@ -413,7 +414,7 @@ namespace GorillaNetworking
 			if (this.searchIndex != -1)
 			{
 				this.currentCart.RemoveAt(this.searchIndex);
-				for (int i = 0; i < 10; i++)
+				for (int i = 0; i < 11; i++)
 				{
 					if (cosmeticItem.itemName == this.tryOnSet.items[i].itemName)
 					{
@@ -670,6 +671,7 @@ namespace GorillaNetworking
 					}
 					break;
 				case CosmeticsController.CosmeticCategory.Badge:
+				case CosmeticsController.CosmeticCategory.Skin:
 					if (!this.unlockedBadges.Contains(this.allCosmetics[num]))
 					{
 						this.unlockedBadges.Add(this.allCosmetics[num]);
@@ -744,7 +746,7 @@ namespace GorillaNetworking
 						Application.Quit();
 						PhotonNetwork.Disconnect();
 						Object.DestroyImmediate(PhotonNetworkController.Instance);
-						Object.DestroyImmediate(global::GorillaLocomotion.Player.Instance);
+						Object.DestroyImmediate(GorillaLocomotion.Player.Instance);
 						GameObject[] array = Object.FindObjectsOfType<GameObject>();
 						for (int i = 0; i < array.Length; i++)
 						{
@@ -885,7 +887,7 @@ namespace GorillaNetworking
 					Application.Quit();
 					PhotonNetwork.Disconnect();
 					Object.DestroyImmediate(PhotonNetworkController.Instance);
-					Object.DestroyImmediate(global::GorillaLocomotion.Player.Instance);
+					Object.DestroyImmediate(GorillaLocomotion.Player.Instance);
 					GameObject[] array = Object.FindObjectsOfType<GameObject>();
 					for (int i = 0; i < array.Length; i++)
 					{
@@ -956,7 +958,7 @@ namespace GorillaNetworking
 					Application.Quit();
 					PhotonNetwork.Disconnect();
 					Object.DestroyImmediate(PhotonNetworkController.Instance);
-					Object.DestroyImmediate(global::GorillaLocomotion.Player.Instance);
+					Object.DestroyImmediate(GorillaLocomotion.Player.Instance);
 					GameObject[] array = Object.FindObjectsOfType<GameObject>();
 					for (int i = 0; i < array.Length; i++)
 					{
@@ -1110,6 +1112,10 @@ namespace GorillaNetworking
 						{
 							this.unlockedBadges.Add(cosmeticItem);
 						}
+						else if (cosmeticItem.itemCategory == CosmeticsController.CosmeticCategory.Skin && !this.unlockedBadges.Contains(cosmeticItem))
+						{
+							this.unlockedBadges.Add(cosmeticItem);
+						}
 						else if (cosmeticItem.itemCategory == CosmeticsController.CosmeticCategory.Holdable && !this.unlockedHoldable.Contains(cosmeticItem))
 						{
 							this.unlockedHoldable.Add(cosmeticItem);
@@ -1151,7 +1157,7 @@ namespace GorillaNetworking
 						Application.Quit();
 						PhotonNetwork.Disconnect();
 						Object.DestroyImmediate(PhotonNetworkController.Instance);
-						Object.DestroyImmediate(global::GorillaLocomotion.Player.Instance);
+						Object.DestroyImmediate(GorillaLocomotion.Player.Instance);
 						GameObject[] array3 = Object.FindObjectsOfType<GameObject>();
 						for (int k = 0; k < array3.Length; k++)
 						{
@@ -1175,7 +1181,7 @@ namespace GorillaNetworking
 					Application.Quit();
 					PhotonNetwork.Disconnect();
 					Object.DestroyImmediate(PhotonNetworkController.Instance);
-					Object.DestroyImmediate(global::GorillaLocomotion.Player.Instance);
+					Object.DestroyImmediate(GorillaLocomotion.Player.Instance);
 					GameObject[] array4 = Object.FindObjectsOfType<GameObject>();
 					for (int l = 0; l < array4.Length; l++)
 					{
@@ -1229,7 +1235,7 @@ namespace GorillaNetworking
 						Application.Quit();
 						PhotonNetwork.Disconnect();
 						Object.DestroyImmediate(PhotonNetworkController.Instance);
-						Object.DestroyImmediate(global::GorillaLocomotion.Player.Instance);
+						Object.DestroyImmediate(GorillaLocomotion.Player.Instance);
 						GameObject[] array = Object.FindObjectsOfType<GameObject>();
 						for (int i = 0; i < array.Length; i++)
 						{
@@ -1251,7 +1257,7 @@ namespace GorillaNetworking
 					Application.Quit();
 					PhotonNetwork.Disconnect();
 					Object.DestroyImmediate(PhotonNetworkController.Instance);
-					Object.DestroyImmediate(global::GorillaLocomotion.Player.Instance);
+					Object.DestroyImmediate(GorillaLocomotion.Player.Instance);
 					GameObject[] array2 = Object.FindObjectsOfType<GameObject>();
 					for (int j = 0; j < array2.Length; j++)
 					{
@@ -1474,7 +1480,7 @@ namespace GorillaNetworking
 					Application.Quit();
 					PhotonNetwork.Disconnect();
 					Object.DestroyImmediate(PhotonNetworkController.Instance);
-					Object.DestroyImmediate(global::GorillaLocomotion.Player.Instance);
+					Object.DestroyImmediate(GorillaLocomotion.Player.Instance);
 					GameObject[] array = Object.FindObjectsOfType<GameObject>();
 					for (int i = 0; i < array.Length; i++)
 					{
@@ -1704,6 +1710,7 @@ namespace GorillaNetworking
 			Holdable,
 			Gloves,
 			Slingshot,
+			Skin,
 			Count,
 			Set
 		}
@@ -1720,6 +1727,7 @@ namespace GorillaNetworking
 			HandLeft,
 			HandRight,
 			Chest,
+			Skin,
 			Count
 		}
 
@@ -1728,22 +1736,22 @@ namespace GorillaNetworking
 		{
 			public event CosmeticsController.CosmeticSet.OnSetActivatedHandler onSetActivatedEvent;
 
-			protected void OnSetActivated(CosmeticsController.CosmeticSet prevSet, CosmeticsController.CosmeticSet currentSet, Photon.Realtime.Player player)
+			protected void OnSetActivated(CosmeticsController.CosmeticSet prevSet, CosmeticsController.CosmeticSet currentSet, NetPlayer netPlayer)
 			{
 				if (this.onSetActivatedEvent != null)
 				{
-					this.onSetActivatedEvent(prevSet, currentSet, player);
+					this.onSetActivatedEvent(prevSet, currentSet, netPlayer);
 				}
 			}
 
 			public CosmeticSet()
 			{
-				this.items = new CosmeticsController.CosmeticItem[10];
+				this.items = new CosmeticsController.CosmeticItem[11];
 			}
 
 			public CosmeticSet(string[] itemNames, CosmeticsController controller)
 			{
-				this.items = new CosmeticsController.CosmeticItem[10];
+				this.items = new CosmeticsController.CosmeticItem[11];
 				for (int i = 0; i < itemNames.Length; i++)
 				{
 					string text = itemNames[i];
@@ -1762,7 +1770,7 @@ namespace GorillaNetworking
 
 			public void MergeSets(CosmeticsController.CosmeticSet tryOn, CosmeticsController.CosmeticSet current)
 			{
-				for (int i = 0; i < 10; i++)
+				for (int i = 0; i < 11; i++)
 				{
 					if (tryOn == null)
 					{
@@ -1777,7 +1785,7 @@ namespace GorillaNetworking
 
 			public void ClearSet(CosmeticsController.CosmeticItem nullItem)
 			{
-				for (int i = 0; i < 10; i++)
+				for (int i = 0; i < 11; i++)
 				{
 					this.items[i] = nullItem;
 				}
@@ -1785,7 +1793,7 @@ namespace GorillaNetworking
 
 			public bool IsActive(string name)
 			{
-				int num = 10;
+				int num = 11;
 				for (int i = 0; i < num; i++)
 				{
 					if (this.items[i].displayName == name)
@@ -1798,7 +1806,7 @@ namespace GorillaNetworking
 
 			public bool HasItemOfCategory(CosmeticsController.CosmeticCategory category)
 			{
-				int num = 10;
+				int num = 11;
 				for (int i = 0; i < num; i++)
 				{
 					if (!this.items[i].isNullItem && this.items[i].itemCategory == category)
@@ -1811,7 +1819,7 @@ namespace GorillaNetworking
 
 			public bool HasItem(string name)
 			{
-				int num = 10;
+				int num = 11;
 				for (int i = 0; i < num; i++)
 				{
 					if (!this.items[i].isNullItem && this.items[i].displayName == name)
@@ -1866,6 +1874,8 @@ namespace GorillaNetworking
 					return CosmeticsController.CosmeticSlots.HandLeft;
 				case CosmeticsController.CosmeticSlots.Chest:
 					return CosmeticsController.CosmeticSlots.Chest;
+				case CosmeticsController.CosmeticSlots.Skin:
+					return CosmeticsController.CosmeticSlots.Skin;
 				default:
 					return CosmeticsController.CosmeticSlots.Count;
 				}
@@ -1946,7 +1956,7 @@ namespace GorillaNetworking
 
 			public void ActivateCosmetics(CosmeticsController.CosmeticSet prevSet, VRRig rig, BodyDockPositions bDock, CosmeticsController.CosmeticItem nullItem, CosmeticItemRegistry cosmeticsObjectRegistry)
 			{
-				int num = 10;
+				int num = 11;
 				for (int i = 0; i < num; i++)
 				{
 					if (CosmeticsController.CosmeticSet.IsSlotHoldable((CosmeticsController.CosmeticSlots)i))
@@ -1958,13 +1968,13 @@ namespace GorillaNetworking
 						this.ActivateCosmeticItem(prevSet, rig, i, cosmeticsObjectRegistry, nullItem);
 					}
 				}
-				this.OnSetActivated(prevSet, this, rig.myPlayer);
+				this.OnSetActivated(prevSet, this, rig.creatorWrapped);
 			}
 
 			public void DeactivateAllCosmetcs(BodyDockPositions bDock, CosmeticsController.CosmeticItem nullItem, CosmeticItemRegistry cosmeticObjectRegistry)
 			{
 				bDock.DisableAllTransferableItems();
-				int num = 10;
+				int num = 11;
 				for (int i = 0; i < num; i++)
 				{
 					CosmeticsController.CosmeticItem cosmeticItem = this.items[i];
@@ -1986,7 +1996,7 @@ namespace GorillaNetworking
 
 			public void LoadFromPlayerPreferences(CosmeticsController controller)
 			{
-				int num = 10;
+				int num = 11;
 				for (int i = 0; i < num; i++)
 				{
 					CosmeticsController.CosmeticSlots cosmeticSlots = (CosmeticsController.CosmeticSlots)i;
@@ -2004,7 +2014,7 @@ namespace GorillaNetworking
 
 			public string[] ToDisplayNameArray()
 			{
-				int num = 10;
+				int num = 11;
 				for (int i = 0; i < num; i++)
 				{
 					this.returnArray[i] = this.items[i].displayName;
@@ -2014,7 +2024,7 @@ namespace GorillaNetworking
 
 			public string[] HoldableDisplayNames(bool leftHoldables)
 			{
-				int num = 10;
+				int num = 11;
 				int num2 = 0;
 				for (int i = 0; i < num; i++)
 				{
@@ -2057,7 +2067,7 @@ namespace GorillaNetworking
 
 			public bool[] ToOnRightSideArray()
 			{
-				int num = 10;
+				int num = 11;
 				bool[] array = new bool[num];
 				for (int i = 0; i < num; i++)
 				{
@@ -2075,9 +2085,9 @@ namespace GorillaNetworking
 
 			public CosmeticsController.CosmeticItem[] items;
 
-			public string[] returnArray = new string[10];
+			public string[] returnArray = new string[11];
 
-			public delegate void OnSetActivatedHandler(CosmeticsController.CosmeticSet prevSet, CosmeticsController.CosmeticSet currentSet, Photon.Realtime.Player player);
+			public delegate void OnSetActivatedHandler(CosmeticsController.CosmeticSet prevSet, CosmeticsController.CosmeticSet currentSet, NetPlayer netPlayer);
 		}
 
 		[Serializable]

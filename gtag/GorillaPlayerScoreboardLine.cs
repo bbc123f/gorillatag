@@ -4,7 +4,6 @@ using GorillaExtensions;
 using GorillaNetworking;
 using Photon.Pun;
 using Photon.Realtime;
-using Photon.Voice.PUN;
 using Photon.Voice.Unity;
 using UnityEngine;
 using UnityEngine.UI;
@@ -21,9 +20,8 @@ public class GorillaPlayerScoreboardLine : MonoBehaviour
 
 	public void InitializeLine()
 	{
-		this.myVoiceView = null;
 		this.UpdatePlayerText();
-		if (this.linePlayer == PhotonNetwork.LocalPlayer)
+		if (this.linePlayer == NetworkSystem.Instance.LocalPlayer)
 		{
 			this.muteButton.gameObject.SetActive(false);
 			this.reportButton.gameObject.SetActive(false);
@@ -62,21 +60,25 @@ public class GorillaPlayerScoreboardLine : MonoBehaviour
 		}
 	}
 
-	public void SetLineData(Player player)
+	public void SetLineData(NetPlayer netPlayer)
 	{
-		if (player == this.linePlayer)
+		if (!netPlayer.InRoom)
 		{
 			return;
 		}
-		if (this.playerActorNumber != player.ActorNumber)
+		if (netPlayer == this.linePlayer)
+		{
+			return;
+		}
+		if (this.playerActorNumber != netPlayer.ID)
 		{
 			this.initTime = Time.time;
 		}
-		this.playerActorNumber = player.ActorNumber;
-		this.linePlayer = player;
-		this.playerNameValue = player.NickName;
+		this.playerActorNumber = netPlayer.ID;
+		this.linePlayer = netPlayer;
+		this.playerNameValue = netPlayer.NickName;
 		RigContainer rigContainer;
-		if (VRRigCache.Instance.TryGetVrrig(player, out rigContainer))
+		if (VRRigCache.Instance.TryGetVrrig(netPlayer, out rigContainer))
 		{
 			this.rigContainer = rigContainer;
 			this.playerVRRig = rigContainer.Rig;
@@ -125,13 +127,9 @@ public class GorillaPlayerScoreboardLine : MonoBehaviour
 					{
 						this.playerSwatch.color = this.playerVRRig.materialsToChangeTo[0].color;
 					}
-					if (this.myVoiceView == null)
-					{
-						this.myVoiceView = this.rigContainer.Voice;
-					}
 					if (this.myRecorder == null)
 					{
-						this.myRecorder = PhotonNetworkController.Instance.GetComponent<Recorder>();
+						this.myRecorder = NetworkSystem.Instance.LocalRecorder;
 					}
 					if (this.playerVRRig != null)
 					{
@@ -146,7 +144,7 @@ public class GorillaPlayerScoreboardLine : MonoBehaviour
 								this.speakerIcon.enabled = false;
 							}
 						}
-						else if ((this.myVoiceView != null && this.myVoiceView.IsSpeaking) || (this.playerVRRig.photonView.IsMine && this.myRecorder != null && this.myRecorder.IsCurrentlyTransmitting))
+						else if ((this.rigContainer.Voice != null && this.rigContainer.Voice.IsSpeaking) || (this.playerVRRig.rigSerializer.IsLocallyOwned && this.myRecorder != null && this.myRecorder.IsCurrentlyTransmitting))
 						{
 							this.speakerIcon.enabled = true;
 						}
@@ -350,7 +348,7 @@ public class GorillaPlayerScoreboardLine : MonoBehaviour
 
 	public Texture infectedTexture;
 
-	public Player linePlayer;
+	public NetPlayer linePlayer;
 
 	public VRRig playerVRRig;
 
@@ -387,8 +385,6 @@ public class GorillaPlayerScoreboardLine : MonoBehaviour
 	public MeshRenderer[] meshes;
 
 	public Image[] images;
-
-	private PhotonVoiceView myVoiceView;
 
 	private Recorder myRecorder;
 

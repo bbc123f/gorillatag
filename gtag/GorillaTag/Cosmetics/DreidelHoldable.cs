@@ -113,11 +113,11 @@ namespace GorillaTag.Cosmetics
 
 		public void DebugSpinDreidel()
 		{
-			Transform transform = global::GorillaLocomotion.Player.Instance.headCollider.transform;
+			Transform transform = GorillaLocomotion.Player.Instance.headCollider.transform;
 			Vector3 vector = transform.position + transform.forward * 0.5f;
 			float num = 2f;
 			RaycastHit raycastHit;
-			if (Physics.Raycast(vector, Vector3.down, out raycastHit, num, global::GorillaLocomotion.Player.Instance.locomotionEnabledLayers.value, QueryTriggerInteraction.Ignore))
+			if (Physics.Raycast(vector, Vector3.down, out raycastHit, num, GorillaLocomotion.Player.Instance.locomotionEnabledLayers.value, QueryTriggerInteraction.Ignore))
 			{
 				Vector3 point = raycastHit.point;
 				Vector3 normal = raycastHit.normal;

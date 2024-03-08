@@ -9,7 +9,7 @@ namespace GorillaNetworking
 		{
 			base.OnBoxTriggered();
 			GorillaComputer.instance.allowedMapsToJoin = this.myCollider.myAllowedMapsToJoin;
-			PhotonNetworkController.Instance.AttemptToJoinPublicRoom(this);
+			PhotonNetworkController.Instance.AttemptToJoinPublicRoom(this, false);
 		}
 
 		public void UpdateScreens()
@@ -31,8 +31,6 @@ namespace GorillaNetworking
 		public GameObject[] makeSureThisIsEnabled;
 
 		public string gameModeName;
-
-		public PhotonNetworkController photonNetworkController;
 
 		public string componentTypeToAdd;
 

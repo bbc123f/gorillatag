@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using GorillaExtensions;
 using Photon.Pun;
 using Photon.Realtime;
-using Photon.Voice.PUN;
 using Photon.Voice.Unity;
 using UnityEngine;
 
@@ -14,7 +13,7 @@ public class PhotonPrefabPool : MonoBehaviour, IPunPrefabPool, ITickSystemPre
 	private void Start()
 	{
 		PhotonNetwork.PrefabPool = this;
-		PhotonVoiceNetwork.Instance.RemoteVoiceAdded += this.CheckVOIPSettings;
+		NetworkSystem.Instance.AddRemoteVoiceAddedCallback(new Action<RemoteVoiceLink>(this.CheckVOIPSettings));
 		for (int i = 0; i < this.networkPrefabsData.Length; i++)
 		{
 			PrefabType prefabType = this.networkPrefabsData[i];
@@ -121,7 +120,7 @@ public class PhotonPrefabPool : MonoBehaviour, IPunPrefabPool, ITickSystemPre
 	[SerializeField]
 	private PrefabType[] networkPrefabsData;
 
-	private Dictionary<string, GameObject> networkPrefabs = new Dictionary<string, GameObject>();
+	public Dictionary<string, GameObject> networkPrefabs = new Dictionary<string, GameObject>();
 
 	private Queue<GameObject> objectsWaiting = new Queue<GameObject>(20);
 

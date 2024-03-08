@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using GorillaExtensions;
@@ -101,7 +102,7 @@ public class GorillaCaveCrystal : Tappable
 		this.visuals.enabled = true;
 	}
 
-	private void Update()
+	public void InvokeUpdate()
 	{
 		if (!this._animating)
 		{
@@ -131,6 +132,18 @@ public class GorillaCaveCrystal : Tappable
 		float num4 = this._timeSinceLastTap / this._tapAnimLength;
 		float num5 = Mathf.Lerp(num2, num3, num4) * 2f;
 		this.visuals.lerp = num5;
+	}
+
+	protected override void OnEnable()
+	{
+		base.OnEnable();
+		GorillaCaveCrystal.GorillaCaveCrystalManager.RegisterGorillaCaveCrystal(this);
+	}
+
+	protected override void OnDisable()
+	{
+		base.OnDisable();
+		GorillaCaveCrystal.GorillaCaveCrystalManager.UnregisterGorillaCaveCrystal(this);
 	}
 
 	public bool overrideSoundAndMaterial;
@@ -166,4 +179,70 @@ public class GorillaCaveCrystal : Tappable
 
 	[NonSerialized]
 	private TimeSince _timeSinceLastTap;
+
+	public class GorillaCaveCrystalManager : MonoBehaviour
+	{
+		protected void Awake()
+		{
+			if (GorillaCaveCrystal.GorillaCaveCrystalManager.hasInstance && GorillaCaveCrystal.GorillaCaveCrystalManager.instance != null && GorillaCaveCrystal.GorillaCaveCrystalManager.instance != this)
+			{
+				Object.Destroy(this);
+				return;
+			}
+			GorillaCaveCrystal.GorillaCaveCrystalManager.SetInstance(this);
+		}
+
+		public static void CreateManager()
+		{
+			GorillaCaveCrystal.GorillaCaveCrystalManager.SetInstance(new GameObject("GorillaCaveCrystalManager").AddComponent<GorillaCaveCrystal.GorillaCaveCrystalManager>());
+		}
+
+		private static void SetInstance(GorillaCaveCrystal.GorillaCaveCrystalManager manager)
+		{
+			GorillaCaveCrystal.GorillaCaveCrystalManager.instance = manager;
+			GorillaCaveCrystal.GorillaCaveCrystalManager.hasInstance = true;
+			if (Application.isPlaying)
+			{
+				Object.DontDestroyOnLoad(manager);
+			}
+		}
+
+		public static void RegisterGorillaCaveCrystal(GorillaCaveCrystal gCC)
+		{
+			if (!GorillaCaveCrystal.GorillaCaveCrystalManager.hasInstance)
+			{
+				GorillaCaveCrystal.GorillaCaveCrystalManager.CreateManager();
+			}
+			if (!GorillaCaveCrystal.GorillaCaveCrystalManager.allCrystals.Contains(gCC))
+			{
+				GorillaCaveCrystal.GorillaCaveCrystalManager.allCrystals.Add(gCC);
+			}
+		}
+
+		public static void UnregisterGorillaCaveCrystal(GorillaCaveCrystal gCC)
+		{
+			if (!GorillaCaveCrystal.GorillaCaveCrystalManager.hasInstance)
+			{
+				GorillaCaveCrystal.GorillaCaveCrystalManager.CreateManager();
+			}
+			if (GorillaCaveCrystal.GorillaCaveCrystalManager.allCrystals.Contains(gCC))
+			{
+				GorillaCaveCrystal.GorillaCaveCrystalManager.allCrystals.Remove(gCC);
+			}
+		}
+
+		public void Update()
+		{
+			for (int i = 0; i < GorillaCaveCrystal.GorillaCaveCrystalManager.allCrystals.Count; i++)
+			{
+				GorillaCaveCrystal.GorillaCaveCrystalManager.allCrystals[i].InvokeUpdate();
+			}
+		}
+
+		public static GorillaCaveCrystal.GorillaCaveCrystalManager instance;
+
+		public static bool hasInstance = false;
+
+		public static List<GorillaCaveCrystal> allCrystals = new List<GorillaCaveCrystal>();
+	}
 }

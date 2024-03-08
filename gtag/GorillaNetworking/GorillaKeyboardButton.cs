@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections;
+using System.Runtime.CompilerServices;
+using GorillaTag;
 using Photon.Pun;
 using UnityEngine;
 
@@ -8,8 +11,12 @@ namespace GorillaNetworking
 	{
 		private void Start()
 		{
+			if (this.ButtonRenderer == null)
+			{
+				this.ButtonRenderer = base.GetComponent<Renderer>();
+			}
+			this.propBlock = new MaterialPropertyBlock();
 			this.pressTime = 0f;
-			this.computer = GorillaComputer.instance;
 		}
 
 		private void OnTriggerEnter(Collider collider)
@@ -19,7 +26,8 @@ namespace GorillaNetworking
 			{
 				GorillaTriggerColliderHandIndicator component = collider.GetComponent<GorillaTriggerColliderHandIndicator>();
 				Debug.Log("buttan press");
-				this.computer.PressButton(this);
+				GameEvents.OnGorrillaKeyboardButtonPressedEvent.Invoke(this.Binding);
+				this.PressButtonColourUpdate();
 				if (component != null)
 				{
 					GorillaTagger.Instance.StartVibration(component.isLeftHand, GorillaTagger.Instance.tapHapticStrength / 2f, GorillaTagger.Instance.tapHapticDuration);
@@ -32,9 +40,32 @@ namespace GorillaNetworking
 			}
 		}
 
+		public void PressButtonColourUpdate()
+		{
+			this.propBlock.SetColor("_BaseColor", this.ButtonColorSettings.PressedColor);
+			this.propBlock.SetColor("_Color", this.ButtonColorSettings.PressedColor);
+			this.ButtonRenderer.SetPropertyBlock(this.propBlock);
+			this.pressTime = Time.time;
+			base.StartCoroutine(this.<PressButtonColourUpdate>g__ButtonColorUpdate_Local|13_0());
+		}
+
+		[CompilerGenerated]
+		private IEnumerator <PressButtonColourUpdate>g__ButtonColorUpdate_Local|13_0()
+		{
+			yield return new WaitForSeconds(this.ButtonColorSettings.PressedTime);
+			if (this.pressTime != 0f && Time.time > this.ButtonColorSettings.PressedTime + this.pressTime)
+			{
+				this.propBlock.SetColor("_BaseColor", this.ButtonColorSettings.UnpressedColor);
+				this.propBlock.SetColor("_Color", this.ButtonColorSettings.UnpressedColor);
+				this.ButtonRenderer.SetPropertyBlock(this.propBlock);
+				this.pressTime = 0f;
+			}
+			yield break;
+		}
+
 		public string characterString;
 
-		public GorillaComputer computer;
+		public GorillaKeyboardBindings Binding;
 
 		public float pressTime;
 
@@ -46,6 +77,12 @@ namespace GorillaNetworking
 
 		public float repeatCooldown = 2f;
 
+		public Renderer ButtonRenderer;
+
+		public ButtonColorSettings ButtonColorSettings;
+
 		private float lastTestClick;
+
+		private MaterialPropertyBlock propBlock;
 	}
 }

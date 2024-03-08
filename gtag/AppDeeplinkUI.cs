@@ -16,7 +16,7 @@ public class AppDeeplinkUI : MonoBehaviour
 		this.deeplinkAppId = CustomDebugUI.instance.AddTextField(3535750239844224UL.ToString(), 0);
 		this.deeplinkMessage = CustomDebugUI.instance.AddTextField("MSG_UNITY_SAMPLE", 0);
 		instance.AddButton("LaunchSelf", new DebugUIBuilder.OnClick(this.LaunchSelf), -1, 0, false);
-		if (global::UnityEngine.Application.platform == RuntimePlatform.Android && !Core.IsInitialized())
+		if (UnityEngine.Application.platform == RuntimePlatform.Android && !Core.IsInitialized())
 		{
 			Core.Initialize(null);
 		}
@@ -30,7 +30,7 @@ public class AppDeeplinkUI : MonoBehaviour
 	private void Update()
 	{
 		DebugUIBuilder instance = DebugUIBuilder.instance;
-		if (global::UnityEngine.Application.platform == RuntimePlatform.Android)
+		if (UnityEngine.Application.platform == RuntimePlatform.Android)
 		{
 			LaunchDetails launchDetails = ApplicationLifecycle.GetLaunchDetails();
 			this.uiLaunchType.GetComponentInChildren<Text>().text = "LaunchType: " + launchDetails.LaunchType.ToString();

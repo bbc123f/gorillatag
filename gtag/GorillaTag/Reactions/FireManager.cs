@@ -236,7 +236,14 @@ namespace GorillaTag.Reactions
 				float num = fireInstance._thermalVolume.celsius + fireInstance._reheatSpeed * Time.unscaledDeltaTime;
 				if (fireInstance._isDespawning)
 				{
-					num = Mathf.Lerp(fireInstance._thermalVolume.celsius, 0f, fireInstance._timeSinceDyingStart / fireInstance._deathStateDuration);
+					if (fireInstance._deathStateDuration <= 0f)
+					{
+						num = 0f;
+					}
+					else
+					{
+						num = Mathf.Lerp(fireInstance._thermalVolume.celsius, 0f, fireInstance._timeSinceDyingStart / fireInstance._deathStateDuration);
+					}
 				}
 				num = ((num > fireInstance._defaultTemperature) ? fireInstance._defaultTemperature : num);
 				fireInstance._thermalVolume.celsius = num;

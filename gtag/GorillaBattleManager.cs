@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using GorillaGameModes;
 using GorillaNetworking;
 using Photon.Pun;
 using Photon.Realtime;

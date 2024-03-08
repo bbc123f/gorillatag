@@ -1,5 +1,6 @@
 ﻿using System;
 using GorillaExtensions;
+using Photon.Pun;
 using UnityEngine;
 
 namespace GorillaTag.Cosmetics
@@ -48,11 +49,18 @@ namespace GorillaTag.Cosmetics
 		{
 			if (this.edibleState == this.edibleStateInfos.Length - 1)
 			{
-				if (Time.time > this.lastFullyEatenTime + this.respawnTime)
+				if (!this.isNonRespawnable && Time.time > this.lastFullyEatenTime + this.respawnTime)
 				{
 					this.edibleState = 0;
 					this.previousEdibleState = 0;
 					this.OnEdibleHoldableStateChange();
+				}
+				if (this.isNonRespawnable && Time.time > this.lastFullyEatenTime)
+				{
+					this.edibleState = 0;
+					this.previousEdibleState = 0;
+					this.OnEdibleHoldableStateChange();
+					GorillaGameManager.instance.FindVRRigForPlayer(PhotonNetwork.LocalPlayer).RPC("EnableNonCosmeticHandItemRPC", RpcTarget.All, new object[] { false, this.isLeftHand });
 				}
 			}
 			else if (Time.time > this.lastEatTime + this.biteCooldown)
@@ -120,9 +128,15 @@ namespace GorillaTag.Cosmetics
 			}
 			if (this.edibleState >= 0 && this.edibleState < this.edibleStateInfos.Length)
 			{
-				EdibleWearable.EdibleStateInfo edibleStateInfo = this.edibleStateInfos[this.edibleState];
-				edibleStateInfo.gameObject.SetActive(true);
-				this.audioSource.PlayOneShot(edibleStateInfo.sound, this.volume);
+				this.edibleStateInfos[this.edibleState].gameObject.SetActive(true);
+			}
+			if (this.edibleState > 0 && this.edibleState < this.edibleStateInfos.Length)
+			{
+				this.audioSource.PlayOneShot(this.edibleStateInfos[this.edibleState].sound, this.volume);
+			}
+			if (this.edibleState == this.edibleStateInfos.Length)
+			{
+				this.audioSource.PlayOneShot(this.edibleStateInfos[this.edibleState - 1].sound, this.volume);
 			}
 			float num = GorillaTagger.Instance.tapHapticStrength / 4f;
 			float fixedDeltaTime = Time.fixedDeltaTime;
@@ -131,6 +145,9 @@ namespace GorillaTag.Cosmetics
 				GorillaTagger.Instance.StartVibration(this.isLeftHand, num, fixedDeltaTime);
 			}
 		}
+
+		[Tooltip("Check when using non cosmetic edible items like honeycomb")]
+		public bool isNonRespawnable;
 
 		[Tooltip("Eating sounds are played through this AudioSource using PlayOneShot.")]
 		public AudioSource audioSource;

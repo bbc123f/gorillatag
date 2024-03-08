@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Photon.Pun;
 using Photon.Realtime;
@@ -26,6 +27,11 @@ public static class Utils
 	public static bool InRoom(this Player player)
 	{
 		return PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.Players.ContainsKey(player.ActorNumber);
+	}
+
+	public static bool InRoom(this NetPlayer player)
+	{
+		return NetworkSystem.Instance.InRoom && NetworkSystem.Instance.AllNetPlayers.Contains(player);
 	}
 
 	public static bool PlayerInRoom(int actorNumber)

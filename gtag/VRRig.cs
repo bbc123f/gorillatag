@@ -2,7 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Fusion;
 using GorillaExtensions;
+using GorillaGameModes;
 using GorillaLocomotion;
 using GorillaLocomotion.Climbing;
 using GorillaLocomotion.Gameplay;
@@ -11,6 +13,7 @@ using GorillaTag;
 using GorillaTag.GuidedRefs;
 using Photon.Pun;
 using Photon.Realtime;
+using Photon.Voice;
 using Photon.Voice.PUN;
 using Photon.Voice.Unity;
 using PlayFab;
@@ -18,8 +21,9 @@ using PlayFab.ClientModels;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.XR;
+using WebSocketSharp;
 
-public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCosmeticsCallback, IGuidedRefTargetMono, IGuidedRefMonoBehaviour, IGuidedRefObject, IGuidedRefReceiverMono
+public class VRRig : MonoBehaviour, IWrappedSerializable, INetworkStruct, IPreDisable, IUserCosmeticsCallback, IGuidedRefTargetMono, IGuidedRefMonoBehaviour, IGuidedRefObject, IGuidedRefReceiverMono
 {
 	public int ActiveTransferrableObjectIndex(int idx)
 	{
@@ -239,6 +243,14 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		}
 	}
 
+	public Photon.Realtime.Player Creator
+	{
+		get
+		{
+			return this.creator;
+		}
+	}
+
 	internal bool Initialized
 	{
 		get
@@ -288,12 +300,19 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 
 	private void EnsureInstantiatedMaterial()
 	{
-		if (this.didInstantiateMaterial)
+		if (this.myDefaultSkinMaterialInstance == null)
 		{
-			return;
+			this.myDefaultSkinMaterialInstance = Object.Instantiate<Material>(this.materialsToChangeTo[0]);
+			this.materialsToChangeTo[0] = this.myDefaultSkinMaterialInstance;
 		}
-		this.materialsToChangeTo[0] = Object.Instantiate<Material>(this.materialsToChangeTo[0]);
-		this.didInstantiateMaterial = true;
+	}
+
+	private void ApplyColorCode()
+	{
+		float @float = PlayerPrefs.GetFloat("redValue", 0.16f);
+		float float2 = PlayerPrefs.GetFloat("greenValue", 0.16f);
+		float float3 = PlayerPrefs.GetFloat("blueValue", 0.16f);
+		GorillaTagger.Instance.UpdateColor(@float, float2, float3);
 	}
 
 	private void SharedStart()
@@ -335,6 +354,8 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		{
 			base.transform.parent = GorillaParent.instance.transform;
 		}
+		GorillaSkin.ApplyToRig(this, this.defaultSkin);
+		base.Invoke("ApplyColorCode", 1f);
 	}
 
 	private IEnumerator OccasionalUpdate()
@@ -343,9 +364,9 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		{
 			try
 			{
-				if (RoomSystem.JoinedRoom && PhotonNetwork.IsMasterClient && GameMode.ActiveNetworkHandler.IsNull())
+				if (RoomSystem.JoinedRoom && NetworkSystem.Instance.IsMasterClient && GorillaGameModes.GameMode.ActiveNetworkHandler.IsNull())
 				{
-					GameMode.LoadGameModeFromProperty();
+					GorillaGameModes.GameMode.LoadGameModeFromProperty();
 				}
 			}
 			catch
@@ -382,15 +403,15 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 			if (GorillaGameManager.instance != null)
 			{
 				this.speedArray = GorillaGameManager.instance.LocalPlayerSpeed();
-				global::GorillaLocomotion.Player.Instance.jumpMultiplier = this.speedArray[1];
-				global::GorillaLocomotion.Player.Instance.maxJumpSpeed = this.speedArray[0];
+				GorillaLocomotion.Player.Instance.jumpMultiplier = this.speedArray[1];
+				GorillaLocomotion.Player.Instance.maxJumpSpeed = this.speedArray[0];
 			}
 			else
 			{
-				global::GorillaLocomotion.Player.Instance.jumpMultiplier = 1.1f;
-				global::GorillaLocomotion.Player.Instance.maxJumpSpeed = 6.5f;
+				GorillaLocomotion.Player.Instance.jumpMultiplier = 1.1f;
+				GorillaLocomotion.Player.Instance.maxJumpSpeed = 6.5f;
 			}
-			this.scaleFactor = global::GorillaLocomotion.Player.Instance.scale;
+			this.scaleFactor = GorillaLocomotion.Player.Instance.scale;
 			base.transform.localScale = Vector3.one * this.scaleFactor;
 			base.transform.eulerAngles = new Vector3(0f, this.mainCamera.transform.rotation.eulerAngles.y, 0f);
 			this.syncPos = this.mainCamera.transform.position + this.headConstraint.rotation * this.head.trackingPositionOffset * this.scaleFactor + base.transform.rotation * this.headBodyOffset * this.scaleFactor;
@@ -408,19 +429,23 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 			{
 				this.mainSkin.enabled = OVRManager.hasInputFocus;
 			}
-			this.mainSkin.enabled = !global::GorillaLocomotion.Player.Instance.inOverlay;
+			this.mainSkin.enabled = !GorillaLocomotion.Player.Instance.inOverlay;
 			this.speakingLoudness = 0f;
 			if (this.shouldSendSpeakingLoudness && this.photonView)
 			{
 				PhotonVoiceView component = this.photonView.GetComponent<PhotonVoiceView>();
 				if (component && component.RecorderInUse)
 				{
-					MicWrapper micWrapper = component.RecorderInUse.InputSource as MicWrapper;
-					if (micWrapper != null)
+					if (this.audioDesc != component.RecorderInUse.InputSource)
+					{
+						this.audioDesc = component.RecorderInUse.InputSource;
+						this.currentMicWrapper = this.audioDesc as MicWrapper;
+					}
+					if (this.currentMicWrapper != null)
 					{
 						int num = this.replacementVoiceDetectionDelay;
 						float[] array = new float[num];
-						if (micWrapper.Mic.samples >= num && micWrapper.Mic.GetData(array, micWrapper.Mic.samples - num))
+						if (this.currentMicWrapper.Mic.samples >= num && this.currentMicWrapper.Mic.GetData(array, this.currentMicWrapper.Mic.samples - num))
 						{
 							float num2 = 0f;
 							for (int i = 0; i < num; i++)
@@ -563,52 +588,57 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		this.ClearRopeData();
 	}
 
-	void IGorillaSerializeable.OnSerializeWrite(PhotonStream stream, PhotonMessageInfo info)
+	public object OnSerializeWrite()
 	{
-		stream.SendNext(this.head.rigTarget.localRotation);
-		stream.SendNext(this.rightHand.rigTarget.localPosition);
-		stream.SendNext(this.rightHand.rigTarget.localRotation);
-		stream.SendNext(this.leftHand.rigTarget.localPosition);
-		stream.SendNext(this.leftHand.rigTarget.localRotation);
-		stream.SendNext(base.transform.position);
-		stream.SendNext(Mathf.RoundToInt(base.transform.rotation.eulerAngles.y));
-		stream.SendNext(this.ReturnHandPosition());
-		stream.SendNext(this.currentState);
-		stream.SendNext(this.remoteUseReplacementVoice);
-		stream.SendNext(this.speakingLoudness);
-		stream.SendNext(this.grabbedRopeIndex);
+		InputStruct inputStruct = default(InputStruct);
+		inputStruct.headRotation = this.head.rigTarget.localRotation;
+		inputStruct.rightHandPosition = this.rightHand.rigTarget.localPosition;
+		inputStruct.rightHandRotation = this.rightHand.rigTarget.localRotation;
+		inputStruct.leftHandPosition = this.leftHand.rigTarget.localPosition;
+		inputStruct.leftHandRotation = this.leftHand.rigTarget.localRotation;
+		inputStruct.position = base.transform.position;
+		inputStruct.roundedRotation = Mathf.RoundToInt(base.transform.rotation.eulerAngles.y);
+		inputStruct.handPosition = this.ReturnHandPosition();
+		inputStruct.state = this.currentState;
+		inputStruct.remoteUseReplacementVoice = this.remoteUseReplacementVoice;
+		inputStruct.speakingLoudness = this.speakingLoudness;
+		inputStruct.grabbedRopeIndex = this.grabbedRopeIndex;
 		if (this.grabbedRopeIndex > 0)
 		{
-			stream.SendNext(this.grabbedRopeBoneIndex);
-			stream.SendNext(this.grabbedRopeIsLeft);
-			stream.SendNext(this.grabbedRopeOffset);
+			inputStruct.ropeBoneIndex = this.grabbedRopeBoneIndex;
+			inputStruct.ropeGrabIsLeft = this.grabbedRopeIsLeft;
+			inputStruct.ropeGrabOffset = this.grabbedRopeOffset;
 		}
+		double num = NetworkSystem.Instance.SimTick / 1000.0;
+		inputStruct.serverTimeStamp = num;
+		return inputStruct;
 	}
 
-	void IGorillaSerializeable.OnSerializeRead(PhotonStream stream, PhotonMessageInfo info)
+	public void OnSerializeRead(object objectData)
 	{
-		this.head.syncRotation = this.SanitizeQuaternion((Quaternion)stream.ReceiveNext());
-		this.rightHand.syncPos = this.SanitizeVector3((Vector3)stream.ReceiveNext());
-		this.rightHand.syncRotation = this.SanitizeQuaternion((Quaternion)stream.ReceiveNext());
-		this.leftHand.syncPos = this.SanitizeVector3((Vector3)stream.ReceiveNext());
-		this.leftHand.syncRotation = this.SanitizeQuaternion((Quaternion)stream.ReceiveNext());
-		this.syncPos = this.SanitizeVector3((Vector3)stream.ReceiveNext());
-		this.syncRotation.eulerAngles = this.SanitizeVector3(new Vector3(0f, (float)((int)stream.ReceiveNext()), 0f));
-		this.handSync = (int)stream.ReceiveNext();
-		this.currentState = (TransferrableObject.PositionState)stream.ReceiveNext();
-		this.lastPosition = this.syncPos;
-		this.remoteUseReplacementVoice = (bool)stream.ReceiveNext();
-		this.speakingLoudness = (float)stream.ReceiveNext();
+		InputStruct inputStruct = (InputStruct)objectData;
+		this.head.syncRotation = this.SanitizeQuaternion(inputStruct.headRotation);
+		this.rightHand.syncPos = this.SanitizeVector3(inputStruct.rightHandPosition);
+		this.rightHand.syncRotation = this.SanitizeQuaternion(inputStruct.rightHandRotation);
+		this.leftHand.syncPos = this.SanitizeVector3(inputStruct.leftHandPosition);
+		this.leftHand.syncRotation = this.SanitizeQuaternion(inputStruct.leftHandRotation);
+		this.syncPos = this.SanitizeVector3(inputStruct.position);
+		this.syncRotation.eulerAngles = this.SanitizeVector3(new Vector3(0f, (float)inputStruct.roundedRotation, 0f));
+		this.handSync = inputStruct.handPosition;
+		this.currentState = inputStruct.state;
+		this.remoteUseReplacementVoice = inputStruct.remoteUseReplacementVoice;
+		this.speakingLoudness = inputStruct.speakingLoudness;
 		this.UpdateReplacementVoice();
-		this.grabbedRopeIndex = (int)stream.ReceiveNext();
+		this.lastPosition = this.syncPos;
+		this.grabbedRopeIndex = inputStruct.grabbedRopeIndex;
 		if (this.grabbedRopeIndex > 0)
 		{
-			this.grabbedRopeBoneIndex = (int)stream.ReceiveNext();
-			this.grabbedRopeIsLeft = (bool)stream.ReceiveNext();
-			this.grabbedRopeOffset = this.SanitizeVector3((Vector3)stream.ReceiveNext());
+			this.grabbedRopeBoneIndex = inputStruct.ropeBoneIndex;
+			this.grabbedRopeIsLeft = inputStruct.ropeGrabIsLeft;
+			this.grabbedRopeOffset = this.SanitizeVector3(inputStruct.ropeGrabOffset);
 		}
 		this.UpdateRopeData();
-		this.AddVelocityToQueue(this.syncPos, info);
+		this.AddVelocityToQueue(this.syncPos, inputStruct.serverTimeStamp);
 	}
 
 	private void UpdateRopeData()
@@ -688,6 +718,7 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 
 	public void ChangeMaterialLocal(int materialIndex)
 	{
+		Debug.Log("ChangeMatLocal");
 		this.setMatIndex = materialIndex;
 		if (this.setMatIndex > -1 && this.setMatIndex < this.materialsToChangeTo.Length)
 		{
@@ -729,38 +760,59 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		}
 	}
 
-	[PunRPC]
-	public void InitializeNoobMaterial(float red, float green, float blue, bool leftHanded, PhotonMessageInfo info)
+	public void InitializeNoobMaterial(float red, float green, float blue, PhotonMessageInfoWrapped info)
 	{
 		this.IncrementRPC(info, "InitializeNoobMaterial");
-		if (info.Sender == this.photonView.Owner && (!this.initialized || (this.initialized && GorillaComputer.instance.friendJoinCollider.playerIDsCurrentlyTouching.Contains(info.Sender.UserId))))
+		NetPlayer player = NetworkSystem.Instance.GetPlayer(info.senderID);
+		Debug.Log("InitNoobMat senderID from info is " + info.senderID.ToString() + ". My ID is " + NetworkSystem.Instance.LocalPlayerID.ToString());
+		Debug.Log("Rig ID = " + NetworkSystem.Instance.GetOwningPlayerID(this.rigSerializer.gameObject).ToString());
+		string userID = NetworkSystem.Instance.GetUserID(info.senderID);
+		Debug.Log(info.senderID == NetworkSystem.Instance.GetOwningPlayerID(this.rigSerializer.gameObject));
+		Debug.Log(!this.initialized);
+		Debug.Log(GorillaComputer.instance.friendJoinCollider.playerIDsCurrentlyTouching.Contains(userID));
+		if (info.senderID == NetworkSystem.Instance.GetOwningPlayerID(this.rigSerializer.gameObject) && (!this.initialized || (this.initialized && GorillaComputer.instance.friendJoinCollider.playerIDsCurrentlyTouching.Contains(userID))))
 		{
 			this.initialized = true;
-			red = red.ClampSafe(0f, 1f);
-			green = green.ClampSafe(0f, 1f);
-			blue = blue.ClampSafe(0f, 1f);
-			this.InitializeNoobMaterialLocal(red, green, blue, leftHanded);
+			red = Mathf.Clamp(red, 0f, 1f);
+			green = Mathf.Clamp(green, 0f, 1f);
+			blue = Mathf.Clamp(blue, 0f, 1f);
+			Debug.Log(string.Concat(new string[]
+			{
+				"Setting colour values to: red - ",
+				red.ToString(),
+				", green - ",
+				green.ToString(),
+				" blue - ",
+				blue.ToString()
+			}));
+			this.InitializeNoobMaterialLocal(red, green, blue);
+			return;
 		}
-		else
-		{
-			GorillaNot.instance.SendReport("inappropriate tag data being sent init noob", info.Sender.UserId, info.Sender.NickName);
-		}
-		this.playerLeftHanded = leftHanded;
+		Debug.Log("inappropriate tag data being sent init noob");
+		GorillaNot.instance.SendReport("inappropriate tag data being sent init noob", player.UserId, player.NickName);
 	}
 
-	public void InitializeNoobMaterialLocal(float red, float green, float blue, bool leftHanded)
+	public void InitializeNoobMaterialLocal(float red, float green, float blue)
 	{
 		Color color = new Color(red, green, blue);
 		this.EnsureInstantiatedMaterial();
-		this.materialsToChangeTo[0].color = color;
-		if (this.photonView != null)
+		if (this.myDefaultSkinMaterialInstance != null)
 		{
-			this.playerText.text = this.NormalizeName(true, this.photonView.Owner.NickName);
+			color.r = Mathf.Clamp(color.r, 0.16f, 1f);
+			color.g = Mathf.Clamp(color.g, 0.16f, 1f);
+			color.b = Mathf.Clamp(color.b, 0.16f, 1f);
+			this.myDefaultSkinMaterialInstance.color = color;
+		}
+		if (this.rigSerializer != null)
+		{
+			string nickName = this.OwningNetPlayer.NickName;
+			this.playerText.text = this.NormalizeName(true, nickName);
 		}
 		else if (this.showName)
 		{
-			this.playerText.text = PlayerPrefs.GetString("playerName");
+			this.playerText.text = NetworkSystem.Instance.GetMyNickName();
 		}
+		Debug.Log("Set Color");
 		this.SetColor(color);
 	}
 
@@ -787,31 +839,31 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 
 	public void SetJumpLimitLocal(float maxJumpSpeed)
 	{
-		global::GorillaLocomotion.Player.Instance.maxJumpSpeed = maxJumpSpeed;
+		GorillaLocomotion.Player.Instance.maxJumpSpeed = maxJumpSpeed;
 	}
 
 	public void SetJumpMultiplierLocal(float jumpMultiplier)
 	{
-		global::GorillaLocomotion.Player.Instance.jumpMultiplier = jumpMultiplier;
+		GorillaLocomotion.Player.Instance.jumpMultiplier = jumpMultiplier;
 	}
 
 	[PunRPC]
-	public void RequestMaterialColor(Photon.Realtime.Player askingPlayer, bool noneBool, PhotonMessageInfo info)
+	public void RequestMaterialColor(int askingPlayerID, PhotonMessageInfoWrapped info)
 	{
+		Debug.Log("Request Mat Color from rig");
 		this.IncrementRPC(info, "RequestMaterialColor");
+		Photon.Realtime.Player playerRef = ((PunNetPlayer)NetworkSystem.Instance.GetPlayer(info.senderID)).playerRef;
 		if (this.photonView.IsMine)
 		{
-			this.photonView.RPC("InitializeNoobMaterial", info.Sender, new object[]
+			this.photonView.RPC("InitializeNoobMaterial", playerRef, new object[]
 			{
-				this.materialsToChangeTo[0].color.r,
-				this.materialsToChangeTo[0].color.g,
-				this.materialsToChangeTo[0].color.b,
-				GorillaComputer.instance.leftHanded
+				this.myDefaultSkinMaterialInstance.color.r,
+				this.myDefaultSkinMaterialInstance.color.g,
+				this.myDefaultSkinMaterialInstance.color.b
 			});
 		}
 	}
 
-	[PunRPC]
 	public void RequestCosmetics(PhotonMessageInfo info)
 	{
 		this.IncrementRPC(info, "RequestCosmetics");
@@ -856,7 +908,6 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		}
 	}
 
-	[PunRPC]
 	public void PlayDrum(int drumIndex, float drumVolume, PhotonMessageInfo info)
 	{
 		this.IncrementRPC(info, "PlayDrum");
@@ -881,7 +932,6 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		audioSource.Play();
 	}
 
-	[PunRPC]
 	public void PlaySelfOnlyInstrument(int selfOnlyIndex, int noteIndex, float instrumentVol, PhotonMessageInfo info)
 	{
 		this.IncrementRPC(info, "PlaySelfOnlyInstrument");
@@ -904,22 +954,21 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 
 	public void PlayHandTapLocal(int soundIndex, bool isLeftHand, float tapVolume)
 	{
-		if (soundIndex > -1 && soundIndex < global::GorillaLocomotion.Player.Instance.materialData.Count)
+		if (soundIndex > -1 && soundIndex < GorillaLocomotion.Player.Instance.materialData.Count)
 		{
 			if (isLeftHand)
 			{
 				this.leftHandPlayer.volume = tapVolume;
-				this.leftHandPlayer.clip = (global::GorillaLocomotion.Player.Instance.materialData[soundIndex].overrideAudio ? global::GorillaLocomotion.Player.Instance.materialData[soundIndex].audio : global::GorillaLocomotion.Player.Instance.materialData[0].audio);
+				this.leftHandPlayer.clip = (GorillaLocomotion.Player.Instance.materialData[soundIndex].overrideAudio ? GorillaLocomotion.Player.Instance.materialData[soundIndex].audio : GorillaLocomotion.Player.Instance.materialData[0].audio);
 				this.leftHandPlayer.PlayOneShot(this.leftHandPlayer.clip);
 				return;
 			}
 			this.rightHandPlayer.volume = tapVolume;
-			this.rightHandPlayer.clip = (global::GorillaLocomotion.Player.Instance.materialData[soundIndex].overrideAudio ? global::GorillaLocomotion.Player.Instance.materialData[soundIndex].audio : global::GorillaLocomotion.Player.Instance.materialData[0].audio);
+			this.rightHandPlayer.clip = (GorillaLocomotion.Player.Instance.materialData[soundIndex].overrideAudio ? GorillaLocomotion.Player.Instance.materialData[soundIndex].audio : GorillaLocomotion.Player.Instance.materialData[0].audio);
 			this.rightHandPlayer.PlayOneShot(this.rightHandPlayer.clip);
 		}
 	}
 
-	[PunRPC]
 	public void PlaySplashEffect(Vector3 splashPosition, Quaternion splashRotation, float splashScale, float boundingRadius, bool bigSplash, bool enteringWater, PhotonMessageInfo info)
 	{
 		this.IncrementRPC(info, "PlaySplashEffect");
@@ -942,9 +991,9 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 				{
 					this.splashEffectTimes[num] = time;
 					boundingRadius = Mathf.Clamp(boundingRadius, 0.0001f, 0.5f);
-					ObjectPools.instance.Instantiate(global::GorillaLocomotion.Player.Instance.waterParams.rippleEffect, splashPosition, splashRotation, global::GorillaLocomotion.Player.Instance.waterParams.rippleEffectScale * boundingRadius * 2f);
+					ObjectPools.instance.Instantiate(GorillaLocomotion.Player.Instance.waterParams.rippleEffect, splashPosition, splashRotation, GorillaLocomotion.Player.Instance.waterParams.rippleEffectScale * boundingRadius * 2f);
 					splashScale = Mathf.Clamp(splashScale, 1E-05f, 1f);
-					ObjectPools.instance.Instantiate(global::GorillaLocomotion.Player.Instance.waterParams.splashEffect, splashPosition, splashRotation, splashScale).GetComponent<WaterSplashEffect>().PlayEffect(bigSplash, enteringWater, splashScale, null);
+					ObjectPools.instance.Instantiate(GorillaLocomotion.Player.Instance.waterParams.splashEffect, splashPosition, splashRotation, splashScale).GetComponent<WaterSplashEffect>().PlayEffect(bigSplash, enteringWater, splashScale, null);
 					return;
 				}
 			}
@@ -952,6 +1001,34 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		else
 		{
 			GorillaNot.instance.SendReport("inappropriate tag data being sent splash effect", info.Sender.UserId, info.Sender.NickName);
+		}
+	}
+
+	[PunRPC]
+	public void EnableNonCosmeticHandItemRPC(bool enable, bool isLeftHand, PhotonMessageInfo info)
+	{
+		this.IncrementRPC(info, "EnableNonCosmeticHandItem");
+		if (info.Sender == this.photonView.Owner)
+		{
+			this.senderRig = GorillaGameManager.StaticFindRigForPlayer(info.Sender);
+			if (this.senderRig == null)
+			{
+				return;
+			}
+			if (isLeftHand && this.nonCosmeticLeftHandItem)
+			{
+				this.senderRig.nonCosmeticLeftHandItem.EnableItem(enable);
+				return;
+			}
+			if (!isLeftHand && this.nonCosmeticRightHandItem)
+			{
+				this.senderRig.nonCosmeticRightHandItem.EnableItem(enable);
+				return;
+			}
+		}
+		else
+		{
+			GorillaNot.instance.SendReport("inappropriate tag data being sent Enable Non Cosmetic Hand Item", info.Sender.UserId, info.Sender.NickName);
 		}
 	}
 
@@ -977,7 +1054,6 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		this.rightHandPlayer.PlayOneShot(this.rightHandPlayer.clip);
 	}
 
-	[PunRPC]
 	public void UpdateCosmetics(string[] currentItems, PhotonMessageInfo info)
 	{
 		this.IncrementRPC(info, "UpdateCosmetics");
@@ -990,7 +1066,6 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		GorillaNot.instance.SendReport("inappropriate tag data being sent update cosmetics", info.Sender.UserId, info.Sender.NickName);
 	}
 
-	[PunRPC]
 	public void UpdateCosmeticsWithTryon(string[] currentItems, string[] tryOnItems, PhotonMessageInfo info)
 	{
 		this.IncrementRPC(info, "UpdateCosmeticsWithTryon");
@@ -1137,6 +1212,14 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		return Vector3.ClampMagnitude(vec, 1000f);
 	}
 
+	private void IncrementRPC(PhotonMessageInfoWrapped info, string sourceCall)
+	{
+		if (GorillaGameManager.instance != null)
+		{
+			GorillaNot.IncrementRPCCall(info, sourceCall);
+		}
+	}
+
 	private void IncrementRPC(PhotonMessageInfo info, string sourceCall)
 	{
 		if (GorillaGameManager.instance != null)
@@ -1145,7 +1228,7 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		}
 	}
 
-	private void AddVelocityToQueue(Vector3 position, PhotonMessageInfo info)
+	private void AddVelocityToQueue(Vector3 position, double serverTime)
 	{
 		Vector3 vector;
 		if (this.velocityHistoryList.Count == 0)
@@ -1155,9 +1238,9 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		}
 		else
 		{
-			vector = (position - this.lastPosition) / (float)(info.SentServerTime - this.velocityHistoryList[0].time);
+			vector = (position - this.lastPosition) / (float)(serverTime - this.velocityHistoryList[0].time);
 		}
-		this.velocityHistoryList.Insert(0, new VRRig.VelocityTime(vector, info.SentServerTime));
+		this.velocityHistoryList.Insert(0, new VRRig.VelocityTime(vector, serverTime));
 		if (this.velocityHistoryList.Count > this.velocityHistoryMaxLength)
 		{
 			this.velocityHistoryList.RemoveRange(this.velocityHistoryMaxLength, this.velocityHistoryList.Count - this.velocityHistoryMaxLength);
@@ -1271,6 +1354,7 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 
 	private void OnDisable()
 	{
+		Debug.Log("ON DISABLE!");
 		this.initialized = false;
 		this.muted = false;
 		this.photonView = null;
@@ -1284,6 +1368,7 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 		this.ChangeMaterialLocal(this.setMatIndex);
 		this.currentCosmeticTries = 0;
 		this.creator = null;
+		Debug.Log("ON DISABLE! Finished cleanup" + (this.photonView == null).ToString());
 		try
 		{
 			CallLimitType<CallLimiter>[] callSettings = this.fxSettings.callSettings;
@@ -1301,10 +1386,9 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 	public void NetInitialize()
 	{
 		this.timeSpawned = Time.time;
-		if (PhotonNetwork.InRoom)
+		if (NetworkSystem.Instance.InRoom)
 		{
 			GorillaGameManager instance = GorillaGameManager.instance;
-			object obj;
 			if (instance != null)
 			{
 				if (instance is GorillaHuntManager || instance.GameModeName() == "HUNT")
@@ -1316,16 +1400,20 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 					this.EnableBattleCosmetics(true);
 				}
 			}
-			else if (PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue("gameMode", out obj))
+			else
 			{
-				string text = obj.ToString();
-				if (text.Contains("HUNT"))
+				string gameModeString = NetworkSystem.Instance.GameModeString;
+				if (!gameModeString.IsNullOrEmpty())
 				{
-					this.EnableHuntWatch(true);
-				}
-				else if (text.Contains("BATTLE"))
-				{
-					this.EnableBattleCosmetics(true);
+					string text = gameModeString;
+					if (text.Contains("HUNT"))
+					{
+						this.EnableHuntWatch(true);
+					}
+					else if (text.Contains("BATTLE"))
+					{
+						this.EnableBattleCosmetics(true);
+					}
 				}
 			}
 		}
@@ -1558,7 +1646,9 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 
 	public SkinnedMeshRenderer mainSkin;
 
-	public Photon.Realtime.Player myPlayer;
+	public GorillaSkin defaultSkin;
+
+	public Material myDefaultSkinMaterialInstance;
 
 	public GameObject spectatorSkin;
 
@@ -1620,7 +1710,13 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 	[NonSerialized]
 	public float HauntedRingVoicePitch;
 
+	public NonCosmeticHandItem nonCosmeticLeftHandItem;
+
+	public NonCosmeticHandItem nonCosmeticRightHandItem;
+
 	public VRRigReliableState reliableState;
+
+	internal RigContainer rigContainer;
 
 	public static readonly GTBitOps.BitWriteInfo[] WearablePackedStatesBitWriteInfos = new GTBitOps.BitWriteInfo[]
 	{
@@ -1644,6 +1740,8 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 	private Photon.Realtime.Player tempPlayer;
 
 	internal Photon.Realtime.Player creator;
+
+	internal NetPlayer creatorWrapped;
 
 	private VRRig tempRig;
 
@@ -1695,8 +1793,6 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 
 	public Slingshot slingshot;
 
-	public bool playerLeftHanded;
-
 	public Slingshot.SlingshotState slingshotState;
 
 	private PhotonVoiceView myPhotonVoiceView;
@@ -1725,6 +1821,10 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 
 	public bool localUseReplacementVoice;
 
+	private MicWrapper currentMicWrapper;
+
+	private IAudioDesc audioDesc;
+
 	private float speakingLoudness;
 
 	public bool shouldSendSpeakingLoudness = true;
@@ -1737,16 +1837,21 @@ public class VRRig : MonoBehaviour, IGorillaSerializeable, IPreDisable, IUserCos
 	internal PhotonView photonView;
 
 	[SerializeField]
+	internal VRRigSerializer rigSerializer;
+
+	public NetPlayer OwningNetPlayer;
+
+	[SerializeField]
 	private FXSystemSettings sharedFXSettings;
 
 	[NonSerialized]
 	public FXSystemSettings fxSettings;
 
-	private bool didInstantiateMaterial;
-
 	private bool playerWasHaunted;
 
 	private float nonHauntedVolume;
+
+	private int count;
 
 	public Color playerColor;
 

@@ -79,9 +79,9 @@ namespace GorillaNetworking
 			return new ValueTuple<CreditsSection, int>(this.creditsSections.First<CreditsSection>(), 0);
 		}
 
-		public void ProcessButtonPress(GorillaKeyboardButton buttonPressed)
+		public void ProcessButtonPress(GorillaKeyboardBindings buttonPressed)
 		{
-			if (buttonPressed.characterString == "enter")
+			if (buttonPressed == GorillaKeyboardBindings.enter)
 			{
 				this.currentPage++;
 				this.currentPage %= this.TotalPages;

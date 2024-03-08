@@ -459,6 +459,7 @@ namespace GorillaLocomotion
 			}
 			this.handleClimbing(Time.fixedDeltaTime);
 			this.stuckHandsCheckFixedUpdate();
+			this.FixedUpdate_HandHolds(Time.fixedDeltaTime);
 		}
 
 		private void BodyCollider()
@@ -609,10 +610,10 @@ namespace GorillaLocomotion
 				base.transform.position = base.transform.position + this.slideAverage * this.calcDeltaTime;
 				this.slideAverage += 9.8f * Vector3.down * this.calcDeltaTime * this.scale;
 			}
-			this.FirstHandIteration(this.leftControllerTransform, this.leftHandOffset, this.GetLastLeftHandPosition(), this.wasLeftHandSlide, this.wasLeftHandTouching, out this.leftHandPushDisplacement, ref this.leftHandSlipPercentage, ref this.leftHandSlide, ref this.leftHandSlideNormal, ref this.leftHandColliding, ref this.leftHandMaterialTouchIndex, ref this.leftHandSurfaceOverride);
+			this.FirstHandIteration(this.leftControllerTransform, this.leftHandOffset, this.GetLastLeftHandPosition(), this.wasLeftHandSlide, this.wasLeftHandTouching, out this.leftHandPushDisplacement, ref this.leftHandSlipPercentage, ref this.leftHandSlide, ref this.leftHandSlideNormal, ref this.leftHandColliding, ref this.leftHandMaterialTouchIndex, ref this.leftHandSurfaceOverride, this.leftHandHolding);
 			this.leftHandColliding = this.leftHandColliding && this.controllerState.LeftValid;
 			this.leftHandSlide = this.leftHandSlide && this.controllerState.LeftValid;
-			this.FirstHandIteration(this.rightControllerTransform, this.rightHandOffset, this.GetLastRightHandPosition(), this.wasRightHandSlide, this.wasRightHandTouching, out this.rightHandPushDisplacement, ref this.rightHandSlipPercentage, ref this.rightHandSlide, ref this.rightHandSlideNormal, ref this.rightHandColliding, ref this.rightHandMaterialTouchIndex, ref this.rightHandSurfaceOverride);
+			this.FirstHandIteration(this.rightControllerTransform, this.rightHandOffset, this.GetLastRightHandPosition(), this.wasRightHandSlide, this.wasRightHandTouching, out this.rightHandPushDisplacement, ref this.rightHandSlipPercentage, ref this.rightHandSlide, ref this.rightHandSlideNormal, ref this.rightHandColliding, ref this.rightHandMaterialTouchIndex, ref this.rightHandSurfaceOverride, this.rightHandHolding);
 			this.rightHandColliding = this.rightHandColliding && this.controllerState.RightValid;
 			this.rightHandSlide = this.rightHandSlide && this.controllerState.RightValid;
 			this.touchPoints = 0;
@@ -654,10 +655,10 @@ namespace GorillaLocomotion
 			}
 			this.lastHeadPosition = this.headCollider.transform.position;
 			this.areBothTouching = (!this.leftHandColliding && !this.wasLeftHandTouching) || (!this.rightHandColliding && !this.wasRightHandTouching);
-			Vector3 vector2 = this.FinalHandPosition(this.leftControllerTransform, this.leftHandOffset, this.GetLastLeftHandPosition(), this.areBothTouching, this.leftHandColliding, out this.leftHandColliding, this.leftHandSlide, out this.leftHandSlide, this.leftHandMaterialTouchIndex, out this.leftHandMaterialTouchIndex, this.leftHandSurfaceOverride, out this.leftHandSurfaceOverride);
+			Vector3 vector2 = this.FinalHandPosition(this.leftControllerTransform, this.leftHandOffset, this.GetLastLeftHandPosition(), this.areBothTouching, this.leftHandColliding, out this.leftHandColliding, this.leftHandSlide, out this.leftHandSlide, this.leftHandMaterialTouchIndex, out this.leftHandMaterialTouchIndex, this.leftHandSurfaceOverride, out this.leftHandSurfaceOverride, this.leftHandHolding);
 			this.leftHandColliding = this.leftHandColliding && this.controllerState.LeftValid;
 			this.leftHandSlide = this.leftHandSlide && this.controllerState.LeftValid;
-			Vector3 vector3 = this.FinalHandPosition(this.rightControllerTransform, this.rightHandOffset, this.GetLastRightHandPosition(), this.areBothTouching, this.rightHandColliding, out this.rightHandColliding, this.rightHandSlide, out this.rightHandSlide, this.rightHandMaterialTouchIndex, out this.rightHandMaterialTouchIndex, this.rightHandSurfaceOverride, out this.rightHandSurfaceOverride);
+			Vector3 vector3 = this.FinalHandPosition(this.rightControllerTransform, this.rightHandOffset, this.GetLastRightHandPosition(), this.areBothTouching, this.rightHandColliding, out this.rightHandColliding, this.rightHandSlide, out this.rightHandSlide, this.rightHandMaterialTouchIndex, out this.rightHandMaterialTouchIndex, this.rightHandSurfaceOverride, out this.rightHandSurfaceOverride, this.rightHandHolding);
 			this.rightHandColliding = this.rightHandColliding && this.controllerState.RightValid;
 			this.rightHandSlide = this.rightHandSlide && this.controllerState.RightValid;
 			this.StoreVelocities();
@@ -893,7 +894,7 @@ namespace GorillaLocomotion
 			}
 		}
 
-		private Vector3 FirstHandIteration(Transform handTransform, Vector3 handOffset, Vector3 lastHandPosition, bool wasHandSlide, bool wasHandTouching, out Vector3 pushDisplacement, ref float handSlipPercentage, ref bool handSlide, ref Vector3 slideNormal, ref bool handColliding, ref int materialTouchIndex, ref GorillaSurfaceOverride touchedOverride)
+		private Vector3 FirstHandIteration(Transform handTransform, Vector3 handOffset, Vector3 lastHandPosition, bool wasHandSlide, bool wasHandTouching, out Vector3 pushDisplacement, ref float handSlipPercentage, ref bool handSlide, ref Vector3 slideNormal, ref bool handColliding, ref int materialTouchIndex, ref GorillaSurfaceOverride touchedOverride, bool skipCollisionChecks)
 		{
 			Vector3 currentHandPosition = this.GetCurrentHandPosition(handTransform, handOffset);
 			Vector3 vector = currentHandPosition;
@@ -902,7 +903,7 @@ namespace GorillaLocomotion
 			{
 				this.distanceTraveled += Vector3.Project(-this.slideAverageNormal * this.stickDepth * this.scale, Vector3.down);
 			}
-			if (this.IterativeCollisionSphereCast(lastHandPosition, this.minimumRaycastDistance * this.scale, this.distanceTraveled, out this.finalPosition, true, out this.slipPercentage, out this.tempHitInfo, false) && !this.InReportMenu)
+			if (this.IterativeCollisionSphereCast(lastHandPosition, this.minimumRaycastDistance * this.scale, this.distanceTraveled, out this.finalPosition, true, out this.slipPercentage, out this.tempHitInfo, false) && !skipCollisionChecks && !this.InReportMenu)
 			{
 				if (wasHandTouching && this.slipPercentage <= this.defaultSlideFactor)
 				{
@@ -934,14 +935,14 @@ namespace GorillaLocomotion
 			return vector;
 		}
 
-		private Vector3 FinalHandPosition(Transform handTransform, Vector3 handOffset, Vector3 lastHandPosition, bool bothTouching, bool isHandTouching, out bool handColliding, bool isHandSlide, out bool handSlide, int currentMaterialTouchIndex, out int materialTouchIndex, GorillaSurfaceOverride currentSurface, out GorillaSurfaceOverride touchedOverride)
+		private Vector3 FinalHandPosition(Transform handTransform, Vector3 handOffset, Vector3 lastHandPosition, bool bothTouching, bool isHandTouching, out bool handColliding, bool isHandSlide, out bool handSlide, int currentMaterialTouchIndex, out int materialTouchIndex, GorillaSurfaceOverride currentSurface, out GorillaSurfaceOverride touchedOverride, bool skipCollisionChecks)
 		{
 			handColliding = isHandTouching;
 			handSlide = isHandSlide;
 			materialTouchIndex = currentMaterialTouchIndex;
 			touchedOverride = currentSurface;
 			this.distanceTraveled = this.GetCurrentHandPosition(handTransform, handOffset) - lastHandPosition;
-			if (this.IterativeCollisionSphereCast(lastHandPosition, this.minimumRaycastDistance * this.scale, this.distanceTraveled, out this.finalPosition, bothTouching, out this.slipPercentage, out this.junkHit, false))
+			if (this.IterativeCollisionSphereCast(lastHandPosition, this.minimumRaycastDistance * this.scale, this.distanceTraveled, out this.finalPosition, bothTouching, out this.slipPercentage, out this.junkHit, false) && !skipCollisionChecks)
 			{
 				handColliding = true;
 				handSlide = this.slipPercentage > this.iceThreshold;
@@ -1182,7 +1183,18 @@ namespace GorillaLocomotion
 
 		public void Turn(float degrees)
 		{
-			this.turnParent.transform.RotateAround(this.headCollider.transform.position, base.transform.up, degrees);
+			Vector3 vector = this.headCollider.transform.position;
+			bool flag = this.rightHandColliding || this.rightHandHolding;
+			bool flag2 = this.leftHandColliding || this.leftHandHolding;
+			if (flag != flag2 && flag)
+			{
+				vector = this.rightControllerTransform.position;
+			}
+			if (flag != flag2 && flag2)
+			{
+				vector = this.leftControllerTransform.position;
+			}
+			this.turnParent.transform.RotateAround(vector, base.transform.up, degrees);
 			this.degreesTurnedThisFrame = degrees;
 			this.denormalizedVelocityAverage = Vector3.zero;
 			for (int i = 0; i < this.velocityHistory.Length; i++)
@@ -1656,6 +1668,81 @@ namespace GorillaLocomotion
 			return false;
 		}
 
+		internal void AddHandHold(Transform handHold, Transform grabber, bool rightHand, bool rotatePlayerWhenHeld, out Vector3 grabbedVelocity)
+		{
+			grabbedVelocity = Vector3.zero;
+			if (this.handHolds.Count == 0)
+			{
+				grabbedVelocity = -this.bodyCollider.attachedRigidbody.velocity;
+				this.playerRigidBody.AddForce(grabbedVelocity, ForceMode.VelocityChange);
+			}
+			this.handHoldGrabbers[handHold] = grabber;
+			this.attachedPosition[grabber] = grabber.transform.position;
+			this.attachedPrevPosition[grabber] = this.attachedPosition[grabber];
+			if (!this.handHolds.Contains(handHold))
+			{
+				this.handHolds.Add(handHold);
+				this.handHoldPositions[handHold] = handHold.transform.position;
+				this.handHoldVelocities[handHold] = Vector3.zero;
+				if (rotatePlayerWhenHeld)
+				{
+					this.handHoldRotations[handHold] = handHold.transform.rotation;
+				}
+			}
+			if (rightHand)
+			{
+				this.rightHandHolding = true;
+				return;
+			}
+			this.leftHandHolding = true;
+		}
+
+		internal void RemoveHandHold(Transform handHold, bool rightHand)
+		{
+			this.handHoldVelocities.Remove(handHold);
+			this.handHoldPositions.Remove(handHold);
+			this.handHoldGrabbers.Remove(handHold);
+			this.handHoldRotations.Remove(handHold);
+			this.handHolds.Remove(handHold);
+			if (rightHand)
+			{
+				this.rightHandHolding = false;
+			}
+			else
+			{
+				this.leftHandHolding = false;
+			}
+			if (this.handHolds.Count == 0)
+			{
+				this.attachedPosition.Clear();
+				this.attachedPrevPosition.Clear();
+			}
+		}
+
+		private void FixedUpdate_HandHolds(float timeDelta)
+		{
+			if (this.handHolds.Count > 0)
+			{
+				Vector3 vector = Vector3.zero;
+				Transform transform = this.handHolds[this.handHolds.Count - 1];
+				Vector3 vector2 = (transform.transform.position - this.handHoldPositions[transform]) / timeDelta;
+				Vector3 vector3 = vector2 - this.handHoldVelocities[transform] / timeDelta;
+				this.handHoldPositions[transform] = transform.transform.position;
+				this.handHoldVelocities[transform] = vector2;
+				vector += vector2 - vector3 * Mathf.Pow(timeDelta, 2.3f);
+				if (this.handHoldRotations.ContainsKey(transform))
+				{
+					this.Turn(-(this.handHoldRotations[transform] * Quaternion.Inverse(transform.transform.rotation)).eulerAngles.y);
+					this.handHoldRotations[transform] = transform.transform.rotation;
+				}
+				this.attachedPosition[this.handHoldGrabbers[transform]] = this.handHoldGrabbers[transform].transform.position;
+				Vector3 vector4 = (this.attachedPosition[this.handHoldGrabbers[transform]] - this.attachedPrevPosition[this.handHoldGrabbers[transform]]) / timeDelta;
+				this.attachedPrevPosition[this.handHoldGrabbers[transform]] = this.attachedPosition[this.handHoldGrabbers[transform]];
+				vector -= vector4;
+				this.playerRigidBody.AddForce(vector - Physics.gravity * timeDelta, ForceMode.VelocityChange);
+			}
+		}
+
 		[CompilerGenerated]
 		internal static void <BeginClimbing>g__SnapAxis|259_0(ref float val, float maxDist)
 		{
@@ -2078,6 +2165,26 @@ namespace GorillaLocomotion
 		private bool stuckRight;
 
 		private float lastScale;
+
+		private const float ACCELERATION_HELPER_CURVE = 2.3f;
+
+		private List<Transform> handHolds = new List<Transform>();
+
+		private Dictionary<Transform, Transform> handHoldGrabbers = new Dictionary<Transform, Transform>();
+
+		private Dictionary<Transform, Vector3> handHoldPositions = new Dictionary<Transform, Vector3>();
+
+		private Dictionary<Transform, Quaternion> handHoldRotations = new Dictionary<Transform, Quaternion>();
+
+		private Dictionary<Transform, Vector3> handHoldVelocities = new Dictionary<Transform, Vector3>();
+
+		private Dictionary<Transform, Vector3> attachedPosition = new Dictionary<Transform, Vector3>();
+
+		private Dictionary<Transform, Vector3> attachedPrevPosition = new Dictionary<Transform, Vector3>();
+
+		private bool rightHandHolding;
+
+		private bool leftHandHolding;
 
 		[Serializable]
 		public struct MaterialData

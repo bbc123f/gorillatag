@@ -12,8 +12,11 @@ namespace NetSynchrony
 			{
 				return;
 			}
-			GorillaComputer instance = GorillaComputer.instance;
-			instance.OnServerTimeUpdated = (Action)Delegate.Remove(instance.OnServerTimeUpdated, new Action(this.OnTimeChanged));
+			if (GorillaComputer.instance != null)
+			{
+				GorillaComputer instance = GorillaComputer.instance;
+				instance.OnServerTimeUpdated = (Action)Delegate.Remove(instance.OnServerTimeUpdated, new Action(this.OnTimeChanged));
+			}
 		}
 
 		private void OnTimeChanged()
@@ -21,7 +24,7 @@ namespace NetSynchrony
 			this.AdjustedServerTime();
 			for (int i = 0; i < this.randomDispatchers.Length; i++)
 			{
-				this.randomDispatchers[i].Sync((float)this.serverTime);
+				this.randomDispatchers[i].Sync(this.serverTime);
 			}
 		}
 
@@ -38,7 +41,7 @@ namespace NetSynchrony
 			instance.OnServerTimeUpdated = (Action)Delegate.Combine(instance.OnServerTimeUpdated, new Action(this.OnTimeChanged));
 			for (int i = 0; i < this.randomDispatchers.Length; i++)
 			{
-				this.randomDispatchers[i].Init((float)this.serverTime);
+				this.randomDispatchers[i].Init(this.serverTime);
 			}
 		}
 
@@ -46,7 +49,7 @@ namespace NetSynchrony
 		{
 			for (int i = 0; i < this.randomDispatchers.Length; i++)
 			{
-				this.randomDispatchers[i].Tick((float)this.serverTime);
+				this.randomDispatchers[i].Tick(this.serverTime);
 			}
 			this.serverTime += (double)Time.deltaTime;
 		}

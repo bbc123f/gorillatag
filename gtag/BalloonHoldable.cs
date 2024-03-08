@@ -29,7 +29,7 @@ public class BalloonHoldable : TransferrableObject, IFXContext
 		this.EnableDynamics(false, false);
 		this.mesh.enabled = true;
 		this.lineRenderer.enabled = false;
-		if (PhotonNetwork.InRoom)
+		if (NetworkSystem.Instance.InRoom)
 		{
 			if (this.worldShareableInstance != null)
 			{
@@ -140,7 +140,7 @@ public class BalloonHoldable : TransferrableObject, IFXContext
 		{
 			flag = true;
 		}
-		else if (PhotonNetwork.InRoom && this.worldShareableInstance != null)
+		else if (NetworkSystem.Instance.InRoom && this.worldShareableInstance != null)
 		{
 			PhotonView photonView = PhotonView.Get(this.worldShareableInstance.gameObject);
 			if (photonView != null && !photonView.IsMine)
@@ -164,7 +164,7 @@ public class BalloonHoldable : TransferrableObject, IFXContext
 		{
 			this.gripInteractor.gameObject.SetActive(false);
 		}
-		if ((object.Equals(this.originalOwner, PhotonNetwork.LocalPlayer) || !PhotonNetwork.InRoom) && PhotonNetwork.InRoom && this.worldShareableInstance != null && !this.worldShareableInstance.guard.isTrulyMine)
+		if ((object.Equals(this.originalOwner, PhotonNetwork.LocalPlayer) || !NetworkSystem.Instance.InRoom) && NetworkSystem.Instance.InRoom && this.worldShareableInstance != null && !this.worldShareableInstance.guard.isTrulyMine)
 		{
 			this.worldShareableInstance.guard.RequestOwnershipImmediatelyWithGuaranteedAuthority();
 		}
@@ -261,7 +261,7 @@ public class BalloonHoldable : TransferrableObject, IFXContext
 			}
 			break;
 		case BalloonHoldable.BalloonStates.WaitForOwnershipTransfer:
-			if (!PhotonNetwork.InRoom)
+			if (!NetworkSystem.Instance.InRoom)
 			{
 				this.balloonState = BalloonHoldable.BalloonStates.WaitForReDock;
 				base.ReDock();
@@ -413,7 +413,7 @@ public class BalloonHoldable : TransferrableObject, IFXContext
 				}
 			}
 		}
-		if (!PhotonNetwork.InRoom)
+		if (!NetworkSystem.Instance.InRoom)
 		{
 			return;
 		}
@@ -446,7 +446,7 @@ public class BalloonHoldable : TransferrableObject, IFXContext
 		{
 			return;
 		}
-		if (!PhotonNetwork.InRoom)
+		if (!NetworkSystem.Instance.InRoom)
 		{
 			this.OwnerPopBalloon();
 			return;

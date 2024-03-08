@@ -61,6 +61,10 @@ public class SynchedMusicController : MonoBehaviour
 				this.audioSource.Play();
 			}
 		}
+		if (GorillaComputer.instance == null)
+		{
+			return;
+		}
 		if (GorillaComputer.instance.startupMillis != 0L)
 		{
 			if (this.totalLoopTime == 0L || this.songStartTimes.Length == 0)

@@ -2,53 +2,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using ExitGames.Client.Photon;
+using Fusion;
+using GorillaGameModes;
 using GorillaLocomotion;
-using GorillaTag;
-using Oculus.Platform;
-using Oculus.Platform.Models;
 using Photon.Pun;
-using Photon.Realtime;
-using Photon.Voice.PUN;
 using PlayFab;
-using PlayFab.ClientModels;
 using UnityEngine;
+using WebSocketSharp;
 
 namespace GorillaNetworking
 {
-	public class PhotonNetworkController : MonoBehaviourPunCallbacks, IConnectionCallbacks
+	public class PhotonNetworkController : MonoBehaviour
 	{
-		public string GameVersionType
-		{
-			get
-			{
-				return this.gameVersionType;
-			}
-		}
-
-		public int GameMajorVersion
-		{
-			get
-			{
-				return this.majorVersion;
-			}
-		}
-
-		public int GameMinorVersion
-		{
-			get
-			{
-				return this.minorVersion;
-			}
-		}
-
-		public int GameMinorVersion2
-		{
-			get
-			{
-				return this.minorVersion2;
-			}
-		}
-
 		public string StartLevel
 		{
 			get
@@ -73,41 +38,20 @@ namespace GorillaNetworking
 			}
 		}
 
-		public string GameVersionString
+		public GorillaGeoHideShowTrigger StartGeoTrigger
 		{
 			get
 			{
-				return this._gameVersionString;
+				return this.startGeoTrigger;
 			}
 			set
 			{
-				this._gameVersionString = "MODDED";
+				this.startGeoTrigger = value;
 			}
-		}
-
-		public void FullDisconnect()
-		{
-			this.currentState = PhotonNetworkController.ConnectionState.Initialization;
-			PhotonNetwork.Disconnect();
-		}
-
-		public void InitiateConnection()
-		{
-			this.ProcessState(PhotonNetworkController.ConnectionEvent.InitialConnection);
 		}
 
 		public void Awake()
 		{
-			this._gameVersionString = string.Concat(new string[]
-			{
-				this.gameVersionType,
-				".",
-				this.majorVersion.ToString(),
-				".",
-				this.minorVersion.ToString(),
-				".",
-				this.minorVersion2.ToString()
-			});
 			if (PhotonNetworkController.Instance == null)
 			{
 				PhotonNetworkController.Instance = this;
@@ -117,26 +61,15 @@ namespace GorillaNetworking
 				Object.Destroy(base.gameObject);
 			}
 			this.updatedName = false;
-			this.roomCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789";
 			this.playersInRegion = new int[this.serverRegions.Length];
 			this.pingInRegion = new int[this.serverRegions.Length];
-			this.currentState = PhotonNetworkController.ConnectionState.Initialization;
-		}
-
-		public override void OnCustomAuthenticationFailed(string debugMessage)
-		{
-			this.retry = true;
-			if (this.timeToRetryWithBackoff < 1f)
-			{
-				this.timeToRetryWithBackoff = 1f;
-			}
-			Debug.Log("auth failed, backing off connecting, with message: " + debugMessage);
 		}
 
 		public void Start()
 		{
 			base.StartCoroutine(this.DisableOnStart());
-			PhotonNetwork.EnableCloseConnection = false;
+			NetworkSystem.Instance.OnMultiplayerStarted += this.OnJoinedRoom;
+			NetworkSystem.Instance.OnReturnedToSinglePlayer += this.OnDisconnected;
 			PhotonNetwork.NetworkingClient.LoadBalancingPeer.ReuseEventInstance = true;
 		}
 
@@ -148,13 +81,13 @@ namespace GorillaNetworking
 
 		public void FixedUpdate()
 		{
-			this.headRightHandDistance = (global::GorillaLocomotion.Player.Instance.headCollider.transform.position - global::GorillaLocomotion.Player.Instance.rightControllerTransform.position).magnitude;
-			this.headLeftHandDistance = (global::GorillaLocomotion.Player.Instance.headCollider.transform.position - global::GorillaLocomotion.Player.Instance.leftControllerTransform.position).magnitude;
-			this.headQuat = global::GorillaLocomotion.Player.Instance.headCollider.transform.rotation;
+			this.headRightHandDistance = (Player.Instance.headCollider.transform.position - Player.Instance.rightControllerTransform.position).magnitude;
+			this.headLeftHandDistance = (Player.Instance.headCollider.transform.position - Player.Instance.leftControllerTransform.position).magnitude;
+			this.headQuat = Player.Instance.headCollider.transform.rotation;
 			if (!this.disableAFKKick && Quaternion.Angle(this.headQuat, this.lastHeadQuat) <= 0.01f && Mathf.Abs(this.headRightHandDistance - this.lastHeadRightHandDistance) < 0.001f && Mathf.Abs(this.headLeftHandDistance - this.lastHeadLeftHandDistance) < 0.001f && this.pauseTime + this.disconnectTime < Time.realtimeSinceStartup)
 			{
 				this.pauseTime = Time.realtimeSinceStartup;
-				this.ProcessState(PhotonNetworkController.ConnectionEvent.Disconnect);
+				NetworkSystem.Instance.ReturnToSinglePlayer();
 			}
 			else if (Quaternion.Angle(this.headQuat, this.lastHeadQuat) > 0.01f || Mathf.Abs(this.headRightHandDistance - this.lastHeadRightHandDistance) >= 0.001f || Mathf.Abs(this.headLeftHandDistance - this.lastHeadLeftHandDistance) >= 0.001f)
 			{
@@ -165,580 +98,93 @@ namespace GorillaNetworking
 			this.lastHeadQuat = this.headQuat;
 		}
 
-		private void ProcessInitializationState(PhotonNetworkController.ConnectionEvent connectionEvent)
+		public void AttemptToJoinPublicRoom(GorillaNetworkJoinTrigger triggeredTrigger, bool joinWithFriends = false)
 		{
-			if (connectionEvent == PhotonNetworkController.ConnectionEvent.InitialConnection)
+			if (NetworkSystem.Instance.netState == NetSystemState.Connecting || NetworkSystem.Instance.netState == NetSystemState.Disconnecting)
 			{
-				PhotonNetwork.PhotonServerSettings.AppSettings.AppVersion = this.GameVersionString;
-				this.currentRegionIndex = 0;
-				if (PlayerPrefs.GetString("playerName") != "")
+				Debug.Log("Cant join Public room, Still connecting or disconnecting");
+				return;
+			}
+			Debug.Log("Attempting To Join public room.");
+			Debug.Log("Joining with friends: " + joinWithFriends.ToString());
+			if (this.joiningWithFriend)
+			{
+				string text = "Joining with: ";
+				foreach (string text2 in this.friendIDList)
 				{
-					PhotonNetwork.LocalPlayer.NickName = PlayerPrefs.GetString("playerName");
+					text = text + text2 + ", ";
 				}
-				else
-				{
-					PhotonNetwork.LocalPlayer.NickName = "gorilla" + Random.Range(0, 9999).ToString().PadLeft(4, '0');
-				}
-				PhotonNetwork.AutomaticallySyncScene = false;
-				this.currentState = PhotonNetworkController.ConnectionState.DeterminingPingsAndPlayerCount;
-				this.ConnectToRegion(this.serverRegions[this.currentRegionIndex]);
-				return;
+				Debug.Log(text);
 			}
-			this.InvalidState(connectionEvent);
-		}
-
-		private void ProcessDeterminingPingsAndPlayerCountState(PhotonNetworkController.ConnectionEvent connectionEvent)
-		{
-			if (connectionEvent == PhotonNetworkController.ConnectionEvent.OnConnectedToMaster)
+			if (NetworkSystem.Instance.InRoom && !joinWithFriends)
 			{
-				int ping = PhotonNetwork.GetPing();
-				Debug.Log(string.Concat(new string[]
+				if (NetworkSystem.Instance.SessionIsPrivate)
 				{
-					"current ping is ",
-					ping.ToString(),
-					" on region ",
-					this.serverRegions[this.currentRegionIndex],
-					". player count is ",
-					PhotonNetwork.CountOfPlayers.ToString()
-				}));
-				GorillaComputer.instance.screenChanged = true;
-				this.playersInRegion[this.currentRegionIndex] = PhotonNetwork.CountOfPlayers;
-				this.pingInRegion[this.currentRegionIndex] = ping;
-				PhotonNetwork.Disconnect();
-				return;
-			}
-			if (connectionEvent != PhotonNetworkController.ConnectionEvent.OnDisconnected)
-			{
-				this.InvalidState(connectionEvent);
-				return;
-			}
-			this.currentRegionIndex++;
-			if (this.currentRegionIndex >= this.serverRegions.Length)
-			{
-				Debug.Log("checked all servers. connecting to server with best ping: " + this.GetRegionWithLowestPing());
-				this.currentState = PhotonNetworkController.ConnectionState.ConnectedAndWaiting;
-				GorillaComputer.instance.screenChanged = true;
-				if (this.currentJoinTrigger != null)
-				{
-					this.AttemptToJoinPublicRoom(this.currentJoinTrigger);
-				}
-				this.ConnectToRegion(this.GetRegionWithLowestPing());
-				return;
-			}
-			Debug.Log("checking next region");
-			this.ConnectToRegion(this.serverRegions[this.currentRegionIndex]);
-		}
-
-		private void ProcessConnectedAndWaitingState(PhotonNetworkController.ConnectionEvent connectionEvent)
-		{
-			switch (connectionEvent)
-			{
-			case PhotonNetworkController.ConnectionEvent.AttemptJoinPublicRoom:
-				this.currentState = PhotonNetworkController.ConnectionState.JoiningPublicRoom;
-				this.ProcessState(PhotonNetworkController.ConnectionEvent.AttemptJoinPublicRoom);
-				return;
-			case PhotonNetworkController.ConnectionEvent.AttemptJoinSpecificRoom:
-				this.currentState = PhotonNetworkController.ConnectionState.JoiningSpecificRoom;
-				this.ProcessState(PhotonNetworkController.ConnectionEvent.AttemptJoinSpecificRoom);
-				return;
-			case PhotonNetworkController.ConnectionEvent.AttemptToCreateRoom:
-				break;
-			case PhotonNetworkController.ConnectionEvent.Disconnect:
-				PhotonNetwork.Disconnect();
-				return;
-			default:
-				if (connectionEvent == PhotonNetworkController.ConnectionEvent.OnDisconnected)
-				{
-					Debug.Log("not sure what happened, reconnecting to region with best ping");
-					this.retry = true;
-					this.ConnectToRegion(this.GetRegionWithLowestPing());
+					Debug.Log("In a private room, dont want to join a pub.");
 					return;
 				}
-				break;
-			}
-			this.InvalidState(connectionEvent);
-		}
-
-		private void ProcessDisconnectingFromRoomState(PhotonNetworkController.ConnectionEvent connectionEvent)
-		{
-			if (connectionEvent == PhotonNetworkController.ConnectionEvent.OnConnectedToMaster)
-			{
-				Debug.Log("successfully reconnected to master. waiting on what to do next.");
-				this.currentState = PhotonNetworkController.ConnectionState.ConnectedAndWaiting;
-				return;
-			}
-			if (connectionEvent == PhotonNetworkController.ConnectionEvent.Disconnect)
-			{
-				PhotonNetwork.Disconnect();
-				return;
-			}
-			if (connectionEvent != PhotonNetworkController.ConnectionEvent.OnDisconnected)
-			{
-				this.InvalidState(connectionEvent);
-				return;
-			}
-			Debug.Log("just disconnected while trying to disconnect. attempting to reconnect to best region.");
-			this.currentState = PhotonNetworkController.ConnectionState.ConnectedAndWaiting;
-			this.ConnectToRegion(this.GetRegionWithLowestPing());
-		}
-
-		private void ProcessJoiningPublicRoomState(PhotonNetworkController.ConnectionEvent connectionEvent)
-		{
-			switch (connectionEvent)
-			{
-			case PhotonNetworkController.ConnectionEvent.OnConnectedToMaster:
-				this.JoinPublicRoom(this.joiningWithFriend);
-				return;
-			case PhotonNetworkController.ConnectionEvent.AttemptJoinPublicRoom:
-				if (!this.pastFirstConnection)
+				Debug.Log("Current gamemode string is: " + NetworkSystem.Instance.GameModeString);
+				Debug.Log("Triggered gamemode is " + triggeredTrigger.gameModeName);
+				if (NetworkSystem.Instance.GameModeString.Contains(triggeredTrigger.gameModeName))
 				{
-					this.JoinPublicRoom(this.joiningWithFriend);
+					Debug.Log("Already in triggered gamemode, staying in current room");
 					return;
 				}
-				PhotonNetwork.Disconnect();
-				return;
-			case PhotonNetworkController.ConnectionEvent.AttemptJoinSpecificRoom:
-				this.JoinSpecificRoom();
-				return;
-			case PhotonNetworkController.ConnectionEvent.Disconnect:
-				this.DisconnectFromRoom(PhotonNetworkController.ConnectionState.DisconnectingFromRoom);
-				return;
-			case PhotonNetworkController.ConnectionEvent.OnJoinedRoom:
-				this.pastFirstConnection = true;
-				this.currentJoinTrigger.UpdateScreens();
-				this.currentState = PhotonNetworkController.ConnectionState.InPublicRoom;
-				return;
-			case PhotonNetworkController.ConnectionEvent.OnJoinRandomFailed:
-				this.CreatePublicRoom(this.joiningWithFriend);
-				return;
-			case PhotonNetworkController.ConnectionEvent.OnCreateRoomFailed:
-				this.CreatePublicRoom(this.joiningWithFriend);
-				return;
-			case PhotonNetworkController.ConnectionEvent.OnDisconnected:
-				if (!this.joiningWithFriend)
-				{
-					if (!this.pastFirstConnection)
-					{
-						this.pastFirstConnection = true;
-						PhotonNetwork.PhotonServerSettings.AppSettings.FixedRegion = this.GetRegionWithLowestPing();
-					}
-					else
-					{
-						float value = Random.value;
-						int num = 0;
-						for (int i = 0; i < this.playersInRegion.Length; i++)
-						{
-							num += this.playersInRegion[i];
-						}
-						float num2 = 0f;
-						int num3 = -1;
-						while (num2 < value && num3 < this.playersInRegion.Length - 1)
-						{
-							num3++;
-							num2 += (float)this.playersInRegion[num3] / (float)num;
-						}
-						PhotonNetwork.PhotonServerSettings.AppSettings.FixedRegion = this.serverRegions[num3];
-					}
-				}
-				base.StartCoroutine(this.ConnectUsingSettingsWithBackoff());
-				return;
+				Debug.Log("Joining a new public room as selected gamemode is different to current rooms mode or joining with friends!");
 			}
-			this.InvalidState(connectionEvent);
-		}
-
-		private void ProcessJoiningSpecificRoomState(PhotonNetworkController.ConnectionEvent connectionEvent)
-		{
-			switch (connectionEvent)
-			{
-			case PhotonNetworkController.ConnectionEvent.OnConnectedToMaster:
-				if (!this.createRoom)
-				{
-					Debug.Log("connected to master in the determined region. joining specific room");
-					this.JoinSpecificRoom();
-					return;
-				}
-				this.createRoom = false;
-				this.CreatePrivateRoom();
-				return;
-			case PhotonNetworkController.ConnectionEvent.AttemptJoinPublicRoom:
-				this.currentState = PhotonNetworkController.ConnectionState.JoiningPublicRoom;
-				this.JoinPublicRoom(false);
-				return;
-			case PhotonNetworkController.ConnectionEvent.AttemptJoinSpecificRoom:
-				this.isRoomFull = false;
-				GorillaComputer.instance.roomNotAllowed = false;
-				this.doesRoomExist = false;
-				this.createRoom = false;
-				this.currentRegionIndex = 0;
-				PhotonNetwork.Disconnect();
-				return;
-			case PhotonNetworkController.ConnectionEvent.Disconnect:
-				this.DisconnectFromRoom(PhotonNetworkController.ConnectionState.DisconnectingFromRoom);
-				return;
-			case PhotonNetworkController.ConnectionEvent.OnJoinedRoom:
-				Debug.Log("successfully joined room!");
-				this.currentState = (PhotonNetwork.CurrentRoom.IsVisible ? PhotonNetworkController.ConnectionState.InPublicRoom : PhotonNetworkController.ConnectionState.InPrivateRoom);
-				if (this.currentState == PhotonNetworkController.ConnectionState.InPublicRoom)
-				{
-					Debug.Log("game mode of room joined is: " + (string)PhotonNetwork.CurrentRoom.CustomProperties["gameMode"]);
-					if (((string)PhotonNetwork.CurrentRoom.CustomProperties["gameMode"]).Contains(GorillaComputer.instance.forestMapTrigger.gameModeName))
-					{
-						this.currentJoinTrigger = GorillaComputer.instance.forestMapTrigger;
-					}
-					else if (((string)PhotonNetwork.CurrentRoom.CustomProperties["gameMode"]).Contains(GorillaComputer.instance.caveMapTrigger.gameModeName))
-					{
-						this.currentJoinTrigger = GorillaComputer.instance.caveMapTrigger;
-					}
-					else if (((string)PhotonNetwork.CurrentRoom.CustomProperties["gameMode"]).Contains(GorillaComputer.instance.canyonMapTrigger.gameModeName))
-					{
-						this.currentJoinTrigger = GorillaComputer.instance.canyonMapTrigger;
-					}
-					else if (((string)PhotonNetwork.CurrentRoom.CustomProperties["gameMode"]).Contains(GorillaComputer.instance.cityMapTrigger.gameModeName))
-					{
-						this.currentJoinTrigger = GorillaComputer.instance.cityMapTrigger;
-					}
-					else if (((string)PhotonNetwork.CurrentRoom.CustomProperties["gameMode"]).Contains(GorillaComputer.instance.mountainMapTrigger.gameModeName))
-					{
-						this.currentJoinTrigger = GorillaComputer.instance.mountainMapTrigger;
-					}
-					else if (((string)PhotonNetwork.CurrentRoom.CustomProperties["gameMode"]).Contains(GorillaComputer.instance.skyjungleMapTrigger.gameModeName))
-					{
-						this.currentJoinTrigger = GorillaComputer.instance.skyjungleMapTrigger;
-					}
-					else if (((string)PhotonNetwork.CurrentRoom.CustomProperties["gameMode"]).Contains(GorillaComputer.instance.basementMapTrigger.gameModeName))
-					{
-						this.currentJoinTrigger = GorillaComputer.instance.basementMapTrigger;
-					}
-					else if (((string)PhotonNetwork.CurrentRoom.CustomProperties["gameMode"]).Contains(GorillaComputer.instance.beachMapTrigger.gameModeName))
-					{
-						this.currentJoinTrigger = GorillaComputer.instance.beachMapTrigger;
-					}
-					else if (((string)PhotonNetwork.CurrentRoom.CustomProperties["gameMode"]).Contains(GorillaComputer.instance.rotatingMapTrigger.gameModeName))
-					{
-						this.currentJoinTrigger = GorillaComputer.instance.rotatingMapTrigger;
-					}
-					this.currentJoinTrigger.UpdateScreens();
-					return;
-				}
-				return;
-			case PhotonNetworkController.ConnectionEvent.OnJoinRoomFailed:
-				if (this.doesRoomExist && this.isRoomFull)
-				{
-					Debug.Log("cant join, the room is full! going back to best region.");
-					GorillaComputer.instance.roomFull = true;
-					this.DisconnectFromRoom(PhotonNetworkController.ConnectionState.DisconnectingFromRoom);
-					return;
-				}
-				if (this.currentRegionIndex == this.serverRegions.Length - 1)
-				{
-					this.createRoom = true;
-					PhotonNetwork.Disconnect();
-					return;
-				}
-				Debug.Log("room was missing. check the next region");
-				this.currentRegionIndex++;
-				PhotonNetwork.Disconnect();
-				return;
-			case PhotonNetworkController.ConnectionEvent.OnCreateRoomFailed:
-				Debug.Log("the room probably actually already exists, so maybe it was created just now? either way, give up.");
-				this.DisconnectFromRoom(PhotonNetworkController.ConnectionState.ConnectedAndWaiting);
-				return;
-			case PhotonNetworkController.ConnectionEvent.OnDisconnected:
-				if (!this.createRoom)
-				{
-					this.ConnectToRegion(this.serverRegions[this.currentRegionIndex]);
-					return;
-				}
-				Debug.Log("checked all the rooms, it doesn't exist. lets go back to our fav region and create the room");
-				this.ConnectToRegion(this.GetRegionWithLowestPing());
-				return;
-			}
-			this.InvalidState(connectionEvent);
-		}
-
-		private void ProcessJoiningFriendState(PhotonNetworkController.ConnectionEvent connectionEvent)
-		{
-			switch (connectionEvent)
-			{
-			case PhotonNetworkController.ConnectionEvent.OnConnectedToMaster:
-				this.StartSearchingForFriend();
-				return;
-			case PhotonNetworkController.ConnectionEvent.AttemptJoinPublicRoom:
-				this.currentState = PhotonNetworkController.ConnectionState.JoiningPublicRoom;
-				this.ProcessState(PhotonNetworkController.ConnectionEvent.AttemptJoinPublicRoom);
-				return;
-			case PhotonNetworkController.ConnectionEvent.AttemptJoinSpecificRoom:
-				this.JoinSpecificRoom();
-				return;
-			case PhotonNetworkController.ConnectionEvent.Disconnect:
-				PhotonNetwork.Disconnect();
-				return;
-			case PhotonNetworkController.ConnectionEvent.OnJoinedRoom:
-				this.currentState = PhotonNetworkController.ConnectionState.InPublicRoom;
-				if (((string)PhotonNetwork.CurrentRoom.CustomProperties["gameMode"]).Contains(GorillaComputer.instance.forestMapTrigger.gameModeName))
-				{
-					this.currentJoinTrigger = GorillaComputer.instance.forestMapTrigger;
-				}
-				else if (((string)PhotonNetwork.CurrentRoom.CustomProperties["gameMode"]).Contains(GorillaComputer.instance.caveMapTrigger.gameModeName))
-				{
-					this.currentJoinTrigger = GorillaComputer.instance.caveMapTrigger;
-				}
-				else if (((string)PhotonNetwork.CurrentRoom.CustomProperties["gameMode"]).Contains(GorillaComputer.instance.canyonMapTrigger.gameModeName))
-				{
-					this.currentJoinTrigger = GorillaComputer.instance.canyonMapTrigger;
-				}
-				else if (((string)PhotonNetwork.CurrentRoom.CustomProperties["gameMode"]).Contains(GorillaComputer.instance.cityMapTrigger.gameModeName))
-				{
-					this.currentJoinTrigger = GorillaComputer.instance.cityMapTrigger;
-				}
-				else if (((string)PhotonNetwork.CurrentRoom.CustomProperties["gameMode"]).Contains(GorillaComputer.instance.basementMapTrigger.gameModeName))
-				{
-					this.currentJoinTrigger = GorillaComputer.instance.basementMapTrigger;
-				}
-				else if (((string)PhotonNetwork.CurrentRoom.CustomProperties["gameMode"]).Contains(GorillaComputer.instance.beachMapTrigger.gameModeName))
-				{
-					this.currentJoinTrigger = GorillaComputer.instance.beachMapTrigger;
-				}
-				else if (((string)PhotonNetwork.CurrentRoom.CustomProperties["gameMode"]).Contains(GorillaComputer.instance.rotatingMapTrigger.gameModeName))
-				{
-					this.currentJoinTrigger = GorillaComputer.instance.rotatingMapTrigger;
-				}
-				this.currentJoinTrigger.UpdateScreens();
-				return;
-			case PhotonNetworkController.ConnectionEvent.OnJoinRoomFailed:
-				this.currentState = PhotonNetworkController.ConnectionState.ConnectedAndWaiting;
-				return;
-			case PhotonNetworkController.ConnectionEvent.OnDisconnected:
-				base.StartCoroutine(this.ConnectUsingSettingsWithBackoff());
-				return;
-			case PhotonNetworkController.ConnectionEvent.FoundFriendToJoin:
-				if (PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.Players.TryGetValue(this.actorIdToFollow, out this.tempPlayer) && this.tempPlayer != null)
-				{
-					this.currentState = PhotonNetworkController.ConnectionState.InPrivateRoom;
-					GorillaNot.instance.SendReport("possible kick attempt", this.tempPlayer.UserId, this.tempPlayer.NickName);
-					return;
-				}
-				if (PhotonNetwork.CurrentRoom.Name != this.customRoomID)
-				{
-					this.DisconnectCleanup();
-					this.currentState = PhotonNetworkController.ConnectionState.JoiningSpecificRoom;
-					this.currentRegionIndex = 0;
-					PhotonNetwork.Disconnect();
-					return;
-				}
-				return;
-			}
-			this.InvalidState(connectionEvent);
-		}
-
-		private void ProcessInPrivateRoomState(PhotonNetworkController.ConnectionEvent connectionEvent)
-		{
-			switch (connectionEvent)
-			{
-			case PhotonNetworkController.ConnectionEvent.AttemptJoinPublicRoom:
-				if (this.joiningWithFriend)
-				{
-					this.DisconnectFromRoom(PhotonNetworkController.ConnectionState.JoiningPublicRoom);
-					return;
-				}
-				return;
-			case PhotonNetworkController.ConnectionEvent.AttemptJoinSpecificRoom:
-				if (PhotonNetwork.CurrentRoom.Name != this.customRoomID)
-				{
-					this.DisconnectCleanup();
-					this.currentState = PhotonNetworkController.ConnectionState.JoiningSpecificRoom;
-					this.currentRegionIndex = 0;
-					PhotonNetwork.Disconnect();
-					return;
-				}
-				return;
-			case PhotonNetworkController.ConnectionEvent.AttemptToCreateRoom:
-				break;
-			case PhotonNetworkController.ConnectionEvent.Disconnect:
-				this.DisconnectFromRoom(PhotonNetworkController.ConnectionState.DisconnectingFromRoom);
-				return;
-			default:
-				if (connectionEvent == PhotonNetworkController.ConnectionEvent.OnDisconnected)
-				{
-					this.DisconnectCleanup();
-					this.currentState = PhotonNetworkController.ConnectionState.DisconnectingFromRoom;
-					base.StartCoroutine(this.ConnectUsingSettingsWithBackoff());
-					return;
-				}
-				if (connectionEvent == PhotonNetworkController.ConnectionEvent.FollowFriendToPub)
-				{
-					this.currentState = PhotonNetworkController.ConnectionState.JoiningFriend;
-					this.StartSearchingForFriend();
-					return;
-				}
-				break;
-			}
-			this.InvalidState(connectionEvent);
-		}
-
-		private void ProcessInPublicRoomState(PhotonNetworkController.ConnectionEvent connectionEvent)
-		{
-			switch (connectionEvent)
-			{
-			case PhotonNetworkController.ConnectionEvent.AttemptJoinPublicRoom:
-				if (!((string)PhotonNetwork.CurrentRoom.CustomProperties["gameMode"]).Contains(this.currentJoinTrigger.gameModeName))
-				{
-					this.DisconnectFromRoom(PhotonNetworkController.ConnectionState.JoiningPublicRoom);
-					return;
-				}
-				return;
-			case PhotonNetworkController.ConnectionEvent.AttemptJoinSpecificRoom:
-				if (PhotonNetwork.CurrentRoom.Name != this.customRoomID)
-				{
-					this.DisconnectCleanup();
-					this.currentState = PhotonNetworkController.ConnectionState.JoiningSpecificRoom;
-					this.currentRegionIndex = 0;
-					PhotonNetwork.Disconnect();
-					return;
-				}
-				return;
-			case PhotonNetworkController.ConnectionEvent.AttemptToCreateRoom:
-				break;
-			case PhotonNetworkController.ConnectionEvent.Disconnect:
-				this.DisconnectFromRoom(PhotonNetworkController.ConnectionState.DisconnectingFromRoom);
-				return;
-			default:
-				if (connectionEvent == PhotonNetworkController.ConnectionEvent.OnDisconnected)
-				{
-					this.DisconnectCleanup();
-					this.currentState = PhotonNetworkController.ConnectionState.DisconnectingFromRoom;
-					base.StartCoroutine(this.ConnectUsingSettingsWithBackoff());
-					return;
-				}
-				break;
-			}
-			this.InvalidState(connectionEvent);
-		}
-
-		private void ProcessWrongVersionState(PhotonNetworkController.ConnectionEvent connectionEvent)
-		{
-			this.InvalidState(connectionEvent);
-		}
-
-		private void ProcessState(PhotonNetworkController.ConnectionEvent connectionEvent)
-		{
-			if (this.currentState == PhotonNetworkController.ConnectionState.Initialization)
-			{
-				this.ProcessInitializationState(connectionEvent);
-				return;
-			}
-			if (this.currentState == PhotonNetworkController.ConnectionState.DeterminingPingsAndPlayerCount)
-			{
-				this.ProcessDeterminingPingsAndPlayerCountState(connectionEvent);
-				return;
-			}
-			if (this.currentState == PhotonNetworkController.ConnectionState.ConnectedAndWaiting)
-			{
-				this.ProcessConnectedAndWaitingState(connectionEvent);
-				return;
-			}
-			if (this.currentState == PhotonNetworkController.ConnectionState.DisconnectingFromRoom)
-			{
-				this.ProcessDisconnectingFromRoomState(connectionEvent);
-				return;
-			}
-			if (this.currentState == PhotonNetworkController.ConnectionState.JoiningPublicRoom)
-			{
-				this.ProcessJoiningPublicRoomState(connectionEvent);
-				return;
-			}
-			if (this.currentState == PhotonNetworkController.ConnectionState.JoiningSpecificRoom)
-			{
-				this.ProcessJoiningSpecificRoomState(connectionEvent);
-				return;
-			}
-			if (this.currentState == PhotonNetworkController.ConnectionState.JoiningFriend)
-			{
-				this.ProcessJoiningFriendState(connectionEvent);
-				return;
-			}
-			if (this.currentState == PhotonNetworkController.ConnectionState.InPrivateRoom)
-			{
-				this.ProcessInPrivateRoomState(connectionEvent);
-				return;
-			}
-			if (this.currentState == PhotonNetworkController.ConnectionState.InPublicRoom)
-			{
-				this.ProcessInPublicRoomState(connectionEvent);
-				return;
-			}
-			if (this.currentState == PhotonNetworkController.ConnectionState.WrongVersion)
-			{
-				this.ProcessWrongVersionState(connectionEvent);
-				return;
-			}
-		}
-
-		private void InvalidState(PhotonNetworkController.ConnectionEvent connectionEvent)
-		{
-		}
-
-		public void AttemptToJoinPublicRoom(GorillaNetworkJoinTrigger triggeredTrigger)
-		{
+			Debug.Log("Joining a public room!");
 			this.currentJoinTrigger = triggeredTrigger;
-			this.joiningWithFriend = false;
-			this.ProcessState(PhotonNetworkController.ConnectionEvent.AttemptJoinPublicRoom);
+			this.joiningWithFriend = joinWithFriends;
+			if (PlayFabClientAPI.IsClientLoggedIn())
+			{
+				this.playFabAuthenticator.SetDisplayName(NetworkSystem.Instance.GetMyNickName());
+			}
+			RoomConfig roomConfig = RoomConfig.AnyPublicConfig();
+			if (this.joiningWithFriend)
+			{
+				roomConfig.SetFriendIDs(this.friendIDList);
+			}
+			string gameModeName = this.currentJoinTrigger.gameModeName;
+			string currentQueue = GorillaComputer.instance.currentQueue;
+			string text3 = ((this.currentJoinTrigger.gameModeName == "city" || this.currentJoinTrigger.gameModeName == "basement") ? "CASUAL" : GorillaComputer.instance.currentGameMode);
+			string text4 = gameModeName + currentQueue + ((text3 != null) ? text3.ToString() : null);
+			Hashtable hashtable = new Hashtable { { "gameMode", text4 } };
+			roomConfig.customProps = hashtable;
+			roomConfig.MaxPlayers = this.GetRoomSize(this.currentJoinTrigger.gameModeName);
+			Debug.Log("DEBUG GAMEMODE: " + text4);
+			NetworkSystem.Instance.ConnectToRoom(null, roomConfig);
 		}
 
 		public void AttemptToJoinSpecificRoom(string roomID)
 		{
-			this.customRoomID = roomID;
-			this.joiningWithFriend = false;
-			this.ProcessState(PhotonNetworkController.ConnectionEvent.AttemptJoinSpecificRoom);
-		}
-
-		private void JoinPublicRoom(bool joinWithFriends)
-		{
-			PhotonNetwork.LocalPlayer.NickName = GorillaComputer.instance.savedName;
-			if (PlayFabClientAPI.IsClientLoggedIn())
+			if (NetworkSystem.Instance.netState != NetSystemState.Idle && NetworkSystem.Instance.netState != NetSystemState.InGame)
 			{
-				this.playFabAuthenticator.SetDisplayName(PhotonNetwork.LocalPlayer.NickName);
-			}
-			Hashtable hashtable = new Hashtable();
-			if (this.currentJoinTrigger.gameModeName != "city" && this.currentJoinTrigger.gameModeName != "basement")
-			{
-				Dictionary<object, object> dictionary = hashtable;
-				object obj = "gameMode";
-				string gameModeName = this.currentJoinTrigger.gameModeName;
-				string currentQueue = GorillaComputer.instance.currentQueue;
-				WatchableStringSO currentGameMode = GorillaComputer.instance.currentGameMode;
-				dictionary.Add(obj, gameModeName + currentQueue + ((currentGameMode != null) ? currentGameMode.ToString() : null));
-			}
-			else
-			{
-				hashtable.Add("gameMode", this.currentJoinTrigger.gameModeName + GorillaComputer.instance.currentQueue + "CASUAL");
-			}
-			PhotonNetwork.AutomaticallySyncScene = false;
-			if (joinWithFriends)
-			{
-				this.friendIDList.Remove(PhotonNetwork.LocalPlayer.UserId);
-				PhotonNetwork.JoinRandomRoom(hashtable, this.GetRoomSize(this.currentJoinTrigger.gameModeName), MatchmakingMode.RandomMatching, null, null, this.friendIDList.ToArray());
 				return;
 			}
-			PhotonNetwork.JoinRandomRoom(hashtable, this.GetRoomSize(this.currentJoinTrigger.gameModeName), MatchmakingMode.FillRoom, null, null, null);
-		}
-
-		private void JoinSpecificRoom()
-		{
-			PhotonNetwork.LocalPlayer.NickName = GorillaComputer.instance.savedName;
+			this.customRoomID = roomID;
+			this.joiningWithFriend = false;
+			this.currentJoinTrigger = this.privateTrigger;
+			string gameModeName = this.currentJoinTrigger.gameModeName;
+			string currentQueue = GorillaComputer.instance.currentQueue;
+			string text = ((this.currentJoinTrigger.gameModeName == "city" || this.currentJoinTrigger.gameModeName == "basement") ? "CASUAL" : GorillaComputer.instance.currentGameMode);
+			string text2 = gameModeName + currentQueue + ((text != null) ? text.ToString() : null);
+			Hashtable hashtable = new Hashtable { { "gameMode", text2 } };
+			RoomConfig roomConfig = new RoomConfig();
+			roomConfig.createIfMissing = true;
+			roomConfig.isJoinable = true;
+			roomConfig.isPublic = false;
+			roomConfig.MaxPlayers = this.GetRoomSize(this.currentJoinTrigger.gameModeName);
+			roomConfig.customProps = hashtable;
 			if (PlayFabClientAPI.IsClientLoggedIn())
 			{
-				this.playFabAuthenticator.SetDisplayName(PhotonNetwork.LocalPlayer.NickName);
+				this.playFabAuthenticator.SetDisplayName(NetworkSystem.Instance.GetMyNickName());
 			}
-			PhotonNetwork.JoinRoom(this.customRoomID, null);
+			NetworkSystem.Instance.ConnectToRoom(roomID, roomConfig);
 		}
 
 		private void DisconnectCleanup()
 		{
-			if (GTAppState.isQuitting)
-			{
-				return;
-			}
+			Debug.Log("Disconnect cleanup running!");
 			if (GorillaParent.instance != null)
 			{
 				GorillaScoreboardSpawner[] componentsInChildren = GorillaParent.instance.GetComponentsInChildren<GorillaScoreboardSpawner>();
@@ -748,6 +194,13 @@ namespace GorillaNetworking
 				}
 			}
 			this.attemptingToConnect = true;
+			foreach (SkinnedMeshRenderer skinnedMeshRenderer in this.offlineVRRig)
+			{
+				if (skinnedMeshRenderer != null)
+				{
+					skinnedMeshRenderer.enabled = true;
+				}
+			}
 			if (GorillaComputer.instance != null && !ApplicationQuittingState.IsQuitting)
 			{
 				foreach (GorillaLevelScreen gorillaLevelScreen in GorillaComputer.instance.levelScreens)
@@ -755,29 +208,22 @@ namespace GorillaNetworking
 					gorillaLevelScreen.UpdateText(gorillaLevelScreen.startingText, true);
 				}
 			}
-			global::GorillaLocomotion.Player.Instance.maxJumpSpeed = 6.5f;
-			global::GorillaLocomotion.Player.Instance.jumpMultiplier = 1.1f;
+			Player.Instance.maxJumpSpeed = 6.5f;
+			Player.Instance.jumpMultiplier = 1.1f;
 			GorillaNot.instance.currentMasterClient = null;
 			GorillaTagger.Instance.offlineVRRig.huntComputer.SetActive(false);
 			this.initialGameMode = "";
 		}
 
-		public override void OnConnectedToMaster()
+		public void OnJoinedRoom()
 		{
-			this.ProcessState(PhotonNetworkController.ConnectionEvent.OnConnectedToMaster);
-		}
-
-		public override void OnJoinedRoom()
-		{
-			this.timeToRetryWithBackoff = 0.1f;
-			object obj;
-			if (!PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue("gameMode", out obj))
+			Debug.Log("PhotonNetworkController: On Joined Room!");
+			if (NetworkSystem.Instance.GameModeString.IsNullOrEmpty())
 			{
-				this.AttemptDisconnect();
-				return;
+				NetworkSystem.Instance.ReturnToSinglePlayer();
 			}
-			this.initialGameMode = obj.ToString();
-			if (!PhotonNetwork.CurrentRoom.IsVisible)
+			this.initialGameMode = NetworkSystem.Instance.GameModeString;
+			if (NetworkSystem.Instance.SessionIsPrivate)
 			{
 				this.currentJoinTrigger = this.privateTrigger;
 				GorillaLevelScreen[] levelScreens = GorillaComputer.instance.levelScreens;
@@ -791,7 +237,9 @@ namespace GorillaNetworking
 				this.allowedInPubRoom = false;
 				for (int j = 0; j < GorillaComputer.instance.allowedMapsToJoin.Length; j++)
 				{
-					if (obj.ToString().Contains(GorillaComputer.instance.allowedMapsToJoin[j]))
+					Debug.Log(GorillaComputer.instance.allowedMapsToJoin[j]);
+					Debug.Log("Checking allowed in room check, Gamemode: " + NetworkSystem.Instance.GameModeString);
+					if (NetworkSystem.Instance.GameModeString.Contains(GorillaComputer.instance.allowedMapsToJoin[j]))
 					{
 						this.allowedInPubRoom = true;
 						break;
@@ -799,218 +247,114 @@ namespace GorillaNetworking
 				}
 				if (!this.allowedInPubRoom)
 				{
+					Debug.Log("NOT ALLOWED IN ROOM");
 					GorillaComputer.instance.roomNotAllowed = true;
-					PhotonNetwork.Disconnect();
+					NetworkSystem.Instance.ReturnToSinglePlayer();
 					return;
 				}
 			}
-			PhotonVoiceNetwork.Instance.PrimaryRecorder.StartRecording();
-			if (PhotonNetwork.IsMasterClient)
+			if (NetworkSystem.Instance.IsMasterClient)
 			{
-				GameMode.LoadGameModeFromProperty(this.initialGameMode);
+				GorillaGameModes.GameMode.LoadGameModeFromProperty(this.initialGameMode);
 			}
-			bool flag = PlayerPrefs.GetString("tutorial", "nope") == "done";
-			if (!flag)
+			NetworkSystem.Instance.SetMyTutorialComplete();
+			Debug.Log("Spawning player");
+			GameObject gameObject;
+			VRRigCache.Instance.GetComponent<PhotonPrefabPool>().networkPrefabs.TryGetValue("Player Network Controller", out gameObject);
+			if (gameObject == null)
 			{
-				PlayerPrefs.SetString("tutorial", "done");
-				PlayerPrefs.Save();
+				Debug.LogError("Unable to find player prefab to spawn");
+				return;
 			}
-			Hashtable hashtable = new Hashtable();
-			hashtable.Add("didTutorial", flag);
-			PhotonNetwork.LocalPlayer.SetCustomProperties(hashtable, null, null);
-			PhotonNetwork.Instantiate("GorillaPrefabs/Gorilla Player Networked", this.playerOffset.transform.position, this.playerOffset.transform.rotation, 0, null);
+			NetworkSystem.Instance.NetInstantiate(gameObject, this.playerOffset.transform.position, this.playerOffset.transform.rotation, false);
 			GorillaComputer.instance.roomFull = false;
 			GorillaComputer.instance.roomNotAllowed = false;
 			if (this.joiningWithFriend)
 			{
-				this.BroadcastMyRoom(true);
+				NetworkSystem.Instance.BroadcastMyRoom(true, this.keyToFollow, this.shuffler);
 			}
-			PhotonNetwork.NickName = PlayerPrefs.GetString("playerName", "gorilla" + Random.Range(0, 9999).ToString().PadLeft(4, '0'));
 			GorillaNot.instance.currentMasterClient = null;
-			this.ProcessState(PhotonNetworkController.ConnectionEvent.OnJoinedRoom);
+			this.UpdateTriggerScreens();
+			GorillaScoreboardTotalUpdater.instance.JoinedRoom();
 		}
 
-		public override void OnJoinRoomFailed(short returnCode, string message)
+		private void UpdateTriggerScreens()
 		{
-			Debug.Log("join room failed:" + returnCode.ToString() + " " + message);
-			if (returnCode == 32758)
+			Debug.Log(NetworkSystem.Instance.GameModeString);
+			if (NetworkSystem.Instance.GameModeString.Contains(GorillaComputer.instance.forestMapTrigger.gameModeName))
 			{
-				Debug.Log("room didn't exist!");
-				this.doesRoomExist = false;
+				this.currentJoinTrigger = GorillaComputer.instance.forestMapTrigger;
 			}
-			else
+			else if (NetworkSystem.Instance.GameModeString.Contains(GorillaComputer.instance.caveMapTrigger.gameModeName))
 			{
-				this.doesRoomExist = true;
+				this.currentJoinTrigger = GorillaComputer.instance.caveMapTrigger;
 			}
-			if (returnCode == 32765)
+			else if (NetworkSystem.Instance.GameModeString.Contains(GorillaComputer.instance.canyonMapTrigger.gameModeName))
 			{
-				Debug.Log("room was full!");
-				this.isRoomFull = true;
+				this.currentJoinTrigger = GorillaComputer.instance.canyonMapTrigger;
 			}
-			else
+			else if (NetworkSystem.Instance.GameModeString.Contains(GorillaComputer.instance.cityMapTrigger.gameModeName))
 			{
-				this.isRoomFull = false;
+				this.currentJoinTrigger = GorillaComputer.instance.cityMapTrigger;
 			}
-			this.ProcessState(PhotonNetworkController.ConnectionEvent.OnJoinRoomFailed);
-		}
-
-		public override void OnJoinRandomFailed(short returnCode, string message)
-		{
-			this.ProcessState(PhotonNetworkController.ConnectionEvent.OnJoinRandomFailed);
-		}
-
-		private void CreatePublicRoom(bool joinWithFriends)
-		{
-			Hashtable hashtable2;
-			if (this.currentJoinTrigger.gameModeName != "city" && this.currentJoinTrigger.gameModeName != "basement")
+			else if (NetworkSystem.Instance.GameModeString.Contains(GorillaComputer.instance.mountainMapTrigger.gameModeName))
 			{
-				Hashtable hashtable = new Hashtable();
-				object obj = "gameMode";
-				string gameModeName = this.currentJoinTrigger.gameModeName;
-				string currentQueue = GorillaComputer.instance.currentQueue;
-				WatchableStringSO currentGameMode = GorillaComputer.instance.currentGameMode;
-				hashtable.Add(obj, gameModeName + currentQueue + ((currentGameMode != null) ? currentGameMode.ToString() : null));
-				hashtable2 = hashtable;
+				this.currentJoinTrigger = GorillaComputer.instance.mountainMapTrigger;
 			}
-			else
+			else if (NetworkSystem.Instance.GameModeString.Contains(GorillaComputer.instance.skyjungleMapTrigger.gameModeName))
 			{
-				hashtable2 = new Hashtable { 
+				this.currentJoinTrigger = GorillaComputer.instance.skyjungleMapTrigger;
+			}
+			else if (NetworkSystem.Instance.GameModeString.Contains(GorillaComputer.instance.basementMapTrigger.gameModeName))
+			{
+				this.currentJoinTrigger = GorillaComputer.instance.basementMapTrigger;
+			}
+			else if (NetworkSystem.Instance.GameModeString.Contains(GorillaComputer.instance.beachMapTrigger.gameModeName))
+			{
+				this.currentJoinTrigger = GorillaComputer.instance.beachMapTrigger;
+			}
+			else if (NetworkSystem.Instance.GameModeString.Contains(GorillaComputer.instance.rotatingMapTrigger.gameModeName))
+			{
+				this.currentJoinTrigger = GorillaComputer.instance.rotatingMapTrigger;
+			}
+			else if (NetworkSystem.Instance.SessionIsPrivate)
+			{
+				if (this.currentJoinTrigger != this.privateTrigger)
 				{
-					"gameMode",
-					this.currentJoinTrigger.gameModeName + GorillaComputer.instance.currentQueue + "CASUAL"
-				} };
-			}
-			Photon.Realtime.RoomOptions roomOptions = new Photon.Realtime.RoomOptions();
-			roomOptions.IsVisible = true;
-			roomOptions.IsOpen = true;
-			roomOptions.MaxPlayers = this.GetRoomSize(this.currentJoinTrigger.gameModeName);
-			roomOptions.CustomRoomProperties = hashtable2;
-			roomOptions.PublishUserId = true;
-			roomOptions.CustomRoomPropertiesForLobby = new string[] { "gameMode" };
-			if (joinWithFriends)
-			{
-				foreach (string text in this.friendIDList.ToArray())
-				{
+					Debug.LogError("IN a private game but private trigger isnt current");
 				}
-				this.friendIDList.Remove(PhotonNetwork.LocalPlayer.UserId);
-				PhotonNetwork.CreateRoom(this.ReturnRoomName(), roomOptions, null, this.friendIDList.ToArray());
-				return;
 			}
-			PhotonNetwork.CreateRoom(this.ReturnRoomName(), roomOptions, null, null);
-		}
-
-		private void CreatePrivateRoom()
-		{
-			this.currentJoinTrigger = this.privateTrigger;
-			Hashtable hashtable = new Hashtable();
-			object obj = "gameMode";
-			string gameModeName = this.currentJoinTrigger.gameModeName;
-			string currentQueue = GorillaComputer.instance.currentQueue;
-			WatchableStringSO currentGameMode = GorillaComputer.instance.currentGameMode;
-			hashtable.Add(obj, gameModeName + currentQueue + ((currentGameMode != null) ? currentGameMode.ToString() : null));
-			Hashtable hashtable2 = hashtable;
-			Photon.Realtime.RoomOptions roomOptions = new Photon.Realtime.RoomOptions();
-			roomOptions.IsVisible = false;
-			roomOptions.IsOpen = true;
-			roomOptions.MaxPlayers = this.GetRoomSize(this.currentJoinTrigger.gameModeName);
-			roomOptions.CustomRoomProperties = hashtable2;
-			roomOptions.PublishUserId = true;
-			roomOptions.CustomRoomPropertiesForLobby = new string[] { "gameMode" };
-			PhotonNetwork.CreateRoom(this.customRoomID, roomOptions, null, null);
-		}
-
-		public override void OnCreateRoomFailed(short returnCode, string message)
-		{
-			this.ProcessState(PhotonNetworkController.ConnectionEvent.OnCreateRoomFailed);
-		}
-
-		public void ConnectToRegion(string region)
-		{
-			PhotonNetwork.PhotonServerSettings.AppSettings.FixedRegion = region;
-			base.StartCoroutine(this.ConnectUsingSettingsWithBackoff());
-		}
-
-		private IEnumerator ConnectUsingSettingsWithBackoff()
-		{
-			if (this.retry)
+			else
 			{
-				this.retry = false;
-				this.timeToRetryWithBackoff *= 2f;
-				Debug.Log("backing off retry, current time to wait is " + this.timeToRetryWithBackoff.ToString());
+				Debug.LogError("Not in private room and unabel tp update jointrigger.");
 			}
-			yield return new WaitForSeconds(this.timeToRetryWithBackoff);
-			PhotonNetwork.ConnectUsingSettings();
-			yield break;
+			this.currentJoinTrigger.UpdateScreens();
 		}
 
 		public void AttemptJoinPublicWithFriends(GorillaNetworkJoinTrigger triggeredTrigger)
 		{
 			this.currentJoinTrigger = triggeredTrigger;
 			this.joiningWithFriend = true;
-			this.keyToFollow = PhotonNetwork.LocalPlayer.ActorNumber.ToString() + this.keyStr;
-			this.BroadcastMyRoom(false);
-			this.ProcessState(PhotonNetworkController.ConnectionEvent.AttemptJoinPublicRoom);
+			this.keyToFollow = NetworkSystem.Instance.LocalPlayerID.ToString() + this.keyStr;
+			NetworkSystem.Instance.BroadcastMyRoom(false, this.keyToFollow, this.shuffler);
+			this.AttemptToJoinPublicRoom(this.currentJoinTrigger, true);
 		}
 
 		public void AttemptToFollowFriendIntoPub(string userIDToFollow, int actorNumberToFollow, string newKeyStr, string shufflerStr)
 		{
+			Debug.Log("Following friend into pub");
 			this.friendToFollow = userIDToFollow;
 			this.keyToFollow = actorNumberToFollow.ToString() + newKeyStr;
-			this.actorIdToFollow = actorNumberToFollow;
 			this.shuffler = shufflerStr;
-			this.ProcessState(PhotonNetworkController.ConnectionEvent.FollowFriendToPub);
+			if (NetworkSystem.Instance.InRoom && NetworkSystem.Instance.SessionIsPrivate)
+			{
+				NetworkSystem.Instance.JoinFriendsRoom(this.friendToFollow, actorNumberToFollow, this.keyToFollow, this.shuffler);
+			}
 		}
 
-		public void AttemptDisconnect()
-		{
-			this.ProcessState(PhotonNetworkController.ConnectionEvent.Disconnect);
-		}
-
-		private void DisconnectFromRoom(PhotonNetworkController.ConnectionState newState)
-		{
-			this.currentState = newState;
-			PhotonNetwork.Disconnect();
-		}
-
-		public override void OnDisconnected(DisconnectCause cause)
+		public void OnDisconnected()
 		{
 			this.DisconnectCleanup();
-			this.ProcessState(PhotonNetworkController.ConnectionEvent.OnDisconnected);
-		}
-
-		private void GetOculusNonceCallback(Message<UserProof> message)
-		{
-			AuthenticationValues authValues = PhotonNetwork.AuthValues;
-			if (authValues != null)
-			{
-				Dictionary<string, object> dictionary = PhotonNetwork.AuthValues.AuthPostData as Dictionary<string, object>;
-				if (dictionary != null)
-				{
-					if (message.IsError)
-					{
-						base.StartCoroutine(this.ReGetNonce());
-						return;
-					}
-					dictionary["Nonce"] = message.Data.Value;
-					authValues.SetAuthPostData(dictionary);
-					PhotonNetwork.AuthValues = authValues;
-				}
-			}
-			this.ProcessState(PhotonNetworkController.ConnectionEvent.OnDisconnected);
-		}
-
-		private IEnumerator ReGetNonce()
-		{
-			yield return new WaitForSeconds(3f);
-			Users.GetUserProof().OnComplete(new Message<UserProof>.Callback(this.GetOculusNonceCallback));
-			yield return null;
-			yield break;
-		}
-
-		public void WrongVersion()
-		{
-			this.wrongVersion = true;
-			this.currentState = PhotonNetworkController.ConnectionState.WrongVersion;
 		}
 
 		public void OnApplicationQuit()
@@ -1035,37 +379,13 @@ namespace GorillaNetworking
 			string text = "";
 			for (int i = 0; i < 4; i++)
 			{
-				text += this.roomCharacters.Substring(Random.Range(0, this.roomCharacters.Length), 1);
+				text += "ABCDEFGHIJKLMNOPQRSTUVWXYX123456789".Substring(Random.Range(0, "ABCDEFGHIJKLMNOPQRSTUVWXYX123456789".Length), 1);
 			}
 			if (GorillaComputer.instance.CheckAutoBanListForName(text))
 			{
 				return text;
 			}
 			return this.RandomRoomName();
-		}
-
-		public string ShuffleRoomName(string room, string shuffle, bool encode)
-		{
-			string text = "";
-			int num;
-			if (!int.TryParse(shuffle, out num) || shuffle.Length != room.Length * 2)
-			{
-				return "";
-			}
-			for (int i = 0; i < room.Length; i++)
-			{
-				string text2 = room.Substring(i, 1);
-				int num2 = this.roomCharacters.IndexOf(text2);
-				if (encode)
-				{
-					text += this.roomCharacters.Substring(PhotonNetworkController.mod(num2 + int.Parse(shuffle.Substring(i * 2, 2)), this.roomCharacters.Length), 1);
-				}
-				else
-				{
-					text += this.roomCharacters.Substring(PhotonNetworkController.mod(num2 - int.Parse(shuffle.Substring(i * 2, 2)), this.roomCharacters.Length), 1);
-				}
-			}
-			return text;
 		}
 
 		public byte GetRoomSize(string gameModeName)
@@ -1075,46 +395,6 @@ namespace GorillaNetworking
 				return 5;
 			}
 			return 10;
-		}
-
-		public void StartSearchingForFriend()
-		{
-			this.startingToLookForFriend = Time.time;
-			this.successfullyFoundFriend = false;
-			base.StartCoroutine(this.SearchForFriendToJoin(this.friendToFollow, this.keyToFollow, this.shuffler));
-		}
-
-		private IEnumerator SearchForFriendToJoin(string userID, string keyToFollow, string shufflerToFollow)
-		{
-			while (!this.successfullyFoundFriend && this.startingToLookForFriend + this.timeToSpendLookingForFriend > Time.time)
-			{
-				try
-				{
-					GetSharedGroupDataRequest getSharedGroupDataRequest = new GetSharedGroupDataRequest();
-					getSharedGroupDataRequest.Keys = new List<string> { keyToFollow };
-					getSharedGroupDataRequest.SharedGroupId = userID;
-					PlayFabClientAPI.GetSharedGroupData(getSharedGroupDataRequest, delegate(GetSharedGroupDataResult result)
-					{
-						foreach (KeyValuePair<string, SharedGroupDataRecord> keyValuePair in result.Data)
-						{
-							if (keyValuePair.Key == keyToFollow)
-							{
-								this.customRoomID = this.ShuffleRoomName(keyValuePair.Value.Value, shufflerToFollow, false);
-								this.successfullyFoundFriend = true;
-								this.ProcessState(PhotonNetworkController.ConnectionEvent.FoundFriendToJoin);
-							}
-						}
-					}, delegate(PlayFabError error)
-					{
-					}, null, null);
-				}
-				catch
-				{
-				}
-				yield return new WaitForSeconds(3f);
-			}
-			yield return null;
-			yield break;
 		}
 
 		private string GetRegionWithLowestPing()
@@ -1145,51 +425,60 @@ namespace GorillaNetworking
 
 		public string CurrentState()
 		{
-			return this.currentState.ToString();
+			if (NetworkSystem.Instance == null)
+			{
+				Debug.Log("Null netsys!!!");
+			}
+			return NetworkSystem.Instance.netState.ToString();
 		}
 
-		private void BroadcastMyRoom(bool create)
+		private void OnApplicationPause(bool pause)
 		{
-			Debug.Log("broadcasting room");
-			ExecuteCloudScriptRequest executeCloudScriptRequest = new ExecuteCloudScriptRequest();
-			executeCloudScriptRequest.FunctionName = "BroadcastMyRoom";
-			executeCloudScriptRequest.FunctionParameter = new
+			if (pause)
 			{
-				KeyToFollow = this.keyToFollow,
-				RoomToJoin = this.ShuffleRoomName(PhotonNetwork.CurrentRoom.Name, this.shuffler, true),
-				Set = create
-			};
-			PlayFabClientAPI.ExecuteCloudScript(executeCloudScriptRequest, delegate(ExecuteCloudScriptResult result)
+				this.timeWhenApplicationPaused = new DateTime?(DateTime.Now);
+				return;
+			}
+			if ((DateTime.Now - (this.timeWhenApplicationPaused ?? DateTime.Now)).TotalSeconds > (double)this.disconnectTime)
 			{
-			}, delegate(PlayFabError error)
+				this.timeWhenApplicationPaused = null;
+				NetworkSystem instance = NetworkSystem.Instance;
+				if (instance != null)
+				{
+					instance.ReturnToSinglePlayer();
+				}
+			}
+			if (NetworkSystem.Instance != null && !NetworkSystem.Instance.InRoom && NetworkSystem.Instance.netState == NetSystemState.InGame)
 			{
-			}, null, null);
+				NetworkSystem instance2 = NetworkSystem.Instance;
+				if (instance2 == null)
+				{
+					return;
+				}
+				instance2.ReturnToSinglePlayer();
+			}
 		}
 
-		public static int mod(int x, int m)
+		private void OnApplicationFocus(bool focus)
 		{
-			return (x % m + m) % m;
+			if (!focus && NetworkSystem.Instance != null && !NetworkSystem.Instance.InRoom && NetworkSystem.Instance.netState == NetSystemState.InGame)
+			{
+				NetworkSystem instance = NetworkSystem.Instance;
+				if (instance == null)
+				{
+					return;
+				}
+				instance.ReturnToSinglePlayer();
+			}
 		}
 
 		public static volatile PhotonNetworkController Instance;
 
 		public int incrementCounter;
 
-		private PhotonNetworkController.ConnectionState currentState;
-
 		public PlayFabAuthenticator playFabAuthenticator;
 
 		public string[] serverRegions;
-
-		private string gameVersionType = "live1";
-
-		private int majorVersion = 1;
-
-		private int minorVersion = 1;
-
-		private int minorVersion2 = 72;
-
-		private string _gameVersionString = "";
 
 		public bool isPrivate;
 
@@ -1205,8 +494,6 @@ namespace GorillaNetworking
 
 		public string currentGameType;
 
-		public bool wrongVersion;
-
 		public bool roomCosmeticsInitialized;
 
 		public GameObject photonVoiceObjectPrefab;
@@ -1214,12 +501,6 @@ namespace GorillaNetworking
 		public Dictionary<string, bool> playerCosmeticsLookup = new Dictionary<string, bool>();
 
 		private bool pastFirstConnection;
-
-		private float timeToRetryWithBackoff = 0.1f;
-
-		private bool retry;
-
-		private float lastTimeConnected;
 
 		private float lastHeadRightHandDistance;
 
@@ -1243,8 +524,6 @@ namespace GorillaNetworking
 
 		public GameObject[] enableOnStartup;
 
-		public string roomCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789";
-
 		public bool updatedName;
 
 		private int[] playersInRegion;
@@ -1253,35 +532,21 @@ namespace GorillaNetworking
 
 		public List<string> friendIDList = new List<string>();
 
-		private bool successfullyFoundFriend;
-
-		private float startingToLookForFriend;
-
-		private float timeToSpendLookingForFriend = 15f;
-
 		private bool joiningWithFriend;
 
 		private string friendToFollow;
 
 		private string keyToFollow;
 
-		private int actorIdToFollow;
-
 		public string shuffler;
 
 		public string keyStr;
 
-		private Photon.Realtime.Player tempPlayer;
-
-		private bool isRoomFull;
-
-		private bool doesRoomExist;
-
-		private bool createRoom;
-
 		private string startLevel;
 
 		private GTZone startZone;
+
+		private GorillaGeoHideShowTrigger startGeoTrigger;
 
 		public GorillaNetworkJoinTrigger privateTrigger;
 
@@ -1291,35 +556,10 @@ namespace GorillaNetworking
 
 		public bool allowedInPubRoom;
 
-		public enum ConnectionState
-		{
-			Initialization,
-			WrongVersion,
-			DeterminingPingsAndPlayerCount,
-			ConnectedAndWaiting,
-			DisconnectingFromRoom,
-			JoiningPublicRoom,
-			JoiningSpecificRoom,
-			JoiningFriend,
-			InPrivateRoom,
-			InPublicRoom
-		}
+		private DateTime? timeWhenApplicationPaused;
 
-		public enum ConnectionEvent
-		{
-			InitialConnection,
-			OnConnectedToMaster,
-			AttemptJoinPublicRoom,
-			AttemptJoinSpecificRoom,
-			AttemptToCreateRoom,
-			Disconnect,
-			OnJoinedRoom,
-			OnJoinRoomFailed,
-			OnJoinRandomFailed,
-			OnCreateRoomFailed,
-			OnDisconnected,
-			FoundFriendToJoin,
-			FollowFriendToPub
-		}
+		[NetworkPrefab]
+		[SerializeField]
+		private NetworkObject testPlayerPrefab;
 	}
 }

@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using CjLib;
 using ExitGames.Client.Photon;
 using GorillaExtensions;
+using GorillaGameModes;
 using GorillaLocomotion;
 using GorillaLocomotion.Swimming;
 using Photon.Pun;
@@ -155,6 +156,7 @@ namespace GorillaTag
 			this.fizzParticleEmission = elements.sodaFizzParticles.emission;
 			elements.sodaFizzParticles.gameObject.SetActive(false);
 			elements.sodaEruptionParticles.gameObject.SetActive(false);
+			RoomSystem.LeftRoomEvent = (Action)Delegate.Combine(RoomSystem.LeftRoomEvent, new Action(this.OnLeftRoom));
 		}
 
 		public void DeInitElements()
@@ -836,7 +838,7 @@ namespace GorillaTag
 
 		private void OnColliderEnteredSoda(WaterVolume volume, Collider collider)
 		{
-			if (collider == global::GorillaLocomotion.Player.Instance.bodyCollider)
+			if (collider == GorillaLocomotion.Player.Instance.bodyCollider)
 			{
 				if (base.photonView.IsMine)
 				{
@@ -853,7 +855,7 @@ namespace GorillaTag
 
 		private void OnColliderEnteredRefreshWater(WaterVolume volume, Collider collider)
 		{
-			if (collider == global::GorillaLocomotion.Player.Instance.bodyCollider)
+			if (collider == GorillaLocomotion.Player.Instance.bodyCollider)
 			{
 				if (base.photonView.IsMine)
 				{
@@ -1100,7 +1102,7 @@ namespace GorillaTag
 
 		private void ValidateLocalPlayerWaterBalloonHit(int playerId)
 		{
-			if (playerId == PhotonNetwork.LocalPlayer.ActorNumber && !global::GorillaLocomotion.Player.Instance.InWater)
+			if (playerId == PhotonNetwork.LocalPlayer.ActorNumber && !GorillaLocomotion.Player.Instance.InWater)
 			{
 				if (base.photonView.IsMine)
 				{
@@ -1297,7 +1299,7 @@ namespace GorillaTag
 
 		private Photon.Realtime.Player[] allPlayersInRoom;
 
-		private ScienceExperimentManager.RotatingRingState[] rotatingRings;
+		private ScienceExperimentManager.RotatingRingState[] rotatingRings = new ScienceExperimentManager.RotatingRingState[0];
 
 		private const int maxPlayerCount = 10;
 

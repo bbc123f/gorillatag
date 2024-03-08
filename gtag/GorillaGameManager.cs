@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using ExitGames.Client.Photon;
+using GorillaGameModes;
+using GorillaLocomotion;
+using GorillaNetworking;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
@@ -73,29 +76,29 @@ public abstract class GorillaGameManager : MonoBehaviour, IInRoomCallbacks, IGor
 		return "NONE";
 	}
 
-	public virtual void ReportTag(Player taggedPlayer, Player taggingPlayer)
+	public virtual void ReportTag(Photon.Realtime.Player taggedPlayer, Photon.Realtime.Player taggingPlayer)
 	{
 	}
 
-	public virtual void HitPlayer(Player player)
+	public virtual void HitPlayer(Photon.Realtime.Player player)
 	{
 	}
 
-	public virtual bool CanAffectPlayer(Player player, bool thisFrame)
-	{
-		return false;
-	}
-
-	public virtual void NewVRRig(Player player, int vrrigPhotonViewID, bool didTutorial)
-	{
-	}
-
-	public virtual bool LocalCanTag(Player myPlayer, Player otherPlayer)
+	public virtual bool CanAffectPlayer(Photon.Realtime.Player player, bool thisFrame)
 	{
 		return false;
 	}
 
-	public virtual PhotonView FindVRRigForPlayer(Player player)
+	public virtual void NewVRRig(Photon.Realtime.Player player, int vrrigPhotonViewID, bool didTutorial)
+	{
+	}
+
+	public virtual bool LocalCanTag(Photon.Realtime.Player myPlayer, Photon.Realtime.Player otherPlayer)
+	{
+		return false;
+	}
+
+	public virtual PhotonView FindVRRigForPlayer(Photon.Realtime.Player player)
 	{
 		VRRig vrrig = this.FindPlayerVRRig(player);
 		if (vrrig == null)
@@ -105,7 +108,7 @@ public abstract class GorillaGameManager : MonoBehaviour, IInRoomCallbacks, IGor
 		return vrrig.photonView;
 	}
 
-	public virtual VRRig FindPlayerVRRig(Player player)
+	public virtual VRRig FindPlayerVRRig(Photon.Realtime.Player player)
 	{
 		this.returnRig = null;
 		this.outContainer = null;
@@ -120,7 +123,7 @@ public abstract class GorillaGameManager : MonoBehaviour, IInRoomCallbacks, IGor
 		return this.returnRig;
 	}
 
-	public static VRRig StaticFindRigForPlayer(Player player)
+	public static VRRig StaticFindRigForPlayer(Photon.Realtime.Player player)
 	{
 		VRRig vrrig = null;
 		RigContainer rigContainer;
@@ -142,7 +145,7 @@ public abstract class GorillaGameManager : MonoBehaviour, IInRoomCallbacks, IGor
 		return this.playerSpeed;
 	}
 
-	public virtual int MyMatIndex(Player forPlayer)
+	public virtual int MyMatIndex(Photon.Realtime.Player forPlayer)
 	{
 		return 0;
 	}
@@ -230,17 +233,17 @@ public abstract class GorillaGameManager : MonoBehaviour, IInRoomCallbacks, IGor
 		this.lastCheck = 0f;
 	}
 
-	public virtual void OnPlayerLeftRoom(Player otherPlayer)
+	public virtual void OnPlayerLeftRoom(Photon.Realtime.Player otherPlayer)
 	{
 		this.currentPlayerArray = PhotonNetwork.PlayerList;
 	}
 
-	public virtual void OnPlayerEnteredRoom(Player newPlayer)
+	public virtual void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
 	{
 		this.currentPlayerArray = PhotonNetwork.PlayerList;
 	}
 
-	public virtual void OnMasterClientSwitched(Player newMaster)
+	public virtual void OnMasterClientSwitched(Photon.Realtime.Player newMaster)
 	{
 	}
 
@@ -248,11 +251,28 @@ public abstract class GorillaGameManager : MonoBehaviour, IInRoomCallbacks, IGor
 	{
 	}
 
-	public virtual void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
+	public virtual void OnPlayerPropertiesUpdate(Photon.Realtime.Player targetPlayer, Hashtable changedProps)
 	{
 		if (changedProps.ContainsKey(255))
 		{
 			GorillaScoreboardTotalUpdater.instance.UpdateActiveScoreboards();
+		}
+	}
+
+	internal static void ForceStopGame_DisconnectAndDestroy()
+	{
+		Application.Quit();
+		NetworkSystem instance = NetworkSystem.Instance;
+		if (instance != null)
+		{
+			instance.ReturnToSinglePlayer();
+		}
+		Object.DestroyImmediate(PhotonNetworkController.Instance);
+		Object.DestroyImmediate(GorillaLocomotion.Player.Instance);
+		GameObject[] array = Object.FindObjectsOfType<GameObject>();
+		for (int i = 0; i < array.Length; i++)
+		{
+			Object.Destroy(array[i]);
 		}
 	}
 
@@ -288,19 +308,19 @@ public abstract class GorillaGameManager : MonoBehaviour, IInRoomCallbacks, IGor
 
 	public bool endGameManually;
 
-	public Player currentMasterClient;
+	public Photon.Realtime.Player currentMasterClient;
 
 	public PhotonView returnPhotonView;
 
 	public VRRig returnRig;
 
-	private Player outPlayer;
+	private Photon.Realtime.Player outPlayer;
 
 	private int outInt;
 
 	private VRRig tempRig;
 
-	public Player[] currentPlayerArray;
+	public Photon.Realtime.Player[] currentPlayerArray;
 
 	public float[] playerSpeed = new float[2];
 
@@ -314,5 +334,5 @@ public abstract class GorillaGameManager : MonoBehaviour, IInRoomCallbacks, IGor
 
 	private GameModeSerializer serializer;
 
-	public delegate void OnTouchDelegate(Player taggedPlayer, Player taggingPlayer);
+	public delegate void OnTouchDelegate(Photon.Realtime.Player taggedPlayer, Photon.Realtime.Player taggingPlayer);
 }

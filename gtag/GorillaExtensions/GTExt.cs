@@ -790,40 +790,39 @@ namespace GorillaExtensions
 			return GTExt.Matrix4X4LerpNoScale(a, b, t);
 		}
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static bool IsNaN(this Vector3 vector)
+		public static bool IsNaN(this Vector3 v)
 		{
-			return float.IsNaN(vector.x) || float.IsNaN(vector.y) || float.IsNaN(vector.z);
+			return float.IsNaN(v.x) || float.IsNaN(v.y) || float.IsNaN(v.z);
 		}
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static bool IsNan(this Quaternion quat)
+		public static bool IsNan(this Quaternion q)
 		{
-			return float.IsNaN(quat.x) || float.IsNaN(quat.y) || float.IsNaN(quat.z) || float.IsNaN(quat.w);
+			return float.IsNaN(q.x) || float.IsNaN(q.y) || float.IsNaN(q.z) || float.IsNaN(q.w);
 		}
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static bool IsInfinity(this Vector3 vector)
+		public static bool IsInfinity(this Vector3 v)
 		{
-			return float.IsInfinity(vector.x) || float.IsInfinity(vector.y) || float.IsInfinity(vector.z);
+			return float.IsInfinity(v.x) || float.IsInfinity(v.y) || float.IsInfinity(v.z);
 		}
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static bool IsInfinity(this Quaternion quat)
+		public static bool IsInfinity(this Quaternion q)
 		{
-			return float.IsInfinity(quat.x) || float.IsInfinity(quat.y) || float.IsInfinity(quat.z) || float.IsInfinity(quat.w);
+			return float.IsInfinity(q.x) || float.IsInfinity(q.y) || float.IsInfinity(q.z) || float.IsInfinity(q.w);
 		}
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static bool IsValid(this Vector3 vector)
+		public static bool IsValid(this Vector3 v)
 		{
-			return !(vector).IsNaN() && !(vector).IsInfinity();
+			return !(v).IsNaN() && !(v).IsInfinity();
 		}
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static bool IsValid(this Quaternion quat)
+		public static bool IsValid(this Quaternion q)
 		{
-			return !(quat).IsNan() && !(quat).IsInfinity() && (quat.x != 0f || quat.y != 0f || quat.z != 0f || quat.w != 0f);
+			bool flag = !Mathf.Approximately(q.x, 0f);
+			bool flag2 = !Mathf.Approximately(q.y, 0f);
+			bool flag3 = !Mathf.Approximately(q.z, 0f);
+			bool flag4 = !Mathf.Approximately(q.w, 0f);
+			bool flag5 = flag && flag2 && flag3 && flag4;
+			return !(q).IsNan() && !(q).IsInfinity() && flag5;
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1741,42 +1740,42 @@ namespace GorillaExtensions
 			return new Vector3(v.x, v.y, z);
 		}
 
-		public static bool ShorterThan(this Vector2 v, float len)
+		public static bool IsShorterThan(this Vector2 v, float len)
 		{
 			return v.sqrMagnitude < len * len;
 		}
 
-		public static bool ShorterThan(this Vector2 v, Vector2 v2)
+		public static bool IsShorterThan(this Vector2 v, Vector2 v2)
 		{
 			return v.sqrMagnitude < v2.sqrMagnitude;
 		}
 
-		public static bool ShorterThan(this Vector3 v, float len)
+		public static bool IsShorterThan(this Vector3 v, float len)
 		{
 			return v.sqrMagnitude < len * len;
 		}
 
-		public static bool ShorterThan(this Vector3 v, Vector3 v2)
+		public static bool IsShorterThan(this Vector3 v, Vector3 v2)
 		{
 			return v.sqrMagnitude < v2.sqrMagnitude;
 		}
 
-		public static bool LongerThan(this Vector2 v, float len)
+		public static bool IsLongerThan(this Vector2 v, float len)
 		{
 			return v.sqrMagnitude > len * len;
 		}
 
-		public static bool LongerThan(this Vector2 v, Vector2 v2)
+		public static bool IsLongerThan(this Vector2 v, Vector2 v2)
 		{
 			return v.sqrMagnitude > v2.sqrMagnitude;
 		}
 
-		public static bool LongerThan(this Vector3 v, float len)
+		public static bool IsLongerThan(this Vector3 v, float len)
 		{
 			return v.sqrMagnitude > len * len;
 		}
 
-		public static bool LongerThan(this Vector3 v, Vector3 v2)
+		public static bool IsLongerThan(this Vector3 v, Vector3 v2)
 		{
 			return v.sqrMagnitude > v2.sqrMagnitude;
 		}

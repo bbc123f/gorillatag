@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using ExitGames.Client.Photon;
 using GorillaNetworking;
-using Photon.Pun;
-using Photon.Realtime;
 using UnityEngine;
 
-public class GorillaScoreboardTotalUpdater : MonoBehaviour, IInRoomCallbacks, IMatchmakingCallbacks
+public class GorillaScoreboardTotalUpdater : MonoBehaviour
 {
 	public void UpdateLineState(GorillaPlayerScoreboardLine line)
 	{
@@ -30,7 +27,13 @@ public class GorillaScoreboardTotalUpdater : MonoBehaviour, IInRoomCallbacks, IM
 			return;
 		}
 		GorillaScoreboardTotalUpdater.SetInstance(this);
-		PhotonNetwork.AddCallbackTarget(this);
+	}
+
+	private void Start()
+	{
+		NetworkSystem.Instance.OnPlayerJoined += this.OnPlayerEnteredRoom;
+		NetworkSystem.Instance.OnPlayerLeft += this.OnPlayerLeftRoom;
+		NetworkSystem.Instance.OnReturnedToSinglePlayer += this.OnLeftRoom;
 	}
 
 	public static void CreateManager()
@@ -178,33 +181,46 @@ public class GorillaScoreboardTotalUpdater : MonoBehaviour, IInRoomCallbacks, IM
 		}
 	}
 
-	void IInRoomCallbacks.OnPlayerEnteredRoom(Player newPlayer)
+	private void OnPlayerEnteredRoom(int netPlayerID)
 	{
-		this.playersInRoom.Add(newPlayer);
-		this.UpdateActiveScoreboards();
-	}
-
-	void IInRoomCallbacks.OnPlayerLeftRoom(Player otherPlayer)
-	{
-		this.playersInRoom.Remove(otherPlayer);
-		this.UpdateActiveScoreboards();
-	}
-
-	void IMatchmakingCallbacks.OnJoinedRoom()
-	{
-		this.joinedRoom = true;
-		foreach (Player player in PhotonNetwork.CurrentRoom.Players.Values)
+		NetPlayer player = NetworkSystem.Instance.GetPlayer(netPlayerID);
+		if (player == null)
+		{
+			Debug.LogError("Null netplayer");
+		}
+		if (!this.playersInRoom.Contains(player))
 		{
 			this.playersInRoom.Add(player);
 		}
-		this.playersInRoom.Sort((Player x, Player y) => x.ActorNumber.CompareTo(y.ActorNumber));
+		this.UpdateActiveScoreboards();
+	}
+
+	private void OnPlayerLeftRoom(int netPlayerID)
+	{
+		NetPlayer player = NetworkSystem.Instance.GetPlayer(netPlayerID);
+		if (player == null)
+		{
+			Debug.LogError("Null netplayer");
+		}
+		this.playersInRoom.Remove(player);
+		this.UpdateActiveScoreboards();
+	}
+
+	internal void JoinedRoom()
+	{
+		this.joinedRoom = true;
+		foreach (NetPlayer netPlayer in NetworkSystem.Instance.AllNetPlayers)
+		{
+			this.playersInRoom.Add(netPlayer);
+		}
+		this.playersInRoom.Sort((NetPlayer x, NetPlayer y) => x.ID.CompareTo(y.ID));
 		foreach (GorillaScoreBoard gorillaScoreBoard in GorillaScoreboardTotalUpdater.allScoreboards)
 		{
 			this.UpdateScoreboard(gorillaScoreBoard);
 		}
 	}
 
-	void IMatchmakingCallbacks.OnLeftRoom()
+	private void OnLeftRoom()
 	{
 		this.joinedRoom = false;
 		this.playersInRoom.Clear();
@@ -213,42 +229,6 @@ public class GorillaScoreboardTotalUpdater : MonoBehaviour, IInRoomCallbacks, IM
 		{
 			this.UpdateScoreboard(gorillaScoreBoard);
 		}
-	}
-
-	void IInRoomCallbacks.OnMasterClientSwitched(Player newMasterClient)
-	{
-	}
-
-	void IInRoomCallbacks.OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
-	{
-	}
-
-	void IInRoomCallbacks.OnRoomPropertiesUpdate(Hashtable propertiesThatChanged)
-	{
-	}
-
-	void IMatchmakingCallbacks.OnCreatedRoom()
-	{
-	}
-
-	void IMatchmakingCallbacks.OnCreateRoomFailed(short returnCode, string message)
-	{
-	}
-
-	void IMatchmakingCallbacks.OnJoinRoomFailed(short returnCode, string message)
-	{
-	}
-
-	void IMatchmakingCallbacks.OnJoinRandomFailed(short returnCode, string message)
-	{
-	}
-
-	void IMatchmakingCallbacks.OnPreLeavingRoom()
-	{
-	}
-
-	void IMatchmakingCallbacks.OnFriendListUpdate(List<FriendInfo> friendList)
-	{
 	}
 
 	public static GorillaScoreboardTotalUpdater instance;
@@ -268,7 +248,7 @@ public class GorillaScoreboardTotalUpdater : MonoBehaviour, IInRoomCallbacks, IM
 
 	private static int boardsPerFrame = 1;
 
-	private List<Player> playersInRoom = new List<Player>();
+	private List<NetPlayer> playersInRoom = new List<NetPlayer>();
 
 	private bool joinedRoom;
 

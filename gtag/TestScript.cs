@@ -1,8 +1,7 @@
 ﻿using System;
-using Photon.Pun;
 using UnityEngine;
 
-public class TestScript : MonoBehaviourPunCallbacks
+public class TestScript : MonoBehaviour
 {
 	public int callbackOrder
 	{

@@ -140,6 +140,7 @@ namespace GorillaNetworking
 
 		private void AuthenticateWithPhoton(GetPhotonAuthenticationTokenResult photonTokenResult)
 		{
+			this.LogMessage("Photon token acquired: " + photonTokenResult.PhotonCustomAuthenticationToken + "  Authentication complete.");
 			AuthenticationValues authenticationValues = new AuthenticationValues(PlayFabSettings.DeviceUniqueIdentifier);
 			authenticationValues.AuthType = CustomAuthenticationType.Custom;
 			string playFabPlayerIdCache = this._playFabPlayerIdCache;
@@ -161,8 +162,8 @@ namespace GorillaNetworking
 				{ "Nonce", this._nonce }
 			};
 			authenticationValues.SetAuthPostData(dictionary);
-			Debug.Log("Set Photon auth data. Appversion is: " + PhotonNetwork.AppVersion);
 			PhotonNetwork.AuthValues = authenticationValues;
+			Debug.Log("Set Photon auth data. Appversion is: " + PhotonNetwork.AppVersion);
 			this.GetPlayerDisplayName(this._playFabPlayerIdCache);
 			ExecuteCloudScriptRequest executeCloudScriptRequest = new ExecuteCloudScriptRequest();
 			executeCloudScriptRequest.FunctionName = "AddOrRemoveDLCOwnership";
@@ -192,10 +193,25 @@ namespace GorillaNetworking
 			{
 				this.gorillaComputer.OnConnectedToMasterStuff();
 			}
+			else
+			{
+				base.StartCoroutine(this.ComputerOnConnectedToMaster());
+			}
 			if (PhotonNetworkController.Instance != null)
 			{
-				PhotonNetworkController.Instance.InitiateConnection();
+				NetworkSystem.Instance.SetAuthenticationValues(null);
 			}
+		}
+
+		private IEnumerator ComputerOnConnectedToMaster()
+		{
+			WaitForEndOfFrame frameYield = new WaitForEndOfFrame();
+			while (this.gorillaComputer == null)
+			{
+				yield return frameYield;
+			}
+			this.gorillaComputer.OnConnectedToMasterStuff();
+			yield break;
 		}
 
 		private void OnPlayFabError(PlayFabError obj)

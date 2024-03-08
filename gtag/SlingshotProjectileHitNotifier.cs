@@ -10,6 +10,8 @@ public class SlingshotProjectileHitNotifier : BaseGuidedRefTargetMono
 
 	public event SlingshotProjectileHitNotifier.ProjectileTriggerEvent OnProjectileTriggerEnter;
 
+	public event SlingshotProjectileHitNotifier.ProjectileTriggerEvent OnProjectileTriggerExit;
+
 	public void InvokeHit(SlingshotProjectile projectile, Collision collision)
 	{
 		SlingshotProjectileHitNotifier.ProjectileHitEvent onProjectileHit = this.OnProjectileHit;
@@ -40,10 +42,21 @@ public class SlingshotProjectileHitNotifier : BaseGuidedRefTargetMono
 		onProjectileTriggerEnter(projectile, collider);
 	}
 
+	public void InvokeTriggerExit(SlingshotProjectile projectile, Collider collider)
+	{
+		SlingshotProjectileHitNotifier.ProjectileTriggerEvent onProjectileTriggerExit = this.OnProjectileTriggerExit;
+		if (onProjectileTriggerExit == null)
+		{
+			return;
+		}
+		onProjectileTriggerExit(projectile, collider);
+	}
+
 	private new void OnDestroy()
 	{
 		this.OnProjectileHit = null;
 		this.OnProjectileCollisionStay = null;
+		this.OnProjectileTriggerExit = null;
 	}
 
 	public delegate void ProjectileHitEvent(SlingshotProjectile projectile, Collision collision);

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using ExitGames.Client.Photon;
+using GorillaGameModes;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
@@ -353,16 +354,16 @@ public class GorillaTagManager : GorillaGameManager
 		bool isMasterClient = PhotonNetwork.LocalPlayer.IsMasterClient;
 	}
 
-	public override void NewVRRig(Player player, int vrrigPhotonViewID, bool didntDoTutorial)
+	public override void NewVRRig(Player player, int vrrigPhotonViewID, bool didTutorial)
 	{
-		base.NewVRRig(player, vrrigPhotonViewID, didntDoTutorial);
+		base.NewVRRig(player, vrrigPhotonViewID, didTutorial);
 		if (PhotonNetwork.IsMasterClient)
 		{
 			bool flag = this.isCurrentlyTag;
 			this.UpdateState();
 			if (!flag && !this.isCurrentlyTag)
 			{
-				if (!didntDoTutorial)
+				if (didTutorial)
 				{
 					this.AddInfectedPlayer(player, false);
 				}

@@ -5,7 +5,7 @@ using UnityEngine.Serialization;
 
 public class ThrowableBug : TransferrableObject
 {
-	public new void Start()
+	protected override void Start()
 	{
 		float num = Random.Range(0f, 6.2831855f);
 		this.targetVelocity = new Vector3(Mathf.Sin(num) * this.maxNaturalSpeed, 0f, Mathf.Cos(num) * this.maxNaturalSpeed);

@@ -1,31 +1,33 @@
 ﻿using System;
-using GorillaTag;
 using UnityEngine;
 
 public class ZoneConditionalVisibility : MonoBehaviour
 {
 	private void Start()
 	{
-		this.zoneRoot.AddCallback(new Action<GameObject>(this.Callback), true);
+		this.OnZoneChanged();
+		ZoneManagement instance = ZoneManagement.instance;
+		instance.onZoneChanged = (Action)Delegate.Combine(instance.onZoneChanged, new Action(this.OnZoneChanged));
 	}
 
 	private void OnDestroy()
 	{
-		this.zoneRoot.RemoveCallback(new Action<GameObject>(this.Callback));
+		ZoneManagement instance = ZoneManagement.instance;
+		instance.onZoneChanged = (Action)Delegate.Remove(instance.onZoneChanged, new Action(this.OnZoneChanged));
 	}
 
-	private void Callback(GameObject rootObject)
+	private void OnZoneChanged()
 	{
 		if (this.invisibleWhileLoaded)
 		{
-			base.gameObject.SetActive(rootObject == null);
+			base.gameObject.SetActive(!ZoneManagement.IsInZone(this.zone));
 			return;
 		}
-		base.gameObject.SetActive(rootObject != null);
+		base.gameObject.SetActive(ZoneManagement.IsInZone(this.zone));
 	}
 
 	[SerializeField]
-	private WatchableGameObjectSO zoneRoot;
+	private GTZone zone;
 
 	[SerializeField]
 	private bool invisibleWhileLoaded;

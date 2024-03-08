@@ -1,4 +1,5 @@
 ﻿using System;
+using GorillaGameModes;
 using Photon.Pun;
 
 public class CasualGameMode : GorillaGameManager

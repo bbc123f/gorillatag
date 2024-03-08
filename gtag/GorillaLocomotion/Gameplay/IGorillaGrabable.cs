@@ -1,11 +1,12 @@
 ﻿using System;
+using UnityEngine;
 
 namespace GorillaLocomotion.Gameplay
 {
 	internal interface IGorillaGrabable
 	{
-		void OnGrabbed();
+		Transform OnGrabbed(GorillaGrabber grabber);
 
-		void OnGrabReleased();
+		Transform OnGrabReleased(GorillaGrabber grabber);
 	}
 }

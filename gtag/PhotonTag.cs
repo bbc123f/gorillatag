@@ -57,7 +57,7 @@ public class PhotonTag : MonoBehaviour, IOnEventCallback, IEquatable<PhotonTag>
 		{
 			return;
 		}
-		this._tagId = global::BuildSafe.ComponentUtils.GetComponentID(this, 0);
+		this._tagId = BuildSafe.ComponentUtils.GetComponentID(this, 0);
 	}
 
 	public bool Equals(PhotonTag other)

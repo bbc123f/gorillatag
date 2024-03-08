@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Photon.Pun;
-using Photon.Realtime;
 using UnityEngine;
 
 public class GorillaParent : MonoBehaviour
@@ -41,9 +40,19 @@ public class GorillaParent : MonoBehaviour
 			}
 			this.i--;
 		}
-		if (RoomSystem.JoinedRoom && GorillaTagger.Instance.offlineVRRig.photonView == null)
+		if (NetworkSystem.Instance.InRoom && this.joinedRoom)
 		{
-			PhotonNetwork.Instantiate("GorillaPrefabs/Gorilla Player Networked", Vector3.zero, Quaternion.identity, 0, null);
+			if (GorillaTagger.Instance.offlineVRRig.photonView == null)
+			{
+				Debug.LogError("IS THIS BEING HIT?");
+				Debug.Log("online rig missing, re-instantiating it", base.gameObject);
+				PhotonNetwork.Instantiate("GorillaPrefabs/Gorilla Player Networked", Vector3.zero, Quaternion.identity, 0, null);
+				return;
+			}
+		}
+		else if (!NetworkSystem.Instance.InRoom && this.joinedRoom)
+		{
+			this.joinedRoom = false;
 		}
 	}
 
@@ -82,11 +91,9 @@ public class GorillaParent : MonoBehaviour
 
 	public List<VRRig> vrrigs;
 
-	public Dictionary<Player, VRRig> vrrigDict = new Dictionary<Player, VRRig>();
+	public Dictionary<NetPlayer, VRRig> vrrigDict = new Dictionary<NetPlayer, VRRig>();
 
 	private int i;
-
-	private PhotonView[] childPhotonViews;
 
 	private bool joinedRoom;
 

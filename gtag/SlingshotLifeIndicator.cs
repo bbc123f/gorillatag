@@ -1,10 +1,19 @@
 ﻿using System;
-using Photon.Pun;
-using Photon.Realtime;
 using UnityEngine;
 
-public class SlingshotLifeIndicator : MonoBehaviourPunCallbacks, IInRoomCallbacks
+public class SlingshotLifeIndicator : MonoBehaviour
 {
+	private void OnEnable()
+	{
+		NetworkSystem.Instance.OnReturnedToSinglePlayer += this.OnLeftRoom;
+	}
+
+	public void OnDisable()
+	{
+		this.Reset();
+		NetworkSystem.Instance.OnReturnedToSinglePlayer -= this.OnLeftRoom;
+	}
+
 	private void SetActive(GameObject obj, bool active)
 	{
 		if (!obj.activeSelf && active)
@@ -19,7 +28,7 @@ public class SlingshotLifeIndicator : MonoBehaviourPunCallbacks, IInRoomCallback
 
 	private void LateUpdate()
 	{
-		if (!PhotonNetwork.InRoom || (this.checkedBattle && !this.inBattle))
+		if (!NetworkSystem.Instance.InRoom || (this.checkedBattle && !this.inBattle))
 		{
 			if (this.indicator1.activeSelf)
 			{
@@ -61,15 +70,8 @@ public class SlingshotLifeIndicator : MonoBehaviourPunCallbacks, IInRoomCallback
 		this.SetActive(this.indicator3, playerLives >= 3);
 	}
 
-	public override void OnDisable()
+	public void OnLeftRoom()
 	{
-		base.OnDisable();
-		this.Reset();
-	}
-
-	public override void OnLeftRoom()
-	{
-		base.OnLeftRoom();
 		this.Reset();
 	}
 
@@ -83,8 +85,6 @@ public class SlingshotLifeIndicator : MonoBehaviourPunCallbacks, IInRoomCallback
 	public VRRig myRig;
 
 	public GorillaBattleManager bMgr;
-
-	public Player myPlayer;
 
 	public bool checkedBattle;
 

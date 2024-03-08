@@ -118,6 +118,72 @@ public struct SRand
 		return min + this.NextInt(num);
 	}
 
+	public int NextIntWithExclusion(int min, int max, int exclude)
+	{
+		int num = max - min - 1;
+		if (num <= 0)
+		{
+			return min;
+		}
+		int num2 = min + 1 + this.NextInt(num);
+		if (num2 > exclude)
+		{
+			return num2;
+		}
+		return num2 - 1;
+	}
+
+	public int NextIntWithExclusion2(int min, int max, int exclude, int exclude2)
+	{
+		if (exclude == exclude2)
+		{
+			return this.NextIntWithExclusion(min, max, exclude);
+		}
+		int num = max - min - 2;
+		if (num <= 0)
+		{
+			return min;
+		}
+		int num2 = min + 2 + this.NextInt(num);
+		int num3;
+		int num4;
+		if (exclude >= exclude2)
+		{
+			num3 = exclude2 + 1;
+			num4 = exclude;
+		}
+		else
+		{
+			num3 = exclude + 1;
+			num4 = exclude2;
+		}
+		if (num2 <= num3)
+		{
+			return num2 - 2;
+		}
+		if (num2 <= num4)
+		{
+			return num2 - 1;
+		}
+		return num2;
+	}
+
+	public Color32 NextColor32()
+	{
+		byte b = (byte)this.NextInt(256);
+		byte b2 = (byte)this.NextInt(256);
+		byte b3 = (byte)this.NextInt(256);
+		return new Color32(b, b2, b3, byte.MaxValue);
+	}
+
+	public Color NextColor()
+	{
+		float num = this.NextFloat();
+		float num2 = this.NextFloat();
+		float num3 = this.NextFloat();
+		return new Color(num, num2, num3, 1f);
+	}
+
 	public void Shuffle<T>(T[] array)
 	{
 		int i = array.Length;

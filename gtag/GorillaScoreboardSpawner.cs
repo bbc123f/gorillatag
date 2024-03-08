@@ -1,16 +1,20 @@
 ﻿using System;
 using System.Collections;
 using GorillaLocomotion;
-using Photon.Pun;
-using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GorillaScoreboardSpawner : MonoBehaviourPunCallbacks
+public class GorillaScoreboardSpawner : MonoBehaviour
 {
 	public void Awake()
 	{
 		base.StartCoroutine(this.UpdateBoard());
+	}
+
+	private void Start()
+	{
+		NetworkSystem.Instance.OnMultiplayerStarted += this.OnJoinedRoom;
+		NetworkSystem.Instance.OnReturnedToSinglePlayer += this.OnLeftRoom;
 	}
 
 	public bool IsCurrentScoreboard()
@@ -18,25 +22,20 @@ public class GorillaScoreboardSpawner : MonoBehaviourPunCallbacks
 		return base.gameObject.activeInHierarchy;
 	}
 
-	public override void OnJoinedRoom()
+	public void OnJoinedRoom()
 	{
+		Debug.Log("SCOREBOARD JOIN ROOM");
 		if (this.IsCurrentScoreboard())
 		{
 			this.notInRoomText.SetActive(false);
-			GameObject gameObject = Object.Instantiate<GameObject>(this.scoreboardPrefab, base.transform);
-			this.currentScoreboard = gameObject.GetComponent<GorillaScoreBoard>();
-			gameObject.transform.rotation = base.transform.rotation;
+			this.currentScoreboard = Object.Instantiate<GameObject>(this.scoreboardPrefab, base.transform).GetComponent<GorillaScoreBoard>();
+			this.currentScoreboard.transform.rotation = base.transform.rotation;
 			if (this.includeMMR)
 			{
-				gameObject.GetComponent<GorillaScoreBoard>().includeMMR = true;
-				gameObject.GetComponent<Text>().text = "Player                     Color         Level        MMR";
+				this.currentScoreboard.GetComponent<GorillaScoreBoard>().includeMMR = true;
+				this.currentScoreboard.GetComponent<Text>().text = "Player                     Color         Level        MMR";
 			}
 		}
-	}
-
-	public override void OnDisconnected(DisconnectCause cause)
-	{
-		this.OnLeftRoom();
 	}
 
 	public bool IsVisible()
@@ -45,7 +44,7 @@ public class GorillaScoreboardSpawner : MonoBehaviourPunCallbacks
 		{
 			return this.controllingParentGameObject.activeSelf;
 		}
-		return global::GorillaLocomotion.Player.Instance.inOverlay;
+		return Player.Instance.inOverlay;
 	}
 
 	private IEnumerator UpdateBoard()
@@ -82,16 +81,21 @@ public class GorillaScoreboardSpawner : MonoBehaviourPunCallbacks
 		yield break;
 	}
 
-	public override void OnLeftRoom()
+	public void OnLeftRoom()
+	{
+		this.Cleanup();
+		if (this.notInRoomText)
+		{
+			this.notInRoomText.SetActive(true);
+		}
+	}
+
+	public void Cleanup()
 	{
 		if (this.currentScoreboard != null)
 		{
 			Object.Destroy(this.currentScoreboard.gameObject);
 			this.currentScoreboard = null;
-		}
-		if (this.notInRoomText)
-		{
-			this.notInRoomText.SetActive(true);
 		}
 	}
 

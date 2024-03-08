@@ -12,5 +12,6 @@ public enum GTZone
 	cave,
 	cityWithSkyJungle,
 	tutorial,
-	rotating
+	rotating,
+	none
 }

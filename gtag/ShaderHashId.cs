@@ -1,17 +1,19 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
+[Serializable]
 public struct ShaderHashId
 {
-	public ShaderHashId(string hashText)
+	public ShaderHashId(string text)
 	{
-		this.hashText = hashText;
-		this.hashValue = Shader.PropertyToID(hashText);
+		this._text = text;
+		this._hash = Shader.PropertyToID(text);
 	}
 
 	public static implicit operator int(ShaderHashId h)
 	{
-		return h.hashValue;
+		return h._hash;
 	}
 
 	public static implicit operator ShaderHashId(string s)
@@ -19,7 +21,11 @@ public struct ShaderHashId
 		return new ShaderHashId(s);
 	}
 
-	private string hashText;
+	[FormerlySerializedAs("_hashText")]
+	[SerializeField]
+	private string _text;
 
-	private int hashValue;
+	[DebugReadOnly]
+	[NonSerialized]
+	private int _hash;
 }

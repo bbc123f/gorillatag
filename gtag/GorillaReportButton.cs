@@ -22,7 +22,7 @@ public class GorillaReportButton : MonoBehaviour
 			GorillaTagger.Instance.offlineVRRig.PlayHandTapLocal(67, false, 0.05f);
 			if (PhotonNetwork.InRoom && GorillaTagger.Instance.myVRRig != null)
 			{
-				PhotonView.Get(GorillaTagger.Instance.myVRRig).RPC("PlayHandTap", RpcTarget.Others, new object[] { 67, false, 0.05f });
+				GorillaTagger.Instance.myVRRig.RPC("PlayHandTap", RpcTarget.Others, new object[] { 67, false, 0.05f });
 			}
 		}
 	}

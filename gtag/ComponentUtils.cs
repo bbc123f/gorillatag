@@ -4,49 +4,23 @@ using UnityEngine;
 
 public static class ComponentUtils
 {
-	public static T EnsureComponent<T>(this GameObject g) where T : Component
+	public static T AddComponent<T>(this Component c) where T : Component
 	{
-		T component = g.GetComponent<T>();
-		if (!(component == null))
-		{
-			return component;
-		}
-		return g.AddComponent<T>();
+		return c.gameObject.AddComponent<T>();
 	}
 
-	public static T GetOrAdd<T>(this Component c, ref T instance) where T : Component
+	public static void GetOrAddComponent<T>(this Component c, out T result) where T : Component
 	{
-		if (!ComponentUtils.IsNull<T>(instance))
+		if (!c.TryGetComponent<T>(out result))
 		{
-			return instance;
+			result = c.gameObject.AddComponent<T>();
 		}
-		GameObject gameObject = c.gameObject;
-		instance = gameObject.GetComponent<T>();
-		if (instance != null)
-		{
-			return instance;
-		}
-		return instance = gameObject.AddComponent<T>();
-	}
-
-	public static T GetOrAdd<T>(this GameObject g, ref T instance) where T : Component
-	{
-		if (!ComponentUtils.IsNull<T>(instance))
-		{
-			return instance;
-		}
-		instance = g.GetComponent<T>();
-		if (instance != null)
-		{
-			return instance;
-		}
-		return instance = g.AddComponent<T>();
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	private static bool IsNull<T>(T unityObject) where T : Object
 	{
-		return unityObject != null && unityObject.GetHashCode() != 0;
+		return unityObject == null || unityObject.GetHashCode() == 0;
 	}
 
 	public static bool GetComponentAndSetFieldIfNullElseLogAndDisable<T>(this Behaviour c, ref T fieldRef, string fieldName, string fieldTypeName, string msgSuffix = "Disabling.", [CallerMemberName] string caller = "__UNKNOWN_CALLER__") where T : Component

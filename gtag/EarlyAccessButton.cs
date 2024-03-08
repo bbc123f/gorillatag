@@ -11,7 +11,7 @@ public class EarlyAccessButton : GorillaPressableButton
 
 	public void Update()
 	{
-		if (PhotonNetworkController.Instance != null && PhotonNetworkController.Instance.wrongVersion)
+		if (NetworkSystem.Instance != null && NetworkSystem.Instance.WrongVersion)
 		{
 			base.enabled = false;
 			base.GetComponent<BoxCollider>().enabled = false;

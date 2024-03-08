@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace GorillaNetworking
@@ -7,12 +8,14 @@ namespace GorillaNetworking
 	[Serializable]
 	public class GorillaText
 	{
-		public void Initialize(MeshRenderer meshRenderer_, Material failureMaterial_)
+		public void Initialize(Material[] originalMaterials, Material failureMaterial, UnityEvent<string> callback = null, UnityEvent<Material[]> materialCallback = null)
 		{
-			this.meshRenderer = meshRenderer_;
-			this.failureMaterial = failureMaterial_;
-			this.originalMaterials = this.meshRenderer.materials;
-			this.originalText = this.text.text;
+			this.failureMaterial = failureMaterial;
+			this.originalMaterials = originalMaterials;
+			this.currentMaterials = originalMaterials;
+			Debug.Log("Original text = " + this.originalText);
+			this.updateTextCallback = callback;
+			this.updateMaterialCallback = materialCallback;
 		}
 
 		public string Text
@@ -23,10 +26,19 @@ namespace GorillaNetworking
 			}
 			set
 			{
+				if (this.originalText == value)
+				{
+					return;
+				}
 				this.originalText = value;
 				if (!this.failedState)
 				{
-					this.text.text = value;
+					UnityEvent<string> unityEvent = this.updateTextCallback;
+					if (unityEvent == null)
+					{
+						return;
+					}
+					unityEvent.Invoke(value);
 				}
 			}
 		}
@@ -34,19 +46,38 @@ namespace GorillaNetworking
 		public void EnableFailedState(string failText)
 		{
 			this.failedState = true;
-			this.text.text = failText;
 			this.failureText = failText;
-			Material[] materials = this.meshRenderer.materials;
-			materials[0] = this.failureMaterial;
-			this.meshRenderer.materials = materials;
+			UnityEvent<string> unityEvent = this.updateTextCallback;
+			if (unityEvent != null)
+			{
+				unityEvent.Invoke(failText);
+			}
+			this.currentMaterials = (Material[])this.originalMaterials.Clone();
+			this.currentMaterials[0] = this.failureMaterial;
+			UnityEvent<Material[]> unityEvent2 = this.updateMaterialCallback;
+			if (unityEvent2 == null)
+			{
+				return;
+			}
+			unityEvent2.Invoke(this.currentMaterials);
 		}
 
 		public void DisableFailedState()
 		{
 			this.failedState = true;
-			this.text.text = this.originalText;
+			UnityEvent<string> unityEvent = this.updateTextCallback;
+			if (unityEvent != null)
+			{
+				unityEvent.Invoke(this.originalText);
+			}
 			this.failureText = "";
-			this.meshRenderer.materials = this.originalMaterials;
+			this.currentMaterials = this.originalMaterials;
+			UnityEvent<Material[]> unityEvent2 = this.updateMaterialCallback;
+			if (unityEvent2 == null)
+			{
+				return;
+			}
+			unityEvent2.Invoke(this.currentMaterials);
 		}
 
 		[SerializeField]
@@ -54,7 +85,7 @@ namespace GorillaNetworking
 
 		private string failureText;
 
-		private string originalText;
+		private string originalText = string.Empty;
 
 		private bool failedState;
 
@@ -62,6 +93,10 @@ namespace GorillaNetworking
 
 		private Material failureMaterial;
 
-		private MeshRenderer meshRenderer;
+		internal Material[] currentMaterials;
+
+		private UnityEvent<string> updateTextCallback;
+
+		private UnityEvent<Material[]> updateMaterialCallback;
 	}
 }

@@ -3,19 +3,24 @@ using UnityEngine;
 
 public class GorillaMouthFlap : MonoBehaviour
 {
+	private void Start()
+	{
+		this.speaker = base.GetComponent<GorillaSpeakerLoudness>();
+	}
+
 	private void Update()
 	{
-		GorillaSpeakerLoudness component = base.GetComponent<GorillaSpeakerLoudness>();
-		if (component == null)
+		if (this.speaker == null)
 		{
+			this.speaker = base.GetComponent<GorillaSpeakerLoudness>();
 			return;
 		}
 		float num = 0f;
-		if (component.IsSpeaking)
+		if (this.speaker.IsSpeaking)
 		{
-			num = component.Loudness;
+			num = this.speaker.Loudness;
 		}
-		this.CheckMouthflapChange(component.IsMicEnabled, num);
+		this.CheckMouthflapChange(this.speaker.IsMicEnabled, num);
 		MouthFlapLevel mouthFlapLevel = this.noMicFace;
 		if (this.useMicEnabled)
 		{
@@ -80,6 +85,8 @@ public class GorillaMouthFlap : MonoBehaviour
 	private int activeFlipbookIndex;
 
 	private float activeFlipbookPlayTime;
+
+	private GorillaSpeakerLoudness speaker;
 
 	private ShaderHashId _MouthMap = "_MouthMap";
 }

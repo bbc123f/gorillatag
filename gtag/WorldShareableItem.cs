@@ -240,7 +240,7 @@ public class WorldShareableItem : MonoBehaviourPunCallbacks, IPunInstantiateMagi
 	}
 
 	[PunRPC]
-	private void RPCWorldShareable(PhotonMessageInfo info)
+	internal void RPCWorldShareable(PhotonMessageInfo info)
 	{
 		GorillaNot.IncrementRPCCall(info, "RPCWorldShareable");
 		this.rpcCallBack();
@@ -271,7 +271,7 @@ public class WorldShareableItem : MonoBehaviourPunCallbacks, IPunInstantiateMagi
 
 	private bool validShareable = true;
 
-	private PhotonView view;
+	internal PhotonView view;
 
 	public RequestableOwnershipGuard guard;
 

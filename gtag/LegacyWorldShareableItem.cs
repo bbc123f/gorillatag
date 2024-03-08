@@ -141,7 +141,7 @@ public class LegacyWorldShareableItem : MonoBehaviourPunCallbacks, IPunInstantia
 	}
 
 	[PunRPC]
-	private void RPCWorldShareable(PhotonMessageInfo info)
+	internal void RPCWorldShareable(PhotonMessageInfo info)
 	{
 		GorillaNot.IncrementRPCCall(info, "RPCWorldShareable");
 		this.rpcCallBack();

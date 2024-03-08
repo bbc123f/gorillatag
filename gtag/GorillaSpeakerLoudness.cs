@@ -61,13 +61,12 @@ public class GorillaSpeakerLoudness : MonoBehaviour
 		VRRig rig = this.rigContainer.Rig;
 		if (rig.isOfflineVRRig)
 		{
-			bool flag = MicPermissionsManager.HasMicPermission();
-			bool flag2 = true;
-			if (flag && Microphone.devices != null)
+			this.permission = this.permission || MicPermissionsManager.HasMicPermission();
+			if (this.permission && !this.micConnected && Microphone.devices != null)
 			{
-				flag2 = Microphone.devices.Length != 0;
+				this.micConnected = Microphone.devices.Length != 0;
 			}
-			this.isMicEnabled = flag && flag2;
+			this.isMicEnabled = this.permission && this.micConnected;
 			rig.IsMicEnabled = this.isMicEnabled;
 			return;
 		}
@@ -80,17 +79,14 @@ public class GorillaSpeakerLoudness : MonoBehaviour
 		{
 			return;
 		}
-		if (this.voiceView == null)
+		PhotonVoiceView voice = this.rigContainer.Voice;
+		if (voice != null && this.speaker == null)
 		{
-			this.voiceView = this.rigContainer.Voice;
-		}
-		if (this.voiceView != null && this.speaker == null)
-		{
-			this.speaker = this.voiceView.SpeakerInUse;
+			this.speaker = voice.SpeakerInUse;
 		}
 		if (this.recorder == null)
 		{
-			this.recorder = PhotonNetworkController.Instance.GetComponent<Recorder>();
+			this.recorder = ((voice != null) ? voice.RecorderInUse : null);
 		}
 		VRRig rig = this.rigContainer.Rig;
 		if ((rig.remoteUseReplacementVoice || rig.localUseReplacementVoice || GorillaComputer.instance.voiceChatOn == "FALSE") && rig.SpeakingLoudness > 0f)
@@ -99,7 +95,7 @@ public class GorillaSpeakerLoudness : MonoBehaviour
 			this.loudness = rig.SpeakingLoudness;
 			return;
 		}
-		if (this.voiceView != null && this.voiceView.IsSpeaking)
+		if (voice != null && voice.IsSpeaking)
 		{
 			this.isSpeaking = true;
 			if (!(this.speaker != null))
@@ -117,7 +113,7 @@ public class GorillaSpeakerLoudness : MonoBehaviour
 				return;
 			}
 		}
-		else if (this.rigContainer.photonView != null && this.rigContainer.photonView.IsMine && this.recorder != null && this.recorder.IsCurrentlyTransmitting)
+		else if (voice != null && this.recorder != null && NetworkSystem.Instance.IsObjectLocallyOwned(voice.gameObject) && this.recorder.IsCurrentlyTransmitting)
 		{
 			if (this.voiceToLoudness == null)
 			{
@@ -170,8 +166,6 @@ public class GorillaSpeakerLoudness : MonoBehaviour
 
 	private RigContainer rigContainer;
 
-	private PhotonVoiceView voiceView;
-
 	private Speaker speaker;
 
 	private SpeakerVoiceToLoudness speakerVoiceToLoudness;
@@ -189,4 +183,8 @@ public class GorillaSpeakerLoudness : MonoBehaviour
 	private float loudnessUpdateCheckRate = 0.2f;
 
 	private float loudnessBlendStrength = 2f;
+
+	private bool permission;
+
+	private bool micConnected;
 }

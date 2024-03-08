@@ -1,11 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using Photon.Pun;
-using Photon.Realtime;
 using UnityEngine;
 
-public class MazePlayerCollection : MonoBehaviourPunCallbacks
+public class MazePlayerCollection : MonoBehaviour
 {
+	private void Start()
+	{
+		NetworkSystem.Instance.OnPlayerLeft += this.OnPlayerLeftRoom;
+	}
+
+	private void OnDestroy()
+	{
+		NetworkSystem.Instance.OnPlayerLeft -= this.OnPlayerLeftRoom;
+	}
+
 	public void OnTriggerEnter(Collider other)
 	{
 		if (!other.GetComponent<SphereCollider>())
@@ -40,16 +48,10 @@ public class MazePlayerCollection : MonoBehaviourPunCallbacks
 		}
 	}
 
-	public override void OnPlayerLeftRoom(Player otherPlayer)
+	public void OnPlayerLeftRoom(int otherPlayerId)
 	{
-		for (int i = this.containedRigs.Count - 1; i >= 0; i--)
-		{
-			VRRig vrrig = this.containedRigs[i];
-			if (((vrrig != null) ? vrrig.creator : null) == null || vrrig.creator == otherPlayer)
-			{
-				this.containedRigs.RemoveAt(i);
-			}
-		}
+		NetPlayer otherPlayer = NetworkSystem.Instance.GetPlayer(otherPlayerId);
+		this.containedRigs.RemoveAll((VRRig r) => ((r != null) ? r.creatorWrapped : null) == null || r.creatorWrapped == otherPlayer);
 	}
 
 	public List<VRRig> containedRigs = new List<VRRig>();

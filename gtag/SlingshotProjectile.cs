@@ -1,4 +1,5 @@
 ﻿using System;
+using GorillaGameModes;
 using GorillaLocomotion.Swimming;
 using Photon.Pun;
 using Photon.Realtime;
@@ -107,11 +108,14 @@ public class SlingshotProjectile : MonoBehaviour
 			{
 				this.Deactivate();
 			}
-			Transform transform = base.transform;
-			Vector3 position = transform.position;
-			Vector3 vector = position - this.previousPosition;
-			transform.rotation = ((vector.sqrMagnitude > 0f) ? Quaternion.LookRotation(vector) : transform.rotation);
-			this.previousPosition = position;
+			if (this.faceDirectionOfTravel)
+			{
+				Transform transform = base.transform;
+				Vector3 position = transform.position;
+				Vector3 vector = position - this.previousPosition;
+				transform.rotation = ((vector.sqrMagnitude > 0f) ? Quaternion.LookRotation(vector) : transform.rotation);
+				this.previousPosition = position;
+			}
 		}
 	}
 
@@ -145,6 +149,19 @@ public class SlingshotProjectile : MonoBehaviour
 		ContactPoint contact = collision.GetContact(0);
 		this.SpawnImpactEffect(this.surfaceImpactEffectPrefab, contact.point, contact.normal);
 		this.Deactivate();
+	}
+
+	protected void OnTriggerExit(Collider other)
+	{
+		if (!this.particleLaunched)
+		{
+			return;
+		}
+		SlingshotProjectileHitNotifier slingshotProjectileHitNotifier;
+		if (other.gameObject.TryGetComponent<SlingshotProjectileHitNotifier>(out slingshotProjectileHitNotifier))
+		{
+			slingshotProjectileHitNotifier.InvokeTriggerExit(this, other);
+		}
 	}
 
 	protected void OnTriggerEnter(Collider other)
@@ -259,6 +276,8 @@ public class SlingshotProjectile : MonoBehaviour
 	public Renderer blueBall;
 
 	public bool colorizeBalls;
+
+	public bool faceDirectionOfTravel = true;
 
 	private bool particleLaunched;
 

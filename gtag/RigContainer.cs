@@ -1,6 +1,5 @@
 ﻿using System;
 using GorillaNetworking;
-using GorillaTag;
 using Photon.Pun;
 using Photon.Realtime;
 using Photon.Voice.PUN;
@@ -47,19 +46,19 @@ internal class RigContainer : MonoBehaviour
 	{
 		get
 		{
-			return this.photonVoiceView;
+			return this.voiceView;
 		}
 		set
 		{
-			if (value == this.photonVoiceView)
+			if (value == this.voiceView)
 			{
 				return;
 			}
-			if (this.photonVoiceView != null)
+			if (this.voiceView != null)
 			{
-				this.photonVoiceView.SpeakerInUse.enabled = false;
+				this.voiceView.SpeakerInUse.enabled = false;
 			}
-			this.photonVoiceView = value;
+			this.voiceView = value;
 			this.RefreshVoiceChat();
 		}
 	}
@@ -101,6 +100,22 @@ internal class RigContainer : MonoBehaviour
 		}
 	}
 
+	public NetPlayer CreatorWrapped
+	{
+		get
+		{
+			return this.vrrig.creatorWrapped;
+		}
+		set
+		{
+			if (this.vrrig.isOfflineVRRig || (this.vrrig.creatorWrapped != null && !this.vrrig.creatorWrapped.InRoom))
+			{
+				return;
+			}
+			this.vrrig.creatorWrapped = value;
+		}
+	}
+
 	public bool ForceMute
 	{
 		get
@@ -119,6 +134,16 @@ internal class RigContainer : MonoBehaviour
 		if (this.Rig.isOfflineVRRig)
 		{
 			this.vrrig.creator = PhotonNetwork.LocalPlayer;
+			NetworkSystem.Instance.OnMultiplayerStarted += this.OnMultiPlayerStarted;
+		}
+		this.Rig.rigContainer = this;
+	}
+
+	private void OnMultiPlayerStarted()
+	{
+		if (this.Rig.isOfflineVRRig)
+		{
+			this.vrrig.creatorWrapped = NetworkSystem.Instance.GetLocalPlayer();
 		}
 	}
 
@@ -126,7 +151,7 @@ internal class RigContainer : MonoBehaviour
 	{
 		this.Initialized = false;
 		this.enableVoice = true;
-		this.photonVoiceView = null;
+		this.voiceView = null;
 		base.gameObject.transform.localPosition = Vector3.zero;
 		base.gameObject.transform.localRotation = Quaternion.identity;
 		this.vrrig.syncPos = base.gameObject.transform.position;
@@ -134,15 +159,22 @@ internal class RigContainer : MonoBehaviour
 		this.forceMute = false;
 	}
 
-	public void InitializeNetwork(PhotonView photonView, PhotonVoiceView voiceView)
+	internal void InitializeNetwork(PhotonView photonView, PhotonVoiceView voiceView, VRRigSerializer vrRigSerializer)
 	{
-		if (!photonView || !voiceView || GTAppState.isQuitting)
+		if (!photonView || !voiceView)
 		{
 			return;
 		}
+		this.InitializeNetwork_Shared(photonView, vrRigSerializer);
+		this.Voice = voiceView;
+		this.vrrig.voiceAudio = voiceView.SpeakerInUse.GetComponent<AudioSource>();
+	}
+
+	private void InitializeNetwork_Shared(PhotonView photonView, VRRigSerializer vrRigSerializer)
+	{
 		if (this.vrrig.photonView)
 		{
-			GorillaNot.instance.SendReport("inappropriate tag data being sent creating multiple vrrigs", this.Creator.UserId, this.Creator.NickName);
+			Debug.Log("Skipping report photon view is not null onm this rig during Init Network");
 			if (this.vrrig.photonView.IsMine)
 			{
 				PhotonNetwork.Destroy(this.vrrig.photonView);
@@ -153,46 +185,43 @@ internal class RigContainer : MonoBehaviour
 			}
 		}
 		this.vrrig.photonView = photonView;
+		this.vrrig.rigSerializer = vrRigSerializer;
+		this.vrrig.OwningNetPlayer = NetworkSystem.Instance.GetPlayer(NetworkSystem.Instance.GetOwningPlayerID(vrRigSerializer.gameObject));
 		if (!this.Initialized)
 		{
 			this.vrrig.NetInitialize();
-			if (GorillaGameManager.instance != null && PhotonNetwork.IsMasterClient)
+			if (GorillaGameManager.instance != null && NetworkSystem.Instance.IsMasterClient)
 			{
-				object obj;
-				bool flag = photonView.Owner.CustomProperties.TryGetValue("didTutorial", out obj) && !(bool)obj;
-				GorillaGameManager.instance.NewVRRig(photonView.Owner, photonView.ViewID, flag);
+				int owningPlayerID = NetworkSystem.Instance.GetOwningPlayerID(vrRigSerializer.gameObject);
+				bool playerTutorialCompletion = NetworkSystem.Instance.GetPlayerTutorialCompletion(owningPlayerID);
+				GorillaGameManager.instance.NewVRRig(photonView.Owner, photonView.ViewID, playerTutorialCompletion);
 			}
-			photonView.RPC("RequestMaterialColor", photonView.Owner, new object[]
-			{
-				PhotonNetwork.LocalPlayer,
-				false
-			});
-			this.Initialized = true;
 		}
-		this.Voice = voiceView;
-		this.vrrig.voiceAudio = voiceView.SpeakerInUse.GetComponent<AudioSource>();
+		Debug.Log("Running MAT REQEST RPC");
+		photonView.RPC("RequestMaterialColor", photonView.Owner, new object[] { PhotonNetwork.LocalPlayer });
+		this.Initialized = true;
 	}
 
 	public void RefreshVoiceChat()
 	{
-		if (this.photonVoiceView == null)
+		if (this.Voice == null)
 		{
 			return;
 		}
-		this.photonVoiceView.SpeakerInUse.enabled = !this.forceMute && this.enableVoice && GorillaComputer.instance.voiceChatOn == "TRUE";
+		this.Voice.SpeakerInUse.enabled = !this.forceMute && this.enableVoice && GorillaComputer.instance.voiceChatOn == "TRUE";
 		this.replacementVoiceSource.mute = this.forceMute || !this.enableVoice || GorillaComputer.instance.voiceChatOn == "OFF";
 	}
 
 	public static void RefreshAllRigVoices()
 	{
 		RigContainer.staticTempRC = null;
-		if (!PhotonNetwork.InRoom || VRRigCache.Instance == null)
+		if (!NetworkSystem.Instance.InRoom || VRRigCache.Instance == null)
 		{
 			return;
 		}
-		foreach (Player player in PhotonNetwork.PlayerListOthers)
+		foreach (NetPlayer netPlayer in NetworkSystem.Instance.AllNetPlayers)
 		{
-			if (VRRigCache.Instance.TryGetVrrig(player, out RigContainer.staticTempRC))
+			if (VRRigCache.Instance.TryGetVrrig(netPlayer, out RigContainer.staticTempRC))
 			{
 				RigContainer.staticTempRC.RefreshVoiceChat();
 			}
@@ -211,7 +240,7 @@ internal class RigContainer : MonoBehaviour
 	[SerializeField]
 	private AudioSource replacementVoiceSource;
 
-	private PhotonVoiceView photonVoiceView;
+	private PhotonVoiceView voiceView;
 
 	private bool enableVoice = true;
 

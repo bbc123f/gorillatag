@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using ExitGames.Client.Photon;
+using GorillaGameModes;
 using GorillaLocomotion;
 using GorillaNetworking;
 using GorillaTag.GuidedRefs;
@@ -32,6 +33,14 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiverMono, IGuidedRefMo
 		}
 	}
 
+	internal VRRigSerializer rigSerializer
+	{
+		get
+		{
+			return this.offlineVRRig.rigSerializer;
+		}
+	}
+
 	public Rigidbody rigidbody { get; private set; }
 
 	public Recorder myRecorder { get; private set; }
@@ -58,16 +67,15 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiverMono, IGuidedRefMo
 			GorillaTagger.hasInstance = true;
 			GorillaTagger.onPlayerSpawnedRootCallback();
 		}
-		if (!this.disableTutorial && (this.testTutorial || (PlayerPrefs.GetString("tutorial") != "done" && PhotonNetworkController.Instance.GameVersionString != "dev")))
+		if (!this.disableTutorial && (this.testTutorial || (PlayerPrefs.GetString("tutorial") != "done" && NetworkSystemConfig.GameVersionString != "dev")))
 		{
 			base.transform.parent.position = new Vector3(-140f, 28f, -102f);
 			base.transform.parent.eulerAngles = new Vector3(0f, 180f, 0f);
-			global::GorillaLocomotion.Player.Instance.InitializeValues();
+			GorillaLocomotion.Player.Instance.InitializeValues();
 			PlayerPrefs.SetFloat("redValue", Random.value);
 			PlayerPrefs.SetFloat("greenValue", Random.value);
 			PlayerPrefs.SetFloat("blueValue", Random.value);
 			PlayerPrefs.Save();
-			this.UpdateColor(PlayerPrefs.GetFloat("redValue", 0f), PlayerPrefs.GetFloat("greenValue", 0f), PlayerPrefs.GetFloat("blueValue", 0f));
 		}
 		else
 		{
@@ -78,7 +86,7 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiverMono, IGuidedRefMo
 		this.thirdPersonCamera.SetActive(Application.platform != RuntimePlatform.Android);
 		this.inputDevice = InputDevices.GetDeviceAtXRNode(XRNode.RightHand);
 		this.wasInOverlay = false;
-		this.baseSlideControl = global::GorillaLocomotion.Player.Instance.slideControl;
+		this.baseSlideControl = GorillaLocomotion.Player.Instance.slideControl;
 		this.gorillaTagColliderLayerMask = LayerMask.GetMask(new string[] { "Gorilla Tag Collider" });
 		this.rigidbody = base.GetComponent<Rigidbody>();
 	}
@@ -116,14 +124,14 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiverMono, IGuidedRefMo
 		this.IsXRSubsystemActive();
 		if (this.loadedDeviceName == "OpenVR Display")
 		{
-			global::GorillaLocomotion.Player.Instance.leftHandOffset = new Vector3(-0.02f, 0f, -0.07f);
-			global::GorillaLocomotion.Player.Instance.rightHandOffset = new Vector3(0.02f, 0f, -0.07f);
+			GorillaLocomotion.Player.Instance.leftHandOffset = new Vector3(-0.02f, 0f, -0.07f);
+			GorillaLocomotion.Player.Instance.rightHandOffset = new Vector3(0.02f, 0f, -0.07f);
 			Quaternion quaternion = Quaternion.Euler(new Vector3(-90f, 180f, -20f));
 			Quaternion quaternion2 = Quaternion.Euler(new Vector3(-90f, 180f, 20f));
 			Quaternion quaternion3 = Quaternion.Euler(new Vector3(-141f, 204f, -27f));
 			Quaternion quaternion4 = Quaternion.Euler(new Vector3(-141f, 156f, 27f));
-			global::GorillaLocomotion.Player.Instance.leftHandRotOffset = quaternion3 * Quaternion.Inverse(quaternion);
-			global::GorillaLocomotion.Player.Instance.rightHandRotOffset = quaternion4 * Quaternion.Inverse(quaternion2);
+			GorillaLocomotion.Player.Instance.leftHandRotOffset = quaternion3 * Quaternion.Inverse(quaternion);
+			GorillaLocomotion.Player.Instance.rightHandRotOffset = quaternion4 * Quaternion.Inverse(quaternion2);
 		}
 		this.bodyVector = new Vector3(0f, this.bodyCollider.height / 2f - this.bodyCollider.radius, 0f);
 		if (SteamManager.Initialized)
@@ -146,7 +154,7 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiverMono, IGuidedRefMo
 				this.leftHandTriggerCollider.SetActive(false);
 				this.rightHandTriggerCollider.SetActive(true);
 			}
-			global::GorillaLocomotion.Player.Instance.inOverlay = true;
+			GorillaLocomotion.Player.Instance.inOverlay = true;
 		}
 		else
 		{
@@ -155,7 +163,7 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiverMono, IGuidedRefMo
 				this.leftHandTriggerCollider.SetActive(true);
 				this.rightHandTriggerCollider.SetActive(true);
 			}
-			global::GorillaLocomotion.Player.Instance.inOverlay = false;
+			GorillaLocomotion.Player.Instance.inOverlay = false;
 		}
 		if (this.xrSubsystemIsActive && Application.platform != RuntimePlatform.Android)
 		{
@@ -166,16 +174,16 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiverMono, IGuidedRefMo
 				Debug.Log(" refresh rate         :\t" + XRDevice.refreshRate.ToString());
 				Time.fixedDeltaTime = 1f / XRDevice.refreshRate;
 				Debug.Log(" fixedDeltaTime after :\t" + Time.fixedDeltaTime.ToString());
-				Debug.Log(" history size before  :\t" + global::GorillaLocomotion.Player.Instance.velocityHistorySize.ToString());
-				global::GorillaLocomotion.Player.Instance.velocityHistorySize = Mathf.Max(Mathf.Min(Mathf.FloorToInt(XRDevice.refreshRate * 0.083333336f), 10), 6);
-				if (global::GorillaLocomotion.Player.Instance.velocityHistorySize > 9)
+				Debug.Log(" history size before  :\t" + GorillaLocomotion.Player.Instance.velocityHistorySize.ToString());
+				GorillaLocomotion.Player.Instance.velocityHistorySize = Mathf.Max(Mathf.Min(Mathf.FloorToInt(XRDevice.refreshRate * 0.083333336f), 10), 6);
+				if (GorillaLocomotion.Player.Instance.velocityHistorySize > 9)
 				{
-					global::GorillaLocomotion.Player.Instance.velocityHistorySize--;
+					GorillaLocomotion.Player.Instance.velocityHistorySize--;
 				}
-				Debug.Log("new history size: " + global::GorillaLocomotion.Player.Instance.velocityHistorySize.ToString());
+				Debug.Log("new history size: " + GorillaLocomotion.Player.Instance.velocityHistorySize.ToString());
 				Debug.Log(" ============================================");
-				global::GorillaLocomotion.Player.Instance.slideControl = 1f - this.CalcSlideControl(XRDevice.refreshRate);
-				global::GorillaLocomotion.Player.Instance.InitializeValues();
+				GorillaLocomotion.Player.Instance.slideControl = 1f - this.CalcSlideControl(XRDevice.refreshRate);
+				GorillaLocomotion.Player.Instance.InitializeValues();
 			}
 		}
 		else if (Application.platform != RuntimePlatform.Android && OVRManager.instance != null && OVRManager.OVRManagerinitialized && OVRManager.instance.gameObject != null && OVRManager.instance.gameObject.activeSelf)
@@ -207,17 +215,17 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiverMono, IGuidedRefMo
 				Debug.Log(" refresh rate         :\t" + num2.ToString());
 				Time.fixedDeltaTime = 1f / num2 * 0.98f;
 				OVRPlugin.systemDisplayFrequency = num2;
-				global::GorillaLocomotion.Player.Instance.velocityHistorySize = Mathf.FloorToInt(num2 * 0.083333336f);
-				if (global::GorillaLocomotion.Player.Instance.velocityHistorySize > 9)
+				GorillaLocomotion.Player.Instance.velocityHistorySize = Mathf.FloorToInt(num2 * 0.083333336f);
+				if (GorillaLocomotion.Player.Instance.velocityHistorySize > 9)
 				{
-					global::GorillaLocomotion.Player.Instance.velocityHistorySize--;
+					GorillaLocomotion.Player.Instance.velocityHistorySize--;
 				}
 				Debug.Log(" fixedDeltaTime after :\t" + Time.fixedDeltaTime.ToString());
-				Debug.Log(" history size before  :\t" + global::GorillaLocomotion.Player.Instance.velocityHistorySize.ToString());
-				Debug.Log("new history size: " + global::GorillaLocomotion.Player.Instance.velocityHistorySize.ToString());
+				Debug.Log(" history size before  :\t" + GorillaLocomotion.Player.Instance.velocityHistorySize.ToString());
+				Debug.Log("new history size: " + GorillaLocomotion.Player.Instance.velocityHistorySize.ToString());
 				Debug.Log(" ============================================");
-				global::GorillaLocomotion.Player.Instance.slideControl = 1f - this.CalcSlideControl(XRDevice.refreshRate);
-				global::GorillaLocomotion.Player.Instance.InitializeValues();
+				GorillaLocomotion.Player.Instance.slideControl = 1f - this.CalcSlideControl(XRDevice.refreshRate);
+				GorillaLocomotion.Player.Instance.InitializeValues();
 				OVRManager.instance.gameObject.SetActive(false);
 				this.frameRateUpdated = true;
 			}
@@ -227,14 +235,14 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiverMono, IGuidedRefMo
 			Debug.Log("updating delta time. was: " + Time.fixedDeltaTime.ToString() + ". now it's " + 0.0069444445f.ToString());
 			Application.targetFrameRate = 144;
 			Time.fixedDeltaTime = 0.0069444445f;
-			global::GorillaLocomotion.Player.Instance.velocityHistorySize = Mathf.Min(Mathf.FloorToInt(12f), 10);
-			if (global::GorillaLocomotion.Player.Instance.velocityHistorySize > 9)
+			GorillaLocomotion.Player.Instance.velocityHistorySize = Mathf.Min(Mathf.FloorToInt(12f), 10);
+			if (GorillaLocomotion.Player.Instance.velocityHistorySize > 9)
 			{
-				global::GorillaLocomotion.Player.Instance.velocityHistorySize--;
+				GorillaLocomotion.Player.Instance.velocityHistorySize--;
 			}
-			Debug.Log("new history size: " + global::GorillaLocomotion.Player.Instance.velocityHistorySize.ToString());
-			global::GorillaLocomotion.Player.Instance.slideControl = 1f - this.CalcSlideControl(144f);
-			global::GorillaLocomotion.Player.Instance.InitializeValues();
+			Debug.Log("new history size: " + GorillaLocomotion.Player.Instance.velocityHistorySize.ToString());
+			GorillaLocomotion.Player.Instance.slideControl = 1f - this.CalcSlideControl(144f);
+			GorillaLocomotion.Player.Instance.InitializeValues();
 		}
 		this.leftRaycastSweep = this.leftHandTransform.position - this.lastLeftHandPositionForTag;
 		this.leftHeadRaycastSweep = this.leftHandTransform.position - this.headCollider.transform.position;
@@ -244,46 +252,46 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiverMono, IGuidedRefMo
 		this.bodyRaycastSweep = this.bodyCollider.transform.position - this.lastBodyPositionForTag;
 		this.otherPlayer = null;
 		this.touchedPlayer = null;
-		float num4 = this.sphereCastRadius * global::GorillaLocomotion.Player.Instance.scale;
+		float num4 = this.sphereCastRadius * GorillaLocomotion.Player.Instance.scale;
 		this.nonAllocHits = Physics.SphereCastNonAlloc(this.lastLeftHandPositionForTag, num4, this.leftRaycastSweep.normalized, this.nonAllocRaycastHits, Mathf.Max(this.leftRaycastSweep.magnitude, num4), this.gorillaTagColliderLayerMask, QueryTriggerInteraction.Collide);
-		this.<LateUpdate>g__TryTaggingAllHits|97_0(false);
+		this.<LateUpdate>g__TryTaggingAllHits|99_0(false);
 		this.nonAllocHits = Physics.SphereCastNonAlloc(this.headCollider.transform.position, num4, this.leftHeadRaycastSweep.normalized, this.nonAllocRaycastHits, Mathf.Max(this.leftHeadRaycastSweep.magnitude, num4), this.gorillaTagColliderLayerMask, QueryTriggerInteraction.Collide);
-		this.<LateUpdate>g__TryTaggingAllHits|97_0(false);
+		this.<LateUpdate>g__TryTaggingAllHits|99_0(false);
 		this.nonAllocHits = Physics.SphereCastNonAlloc(this.lastRightHandPositionForTag, num4, this.rightRaycastSweep.normalized, this.nonAllocRaycastHits, Mathf.Max(this.rightRaycastSweep.magnitude, num4), this.gorillaTagColliderLayerMask, QueryTriggerInteraction.Collide);
-		this.<LateUpdate>g__TryTaggingAllHits|97_0(false);
+		this.<LateUpdate>g__TryTaggingAllHits|99_0(false);
 		this.nonAllocHits = Physics.SphereCastNonAlloc(this.headCollider.transform.position, num4, this.rightHeadRaycastSweep.normalized, this.nonAllocRaycastHits, Mathf.Max(this.rightHeadRaycastSweep.magnitude, num4), this.gorillaTagColliderLayerMask, QueryTriggerInteraction.Collide);
-		this.<LateUpdate>g__TryTaggingAllHits|97_0(false);
-		this.nonAllocHits = Physics.SphereCastNonAlloc(this.headCollider.transform.position, this.headCollider.radius * this.headCollider.transform.localScale.x * global::GorillaLocomotion.Player.Instance.scale, this.headRaycastSweep.normalized, this.nonAllocRaycastHits, Mathf.Max(this.headRaycastSweep.magnitude, num4), this.gorillaTagColliderLayerMask, QueryTriggerInteraction.Collide);
-		this.<LateUpdate>g__TryTaggingAllHits|97_0(true);
+		this.<LateUpdate>g__TryTaggingAllHits|99_0(false);
+		this.nonAllocHits = Physics.SphereCastNonAlloc(this.headCollider.transform.position, this.headCollider.radius * this.headCollider.transform.localScale.x * GorillaLocomotion.Player.Instance.scale, this.headRaycastSweep.normalized, this.nonAllocRaycastHits, Mathf.Max(this.headRaycastSweep.magnitude, num4), this.gorillaTagColliderLayerMask, QueryTriggerInteraction.Collide);
+		this.<LateUpdate>g__TryTaggingAllHits|99_0(true);
 		this.topVector = this.lastBodyPositionForTag + this.bodyVector;
 		this.bottomVector = this.lastBodyPositionForTag - this.bodyVector;
-		this.nonAllocHits = Physics.CapsuleCastNonAlloc(this.topVector, this.bottomVector, this.bodyCollider.radius * 2f * global::GorillaLocomotion.Player.Instance.scale, this.bodyRaycastSweep.normalized, this.nonAllocRaycastHits, Mathf.Max(this.bodyRaycastSweep.magnitude, num4), this.gorillaTagColliderLayerMask, QueryTriggerInteraction.Collide);
-		this.<LateUpdate>g__TryTaggingAllHits|97_0(true);
+		this.nonAllocHits = Physics.CapsuleCastNonAlloc(this.topVector, this.bottomVector, this.bodyCollider.radius * 2f * GorillaLocomotion.Player.Instance.scale, this.bodyRaycastSweep.normalized, this.nonAllocRaycastHits, Mathf.Max(this.bodyRaycastSweep.magnitude, num4), this.gorillaTagColliderLayerMask, QueryTriggerInteraction.Collide);
+		this.<LateUpdate>g__TryTaggingAllHits|99_0(true);
 		if (this.otherPlayer != null)
 		{
 			Debug.Log("tagging someone yeet");
 			GameMode.ReportTag(this.otherPlayer);
 		}
-		if (!global::GorillaLocomotion.Player.Instance.IsHandSliding(true) && global::GorillaLocomotion.Player.Instance.IsHandTouching(true) && !this.leftHandTouching && Time.time > this.lastLeftTap + this.tapCoolDown && !global::GorillaLocomotion.Player.Instance.inOverlay)
+		if (!GorillaLocomotion.Player.Instance.IsHandSliding(true) && GorillaLocomotion.Player.Instance.IsHandTouching(true) && !this.leftHandTouching && Time.time > this.lastLeftTap + this.tapCoolDown && !GorillaLocomotion.Player.Instance.inOverlay)
 		{
 			this.StartVibration(true, this.tapHapticStrength, this.tapHapticDuration);
-			this.tempInt = ((global::GorillaLocomotion.Player.Instance.leftHandSurfaceOverride != null) ? global::GorillaLocomotion.Player.Instance.leftHandSurfaceOverride.overrideIndex : global::GorillaLocomotion.Player.Instance.leftHandMaterialTouchIndex);
-			if (PhotonNetwork.InRoom && this.myVRRig != null)
+			this.tempInt = ((GorillaLocomotion.Player.Instance.leftHandSurfaceOverride != null) ? GorillaLocomotion.Player.Instance.leftHandSurfaceOverride.overrideIndex : GorillaLocomotion.Player.Instance.leftHandMaterialTouchIndex);
+			if (NetworkSystem.Instance.InRoom && this.myVRRig != null)
 			{
 				PhotonView.Get(this.myVRRig).RPC("PlayHandTap", RpcTarget.Others, new object[] { this.tempInt, true, this.handTapVolume });
 			}
 			this.offlineVRRig.PlayHandTapLocal(this.tempInt, true, this.handTapVolume);
 			this.lastLeftTap = Time.time;
-			if (global::GorillaLocomotion.Player.Instance.leftHandSurfaceOverride != null && global::GorillaLocomotion.Player.Instance.leftHandSurfaceOverride.sendOnTapEvent)
+			if (GorillaLocomotion.Player.Instance.leftHandSurfaceOverride != null && GorillaLocomotion.Player.Instance.leftHandSurfaceOverride.sendOnTapEvent)
 			{
-				Tappable component = global::GorillaLocomotion.Player.Instance.leftHandSurfaceOverride.gameObject.GetComponent<Tappable>();
+				Tappable component = GorillaLocomotion.Player.Instance.leftHandSurfaceOverride.gameObject.GetComponent<Tappable>();
 				if (component != null)
 				{
 					component.OnTap(this.handTapVolume, this.lastLeftTap);
 				}
 			}
 		}
-		else if (global::GorillaLocomotion.Player.Instance.IsHandSliding(true) && !global::GorillaLocomotion.Player.Instance.inOverlay)
+		else if (GorillaLocomotion.Player.Instance.IsHandSliding(true) && !GorillaLocomotion.Player.Instance.inOverlay)
 		{
 			this.StartVibration(true, this.tapHapticStrength / 5f, Time.fixedDeltaTime);
 			if (!this.leftHandSlideSource.isPlaying)
@@ -291,30 +299,30 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiverMono, IGuidedRefMo
 				this.leftHandSlideSource.Play();
 			}
 		}
-		if (!global::GorillaLocomotion.Player.Instance.IsHandSliding(true))
+		if (!GorillaLocomotion.Player.Instance.IsHandSliding(true))
 		{
 			this.leftHandSlideSource.Stop();
 		}
-		if (!global::GorillaLocomotion.Player.Instance.IsHandSliding(false) && global::GorillaLocomotion.Player.Instance.IsHandTouching(false) && !this.rightHandTouching && Time.time > this.lastRightTap + this.tapCoolDown && !global::GorillaLocomotion.Player.Instance.inOverlay)
+		if (!GorillaLocomotion.Player.Instance.IsHandSliding(false) && GorillaLocomotion.Player.Instance.IsHandTouching(false) && !this.rightHandTouching && Time.time > this.lastRightTap + this.tapCoolDown && !GorillaLocomotion.Player.Instance.inOverlay)
 		{
 			this.StartVibration(false, this.tapHapticStrength, this.tapHapticDuration);
-			this.tempInt = ((global::GorillaLocomotion.Player.Instance.rightHandSurfaceOverride != null) ? global::GorillaLocomotion.Player.Instance.rightHandSurfaceOverride.overrideIndex : global::GorillaLocomotion.Player.Instance.rightHandMaterialTouchIndex);
+			this.tempInt = ((GorillaLocomotion.Player.Instance.rightHandSurfaceOverride != null) ? GorillaLocomotion.Player.Instance.rightHandSurfaceOverride.overrideIndex : GorillaLocomotion.Player.Instance.rightHandMaterialTouchIndex);
 			if (PhotonNetwork.InRoom && this.myVRRig != null)
 			{
 				PhotonView.Get(this.myVRRig).RPC("PlayHandTap", RpcTarget.Others, new object[] { this.tempInt, false, this.handTapVolume });
 			}
 			this.offlineVRRig.PlayHandTapLocal(this.tempInt, false, this.handTapVolume);
 			this.lastRightTap = Time.time;
-			if (global::GorillaLocomotion.Player.Instance.rightHandSurfaceOverride != null && global::GorillaLocomotion.Player.Instance.rightHandSurfaceOverride.sendOnTapEvent)
+			if (GorillaLocomotion.Player.Instance.rightHandSurfaceOverride != null && GorillaLocomotion.Player.Instance.rightHandSurfaceOverride.sendOnTapEvent)
 			{
-				Tappable component2 = global::GorillaLocomotion.Player.Instance.rightHandSurfaceOverride.gameObject.GetComponent<Tappable>();
+				Tappable component2 = GorillaLocomotion.Player.Instance.rightHandSurfaceOverride.gameObject.GetComponent<Tappable>();
 				if (component2 != null)
 				{
 					component2.OnTap(this.handTapVolume, this.lastRightTap);
 				}
 			}
 		}
-		else if (global::GorillaLocomotion.Player.Instance.IsHandSliding(false) && !global::GorillaLocomotion.Player.Instance.inOverlay)
+		else if (GorillaLocomotion.Player.Instance.IsHandSliding(false) && !GorillaLocomotion.Player.Instance.inOverlay)
 		{
 			this.StartVibration(false, this.tapHapticStrength / 5f, Time.fixedDeltaTime);
 			if (!this.rightHandSlideSource.isPlaying)
@@ -322,20 +330,24 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiverMono, IGuidedRefMo
 				this.rightHandSlideSource.Play();
 			}
 		}
-		if (!global::GorillaLocomotion.Player.Instance.IsHandSliding(false))
+		if (!GorillaLocomotion.Player.Instance.IsHandSliding(false))
 		{
 			this.rightHandSlideSource.Stop();
 		}
 		this.CheckEndStatusEffect();
-		this.leftHandTouching = global::GorillaLocomotion.Player.Instance.IsHandTouching(true);
-		this.rightHandTouching = global::GorillaLocomotion.Player.Instance.IsHandTouching(false);
+		this.leftHandTouching = GorillaLocomotion.Player.Instance.IsHandTouching(true);
+		this.rightHandTouching = GorillaLocomotion.Player.Instance.IsHandTouching(false);
 		this.lastLeftHandPositionForTag = this.leftHandTransform.position;
 		this.lastRightHandPositionForTag = this.rightHandTransform.position;
 		this.lastBodyPositionForTag = this.bodyCollider.transform.position;
 		this.lastHeadPositionForTag = this.headCollider.transform.position;
+		if (GorillaComputer.instance == null || NetworkSystem.Instance.LocalRecorder == null)
+		{
+			return;
+		}
 		if (GorillaComputer.instance.voiceChatOn == "TRUE")
 		{
-			this.myRecorder = PhotonNetworkController.Instance.GetComponent<Recorder>();
+			this.myRecorder = NetworkSystem.Instance.LocalRecorder;
 			if (this.offlineVRRig.remoteUseReplacementVoice)
 			{
 				this.offlineVRRig.remoteUseReplacementVoice = false;
@@ -349,7 +361,7 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiverMono, IGuidedRefMo
 				this.primaryButtonPressRight = ControllerInputPoller.PrimaryButtonPress(XRNode.RightHand);
 				this.secondaryButtonPressRight = ControllerInputPoller.SecondaryButtonPress(XRNode.RightHand);
 				this.primaryButtonPressLeft = ControllerInputPoller.PrimaryButtonPress(XRNode.LeftHand);
-				this.secondaryButtonPressLeft = ControllerInputPoller.PrimaryButtonPress(XRNode.LeftHand);
+				this.secondaryButtonPressLeft = ControllerInputPoller.SecondaryButtonPress(XRNode.LeftHand);
 				if (this.primaryButtonPressRight || this.secondaryButtonPressRight || this.primaryButtonPressLeft || this.secondaryButtonPressLeft)
 				{
 					if (GorillaComputer.instance.pttType == "PUSH TO MUTE")
@@ -396,13 +408,14 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiverMono, IGuidedRefMo
 		}
 		else if (GorillaComputer.instance.voiceChatOn == "FALSE")
 		{
+			this.myRecorder = NetworkSystem.Instance.LocalRecorder;
 			if (!this.offlineVRRig.remoteUseReplacementVoice)
 			{
 				this.offlineVRRig.remoteUseReplacementVoice = true;
 			}
-			if (PhotonNetworkController.Instance.GetComponent<Recorder>().TransmitEnabled)
+			if (this.myRecorder.TransmitEnabled)
 			{
-				PhotonNetworkController.Instance.GetComponent<Recorder>().TransmitEnabled = false;
+				this.myRecorder.TransmitEnabled = false;
 			}
 			if (GorillaComputer.instance.pttType != "ALL CHAT")
 			{
@@ -413,7 +426,7 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiverMono, IGuidedRefMo
 				this.primaryButtonPressRight = ControllerInputPoller.PrimaryButtonPress(XRNode.RightHand);
 				this.secondaryButtonPressRight = ControllerInputPoller.SecondaryButtonPress(XRNode.RightHand);
 				this.primaryButtonPressLeft = ControllerInputPoller.PrimaryButtonPress(XRNode.LeftHand);
-				this.secondaryButtonPressLeft = ControllerInputPoller.PrimaryButtonPress(XRNode.LeftHand);
+				this.secondaryButtonPressLeft = ControllerInputPoller.SecondaryButtonPress(XRNode.LeftHand);
 				if (this.primaryButtonPressRight || this.secondaryButtonPressRight || this.primaryButtonPressLeft || this.secondaryButtonPressLeft)
 				{
 					if (GorillaComputer.instance.pttType == "PUSH TO MUTE")
@@ -449,6 +462,7 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiverMono, IGuidedRefMo
 		}
 		else
 		{
+			this.myRecorder = NetworkSystem.Instance.LocalRecorder;
 			if (this.offlineVRRig.remoteUseReplacementVoice)
 			{
 				this.offlineVRRig.remoteUseReplacementVoice = false;
@@ -457,9 +471,9 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiverMono, IGuidedRefMo
 			{
 				this.offlineVRRig.shouldSendSpeakingLoudness = false;
 			}
-			if (PhotonNetworkController.Instance.GetComponent<Recorder>().TransmitEnabled)
+			if (this.myRecorder.TransmitEnabled)
 			{
-				PhotonNetworkController.Instance.GetComponent<Recorder>().TransmitEnabled = false;
+				this.myRecorder.TransmitEnabled = false;
 			}
 		}
 	}
@@ -531,15 +545,8 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiverMono, IGuidedRefMo
 
 	public void UpdateColor(float red, float green, float blue)
 	{
-		if (GorillaComputer.instance != null)
-		{
-			this.offlineVRRig.InitializeNoobMaterialLocal(red, green, blue, GorillaComputer.instance.leftHanded);
-		}
-		else
-		{
-			this.offlineVRRig.InitializeNoobMaterialLocal(red, green, blue, false);
-		}
-		if (!PhotonNetwork.InRoom)
+		this.offlineVRRig.InitializeNoobMaterialLocal(red, green, blue);
+		if (!NetworkSystem.Instance.InRoom)
 		{
 			this.offlineVRRig.mainSkin.material = this.offlineVRRig.materialsToChangeTo[0];
 		}
@@ -547,7 +554,7 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiverMono, IGuidedRefMo
 
 	protected void OnTriggerEnter(Collider other)
 	{
-		if (PhotonNetwork.InRoom && other.gameObject.layer == 15 && other.gameObject != null && other.gameObject.GetComponent<GorillaTriggerBox>() != null)
+		if (NetworkSystem.Instance.InRoom && other.gameObject.layer == 15 && other.gameObject != null && other.gameObject.GetComponent<GorillaTriggerBox>() != null)
 		{
 			other.gameObject.GetComponent<GorillaTriggerBox>().OnBoxTriggered();
 		}
@@ -585,7 +592,7 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiverMono, IGuidedRefMo
 		case GorillaTagger.StatusEffect.Slowed:
 			break;
 		case GorillaTagger.StatusEffect.Frozen:
-			global::GorillaLocomotion.Player.Instance.disableMovement = true;
+			GorillaLocomotion.Player.Instance.disableMovement = true;
 			break;
 		default:
 			return;
@@ -607,7 +614,7 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiverMono, IGuidedRefMo
 		case GorillaTagger.StatusEffect.None:
 			break;
 		case GorillaTagger.StatusEffect.Frozen:
-			global::GorillaLocomotion.Player.Instance.disableMovement = false;
+			GorillaLocomotion.Player.Instance.disableMovement = false;
 			this.currentStatus = GorillaTagger.StatusEffect.None;
 			return;
 		case GorillaTagger.StatusEffect.Slowed:
@@ -670,7 +677,7 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiverMono, IGuidedRefMo
 	}
 
 	[CompilerGenerated]
-	private void <LateUpdate>g__TryTaggingAllHits|97_0(bool isBodyTag)
+	private void <LateUpdate>g__TryTaggingAllHits|99_0(bool isBodyTag)
 	{
 		for (int i = 0; i < this.nonAllocHits; i++)
 		{

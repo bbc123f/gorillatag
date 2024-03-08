@@ -100,15 +100,17 @@ namespace GorillaLocomotion.Gameplay
 			return this.currentSpeedMultiplier;
 		}
 
-		void IGorillaGrabable.OnGrabbed()
+		Transform IGorillaGrabable.OnGrabbed(GorillaGrabber g)
 		{
 			base.photonView.TransferOwnership(PhotonNetwork.LocalPlayer);
 			this.isHeldByLocalPlayer = true;
+			return base.transform;
 		}
 
-		void IGorillaGrabable.OnGrabReleased()
+		Transform IGorillaGrabable.OnGrabReleased(GorillaGrabber g)
 		{
 			this.isHeldByLocalPlayer = false;
+			return base.transform;
 		}
 
 		public BezierSpline spline;

@@ -1,68 +1,104 @@
 ﻿using System;
-using System.Collections.Generic;
+using GorillaLocomotion;
 using GorillaLocomotion.Gameplay;
 using UnityEngine;
 using UnityEngine.XR;
 
 public class GorillaGrabber : MonoBehaviour
 {
+	public XRNode XrNode
+	{
+		get
+		{
+			return this.xrNode;
+		}
+	}
+
+	public Player Player
+	{
+		get
+		{
+			return this.player;
+		}
+	}
+
 	private void Awake()
 	{
-		this.col = base.GetComponent<Collider>();
+		this.audioSource = base.GetComponent<AudioSource>();
+		this.player = base.GetComponentInParent<Player>();
+		this.breakDistance = this.grabRadius * 2f;
 	}
 
 	private void Update()
 	{
-		bool grab = ControllerInputPoller.GetGrab(this.xrNode);
+		bool grabMomentary = ControllerInputPoller.GetGrabMomentary(this.xrNode);
 		bool grabRelease = ControllerInputPoller.GetGrabRelease(this.xrNode);
-		if (grab && this.currentGrabbed == null)
+		if (this.currentGrabbable != null && (grabRelease || this.GrabDistanceOverCheck()))
 		{
-			this.currentGrabbed = this.GetGrabable();
-			if (this.currentGrabbed != null)
-			{
-				this.currentGrabbed.OnGrabbed();
-			}
+			this.Ungrab();
 		}
-		if (grabRelease && this.currentGrabbed != null)
+		if (grabMomentary && this.currentGrabbable == null)
 		{
-			this.currentGrabbed.OnGrabReleased();
-			this.currentGrabbed = null;
+			this.currentGrabbable = this.GetGrabable();
 		}
+	}
+
+	private bool GrabDistanceOverCheck()
+	{
+		return this.currentGrabbedTransform == null || Vector3.Distance(base.transform.position, this.currentGrabbedTransform.position) > this.breakDistance;
+	}
+
+	private void Ungrab()
+	{
+		this.currentGrabbable.OnGrabReleased(this);
+		this.currentGrabbable = null;
+		this.gripEffects.Stop();
 	}
 
 	private IGorillaGrabable GetGrabable()
 	{
-		if (this.overlapGrabables.Count > 0)
+		IGorillaGrabable gorillaGrabable = null;
+		Debug.DrawRay(base.transform.position, base.transform.forward * this.grabRadius, Color.blue, 1f);
+		int num = Physics.OverlapSphereNonAlloc(base.transform.position, this.grabRadius, this.grabCastResults);
+		float num2 = float.MaxValue;
+		for (int i = 0; i < num; i++)
 		{
-			return this.overlapGrabables[0];
+			IGorillaGrabable gorillaGrabable2;
+			if (this.grabCastResults[i].TryGetComponent<IGorillaGrabable>(out gorillaGrabable2))
+			{
+				float num3 = Vector3.Distance(base.transform.position, this.grabCastResults[i].ClosestPoint(base.transform.position));
+				if (num3 < num2)
+				{
+					num2 = num3;
+					gorillaGrabable = gorillaGrabable2;
+				}
+			}
 		}
-		return null;
+		if (gorillaGrabable != null)
+		{
+			this.currentGrabbedTransform = gorillaGrabable.OnGrabbed(this);
+		}
+		return gorillaGrabable;
 	}
 
-	private void OnTriggerEnter(Collider other)
-	{
-		IGorillaGrabable gorillaGrabable;
-		if (other.TryGetComponent<IGorillaGrabable>(out gorillaGrabable))
-		{
-			this.overlapGrabables.Add(gorillaGrabable);
-		}
-	}
-
-	private void OnTriggerExit(Collider other)
-	{
-		IGorillaGrabable gorillaGrabable;
-		if (other.TryGetComponent<IGorillaGrabable>(out gorillaGrabable))
-		{
-			this.overlapGrabables.Remove(gorillaGrabable);
-		}
-	}
-
-	private List<IGorillaGrabable> overlapGrabables = new List<IGorillaGrabable>();
+	private Player player;
 
 	[SerializeField]
 	private XRNode xrNode = XRNode.LeftHand;
 
-	private Collider col;
+	private AudioSource audioSource;
 
-	private IGorillaGrabable currentGrabbed;
+	private Transform currentGrabbedTransform;
+
+	private IGorillaGrabable currentGrabbable;
+
+	[SerializeField]
+	private float grabRadius = 0.015f;
+
+	private float breakDistance = 0.015f;
+
+	[SerializeField]
+	private ParticleSystem gripEffects;
+
+	private Collider[] grabCastResults = new Collider[32];
 }

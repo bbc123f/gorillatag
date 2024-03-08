@@ -92,14 +92,14 @@ public class PartyHornTransferableObject : TransferrableObject
 				bool flag5;
 				if (flag)
 				{
-					RigContainer component = vrrig.GetComponent<RigContainer>();
-					if (component == null)
+					RigContainer rigContainer = vrrig.rigContainer;
+					if (rigContainer == null)
 					{
 						flag5 = false;
 					}
 					else
 					{
-						PhotonVoiceView voice = component.Voice;
+						PhotonVoiceView voice = rigContainer.Voice;
 						bool? flag3 = ((voice != null) ? new bool?(voice.IsSpeaking) : null);
 						bool flag4 = true;
 						flag5 = (flag3.GetValueOrDefault() == flag4) & (flag3 != null);

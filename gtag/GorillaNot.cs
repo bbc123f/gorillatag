@@ -156,7 +156,7 @@ public class GorillaNot : MonoBehaviourPunCallbacks
 				this.suspiciousPlayerId,
 				this.suspiciousPlayerName,
 				this.suspiciousReason,
-				PhotonNetworkController.Instance.GameVersionString
+				NetworkSystemConfig.GameVersionString
 			};
 			PhotonNetwork.RaiseEvent(8, array3, raiseEventOptions, SendOptions.SendReliable);
 			if (this.ShouldDisconnectFromRoom())
@@ -177,10 +177,10 @@ public class GorillaNot : MonoBehaviourPunCallbacks
 			try
 			{
 				this.logErrorCount = 0;
-				if (PhotonNetwork.InRoom)
+				if (NetworkSystem.Instance.InRoom)
 				{
 					this.lastCheck = Time.time;
-					this.lastServerTimestamp = PhotonNetwork.ServerTimestamp;
+					this.lastServerTimestamp = NetworkSystem.Instance.SimTick;
 					if (!PhotonNetwork.CurrentRoom.PublishUserId)
 					{
 						this.sendReport = true;
@@ -260,25 +260,42 @@ public class GorillaNot : MonoBehaviourPunCallbacks
 
 	public static void IncrementRPCCall(PhotonMessageInfo info, [CallerMemberName] string callingMethod = "")
 	{
-		GorillaNot.instance.IncrementRPCCallLocal(info, callingMethod);
+		GorillaNot.IncrementRPCCall(new PhotonMessageInfoWrapped(info), callingMethod);
 	}
 
-	private void IncrementRPCCallLocal(PhotonMessageInfo info, string rpcFunction)
+	public static void IncrementRPCCall(PhotonMessageInfoWrapped infoWrapped, [CallerMemberName] string callingMethod = "")
 	{
-		if (info.SentServerTimestamp < this.lastServerTimestamp)
+		GorillaNot.instance.IncrementRPCCallLocal(infoWrapped, callingMethod);
+	}
+
+	private void IncrementRPCCallLocal(PhotonMessageInfoWrapped infoWrapped, string rpcFunction)
+	{
+		if (infoWrapped.sentTick < this.lastServerTimestamp)
 		{
 			return;
 		}
-		if (!this.IncrementRPCTracker(info.Sender, rpcFunction, this.rpcCallLimit))
+		NetPlayer player = NetworkSystem.Instance.GetPlayer(infoWrapped.senderID);
+		if (player == null)
 		{
-			this.SendReport("too many rpc calls! " + rpcFunction, info.Sender.UserId, info.Sender.NickName);
+			return;
+		}
+		string userId = player.UserId;
+		if (!this.IncrementRPCTracker(userId, rpcFunction, this.rpcCallLimit))
+		{
+			this.SendReport("too many rpc calls! " + rpcFunction, player.UserId, player.NickName);
 			return;
 		}
 	}
 
 	private bool IncrementRPCTracker(in Player sender, in string rpcFunction, in int callLimit)
 	{
-		GorillaNot.RPCCallTracker rpccallTracker = this.GetRPCCallTracker(sender, rpcFunction);
+		string userId = sender.UserId;
+		return this.IncrementRPCTracker(userId, rpcFunction, callLimit);
+	}
+
+	private bool IncrementRPCTracker(in string userId, in string rpcFunction, in int callLimit)
+	{
+		GorillaNot.RPCCallTracker rpccallTracker = this.GetRPCCallTracker(userId, rpcFunction);
 		if (rpccallTracker == null)
 		{
 			return true;
@@ -291,15 +308,15 @@ public class GorillaNot : MonoBehaviourPunCallbacks
 		return rpccallTracker.RPCCalls <= callLimit;
 	}
 
-	private GorillaNot.RPCCallTracker GetRPCCallTracker(in Player sender, in string rpcFunction)
+	private GorillaNot.RPCCallTracker GetRPCCallTracker(string userID, string rpcFunction)
 	{
-		if (sender == null || sender.UserId == null)
+		if (userID == null)
 		{
 			return null;
 		}
 		GorillaNot.RPCCallTracker rpccallTracker = null;
 		Dictionary<string, GorillaNot.RPCCallTracker> dictionary;
-		if (!this.userRPCCalls.TryGetValue(sender.UserId, out dictionary))
+		if (!this.userRPCCalls.TryGetValue(userID, out dictionary))
 		{
 			rpccallTracker = new GorillaNot.RPCCallTracker
 			{
@@ -308,7 +325,7 @@ public class GorillaNot : MonoBehaviourPunCallbacks
 			};
 			Dictionary<string, GorillaNot.RPCCallTracker> dictionary2 = new Dictionary<string, GorillaNot.RPCCallTracker>();
 			dictionary2.Add(rpcFunction, rpccallTracker);
-			this.userRPCCalls.Add(sender.UserId, dictionary2);
+			this.userRPCCalls.Add(userID, dictionary2);
 		}
 		else if (!dictionary.TryGetValue(rpcFunction, out rpccallTracker))
 		{
@@ -325,7 +342,7 @@ public class GorillaNot : MonoBehaviourPunCallbacks
 	private IEnumerator QuitDelay()
 	{
 		yield return new WaitForSeconds(1f);
-		PhotonNetworkController.Instance.AttemptDisconnect();
+		NetworkSystem.Instance.ReturnToSinglePlayer();
 		yield break;
 	}
 

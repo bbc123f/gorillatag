@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class SizeLayerChangerGrabable : MonoBehaviour, IGorillaGrabable
 {
-	void IGorillaGrabable.OnGrabbed()
+	Transform IGorillaGrabable.OnGrabbed(GorillaGrabber g)
 	{
 		if (this.grabChangesSizeLayer)
 		{
@@ -13,9 +13,10 @@ public class SizeLayerChangerGrabable : MonoBehaviour, IGorillaGrabable
 			VRRigCache.Instance.TryGetVrrig(PhotonNetwork.LocalPlayer, out rigContainer);
 			rigContainer.Rig.sizeManager.currentSizeLayerMaskValue = this.grabbedSizeLayerMask.Mask;
 		}
+		return base.transform;
 	}
 
-	void IGorillaGrabable.OnGrabReleased()
+	Transform IGorillaGrabable.OnGrabReleased(GorillaGrabber g)
 	{
 		if (this.releaseChangesSizeLayer)
 		{
@@ -23,6 +24,7 @@ public class SizeLayerChangerGrabable : MonoBehaviour, IGorillaGrabable
 			VRRigCache.Instance.TryGetVrrig(PhotonNetwork.LocalPlayer, out rigContainer);
 			rigContainer.Rig.sizeManager.currentSizeLayerMaskValue = this.releasedSizeLayerMask.Mask;
 		}
+		return base.transform;
 	}
 
 	[SerializeField]

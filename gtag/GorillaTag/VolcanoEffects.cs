@@ -126,6 +126,10 @@ namespace GorillaTag
 
 		private void ResetState()
 		{
+			if (this.currentStateFX == null)
+			{
+				return;
+			}
 			this.currentStateFX.startSoundPlayed = false;
 			this.currentStateFX.endSoundPlayed = false;
 			if (this.currentStateFX.startSoundExists)
@@ -148,6 +152,10 @@ namespace GorillaTag
 
 		private void UpdateState(float time, float timeRemaining, float progress)
 		{
+			if (this.currentStateFX == null)
+			{
+				return;
+			}
 			if (this.currentStateFX.startSoundExists && !this.currentStateFX.startSoundPlayed && time >= this.currentStateFX.startSoundDelay)
 			{
 				this.currentStateFX.startSoundPlayed = true;

@@ -5,6 +5,58 @@ using UnityEngine;
 public static class MathUtils
 {
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static void Validate(ref Vector3 v)
+	{
+		float x = v.x;
+		float y = v.y;
+		float z = v.z;
+		bool flag = float.IsNaN(x) || float.IsInfinity(x);
+		bool flag2 = float.IsNaN(y) || float.IsInfinity(y);
+		bool flag3 = float.IsNaN(z) || float.IsInfinity(z);
+		if (flag)
+		{
+			v.x = 0f;
+		}
+		if (flag2)
+		{
+			v.y = 0f;
+		}
+		if (flag3)
+		{
+			v.z = 0f;
+		}
+	}
+
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static void Validate(ref Quaternion q)
+	{
+		float x = q.x;
+		float y = q.y;
+		float z = q.z;
+		float w = q.w;
+		bool flag = float.IsNaN(x) || float.IsInfinity(x);
+		bool flag2 = float.IsNaN(y) || float.IsInfinity(y);
+		bool flag3 = float.IsNaN(z) || float.IsInfinity(z);
+		bool flag4 = float.IsNaN(w) || float.IsInfinity(w);
+		if (flag)
+		{
+			q.x = 0f;
+		}
+		if (flag2)
+		{
+			q.y = 0f;
+		}
+		if (flag3)
+		{
+			q.z = 0f;
+		}
+		if (flag4)
+		{
+			q.w = 1f;
+		}
+	}
+
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool Approx(float a, float b, float epsilon = 1E-06f)
 	{
 		double num = (double)a;

@@ -1,5 +1,6 @@
 ﻿using System;
 using GorillaExtensions;
+using GorillaGameModes;
 using GorillaLocomotion;
 using GorillaLocomotion.Swimming;
 using GorillaTag.GuidedRefs;
@@ -455,7 +456,7 @@ namespace GorillaTag
 
 		private void CheckLocalPlayerAgainstLava(double currentTime)
 		{
-			if (global::GorillaLocomotion.Player.Instance.InWater && global::GorillaLocomotion.Player.Instance.CurrentWaterVolume == this.lavaVolume)
+			if (GorillaLocomotion.Player.Instance.InWater && GorillaLocomotion.Player.Instance.CurrentWaterVolume == this.lavaVolume)
 			{
 				this.LocalPlayerInLava(currentTime, false);
 			}
@@ -463,7 +464,7 @@ namespace GorillaTag
 
 		private void OnColliderEnteredLava(WaterVolume volume, Collider collider)
 		{
-			if (collider == global::GorillaLocomotion.Player.Instance.bodyCollider)
+			if (collider == GorillaLocomotion.Player.Instance.bodyCollider)
 			{
 				this.LocalPlayerInLava(PhotonNetwork.InRoom ? PhotonNetwork.Time : Time.timeAsDouble, true);
 			}

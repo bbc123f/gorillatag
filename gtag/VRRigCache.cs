@@ -1,35 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
 
-internal class VRRigCache : MonoBehaviourPunCallbacks
+internal class VRRigCache : MonoBehaviour
 {
-	public static bool TryFindRigPlayer(VRRig rig, out Player player)
-	{
-		player = null;
-		if (rig == null)
-		{
-			return false;
-		}
-		if (VRRigCache.rigsInUse == null)
-		{
-			return false;
-		}
-		foreach (KeyValuePair<Player, RigContainer> keyValuePair in VRRigCache.rigsInUse)
-		{
-			RigContainer value = keyValuePair.Value;
-			if (!(value == null) && !(value.Rig != rig))
-			{
-				player = keyValuePair.Key;
-				return true;
-			}
-		}
-		return false;
-	}
-
 	public static VRRigCache Instance { get; private set; }
 
 	public Transform NetworkParent
@@ -72,7 +48,10 @@ internal class VRRigCache : MonoBehaviourPunCallbacks
 			VRRigCache.freeRigs.Enqueue(rigContainer);
 			num++;
 		}
-		this.isInitialized = true;
+		NetworkSystem.Instance.OnMultiplayerStarted += this.OnJoinedRoom;
+		NetworkSystem.Instance.OnReturnedToSinglePlayer += this.OnLeftRoom;
+		NetworkSystem.Instance.OnPlayerJoined += this.OnPlayerEnteredRoom;
+		NetworkSystem.Instance.OnPlayerLeft += this.OnPlayerLeftRoom;
 	}
 
 	private void OnDestroy()
@@ -99,14 +78,19 @@ internal class VRRigCache : MonoBehaviourPunCallbacks
 
 	internal bool TryGetVrrig(Player targetPlayer, out RigContainer playerRig)
 	{
+		return this.TryGetVrrig(NetworkSystem.Instance.GetPlayer(targetPlayer.ActorNumber), out playerRig);
+	}
+
+	internal bool TryGetVrrig(NetPlayer targetPlayer, out RigContainer playerRig)
+	{
 		playerRig = null;
 		if (ApplicationQuittingState.IsQuitting)
 		{
 			return false;
 		}
-		if (targetPlayer == null)
+		if (targetPlayer.IsNull || targetPlayer == null)
 		{
-			Debug.LogWarning("Player for rig is null");
+			Debug.LogError("VrRigCache - target player is null");
 			return false;
 		}
 		if (targetPlayer.IsLocal)
@@ -114,9 +98,9 @@ internal class VRRigCache : MonoBehaviourPunCallbacks
 			playerRig = this.localRig;
 			return true;
 		}
-		if (!targetPlayer.InRoom())
+		if (!targetPlayer.InRoom)
 		{
-			this.LogWarning("player is not in room?? " + targetPlayer.ToStringFull());
+			this.LogWarning("player is not in room?? " + targetPlayer.UserId);
 			return false;
 		}
 		if (VRRigCache.rigsInUse.ContainsKey(targetPlayer))
@@ -131,19 +115,16 @@ internal class VRRigCache : MonoBehaviourPunCallbacks
 				return false;
 			}
 			playerRig = VRRigCache.freeRigs.Dequeue();
-			playerRig.Creator = targetPlayer;
+			Debug.Log("Setting Creator", base.gameObject);
+			playerRig.Creator = ((PunNetPlayer)targetPlayer).playerRef;
+			playerRig.CreatorWrapped = targetPlayer;
 			VRRigCache.rigsInUse.Add(targetPlayer, playerRig);
 			playerRig.gameObject.SetActive(true);
 		}
 		return true;
 	}
 
-	internal bool PlayerHasRig(Player targetPlayer)
-	{
-		return targetPlayer.InRoom() && (targetPlayer.IsLocal || VRRigCache.rigsInUse.ContainsKey(targetPlayer));
-	}
-
-	private void AddRigToGorillaParent(Player player, VRRig vrrig)
+	private void AddRigToGorillaParent(NetPlayer player, VRRig vrrig)
 	{
 		GorillaParent instance = GorillaParent.instance;
 		if (instance == null)
@@ -162,28 +143,35 @@ internal class VRRigCache : MonoBehaviourPunCallbacks
 		instance.vrrigDict[player] = vrrig;
 	}
 
-	public override void OnPlayerEnteredRoom(Player newPlayer)
+	public void OnPlayerEnteredRoom(int joiningPlayerID)
 	{
-		RigContainer rigContainer;
-		if (this.TryGetVrrig(newPlayer, out rigContainer))
+		NetPlayer player = NetworkSystem.Instance.GetPlayer(joiningPlayerID);
+		if (player.ID == -1)
 		{
-			this.AddRigToGorillaParent(newPlayer, rigContainer.Rig);
+			Debug.LogError("LocalPlayer returned, vrrig no correctly initialised");
+		}
+		Debug.Log("VrRigCache - On player entered room");
+		RigContainer rigContainer;
+		if (this.TryGetVrrig(player, out rigContainer))
+		{
+			this.AddRigToGorillaParent(player, rigContainer.Rig);
 		}
 	}
 
-	public override void OnJoinedRoom()
+	public void OnJoinedRoom()
 	{
-		foreach (Player player in PhotonNetwork.PlayerList)
+		Debug.Log("VrRigCache - On player joined room");
+		foreach (NetPlayer netPlayer in NetworkSystem.Instance.AllNetPlayers)
 		{
 			RigContainer rigContainer;
-			if (this.TryGetVrrig(player, out rigContainer))
+			if (this.TryGetVrrig(netPlayer, out rigContainer))
 			{
-				this.AddRigToGorillaParent(player, rigContainer.Rig);
+				this.AddRigToGorillaParent(netPlayer, rigContainer.Rig);
 			}
 		}
 	}
 
-	private void RemoveRigFromGorillaParent(Player player, VRRig vrrig)
+	private void RemoveRigFromGorillaParent(NetPlayer player, VRRig vrrig)
 	{
 		GorillaParent instance = GorillaParent.instance;
 		if (instance == null)
@@ -200,31 +188,58 @@ internal class VRRigCache : MonoBehaviourPunCallbacks
 		}
 	}
 
-	public override void OnPlayerLeftRoom(Player otherPlayer)
+	public void OnPlayerLeftRoom(int playerID)
 	{
-		RigContainer rigContainer;
-		if (VRRigCache.rigsInUse.TryGetValue(otherPlayer, out rigContainer))
+		Debug.Log("player left");
+		NetPlayer player = NetworkSystem.Instance.GetPlayer(playerID);
+		if (player == null)
 		{
+			Debug.LogError("Leaving players NetPlayer is Null");
+			this.CheckForMissingPlayer();
+		}
+		RigContainer rigContainer;
+		if (VRRigCache.rigsInUse.TryGetValue(player, out rigContainer))
+		{
+			Debug.Log("Disable Rig Container!");
 			rigContainer.gameObject.Disable();
 			VRRigCache.freeRigs.Enqueue(rigContainer);
-			VRRigCache.rigsInUse.Remove(otherPlayer);
-			this.RemoveRigFromGorillaParent(otherPlayer, rigContainer.Rig);
+			VRRigCache.rigsInUse.Remove(player);
+			this.RemoveRigFromGorillaParent(player, rigContainer.Rig);
 			return;
 		}
-		this.LogError("failed to find player's vrrig who left " + otherPlayer.ToStringFull());
+		this.LogError("failed to find player's vrrig who left " + player.UserId);
 	}
 
-	public override void OnLeftRoom()
+	private void CheckForMissingPlayer()
 	{
-		foreach (Player player in VRRigCache.rigsInUse.Keys.ToArray<Player>())
+		foreach (KeyValuePair<NetPlayer, RigContainer> keyValuePair in VRRigCache.rigsInUse)
 		{
-			RigContainer rigContainer = VRRigCache.rigsInUse[player];
+			if (keyValuePair.Key == null || keyValuePair.Value == null)
+			{
+				Debug.LogError("Somehow null reference in rigsInUse");
+			}
+			else if (!keyValuePair.Key.InRoom)
+			{
+				Debug.Log("Disable Rig Container in backup method!");
+				keyValuePair.Value.gameObject.Disable();
+				VRRigCache.freeRigs.Enqueue(keyValuePair.Value);
+				VRRigCache.rigsInUse.Remove(keyValuePair.Key);
+				this.RemoveRigFromGorillaParent(keyValuePair.Key, keyValuePair.Value.Rig);
+			}
+		}
+	}
+
+	public void OnLeftRoom()
+	{
+		foreach (NetPlayer netPlayer in VRRigCache.rigsInUse.Keys.ToArray<NetPlayer>())
+		{
+			RigContainer rigContainer = VRRigCache.rigsInUse[netPlayer];
 			if (!(rigContainer == null))
 			{
-				VRRig rig = VRRigCache.rigsInUse[player].Rig;
+				VRRig rig = VRRigCache.rigsInUse[netPlayer].Rig;
 				rigContainer.gameObject.Disable();
-				VRRigCache.rigsInUse.Remove(player);
-				this.RemoveRigFromGorillaParent(player, rig);
+				VRRigCache.rigsInUse.Remove(netPlayer);
+				this.RemoveRigFromGorillaParent(netPlayer, rig);
 				VRRigCache.freeRigs.Enqueue(rigContainer);
 			}
 		}
@@ -260,7 +275,7 @@ internal class VRRigCache : MonoBehaviourPunCallbacks
 	private static Queue<RigContainer> freeRigs = new Queue<RigContainer>(10);
 
 	[OnEnterPlay_Clear]
-	private static Dictionary<Player, RigContainer> rigsInUse = new Dictionary<Player, RigContainer>(10);
+	private static Dictionary<NetPlayer, RigContainer> rigsInUse = new Dictionary<NetPlayer, RigContainer>(10);
 
 	private bool isInitialized;
 }

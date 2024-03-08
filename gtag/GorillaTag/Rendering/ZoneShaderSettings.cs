@@ -1,11 +1,10 @@
 ﻿using System;
 using GorillaExtensions;
-using GorillaTag.GuidedRefs;
 using UnityEngine;
 
 namespace GorillaTag.Rendering
 {
-	public class ZoneShaderSettings : BaseGuidedRefTargetMono, ITickSystemPost
+	public class ZoneShaderSettings : MonoBehaviour, ITickSystemPost
 	{
 		[DebugReadout]
 		public static ZoneShaderSettings defaultsInstance { get; private set; }
@@ -89,9 +88,13 @@ namespace GorillaTag.Rendering
 
 		public static int shaderParam_ZoneLiquidPosRadiusSq { get; private set; } = Shader.PropertyToID("_ZoneLiquidPosRadiusSq");
 
-		protected override void Awake()
+		public static float GetWaterY()
 		{
-			base.Awake();
+			return ZoneShaderSettings.activeInstance.mainWaterSurfacePlane.position.y;
+		}
+
+		protected void Awake()
+		{
 			this.hasMainWaterSurfacePlane = this.mainWaterSurfacePlane != null && (this.mainWaterSurfacePlane_overrideMode == ZoneShaderSettings.EOverrideMode.ApplyNewValue || this.isDefaultValues);
 			this.hasDynamicWaterSurfacePlane = this.hasMainWaterSurfacePlane && !this.mainWaterSurfacePlane.gameObject.isStatic;
 			this.hasLiquidBottomTransform = this.liquidBottomTransform != null && (this.liquidBottomTransform_overrideMode == ZoneShaderSettings.EOverrideMode.ApplyNewValue || this.isDefaultValues);
@@ -115,7 +118,7 @@ namespace GorillaTag.Rendering
 			TickSystem<object>.RemovePostTickCallback(this);
 		}
 
-		protected override void OnDestroy()
+		protected void OnDestroy()
 		{
 			if (ZoneShaderSettings.defaultsInstance == this)
 			{

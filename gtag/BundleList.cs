@@ -1,5 +1,4 @@
 ﻿using System;
-using GorillaNetworking;
 
 internal class BundleList
 {
@@ -14,9 +13,9 @@ internal class BundleList
 		int num = this.data[0].majorVersion;
 		int num2 = this.data[0].minorVersion;
 		int num3 = this.data[0].minorVersion2;
-		int gameMajorVersion = PhotonNetworkController.Instance.GameMajorVersion;
-		int gameMinorVersion = PhotonNetworkController.Instance.GameMinorVersion;
-		int gameMinorVersion2 = PhotonNetworkController.Instance.GameMinorVersion2;
+		int gameMajorVersion = NetworkSystemConfig.GameMajorVersion;
+		int gameMinorVersion = NetworkSystemConfig.GameMinorVersion;
+		int gameMinorVersion2 = NetworkSystemConfig.GameMinorVersion2;
 		for (int i = 1; i < this.data.Length; i++)
 		{
 			this.data[i].isActive = false;

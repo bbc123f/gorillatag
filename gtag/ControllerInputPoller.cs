@@ -83,21 +83,25 @@ public class ControllerInputPoller : MonoBehaviour
 		this.headDevice.TryGetFeatureValue(CommonUsages.deviceRotation, out this.headRotation);
 		if (this.controllerType == GorillaControllerType.OCULUS_DEFAULT)
 		{
-			this.CalculateGrabState(this.leftControllerGripFloat, ref this.leftGrab, ref this.leftGrabRelease, 0.75f, 0.65f);
-			this.CalculateGrabState(this.rightControllerGripFloat, ref this.rightGrab, ref this.rightGrabRelease, 0.75f, 0.65f);
+			this.CalculateGrabState(this.leftControllerGripFloat, ref this.leftGrab, ref this.leftGrabRelease, ref this.leftGrabMomentary, ref this.leftGrabReleaseMomentary, 0.75f, 0.65f);
+			this.CalculateGrabState(this.rightControllerGripFloat, ref this.rightGrab, ref this.rightGrabRelease, ref this.rightGrabMomentary, ref this.rightGrabReleaseMomentary, 0.75f, 0.65f);
 			return;
 		}
 		if (this.controllerType == GorillaControllerType.INDEX)
 		{
-			this.CalculateGrabState(this.leftControllerGripFloat, ref this.leftGrab, ref this.leftGrabRelease, 0.1f, 0.01f);
-			this.CalculateGrabState(this.rightControllerGripFloat, ref this.rightGrab, ref this.rightGrabRelease, 0.1f, 0.01f);
+			this.CalculateGrabState(this.leftControllerGripFloat, ref this.leftGrab, ref this.leftGrabRelease, ref this.leftGrabMomentary, ref this.leftGrabReleaseMomentary, 0.1f, 0.01f);
+			this.CalculateGrabState(this.rightControllerGripFloat, ref this.rightGrab, ref this.rightGrabRelease, ref this.rightGrabMomentary, ref this.rightGrabReleaseMomentary, 0.1f, 0.01f);
 		}
 	}
 
-	private void CalculateGrabState(float grabValue, ref bool grab, ref bool grabRelease, float grabThreshold, float grabReleaseThreshold)
+	private void CalculateGrabState(float grabValue, ref bool grab, ref bool grabRelease, ref bool grabMomentary, ref bool grabReleaseMomentary, float grabThreshold, float grabReleaseThreshold)
 	{
-		grab = grabValue >= grabThreshold;
-		grabRelease = grabValue <= grabReleaseThreshold;
+		bool flag = grabValue >= grabThreshold;
+		bool flag2 = grabValue <= grabReleaseThreshold;
+		grabMomentary = flag && flag != grab;
+		grabReleaseMomentary = flag2 && flag2 != grabRelease;
+		grab = flag;
+		grabRelease = flag2;
 	}
 
 	public static bool GetGrab(XRNode node)
@@ -116,6 +120,24 @@ public class ControllerInputPoller : MonoBehaviour
 			return ControllerInputPoller.instance.leftGrabRelease;
 		}
 		return node == XRNode.RightHand && ControllerInputPoller.instance.rightGrabRelease;
+	}
+
+	public static bool GetGrabMomentary(XRNode node)
+	{
+		if (node == XRNode.LeftHand)
+		{
+			return ControllerInputPoller.instance.leftGrabMomentary;
+		}
+		return node == XRNode.RightHand && ControllerInputPoller.instance.rightGrabMomentary;
+	}
+
+	public static bool GetGrabReleaseMomentary(XRNode node)
+	{
+		if (node == XRNode.LeftHand)
+		{
+			return ControllerInputPoller.instance.leftGrabReleaseMomentary;
+		}
+		return node == XRNode.RightHand && ControllerInputPoller.instance.rightGrabReleaseMomentary;
 	}
 
 	public static Vector2 Primary2DAxis(XRNode node)
@@ -310,6 +332,14 @@ public class ControllerInputPoller : MonoBehaviour
 	public bool rightGrab;
 
 	public bool rightGrabRelease;
+
+	public bool leftGrabMomentary;
+
+	public bool leftGrabReleaseMomentary;
+
+	public bool rightGrabMomentary;
+
+	public bool rightGrabReleaseMomentary;
 
 	public Vector2 rightControllerPrimary2DAxis;
 }

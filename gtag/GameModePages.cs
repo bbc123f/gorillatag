@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using GorillaGameModes;
 using GorillaNetworking;
 using UnityEngine;
 using UnityEngine.UI;

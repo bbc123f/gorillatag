@@ -568,7 +568,7 @@ public class LegacyTransferrableObject : HoldableObject
 		VRRig vrrig = this.targetRig;
 		if ((vrrig != null) ? vrrig.photonView : null)
 		{
-			this.targetRig.photonView.RPC("PlayHandTap", RpcTarget.Others, new object[] { soundIndex, flag, 0.1f });
+			this.targetRig.rigSerializer.PlayHandTap(soundIndex, flag, 0.1f, default(PhotonMessageInfo));
 		}
 		this.myRig.PlayHandTapLocal(soundIndex, flag, soundVolume);
 		GorillaTagger.Instance.StartVibration(flag, hapticStrength, hapticDuration);

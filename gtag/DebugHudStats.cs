@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using GorillaLocomotion;
+using GorillaNetworking;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -43,6 +44,14 @@ public class DebugHudStats : MonoBehaviour
 		float magnitude = Player.Instance.currentVelocity.magnitude;
 		this.builder.Append(Mathf.RoundToInt(magnitude));
 		this.builder.AppendLine(" m/s");
+		if (GorillaComputer.instance != null)
+		{
+			this.builder.AppendLine(GorillaComputer.instance.GetServerTime().ToString());
+		}
+		else
+		{
+			this.builder.AppendLine("Server Time Unavailable");
+		}
 		this.text.text = this.builder.ToString();
 		this.updateTimer = 0f;
 	}

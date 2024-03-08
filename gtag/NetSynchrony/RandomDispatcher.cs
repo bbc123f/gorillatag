@@ -9,19 +9,19 @@ namespace NetSynchrony
 	{
 		public event RandomDispatcher.RandomDispatcherEvent Dispatch;
 
-		public void Init(float seconds)
+		public void Init(double seconds)
 		{
-			seconds %= this.totalMinutes * 60f;
+			seconds %= (double)(this.totalMinutes * 60f);
 			this.index = 0;
 			this.dispatchTimes = new List<float>();
 			float num = 0f;
 			float num2 = this.totalMinutes * 60f;
-			Random.InitState(Application.buildGUID.GetHashCode());
+			Random.InitState(StaticHash.Calculate(Application.buildGUID));
 			while (num < num2)
 			{
 				float num3 = Random.Range(this.minWaitTime, this.maxWaitTime);
 				num += num3;
-				if (num < seconds)
+				if ((double)num < seconds)
 				{
 					this.index = this.dispatchTimes.Count;
 				}
@@ -30,23 +30,23 @@ namespace NetSynchrony
 			Random.InitState((int)DateTime.Now.Ticks);
 		}
 
-		public void Sync(float seconds)
+		public void Sync(double seconds)
 		{
-			seconds %= this.totalMinutes * 60f;
+			seconds %= (double)(this.totalMinutes * 60f);
 			this.index = 0;
 			for (int i = 0; i < this.dispatchTimes.Count; i++)
 			{
-				if (this.dispatchTimes[i] < seconds)
+				if ((double)this.dispatchTimes[i] < seconds)
 				{
 					this.index = i;
 				}
 			}
 		}
 
-		public void Tick(float seconds)
+		public void Tick(double seconds)
 		{
-			seconds %= this.totalMinutes * 60f;
-			if (this.dispatchTimes[this.index] < seconds)
+			seconds %= (double)(this.totalMinutes * 60f);
+			if ((double)this.dispatchTimes[this.index] < seconds)
 			{
 				this.index = (this.index + 1) % this.dispatchTimes.Count;
 				if (this.Dispatch != null)

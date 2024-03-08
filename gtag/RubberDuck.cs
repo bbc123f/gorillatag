@@ -147,17 +147,25 @@ public class RubberDuck : TransferrableObject
 		}
 		if (this._raiseActivate)
 		{
-			RubberDuckEvents events = this._events;
-			if (events == null)
+			if (PhotonNetwork.InRoom)
 			{
+				RubberDuckEvents events = this._events;
+				if (events == null)
+				{
+					return;
+				}
+				PhotonEvent activate = events.Activate;
+				if (activate == null)
+				{
+					return;
+				}
+				activate.RaiseAll(new object[] { this.particleFXEmissionSqueeze });
 				return;
 			}
-			PhotonEvent activate = events.Activate;
-			if (activate == null)
+			else
 			{
-				return;
+				this.OnSqueezeActivate(0, 0, new object[] { this.particleFXEmissionSqueeze });
 			}
-			activate.RaiseAll(new object[] { this.particleFXEmissionSqueeze });
 		}
 	}
 
@@ -173,20 +181,25 @@ public class RubberDuck : TransferrableObject
 			}
 			GorillaTagger.Instance.StartVibration(flag, this.releaseStrength, Time.deltaTime);
 		}
-		if (this._raiseDeactivate)
+		if (!this._raiseDeactivate)
 		{
-			RubberDuckEvents events = this._events;
-			if (events == null)
+			if (PhotonNetwork.InRoom)
 			{
-				return;
+				this.OnSqueezeDeactivate(0, 0, new object[] { this.particleFXEmissionIdle });
 			}
-			PhotonEvent deactivate = events.Deactivate;
-			if (deactivate == null)
-			{
-				return;
-			}
-			deactivate.RaiseAll(new object[] { this.particleFXEmissionIdle });
+			return;
 		}
+		RubberDuckEvents events = this._events;
+		if (events == null)
+		{
+			return;
+		}
+		PhotonEvent deactivate = events.Deactivate;
+		if (deactivate == null)
+		{
+			return;
+		}
+		deactivate.RaiseAll(new object[] { this.particleFXEmissionIdle });
 	}
 
 	public void PlayParticleFX(float rate)

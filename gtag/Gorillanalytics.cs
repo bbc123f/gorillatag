@@ -43,9 +43,9 @@ public class Gorillanalytics : MonoBehaviour
 			string text2;
 			string text3;
 			this.GetMapModeQueue(out text, out text2, out text3);
-			Vector3 position = global::GorillaLocomotion.Player.Instance.headCollider.transform.position;
-			Vector3 currentVelocity = global::GorillaLocomotion.Player.Instance.currentVelocity;
-			this.uploadData.version = PhotonNetworkController.Instance.GameVersionString;
+			Vector3 position = GorillaLocomotion.Player.Instance.headCollider.transform.position;
+			Vector3 currentVelocity = GorillaLocomotion.Player.Instance.currentVelocity;
+			this.uploadData.version = NetworkSystemConfig.AppVersion;
 			this.uploadData.upload_chance = this.oneOverChance;
 			this.uploadData.map = text;
 			this.uploadData.mode = text2;

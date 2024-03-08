@@ -37,6 +37,12 @@ public class ZoneManagement : MonoBehaviour
 			return;
 		}
 		ZoneManagement.instance.SetZones(zones);
+		Action action = ZoneManagement.instance.onZoneChanged;
+		if (action == null)
+		{
+			return;
+		}
+		action();
 	}
 
 	public static bool IsInZone(GTZone zone)
@@ -46,7 +52,7 @@ public class ZoneManagement : MonoBehaviour
 			ZoneManagement.FindInstance();
 		}
 		ZoneData zoneData = ZoneManagement.instance.GetZoneData(zone);
-		return zoneData != null && zoneData.rootGameObjects.Length != 0 && zoneData.rootGameObjects[0].activeSelf;
+		return zoneData != null && zoneData.active;
 	}
 
 	public GameObject GetPrimaryGameObject(GTZone zone)
@@ -72,7 +78,7 @@ public class ZoneManagement : MonoBehaviour
 		ZoneManagement.instance.sceneForceStayLoaded.Remove(sceneName);
 	}
 
-	private static void FindInstance()
+	public static void FindInstance()
 	{
 		ZoneManagement zoneManagement = Object.FindObjectOfType<ZoneManagement>();
 		if (zoneManagement == null)
@@ -81,6 +87,34 @@ public class ZoneManagement : MonoBehaviour
 		}
 		Debug.LogWarning("ZoneManagement accessed before MonoBehaviour awake function called; consider delaying zone management functions to avoid FindObject lookup.");
 		zoneManagement.Initialize();
+	}
+
+	public bool IsSceneLoaded(GTZone gtZone)
+	{
+		foreach (ZoneData zoneData in this.zones)
+		{
+			if (zoneData.zone == gtZone && this.scenesLoaded.Contains(zoneData.sceneName))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public bool IsZoneActive(GTZone zone)
+	{
+		ZoneData zoneData = this.GetZoneData(zone);
+		return zoneData != null && zoneData.active;
+	}
+
+	public HashSet<string> GetAllLoadedScenes()
+	{
+		return this.scenesLoaded;
+	}
+
+	public bool IsSceneLoaded(string sceneName)
+	{
+		return this.scenesLoaded.Contains(sceneName);
 	}
 
 	private void Initialize()
@@ -112,7 +146,7 @@ public class ZoneManagement : MonoBehaviour
 		this.objectActivationState = new bool[this.allObjects.Length];
 	}
 
-	private void SetZones(GTZone[] zones)
+	private void SetZones(GTZone[] newActiveZones)
 	{
 		for (int i = 0; i < this.objectActivationState.Length; i++)
 		{
@@ -120,11 +154,16 @@ public class ZoneManagement : MonoBehaviour
 		}
 		this.scenesRequested.Clear();
 		this.scenesRequested.Add("GorillaTag");
-		for (int j = 0; j < zones.Length; j++)
+		for (int j = 0; j < this.zones.Length; j++)
 		{
-			ZoneData zoneData = this.GetZoneData(zones[j]);
-			if (zoneData != null && zoneData.rootGameObjects != null)
+			ZoneData zoneData = this.zones[j];
+			if (zoneData == null || zoneData.rootGameObjects == null || !newActiveZones.Contains(zoneData.zone))
 			{
+				zoneData.active = false;
+			}
+			else
+			{
+				zoneData.active = true;
 				if (!string.IsNullOrEmpty(zoneData.sceneName))
 				{
 					this.scenesRequested.Add(zoneData.sceneName);
@@ -200,6 +239,8 @@ public class ZoneManagement : MonoBehaviour
 	private GameObject[] allObjects;
 
 	private bool[] objectActivationState;
+
+	public Action onZoneChanged;
 
 	private HashSet<string> scenesLoaded = new HashSet<string>();
 

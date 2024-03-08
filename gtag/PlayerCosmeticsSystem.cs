@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using ExitGames.Client.Photon;
-using GorillaLocomotion;
 using GorillaNetworking;
 using Photon.Pun;
 using Photon.Realtime;
@@ -72,7 +71,7 @@ internal class PlayerCosmeticsSystem : MonoBehaviour, ITickSystemPre
 		PlayerCosmeticsSystem.playerIDsList.Clear();
 		while (PlayerCosmeticsSystem.playersToLookUp.Count > 0)
 		{
-			Photon.Realtime.Player player = PlayerCosmeticsSystem.playersToLookUp.Dequeue();
+			Player player = PlayerCosmeticsSystem.playersToLookUp.Dequeue();
 			string text = player.ActorNumber.ToString();
 			if (player.InRoom() && !PlayerCosmeticsSystem.playerIDsList.Contains(text))
 			{
@@ -97,15 +96,7 @@ internal class PlayerCosmeticsSystem : MonoBehaviour, ITickSystemPre
 				}
 				if (error.Error == PlayFabErrorCode.AccountBanned)
 				{
-					Application.Quit();
-					PhotonNetwork.Disconnect();
-					Object.DestroyImmediate(PhotonNetworkController.Instance);
-					Object.DestroyImmediate(global::GorillaLocomotion.Player.Instance);
-					GameObject[] array = Object.FindObjectsOfType<GameObject>();
-					for (int i = 0; i < array.Length; i++)
-					{
-						Object.Destroy(array[i]);
-					}
+					GorillaGameManager.ForceStopGame_DisconnectAndDestroy();
 				}
 			}, null, null);
 		}
@@ -215,7 +206,7 @@ internal class PlayerCosmeticsSystem : MonoBehaviour, ITickSystemPre
 		}
 	}
 
-	public static void UpdatePlayerCosmetics(Photon.Realtime.Player player)
+	public static void UpdatePlayerCosmetics(Player player)
 	{
 		if (player == null || player.IsLocal)
 		{
@@ -233,9 +224,9 @@ internal class PlayerCosmeticsSystem : MonoBehaviour, ITickSystemPre
 		}
 	}
 
-	public static void UpdatePlayerCosmetics(List<Photon.Realtime.Player> players)
+	public static void UpdatePlayerCosmetics(List<Player> players)
 	{
-		foreach (Photon.Realtime.Player player in players)
+		foreach (Player player in players)
 		{
 			if (player != null && !player.IsLocal)
 			{
@@ -270,13 +261,13 @@ internal class PlayerCosmeticsSystem : MonoBehaviour, ITickSystemPre
 
 	private string tempCosmetics;
 
-	private Photon.Realtime.Player playerTemp;
+	private Player playerTemp;
 
 	private RigContainer tempRC;
 
 	private static PlayerCosmeticsSystem instance;
 
-	private static Queue<Photon.Realtime.Player> playersToLookUp = new Queue<Photon.Realtime.Player>(10);
+	private static Queue<Player> playersToLookUp = new Queue<Player>(10);
 
 	private static Dictionary<int, IUserCosmeticsCallback> userCosmeticCallback = new Dictionary<int, IUserCosmeticsCallback>(10);
 

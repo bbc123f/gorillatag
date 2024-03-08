@@ -127,7 +127,7 @@ namespace GorillaTag.Reactions
 				return;
 			}
 			GorillaComputer instance = GorillaComputer.instance;
-			int num = ((GorillaGameManager.instance == null) ? 0 : GorillaGameManager.instance.MyMatIndex(this._ownerVRRig.myPlayer));
+			int num = ((GorillaGameManager.instance == null) ? 0 : GorillaGameManager.instance.MyMatIndex(this._ownerVRRig.creator));
 			if (this._previousMatIndex == num && this._reactionsRemaining <= 0)
 			{
 				return;

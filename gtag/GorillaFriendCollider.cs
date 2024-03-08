@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using GorillaLocomotion;
 using GorillaNetworking;
-using Photon.Pun;
 using UnityEngine;
 
 public class GorillaFriendCollider : MonoBehaviour
@@ -43,25 +42,25 @@ public class GorillaFriendCollider : MonoBehaviour
 					{
 						this.otherColliderGO = this.otherCollider.attachedRigidbody.gameObject;
 						this.collidingRig = this.otherColliderGO.GetComponent<VRRig>();
-						if (this.collidingRig != null && this.collidingRig.creator != null)
+						if (this.collidingRig == null || this.collidingRig.creatorWrapped == null || this.collidingRig.creatorWrapped.IsNull || string.IsNullOrEmpty(this.collidingRig.creatorWrapped.UserId))
 						{
-							string text = this.collidingRig.creator.UserId;
+							if (this.otherColliderGO.GetComponent<Player>() == null || NetworkSystem.Instance.LocalPlayer == null)
+							{
+								goto IL_1A9;
+							}
+							string text = NetworkSystem.Instance.LocalPlayer.UserId;
 							this.AddUserID(text);
 						}
 						else
 						{
-							if (this.otherColliderGO.GetComponent<Player>() == null)
-							{
-								goto IL_16F;
-							}
-							string text = PhotonNetwork.LocalPlayer.UserId;
+							string text = this.collidingRig.creatorWrapped.UserId;
 							this.AddUserID(text);
 						}
 						this.overlapColliders[i] = null;
 					}
-					IL_16F:;
+					IL_1A9:;
 				}
-				if (this.playerIDsCurrentlyTouching.Contains(PhotonNetwork.LocalPlayer.UserId) && GorillaComputer.instance.friendJoinCollider != this)
+				if (NetworkSystem.Instance.LocalPlayer != null && this.playerIDsCurrentlyTouching.Contains(NetworkSystem.Instance.LocalPlayer.UserId) && GorillaComputer.instance.friendJoinCollider != this)
 				{
 					GorillaComputer.instance.allowedMapsToJoin = this.myAllowedMapsToJoin;
 					GorillaComputer.instance.friendJoinCollider = this;

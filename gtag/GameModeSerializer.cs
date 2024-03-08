@@ -1,5 +1,6 @@
 ﻿using System;
 using GorillaExtensions;
+using GorillaGameModes;
 using GorillaTag;
 using Photon.Pun;
 using Photon.Realtime;

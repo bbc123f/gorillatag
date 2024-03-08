@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Photon.Pun;
+using GorillaGameModes;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,9 +14,13 @@ public class GorillaScoreBoard : MonoBehaviour
 		this.linesParent.SetActive(awake);
 	}
 
+	private void OnDestroy()
+	{
+	}
+
 	public string GetBeginningString()
 	{
-		return "ROOM ID: " + ((!PhotonNetwork.CurrentRoom.IsVisible) ? "-PRIVATE- GAME MODE: " : (PhotonNetwork.CurrentRoom.Name + "    GAME MODE: ")) + this.RoomType() + "\n   PLAYER      COLOR   MUTE   REPORT";
+		return "ROOM ID: " + (NetworkSystem.Instance.SessionIsPrivate ? "-PRIVATE- GAME MODE: " : (NetworkSystem.Instance.RoomName + "    GAME MODE: ")) + this.RoomType() + "\n   PLAYER      COLOR   MUTE   REPORT";
 	}
 
 	public string RoomType()
@@ -49,13 +53,11 @@ public class GorillaScoreBoard : MonoBehaviour
 				if (this.lines[i].gameObject.activeInHierarchy)
 				{
 					this.lines[i].gameObject.GetComponent<RectTransform>().localPosition = new Vector3(0f, (float)(this.startingYValue - this.lineHeight * i), 0f);
-					if (this.lines[i].linePlayer != null)
+					if (this.lines[i].linePlayer != null && this.lines[i].linePlayer.InRoom)
 					{
 						this.stringBuilder.Append("\n ");
 						this.stringBuilder.Append(this.NormalizeName(true, this.lines[i].linePlayer.NickName));
-						Text text = this.boardText;
-						text.text = text.text + "\n " + this.NormalizeName(true, this.lines[i].linePlayer.NickName);
-						if (this.lines[i].linePlayer != PhotonNetwork.LocalPlayer)
+						if (this.lines[i].linePlayer != NetworkSystem.Instance.LocalPlayer)
 						{
 							if (this.lines[i].reportButton.isActiveAndEnabled)
 							{
