@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using Photon.Pun;
 using UnityEngine;
 
@@ -198,6 +199,10 @@ public class PlantableFlagManager : MonoBehaviourPun, IPunObservable
 		this.UpdateFlagColors();
 	}
 
+	public PlantableFlagManager()
+	{
+	}
+
 	public PlantableObject[] flags;
 
 	public FlagCauldronColorer[] cauldrons;
@@ -205,4 +210,26 @@ public class PlantableFlagManager : MonoBehaviourPun, IPunObservable
 	public FlagCauldronColorer.ColorMode[] mode;
 
 	public PlantableObject.AppliedColors[][] flagColors;
+
+	[CompilerGenerated]
+	[Serializable]
+	private sealed class <>c
+	{
+		// Note: this type is marked as 'beforefieldinit'.
+		static <>c()
+		{
+		}
+
+		public <>c()
+		{
+		}
+
+		internal void <ResetAllFlags>b__2_0()
+		{
+		}
+
+		public static readonly PlantableFlagManager.<>c <>9 = new PlantableFlagManager.<>c();
+
+		public static Action <>9__2_0;
+	}
 }

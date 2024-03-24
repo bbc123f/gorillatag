@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace GorillaTagScripts
@@ -54,6 +55,16 @@ namespace GorillaTagScripts
 			}
 		}
 
+		public GorillaCaveCrystalSetup()
+		{
+		}
+
+		[CompilerGenerated]
+		private GorillaCaveCrystalSetup.CrystalDef <GetCrystalDefs>b__19_1(FieldInfo f)
+		{
+			return (GorillaCaveCrystalSetup.CrystalDef)f.GetValue(this);
+		}
+
 		public Material SharedBase;
 
 		public Texture2D CrystalAlbedo;
@@ -95,6 +106,10 @@ namespace GorillaTagScripts
 		[Serializable]
 		public class CrystalDef
 		{
+			public CrystalDef()
+			{
+			}
+
 			public Material keyMaterial;
 
 			public CrystalVisualsPreset visualPreset;
@@ -105,6 +120,36 @@ namespace GorillaTagScripts
 			public int mid;
 
 			public int high;
+		}
+
+		[CompilerGenerated]
+		[Serializable]
+		private sealed class <>c
+		{
+			// Note: this type is marked as 'beforefieldinit'.
+			static <>c()
+			{
+			}
+
+			public <>c()
+			{
+			}
+
+			internal bool <GetCrystalDefs>b__19_0(FieldInfo f)
+			{
+				return f != null && f.FieldType == typeof(GorillaCaveCrystalSetup.CrystalDef);
+			}
+
+			internal bool <ProcessTarget>b__21_0(GorillaCaveCrystal c)
+			{
+				return c.visuals == null || !c.visuals;
+			}
+
+			public static readonly GorillaCaveCrystalSetup.<>c <>9 = new GorillaCaveCrystalSetup.<>c();
+
+			public static Func<FieldInfo, bool> <>9__19_0;
+
+			public static Func<GorillaCaveCrystal, bool> <>9__21_0;
 		}
 	}
 }

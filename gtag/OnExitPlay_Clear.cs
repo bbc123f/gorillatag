@@ -13,4 +13,8 @@ public class OnExitPlay_Clear : OnExitPlay_Attribute
 		}
 		field.FieldType.GetMethod("Clear").Invoke(field.GetValue(null), new object[0]);
 	}
+
+	public OnExitPlay_Clear()
+	{
+	}
 }

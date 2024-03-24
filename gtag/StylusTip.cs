@@ -61,6 +61,10 @@ public class StylusTip : MonoBehaviour
 		return identity;
 	}
 
+	public StylusTip()
+	{
+	}
+
 	private const int MaxBreadCrumbs = 60;
 
 	private const float BreadCrumbMinSize = 0.005f;

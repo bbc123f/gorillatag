@@ -101,6 +101,15 @@ public class BushFieldReactorFieldMain : MonoBehaviour
 		}
 	}
 
+	public BushFieldReactorFieldMain()
+	{
+	}
+
+	// Note: this type is marked as 'beforefieldinit'.
+	static BushFieldReactorFieldMain()
+	{
+	}
+
 	public GameObject Bush;
 
 	public GameObject Blossom;

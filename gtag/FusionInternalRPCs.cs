@@ -59,6 +59,10 @@ public class FusionInternalRPCs : SimulationBehaviour
 		Debug.Log("RPC Setting player prop: " + propKey + " - " + propValue);
 	}
 
+	public FusionInternalRPCs()
+	{
+	}
+
 	[NetworkRpcStaticWeavedInvoker("System.Void FusionInternalRPCs::RPC_SendPlayerSyncProp(Fusion.NetworkRunner,Fusion.PlayerRef,Fusion.PlayerRef,System.String,System.String)")]
 	[Preserve]
 	protected unsafe static void RPC_SendPlayerSyncProp@Invoker(NetworkRunner runner, SimulationMessage* message)

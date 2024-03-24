@@ -17,6 +17,10 @@ public class PredicatableRandomRotation : MonoBehaviour
 		base.transform.Rotate(this.rot * num);
 	}
 
+	public PredicatableRandomRotation()
+	{
+	}
+
 	[SerializeField]
 	private Vector3 rot = Vector3.zero;
 

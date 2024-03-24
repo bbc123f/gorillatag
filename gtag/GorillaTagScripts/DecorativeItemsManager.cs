@@ -234,6 +234,10 @@ namespace GorillaTagScripts
 			this.currentIndex = (int)stream.ReceiveNext();
 		}
 
+		public DecorativeItemsManager()
+		{
+		}
+
 		public GameObject decorativeItemsContainer;
 
 		public GameObject respawnableHooksContainer;

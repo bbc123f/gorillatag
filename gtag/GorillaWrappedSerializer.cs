@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using Fusion;
 using Photon.Pun;
 using UnityEngine;
@@ -6,7 +7,19 @@ using UnityEngine;
 [NetworkBehaviourWeaved(0)]
 internal abstract class GorillaWrappedSerializer<T> : NetworkBehaviour, IPunObservable, IPunInstantiateMagicCallback, IOnPhotonViewPreNetDestroy, IPhotonViewCallback where T : struct, INetworkStruct
 {
-	protected virtual T data { get; set; }
+	protected virtual T data
+	{
+		[CompilerGenerated]
+		get
+		{
+			return this.<data>k__BackingField;
+		}
+		[CompilerGenerated]
+		set
+		{
+			this.<data>k__BackingField = value;
+		}
+	}
 
 	public bool IsLocallyOwned
 	{
@@ -105,15 +118,10 @@ internal abstract class GorillaWrappedSerializer<T> : NetworkBehaviour, IPunObse
 		}
 		if (stream.IsWriting)
 		{
-			this.data = (T)((object)this.serializeTarget.OnSerializeWrite());
-			this.data.WriteNetDataToBuffer(stream);
+			this.serializeTarget.OnSerializeWrite(stream, info);
 			return;
 		}
-		if (stream.IsReading)
-		{
-			this.data = NetCrossoverUtils.ReadNetDataFromBuffer<T>(stream);
-			this.serializeTarget.OnSerializeRead(this.data);
-		}
+		this.serializeTarget.OnSerializeRead(stream, info);
 	}
 
 	public override void Despawned(NetworkRunner runner, bool hasState)
@@ -127,6 +135,10 @@ internal abstract class GorillaWrappedSerializer<T> : NetworkBehaviour, IPunObse
 	}
 
 	protected abstract void OnBeforeDespawn();
+
+	protected GorillaWrappedSerializer()
+	{
+	}
 
 	public override void CopyBackingFieldsToState(bool A_1)
 	{
@@ -149,6 +161,9 @@ internal abstract class GorillaWrappedSerializer<T> : NetworkBehaviour, IPunObse
 
 	[SerializeField]
 	protected NetworkObject networkObject;
+
+	[CompilerGenerated]
+	private T <data>k__BackingField;
 
 	static Changed<GorillaWrappedSerializer> $IL2CPP_CHANGED;
 

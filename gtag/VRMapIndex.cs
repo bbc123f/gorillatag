@@ -50,6 +50,10 @@ public class VRMapIndex : VRMap
 		}
 	}
 
+	public VRMapIndex()
+	{
+	}
+
 	public InputFeatureUsage inputAxis;
 
 	public float triggerTouch;

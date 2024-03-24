@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using GorillaExtensions;
 using GorillaTagScripts;
 using UnityEngine;
@@ -7,7 +8,19 @@ using UnityEngine.Serialization;
 
 public class Flocking : MonoBehaviour
 {
-	public FlockingManager.FishArea FishArea { get; set; }
+	public FlockingManager.FishArea FishArea
+	{
+		[CompilerGenerated]
+		get
+		{
+			return this.<FishArea>k__BackingField;
+		}
+		[CompilerGenerated]
+		set
+		{
+			this.<FishArea>k__BackingField = value;
+		}
+	}
 
 	private void Awake()
 	{
@@ -31,77 +44,59 @@ public class Flocking : MonoBehaviour
 
 	public void InvokeUpdate()
 	{
-		if (this.manager.photonView.IsMine)
+		this.AvoidPlayerHands();
+		this.MaybeTurn();
+		switch (this.fishState)
 		{
-			this.AvoidPlayerHands();
-			this.MaybeTurn();
-			switch (this.fishState)
+		case Flocking.FishState.flock:
+			this.Flock(this.FishArea.nextWaypoint);
+			this.SwitchState(Flocking.FishState.patrol);
+			break;
+		case Flocking.FishState.patrol:
+			if (Random.Range(0, 10) < 2)
 			{
-			case Flocking.FishState.flock:
-				this.Flock(this.FishArea.nextWaypoint);
-				this.SwitchState(Flocking.FishState.patrol);
-				break;
-			case Flocking.FishState.patrol:
-				if (Random.Range(0, 10) < 2)
-				{
-					this.SwitchState(Flocking.FishState.flock);
-				}
-				break;
-			case Flocking.FishState.followFood:
-				if (this.isTurning)
-				{
-					return;
-				}
-				if (this.isRealFood)
-				{
-					if ((double)Vector3.Distance(base.transform.position, this.projectileGameObject.transform.position) > this.FollowFoodStopDistance)
-					{
-						this.FollowFood();
-					}
-					else
-					{
-						this.followingFood = false;
-						this.Flock(this.projectileGameObject.transform.position);
-						this.feedingTimeStarted += Time.deltaTime;
-						if (this.feedingTimeStarted > this.eatFoodDuration)
-						{
-							this.SwitchState(Flocking.FishState.patrol);
-						}
-					}
-				}
-				else if (Vector3.Distance(base.transform.position, this.projectileGameObject.transform.position) > this.FollowFakeFoodStopDistance)
+				this.SwitchState(Flocking.FishState.flock);
+			}
+			break;
+		case Flocking.FishState.followFood:
+			if (this.isTurning)
+			{
+				return;
+			}
+			if (this.isRealFood)
+			{
+				if ((double)Vector3.Distance(base.transform.position, this.projectileGameObject.transform.position) > this.FollowFoodStopDistance)
 				{
 					this.FollowFood();
 				}
 				else
 				{
 					this.followingFood = false;
-					this.SwitchState(Flocking.FishState.patrol);
+					this.Flock(this.projectileGameObject.transform.position);
+					this.feedingTimeStarted += Time.deltaTime;
+					if (this.feedingTimeStarted > this.eatFoodDuration)
+					{
+						this.SwitchState(Flocking.FishState.patrol);
+					}
 				}
-				break;
 			}
-			if (!this.followingFood)
+			else if (Vector3.Distance(base.transform.position, this.projectileGameObject.transform.position) > this.FollowFakeFoodStopDistance)
 			{
-				base.transform.Translate(0f, 0f, this.speed * Time.deltaTime);
+				this.FollowFood();
 			}
-			this.pos = base.transform.position;
-			this.rot = base.transform.rotation;
-			return;
+			else
+			{
+				this.followingFood = false;
+				this.SwitchState(Flocking.FishState.patrol);
+			}
+			break;
 		}
-		if (this.followingFood)
+		if (!this.followingFood)
 		{
-			this.velocity = this.speed * this.followFoodSpeedMult;
+			base.transform.Translate(0f, 0f, this.speed * Time.deltaTime);
 		}
-		else if (this.isAvoindingHand)
-		{
-			this.velocity = this.avoidHandSpeed;
-		}
-		else
-		{
-			this.velocity = this.speed;
-		}
-		base.transform.position = Vector3.MoveTowards(base.transform.position, this.pos, this.velocity * Time.deltaTime);
-		base.transform.rotation = Quaternion.RotateTowards(base.transform.rotation, this.rot, this.rotationSpeed * Time.deltaTime);
+		this.pos = base.transform.position;
+		this.rot = base.transform.rotation;
 	}
 
 	private void MaybeTurn()
@@ -231,6 +226,10 @@ public class Flocking : MonoBehaviour
 		FlockingUpdateManager.RegisterFlocking(this);
 	}
 
+	public Flocking()
+	{
+	}
+
 	[Tooltip("Speed is randomly generated from min and max speed")]
 	public float minSpeed = 2f;
 
@@ -298,6 +297,9 @@ public class Flocking : MonoBehaviour
 	private float cacheSpeed;
 
 	private bool isAvoindingHand;
+
+	[CompilerGenerated]
+	private FlockingManager.FishArea <FishArea>k__BackingField;
 
 	public enum FishState
 	{

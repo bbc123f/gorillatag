@@ -21,6 +21,10 @@ namespace OculusSampleFramework
 			this._cowAnimation.Play();
 		}
 
+		public CowController()
+		{
+		}
+
 		[SerializeField]
 		private Animation _cowAnimation;
 

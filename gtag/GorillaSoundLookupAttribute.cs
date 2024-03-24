@@ -4,4 +4,7 @@ using Sirenix.OdinInspector;
 [IncludeMyAttributes]
 public class GorillaSoundLookupAttribute : Attribute
 {
+	public GorillaSoundLookupAttribute()
+	{
+	}
 }

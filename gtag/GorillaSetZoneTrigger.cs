@@ -8,6 +8,10 @@ public class GorillaSetZoneTrigger : GorillaTriggerBox
 		ZoneManagement.SetActiveZones(this.zones);
 	}
 
+	public GorillaSetZoneTrigger()
+	{
+	}
+
 	[SerializeField]
 	private GTZone[] zones;
 }

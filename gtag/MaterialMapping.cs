@@ -7,6 +7,15 @@ public class MaterialMapping : ScriptableObject
 	{
 	}
 
+	public MaterialMapping()
+	{
+	}
+
+	// Note: this type is marked as 'beforefieldinit'.
+	static MaterialMapping()
+	{
+	}
+
 	private static string path = "Assets/UberShaderConversion/MaterialMap.asset";
 
 	public static string materialDirectory = "Assets/UberShaderConversion/Materials/";

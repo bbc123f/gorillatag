@@ -22,6 +22,10 @@ public class WingsWearable : MonoBehaviour
 		this.oldPos = position;
 	}
 
+	public WingsWearable()
+	{
+	}
+
 	[Tooltip("This animator must have a parameter called 'FlapSpeed'")]
 	public Animator animator;
 

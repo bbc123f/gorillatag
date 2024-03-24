@@ -9,5 +9,9 @@ namespace GorillaTag.Rendering.MeshCombiner
 		{
 			Object.Destroy(this);
 		}
+
+		public EdDoNotMeshCombine()
+		{
+		}
 	}
 }

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using Photon.Pun;
 using UnityEngine;
 
@@ -195,6 +196,15 @@ public abstract class GTSystem<T> : MonoBehaviour, IReadOnlyList<T>, IEnumerable
 		GTSystem<T>.gSingleton.UnregisterInstance(instance);
 	}
 
+	protected GTSystem()
+	{
+	}
+
+	// Note: this type is marked as 'beforefieldinit'.
+	static GTSystem()
+	{
+	}
+
 	[SerializeField]
 	protected List<T> _instances = new List<T>();
 
@@ -211,4 +221,27 @@ public abstract class GTSystem<T> : MonoBehaviour, IReadOnlyList<T>, IEnumerable
 	private static bool gAppQuitting = false;
 
 	private static HashSet<T> gQueueRegister = new HashSet<T>();
+
+	[CompilerGenerated]
+	[Serializable]
+	private sealed class <>c
+	{
+		// Note: this type is marked as 'beforefieldinit'.
+		static <>c()
+		{
+		}
+
+		public <>c()
+		{
+		}
+
+		internal bool <SetSingleton>b__25_0(T x)
+		{
+			return x != null;
+		}
+
+		public static readonly GTSystem<T>.<>c <>9 = new GTSystem<T>.<>c();
+
+		public static Func<T, bool> <>9__25_0;
+	}
 }

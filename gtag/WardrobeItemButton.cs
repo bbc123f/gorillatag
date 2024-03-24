@@ -9,6 +9,10 @@ public class WardrobeItemButton : GorillaPressableButton
 		CosmeticsController.instance.PressWardrobeItemButton(this.currentCosmeticItem, isLeftHand);
 	}
 
+	public WardrobeItemButton()
+	{
+	}
+
 	public HeadModel controlledModel;
 
 	public CosmeticsController.CosmeticItem currentCosmeticItem;

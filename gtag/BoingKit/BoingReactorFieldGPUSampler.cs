@@ -54,6 +54,10 @@ namespace BoingKit
 			}
 		}
 
+		public BoingReactorFieldGPUSampler()
+		{
+		}
+
 		public BoingReactorField ReactorField;
 
 		[Range(0f, 10f)]

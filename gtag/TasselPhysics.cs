@@ -23,6 +23,10 @@ public class TasselPhysics : MonoBehaviour
 		}
 	}
 
+	public TasselPhysics()
+	{
+	}
+
 	[SerializeField]
 	private GameObject[] tasselInstances;
 

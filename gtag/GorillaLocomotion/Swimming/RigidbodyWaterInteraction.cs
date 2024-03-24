@@ -188,6 +188,10 @@ namespace GorillaLocomotion.Swimming
 			}
 		}
 
+		public RigidbodyWaterInteraction()
+		{
+		}
+
 		public bool applyDamping = true;
 
 		public bool applyBuoyancyForce = true;

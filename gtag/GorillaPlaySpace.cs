@@ -21,6 +21,10 @@ public class GorillaPlaySpace : MonoBehaviour
 		GorillaPlaySpace._instance = this;
 	}
 
+	public GorillaPlaySpace()
+	{
+	}
+
 	[OnEnterPlay_SetNull]
 	private static GorillaPlaySpace _instance;
 

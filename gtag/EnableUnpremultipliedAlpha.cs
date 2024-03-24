@@ -7,4 +7,8 @@ public class EnableUnpremultipliedAlpha : MonoBehaviour
 	{
 		OVRManager.eyeFovPremultipliedAlphaModeEnabled = false;
 	}
+
+	public EnableUnpremultipliedAlpha()
+	{
+	}
 }

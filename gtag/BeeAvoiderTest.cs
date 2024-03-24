@@ -37,6 +37,10 @@ public class BeeAvoiderTest : MonoBehaviour
 		}
 	}
 
+	public BeeAvoiderTest()
+	{
+	}
+
 	public GameObject[] patrolPoints;
 
 	public GameObject[] avoidancePoints;

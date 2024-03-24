@@ -13,4 +13,8 @@ public class OnEnterPlay_Clear : OnEnterPlay_Attribute
 		}
 		field.FieldType.GetMethod("Clear").Invoke(field.GetValue(null), new object[0]);
 	}
+
+	public OnEnterPlay_Clear()
+	{
+	}
 }

@@ -174,6 +174,10 @@ public class MoviePlayerSampleControls : MonoBehaviour
 		Debug.Log("Controls Visible: " + visible.ToString());
 	}
 
+	public MoviePlayerSampleControls()
+	{
+	}
+
 	public MoviePlayerSample Player;
 
 	public OVRInputModule InputModule;

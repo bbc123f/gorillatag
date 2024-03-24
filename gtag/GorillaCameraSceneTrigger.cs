@@ -17,6 +17,10 @@ public class GorillaCameraSceneTrigger : MonoBehaviour
 		}
 	}
 
+	public GorillaCameraSceneTrigger()
+	{
+	}
+
 	public GorillaSceneCamera sceneCamera;
 
 	public GorillaCameraTriggerIndex currentSceneTrigger;

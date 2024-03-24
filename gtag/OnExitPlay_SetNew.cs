@@ -14,4 +14,8 @@ public class OnExitPlay_SetNew : OnExitPlay_Attribute
 		object obj = field.FieldType.GetConstructor(new Type[0]).Invoke(new object[0]);
 		field.SetValue(null, obj);
 	}
+
+	public OnExitPlay_SetNew()
+	{
+	}
 }

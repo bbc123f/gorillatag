@@ -28,6 +28,10 @@ public class SPPquad : MonoBehaviour
 		this.passthroughLayer.AddSurfaceGeometry(this.projectionObject.gameObject, false);
 	}
 
+	public SPPquad()
+	{
+	}
+
 	private OVRPassthroughLayer passthroughLayer;
 
 	public MeshFilter projectionObject;

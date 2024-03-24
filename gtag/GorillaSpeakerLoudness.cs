@@ -1,7 +1,7 @@
 ﻿using System;
 using GorillaNetworking;
 using GorillaTag.Audio;
-using Oculus.VoiceSDK.Dictation.Utilities;
+using Oculus.VoiceSDK.Utilities;
 using Photon.Voice.PUN;
 using Photon.Voice.Unity;
 using UnityEngine;
@@ -89,7 +89,21 @@ public class GorillaSpeakerLoudness : MonoBehaviour
 			this.recorder = ((voice != null) ? voice.RecorderInUse : null);
 		}
 		VRRig rig = this.rigContainer.Rig;
-		if ((rig.remoteUseReplacementVoice || rig.localUseReplacementVoice || GorillaComputer.instance.voiceChatOn == "FALSE") && rig.SpeakingLoudness > 0f)
+		if (rig.isOfflineVRRig && Time.time > this.nextMicStateLogTimestamp)
+		{
+			Debug.Log(string.Format("Microphone: GorillaSpeakerLoudness {0}, raw {1}, permission {2}, connected {3}, isSpeaking {4}, recorder.TransitEnabled = {5}, IsCurrentlyTransmitting {6}", new object[]
+			{
+				this.loudness,
+				(this.voiceToLoudness != null) ? this.voiceToLoudness.loudness : "null",
+				this.permission,
+				this.micConnected,
+				this.isSpeaking,
+				(this.recorder != null) ? this.recorder.TransmitEnabled.ToString() : "null",
+				(this.recorder != null) ? this.recorder.IsCurrentlyTransmitting : "null"
+			}));
+			this.nextMicStateLogTimestamp = Time.time + 15f;
+		}
+		if ((rig.remoteUseReplacementVoice || rig.localUseReplacementVoice || GorillaComputer.instance.voiceChatOn == "FALSE") && rig.SpeakingLoudness > 0f && !this.rigContainer.ForceMute && !this.rigContainer.Muted)
 		{
 			this.isSpeaking = true;
 			this.loudness = rig.SpeakingLoudness;
@@ -158,6 +172,10 @@ public class GorillaSpeakerLoudness : MonoBehaviour
 		this.timeSinceLoudnessChange += Time.deltaTime;
 	}
 
+	public GorillaSpeakerLoudness()
+	{
+	}
+
 	private bool isSpeaking;
 
 	private float loudness;
@@ -187,4 +205,6 @@ public class GorillaSpeakerLoudness : MonoBehaviour
 	private bool permission;
 
 	private bool micConnected;
+
+	private float nextMicStateLogTimestamp;
 }

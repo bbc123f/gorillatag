@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using ExitGames.Client.Photon;
 using GorillaGameModes;
 using Photon.Pun;
@@ -123,7 +125,6 @@ public class GorillaTagManager : GorillaGameManager
 		if (!this.isCurrentlyTag && this.waitingToStartNextInfectionGame)
 		{
 			this.ClearInfectionState();
-			GameMode.RefreshPlayers();
 			List<Player> participatingPlayers = GameMode.ParticipatingPlayers;
 			if (participatingPlayers.Count > 0)
 			{
@@ -610,6 +611,10 @@ public class GorillaTagManager : GorillaGameManager
 		}
 	}
 
+	public GorillaTagManager()
+	{
+	}
+
 	public float tagCoolDown = 5f;
 
 	public int infectedModeThreshold = 4;
@@ -647,4 +652,96 @@ public class GorillaTagManager : GorillaGameManager
 	private VRRig taggingRig;
 
 	private VRRig taggedRig;
+
+	[CompilerGenerated]
+	private sealed class <InfectionEnd>d__24 : IEnumerator<object>, IEnumerator, IDisposable
+	{
+		[DebuggerHidden]
+		public <InfectionEnd>d__24(int <>1__state)
+		{
+			this.<>1__state = <>1__state;
+		}
+
+		[DebuggerHidden]
+		void IDisposable.Dispose()
+		{
+		}
+
+		bool IEnumerator.MoveNext()
+		{
+			int num = this.<>1__state;
+			GorillaTagManager gorillaTagManager = this;
+			switch (num)
+			{
+			case 0:
+				this.<>1__state = -1;
+				break;
+			case 1:
+				this.<>1__state = -1;
+				break;
+			case 2:
+				this.<>1__state = -1;
+				return false;
+			default:
+				return false;
+			}
+			if ((double)Time.time >= gorillaTagManager.timeInfectedGameEnded + (double)gorillaTagManager.tagCoolDown)
+			{
+				if (!gorillaTagManager.isCurrentlyTag && gorillaTagManager.waitingToStartNextInfectionGame)
+				{
+					gorillaTagManager.ClearInfectionState();
+					List<Player> participatingPlayers = GameMode.ParticipatingPlayers;
+					if (participatingPlayers.Count > 0)
+					{
+						int num2 = Random.Range(0, participatingPlayers.Count);
+						int num3 = 0;
+						while (num3 < 10 && participatingPlayers[num2] == gorillaTagManager.lastInfectedPlayer)
+						{
+							num2 = Random.Range(0, participatingPlayers.Count);
+							num3++;
+						}
+						gorillaTagManager.AddInfectedPlayer(participatingPlayers[num2]);
+						gorillaTagManager.lastInfectedPlayer = participatingPlayers[num2];
+						gorillaTagManager.lastTag = (double)Time.time;
+					}
+				}
+				this.<>2__current = null;
+				this.<>1__state = 2;
+				return true;
+			}
+			this.<>2__current = new WaitForSeconds(0.1f);
+			this.<>1__state = 1;
+			return true;
+		}
+
+		object IEnumerator<object>.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		[DebuggerHidden]
+		void IEnumerator.Reset()
+		{
+			throw new NotSupportedException();
+		}
+
+		object IEnumerator.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		private int <>1__state;
+
+		private object <>2__current;
+
+		public GorillaTagManager <>4__this;
+	}
 }

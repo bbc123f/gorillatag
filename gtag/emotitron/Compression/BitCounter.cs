@@ -147,6 +147,11 @@ namespace emotitron.Compression
 			return 1;
 		}
 
+		// Note: this type is marked as 'beforefieldinit'.
+		static BitCounter()
+		{
+		}
+
 		public static readonly int[] bitPatternToLog2 = new int[]
 		{
 			0, 48, -1, -1, 31, -1, 15, 51, -1, 63,

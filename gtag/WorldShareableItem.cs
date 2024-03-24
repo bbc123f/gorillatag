@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using GorillaExtensions;
 using GorillaNetworking;
 using GorillaTag;
@@ -11,9 +12,33 @@ using UnityEngine;
 public class WorldShareableItem : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback, IOnPhotonViewOwnerChange, IPhotonViewCallback, IPunObservable, IRequestableOwnershipGuardCallbacks
 {
 	[DevInspectorShow]
-	public TransferrableObject.PositionState transferableObjectState { get; set; }
+	public TransferrableObject.PositionState transferableObjectState
+	{
+		[CompilerGenerated]
+		get
+		{
+			return this.<transferableObjectState>k__BackingField;
+		}
+		[CompilerGenerated]
+		set
+		{
+			this.<transferableObjectState>k__BackingField = value;
+		}
+	}
 
-	public TransferrableObject.ItemStates transferableObjectItemState { get; set; }
+	public TransferrableObject.ItemStates transferableObjectItemState
+	{
+		[CompilerGenerated]
+		get
+		{
+			return this.<transferableObjectItemState>k__BackingField;
+		}
+		[CompilerGenerated]
+		set
+		{
+			this.<transferableObjectItemState>k__BackingField = value;
+		}
+	}
 
 	[DevInspectorShow]
 	public WorldTargetItem Target
@@ -268,6 +293,16 @@ public class WorldShareableItem : MonoBehaviourPunCallbacks, IPunInstantiateMagi
 	{
 		this.teleportSerializer.SetWillTeleport();
 	}
+
+	public WorldShareableItem()
+	{
+	}
+
+	[CompilerGenerated]
+	private TransferrableObject.PositionState <transferableObjectState>k__BackingField;
+
+	[CompilerGenerated]
+	private TransferrableObject.ItemStates <transferableObjectItemState>k__BackingField;
 
 	private bool validShareable = true;
 

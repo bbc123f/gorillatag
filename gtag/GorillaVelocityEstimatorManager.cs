@@ -94,6 +94,15 @@ public class GorillaVelocityEstimatorManager : MonoBehaviour
 		}
 	}
 
+	public GorillaVelocityEstimatorManager()
+	{
+	}
+
+	// Note: this type is marked as 'beforefieldinit'.
+	static GorillaVelocityEstimatorManager()
+	{
+	}
+
 	public static GorillaVelocityEstimatorManager instance;
 
 	public static bool hasInstance = false;

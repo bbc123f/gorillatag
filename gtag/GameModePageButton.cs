@@ -9,6 +9,10 @@ public class GameModePageButton : GorillaPressableButton
 		this.selector.ChangePage(this.left);
 	}
 
+	public GameModePageButton()
+	{
+	}
+
 	[SerializeField]
 	private GameModePages selector;
 

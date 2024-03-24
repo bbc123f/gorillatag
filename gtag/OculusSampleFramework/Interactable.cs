@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -38,7 +40,35 @@ namespace OculusSampleFramework
 			}
 		}
 
-		public event Action<ColliderZoneArgs> ProximityZoneEvent;
+		public event Action<ColliderZoneArgs> ProximityZoneEvent
+		{
+			[CompilerGenerated]
+			add
+			{
+				Action<ColliderZoneArgs> action = this.ProximityZoneEvent;
+				Action<ColliderZoneArgs> action2;
+				do
+				{
+					action2 = action;
+					Action<ColliderZoneArgs> action3 = (Action<ColliderZoneArgs>)Delegate.Combine(action2, value);
+					action = Interlocked.CompareExchange<Action<ColliderZoneArgs>>(ref this.ProximityZoneEvent, action3, action2);
+				}
+				while (action != action2);
+			}
+			[CompilerGenerated]
+			remove
+			{
+				Action<ColliderZoneArgs> action = this.ProximityZoneEvent;
+				Action<ColliderZoneArgs> action2;
+				do
+				{
+					action2 = action;
+					Action<ColliderZoneArgs> action3 = (Action<ColliderZoneArgs>)Delegate.Remove(action2, value);
+					action = Interlocked.CompareExchange<Action<ColliderZoneArgs>>(ref this.ProximityZoneEvent, action3, action2);
+				}
+				while (action != action2);
+			}
+		}
 
 		protected virtual void OnProximityZoneEvent(ColliderZoneArgs args)
 		{
@@ -48,7 +78,35 @@ namespace OculusSampleFramework
 			}
 		}
 
-		public event Action<ColliderZoneArgs> ContactZoneEvent;
+		public event Action<ColliderZoneArgs> ContactZoneEvent
+		{
+			[CompilerGenerated]
+			add
+			{
+				Action<ColliderZoneArgs> action = this.ContactZoneEvent;
+				Action<ColliderZoneArgs> action2;
+				do
+				{
+					action2 = action;
+					Action<ColliderZoneArgs> action3 = (Action<ColliderZoneArgs>)Delegate.Combine(action2, value);
+					action = Interlocked.CompareExchange<Action<ColliderZoneArgs>>(ref this.ContactZoneEvent, action3, action2);
+				}
+				while (action != action2);
+			}
+			[CompilerGenerated]
+			remove
+			{
+				Action<ColliderZoneArgs> action = this.ContactZoneEvent;
+				Action<ColliderZoneArgs> action2;
+				do
+				{
+					action2 = action;
+					Action<ColliderZoneArgs> action3 = (Action<ColliderZoneArgs>)Delegate.Remove(action2, value);
+					action = Interlocked.CompareExchange<Action<ColliderZoneArgs>>(ref this.ContactZoneEvent, action3, action2);
+				}
+				while (action != action2);
+			}
+		}
 
 		protected virtual void OnContactZoneEvent(ColliderZoneArgs args)
 		{
@@ -58,7 +116,35 @@ namespace OculusSampleFramework
 			}
 		}
 
-		public event Action<ColliderZoneArgs> ActionZoneEvent;
+		public event Action<ColliderZoneArgs> ActionZoneEvent
+		{
+			[CompilerGenerated]
+			add
+			{
+				Action<ColliderZoneArgs> action = this.ActionZoneEvent;
+				Action<ColliderZoneArgs> action2;
+				do
+				{
+					action2 = action;
+					Action<ColliderZoneArgs> action3 = (Action<ColliderZoneArgs>)Delegate.Combine(action2, value);
+					action = Interlocked.CompareExchange<Action<ColliderZoneArgs>>(ref this.ActionZoneEvent, action3, action2);
+				}
+				while (action != action2);
+			}
+			[CompilerGenerated]
+			remove
+			{
+				Action<ColliderZoneArgs> action = this.ActionZoneEvent;
+				Action<ColliderZoneArgs> action2;
+				do
+				{
+					action2 = action;
+					Action<ColliderZoneArgs> action3 = (Action<ColliderZoneArgs>)Delegate.Remove(action2, value);
+					action = Interlocked.CompareExchange<Action<ColliderZoneArgs>>(ref this.ActionZoneEvent, action3, action2);
+				}
+				while (action != action2);
+			}
+		}
 
 		protected virtual void OnActionZoneEvent(ColliderZoneArgs args)
 		{
@@ -80,17 +166,33 @@ namespace OculusSampleFramework
 			InteractableRegistry.UnregisterInteractable(this);
 		}
 
+		protected Interactable()
+		{
+		}
+
 		protected ColliderZone _proximityZoneCollider;
 
 		protected ColliderZone _contactZoneCollider;
 
 		protected ColliderZone _actionZoneCollider;
 
+		[CompilerGenerated]
+		private Action<ColliderZoneArgs> ProximityZoneEvent;
+
+		[CompilerGenerated]
+		private Action<ColliderZoneArgs> ContactZoneEvent;
+
+		[CompilerGenerated]
+		private Action<ColliderZoneArgs> ActionZoneEvent;
+
 		public Interactable.InteractableStateArgsEvent InteractableStateChanged;
 
 		[Serializable]
 		public class InteractableStateArgsEvent : UnityEvent<InteractableStateArgs>
 		{
+			public InteractableStateArgsEvent()
+			{
+			}
 		}
 	}
 }

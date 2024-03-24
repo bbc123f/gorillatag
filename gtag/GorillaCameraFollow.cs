@@ -33,6 +33,10 @@ public class GorillaCameraFollow : MonoBehaviour
 		}
 	}
 
+	public GorillaCameraFollow()
+	{
+	}
+
 	public Transform playerHead;
 
 	public GameObject cameraParent;

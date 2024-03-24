@@ -78,6 +78,10 @@ namespace OculusSampleFramework
 			}
 		}
 
+		public DistanceGrabbable()
+		{
+		}
+
 		public string m_materialColorField;
 
 		private GrabbableCrosshair m_crosshair;

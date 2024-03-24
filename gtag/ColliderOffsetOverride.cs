@@ -52,6 +52,10 @@ public class ColliderOffsetOverride : MonoBehaviour
 		this.autoSearch = false;
 	}
 
+	public ColliderOffsetOverride()
+	{
+	}
+
 	public List<Collider> colliders;
 
 	[HideInInspector]

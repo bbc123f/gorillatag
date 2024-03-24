@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using UnityEngine;
 
 namespace GorillaLocomotion.Climbing
@@ -191,6 +192,10 @@ namespace GorillaLocomotion.Climbing
 			return num / (float)num2;
 		}
 
+		public GorillaVelocityTracker()
+		{
+		}
+
 		[CompilerGenerated]
 		private void <ResetState>g__PopulateArray|10_0(GorillaVelocityTracker.VelocityDataPoint[] array)
 		{
@@ -233,9 +238,24 @@ namespace GorillaLocomotion.Climbing
 
 		public class VelocityDataPoint
 		{
+			public VelocityDataPoint()
+			{
+			}
+
 			public Vector3 delta;
 
 			public float time = -1f;
+		}
+
+		[CompilerGenerated]
+		[StructLayout(LayoutKind.Auto)]
+		private struct <>c__DisplayClass17_0
+		{
+			public Vector3 total;
+
+			public float totalMag;
+
+			public int added;
 		}
 	}
 }

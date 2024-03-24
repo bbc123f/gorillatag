@@ -14,6 +14,10 @@ public class WardrobeInstance : MonoBehaviour
 		CosmeticsController.instance.RemoveWardrobeInstance(this);
 	}
 
+	public WardrobeInstance()
+	{
+	}
+
 	public WardrobeItemButton[] wardrobeItemButtons;
 
 	public HeadModel selfDoll;

@@ -1,58 +1,157 @@
 ﻿using System;
-using System.Collections.Generic;
 using UnityEngine;
 
-[ExecuteInEditMode]
-[RequireComponent(typeof(SphereCollider))]
-[RequireComponent(typeof(Rigidbody))]
-public class ZoneEntity : MonoBehaviour, IComparer<ZoneEntity>
+public class ZoneEntity : MonoBehaviour
 {
-	public virtual int entityID
+	public string entityTag
 	{
 		get
 		{
-			return base.GetInstanceID();
+			return this._entityTag;
 		}
 	}
 
-	private void OnValidate()
+	public int entityID
 	{
-		if (this.collider == null)
+		get
 		{
-			this.collider = base.GetComponent<SphereCollider>();
+			int num = this._entityID.GetValueOrDefault();
+			if (this._entityID == null)
+			{
+				num = base.GetInstanceID();
+				this._entityID = new int?(num);
+			}
+			return this._entityID.Value;
 		}
-		if (this._rigidbody == null)
+	}
+
+	public VRRig entityRig
+	{
+		get
 		{
-			this._rigidbody = base.GetComponent<Rigidbody>();
-			this._rigidbody.isKinematic = true;
-			this._rigidbody.collisionDetectionMode = CollisionDetectionMode.Discrete;
-			this._rigidbody.constraints = RigidbodyConstraints.FreezeAll;
+			return this._entityRig;
 		}
+	}
+
+	public SphereCollider collider
+	{
+		get
+		{
+			return this._collider;
+		}
+	}
+
+	protected bool IsLocal()
+	{
+		if (ZoneEntity.gLocalRig == null)
+		{
+			ZoneEntity.gLocalRig = VRRigCache.Instance.localRig.Rig;
+		}
+		return ZoneEntity.gLocalRig == this._entityRig;
 	}
 
 	protected virtual void OnEnable()
 	{
-		ZoneGraph.Register<ZoneEntity>(this);
+		ZoneGraph.Register(this);
 	}
 
 	protected virtual void OnDisable()
 	{
-		ZoneGraph.Unregister<ZoneEntity>(this);
+		ZoneGraph.Unregister(this);
 	}
 
-	private void OnTriggerEnter(Collider other)
+	protected virtual void OnTriggerEnter(Collider c)
 	{
-		ZoneGraph.NotifyZoneEnter(this, other.GetInstanceID());
+		if (!Application.isPlaying)
+		{
+			return;
+		}
+		BoxCollider boxCollider = c as BoxCollider;
+		if (boxCollider == null)
+		{
+			return;
+		}
+		ZoneDef zoneDef = ZoneGraph.ColliderToZoneDef(boxCollider);
+		if (zoneDef.zoneId != this.lastEnteredNode.zoneId)
+		{
+			this.sinceZoneEntered = 0;
+			this.lastEnteredNode = ZoneGraph.ColliderToNode(boxCollider);
+		}
+		this.currentZone = zoneDef.zoneId;
+		this.currentSubZone = zoneDef.subZoneId;
+		if (!this._emitTelemetry)
+		{
+			return;
+		}
+		if (!zoneDef.trackEnter)
+		{
+			return;
+		}
+		if (!this.IsLocal())
+		{
+			return;
+		}
+		GorillaTelemetry.PostZoneEvent(zoneDef.zoneId, zoneDef.subZoneId, GTZoneEventType.zone_enter);
 	}
 
-	private void OnTriggerExit(Collider other)
+	protected virtual void OnTriggerExit(Collider c)
 	{
-		ZoneGraph.NotifyZoneExit(this, other.GetInstanceID());
+		if (!Application.isPlaying)
+		{
+			return;
+		}
+		BoxCollider boxCollider = c as BoxCollider;
+		if (boxCollider == null)
+		{
+			return;
+		}
+		ZoneDef zoneDef = ZoneGraph.ColliderToZoneDef(boxCollider);
+		this.lastExitedNode = ZoneGraph.ColliderToNode(boxCollider);
+		if (!this._emitTelemetry)
+		{
+			return;
+		}
+		if (!zoneDef.trackExit)
+		{
+			return;
+		}
+		if (!this.IsLocal())
+		{
+			return;
+		}
+		GorillaTelemetry.PostZoneEvent(zoneDef.zoneId, zoneDef.subZoneId, GTZoneEventType.zone_exit);
 	}
 
-	public int Compare(ZoneEntity x, ZoneEntity y)
+	protected virtual void OnTriggerStay(Collider c)
 	{
-		return ZoneEntity.Compare<ZoneEntity>(x, y);
+		if (!Application.isPlaying)
+		{
+			return;
+		}
+		BoxCollider boxCollider = c as BoxCollider;
+		if (boxCollider == null)
+		{
+			return;
+		}
+		ZoneDef zoneDef = ZoneGraph.ColliderToZoneDef(boxCollider);
+		if (this.sinceZoneEntered.secondsElapsedInt <= this._zoneStayEventInterval)
+		{
+			return;
+		}
+		this.sinceZoneEntered = 0;
+		if (!this._emitTelemetry)
+		{
+			return;
+		}
+		if (!zoneDef.trackStay)
+		{
+			return;
+		}
+		if (!this.IsLocal())
+		{
+			return;
+		}
+		GorillaTelemetry.PostZoneEvent(zoneDef.zoneId, zoneDef.subZoneId, GTZoneEventType.zone_stay);
 	}
 
 	public static int Compare<T>(T x, T y) where T : ZoneEntity
@@ -72,8 +171,55 @@ public class ZoneEntity : MonoBehaviour, IComparer<ZoneEntity>
 		return x.entityID.CompareTo(y.entityID);
 	}
 
-	public SphereCollider collider;
+	public ZoneEntity()
+	{
+	}
+
+	[SerializeField]
+	private bool _emitTelemetry = true;
+
+	[SerializeField]
+	private int _zoneStayEventInterval = 300;
+
+	[SerializeField]
+	private VRRig _entityRig;
+
+	[DebugReadOnly]
+	[NonSerialized]
+	private int? _entityID;
+
+	[SerializeField]
+	private string _entityTag;
+
+	[SerializeField]
+	private SphereCollider _collider;
 
 	[SerializeField]
 	private Rigidbody _rigidbody;
+
+	[Space]
+	[DebugReadOnly]
+	[NonSerialized]
+	public GTZone currentZone;
+
+	[DebugReadOnly]
+	[NonSerialized]
+	public GTSubZone currentSubZone;
+
+	[Space]
+	[DebugReadOnly]
+	[NonSerialized]
+	public ZoneNode lastEnteredNode = ZoneNode.Null;
+
+	[DebugReadOnly]
+	[NonSerialized]
+	public ZoneNode lastExitedNode = ZoneNode.Null;
+
+	[Space]
+	[DebugReadOnly]
+	[NonSerialized]
+	private TimeSince sinceZoneEntered = 0;
+
+	[DebugReadOnly]
+	private static VRRig gLocalRig;
 }

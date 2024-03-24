@@ -10,6 +10,10 @@ namespace GorillaNetworking
 	[CreateAssetMenu(fileName = "VoiceSettings", menuName = "Gorilla Tag/VoiceSettings")]
 	public class SO_NetworkVoiceSettings : ScriptableObject
 	{
+		public SO_NetworkVoiceSettings()
+		{
+		}
+
 		[Header("Voice settings")]
 		public bool AutoConnectAndJoin = true;
 

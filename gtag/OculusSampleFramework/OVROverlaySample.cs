@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -208,6 +210,28 @@ namespace OculusSampleFramework
 			}
 		}
 
+		public OVROverlaySample()
+		{
+		}
+
+		[CompilerGenerated]
+		private void <Start>b__24_0(Toggle t)
+		{
+			this.RadioPressed("OVROverlayID", "group", t);
+		}
+
+		[CompilerGenerated]
+		private void <Start>b__24_1(Toggle t)
+		{
+			this.RadioPressed("ApplicationID", "group", t);
+		}
+
+		[CompilerGenerated]
+		private void <Start>b__24_2(Toggle t)
+		{
+			this.RadioPressed("NoneID", "group", t);
+		}
+
 		private bool inMenu;
 
 		private const string ovrOverlayID = "OVROverlayID";
@@ -257,5 +281,88 @@ namespace OculusSampleFramework
 		public int numLoopsTrigger = 500000000;
 
 		private List<GameObject> spawnedCubes = new List<GameObject>();
+
+		[CompilerGenerated]
+		private sealed class <WaitforOVROverlay>d__30 : IEnumerator<object>, IEnumerator, IDisposable
+		{
+			[DebuggerHidden]
+			public <WaitforOVROverlay>d__30(int <>1__state)
+			{
+				this.<>1__state = <>1__state;
+			}
+
+			[DebuggerHidden]
+			void IDisposable.Dispose()
+			{
+			}
+
+			bool IEnumerator.MoveNext()
+			{
+				int num = this.<>1__state;
+				OVROverlaySample ovroverlaySample = this;
+				switch (num)
+				{
+				case 0:
+				{
+					this.<>1__state = -1;
+					Transform transform = ovroverlaySample.mainCamera.transform;
+					Transform transform2 = ovroverlaySample.loadingTextQuadOverlay.transform;
+					Vector3 vector = transform.position + transform.forward * ovroverlaySample.distanceFromCamToLoadText;
+					vector.y = transform.position.y;
+					transform2.position = vector;
+					ovroverlaySample.cubemapOverlay.enabled = true;
+					ovroverlaySample.loadingTextQuadOverlay.enabled = true;
+					ovroverlaySample.noneRadioButton.isOn = true;
+					this.<>2__current = new WaitForSeconds(0.1f);
+					this.<>1__state = 1;
+					return true;
+				}
+				case 1:
+					this.<>1__state = -1;
+					ovroverlaySample.ClearObjects();
+					ovroverlaySample.SimulateLevelLoad();
+					ovroverlaySample.cubemapOverlay.enabled = false;
+					ovroverlaySample.loadingTextQuadOverlay.enabled = false;
+					this.<>2__current = null;
+					this.<>1__state = 2;
+					return true;
+				case 2:
+					this.<>1__state = -1;
+					return false;
+				default:
+					return false;
+				}
+			}
+
+			object IEnumerator<object>.Current
+			{
+				[DebuggerHidden]
+				get
+				{
+					return this.<>2__current;
+				}
+			}
+
+			[DebuggerHidden]
+			void IEnumerator.Reset()
+			{
+				throw new NotSupportedException();
+			}
+
+			object IEnumerator.Current
+			{
+				[DebuggerHidden]
+				get
+				{
+					return this.<>2__current;
+				}
+			}
+
+			private int <>1__state;
+
+			private object <>2__current;
+
+			public OVROverlaySample <>4__this;
+		}
 	}
 }

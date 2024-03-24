@@ -319,6 +319,10 @@ public class ThrowableBug : TransferrableObject
 		}
 	}
 
+	public ThrowableBug()
+	{
+	}
+
 	public ThrowableBugReliableState reliableState;
 
 	public float slowingDownProgress;

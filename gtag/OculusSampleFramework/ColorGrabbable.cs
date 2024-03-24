@@ -78,6 +78,15 @@ namespace OculusSampleFramework
 			}
 		}
 
+		public ColorGrabbable()
+		{
+		}
+
+		// Note: this type is marked as 'beforefieldinit'.
+		static ColorGrabbable()
+		{
+		}
+
 		public static readonly Color COLOR_GRAB = new Color(1f, 0.5f, 0f, 1f);
 
 		public static readonly Color COLOR_HIGHLIGHT = new Color(1f, 0f, 1f, 1f);

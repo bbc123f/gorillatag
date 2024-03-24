@@ -81,6 +81,10 @@ public class MirrorCameraScript : MonoBehaviour
 		return new Vector4(vector3.x, vector3.y, vector3.z, -Vector3.Dot(vector2, vector3));
 	}
 
+	public MirrorCameraScript()
+	{
+	}
+
 	public Camera mainCamera;
 
 	public Camera mirrorCamera;

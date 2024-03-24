@@ -12,6 +12,10 @@ public class NonCosmeticHandItem : MonoBehaviour
 		}
 	}
 
+	public NonCosmeticHandItem()
+	{
+	}
+
 	public CosmeticsController.CosmeticSlots cosmeticSlots;
 
 	public GameObject itemPrefab;

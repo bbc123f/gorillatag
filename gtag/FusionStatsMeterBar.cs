@@ -227,6 +227,10 @@ public class FusionStatsMeterBar : FusionGraphBase
 		this.ValueLabel.alignByGeometry = false;
 	}
 
+	public FusionStatsMeterBar()
+	{
+	}
+
 	public float HoldPeakTime = 0.1f;
 
 	public float DecayTime = 0.25f;

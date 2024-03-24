@@ -51,6 +51,10 @@ namespace BuildSafe
 		{
 		}
 
+		protected SceneBakeTask()
+		{
+		}
+
 		[SerializeField]
 		private SceneBakeMode m_bakeMode;
 

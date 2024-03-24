@@ -53,6 +53,10 @@ namespace LitJson
 			}
 		}
 
+		static JsonWriter()
+		{
+		}
+
 		public JsonWriter()
 		{
 			this.inst_string_builder = new StringBuilder();

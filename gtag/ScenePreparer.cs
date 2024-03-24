@@ -19,6 +19,10 @@ public class ScenePreparer : MonoBehaviour
 		}
 	}
 
+	public ScenePreparer()
+	{
+	}
+
 	public OVRManager ovrManager;
 
 	public GameObject[] betaDisableObjects;

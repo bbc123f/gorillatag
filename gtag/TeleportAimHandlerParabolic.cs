@@ -22,6 +22,10 @@ public class TeleportAimHandlerParabolic : TeleportAimHandler
 		while (vector.y - ray.origin.y > this.MinimumElevation && (ray.origin - vector).sqrMagnitude <= num);
 	}
 
+	public TeleportAimHandlerParabolic()
+	{
+	}
+
 	[Tooltip("Maximum range for aiming.")]
 	public float Range;
 

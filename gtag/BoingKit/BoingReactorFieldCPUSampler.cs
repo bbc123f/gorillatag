@@ -48,6 +48,10 @@ namespace BoingKit
 			base.transform.rotation = this.m_objRotation;
 		}
 
+		public BoingReactorFieldCPUSampler()
+		{
+		}
+
 		public BoingReactorField ReactorField;
 
 		[Tooltip("Match this mode with how you update your object's transform.\n\nUpdate - Use this mode if you update your object's transform in Update(). This uses variable Time.detalTime. Use FixedUpdate if physics simulation becomes unstable.\n\nFixed Update - Use this mode if you update your object's transform in FixedUpdate(). This uses fixed Time.fixedDeltaTime. Also, use this mode if the game object is affected by Unity physics (i.e. has a rigid body component), which uses fixed updates.")]

@@ -62,6 +62,10 @@ public class BushFieldReactorMain : MonoBehaviour
 		this.m_basePhase -= this.CircleSpeed / this.MaxCircleRadius * Time.deltaTime;
 	}
 
+	public BushFieldReactorMain()
+	{
+	}
+
 	public GameObject Bush;
 
 	public GameObject Blossom;

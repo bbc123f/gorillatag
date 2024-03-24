@@ -293,6 +293,10 @@ public class GTDoor : MonoBehaviourPun
 		}
 	}
 
+	public GTDoor()
+	{
+	}
+
 	[SerializeField]
 	private Transform doorTransform;
 

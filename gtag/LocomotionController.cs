@@ -11,6 +11,10 @@ public class LocomotionController : MonoBehaviour
 		}
 	}
 
+	public LocomotionController()
+	{
+	}
+
 	public OVRCameraRig CameraRig;
 
 	public CapsuleCollider CharacterController;

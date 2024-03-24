@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace OVRTouchSample
@@ -156,6 +157,10 @@ namespace OVRTouchSample
 			}
 		}
 
+		public Hand()
+		{
+		}
+
 		public const string ANIM_LAYER_NAME_POINT = "Point Layer";
 
 		public const string ANIM_LAYER_NAME_THUMB = "Thumb Layer";
@@ -214,5 +219,28 @@ namespace OVRTouchSample
 		private bool m_restoreOnInputAcquired;
 
 		private float m_collisionScaleCurrent;
+
+		[CompilerGenerated]
+		[Serializable]
+		private sealed class <>c
+		{
+			// Note: this type is marked as 'beforefieldinit'.
+			static <>c()
+			{
+			}
+
+			public <>c()
+			{
+			}
+
+			internal bool <Start>b__28_0(Collider childCollider)
+			{
+				return !childCollider.isTrigger;
+			}
+
+			public static readonly Hand.<>c <>9 = new Hand.<>c();
+
+			public static Func<Collider, bool> <>9__28_0;
+		}
 	}
 }

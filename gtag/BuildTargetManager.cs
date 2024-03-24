@@ -8,6 +8,10 @@ public class BuildTargetManager : MonoBehaviour
 		return this.path;
 	}
 
+	public BuildTargetManager()
+	{
+	}
+
 	public BuildTargetManager.BuildTowards newBuildTarget;
 
 	public bool isBeta;
@@ -15,6 +19,8 @@ public class BuildTargetManager : MonoBehaviour
 	public bool isQA;
 
 	public bool spoofIDs;
+
+	public bool spoofChild;
 
 	public bool enableAllCosmetics;
 

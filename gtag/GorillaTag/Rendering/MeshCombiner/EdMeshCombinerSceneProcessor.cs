@@ -19,6 +19,15 @@ namespace GorillaTag.Rendering.MeshCombiner
 		{
 		}
 
+		public EdMeshCombinerSceneProcessor()
+		{
+		}
+
+		// Note: this type is marked as 'beforefieldinit'.
+		static EdMeshCombinerSceneProcessor()
+		{
+		}
+
 		[NonSerialized]
 		private static string _dummyProp = "";
 

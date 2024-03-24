@@ -32,6 +32,10 @@ public class MousePositionDrag : MonoBehaviour
 		}
 	}
 
+	public MousePositionDrag()
+	{
+	}
+
 	private bool m_currFrameHasFocus;
 
 	private bool m_prevFrameHasFocus;

@@ -47,6 +47,15 @@ public class BoundsCalcs : MonoBehaviour
 		list.ForEach(new Action<Mesh>(Object.DestroyImmediate));
 	}
 
+	public BoundsCalcs()
+	{
+	}
+
+	// Note: this type is marked as 'beforefieldinit'.
+	static BoundsCalcs()
+	{
+	}
+
 	public MeshFilter[] optionalTargets = new MeshFilter[0];
 
 	public bool useRootMeshOnly;

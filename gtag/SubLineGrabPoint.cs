@@ -44,6 +44,10 @@ public class SubLineGrabPoint : SubGrabPoint
 		return Vector3.SqrMagnitude(vector - vector2);
 	}
 
+	public SubLineGrabPoint()
+	{
+	}
+
 	[CompilerGenerated]
 	internal static float <GetPreData>g__FindNearestFractionOnLine|8_0(Vector3 origin, Vector3 end, Vector3 point)
 	{

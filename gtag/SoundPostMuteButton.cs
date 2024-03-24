@@ -12,5 +12,9 @@ public class SoundPostMuteButton : GorillaPressableButton
 		}
 	}
 
+	public SoundPostMuteButton()
+	{
+	}
+
 	public SynchedMusicController[] musicControllers;
 }

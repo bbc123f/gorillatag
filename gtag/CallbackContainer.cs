@@ -48,6 +48,10 @@ internal class CallbackContainer<T> where T : ICallBack
 		this.callbackList.Clear();
 	}
 
+	public CallbackContainer()
+	{
+	}
+
 	protected List<T> callbackList = new List<T>(100);
 
 	protected int currentIndex = -1;

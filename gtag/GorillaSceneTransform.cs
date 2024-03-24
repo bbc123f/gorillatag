@@ -4,6 +4,10 @@ using UnityEngine;
 [Serializable]
 public class GorillaSceneTransform
 {
+	public GorillaSceneTransform()
+	{
+	}
+
 	public Vector3 scenePosition;
 
 	public Vector3 sceneRotation;

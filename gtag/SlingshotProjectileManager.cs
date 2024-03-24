@@ -61,6 +61,15 @@ public class SlingshotProjectileManager : MonoBehaviour
 		}
 	}
 
+	public SlingshotProjectileManager()
+	{
+	}
+
+	// Note: this type is marked as 'beforefieldinit'.
+	static SlingshotProjectileManager()
+	{
+	}
+
 	public static SlingshotProjectileManager instance;
 
 	public static bool hasInstance = false;

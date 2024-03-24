@@ -5,5 +5,8 @@ namespace GorillaTag
 {
 	public class StaticLodGroupExcluder : MonoBehaviour
 	{
+		public StaticLodGroupExcluder()
+		{
+		}
 	}
 }

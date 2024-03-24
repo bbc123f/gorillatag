@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using ExitGames.Client.Photon;
 using Fusion;
@@ -18,7 +20,19 @@ using UnityEngine.SceneManagement;
 
 public class NetworkSystemFusion : NetworkSystem
 {
-	public NetworkRunner runner { get; private set; }
+	public NetworkRunner runner
+	{
+		[CompilerGenerated]
+		get
+		{
+			return this.<runner>k__BackingField;
+		}
+		[CompilerGenerated]
+		private set
+		{
+			this.<runner>k__BackingField = value;
+		}
+	}
 
 	public override bool IsOnline
 	{
@@ -911,6 +925,11 @@ public class NetworkSystemFusion : NetworkSystem
 		return PlayerPrefs.GetString("playerName");
 	}
 
+	public override string GetMyDefaultName()
+	{
+		return PlayerPrefs.GetString("playerName");
+	}
+
 	public override string GetNickName(int playerID)
 	{
 		NetPlayer player = this.GetPlayer(playerID);
@@ -921,6 +940,10 @@ public class NetworkSystemFusion : NetworkSystem
 		}
 		RigContainer rigContainer;
 		VRRigCache.Instance.TryGetVrrig(player, out rigContainer);
+		if (PlayFabAuthenticator.instance.GetSafety())
+		{
+			return rigContainer.Rig.rigSerializer.defaultName.Value ?? "";
+		}
 		return rigContainer.Rig.rigSerializer.nickName.Value ?? "";
 	}
 
@@ -1038,6 +1061,26 @@ public class NetworkSystemFusion : NetworkSystem
 		return obj.TryGetComponent<NetworkObject>(out networkObject) && networkObject.IsSceneObject;
 	}
 
+	public NetworkSystemFusion()
+	{
+	}
+
+	[CompilerGenerated]
+	[DebuggerHidden]
+	private void <>n__0()
+	{
+		base.Initialise();
+	}
+
+	[CompilerGenerated]
+	private void <SetupVoice>b__62_0(Action<RemoteVoiceLink> callback)
+	{
+		this.FusionVoice.RemoteVoiceAdded += callback;
+	}
+
+	[CompilerGenerated]
+	private NetworkRunner <runner>k__BackingField;
+
 	private NetworkSystemFusion.InternalState internalState;
 
 	private FusionInternalRPCs internalRPCProvider;
@@ -1077,5 +1120,1151 @@ public class NetworkSystemFusion : NetworkSystem
 		Disconnecting,
 		Disconnected,
 		StateCheckFailed
+	}
+
+	[CompilerGenerated]
+	[StructLayout(LayoutKind.Auto)]
+	private struct <AwaitAuth>d__49 : IAsyncStateMachine
+	{
+		void IAsyncStateMachine.MoveNext()
+		{
+			int num2;
+			int num = num2;
+			NetworkSystemFusion networkSystemFusion = this;
+			try
+			{
+				if (num != 0)
+				{
+					networkSystemFusion.internalState = NetworkSystemFusion.InternalState.AwaitingAuth;
+					goto IL_74;
+				}
+				YieldAwaitable.YieldAwaiter yieldAwaiter2;
+				YieldAwaitable.YieldAwaiter yieldAwaiter = yieldAwaiter2;
+				yieldAwaiter2 = default(YieldAwaitable.YieldAwaiter);
+				num2 = -1;
+				IL_6D:
+				yieldAwaiter.GetResult();
+				IL_74:
+				if (networkSystemFusion.cachedPlayfabAuth != null)
+				{
+					networkSystemFusion.internalState = NetworkSystemFusion.InternalState.Idle;
+					networkSystemFusion.netState = NetSystemState.Idle;
+				}
+				else
+				{
+					yieldAwaiter = Task.Yield().GetAwaiter();
+					if (!yieldAwaiter.IsCompleted)
+					{
+						num2 = 0;
+						yieldAwaiter2 = yieldAwaiter;
+						this.<>t__builder.AwaitUnsafeOnCompleted<YieldAwaitable.YieldAwaiter, NetworkSystemFusion.<AwaitAuth>d__49>(ref yieldAwaiter, ref this);
+						return;
+					}
+					goto IL_6D;
+				}
+			}
+			catch (Exception ex)
+			{
+				num2 = -2;
+				this.<>t__builder.SetException(ex);
+				return;
+			}
+			num2 = -2;
+			this.<>t__builder.SetResult();
+		}
+
+		[DebuggerHidden]
+		void IAsyncStateMachine.SetStateMachine(IAsyncStateMachine stateMachine)
+		{
+			this.<>t__builder.SetStateMachine(stateMachine);
+		}
+
+		public int <>1__state;
+
+		public AsyncTaskMethodBuilder <>t__builder;
+
+		public NetworkSystemFusion <>4__this;
+
+		private YieldAwaitable.YieldAwaiter <>u__1;
+	}
+
+	[CompilerGenerated]
+	[StructLayout(LayoutKind.Auto)]
+	private struct <AwaitJoiningPlayerClientReady>d__81 : IAsyncStateMachine
+	{
+		void IAsyncStateMachine.MoveNext()
+		{
+			NetworkSystemFusion networkSystemFusion = this;
+			try
+			{
+				Debug.Log("Player: " + player.PlayerId.ToString() + "is joining!");
+				networkSystemFusion.UpdatePlayerIDCache();
+				networkSystemFusion.UpdateNetPlayerList();
+				if (networkSystemFusion.runner != null && player == networkSystemFusion.runner.LocalPlayer && !networkSystemFusion.runner.IsSinglePlayer)
+				{
+					Debug.Log("Multiplayer started");
+					networkSystemFusion.MultiplayerStarted();
+				}
+				if (networkSystemFusion.runner != null && player == networkSystemFusion.runner.LocalPlayer && networkSystemFusion.runner.IsSinglePlayer)
+				{
+					Debug.Log("Singleplayer started");
+					networkSystemFusion.SinglePlayerStarted();
+				}
+				Debug.Log("Player " + player.PlayerId.ToString() + " properties sorted!");
+				networkSystemFusion.PlayerJoined(player.PlayerId);
+			}
+			catch (Exception ex)
+			{
+				this.<>1__state = -2;
+				this.<>t__builder.SetException(ex);
+				return;
+			}
+			this.<>1__state = -2;
+			this.<>t__builder.SetResult();
+		}
+
+		[DebuggerHidden]
+		void IAsyncStateMachine.SetStateMachine(IAsyncStateMachine stateMachine)
+		{
+			this.<>t__builder.SetStateMachine(stateMachine);
+		}
+
+		public int <>1__state;
+
+		public AsyncTaskMethodBuilder <>t__builder;
+
+		public PlayerRef player;
+
+		public NetworkSystemFusion <>4__this;
+	}
+
+	[CompilerGenerated]
+	[StructLayout(LayoutKind.Auto)]
+	private struct <AwaitSceneReady>d__75 : IAsyncStateMachine
+	{
+		void IAsyncStateMachine.MoveNext()
+		{
+			int num2;
+			int num = num2;
+			NetworkSystemFusion networkSystemFusion = this;
+			try
+			{
+				YieldAwaitable.YieldAwaiter yieldAwaiter;
+				if (num != 0)
+				{
+					if (num != 1)
+					{
+						goto IL_77;
+					}
+					YieldAwaitable.YieldAwaiter yieldAwaiter2;
+					yieldAwaiter = yieldAwaiter2;
+					yieldAwaiter2 = default(YieldAwaitable.YieldAwaiter);
+					num2 = -1;
+					goto IL_EF;
+				}
+				else
+				{
+					YieldAwaitable.YieldAwaiter yieldAwaiter2;
+					yieldAwaiter = yieldAwaiter2;
+					yieldAwaiter2 = default(YieldAwaitable.YieldAwaiter);
+					num2 = -1;
+				}
+				IL_70:
+				yieldAwaiter.GetResult();
+				IL_77:
+				if (networkSystemFusion.runner.SceneManager.IsReady(networkSystemFusion.runner))
+				{
+					counter = 0f;
+					goto IL_108;
+				}
+				yieldAwaiter = Task.Yield().GetAwaiter();
+				if (!yieldAwaiter.IsCompleted)
+				{
+					num2 = 0;
+					YieldAwaitable.YieldAwaiter yieldAwaiter2 = yieldAwaiter;
+					this.<>t__builder.AwaitUnsafeOnCompleted<YieldAwaitable.YieldAwaiter, NetworkSystemFusion.<AwaitSceneReady>d__75>(ref yieldAwaiter, ref this);
+					return;
+				}
+				goto IL_70;
+				IL_EF:
+				yieldAwaiter.GetResult();
+				counter += Time.deltaTime;
+				IL_108:
+				if (counter < 0.5f)
+				{
+					yieldAwaiter = Task.Yield().GetAwaiter();
+					if (!yieldAwaiter.IsCompleted)
+					{
+						num2 = 1;
+						YieldAwaitable.YieldAwaiter yieldAwaiter2 = yieldAwaiter;
+						this.<>t__builder.AwaitUnsafeOnCompleted<YieldAwaitable.YieldAwaiter, NetworkSystemFusion.<AwaitSceneReady>d__75>(ref yieldAwaiter, ref this);
+						return;
+					}
+					goto IL_EF;
+				}
+			}
+			catch (Exception ex)
+			{
+				num2 = -2;
+				this.<>t__builder.SetException(ex);
+				return;
+			}
+			num2 = -2;
+			this.<>t__builder.SetResult();
+		}
+
+		[DebuggerHidden]
+		void IAsyncStateMachine.SetStateMachine(IAsyncStateMachine stateMachine)
+		{
+			this.<>t__builder.SetStateMachine(stateMachine);
+		}
+
+		public int <>1__state;
+
+		public AsyncTaskMethodBuilder <>t__builder;
+
+		public NetworkSystemFusion <>4__this;
+
+		private float <counter>5__2;
+
+		private YieldAwaitable.YieldAwaiter <>u__1;
+	}
+
+	[CompilerGenerated]
+	[StructLayout(LayoutKind.Auto)]
+	private struct <CloseRunner>d__58 : IAsyncStateMachine
+	{
+		void IAsyncStateMachine.MoveNext()
+		{
+			int num2;
+			int num = num2;
+			NetworkSystemFusion networkSystemFusion = this;
+			try
+			{
+				if (num != 0)
+				{
+					networkSystemFusion.internalState = NetworkSystemFusion.InternalState.Disconnecting;
+				}
+				try
+				{
+					TaskAwaiter taskAwaiter;
+					if (num != 0)
+					{
+						taskAwaiter = networkSystemFusion.runner.Shutdown(true, ShutdownReason.Ok, false).GetAwaiter();
+						if (!taskAwaiter.IsCompleted)
+						{
+							num2 = 0;
+							TaskAwaiter taskAwaiter2 = taskAwaiter;
+							this.<>t__builder.AwaitUnsafeOnCompleted<TaskAwaiter, NetworkSystemFusion.<CloseRunner>d__58>(ref taskAwaiter, ref this);
+							return;
+						}
+					}
+					else
+					{
+						TaskAwaiter taskAwaiter2;
+						taskAwaiter = taskAwaiter2;
+						taskAwaiter2 = default(TaskAwaiter);
+						num2 = -1;
+					}
+					taskAwaiter.GetResult();
+				}
+				catch (Exception ex)
+				{
+					StackFrame frame = new StackTrace(ex, true).GetFrame(0);
+					int fileLineNumber = frame.GetFileLineNumber();
+					Debug.LogError(string.Concat(new string[]
+					{
+						ex.Message,
+						" File:",
+						frame.GetFileName(),
+						" line: ",
+						fileLineNumber.ToString()
+					}));
+				}
+				Object.Destroy(networkSystemFusion.volatileNetObj);
+				networkSystemFusion.internalState = NetworkSystemFusion.InternalState.Disconnected;
+			}
+			catch (Exception ex2)
+			{
+				num2 = -2;
+				this.<>t__builder.SetException(ex2);
+				return;
+			}
+			num2 = -2;
+			this.<>t__builder.SetResult();
+		}
+
+		[DebuggerHidden]
+		void IAsyncStateMachine.SetStateMachine(IAsyncStateMachine stateMachine)
+		{
+			this.<>t__builder.SetStateMachine(stateMachine);
+		}
+
+		public int <>1__state;
+
+		public AsyncTaskMethodBuilder <>t__builder;
+
+		public NetworkSystemFusion <>4__this;
+
+		private TaskAwaiter <>u__1;
+	}
+
+	[CompilerGenerated]
+	[StructLayout(LayoutKind.Auto)]
+	private struct <Connect>d__52 : IAsyncStateMachine
+	{
+		void IAsyncStateMachine.MoveNext()
+		{
+			int num2;
+			int num = num2;
+			NetworkSystemFusion networkSystemFusion = this;
+			bool flag;
+			try
+			{
+				TaskAwaiter taskAwaiter;
+				YieldAwaitable.YieldAwaiter yieldAwaiter;
+				TaskAwaiter<StartGameResult> taskAwaiter3;
+				switch (num)
+				{
+				case 0:
+				{
+					TaskAwaiter taskAwaiter2;
+					taskAwaiter = taskAwaiter2;
+					taskAwaiter2 = default(TaskAwaiter);
+					num2 = -1;
+					break;
+				}
+				case 1:
+				{
+					YieldAwaitable.YieldAwaiter yieldAwaiter2;
+					yieldAwaiter = yieldAwaiter2;
+					yieldAwaiter2 = default(YieldAwaitable.YieldAwaiter);
+					num2 = -1;
+					goto IL_10E;
+				}
+				case 2:
+				{
+					YieldAwaitable.YieldAwaiter yieldAwaiter2;
+					yieldAwaiter = yieldAwaiter2;
+					yieldAwaiter2 = default(YieldAwaitable.YieldAwaiter);
+					num2 = -1;
+					goto IL_17D;
+				}
+				case 3:
+				{
+					TaskAwaiter<StartGameResult> taskAwaiter4;
+					taskAwaiter3 = taskAwaiter4;
+					taskAwaiter4 = default(TaskAwaiter<StartGameResult>);
+					num2 = -1;
+					goto IL_347;
+				}
+				case 4:
+				{
+					YieldAwaitable.YieldAwaiter yieldAwaiter2;
+					yieldAwaiter = yieldAwaiter2;
+					yieldAwaiter2 = default(YieldAwaitable.YieldAwaiter);
+					num2 = -1;
+					goto IL_44E;
+				}
+				default:
+					if (!(networkSystemFusion.runner != null))
+					{
+						goto IL_184;
+					}
+					goingBetweenRooms = networkSystemFusion.InRoom && mode != GameMode.Single;
+					taskAwaiter = networkSystemFusion.CloseRunner().GetAwaiter();
+					if (!taskAwaiter.IsCompleted)
+					{
+						num2 = 0;
+						TaskAwaiter taskAwaiter2 = taskAwaiter;
+						this.<>t__builder.AwaitUnsafeOnCompleted<TaskAwaiter, NetworkSystemFusion.<Connect>d__52>(ref taskAwaiter, ref this);
+						return;
+					}
+					break;
+				}
+				taskAwaiter.GetResult();
+				yieldAwaiter = Task.Yield().GetAwaiter();
+				if (!yieldAwaiter.IsCompleted)
+				{
+					num2 = 1;
+					YieldAwaitable.YieldAwaiter yieldAwaiter2 = yieldAwaiter;
+					this.<>t__builder.AwaitUnsafeOnCompleted<YieldAwaitable.YieldAwaiter, NetworkSystemFusion.<Connect>d__52>(ref yieldAwaiter, ref this);
+					return;
+				}
+				IL_10E:
+				yieldAwaiter.GetResult();
+				if (!goingBetweenRooms)
+				{
+					goto IL_184;
+				}
+				networkSystemFusion.SinglePlayerStarted();
+				yieldAwaiter = Task.Yield().GetAwaiter();
+				if (!yieldAwaiter.IsCompleted)
+				{
+					num2 = 2;
+					YieldAwaitable.YieldAwaiter yieldAwaiter2 = yieldAwaiter;
+					this.<>t__builder.AwaitUnsafeOnCompleted<YieldAwaitable.YieldAwaiter, NetworkSystemFusion.<Connect>d__52>(ref yieldAwaiter, ref this);
+					return;
+				}
+				IL_17D:
+				yieldAwaiter.GetResult();
+				IL_184:
+				if (networkSystemFusion.volatileNetObj)
+				{
+					Debug.LogError("Volatile net obj should not exist - destroying and recreating");
+					Object.Destroy(networkSystemFusion.volatileNetObj);
+				}
+				networkSystemFusion.volatileNetObj = new GameObject("VolatileFusionObj");
+				networkSystemFusion.volatileNetObj.transform.parent = networkSystemFusion.transform;
+				networkSystemFusion.runner = networkSystemFusion.volatileNetObj.AddComponent<NetworkRunner>();
+				networkSystemFusion.internalRPCProvider = networkSystemFusion.volatileNetObj.AddComponent<FusionInternalRPCs>();
+				networkSystemFusion.callbackHandler = networkSystemFusion.volatileNetObj.AddComponent<FusionCallbackHandler>();
+				networkSystemFusion.callbackHandler.Setup(networkSystemFusion);
+				if (mode != GameMode.Single)
+				{
+					SceneManager.GetActiveScene();
+				}
+				networkSystemFusion.lastConnectAttempt_WasFull = false;
+				networkSystemFusion.lastConnectAttempt_WasMissing = false;
+				networkSystemFusion.internalState = NetworkSystemFusion.InternalState.ConnectingToRoom;
+				Hashtable customProps = opts.customProps;
+				Dictionary<string, SessionProperty> dictionary = ((customProps != null) ? customProps.ToPropDict() : null);
+				startupTask = networkSystemFusion.runner.StartGame(new StartGameArgs
+				{
+					IsVisible = new bool?(opts.isPublic),
+					IsOpen = new bool?(opts.isJoinable),
+					GameMode = mode,
+					SessionName = targetSessionName,
+					PlayerCount = new int?((int)opts.MaxPlayers),
+					SceneManager = networkSystemFusion.volatileNetObj.AddComponent<NetworkSceneManagerDefault>(),
+					SessionProperties = dictionary,
+					DisableClientSessionCreation = !opts.createIfMissing
+				});
+				taskAwaiter3 = startupTask.GetAwaiter();
+				if (!taskAwaiter3.IsCompleted)
+				{
+					num2 = 3;
+					TaskAwaiter<StartGameResult> taskAwaiter4 = taskAwaiter3;
+					this.<>t__builder.AwaitUnsafeOnCompleted<TaskAwaiter<StartGameResult>, NetworkSystemFusion.<Connect>d__52>(ref taskAwaiter3, ref this);
+					return;
+				}
+				IL_347:
+				taskAwaiter3.GetResult();
+				Debug.Log("Startuptask finished : " + startupTask.Result.ToString());
+				if (!startupTask.Result.Ok)
+				{
+					networkSystemFusion.CurrentRoom = null;
+					flag = startupTask.Result.Ok;
+					goto IL_4C4;
+				}
+				networkSystemFusion.AddVoice();
+				networkSystemFusion.CurrentRoom = opts;
+				if (networkSystemFusion.IsTotalAuthority() || networkSystemFusion.runner.IsSharedModeMasterClient)
+				{
+					opts.SetFusionOpts(networkSystemFusion.runner);
+					networkSystemFusion.runner.SetActiveScene(SceneManager.GetActiveScene().name);
+					goto IL_455;
+				}
+				goto IL_46D;
+				IL_44E:
+				yieldAwaiter.GetResult();
+				IL_455:
+				if (!networkSystemFusion.runner.SceneManager.IsReady(networkSystemFusion.runner))
+				{
+					yieldAwaiter = Task.Yield().GetAwaiter();
+					if (!yieldAwaiter.IsCompleted)
+					{
+						num2 = 4;
+						YieldAwaitable.YieldAwaiter yieldAwaiter2 = yieldAwaiter;
+						this.<>t__builder.AwaitUnsafeOnCompleted<YieldAwaitable.YieldAwaiter, NetworkSystemFusion.<Connect>d__52>(ref yieldAwaiter, ref this);
+						return;
+					}
+					goto IL_44E;
+				}
+				IL_46D:
+				networkSystemFusion.SetMyNickName(GorillaComputer.instance.savedName);
+				networkSystemFusion.runner.AddSimulationBehaviour(networkSystemFusion.internalRPCProvider, null);
+				flag = startupTask.Result.Ok;
+			}
+			catch (Exception ex)
+			{
+				num2 = -2;
+				startupTask = null;
+				this.<>t__builder.SetException(ex);
+				return;
+			}
+			IL_4C4:
+			num2 = -2;
+			startupTask = null;
+			this.<>t__builder.SetResult(flag);
+		}
+
+		[DebuggerHidden]
+		void IAsyncStateMachine.SetStateMachine(IAsyncStateMachine stateMachine)
+		{
+			this.<>t__builder.SetStateMachine(stateMachine);
+		}
+
+		public int <>1__state;
+
+		public AsyncTaskMethodBuilder<bool> <>t__builder;
+
+		public NetworkSystemFusion <>4__this;
+
+		public GameMode mode;
+
+		public RoomConfig opts;
+
+		public string targetSessionName;
+
+		private Task<StartGameResult> <startupTask>5__2;
+
+		private bool <goingBetweenRooms>5__3;
+
+		private TaskAwaiter <>u__1;
+
+		private YieldAwaitable.YieldAwaiter <>u__2;
+
+		private TaskAwaiter<StartGameResult> <>u__3;
+	}
+
+	[CompilerGenerated]
+	[StructLayout(LayoutKind.Auto)]
+	private struct <ConnectToRoom>d__51 : IAsyncStateMachine
+	{
+		void IAsyncStateMachine.MoveNext()
+		{
+			int num2;
+			int num = num2;
+			NetworkSystemFusion networkSystemFusion = this;
+			NetJoinResult netJoinResult;
+			try
+			{
+				TaskAwaiter<NetJoinResult> taskAwaiter;
+				TaskAwaiter<NetJoinResult> taskAwaiter2;
+				NetJoinResult netJoinResult2;
+				if (num != 0)
+				{
+					if (num != 1)
+					{
+						if (networkSystemFusion.isWrongVersion)
+						{
+							netJoinResult = NetJoinResult.Failed_Other;
+							goto IL_227;
+						}
+						if (networkSystemFusion.netState != NetSystemState.Idle && networkSystemFusion.netState != NetSystemState.InGame)
+						{
+							netJoinResult = NetJoinResult.Failed_Other;
+							goto IL_227;
+						}
+						if (networkSystemFusion.InRoom && roomName == networkSystemFusion.RoomName)
+						{
+							netJoinResult = NetJoinResult.AlreadyInRoom;
+							goto IL_227;
+						}
+						networkSystemFusion.netState = NetSystemState.Connecting;
+						Debug.Log("Connecting to:" + (string.IsNullOrEmpty(roomName) ? "random room" : roomName));
+						if (!string.IsNullOrEmpty(roomName))
+						{
+							makeOrJoinTask = networkSystemFusion.MakeOrJoinRoom(roomName, opts);
+							taskAwaiter = makeOrJoinTask.GetAwaiter();
+							if (!taskAwaiter.IsCompleted)
+							{
+								num2 = 0;
+								taskAwaiter2 = taskAwaiter;
+								this.<>t__builder.AwaitUnsafeOnCompleted<TaskAwaiter<NetJoinResult>, NetworkSystemFusion.<ConnectToRoom>d__51>(ref taskAwaiter, ref this);
+								return;
+							}
+							goto IL_116;
+						}
+						else
+						{
+							makeOrJoinTask = networkSystemFusion.JoinRandomPublicRoom(opts);
+							taskAwaiter = makeOrJoinTask.GetAwaiter();
+							if (!taskAwaiter.IsCompleted)
+							{
+								num2 = 1;
+								taskAwaiter2 = taskAwaiter;
+								this.<>t__builder.AwaitUnsafeOnCompleted<TaskAwaiter<NetJoinResult>, NetworkSystemFusion.<ConnectToRoom>d__51>(ref taskAwaiter, ref this);
+								return;
+							}
+						}
+					}
+					else
+					{
+						taskAwaiter = taskAwaiter2;
+						taskAwaiter2 = default(TaskAwaiter<NetJoinResult>);
+						num2 = -1;
+					}
+					taskAwaiter.GetResult();
+					netJoinResult2 = makeOrJoinTask.Result;
+					makeOrJoinTask = null;
+					goto IL_1BA;
+				}
+				taskAwaiter = taskAwaiter2;
+				taskAwaiter2 = default(TaskAwaiter<NetJoinResult>);
+				num2 = -1;
+				IL_116:
+				taskAwaiter.GetResult();
+				netJoinResult2 = makeOrJoinTask.Result;
+				makeOrJoinTask = null;
+				IL_1BA:
+				if (netJoinResult2 == NetJoinResult.Failed_Full || netJoinResult2 == NetJoinResult.Failed_Other)
+				{
+					networkSystemFusion.ResetSystem();
+					netJoinResult = netJoinResult2;
+				}
+				else if (netJoinResult2 == NetJoinResult.AlreadyInRoom)
+				{
+					networkSystemFusion.netState = NetSystemState.InGame;
+					netJoinResult = netJoinResult2;
+				}
+				else
+				{
+					networkSystemFusion.UpdatePlayerIDCache();
+					networkSystemFusion.UpdateNetPlayerList();
+					networkSystemFusion.netState = NetSystemState.InGame;
+					Debug.Log("Connect to room result: " + netJoinResult2.ToString());
+					netJoinResult = netJoinResult2;
+				}
+			}
+			catch (Exception ex)
+			{
+				num2 = -2;
+				this.<>t__builder.SetException(ex);
+				return;
+			}
+			IL_227:
+			num2 = -2;
+			this.<>t__builder.SetResult(netJoinResult);
+		}
+
+		[DebuggerHidden]
+		void IAsyncStateMachine.SetStateMachine(IAsyncStateMachine stateMachine)
+		{
+			this.<>t__builder.SetStateMachine(stateMachine);
+		}
+
+		public int <>1__state;
+
+		public AsyncTaskMethodBuilder<NetJoinResult> <>t__builder;
+
+		public NetworkSystemFusion <>4__this;
+
+		public string roomName;
+
+		public RoomConfig opts;
+
+		private Task<NetJoinResult> <makeOrJoinTask>5__2;
+
+		private TaskAwaiter<NetJoinResult> <>u__1;
+	}
+
+	[CompilerGenerated]
+	[StructLayout(LayoutKind.Auto)]
+	private struct <Initialise>d__47 : IAsyncStateMachine
+	{
+		void IAsyncStateMachine.MoveNext()
+		{
+			int num2;
+			int num = num2;
+			NetworkSystemFusion networkSystemFusion = this;
+			try
+			{
+				TaskAwaiter taskAwaiter;
+				if (num != 0)
+				{
+					networkSystemFusion.<>n__0();
+					networkSystemFusion.netState = NetSystemState.Initialization;
+					networkSystemFusion.internalState = NetworkSystemFusion.InternalState.Idle;
+					taskAwaiter = networkSystemFusion.ReturnToSinglePlayer().GetAwaiter();
+					if (!taskAwaiter.IsCompleted)
+					{
+						num2 = 0;
+						TaskAwaiter taskAwaiter2 = taskAwaiter;
+						this.<>t__builder.AwaitUnsafeOnCompleted<TaskAwaiter, NetworkSystemFusion.<Initialise>d__47>(ref taskAwaiter, ref this);
+						return;
+					}
+				}
+				else
+				{
+					TaskAwaiter taskAwaiter2;
+					taskAwaiter = taskAwaiter2;
+					taskAwaiter2 = default(TaskAwaiter);
+					num2 = -1;
+				}
+				taskAwaiter.GetResult();
+				Debug.Log("After return to single player task.");
+				networkSystemFusion.AwaitAuth();
+				Debug.Log("Creating region crawler");
+				networkSystemFusion.CreateRegionCrawler();
+				networkSystemFusion.netState = NetSystemState.Idle;
+			}
+			catch (Exception ex)
+			{
+				num2 = -2;
+				this.<>t__builder.SetException(ex);
+				return;
+			}
+			num2 = -2;
+			this.<>t__builder.SetResult();
+		}
+
+		[DebuggerHidden]
+		void IAsyncStateMachine.SetStateMachine(IAsyncStateMachine stateMachine)
+		{
+			this.<>t__builder.SetStateMachine(stateMachine);
+		}
+
+		public int <>1__state;
+
+		public AsyncVoidMethodBuilder <>t__builder;
+
+		public NetworkSystemFusion <>4__this;
+
+		private TaskAwaiter <>u__1;
+	}
+
+	[CompilerGenerated]
+	[StructLayout(LayoutKind.Auto)]
+	private struct <JoinRandomPublicRoom>d__54 : IAsyncStateMachine
+	{
+		void IAsyncStateMachine.MoveNext()
+		{
+			int num2;
+			int num = num2;
+			NetworkSystemFusion networkSystemFusion = this;
+			NetJoinResult netJoinResult;
+			try
+			{
+				TaskAwaiter<bool> taskAwaiter;
+				if (num != 0)
+				{
+					if (num == 1)
+					{
+						TaskAwaiter<bool> taskAwaiter2;
+						taskAwaiter = taskAwaiter2;
+						taskAwaiter2 = default(TaskAwaiter<bool>);
+						num2 = -1;
+						goto IL_15E;
+					}
+					shouldCreateIfNone = opts.createIfMissing;
+					PhotonAppSettings.Instance.AppSettings.FixedRegion = "";
+					networkSystemFusion.internalState = NetworkSystemFusion.InternalState.Searching_Joining;
+					opts.createIfMissing = false;
+					connectTask = networkSystemFusion.Connect(GameMode.Shared, null, opts);
+					taskAwaiter = connectTask.GetAwaiter();
+					if (!taskAwaiter.IsCompleted)
+					{
+						num2 = 0;
+						TaskAwaiter<bool> taskAwaiter2 = taskAwaiter;
+						this.<>t__builder.AwaitUnsafeOnCompleted<TaskAwaiter<bool>, NetworkSystemFusion.<JoinRandomPublicRoom>d__54>(ref taskAwaiter, ref this);
+						return;
+					}
+				}
+				else
+				{
+					TaskAwaiter<bool> taskAwaiter2;
+					taskAwaiter = taskAwaiter2;
+					taskAwaiter2 = default(TaskAwaiter<bool>);
+					num2 = -1;
+				}
+				taskAwaiter.GetResult();
+				if (connectTask.Result || !shouldCreateIfNone)
+				{
+					netJoinResult = NetJoinResult.Success;
+					goto IL_1BA;
+				}
+				opts.createIfMissing = shouldCreateIfNone;
+				string randomRoomName = NetworkSystem.GetRandomRoomName();
+				createTask = networkSystemFusion.Connect(GameMode.Shared, randomRoomName, opts);
+				taskAwaiter = createTask.GetAwaiter();
+				if (!taskAwaiter.IsCompleted)
+				{
+					num2 = 1;
+					TaskAwaiter<bool> taskAwaiter2 = taskAwaiter;
+					this.<>t__builder.AwaitUnsafeOnCompleted<TaskAwaiter<bool>, NetworkSystemFusion.<JoinRandomPublicRoom>d__54>(ref taskAwaiter, ref this);
+					return;
+				}
+				IL_15E:
+				taskAwaiter.GetResult();
+				if (!createTask.Result)
+				{
+					Debug.LogError("NS-FUS] Failed to create public room");
+					netJoinResult = NetJoinResult.Failed_Other;
+				}
+				else
+				{
+					opts.SetFusionOpts(networkSystemFusion.runner);
+					netJoinResult = NetJoinResult.FallbackCreated;
+				}
+			}
+			catch (Exception ex)
+			{
+				num2 = -2;
+				connectTask = null;
+				this.<>t__builder.SetException(ex);
+				return;
+			}
+			IL_1BA:
+			num2 = -2;
+			connectTask = null;
+			this.<>t__builder.SetResult(netJoinResult);
+		}
+
+		[DebuggerHidden]
+		void IAsyncStateMachine.SetStateMachine(IAsyncStateMachine stateMachine)
+		{
+			this.<>t__builder.SetStateMachine(stateMachine);
+		}
+
+		public int <>1__state;
+
+		public AsyncTaskMethodBuilder<NetJoinResult> <>t__builder;
+
+		public RoomConfig opts;
+
+		public NetworkSystemFusion <>4__this;
+
+		private bool <shouldCreateIfNone>5__2;
+
+		private Task<bool> <connectTask>5__3;
+
+		private TaskAwaiter<bool> <>u__1;
+
+		private Task<bool> <createTask>5__4;
+	}
+
+	[CompilerGenerated]
+	[StructLayout(LayoutKind.Auto)]
+	private struct <MakeOrJoinRoom>d__53 : IAsyncStateMachine
+	{
+		void IAsyncStateMachine.MoveNext()
+		{
+			int num2;
+			int num = num2;
+			NetworkSystemFusion networkSystemFusion = this;
+			NetJoinResult netJoinResult;
+			try
+			{
+				TaskAwaiter<bool> taskAwaiter;
+				bool flag;
+				YieldAwaitable.YieldAwaiter yieldAwaiter;
+				switch (num)
+				{
+				case 0:
+					IL_3A:
+					try
+					{
+						if (num != 0)
+						{
+							PhotonAppSettings.Instance.AppSettings.FixedRegion = networkSystemFusion.regionNames[currentRegionIndex];
+							networkSystemFusion.internalState = NetworkSystemFusion.InternalState.Searching_Joining;
+							connectTask = networkSystemFusion.Connect(GameMode.Shared, roomName, opts);
+							taskAwaiter = connectTask.GetAwaiter();
+							if (!taskAwaiter.IsCompleted)
+							{
+								num = (num2 = 0);
+								TaskAwaiter<bool> taskAwaiter2 = taskAwaiter;
+								this.<>t__builder.AwaitUnsafeOnCompleted<TaskAwaiter<bool>, NetworkSystemFusion.<MakeOrJoinRoom>d__53>(ref taskAwaiter, ref this);
+								return;
+							}
+						}
+						else
+						{
+							TaskAwaiter<bool> taskAwaiter2;
+							taskAwaiter = taskAwaiter2;
+							taskAwaiter2 = default(TaskAwaiter<bool>);
+							num = (num2 = -1);
+						}
+						taskAwaiter.GetResult();
+						flag = connectTask.Result;
+						if (!flag)
+						{
+							if (networkSystemFusion.lastConnectAttempt_WasFull)
+							{
+								Debug.Log("Found room but it was full");
+								goto IL_162;
+							}
+							Debug.Log("Region incrimenting");
+							int num3 = currentRegionIndex + 1;
+							currentRegionIndex = num3;
+						}
+						connectTask = null;
+					}
+					catch (Exception ex)
+					{
+						Debug.LogError("MakeOrJoinRoom - message: " + ex.Message + "\nStacktrace : " + ex.StackTrace);
+						netJoinResult = NetJoinResult.Failed_Other;
+						goto IL_2DC;
+					}
+					break;
+				case 1:
+				{
+					TaskAwaiter<bool> taskAwaiter2;
+					taskAwaiter = taskAwaiter2;
+					taskAwaiter2 = default(TaskAwaiter<bool>);
+					num = (num2 = -1);
+					goto IL_21B;
+				}
+				case 2:
+				{
+					YieldAwaitable.YieldAwaiter yieldAwaiter2;
+					yieldAwaiter = yieldAwaiter2;
+					yieldAwaiter2 = default(YieldAwaitable.YieldAwaiter);
+					num = (num2 = -1);
+					goto IL_2A2;
+				}
+				default:
+					currentRegionIndex = 0;
+					flag = false;
+					opts.createIfMissing = false;
+					break;
+				}
+				if (currentRegionIndex < networkSystemFusion.regionNames.Length && !flag)
+				{
+					goto IL_3A;
+				}
+				IL_162:
+				if (networkSystemFusion.lastConnectAttempt_WasFull)
+				{
+					PhotonAppSettings.Instance.AppSettings.FixedRegion = "";
+					netJoinResult = NetJoinResult.Failed_Full;
+					goto IL_2DC;
+				}
+				if (flag)
+				{
+					netJoinResult = NetJoinResult.Success;
+					goto IL_2DC;
+				}
+				PhotonAppSettings.Instance.AppSettings.FixedRegion = "";
+				opts.createIfMissing = true;
+				connectTask = networkSystemFusion.Connect(GameMode.Shared, roomName, opts);
+				taskAwaiter = connectTask.GetAwaiter();
+				if (!taskAwaiter.IsCompleted)
+				{
+					num = (num2 = 1);
+					TaskAwaiter<bool> taskAwaiter2 = taskAwaiter;
+					this.<>t__builder.AwaitUnsafeOnCompleted<TaskAwaiter<bool>, NetworkSystemFusion.<MakeOrJoinRoom>d__53>(ref taskAwaiter, ref this);
+					return;
+				}
+				IL_21B:
+				taskAwaiter.GetResult();
+				Debug.Log("made room?");
+				if (!connectTask.Result)
+				{
+					Debug.LogError("NS-FUS] Failed to create private room");
+					netJoinResult = NetJoinResult.Failed_Other;
+					goto IL_2DC;
+				}
+				goto IL_2A9;
+				IL_2A2:
+				yieldAwaiter.GetResult();
+				IL_2A9:
+				if (networkSystemFusion.runner.SessionInfo.IsValid)
+				{
+					netJoinResult = NetJoinResult.FallbackCreated;
+				}
+				else
+				{
+					yieldAwaiter = Task.Yield().GetAwaiter();
+					if (!yieldAwaiter.IsCompleted)
+					{
+						num = (num2 = 2);
+						YieldAwaitable.YieldAwaiter yieldAwaiter2 = yieldAwaiter;
+						this.<>t__builder.AwaitUnsafeOnCompleted<YieldAwaitable.YieldAwaiter, NetworkSystemFusion.<MakeOrJoinRoom>d__53>(ref yieldAwaiter, ref this);
+						return;
+					}
+					goto IL_2A2;
+				}
+			}
+			catch (Exception ex2)
+			{
+				num2 = -2;
+				this.<>t__builder.SetException(ex2);
+				return;
+			}
+			IL_2DC:
+			num2 = -2;
+			this.<>t__builder.SetResult(netJoinResult);
+		}
+
+		[DebuggerHidden]
+		void IAsyncStateMachine.SetStateMachine(IAsyncStateMachine stateMachine)
+		{
+			this.<>t__builder.SetStateMachine(stateMachine);
+		}
+
+		public int <>1__state;
+
+		public AsyncTaskMethodBuilder<NetJoinResult> <>t__builder;
+
+		public RoomConfig opts;
+
+		public NetworkSystemFusion <>4__this;
+
+		public string roomName;
+
+		private int <currentRegionIndex>5__2;
+
+		private Task<bool> <connectTask>5__3;
+
+		private TaskAwaiter<bool> <>u__1;
+
+		private YieldAwaitable.YieldAwaiter <>u__2;
+	}
+
+	[CompilerGenerated]
+	[StructLayout(LayoutKind.Auto)]
+	private struct <ResetSystem>d__60 : IAsyncStateMachine
+	{
+		void IAsyncStateMachine.MoveNext()
+		{
+			int num2;
+			int num = num2;
+			NetworkSystemFusion networkSystemFusion = this;
+			try
+			{
+				TaskAwaiter<bool> taskAwaiter;
+				if (num != 0)
+				{
+					taskAwaiter = networkSystemFusion.Connect(GameMode.Single, "--", RoomConfig.SPConfig()).GetAwaiter();
+					if (!taskAwaiter.IsCompleted)
+					{
+						num2 = 0;
+						TaskAwaiter<bool> taskAwaiter2 = taskAwaiter;
+						this.<>t__builder.AwaitUnsafeOnCompleted<TaskAwaiter<bool>, NetworkSystemFusion.<ResetSystem>d__60>(ref taskAwaiter, ref this);
+						return;
+					}
+				}
+				else
+				{
+					TaskAwaiter<bool> taskAwaiter2;
+					taskAwaiter = taskAwaiter2;
+					taskAwaiter2 = default(TaskAwaiter<bool>);
+					num2 = -1;
+				}
+				taskAwaiter.GetResult();
+				Debug.Log("Connect in return to single player");
+				networkSystemFusion.netState = NetSystemState.Idle;
+				networkSystemFusion.internalState = NetworkSystemFusion.InternalState.Idle;
+			}
+			catch (Exception ex)
+			{
+				num2 = -2;
+				this.<>t__builder.SetException(ex);
+				return;
+			}
+			num2 = -2;
+			this.<>t__builder.SetResult();
+		}
+
+		[DebuggerHidden]
+		void IAsyncStateMachine.SetStateMachine(IAsyncStateMachine stateMachine)
+		{
+			this.<>t__builder.SetStateMachine(stateMachine);
+		}
+
+		public int <>1__state;
+
+		public AsyncVoidMethodBuilder <>t__builder;
+
+		public NetworkSystemFusion <>4__this;
+
+		private TaskAwaiter<bool> <>u__1;
+	}
+
+	[CompilerGenerated]
+	[StructLayout(LayoutKind.Auto)]
+	private struct <ReturnToSinglePlayer>d__57 : IAsyncStateMachine
+	{
+		void IAsyncStateMachine.MoveNext()
+		{
+			int num2;
+			int num = num2;
+			NetworkSystemFusion networkSystemFusion = this;
+			try
+			{
+				YieldAwaitable.YieldAwaiter yieldAwaiter;
+				TaskAwaiter taskAwaiter;
+				if (num != 0)
+				{
+					if (num == 1)
+					{
+						YieldAwaitable.YieldAwaiter yieldAwaiter2;
+						yieldAwaiter = yieldAwaiter2;
+						yieldAwaiter2 = default(YieldAwaitable.YieldAwaiter);
+						num2 = -1;
+						goto IL_FE;
+					}
+					if (networkSystemFusion.netState != NetSystemState.InGame && networkSystemFusion.netState != NetSystemState.Initialization)
+					{
+						goto IL_13E;
+					}
+					networkSystemFusion.netState = NetSystemState.Disconnecting;
+					Debug.Log("Returning to single player");
+					if (!networkSystemFusion.runner)
+					{
+						goto IL_10F;
+					}
+					taskAwaiter = networkSystemFusion.CloseRunner().GetAwaiter();
+					if (!taskAwaiter.IsCompleted)
+					{
+						num2 = 0;
+						TaskAwaiter taskAwaiter2 = taskAwaiter;
+						this.<>t__builder.AwaitUnsafeOnCompleted<TaskAwaiter, NetworkSystemFusion.<ReturnToSinglePlayer>d__57>(ref taskAwaiter, ref this);
+						return;
+					}
+				}
+				else
+				{
+					TaskAwaiter taskAwaiter2;
+					taskAwaiter = taskAwaiter2;
+					taskAwaiter2 = default(TaskAwaiter);
+					num2 = -1;
+				}
+				taskAwaiter.GetResult();
+				yieldAwaiter = Task.Yield().GetAwaiter();
+				if (!yieldAwaiter.IsCompleted)
+				{
+					num2 = 1;
+					YieldAwaitable.YieldAwaiter yieldAwaiter2 = yieldAwaiter;
+					this.<>t__builder.AwaitUnsafeOnCompleted<YieldAwaitable.YieldAwaiter, NetworkSystemFusion.<ReturnToSinglePlayer>d__57>(ref yieldAwaiter, ref this);
+					return;
+				}
+				IL_FE:
+				yieldAwaiter.GetResult();
+				Debug.Log("Connect in return to single player");
+				IL_10F:
+				networkSystemFusion.netState = NetSystemState.Idle;
+				networkSystemFusion.internalState = NetworkSystemFusion.InternalState.Idle;
+				networkSystemFusion.SinglePlayerStarted();
+			}
+			catch (Exception ex)
+			{
+				num2 = -2;
+				this.<>t__builder.SetException(ex);
+				return;
+			}
+			IL_13E:
+			num2 = -2;
+			this.<>t__builder.SetResult();
+		}
+
+		[DebuggerHidden]
+		void IAsyncStateMachine.SetStateMachine(IAsyncStateMachine stateMachine)
+		{
+			this.<>t__builder.SetStateMachine(stateMachine);
+		}
+
+		public int <>1__state;
+
+		public AsyncTaskMethodBuilder <>t__builder;
+
+		public NetworkSystemFusion <>4__this;
+
+		private TaskAwaiter <>u__1;
+
+		private YieldAwaitable.YieldAwaiter <>u__2;
 	}
 }

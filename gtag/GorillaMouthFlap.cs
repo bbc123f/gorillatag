@@ -74,6 +74,10 @@ public class GorillaMouthFlap : MonoBehaviour
 		material.SetTextureOffset(this._MouthMap, mouthFlap.faces[num]);
 	}
 
+	public GorillaMouthFlap()
+	{
+	}
+
 	public GameObject targetFace;
 
 	public MouthFlapLevel[] mouthFlapLevels;

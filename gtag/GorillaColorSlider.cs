@@ -43,6 +43,10 @@ public class GorillaColorSlider : MonoBehaviour
 		this.valueImReporting = this.InterpolateValue(base.transform.position.x);
 	}
 
+	public GorillaColorSlider()
+	{
+	}
+
 	public bool setRandomly;
 
 	public float zRange;

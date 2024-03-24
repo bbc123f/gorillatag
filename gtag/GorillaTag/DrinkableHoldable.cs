@@ -121,6 +121,10 @@ namespace GorillaTag
 			fillAmount = bytes.Read(ref num, 6) / 63f;
 		}
 
+		public DrinkableHoldable()
+		{
+		}
+
 		[AssignInCorePrefab]
 		public ContainerLiquid containerLiquid;
 

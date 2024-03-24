@@ -62,6 +62,10 @@ namespace GorillaTagScripts
 			return this.isHooked || this.attachPoint.childCount != 0;
 		}
 
+		public AttachPoint()
+		{
+		}
+
 		public Transform attachPoint;
 
 		public UnityAction onHookedChanged;

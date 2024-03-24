@@ -1,12 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class ZoneManagement : MonoBehaviour
 {
-	public bool hasInstance { get; private set; }
+	public bool hasInstance
+	{
+		[CompilerGenerated]
+		get
+		{
+			return this.<hasInstance>k__BackingField;
+		}
+		[CompilerGenerated]
+		private set
+		{
+			this.<hasInstance>k__BackingField = value;
+		}
+	}
 
 	private void Awake()
 	{
@@ -231,7 +244,14 @@ public class ZoneManagement : MonoBehaviour
 		return null;
 	}
 
+	public ZoneManagement()
+	{
+	}
+
 	public static ZoneManagement instance;
+
+	[CompilerGenerated]
+	private bool <hasInstance>k__BackingField;
 
 	[SerializeField]
 	private ZoneData[] zones;

@@ -65,6 +65,15 @@ namespace OculusSampleFramework
 			}
 		}
 
+		public SelectionCylinder()
+		{
+		}
+
+		// Note: this type is marked as 'beforefieldinit'.
+		static SelectionCylinder()
+		{
+		}
+
 		[SerializeField]
 		private MeshRenderer _selectionMeshRenderer;
 

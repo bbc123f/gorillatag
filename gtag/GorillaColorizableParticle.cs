@@ -10,6 +10,10 @@ public class GorillaColorizableParticle : GorillaColorizableBase
 		main.startColor = new ParticleSystem.MinMaxGradient(this.useLinearColor ? color.linear : color, this.useLinearColor ? color2.linear : color2);
 	}
 
+	public GorillaColorizableParticle()
+	{
+	}
+
 	public ParticleSystem particleSystem;
 
 	public float gradientColorPower = 2f;

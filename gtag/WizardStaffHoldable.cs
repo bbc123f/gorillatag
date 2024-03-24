@@ -100,6 +100,10 @@ public class WizardStaffHoldable : TransferrableObject
 		}
 	}
 
+	public WizardStaffHoldable()
+	{
+	}
+
 	[Tooltip("This GameObject will activate when the staff hits the ground with enough force.")]
 	public GameObject effectsGameObject;
 

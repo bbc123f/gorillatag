@@ -56,6 +56,10 @@ public class DebugHudStats : MonoBehaviour
 		this.updateTimer = 0f;
 	}
 
+	public DebugHudStats()
+	{
+	}
+
 	[SerializeField]
 	private Text text;
 

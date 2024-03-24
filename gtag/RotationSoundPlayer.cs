@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class RotationSoundPlayer : MonoBehaviour
@@ -40,6 +41,10 @@ public class RotationSoundPlayer : MonoBehaviour
 		}
 	}
 
+	public RotationSoundPlayer()
+	{
+	}
+
 	[Tooltip("Transforms that will make a noise when they rotate.")]
 	[SerializeField]
 	private Transform[] transforms;
@@ -62,4 +67,27 @@ public class RotationSoundPlayer : MonoBehaviour
 	private Vector3[] lastUpAxis;
 
 	private float[] lastRotationSpeeds;
+
+	[CompilerGenerated]
+	[Serializable]
+	private sealed class <>c
+	{
+		// Note: this type is marked as 'beforefieldinit'.
+		static <>c()
+		{
+		}
+
+		public <>c()
+		{
+		}
+
+		internal bool <Awake>b__9_0(Transform xform)
+		{
+			return xform == null;
+		}
+
+		public static readonly RotationSoundPlayer.<>c <>9 = new RotationSoundPlayer.<>c();
+
+		public static Predicate<Transform> <>9__9_0;
+	}
 }

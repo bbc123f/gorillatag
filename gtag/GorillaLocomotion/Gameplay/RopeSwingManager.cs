@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Photon.Pun;
 using UnityEngine;
 
@@ -7,7 +8,19 @@ namespace GorillaLocomotion.Gameplay
 {
 	public class RopeSwingManager : MonoBehaviourPun
 	{
-		public static RopeSwingManager instance { get; private set; }
+		public static RopeSwingManager instance
+		{
+			[CompilerGenerated]
+			get
+			{
+				return RopeSwingManager.<instance>k__BackingField;
+			}
+			[CompilerGenerated]
+			private set
+			{
+				RopeSwingManager.<instance>k__BackingField = value;
+			}
+		}
 
 		private void Awake()
 		{
@@ -73,6 +86,13 @@ namespace GorillaLocomotion.Gameplay
 				rope.SetVelocity(boneIndex, velocity, wholeRope, info);
 			}
 		}
+
+		public RopeSwingManager()
+		{
+		}
+
+		[CompilerGenerated]
+		private static RopeSwingManager <instance>k__BackingField;
 
 		private Dictionary<int, GorillaRopeSwing> ropes = new Dictionary<int, GorillaRopeSwing>();
 	}

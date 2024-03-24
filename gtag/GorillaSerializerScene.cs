@@ -90,6 +90,10 @@ internal class GorillaSerializerScene : GorillaSerializer, IOnPhotonViewPreNetDe
 		return base.ValidOnSerialize(stream, info);
 	}
 
+	public GorillaSerializerScene()
+	{
+	}
+
 	[SerializeField]
 	private bool transferrable;
 

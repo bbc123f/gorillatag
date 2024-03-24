@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using Photon.Pun;
 using UnityEngine;
 
@@ -125,6 +127,10 @@ namespace GorillaTag.Sports
 			this.OnScoreUpdated();
 		}
 
+		public SportScoreboard()
+		{
+		}
+
 		[OnEnterPlay_SetNull]
 		public static SportScoreboard Instance;
 
@@ -150,11 +156,88 @@ namespace GorillaTag.Sports
 		[Serializable]
 		private class TeamParameters
 		{
+			public TeamParameters()
+			{
+			}
+
 			[SerializeField]
 			public AudioClip matchWonAudio;
 
 			[SerializeField]
 			public AudioClip goalScoredAudio;
+		}
+
+		[CompilerGenerated]
+		private sealed class <MatchEndCoroutine>d__16 : IEnumerator<object>, IEnumerator, IDisposable
+		{
+			[DebuggerHidden]
+			public <MatchEndCoroutine>d__16(int <>1__state)
+			{
+				this.<>1__state = <>1__state;
+			}
+
+			[DebuggerHidden]
+			void IDisposable.Dispose()
+			{
+			}
+
+			bool IEnumerator.MoveNext()
+			{
+				int num = this.<>1__state;
+				SportScoreboard sportScoreboard = this;
+				if (num == 0)
+				{
+					this.<>1__state = -1;
+					sportScoreboard.runningMatchEndCoroutine = true;
+					if (winningTeam >= 0 && winningTeam < sportScoreboard.teamParameters.Count && sportScoreboard.teamParameters[winningTeam].matchWonAudio != null)
+					{
+						sportScoreboard.audioSource.PlayOneShot(sportScoreboard.teamParameters[winningTeam].matchWonAudio);
+					}
+					this.<>2__current = new WaitForSeconds(sportScoreboard.matchEndScoreResetDelayTime);
+					this.<>1__state = 1;
+					return true;
+				}
+				if (num != 1)
+				{
+					return false;
+				}
+				this.<>1__state = -1;
+				sportScoreboard.runningMatchEndCoroutine = false;
+				sportScoreboard.ResetScores();
+				return false;
+			}
+
+			object IEnumerator<object>.Current
+			{
+				[DebuggerHidden]
+				get
+				{
+					return this.<>2__current;
+				}
+			}
+
+			[DebuggerHidden]
+			void IEnumerator.Reset()
+			{
+				throw new NotSupportedException();
+			}
+
+			object IEnumerator.Current
+			{
+				[DebuggerHidden]
+				get
+				{
+					return this.<>2__current;
+				}
+			}
+
+			private int <>1__state;
+
+			private object <>2__current;
+
+			public SportScoreboard <>4__this;
+
+			public int winningTeam;
 		}
 	}
 }

@@ -21,4 +21,8 @@ public class CasualGameMode : GorillaGameManager
 	{
 		return "CASUAL";
 	}
+
+	public CasualGameMode()
+	{
+	}
 }

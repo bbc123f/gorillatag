@@ -15,6 +15,7 @@ public class HeadModel : MonoBehaviour
 		if (!this.initialized && base.enabled)
 		{
 			this.initialized = true;
+			this.headMesh = base.GetComponent<MeshRenderer>();
 			foreach (GameObject gameObject in this.cosmetics)
 			{
 				if (!(gameObject == null))
@@ -43,6 +44,7 @@ public class HeadModel : MonoBehaviour
 		{
 			this.SetChildRendererWithOverride(gameObject, false, forRightSide);
 		}
+		this.headMesh.enabled = true;
 		this.currentActiveObjects.Clear();
 		this.ClearDynamicallyLoadedActiveObjects();
 		CosmeticsController.CosmeticItem itemFromDict = CosmeticsController.instance.GetItemFromDict(activeCosmeticName);
@@ -76,6 +78,7 @@ public class HeadModel : MonoBehaviour
 		{
 			this.SetChildRendererWithOverride(gameObject, false, false);
 		}
+		this.headMesh.enabled = true;
 		this.currentActiveObjects.Clear();
 		this.ClearDynamicallyLoadedActiveObjects();
 		for (int i = 0; i < activeCosmeticNames.Length; i++)
@@ -121,6 +124,10 @@ public class HeadModel : MonoBehaviour
 		if (component != null)
 		{
 			gameObject = component.rightSideOverride;
+			if (setEnabled && component.replacesHeadMesh)
+			{
+				this.headMesh.enabled = false;
+			}
 		}
 		if (setEnabled && forRightSide && gameObject != null)
 		{
@@ -151,6 +158,10 @@ public class HeadModel : MonoBehaviour
 		}
 	}
 
+	public HeadModel()
+	{
+	}
+
 	public GameObject[] cosmetics;
 
 	private GameObject objRef;
@@ -162,4 +173,6 @@ public class HeadModel : MonoBehaviour
 	private List<GameObject> currentDynamicallyLoadedActiveObjects = new List<GameObject>();
 
 	private bool initialized;
+
+	private MeshRenderer headMesh;
 }

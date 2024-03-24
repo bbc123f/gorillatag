@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace GorillaTag.Audio
@@ -6,7 +7,19 @@ namespace GorillaTag.Audio
 	internal static class GTAudioOneShot
 	{
 		[OnEnterPlay_Set(false)]
-		internal static bool isInitialized { get; private set; }
+		internal static bool isInitialized
+		{
+			[CompilerGenerated]
+			get
+			{
+				return GTAudioOneShot.<isInitialized>k__BackingField;
+			}
+			[CompilerGenerated]
+			private set
+			{
+				GTAudioOneShot.<isInitialized>k__BackingField = value;
+			}
+		}
 
 		[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
 		private static void Initialize()
@@ -48,6 +61,9 @@ namespace GorillaTag.Audio
 			GTAudioOneShot.Play(clip, position, volume, pitch);
 			GTAudioOneShot.audioSource.SetCustomCurve(AudioSourceCurveType.CustomRolloff, GTAudioOneShot.defaultCurve);
 		}
+
+		[CompilerGenerated]
+		private static bool <isInitialized>k__BackingField;
 
 		[OnEnterPlay_SetNull]
 		internal static AudioSource audioSource;

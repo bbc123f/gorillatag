@@ -55,5 +55,9 @@ public class DayNightResetForBaking : MonoBehaviour
 		}
 	}
 
+	public DayNightResetForBaking()
+	{
+	}
+
 	public BetterDayNightManager dayNightManager;
 }

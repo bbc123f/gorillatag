@@ -45,6 +45,10 @@ public class KinematicTestMotion : MonoBehaviour
 		}
 	}
 
+	public KinematicTestMotion()
+	{
+	}
+
 	public Transform start;
 
 	public Transform end;

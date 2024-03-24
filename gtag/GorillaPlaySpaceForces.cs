@@ -20,6 +20,10 @@ public class GorillaPlaySpaceForces : MonoBehaviour
 		}
 	}
 
+	public GorillaPlaySpaceForces()
+	{
+	}
+
 	public GameObject rightHand;
 
 	public GameObject leftHand;

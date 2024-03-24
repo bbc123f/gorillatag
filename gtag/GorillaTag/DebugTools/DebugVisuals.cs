@@ -5,5 +5,8 @@ namespace GorillaTag.DebugTools
 {
 	public class DebugVisuals : MonoBehaviour
 	{
+		public DebugVisuals()
+		{
+		}
 	}
 }

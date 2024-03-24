@@ -156,6 +156,11 @@ public struct AnimatedButterfly
 		this.loopDuration = num + (route[0].transform.position - route[route.Count - 1].transform.position).magnitude * manager.BeeSpeed + holdTimes[0];
 	}
 
+	// Note: this type is marked as 'beforefieldinit'.
+	static AnimatedButterfly()
+	{
+	}
+
 	private List<AnimatedButterfly.TimedDestination> destinationCache;
 
 	private AnimatedButterfly.TimedDestination destinationA;

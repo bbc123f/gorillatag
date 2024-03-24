@@ -28,6 +28,10 @@ public class GorillaPlayerCounter : MonoBehaviour
 		}
 	}
 
+	public GorillaPlayerCounter()
+	{
+	}
+
 	public bool isRedTeam;
 
 	public Text text;

@@ -32,6 +32,10 @@ namespace GorillaTag
 			}
 		}
 
+		public DayNightWatchWearable()
+		{
+		}
+
 		[Tooltip("The transform that will be rotated to indicate the current time.")]
 		public Transform clockNeedle;
 

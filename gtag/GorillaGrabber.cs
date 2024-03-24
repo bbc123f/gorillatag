@@ -81,6 +81,10 @@ public class GorillaGrabber : MonoBehaviour
 		return gorillaGrabable;
 	}
 
+	public GorillaGrabber()
+	{
+	}
+
 	private Player player;
 
 	[SerializeField]

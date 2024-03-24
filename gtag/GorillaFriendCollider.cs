@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using GorillaLocomotion;
 using GorillaNetworking;
 using UnityEngine;
@@ -75,6 +77,10 @@ public class GorillaFriendCollider : MonoBehaviour
 		yield break;
 	}
 
+	public GorillaFriendCollider()
+	{
+	}
+
 	public List<string> playerIDsCurrentlyTouching = new List<string>();
 
 	public CapsuleCollider thisCapsule;
@@ -94,4 +100,119 @@ public class GorillaFriendCollider : MonoBehaviour
 	private VRRig collidingRig;
 
 	private int collisions;
+
+	[CompilerGenerated]
+	private sealed class <UpdatePlayersInSphere>d__12 : IEnumerator<object>, IEnumerator, IDisposable
+	{
+		[DebuggerHidden]
+		public <UpdatePlayersInSphere>d__12(int <>1__state)
+		{
+			this.<>1__state = <>1__state;
+		}
+
+		[DebuggerHidden]
+		void IDisposable.Dispose()
+		{
+		}
+
+		bool IEnumerator.MoveNext()
+		{
+			int num = this.<>1__state;
+			GorillaFriendCollider gorillaFriendCollider = this;
+			switch (num)
+			{
+			case 0:
+				this.<>1__state = -1;
+				this.<>2__current = new WaitForSeconds(1f + gorillaFriendCollider.jiggleAmount);
+				this.<>1__state = 1;
+				return true;
+			case 1:
+				this.<>1__state = -1;
+				wait = new WaitForSeconds(1f);
+				break;
+			case 2:
+				this.<>1__state = -1;
+				break;
+			default:
+				return false;
+			}
+			gorillaFriendCollider.playerIDsCurrentlyTouching.Clear();
+			gorillaFriendCollider.collisions = Physics.OverlapSphereNonAlloc(gorillaFriendCollider.transform.position, gorillaFriendCollider.thisCapsule.radius, gorillaFriendCollider.overlapColliders, gorillaFriendCollider.tagAndBodyLayerMask);
+			gorillaFriendCollider.collisions = Mathf.Min(gorillaFriendCollider.collisions, gorillaFriendCollider.overlapColliders.Length);
+			if (gorillaFriendCollider.collisions > 0)
+			{
+				for (int i = 0; i < gorillaFriendCollider.collisions; i++)
+				{
+					gorillaFriendCollider.otherCollider = gorillaFriendCollider.overlapColliders[i];
+					if (!(gorillaFriendCollider.otherCollider == null))
+					{
+						gorillaFriendCollider.otherColliderGO = gorillaFriendCollider.otherCollider.attachedRigidbody.gameObject;
+						gorillaFriendCollider.collidingRig = gorillaFriendCollider.otherColliderGO.GetComponent<VRRig>();
+						if (gorillaFriendCollider.collidingRig == null || gorillaFriendCollider.collidingRig.creatorWrapped == null || gorillaFriendCollider.collidingRig.creatorWrapped.IsNull || string.IsNullOrEmpty(gorillaFriendCollider.collidingRig.creatorWrapped.UserId))
+						{
+							if (gorillaFriendCollider.otherColliderGO.GetComponent<Player>() == null || NetworkSystem.Instance.LocalPlayer == null)
+							{
+								goto IL_1A9;
+							}
+							GorillaFriendCollider gorillaFriendCollider2 = gorillaFriendCollider;
+							string text = NetworkSystem.Instance.LocalPlayer.UserId;
+							gorillaFriendCollider2.AddUserID(text);
+						}
+						else
+						{
+							GorillaFriendCollider gorillaFriendCollider3 = gorillaFriendCollider;
+							string text = gorillaFriendCollider.collidingRig.creatorWrapped.UserId;
+							gorillaFriendCollider3.AddUserID(text);
+						}
+						gorillaFriendCollider.overlapColliders[i] = null;
+					}
+					IL_1A9:;
+				}
+				if (NetworkSystem.Instance.LocalPlayer != null && gorillaFriendCollider.playerIDsCurrentlyTouching.Contains(NetworkSystem.Instance.LocalPlayer.UserId) && GorillaComputer.instance.friendJoinCollider != gorillaFriendCollider)
+				{
+					GorillaComputer.instance.allowedMapsToJoin = gorillaFriendCollider.myAllowedMapsToJoin;
+					GorillaComputer.instance.friendJoinCollider = gorillaFriendCollider;
+					GorillaComputer.instance.UpdateScreen();
+				}
+				gorillaFriendCollider.otherCollider = null;
+				gorillaFriendCollider.otherColliderGO = null;
+				gorillaFriendCollider.collidingRig = null;
+			}
+			this.<>2__current = wait;
+			this.<>1__state = 2;
+			return true;
+		}
+
+		object IEnumerator<object>.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		[DebuggerHidden]
+		void IEnumerator.Reset()
+		{
+			throw new NotSupportedException();
+		}
+
+		object IEnumerator.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		private int <>1__state;
+
+		private object <>2__current;
+
+		public GorillaFriendCollider <>4__this;
+
+		private WaitForSeconds <wait>5__2;
+	}
 }

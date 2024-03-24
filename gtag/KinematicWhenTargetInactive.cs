@@ -25,6 +25,10 @@ public class KinematicWhenTargetInactive : MonoBehaviour
 		}
 	}
 
+	public KinematicWhenTargetInactive()
+	{
+	}
+
 	public Rigidbody[] rigidBodies;
 
 	public GameObject target;

@@ -25,6 +25,10 @@ public class Flashlight : MonoBehaviour
 		this.bulbGlow.SetActive(doEnable);
 	}
 
+	public Flashlight()
+	{
+	}
+
 	public GameObject lightVolume;
 
 	public Light spotlight;

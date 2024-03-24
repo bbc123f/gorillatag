@@ -28,5 +28,9 @@ public class OverlayPassthrough : MonoBehaviour
 		this.passthroughLayer.textureOpacity = x * 0.5f + 0.5f;
 	}
 
+	public OverlayPassthrough()
+	{
+	}
+
 	private OVRPassthroughLayer passthroughLayer;
 }

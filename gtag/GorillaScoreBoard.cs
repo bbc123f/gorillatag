@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Text;
 using GorillaGameModes;
+using GorillaNetworking;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -56,7 +58,7 @@ public class GorillaScoreBoard : MonoBehaviour
 					if (this.lines[i].linePlayer != null && this.lines[i].linePlayer.InRoom)
 					{
 						this.stringBuilder.Append("\n ");
-						this.stringBuilder.Append(this.NormalizeName(true, this.lines[i].linePlayer.NickName));
+						this.stringBuilder.Append(this.NormalizeName(true, PlayFabAuthenticator.instance.GetSafety() ? this.lines[i].linePlayer.DefaultName : this.lines[i].linePlayer.NickName));
 						if (this.lines[i].linePlayer != NetworkSystem.Instance.LocalPlayer)
 						{
 							if (this.lines[i].reportButton.isActiveAndEnabled)
@@ -112,6 +114,10 @@ public class GorillaScoreBoard : MonoBehaviour
 		GorillaScoreboardTotalUpdater.UnregisterScoreboard(this);
 	}
 
+	public GorillaScoreBoard()
+	{
+	}
+
 	public GameObject scoreBoardLinePrefab;
 
 	public int startingYValue;
@@ -152,4 +158,27 @@ public class GorillaScoreBoard : MonoBehaviour
 	private StringBuilder stringBuilder = new StringBuilder(220);
 
 	private StringBuilder buttonStringBuilder = new StringBuilder(720);
+
+	[CompilerGenerated]
+	[Serializable]
+	private sealed class <>c
+	{
+		// Note: this type is marked as 'beforefieldinit'.
+		static <>c()
+		{
+		}
+
+		public <>c()
+		{
+		}
+
+		internal bool <NormalizeName>b__25_0(char c)
+		{
+			return char.IsLetterOrDigit(c);
+		}
+
+		public static readonly GorillaScoreBoard.<>c <>9 = new GorillaScoreBoard.<>c();
+
+		public static Predicate<char> <>9__25_0;
+	}
 }

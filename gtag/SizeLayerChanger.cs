@@ -67,6 +67,10 @@ public class SizeLayerChanger : MonoBehaviour
 		}
 	}
 
+	public SizeLayerChanger()
+	{
+	}
+
 	public float maxScale;
 
 	public float minScale;

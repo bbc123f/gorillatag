@@ -133,6 +133,10 @@ public class DrumsItem : MonoBehaviour
 		this.drumsAS[tempDrumInner.myIndex].PlayOneShot(this.drumsAS[tempDrumInner.myIndex].clip, this.volToPlay);
 	}
 
+	public DrumsItem()
+	{
+	}
+
 	[Tooltip("Array of colliders for this specific drum.")]
 	public Collider[] collidersForThisDrum;
 

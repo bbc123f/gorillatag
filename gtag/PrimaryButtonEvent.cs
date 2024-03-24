@@ -4,4 +4,7 @@ using UnityEngine.Events;
 [Serializable]
 public class PrimaryButtonEvent : UnityEvent<bool>
 {
+	public PrimaryButtonEvent()
+	{
+	}
 }

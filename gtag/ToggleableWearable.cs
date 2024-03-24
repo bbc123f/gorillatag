@@ -96,6 +96,15 @@ public class ToggleableWearable : MonoBehaviour
 		}
 	}
 
+	public ToggleableWearable()
+	{
+	}
+
+	// Note: this type is marked as 'beforefieldinit'.
+	static ToggleableWearable()
+	{
+	}
+
 	public Renderer[] renderers;
 
 	public Animator[] animators;

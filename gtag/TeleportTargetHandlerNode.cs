@@ -24,6 +24,10 @@ public class TeleportTargetHandlerNode : TeleportTargetHandler
 		return true;
 	}
 
+	public TeleportTargetHandlerNode()
+	{
+	}
+
 	[Tooltip("When checking line of sight to the destination, add this value to the vertical offset for targeting collision checks.")]
 	public float LOSOffset = 1f;
 

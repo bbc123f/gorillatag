@@ -131,6 +131,10 @@ public class ControllerPrototype : NetworkBehaviour
 		base.transform.position += vector * this.Speed * this.Runner.DeltaTime;
 	}
 
+	public ControllerPrototype()
+	{
+	}
+
 	public override void CopyBackingFieldsToState(bool A_1)
 	{
 		this.MovementDirection = this._MovementDirection;

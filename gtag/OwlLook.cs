@@ -63,6 +63,10 @@ public class OwlLook : MonoBehaviour
 		this.head.rotation = Quaternion.LookRotation(vector4, this.neck.up);
 	}
 
+	public OwlLook()
+	{
+	}
+
 	public Transform head;
 
 	public Transform lookTarget;

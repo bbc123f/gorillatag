@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using Fusion;
 using Photon.Pun;
 using UnityEngine;
@@ -6,7 +7,19 @@ using UnityEngine;
 [NetworkBehaviourWeaved(0)]
 public abstract class NetworkComponent<T> : NetworkBehaviour, IPunObservable, IPunInstantiateMagicCallback where T : struct, INetworkStruct
 {
-	protected virtual T data { get; set; }
+	protected virtual T data
+	{
+		[CompilerGenerated]
+		get
+		{
+			return this.<data>k__BackingField;
+		}
+		[CompilerGenerated]
+		set
+		{
+			this.<data>k__BackingField = value;
+		}
+	}
 
 	protected abstract void DataChangeCallback(PhotonMessageInfoWrapped info = default(PhotonMessageInfoWrapped));
 
@@ -84,6 +97,10 @@ public abstract class NetworkComponent<T> : NetworkBehaviour, IPunObservable, IP
 		}
 	}
 
+	protected NetworkComponent()
+	{
+	}
+
 	public override void CopyBackingFieldsToState(bool A_1)
 	{
 	}
@@ -91,6 +108,9 @@ public abstract class NetworkComponent<T> : NetworkBehaviour, IPunObservable, IP
 	public override void CopyStateToBackingFields()
 	{
 	}
+
+	[CompilerGenerated]
+	private T <data>k__BackingField;
 
 	static Changed<NetworkComponent> $IL2CPP_CHANGED;
 

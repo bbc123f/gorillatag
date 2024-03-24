@@ -147,6 +147,10 @@ namespace OculusSampleFramework
 			}
 		}
 
+		public InteractableToolsInputRouter()
+		{
+		}
+
 		private static InteractableToolsInputRouter _instance;
 
 		private bool _leftPinch;

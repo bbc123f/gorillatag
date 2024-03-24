@@ -6,6 +6,10 @@ namespace GorillaLocomotion.Swimming
 	[CreateAssetMenu(fileName = "Data", menuName = "ScriptableObjects/WaterParameters", order = 1)]
 	public class WaterParameters : ScriptableObject
 	{
+		public WaterParameters()
+		{
+		}
+
 		[Header("Splash Effect")]
 		public bool playSplashEffect = true;
 

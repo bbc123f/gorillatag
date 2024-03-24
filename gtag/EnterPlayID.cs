@@ -24,6 +24,11 @@ public struct EnterPlayID
 		}
 	}
 
+	// Note: this type is marked as 'beforefieldinit'.
+	static EnterPlayID()
+	{
+	}
+
 	private static int currentID = 1;
 
 	private int id;

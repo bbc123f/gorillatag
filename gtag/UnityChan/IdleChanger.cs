@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -90,6 +93,10 @@ namespace UnityChan
 			yield break;
 		}
 
+		public IdleChanger()
+		{
+		}
+
 		private AnimatorStateInfo currentState;
 
 		private AnimatorStateInfo previousState;
@@ -107,5 +114,85 @@ namespace UnityChan
 		public Animator UnityChanB;
 
 		private Keyboard kb;
+
+		[CompilerGenerated]
+		private sealed class <RandomChange>d__12 : IEnumerator<object>, IEnumerator, IDisposable
+		{
+			[DebuggerHidden]
+			public <RandomChange>d__12(int <>1__state)
+			{
+				this.<>1__state = <>1__state;
+			}
+
+			[DebuggerHidden]
+			void IDisposable.Dispose()
+			{
+			}
+
+			bool IEnumerator.MoveNext()
+			{
+				int num = this.<>1__state;
+				IdleChanger idleChanger = this;
+				if (num != 0)
+				{
+					if (num != 1)
+					{
+						return false;
+					}
+					this.<>1__state = -1;
+				}
+				else
+				{
+					this.<>1__state = -1;
+				}
+				if (idleChanger._random)
+				{
+					float num2 = Random.Range(0f, 1f);
+					if (num2 < idleChanger._threshold)
+					{
+						idleChanger.UnityChanA.SetBool("Back", true);
+						idleChanger.UnityChanB.SetBool("Back", true);
+					}
+					else if (num2 >= idleChanger._threshold)
+					{
+						idleChanger.UnityChanA.SetBool("Next", true);
+						idleChanger.UnityChanB.SetBool("Next", true);
+					}
+				}
+				this.<>2__current = new WaitForSeconds(idleChanger._interval);
+				this.<>1__state = 1;
+				return true;
+			}
+
+			object IEnumerator<object>.Current
+			{
+				[DebuggerHidden]
+				get
+				{
+					return this.<>2__current;
+				}
+			}
+
+			[DebuggerHidden]
+			void IEnumerator.Reset()
+			{
+				throw new NotSupportedException();
+			}
+
+			object IEnumerator.Current
+			{
+				[DebuggerHidden]
+				get
+				{
+					return this.<>2__current;
+				}
+			}
+
+			private int <>1__state;
+
+			private object <>2__current;
+
+			public IdleChanger <>4__this;
+		}
 	}
 }

@@ -146,6 +146,10 @@ public class FusionPlayerProperties : NetworkBehaviour
 		}
 	}
 
+	public FusionPlayerProperties()
+	{
+	}
+
 	public override void CopyBackingFieldsToState(bool A_1)
 	{
 		NetworkBehaviourUtils.InitializeNetworkDictionary<SerializableDictionary<PlayerRef, FusionPlayerProperties.PlayerInfo>, PlayerRef, FusionPlayerProperties.PlayerInfo>(this.netPlayerAttributes, this._netPlayerAttributes, "netPlayerAttributes");

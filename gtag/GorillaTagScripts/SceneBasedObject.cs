@@ -10,6 +10,10 @@ namespace GorillaTagScripts
 			return (ZoneManagement.instance.GetAllLoadedScenes().Count <= 1 || this.zone != GTZone.forest) && ZoneManagement.instance.IsSceneLoaded(this.zone);
 		}
 
+		public SceneBasedObject()
+		{
+		}
+
 		public GTZone zone;
 	}
 }

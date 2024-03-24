@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
@@ -39,6 +40,15 @@ public class DevConsole : MonoBehaviour, IDebugObject
 	private void OnEnable()
 	{
 		base.gameObject.SetActive(false);
+	}
+
+	public DevConsole()
+	{
+	}
+
+	// Note: this type is marked as 'beforefieldinit'.
+	static DevConsole()
+	{
 	}
 
 	private static DevConsole _instance;
@@ -144,12 +154,39 @@ public class DevConsole : MonoBehaviour, IDebugObject
 		public bool filtered;
 
 		public int index;
+
+		[CompilerGenerated]
+		private sealed class <>c__DisplayClass10_0
+		{
+			public <>c__DisplayClass10_0()
+			{
+			}
+
+			internal bool <.ctor>b__0(string scrubString)
+			{
+				return this.line.Contains(scrubString);
+			}
+
+			public string line;
+		}
 	}
 
 	[Serializable]
 	public class DisplayedLogLine
 	{
-		public Type data { get; set; }
+		public Type data
+		{
+			[CompilerGenerated]
+			get
+			{
+				return this.<data>k__BackingField;
+			}
+			[CompilerGenerated]
+			set
+			{
+				this.<data>k__BackingField = value;
+			}
+		}
 
 		public DisplayedLogLine(GameObject obj)
 		{
@@ -187,6 +224,9 @@ public class DevConsole : MonoBehaviour, IDebugObject
 		private bool expanded;
 
 		public DevInspector inspector;
+
+		[CompilerGenerated]
+		private Type <data>k__BackingField;
 	}
 
 	[Serializable]
@@ -231,6 +271,10 @@ public class DevConsole : MonoBehaviour, IDebugObject
 			return list;
 		}
 
+		public MessagePayload()
+		{
+		}
+
 		public DevConsole.MessagePayload.Block[] blocks;
 
 		[Serializable]
@@ -254,9 +298,36 @@ public class DevConsole : MonoBehaviour, IDebugObject
 		[Serializable]
 		public class TextBlock
 		{
+			public TextBlock()
+			{
+			}
+
 			public string type;
 
 			public string text;
+		}
+
+		[CompilerGenerated]
+		[Serializable]
+		private sealed class <>c
+		{
+			// Note: this type is marked as 'beforefieldinit'.
+			static <>c()
+			{
+			}
+
+			public <>c()
+			{
+			}
+
+			internal int <GeneratePayloads>b__3_0(DevConsole.LogEntry e1, DevConsole.LogEntry e2)
+			{
+				return e1.index.CompareTo(e2.index);
+			}
+
+			public static readonly DevConsole.MessagePayload.<>c <>9 = new DevConsole.MessagePayload.<>c();
+
+			public static Comparison<DevConsole.LogEntry> <>9__3_0;
 		}
 	}
 }

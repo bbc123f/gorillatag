@@ -63,6 +63,15 @@ namespace GorillaTagScripts
 			}
 		}
 
+		public GorillaTimerManager()
+		{
+		}
+
+		// Note: this type is marked as 'beforefieldinit'.
+		static GorillaTimerManager()
+		{
+		}
+
 		public static GorillaTimerManager instance;
 
 		public static bool hasInstance = false;

@@ -202,6 +202,15 @@ namespace BoingKit
 			return QuaternionUtil.AxisAngle(vector5, maxBendAngle) * reference * (Mathf.Sqrt(sqrMagnitude) / Mathf.Sqrt(sqrMagnitude2));
 		}
 
+		public VectorUtil()
+		{
+		}
+
+		// Note: this type is marked as 'beforefieldinit'.
+		static VectorUtil()
+		{
+		}
+
 		public static readonly Vector3 Min = new Vector3(float.MinValue, float.MinValue, float.MinValue);
 
 		public static readonly Vector3 Max = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);

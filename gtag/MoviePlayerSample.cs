@@ -1,15 +1,54 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Video;
 
 public class MoviePlayerSample : MonoBehaviour
 {
-	public bool IsPlaying { get; private set; }
+	public bool IsPlaying
+	{
+		[CompilerGenerated]
+		get
+		{
+			return this.<IsPlaying>k__BackingField;
+		}
+		[CompilerGenerated]
+		private set
+		{
+			this.<IsPlaying>k__BackingField = value;
+		}
+	}
 
-	public long Duration { get; private set; }
+	public long Duration
+	{
+		[CompilerGenerated]
+		get
+		{
+			return this.<Duration>k__BackingField;
+		}
+		[CompilerGenerated]
+		private set
+		{
+			this.<Duration>k__BackingField = value;
+		}
+	}
 
-	public long PlaybackPosition { get; private set; }
+	public long PlaybackPosition
+	{
+		[CompilerGenerated]
+		get
+		{
+			return this.<PlaybackPosition>k__BackingField;
+		}
+		[CompilerGenerated]
+		private set
+		{
+			this.<PlaybackPosition>k__BackingField = value;
+		}
+	}
 
 	private void Awake()
 	{
@@ -284,6 +323,10 @@ public class MoviePlayerSample : MonoBehaviour
 		}
 	}
 
+	public MoviePlayerSample()
+	{
+	}
+
 	private bool videoPausedBeforeAppPause;
 
 	private VideoPlayer videoPlayer;
@@ -291,6 +334,15 @@ public class MoviePlayerSample : MonoBehaviour
 	private OVROverlay overlay;
 
 	private Renderer mediaRenderer;
+
+	[CompilerGenerated]
+	private bool <IsPlaying>k__BackingField;
+
+	[CompilerGenerated]
+	private long <Duration>k__BackingField;
+
+	[CompilerGenerated]
+	private long <PlaybackPosition>k__BackingField;
 
 	private RenderTexture copyTexture;
 
@@ -329,5 +381,109 @@ public class MoviePlayerSample : MonoBehaviour
 		TopBottom,
 		LeftRight,
 		BottomTop
+	}
+
+	[CompilerGenerated]
+	private sealed class <>c__DisplayClass34_0
+	{
+		public <>c__DisplayClass34_0()
+		{
+		}
+
+		internal void <Play>b__0()
+		{
+			Debug.Log("Playing ExoPlayer with SurfaceObject");
+			NativeVideoPlayer.PlayVideo(this.moviePath, this.drmLicencesUrl, this.<>4__this.overlay.externalSurfaceObject);
+			NativeVideoPlayer.SetLooping(this.<>4__this.LoopVideo);
+		}
+
+		public string moviePath;
+
+		public string drmLicencesUrl;
+
+		public MoviePlayerSample <>4__this;
+	}
+
+	[CompilerGenerated]
+	private sealed class <Start>d__33 : IEnumerator<object>, IEnumerator, IDisposable
+	{
+		[DebuggerHidden]
+		public <Start>d__33(int <>1__state)
+		{
+			this.<>1__state = <>1__state;
+		}
+
+		[DebuggerHidden]
+		void IDisposable.Dispose()
+		{
+		}
+
+		bool IEnumerator.MoveNext()
+		{
+			int num = this.<>1__state;
+			MoviePlayerSample moviePlayerSample = this;
+			if (num != 0)
+			{
+				if (num != 1)
+				{
+					return false;
+				}
+				this.<>1__state = -1;
+				if (!string.IsNullOrEmpty(moviePlayerSample.MovieName))
+				{
+					if (moviePlayerSample.IsLocalVideo(moviePlayerSample.MovieName))
+					{
+						moviePlayerSample.Play(Application.streamingAssetsPath + "/" + moviePlayerSample.MovieName, null);
+					}
+					else
+					{
+						moviePlayerSample.Play(moviePlayerSample.MovieName, moviePlayerSample.DrmLicenseUrl);
+					}
+				}
+				return false;
+			}
+			else
+			{
+				this.<>1__state = -1;
+				if (moviePlayerSample.mediaRenderer.material == null)
+				{
+					Debug.LogError("No material for movie surface");
+					return false;
+				}
+				this.<>2__current = new WaitForSeconds(1f);
+				this.<>1__state = 1;
+				return true;
+			}
+		}
+
+		object IEnumerator<object>.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		[DebuggerHidden]
+		void IEnumerator.Reset()
+		{
+			throw new NotSupportedException();
+		}
+
+		object IEnumerator.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		private int <>1__state;
+
+		private object <>2__current;
+
+		public MoviePlayerSample <>4__this;
 	}
 }

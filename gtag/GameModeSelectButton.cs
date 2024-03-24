@@ -9,6 +9,10 @@ public class GameModeSelectButton : GorillaPressableButton
 		this.selector.SelectEntryOnPage(this.buttonIndex);
 	}
 
+	public GameModeSelectButton()
+	{
+	}
+
 	[SerializeField]
 	internal GameModePages selector;
 

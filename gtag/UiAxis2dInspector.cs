@@ -33,6 +33,10 @@ public class UiAxis2dInspector : MonoBehaviour
 		this.m_handle.transform.localPosition = new Vector3(vector.x * vector2.x * 0.5f, vector.y * vector2.y * 0.5f, 0f);
 	}
 
+	public UiAxis2dInspector()
+	{
+	}
+
 	[Header("Settings")]
 	[SerializeField]
 	private Vector2 m_xExtent = new Vector2(-1f, 1f);

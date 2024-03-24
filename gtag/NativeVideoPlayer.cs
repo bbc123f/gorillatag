@@ -242,6 +242,11 @@ public static class NativeVideoPlayer
 		AndroidJNI.CallStaticVoidMethod(NativeVideoPlayer.VideoPlayerClass, NativeVideoPlayer.setListenerRotationQuaternionMethodId, NativeVideoPlayer.setListenerRotationQuaternionParams);
 	}
 
+	// Note: this type is marked as 'beforefieldinit'.
+	static NativeVideoPlayer()
+	{
+	}
+
 	private static IntPtr? _Activity;
 
 	private static IntPtr? _VideoPlayerClass;

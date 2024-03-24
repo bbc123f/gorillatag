@@ -158,6 +158,10 @@ namespace CjLib
 			return twist * swing;
 		}
 
+		public QuaternionUtil()
+		{
+		}
+
 		public enum SterpMode
 		{
 			Nlerp,

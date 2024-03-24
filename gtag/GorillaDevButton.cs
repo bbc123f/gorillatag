@@ -24,6 +24,10 @@ public class GorillaDevButton : GorillaPressableButton
 		this.UpdateColor();
 	}
 
+	public GorillaDevButton()
+	{
+	}
+
 	public DevButtonType Type;
 
 	public LogType levelType;

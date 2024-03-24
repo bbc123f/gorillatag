@@ -35,6 +35,10 @@ namespace OVRTouchSample
 			}
 		}
 
+		public TouchController()
+		{
+		}
+
 		[SerializeField]
 		private OVRInput.Controller m_controller;
 

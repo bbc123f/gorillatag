@@ -86,6 +86,10 @@ public class VolumeAndPlaneSwitcher : MonoBehaviour
 		localScale = new Vector3(dimensions.x, dimensions.z, dimensions.y);
 	}
 
+	public VolumeAndPlaneSwitcher()
+	{
+	}
+
 	public OVRSceneAnchor planePrefab;
 
 	public OVRSceneAnchor volumePrefab;

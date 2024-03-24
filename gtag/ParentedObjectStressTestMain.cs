@@ -17,6 +17,10 @@ public class ParentedObjectStressTestMain : MonoBehaviour
 		}
 	}
 
+	public ParentedObjectStressTestMain()
+	{
+	}
+
 	public GameObject Object;
 
 	public Vector3 NumObjects;

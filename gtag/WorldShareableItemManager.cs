@@ -94,6 +94,15 @@ public class WorldShareableItemManager : MonoBehaviour
 		}
 	}
 
+	public WorldShareableItemManager()
+	{
+	}
+
+	// Note: this type is marked as 'beforefieldinit'.
+	static WorldShareableItemManager()
+	{
+	}
+
 	public static WorldShareableItemManager instance;
 
 	public static bool hasInstance = false;

@@ -240,6 +240,15 @@ namespace emotitron.CompressionTests
 			Debug.Log("Uneven Bitpack byte: time=" + stopwatch.ElapsedMilliseconds.ToString() + " ms");
 		}
 
+		public BenchmarkTests()
+		{
+		}
+
+		// Note: this type is marked as 'beforefieldinit'.
+		static BenchmarkTests()
+		{
+		}
+
 		public const int BYTE_CNT = 128;
 
 		public const int LOOP = 1000000;

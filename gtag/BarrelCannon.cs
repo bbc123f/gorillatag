@@ -238,6 +238,10 @@ public class BarrelCannon : MonoBehaviourPun, IPunObservable, IPunOwnershipCallb
 	{
 	}
 
+	public BarrelCannon()
+	{
+	}
+
 	[SerializeField]
 	private float firingSpeed = 10f;
 
@@ -307,6 +311,10 @@ public class BarrelCannon : MonoBehaviourPun, IPunObservable, IPunOwnershipCallb
 
 	private class BarrelCannonSyncedState
 	{
+		public BarrelCannonSyncedState()
+		{
+		}
+
 		public BarrelCannon.BarrelCannonState currentState;
 
 		public bool hasAuthorityPassenger;

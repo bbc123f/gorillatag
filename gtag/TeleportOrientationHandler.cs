@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public abstract class TeleportOrientationHandler : TeleportSupport
@@ -59,6 +62,12 @@ public abstract class TeleportOrientationHandler : TeleportSupport
 		return rotation;
 	}
 
+	[CompilerGenerated]
+	private void <.ctor>b__3_0()
+	{
+		base.StartCoroutine(this.UpdateOrientationCoroutine());
+	}
+
 	private readonly Action _updateOrientationAction;
 
 	private readonly Action<LocomotionTeleport.AimData> _updateAimDataAction;
@@ -69,5 +78,80 @@ public abstract class TeleportOrientationHandler : TeleportSupport
 	{
 		HeadRelative,
 		ForwardFacing
+	}
+
+	[CompilerGenerated]
+	private sealed class <UpdateOrientationCoroutine>d__7 : IEnumerator<object>, IEnumerator, IDisposable
+	{
+		[DebuggerHidden]
+		public <UpdateOrientationCoroutine>d__7(int <>1__state)
+		{
+			this.<>1__state = <>1__state;
+		}
+
+		[DebuggerHidden]
+		void IDisposable.Dispose()
+		{
+		}
+
+		bool IEnumerator.MoveNext()
+		{
+			int num = this.<>1__state;
+			TeleportOrientationHandler teleportOrientationHandler = this;
+			if (num != 0)
+			{
+				if (num != 1)
+				{
+					return false;
+				}
+				this.<>1__state = -1;
+			}
+			else
+			{
+				this.<>1__state = -1;
+				teleportOrientationHandler.InitializeTeleportDestination();
+			}
+			if (teleportOrientationHandler.LocomotionTeleport.CurrentState != LocomotionTeleport.States.Aim && teleportOrientationHandler.LocomotionTeleport.CurrentState != LocomotionTeleport.States.PreTeleport)
+			{
+				return false;
+			}
+			if (teleportOrientationHandler.AimData != null)
+			{
+				teleportOrientationHandler.UpdateTeleportDestination();
+			}
+			this.<>2__current = null;
+			this.<>1__state = 1;
+			return true;
+		}
+
+		object IEnumerator<object>.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		[DebuggerHidden]
+		void IEnumerator.Reset()
+		{
+			throw new NotSupportedException();
+		}
+
+		object IEnumerator.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		private int <>1__state;
+
+		private object <>2__current;
+
+		public TeleportOrientationHandler <>4__this;
 	}
 }

@@ -73,6 +73,10 @@ namespace OculusSampleFramework
 			}
 		}
 
+		public ControllerBoxController()
+		{
+		}
+
 		[SerializeField]
 		private TrainLocomotive _locomotive;
 

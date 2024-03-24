@@ -43,6 +43,10 @@ public class BalloonString : MonoBehaviour
 		}
 	}
 
+	public BalloonString()
+	{
+	}
+
 	public Transform startPositionXf;
 
 	public Transform endPositionXf;

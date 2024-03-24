@@ -18,6 +18,10 @@ namespace Fusion.CodeGen
 			}
 		}
 
+		public UnityDictionarySurrogate@ReaderWriter@Fusion_NetworkString`1<Fusion__32>@ReaderWriter@Fusion_NetworkString()
+		{
+		}
+
 		public SerializableDictionary<NetworkString<_32>, NetworkString<_32>> Data = SerializableDictionary.Create<NetworkString<_32>, NetworkString<_32>>();
 	}
 }

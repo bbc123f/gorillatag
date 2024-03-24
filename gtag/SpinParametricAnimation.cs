@@ -24,6 +24,10 @@ public class SpinParametricAnimation : MonoBehaviour
 		transform.localRotation = Quaternion.AngleAxis(num2, this.axis) * transform.localRotation;
 	}
 
+	public SpinParametricAnimation()
+	{
+	}
+
 	[Tooltip("Axis to rotate around.")]
 	public Vector3 axis = Vector3.up;
 

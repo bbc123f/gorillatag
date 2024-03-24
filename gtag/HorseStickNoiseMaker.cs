@@ -34,6 +34,10 @@ public class HorseStickNoiseMaker : MonoBehaviour
 		}
 	}
 
+	public HorseStickNoiseMaker()
+	{
+	}
+
 	[Tooltip("Meters the object should traverse between playing a provided audio clip.")]
 	public float metersPerClip = 4f;
 

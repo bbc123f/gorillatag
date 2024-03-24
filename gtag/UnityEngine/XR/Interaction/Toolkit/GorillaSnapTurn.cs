@@ -165,6 +165,15 @@ namespace UnityEngine.XR.Interaction.Toolkit
 			return Mathf.Max(0.75f, 0.5f + newTurnSpeed / 10f * 1.5f);
 		}
 
+		public GorillaSnapTurn()
+		{
+		}
+
+		// Note: this type is marked as 'beforefieldinit'.
+		static GorillaSnapTurn()
+		{
+		}
+
 		private static readonly InputFeatureUsage<Vector2>[] m_Vec2UsageList = new InputFeatureUsage<Vector2>[]
 		{
 			CommonUsages.primary2DAxis,

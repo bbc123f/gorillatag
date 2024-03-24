@@ -256,6 +256,11 @@ public static class AESHMAC
 		return bytes;
 	}
 
+	// Note: this type is marked as 'beforefieldinit'.
+	static AESHMAC()
+	{
+	}
+
 	private static readonly RandomNumberGenerator gRNG = RandomNumberGenerator.Create();
 
 	public const int BlockBitSize = 128;

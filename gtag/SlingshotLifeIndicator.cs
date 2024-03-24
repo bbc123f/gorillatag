@@ -82,6 +82,10 @@ public class SlingshotLifeIndicator : MonoBehaviour
 		this.checkedBattle = false;
 	}
 
+	public SlingshotLifeIndicator()
+	{
+	}
+
 	public VRRig myRig;
 
 	public GorillaBattleManager bMgr;

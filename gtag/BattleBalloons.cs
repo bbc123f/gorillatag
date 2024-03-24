@@ -102,6 +102,10 @@ public class BattleBalloons : MonoBehaviour
 		}
 	}
 
+	public BattleBalloons()
+	{
+	}
+
 	public VRRig myRig;
 
 	public GameObject[] balloons;

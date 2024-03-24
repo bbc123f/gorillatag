@@ -116,6 +116,10 @@ public class BalloonDynamics : MonoBehaviour
 		}
 	}
 
+	public BalloonDynamics()
+	{
+	}
+
 	private Rigidbody rb;
 
 	private Collider balloonCollider;

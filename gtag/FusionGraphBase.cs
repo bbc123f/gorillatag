@@ -306,6 +306,10 @@ public abstract class FusionGraphBase : Fusion.Behaviour, IFusionStatsView
 		}
 	}
 
+	protected FusionGraphBase()
+	{
+	}
+
 	bool IFusionStatsView.get_isActiveAndEnabled()
 	{
 		return base.isActiveAndEnabled;

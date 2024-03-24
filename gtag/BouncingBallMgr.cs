@@ -22,6 +22,10 @@ public class BouncingBallMgr : MonoBehaviour
 		}
 	}
 
+	public BouncingBallMgr()
+	{
+	}
+
 	[SerializeField]
 	private Transform trackingspace;
 

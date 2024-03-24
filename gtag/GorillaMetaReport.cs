@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using GorillaLocomotion;
 using Oculus.Platform;
 using Oculus.Platform.Models;
@@ -286,6 +288,19 @@ public class GorillaMetaReport : MonoBehaviour
 		}
 	}
 
+	public GorillaMetaReport()
+	{
+	}
+
+	[CompilerGenerated]
+	private void <Awake>b__27_0(Message<PlatformInitialize> message)
+	{
+		if (!message.IsError)
+		{
+			AbuseReport.SetReportButtonPressedNotificationCallback(new Message<string>.Callback(this.OnReportButtonIntentNotif));
+		}
+	}
+
 	[SerializeField]
 	private GameObject occluder;
 
@@ -363,4 +378,135 @@ public class GorillaMetaReport : MonoBehaviour
 	public bool isMoving;
 
 	public float movementTime;
+
+	[CompilerGenerated]
+	private sealed class <LockoutButtonPress>d__31 : IEnumerator<object>, IEnumerator, IDisposable
+	{
+		[DebuggerHidden]
+		public <LockoutButtonPress>d__31(int <>1__state)
+		{
+			this.<>1__state = <>1__state;
+		}
+
+		[DebuggerHidden]
+		void IDisposable.Dispose()
+		{
+		}
+
+		bool IEnumerator.MoveNext()
+		{
+			int num = this.<>1__state;
+			GorillaMetaReport gorillaMetaReport = this;
+			if (num == 0)
+			{
+				this.<>1__state = -1;
+				gorillaMetaReport.canPress = false;
+				this.<>2__current = new WaitForSeconds(0.75f);
+				this.<>1__state = 1;
+				return true;
+			}
+			if (num != 1)
+			{
+				return false;
+			}
+			this.<>1__state = -1;
+			gorillaMetaReport.canPress = true;
+			return false;
+		}
+
+		object IEnumerator<object>.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		[DebuggerHidden]
+		void IEnumerator.Reset()
+		{
+			throw new NotSupportedException();
+		}
+
+		object IEnumerator.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		private int <>1__state;
+
+		private object <>2__current;
+
+		public GorillaMetaReport <>4__this;
+	}
+
+	[CompilerGenerated]
+	private sealed class <Submitted>d__30 : IEnumerator<object>, IEnumerator, IDisposable
+	{
+		[DebuggerHidden]
+		public <Submitted>d__30(int <>1__state)
+		{
+			this.<>1__state = <>1__state;
+		}
+
+		[DebuggerHidden]
+		void IDisposable.Dispose()
+		{
+		}
+
+		bool IEnumerator.MoveNext()
+		{
+			int num = this.<>1__state;
+			GorillaMetaReport gorillaMetaReport = this;
+			if (num == 0)
+			{
+				this.<>1__state = -1;
+				this.<>2__current = new WaitForSeconds(1.5f);
+				this.<>1__state = 1;
+				return true;
+			}
+			if (num != 1)
+			{
+				return false;
+			}
+			this.<>1__state = -1;
+			gorillaMetaReport.Teardown();
+			return false;
+		}
+
+		object IEnumerator<object>.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		[DebuggerHidden]
+		void IEnumerator.Reset()
+		{
+			throw new NotSupportedException();
+		}
+
+		object IEnumerator.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		private int <>1__state;
+
+		private object <>2__current;
+
+		public GorillaMetaReport <>4__this;
+	}
 }

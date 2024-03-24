@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using GorillaTag;
 using Photon.Pun;
 using Photon.Realtime;
@@ -112,6 +115,10 @@ public class HitTargetNetworkState : MonoBehaviourPunCallbacks, IPunObservable
 		this.audioPlayer.PlayOneShot(this.audioClips[0]);
 	}
 
+	public HitTargetNetworkState()
+	{
+	}
+
 	[SerializeField]
 	private WatchableIntSO networkedScore;
 
@@ -127,4 +134,75 @@ public class HitTargetNetworkState : MonoBehaviourPunCallbacks, IPunObservable
 	private AudioSource audioPlayer;
 
 	private float nextHittableTimestamp;
+
+	[CompilerGenerated]
+	private sealed class <TestPressCheck>d__11 : IEnumerator<object>, IEnumerator, IDisposable
+	{
+		[DebuggerHidden]
+		public <TestPressCheck>d__11(int <>1__state)
+		{
+			this.<>1__state = <>1__state;
+		}
+
+		[DebuggerHidden]
+		void IDisposable.Dispose()
+		{
+		}
+
+		bool IEnumerator.MoveNext()
+		{
+			int num = this.<>1__state;
+			HitTargetNetworkState hitTargetNetworkState = this;
+			if (num != 0)
+			{
+				if (num != 1)
+				{
+					return false;
+				}
+				this.<>1__state = -1;
+			}
+			else
+			{
+				this.<>1__state = -1;
+			}
+			if (hitTargetNetworkState.testPress)
+			{
+				hitTargetNetworkState.testPress = false;
+				hitTargetNetworkState.TargetHit();
+			}
+			this.<>2__current = new WaitForSeconds(1f);
+			this.<>1__state = 1;
+			return true;
+		}
+
+		object IEnumerator<object>.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		[DebuggerHidden]
+		void IEnumerator.Reset()
+		{
+			throw new NotSupportedException();
+		}
+
+		object IEnumerator.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		private int <>1__state;
+
+		private object <>2__current;
+
+		public HitTargetNetworkState <>4__this;
+	}
 }

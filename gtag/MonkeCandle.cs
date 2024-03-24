@@ -69,6 +69,10 @@ public class MonkeCandle : RubberDuck
 		}
 	}
 
+	public MonkeCandle()
+	{
+	}
+
 	private ParticleSystem.Particle[] fxParticleArray = new ParticleSystem.Particle[20];
 
 	public AudioSource movingFxAudio;

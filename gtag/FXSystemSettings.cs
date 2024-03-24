@@ -36,6 +36,10 @@ public class FXSystemSettings : ScriptableObject
 		}
 	}
 
+	public FXSystemSettings()
+	{
+	}
+
 	[SerializeField]
 	private LimiterType[] callLimits;
 

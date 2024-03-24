@@ -40,6 +40,10 @@ public class UIMatchRotation : MonoBehaviour
 		return vector.normalized;
 	}
 
+	public UIMatchRotation()
+	{
+	}
+
 	[SerializeField]
 	private Transform referenceTransform;
 

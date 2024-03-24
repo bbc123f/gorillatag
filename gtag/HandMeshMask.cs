@@ -482,6 +482,10 @@ public class HandMeshMask : MonoBehaviour
 		this.vertCounter++;
 	}
 
+	public HandMeshMask()
+	{
+	}
+
 	public OVRSkeleton referenceHand;
 
 	public Material maskMaterial;
@@ -492,7 +496,7 @@ public class HandMeshMask : MonoBehaviour
 	[Tooltip("The fade range (finger width is 2x this)")]
 	public float borderSize = 0.2f;
 
-	[Tooltip("Along the fingers, each knuckle scales down by this amount.  Default is zero for uniform width along entire finger.")]
+	[Tooltip("Along the fingers, each knuckle scales down by this amount. Default is zero for uniform width along entire finger.")]
 	public float fingerTaper = 0.13f;
 
 	[Tooltip("Shorten the last bone of each finger; need this to account for bone structure (end bone is at finger tip instead of center). Default is 1.")]

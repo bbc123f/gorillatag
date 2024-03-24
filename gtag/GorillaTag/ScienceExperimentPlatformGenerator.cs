@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using GorillaExtensions;
 using GorillaTag.GuidedRefs;
 using Photon.Pun;
@@ -30,7 +31,19 @@ namespace GorillaTag
 			TickSystem<object>.RemovePostTickCallback(this);
 		}
 
-		bool ITickSystemPost.PostTickRunning { get; set; }
+		bool ITickSystemPost.PostTickRunning
+		{
+			[CompilerGenerated]
+			get
+			{
+				return this.<ITickSystemPost.PostTickRunning>k__BackingField;
+			}
+			[CompilerGenerated]
+			set
+			{
+				this.<ITickSystemPost.PostTickRunning>k__BackingField = value;
+			}
+		}
 
 		void ITickSystemPost.PostTick()
 		{
@@ -266,7 +279,19 @@ namespace GorillaTag
 			GuidedRefHub.ReceiverFullyRegistered<ScienceExperimentPlatformGenerator>(this);
 		}
 
-		int IGuidedRefReceiverMono.GuidedRefsWaitingToResolveCount { get; set; }
+		int IGuidedRefReceiverMono.GuidedRefsWaitingToResolveCount
+		{
+			[CompilerGenerated]
+			get
+			{
+				return this.<GorillaTag.GuidedRefs.IGuidedRefReceiverMono.GuidedRefsWaitingToResolveCount>k__BackingField;
+			}
+			[CompilerGenerated]
+			set
+			{
+				this.<GorillaTag.GuidedRefs.IGuidedRefReceiverMono.GuidedRefsWaitingToResolveCount>k__BackingField = value;
+			}
+		}
 
 		bool IGuidedRefReceiverMono.GuidedRefTryResolveReference(GuidedRefTryResolveInfo target)
 		{
@@ -285,6 +310,10 @@ namespace GorillaTag
 		void IGuidedRefReceiverMono.OnGuidedRefTargetDestroyed(int fieldId)
 		{
 			TickSystem<object>.RemovePostTickCallback(this);
+		}
+
+		public ScienceExperimentPlatformGenerator()
+		{
 		}
 
 		Transform IGuidedRefMonoBehaviour.get_transform()
@@ -392,6 +421,12 @@ namespace GorillaTag
 		private List<ScienceExperimentPlatformGenerator.BubbleSpawnDebug> bubbleSpawnDebug = new List<ScienceExperimentPlatformGenerator.BubbleSpawnDebug>();
 
 		private ScienceExperimentManager scienceExperimentManager;
+
+		[CompilerGenerated]
+		private bool <ITickSystemPost.PostTickRunning>k__BackingField;
+
+		[CompilerGenerated]
+		private int <GorillaTag.GuidedRefs.IGuidedRefReceiverMono.GuidedRefsWaitingToResolveCount>k__BackingField;
 
 		private struct BubbleData
 		{

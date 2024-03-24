@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class BetterBaker : MonoBehaviour
 {
+	public BetterBaker()
+	{
+	}
+
 	public string bakeryLightmapDirectory;
 
 	public string dayNightLightmapsDirectory;

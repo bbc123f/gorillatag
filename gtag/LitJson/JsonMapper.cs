@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace LitJson
 {
@@ -667,6 +668,10 @@ namespace LitJson
 			JsonMapper.custom_importers_table.Clear();
 		}
 
+		public JsonMapper()
+		{
+		}
+
 		private static int max_nesting_depth = 100;
 
 		private static IFormatProvider datetime_format = DateTimeFormatInfo.InvariantInfo;
@@ -698,5 +703,233 @@ namespace LitJson
 		private static JsonWriter static_writer = new JsonWriter();
 
 		private static readonly object static_writer_lock = new object();
+
+		[CompilerGenerated]
+		[Serializable]
+		private sealed class <>c
+		{
+			// Note: this type is marked as 'beforefieldinit'.
+			static <>c()
+			{
+			}
+
+			public <>c()
+			{
+			}
+
+			internal void <RegisterBaseExporters>b__23_0(object obj, JsonWriter writer)
+			{
+				writer.Write(Convert.ToInt32((byte)obj));
+			}
+
+			internal void <RegisterBaseExporters>b__23_1(object obj, JsonWriter writer)
+			{
+				writer.Write(Convert.ToString((char)obj));
+			}
+
+			internal void <RegisterBaseExporters>b__23_2(object obj, JsonWriter writer)
+			{
+				writer.Write(Convert.ToString((DateTime)obj, JsonMapper.datetime_format));
+			}
+
+			internal void <RegisterBaseExporters>b__23_3(object obj, JsonWriter writer)
+			{
+				writer.Write((decimal)obj);
+			}
+
+			internal void <RegisterBaseExporters>b__23_4(object obj, JsonWriter writer)
+			{
+				writer.Write(Convert.ToInt32((sbyte)obj));
+			}
+
+			internal void <RegisterBaseExporters>b__23_5(object obj, JsonWriter writer)
+			{
+				writer.Write(Convert.ToInt32((short)obj));
+			}
+
+			internal void <RegisterBaseExporters>b__23_6(object obj, JsonWriter writer)
+			{
+				writer.Write(Convert.ToInt32((ushort)obj));
+			}
+
+			internal void <RegisterBaseExporters>b__23_7(object obj, JsonWriter writer)
+			{
+				writer.Write(Convert.ToUInt64((uint)obj));
+			}
+
+			internal void <RegisterBaseExporters>b__23_8(object obj, JsonWriter writer)
+			{
+				writer.Write((ulong)obj);
+			}
+
+			internal void <RegisterBaseExporters>b__23_9(object obj, JsonWriter writer)
+			{
+				writer.Write((double)((float)obj));
+			}
+
+			internal object <RegisterBaseImporters>b__24_0(object input)
+			{
+				return Convert.ToByte((int)input);
+			}
+
+			internal object <RegisterBaseImporters>b__24_1(object input)
+			{
+				return Convert.ToUInt64((int)input);
+			}
+
+			internal object <RegisterBaseImporters>b__24_2(object input)
+			{
+				return Convert.ToSByte((int)input);
+			}
+
+			internal object <RegisterBaseImporters>b__24_3(object input)
+			{
+				return Convert.ToInt16((int)input);
+			}
+
+			internal object <RegisterBaseImporters>b__24_4(object input)
+			{
+				return Convert.ToUInt16((int)input);
+			}
+
+			internal object <RegisterBaseImporters>b__24_5(object input)
+			{
+				return Convert.ToUInt32((int)input);
+			}
+
+			internal object <RegisterBaseImporters>b__24_6(object input)
+			{
+				return Convert.ToSingle((int)input);
+			}
+
+			internal object <RegisterBaseImporters>b__24_7(object input)
+			{
+				return Convert.ToSingle((float)((double)input));
+			}
+
+			internal object <RegisterBaseImporters>b__24_8(object input)
+			{
+				return Convert.ToDouble((int)input);
+			}
+
+			internal object <RegisterBaseImporters>b__24_9(object input)
+			{
+				return Convert.ToDecimal((double)input);
+			}
+
+			internal object <RegisterBaseImporters>b__24_10(object input)
+			{
+				return Convert.ToUInt32((long)input);
+			}
+
+			internal object <RegisterBaseImporters>b__24_11(object input)
+			{
+				return Convert.ToChar((string)input);
+			}
+
+			internal object <RegisterBaseImporters>b__24_12(object input)
+			{
+				return Convert.ToDateTime((string)input, JsonMapper.datetime_format);
+			}
+
+			internal IJsonWrapper <ToObject>b__29_0()
+			{
+				return new JsonData();
+			}
+
+			internal IJsonWrapper <ToObject>b__30_0()
+			{
+				return new JsonData();
+			}
+
+			internal IJsonWrapper <ToObject>b__31_0()
+			{
+				return new JsonData();
+			}
+
+			public static readonly JsonMapper.<>c <>9 = new JsonMapper.<>c();
+
+			public static ExporterFunc <>9__23_0;
+
+			public static ExporterFunc <>9__23_1;
+
+			public static ExporterFunc <>9__23_2;
+
+			public static ExporterFunc <>9__23_3;
+
+			public static ExporterFunc <>9__23_4;
+
+			public static ExporterFunc <>9__23_5;
+
+			public static ExporterFunc <>9__23_6;
+
+			public static ExporterFunc <>9__23_7;
+
+			public static ExporterFunc <>9__23_8;
+
+			public static ExporterFunc <>9__23_9;
+
+			public static ImporterFunc <>9__24_0;
+
+			public static ImporterFunc <>9__24_1;
+
+			public static ImporterFunc <>9__24_2;
+
+			public static ImporterFunc <>9__24_3;
+
+			public static ImporterFunc <>9__24_4;
+
+			public static ImporterFunc <>9__24_5;
+
+			public static ImporterFunc <>9__24_6;
+
+			public static ImporterFunc <>9__24_7;
+
+			public static ImporterFunc <>9__24_8;
+
+			public static ImporterFunc <>9__24_9;
+
+			public static ImporterFunc <>9__24_10;
+
+			public static ImporterFunc <>9__24_11;
+
+			public static ImporterFunc <>9__24_12;
+
+			public static WrapperFactory <>9__29_0;
+
+			public static WrapperFactory <>9__30_0;
+
+			public static WrapperFactory <>9__31_0;
+		}
+
+		[CompilerGenerated]
+		private sealed class <>c__DisplayClass37_0<T>
+		{
+			public <>c__DisplayClass37_0()
+			{
+			}
+
+			internal void <RegisterExporter>b__0(object obj, JsonWriter writer)
+			{
+				this.exporter((T)((object)obj), writer);
+			}
+
+			public ExporterFunc<T> exporter;
+		}
+
+		[CompilerGenerated]
+		private sealed class <>c__DisplayClass38_0<TJson, TValue>
+		{
+			public <>c__DisplayClass38_0()
+			{
+			}
+
+			internal object <RegisterImporter>b__0(object input)
+			{
+				return this.importer((TJson)((object)input));
+			}
+
+			public ImporterFunc<TJson, TValue> importer;
+		}
 	}
 }

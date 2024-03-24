@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace GorillaTag.Reactions
@@ -13,7 +14,19 @@ namespace GorillaTag.Reactions
 			}
 		}
 
-		bool ITickSystemPost.PostTickRunning { get; set; }
+		bool ITickSystemPost.PostTickRunning
+		{
+			[CompilerGenerated]
+			get
+			{
+				return this.<ITickSystemPost.PostTickRunning>k__BackingField;
+			}
+			[CompilerGenerated]
+			set
+			{
+				this.<ITickSystemPost.PostTickRunning>k__BackingField = value;
+			}
+		}
 
 		protected void Awake()
 		{
@@ -114,6 +127,10 @@ namespace GorillaTag.Reactions
 			}
 		}
 
+		public ShakeReaction()
+		{
+		}
+
 		[SerializeField]
 		private Transform shakeXform;
 
@@ -155,6 +172,9 @@ namespace GorillaTag.Reactions
 
 		[SerializeField]
 		private float particleDuration = 5f;
+
+		[CompilerGenerated]
+		private bool <ITickSystemPost.PostTickRunning>k__BackingField;
 
 		private const int sampleHistorySize = 256;
 

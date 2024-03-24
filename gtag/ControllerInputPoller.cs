@@ -1,11 +1,24 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.XR;
 using Valve.VR;
 
 public class ControllerInputPoller : MonoBehaviour
 {
-	public GorillaControllerType controllerType { get; private set; }
+	public GorillaControllerType controllerType
+	{
+		[CompilerGenerated]
+		get
+		{
+			return this.<controllerType>k__BackingField;
+		}
+		[CompilerGenerated]
+		private set
+		{
+			this.<controllerType>k__BackingField = value;
+		}
+	}
 
 	private void Awake()
 	{
@@ -274,6 +287,10 @@ public class ControllerInputPoller : MonoBehaviour
 		return false;
 	}
 
+	public ControllerInputPoller()
+	{
+	}
+
 	[OnEnterPlay_SetNull]
 	public static volatile ControllerInputPoller instance;
 
@@ -340,6 +357,9 @@ public class ControllerInputPoller : MonoBehaviour
 	public bool rightGrabMomentary;
 
 	public bool rightGrabReleaseMomentary;
+
+	[CompilerGenerated]
+	private GorillaControllerType <controllerType>k__BackingField;
 
 	public Vector2 rightControllerPrimary2DAxis;
 }

@@ -146,6 +146,10 @@ namespace GorillaTag.Cosmetics
 			}
 		}
 
+		public EdibleWearable()
+		{
+		}
+
 		[Tooltip("Check when using non cosmetic edible items like honeycomb")]
 		public bool isNonRespawnable;
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Runtime.CompilerServices;
 using GorillaNetworking;
 using UnityEngine;
 
@@ -27,6 +28,10 @@ public class CosmeticsControllerUpdateStand : MonoBehaviour
 		return gameObject;
 	}
 
+	public CosmeticsControllerUpdateStand()
+	{
+	}
+
 	public CosmeticsController cosmeticsController;
 
 	public bool FailEntitlement;
@@ -52,4 +57,19 @@ public class CosmeticsControllerUpdateStand : MonoBehaviour
 	public HeadModel[] inventoryHeadModels;
 
 	public string headModelsPrefabPath;
+
+	[CompilerGenerated]
+	private sealed class <>c__DisplayClass13_0
+	{
+		public <>c__DisplayClass13_0()
+		{
+		}
+
+		internal bool <ReturnChildWithCosmeticNameMatch>b__0(CosmeticsController.CosmeticItem x)
+		{
+			return this.child.name == x.itemName;
+		}
+
+		public Transform child;
+	}
 }

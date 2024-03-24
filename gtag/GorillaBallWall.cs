@@ -20,6 +20,10 @@ public class GorillaBallWall : MonoBehaviour
 	{
 	}
 
+	public GorillaBallWall()
+	{
+	}
+
 	[OnEnterPlay_SetNull]
 	public static volatile GorillaBallWall instance;
 }

@@ -1,9 +1,23 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using UnityEngine;
 
 public class TeleportDestination : MonoBehaviour
 {
-	public bool IsValidDestination { get; private set; }
+	public bool IsValidDestination
+	{
+		[CompilerGenerated]
+		get
+		{
+			return this.<IsValidDestination>k__BackingField;
+		}
+		[CompilerGenerated]
+		private set
+		{
+			this.<IsValidDestination>k__BackingField = value;
+		}
+	}
 
 	private TeleportDestination()
 	{
@@ -36,7 +50,35 @@ public class TeleportDestination : MonoBehaviour
 		this.TryDisableEventHandlers();
 	}
 
-	public event Action<TeleportDestination> Deactivated;
+	public event Action<TeleportDestination> Deactivated
+	{
+		[CompilerGenerated]
+		add
+		{
+			Action<TeleportDestination> action = this.Deactivated;
+			Action<TeleportDestination> action2;
+			do
+			{
+				action2 = action;
+				Action<TeleportDestination> action3 = (Action<TeleportDestination>)Delegate.Combine(action2, value);
+				action = Interlocked.CompareExchange<Action<TeleportDestination>>(ref this.Deactivated, action3, action2);
+			}
+			while (action != action2);
+		}
+		[CompilerGenerated]
+		remove
+		{
+			Action<TeleportDestination> action = this.Deactivated;
+			Action<TeleportDestination> action2;
+			do
+			{
+				action2 = action;
+				Action<TeleportDestination> action3 = (Action<TeleportDestination>)Delegate.Remove(action2, value);
+				action = Interlocked.CompareExchange<Action<TeleportDestination>>(ref this.Deactivated, action3, action2);
+			}
+			while (action != action2);
+		}
+	}
 
 	public void OnDeactivated()
 	{
@@ -97,6 +139,9 @@ public class TeleportDestination : MonoBehaviour
 		}
 	}
 
+	[CompilerGenerated]
+	private bool <IsValidDestination>k__BackingField;
+
 	[Tooltip("If the target handler provides a target position, this transform will be moved to that position and it's game object enabled. A target position being provided does not mean the position is valid, only that the aim handler found something to test as a destination.")]
 	public Transform PositionIndicator;
 
@@ -115,4 +160,7 @@ public class TeleportDestination : MonoBehaviour
 	private readonly Action<bool, Vector3?, Quaternion?, Quaternion?> _updateTeleportDestinationAction;
 
 	private bool _eventsActive;
+
+	[CompilerGenerated]
+	private Action<TeleportDestination> Deactivated;
 }

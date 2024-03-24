@@ -7,4 +7,8 @@ public class SpawnManager : MonoBehaviour
 	{
 		return base.transform.GetComponentsInChildren<Transform>();
 	}
+
+	public SpawnManager()
+	{
+	}
 }

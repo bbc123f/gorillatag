@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
+using System.Threading;
 using ExitGames.Client.Photon;
 using GorillaLocomotion;
 using GorillaTag;
@@ -1279,24 +1282,42 @@ namespace GorillaNetworking
 				this.SwitchToStage(CosmeticsController.ATMStages.Menu);
 				return;
 			case CosmeticsController.ATMStages.Menu:
-				if (currencyButton == "one")
+				if (PlayFabAuthenticator.instance.GetSafety())
 				{
-					this.SwitchToStage(CosmeticsController.ATMStages.Balance);
+					if (currencyButton == "one")
+					{
+						this.SwitchToStage(CosmeticsController.ATMStages.Balance);
+						return;
+					}
+					if (!(currencyButton == "four"))
+					{
+						return;
+					}
+					this.SwitchToStage(CosmeticsController.ATMStages.Begin);
 					return;
 				}
-				if (currencyButton == "two")
+				else
 				{
-					this.SwitchToStage(CosmeticsController.ATMStages.Choose);
+					if (currencyButton == "one")
+					{
+						this.SwitchToStage(CosmeticsController.ATMStages.Balance);
+						return;
+					}
+					if (currencyButton == "two")
+					{
+						this.SwitchToStage(CosmeticsController.ATMStages.Choose);
+						return;
+					}
+					if (!(currencyButton == "back"))
+					{
+						return;
+					}
+					this.SwitchToStage(CosmeticsController.ATMStages.Begin);
 					return;
 				}
-				if (!(currencyButton == "four"))
-				{
-					return;
-				}
-				this.SwitchToStage(CosmeticsController.ATMStages.Begin);
-				return;
+				break;
 			case CosmeticsController.ATMStages.Balance:
-				if (currencyButton == "four")
+				if (currencyButton == "back")
 				{
 					this.SwitchToStage(CosmeticsController.ATMStages.Menu);
 					return;
@@ -1327,7 +1348,15 @@ namespace GorillaNetworking
 					this.SwitchToStage(CosmeticsController.ATMStages.Confirm);
 					return;
 				}
-				if (!(currencyButton == "four"))
+				if (currencyButton == "four")
+				{
+					this.numShinyRocksToBuy = 11000;
+					this.shinyRocksCost = 39.99f;
+					this.itemToPurchase = "11000SHINYROCKS";
+					this.SwitchToStage(CosmeticsController.ATMStages.Confirm);
+					return;
+				}
+				if (!(currencyButton == "back"))
 				{
 					return;
 				}
@@ -1340,7 +1369,7 @@ namespace GorillaNetworking
 					this.SwitchToStage(CosmeticsController.ATMStages.Purchasing);
 					return;
 				}
-				if (!(currencyButton == "four"))
+				if (!(currencyButton == "back"))
 				{
 					return;
 				}
@@ -1359,23 +1388,71 @@ namespace GorillaNetworking
 			{
 			case CosmeticsController.ATMStages.Unavailable:
 				this.atmText.text = "ATM NOT AVAILABLE! PLEASE TRY AGAIN LATER!";
-				this.atmButtonsText.text = "";
+				this.ATM_RightColumnButtonText[0].text = "";
+				this.ATM_RightColumnArrowText[0].enabled = false;
+				this.ATM_RightColumnButtonText[1].text = "";
+				this.ATM_RightColumnArrowText[1].enabled = false;
+				this.ATM_RightColumnButtonText[2].text = "";
+				this.ATM_RightColumnArrowText[2].enabled = false;
+				this.ATM_RightColumnButtonText[3].text = "";
+				this.ATM_RightColumnArrowText[3].enabled = false;
 				return;
 			case CosmeticsController.ATMStages.Begin:
 				this.atmText.text = "WELCOME! PRESS ANY BUTTON TO BEGIN.";
-				this.atmButtonsText.text = "\n\n\n\n\n\n\n\n\nBEGIN   -->";
+				this.ATM_RightColumnButtonText[0].text = "";
+				this.ATM_RightColumnArrowText[0].enabled = false;
+				this.ATM_RightColumnButtonText[1].text = "";
+				this.ATM_RightColumnArrowText[1].enabled = false;
+				this.ATM_RightColumnButtonText[2].text = "";
+				this.ATM_RightColumnArrowText[2].enabled = false;
+				this.ATM_RightColumnButtonText[3].text = "BEGIN";
+				this.ATM_RightColumnArrowText[3].enabled = true;
 				return;
 			case CosmeticsController.ATMStages.Menu:
+				if (PlayFabAuthenticator.instance.GetSafety())
+				{
+					this.atmText.text = "CHECK YOUR BALANCE.";
+					this.ATM_RightColumnButtonText[0].text = "BALANCE";
+					this.ATM_RightColumnArrowText[0].enabled = true;
+					this.ATM_RightColumnButtonText[1].text = "";
+					this.ATM_RightColumnArrowText[1].enabled = false;
+					this.ATM_RightColumnButtonText[2].text = "";
+					this.ATM_RightColumnArrowText[2].enabled = false;
+					this.ATM_RightColumnButtonText[3].text = "";
+					this.ATM_RightColumnArrowText[3].enabled = false;
+					return;
+				}
 				this.atmText.text = "CHECK YOUR BALANCE OR PURCHASE MORE SHINY ROCKS.";
-				this.atmButtonsText.text = "BALANCE-- >\n\n\nPURCHASE-->\n\n\n\n\n\nBACK    -->";
+				this.ATM_RightColumnButtonText[0].text = "BALANCE";
+				this.ATM_RightColumnArrowText[0].enabled = true;
+				this.ATM_RightColumnButtonText[1].text = "PURCHASE";
+				this.ATM_RightColumnArrowText[1].enabled = true;
+				this.ATM_RightColumnButtonText[2].text = "";
+				this.ATM_RightColumnArrowText[2].enabled = false;
+				this.ATM_RightColumnButtonText[3].text = "";
+				this.ATM_RightColumnArrowText[3].enabled = false;
 				return;
 			case CosmeticsController.ATMStages.Balance:
 				this.atmText.text = "CURRENT BALANCE:\n\n" + this.currencyBalance.ToString();
-				this.atmButtonsText.text = "\n\n\n\n\n\n\n\n\nBACK    -->";
+				this.ATM_RightColumnButtonText[0].text = "";
+				this.ATM_RightColumnArrowText[0].enabled = false;
+				this.ATM_RightColumnButtonText[1].text = "";
+				this.ATM_RightColumnArrowText[1].enabled = false;
+				this.ATM_RightColumnButtonText[2].text = "";
+				this.ATM_RightColumnArrowText[2].enabled = false;
+				this.ATM_RightColumnButtonText[3].text = "";
+				this.ATM_RightColumnArrowText[3].enabled = false;
 				return;
 			case CosmeticsController.ATMStages.Choose:
 				this.atmText.text = "CHOOSE AN AMOUNT OF SHINY ROCKS TO PURCHASE.";
-				this.atmButtonsText.text = "$4.99 FOR -->\n1000\n\n$9.99 FOR -->\n2200\n\n$19.99 FOR-->\n5000\n\nBACK -->";
+				this.ATM_RightColumnButtonText[0].text = "1000 for $4.99";
+				this.ATM_RightColumnArrowText[0].enabled = true;
+				this.ATM_RightColumnButtonText[1].text = "2200 for $9.99\n(10% BONUS!)";
+				this.ATM_RightColumnArrowText[1].enabled = true;
+				this.ATM_RightColumnButtonText[2].text = "5000 for $19.99\n(25% BONUS!)";
+				this.ATM_RightColumnArrowText[2].enabled = true;
+				this.ATM_RightColumnButtonText[3].text = "11000 for $39.99\n(37% BONUS!)";
+				this.ATM_RightColumnArrowText[3].enabled = true;
 				return;
 			case CosmeticsController.ATMStages.Confirm:
 				this.atmText.text = string.Concat(new string[]
@@ -1386,23 +1463,61 @@ namespace GorillaNetworking
 					this.shinyRocksCost.ToString(),
 					". CONFIRM TO LAUNCH A STEAM WINDOW TO COMPLETE YOUR PURCHASE."
 				});
-				this.atmButtonsText.text = "CONFIRM -->\n\n\n\n\n\n\n\n\nBACK    -->";
+				this.ATM_RightColumnButtonText[0].text = "CONFIRM";
+				this.ATM_RightColumnArrowText[0].enabled = true;
+				this.ATM_RightColumnButtonText[1].text = "";
+				this.ATM_RightColumnArrowText[1].enabled = false;
+				this.ATM_RightColumnButtonText[2].text = "";
+				this.ATM_RightColumnArrowText[2].enabled = false;
+				this.ATM_RightColumnButtonText[3].text = "";
+				this.ATM_RightColumnArrowText[3].enabled = false;
 				return;
 			case CosmeticsController.ATMStages.Purchasing:
 				this.atmText.text = "PURCHASING IN STEAM...";
-				this.atmButtonsText.text = "";
 				return;
 			case CosmeticsController.ATMStages.Success:
 				this.atmText.text = "SUCCESS! NEW SHINY ROCKS BALANCE: " + (this.currencyBalance + this.numShinyRocksToBuy).ToString();
-				this.atmButtonsText.text = "\n\n\n\n\n\n\n\n\nRETURN  -->";
+				this.ATM_RightColumnButtonText[0].text = "";
+				this.ATM_RightColumnArrowText[0].enabled = false;
+				this.ATM_RightColumnButtonText[1].text = "";
+				this.ATM_RightColumnArrowText[1].enabled = false;
+				this.ATM_RightColumnButtonText[2].text = "";
+				this.ATM_RightColumnArrowText[2].enabled = false;
+				this.ATM_RightColumnButtonText[3].text = "";
+				this.ATM_RightColumnArrowText[3].enabled = false;
 				return;
 			case CosmeticsController.ATMStages.Failure:
 				this.atmText.text = "PURCHASE CANCELED. NO FUNDS WERE SPENT.";
-				this.atmButtonsText.text = "\n\n\n\n\n\n\n\n\nRETURN  -->";
+				this.ATM_RightColumnButtonText[0].text = "";
+				this.ATM_RightColumnArrowText[0].enabled = false;
+				this.ATM_RightColumnButtonText[1].text = "";
+				this.ATM_RightColumnArrowText[1].enabled = false;
+				this.ATM_RightColumnButtonText[2].text = "";
+				this.ATM_RightColumnArrowText[2].enabled = false;
+				this.ATM_RightColumnButtonText[3].text = "";
+				this.ATM_RightColumnArrowText[3].enabled = false;
 				return;
 			case CosmeticsController.ATMStages.Locked:
 				this.atmText.text = "UNABLE TO PURCHASE AT THIS TIME. PLEASE RESTART THE GAME OR TRY AGAIN LATER.";
-				this.atmButtonsText.text = "\n\n\n\n\n\n\n\n\nRETURN  -->";
+				this.ATM_RightColumnButtonText[0].text = "";
+				this.ATM_RightColumnArrowText[0].enabled = false;
+				this.ATM_RightColumnButtonText[1].text = "";
+				this.ATM_RightColumnArrowText[1].enabled = false;
+				this.ATM_RightColumnButtonText[2].text = "";
+				this.ATM_RightColumnArrowText[2].enabled = false;
+				this.ATM_RightColumnButtonText[3].text = "";
+				this.ATM_RightColumnArrowText[3].enabled = false;
+				return;
+			case CosmeticsController.ATMStages.SafeAccount:
+				this.atmText.text = "Out Of Order.";
+				this.ATM_RightColumnButtonText[0].text = "";
+				this.ATM_RightColumnArrowText[0].enabled = false;
+				this.ATM_RightColumnButtonText[1].text = "";
+				this.ATM_RightColumnArrowText[1].enabled = false;
+				this.ATM_RightColumnButtonText[2].text = "";
+				this.ATM_RightColumnArrowText[2].enabled = false;
+				this.ATM_RightColumnButtonText[3].text = "";
+				this.ATM_RightColumnArrowText[3].enabled = false;
 				return;
 			default:
 				return;
@@ -1512,6 +1627,479 @@ namespace GorillaNetworking
 			}
 		}
 
+		public CosmeticsController()
+		{
+		}
+
+		// Note: this type is marked as 'beforefieldinit'.
+		static CosmeticsController()
+		{
+		}
+
+		[CompilerGenerated]
+		private void <Start>b__90_0(string data)
+		{
+			this.bundleList.FromJson(data);
+		}
+
+		[CompilerGenerated]
+		private bool <ProcessPurchaseItemState>b__110_0(CosmeticsController.CosmeticItem x)
+		{
+			return this.itemToBuy.itemName == x.itemName;
+		}
+
+		[CompilerGenerated]
+		private void <PurchaseItem>b__112_0(PurchaseItemResult result)
+		{
+			if (result.Items.Count > 0)
+			{
+				foreach (ItemInstance itemInstance in result.Items)
+				{
+					CosmeticsController.CosmeticItem itemFromDict = this.GetItemFromDict(this.itemToBuy.itemName);
+					if (itemFromDict.itemCategory == CosmeticsController.CosmeticCategory.Set)
+					{
+						this.UnlockItem(itemInstance.ItemId);
+						foreach (string text in itemFromDict.bundledItems)
+						{
+							this.UnlockItem(text);
+						}
+					}
+					else
+					{
+						this.UnlockItem(itemInstance.ItemId);
+					}
+				}
+				if (PhotonNetwork.InRoom)
+				{
+					RaiseEventOptions raiseEventOptions = new RaiseEventOptions();
+					WebFlags webFlags = new WebFlags(1);
+					raiseEventOptions.Flags = webFlags;
+					object[] array = new object[0];
+					PhotonNetwork.RaiseEvent(9, array, raiseEventOptions, SendOptions.SendReliable);
+					base.StartCoroutine(this.CheckIfMyCosmeticsUpdated(this.itemToBuy.itemName));
+				}
+				this.currentPurchaseItemStage = CosmeticsController.PurchaseItemStages.Success;
+				this.currencyBalance -= this.itemToBuy.cost;
+				this.UpdateShoppingCart();
+				this.ProcessPurchaseItemState(null, this.isLastHandTouchedLeft);
+				return;
+			}
+			this.currentPurchaseItemStage = CosmeticsController.PurchaseItemStages.Failure;
+			this.ProcessPurchaseItemState(null, false);
+		}
+
+		[CompilerGenerated]
+		private void <PurchaseItem>b__112_1(PlayFabError error)
+		{
+			this.currentPurchaseItemStage = CosmeticsController.PurchaseItemStages.Failure;
+			this.ProcessPurchaseItemState(null, false);
+		}
+
+		[CompilerGenerated]
+		private void <GetLastDailyLogin>b__122_0(GetUserDataResult result)
+		{
+			if (result.Data.TryGetValue("DailyLogin", out this.userDataRecord))
+			{
+				this.lastDailyLogin = this.userDataRecord.Value;
+				return;
+			}
+			this.lastDailyLogin = "NONE";
+			base.StartCoroutine(this.GetMyDaily());
+		}
+
+		[CompilerGenerated]
+		private void <GetLastDailyLogin>b__122_1(PlayFabError error)
+		{
+			this.lastDailyLogin = "FAILED";
+			if (error.Error == PlayFabErrorCode.NotAuthenticated)
+			{
+				PlayFabAuthenticator.instance.AuthenticateWithPlayFab();
+				return;
+			}
+			if (error.Error == PlayFabErrorCode.AccountBanned)
+			{
+				Application.Quit();
+				PhotonNetwork.Disconnect();
+				Object.DestroyImmediate(PhotonNetworkController.Instance);
+				Object.DestroyImmediate(GorillaLocomotion.Player.Instance);
+				GameObject[] array = Object.FindObjectsOfType<GameObject>();
+				for (int i = 0; i < array.Length; i++)
+				{
+					Object.Destroy(array[i]);
+				}
+			}
+		}
+
+		[CompilerGenerated]
+		private void <GetMyDaily>b__124_0(ExecuteCloudScriptResult result)
+		{
+			this.GetCurrencyBalance();
+			this.GetLastDailyLogin();
+		}
+
+		[CompilerGenerated]
+		private void <GetUserCosmeticsAllowed>b__125_0(GetUserInventoryResult result)
+		{
+			PlayFabClientAPI.GetCatalogItems(new GetCatalogItemsRequest
+			{
+				CatalogVersion = this.catalog
+			}, delegate(GetCatalogItemsResult result2)
+			{
+				this.unlockedCosmetics.Clear();
+				this.unlockedHats.Clear();
+				this.unlockedBadges.Clear();
+				this.unlockedFaces.Clear();
+				this.unlockedHoldable.Clear();
+				this.catalogItems = result2.Catalog;
+				using (List<CatalogItem>.Enumerator enumerator = this.catalogItems.GetEnumerator())
+				{
+					while (enumerator.MoveNext())
+					{
+						CatalogItem catalogItem = enumerator.Current;
+						this.searchIndex = this.allCosmetics.FindIndex((CosmeticsController.CosmeticItem x) => catalogItem.DisplayName == x.displayName);
+						if (this.searchIndex > -1)
+						{
+							this.tempStringArray = null;
+							this.hasPrice = false;
+							if (catalogItem.Bundle != null)
+							{
+								this.tempStringArray = catalogItem.Bundle.BundledItems.ToArray();
+							}
+							uint num;
+							if (catalogItem.VirtualCurrencyPrices.TryGetValue(this.currencyName, out num))
+							{
+								this.hasPrice = true;
+							}
+							this.allCosmetics[this.searchIndex] = new CosmeticsController.CosmeticItem
+							{
+								itemName = catalogItem.ItemId,
+								displayName = catalogItem.DisplayName,
+								cost = (int)num,
+								itemPicture = this.allCosmetics[this.searchIndex].itemPicture,
+								itemPictureResourceString = this.allCosmetics[this.searchIndex].itemPictureResourceString,
+								itemCategory = this.allCosmetics[this.searchIndex].itemCategory,
+								bundledItems = this.tempStringArray,
+								canTryOn = this.hasPrice,
+								bothHandsHoldable = this.allCosmetics[this.searchIndex].bothHandsHoldable,
+								overrideDisplayName = this.allCosmetics[this.searchIndex].overrideDisplayName,
+								bLoadsFromResources = this.allCosmetics[this.searchIndex].bLoadsFromResources,
+								bUsesMeshAtlas = this.allCosmetics[this.searchIndex].bUsesMeshAtlas,
+								rotationOffset = this.allCosmetics[this.searchIndex].rotationOffset,
+								positionOffset = this.allCosmetics[this.searchIndex].positionOffset,
+								meshAtlasResourceString = this.allCosmetics[this.searchIndex].meshAtlasResourceString,
+								meshResourceString = this.allCosmetics[this.searchIndex].meshResourceString,
+								materialResourceString = this.allCosmetics[this.searchIndex].materialResourceString
+							};
+							this.allCosmeticsDict[this.allCosmetics[this.searchIndex].itemName] = this.allCosmetics[this.searchIndex];
+							this.allCosmeticsItemIDsfromDisplayNamesDict[this.allCosmetics[this.searchIndex].displayName] = this.allCosmetics[this.searchIndex].itemName;
+						}
+					}
+				}
+				for (int i = this.allCosmetics.Count - 1; i > -1; i--)
+				{
+					this.tempItem = this.allCosmetics[i];
+					if (this.tempItem.itemCategory == CosmeticsController.CosmeticCategory.Set && this.tempItem.canTryOn)
+					{
+						string[] bundledItems = this.tempItem.bundledItems;
+						for (int j = 0; j < bundledItems.Length; j++)
+						{
+							string setItemName = bundledItems[j];
+							this.searchIndex = this.allCosmetics.FindIndex((CosmeticsController.CosmeticItem x) => setItemName == x.itemName);
+							if (this.searchIndex > -1)
+							{
+								this.tempItem = new CosmeticsController.CosmeticItem
+								{
+									itemName = this.allCosmetics[this.searchIndex].itemName,
+									displayName = this.allCosmetics[this.searchIndex].displayName,
+									cost = this.allCosmetics[this.searchIndex].cost,
+									itemPicture = this.allCosmetics[this.searchIndex].itemPicture,
+									itemCategory = this.allCosmetics[this.searchIndex].itemCategory,
+									overrideDisplayName = this.allCosmetics[this.searchIndex].overrideDisplayName,
+									bothHandsHoldable = this.allCosmetics[this.searchIndex].bothHandsHoldable,
+									canTryOn = true
+								};
+								this.allCosmetics[this.searchIndex] = this.tempItem;
+								this.allCosmeticsDict[this.allCosmetics[this.searchIndex].itemName] = this.allCosmetics[this.searchIndex];
+								this.allCosmeticsItemIDsfromDisplayNamesDict[this.allCosmetics[this.searchIndex].displayName] = this.allCosmetics[this.searchIndex].itemName;
+							}
+						}
+					}
+				}
+				using (List<ItemInstance>.Enumerator enumerator2 = result.Inventory.GetEnumerator())
+				{
+					while (enumerator2.MoveNext())
+					{
+						ItemInstance item = enumerator2.Current;
+						if (item.ItemId == "Early Access Supporter Pack")
+						{
+							this.unlockedCosmetics.Add(this.allCosmetics[1]);
+							this.unlockedCosmetics.Add(this.allCosmetics[10]);
+							this.unlockedCosmetics.Add(this.allCosmetics[11]);
+							this.unlockedCosmetics.Add(this.allCosmetics[12]);
+							this.unlockedCosmetics.Add(this.allCosmetics[13]);
+							this.unlockedCosmetics.Add(this.allCosmetics[14]);
+							this.unlockedCosmetics.Add(this.allCosmetics[15]);
+							this.unlockedCosmetics.Add(this.allCosmetics[31]);
+							this.unlockedCosmetics.Add(this.allCosmetics[32]);
+							this.unlockedCosmetics.Add(this.allCosmetics[38]);
+							this.unlockedCosmetics.Add(this.allCosmetics[67]);
+							this.unlockedCosmetics.Add(this.allCosmetics[68]);
+						}
+						else
+						{
+							if (item.ItemId == this.BundlePlayfabItemName)
+							{
+								foreach (EarlyAccessButton earlyAccessButton in this.earlyAccessButtons)
+								{
+									this.AlreadyOwnAllBundleButtons();
+								}
+							}
+							this.searchIndex = this.allCosmetics.FindIndex((CosmeticsController.CosmeticItem x) => item.ItemId == x.itemName);
+							if (this.searchIndex > -1)
+							{
+								this.unlockedCosmetics.Add(this.allCosmetics[this.searchIndex]);
+							}
+						}
+					}
+				}
+				this.searchIndex = this.allCosmetics.FindIndex((CosmeticsController.CosmeticItem x) => "Slingshot" == x.itemName);
+				this.allCosmeticsDict["Slingshot"] = this.allCosmetics[this.searchIndex];
+				this.allCosmeticsItemIDsfromDisplayNamesDict[this.allCosmetics[this.searchIndex].displayName] = this.allCosmetics[this.searchIndex].itemName;
+				foreach (CosmeticsController.CosmeticItem cosmeticItem in this.unlockedCosmetics)
+				{
+					if (cosmeticItem.itemCategory == CosmeticsController.CosmeticCategory.Hat && !this.unlockedHats.Contains(cosmeticItem))
+					{
+						this.unlockedHats.Add(cosmeticItem);
+					}
+					else if (cosmeticItem.itemCategory == CosmeticsController.CosmeticCategory.Face && !this.unlockedFaces.Contains(cosmeticItem))
+					{
+						this.unlockedFaces.Add(cosmeticItem);
+					}
+					else if (cosmeticItem.itemCategory == CosmeticsController.CosmeticCategory.Badge && !this.unlockedBadges.Contains(cosmeticItem))
+					{
+						this.unlockedBadges.Add(cosmeticItem);
+					}
+					else if (cosmeticItem.itemCategory == CosmeticsController.CosmeticCategory.Skin && !this.unlockedBadges.Contains(cosmeticItem))
+					{
+						this.unlockedBadges.Add(cosmeticItem);
+					}
+					else if (cosmeticItem.itemCategory == CosmeticsController.CosmeticCategory.Holdable && !this.unlockedHoldable.Contains(cosmeticItem))
+					{
+						this.unlockedHoldable.Add(cosmeticItem);
+					}
+					else if (cosmeticItem.itemCategory == CosmeticsController.CosmeticCategory.Gloves && !this.unlockedHoldable.Contains(cosmeticItem))
+					{
+						this.unlockedHoldable.Add(cosmeticItem);
+					}
+					else if (cosmeticItem.itemCategory == CosmeticsController.CosmeticCategory.Slingshot && !this.unlockedHoldable.Contains(cosmeticItem))
+					{
+						this.unlockedHoldable.Add(cosmeticItem);
+					}
+					this.concatStringCosmeticsAllowed += cosmeticItem.itemName;
+				}
+				foreach (CosmeticStand cosmeticStand in this.cosmeticStands)
+				{
+					if (cosmeticStand != null)
+					{
+						cosmeticStand.InitializeCosmetic();
+					}
+				}
+				this.currencyBalance = result.VirtualCurrency[this.currencyName];
+				int num2;
+				this.playedInBeta = result.VirtualCurrency.TryGetValue("TC", out num2) && num2 > 0;
+				this.currentWornSet.LoadFromPlayerPreferences(this);
+				this.SwitchToStage(CosmeticsController.ATMStages.Begin);
+				this.ProcessPurchaseItemState(null, false);
+				this.UpdateShoppingCart();
+				this.UpdateWornCosmetics(false);
+				this.UpdateCurrencyBoard();
+			}, delegate(PlayFabError error)
+			{
+				if (error.Error == PlayFabErrorCode.NotAuthenticated)
+				{
+					PlayFabAuthenticator.instance.AuthenticateWithPlayFab();
+				}
+				else if (error.Error == PlayFabErrorCode.AccountBanned)
+				{
+					Application.Quit();
+					PhotonNetwork.Disconnect();
+					Object.DestroyImmediate(PhotonNetworkController.Instance);
+					Object.DestroyImmediate(GorillaLocomotion.Player.Instance);
+					GameObject[] array3 = Object.FindObjectsOfType<GameObject>();
+					for (int k = 0; k < array3.Length; k++)
+					{
+						Object.Destroy(array3[k]);
+					}
+				}
+				if (!this.tryTwice)
+				{
+					this.tryTwice = true;
+					this.GetUserCosmeticsAllowed();
+				}
+			}, null, null);
+		}
+
+		[CompilerGenerated]
+		private void <GetUserCosmeticsAllowed>b__125_3(PlayFabError error)
+		{
+			if (error.Error == PlayFabErrorCode.NotAuthenticated)
+			{
+				PlayFabAuthenticator.instance.AuthenticateWithPlayFab();
+			}
+			else if (error.Error == PlayFabErrorCode.AccountBanned)
+			{
+				Application.Quit();
+				PhotonNetwork.Disconnect();
+				Object.DestroyImmediate(PhotonNetworkController.Instance);
+				Object.DestroyImmediate(GorillaLocomotion.Player.Instance);
+				GameObject[] array = Object.FindObjectsOfType<GameObject>();
+				for (int i = 0; i < array.Length; i++)
+				{
+					Object.Destroy(array[i]);
+				}
+			}
+			if (!this.tryTwice)
+			{
+				this.tryTwice = true;
+				this.GetUserCosmeticsAllowed();
+			}
+		}
+
+		[CompilerGenerated]
+		private void <GetUserCosmeticsAllowed>b__125_1(PlayFabError error)
+		{
+			if (error.Error == PlayFabErrorCode.NotAuthenticated)
+			{
+				PlayFabAuthenticator.instance.AuthenticateWithPlayFab();
+			}
+			else if (error.Error == PlayFabErrorCode.AccountBanned)
+			{
+				Application.Quit();
+				PhotonNetwork.Disconnect();
+				Object.DestroyImmediate(PhotonNetworkController.Instance);
+				Object.DestroyImmediate(GorillaLocomotion.Player.Instance);
+				GameObject[] array = Object.FindObjectsOfType<GameObject>();
+				for (int i = 0; i < array.Length; i++)
+				{
+					Object.Destroy(array[i]);
+				}
+			}
+			if (!this.tryTwice)
+			{
+				this.tryTwice = true;
+				this.GetUserCosmeticsAllowed();
+			}
+		}
+
+		[CompilerGenerated]
+		private void <SteamPurchase>b__126_0(StartPurchaseResult result)
+		{
+			Debug.Log("successfully started purchase. attempted to pay for purchase through steam");
+			this.currentPurchaseID = result.OrderId;
+			PlayFabClientAPI.PayForPurchase(new PayForPurchaseRequest
+			{
+				OrderId = this.currentPurchaseID,
+				ProviderName = "Steam",
+				Currency = "RM"
+			}, delegate(PayForPurchaseResult result2)
+			{
+				Debug.Log("succeeded on sending request for paying with steam! waiting for response");
+				this.buyingBundle = true;
+				this.m_MicroTxnAuthorizationResponse = Callback<MicroTxnAuthorizationResponse_t>.Create(new Callback<MicroTxnAuthorizationResponse_t>.DispatchDelegate(this.OnMicroTxnAuthorizationResponse));
+			}, delegate(PlayFabError error)
+			{
+				if (error.Error == PlayFabErrorCode.NotAuthenticated)
+				{
+					PlayFabAuthenticator.instance.AuthenticateWithPlayFab();
+				}
+				else if (error.Error == PlayFabErrorCode.AccountBanned)
+				{
+					Application.Quit();
+					PhotonNetwork.Disconnect();
+					Object.DestroyImmediate(PhotonNetworkController.Instance);
+					Object.DestroyImmediate(GorillaLocomotion.Player.Instance);
+					GameObject[] array = Object.FindObjectsOfType<GameObject>();
+					for (int i = 0; i < array.Length; i++)
+					{
+						Object.Destroy(array[i]);
+					}
+				}
+				Debug.Log("failed to send request to purchase with steam!");
+				Debug.Log(error.ToString());
+				this.SwitchToStage(CosmeticsController.ATMStages.Failure);
+			}, null, null);
+		}
+
+		[CompilerGenerated]
+		private void <SteamPurchase>b__126_2(PayForPurchaseResult result2)
+		{
+			Debug.Log("succeeded on sending request for paying with steam! waiting for response");
+			this.buyingBundle = true;
+			this.m_MicroTxnAuthorizationResponse = Callback<MicroTxnAuthorizationResponse_t>.Create(new Callback<MicroTxnAuthorizationResponse_t>.DispatchDelegate(this.OnMicroTxnAuthorizationResponse));
+		}
+
+		[CompilerGenerated]
+		private void <SteamPurchase>b__126_3(PlayFabError error)
+		{
+			if (error.Error == PlayFabErrorCode.NotAuthenticated)
+			{
+				PlayFabAuthenticator.instance.AuthenticateWithPlayFab();
+			}
+			else if (error.Error == PlayFabErrorCode.AccountBanned)
+			{
+				Application.Quit();
+				PhotonNetwork.Disconnect();
+				Object.DestroyImmediate(PhotonNetworkController.Instance);
+				Object.DestroyImmediate(GorillaLocomotion.Player.Instance);
+				GameObject[] array = Object.FindObjectsOfType<GameObject>();
+				for (int i = 0; i < array.Length; i++)
+				{
+					Object.Destroy(array[i]);
+				}
+			}
+			Debug.Log("failed to send request to purchase with steam!");
+			Debug.Log(error.ToString());
+			this.SwitchToStage(CosmeticsController.ATMStages.Failure);
+		}
+
+		[CompilerGenerated]
+		private void <OnMicroTxnAuthorizationResponse>b__131_0(ConfirmPurchaseResult result)
+		{
+			if (this.buyingBundle)
+			{
+				this.buyingBundle = false;
+				if (PhotonNetwork.InRoom)
+				{
+					RaiseEventOptions raiseEventOptions = new RaiseEventOptions();
+					WebFlags webFlags = new WebFlags(1);
+					raiseEventOptions.Flags = webFlags;
+					object[] array = new object[0];
+					PhotonNetwork.RaiseEvent(9, array, raiseEventOptions, SendOptions.SendReliable);
+				}
+				base.StartCoroutine(this.CheckIfMyCosmeticsUpdated(this.BundlePlayfabItemName));
+			}
+			this.SwitchToStage(CosmeticsController.ATMStages.Success);
+			this.GetCurrencyBalance();
+			this.UpdateCurrencyBoard();
+			this.GetUserCosmeticsAllowed();
+			GorillaTagger.Instance.offlineVRRig.GetUserCosmeticsAllowed();
+		}
+
+		[CompilerGenerated]
+		private void <OnMicroTxnAuthorizationResponse>b__131_1(PlayFabError error)
+		{
+			this.atmText.text = "PURCHASE CANCELLED!\n\nCURRENT BALANCE IS: ";
+			this.UpdateCurrencyBoard();
+			this.SwitchToStage(CosmeticsController.ATMStages.Failure);
+		}
+
+		[CompilerGenerated]
+		private void <GetCurrencyBalance>b__133_0(GetUserInventoryResult result)
+		{
+			this.currencyBalance = result.VirtualCurrency[this.currencyName];
+			this.UpdateCurrencyBoard();
+		}
+
 		public static int maximumTransferrableItems = 5;
 
 		[OnEnterPlay_SetNull]
@@ -1609,7 +2197,9 @@ namespace GorillaNetworking
 
 		public CosmeticsController.ATMStages currentATMStage;
 
-		public Text atmButtonsText;
+		public Text[] ATM_RightColumnButtonText;
+
+		public Text[] ATM_RightColumnArrowText;
 
 		public int currencyBalance;
 
@@ -1698,7 +2288,8 @@ namespace GorillaNetworking
 			Purchasing,
 			Success,
 			Failure,
-			Locked
+			Locked,
+			SafeAccount
 		}
 
 		public enum CosmeticCategory
@@ -1734,7 +2325,35 @@ namespace GorillaNetworking
 		[Serializable]
 		public class CosmeticSet
 		{
-			public event CosmeticsController.CosmeticSet.OnSetActivatedHandler onSetActivatedEvent;
+			public event CosmeticsController.CosmeticSet.OnSetActivatedHandler onSetActivatedEvent
+			{
+				[CompilerGenerated]
+				add
+				{
+					CosmeticsController.CosmeticSet.OnSetActivatedHandler onSetActivatedHandler = this.onSetActivatedEvent;
+					CosmeticsController.CosmeticSet.OnSetActivatedHandler onSetActivatedHandler2;
+					do
+					{
+						onSetActivatedHandler2 = onSetActivatedHandler;
+						CosmeticsController.CosmeticSet.OnSetActivatedHandler onSetActivatedHandler3 = (CosmeticsController.CosmeticSet.OnSetActivatedHandler)Delegate.Combine(onSetActivatedHandler2, value);
+						onSetActivatedHandler = Interlocked.CompareExchange<CosmeticsController.CosmeticSet.OnSetActivatedHandler>(ref this.onSetActivatedEvent, onSetActivatedHandler3, onSetActivatedHandler2);
+					}
+					while (onSetActivatedHandler != onSetActivatedHandler2);
+				}
+				[CompilerGenerated]
+				remove
+				{
+					CosmeticsController.CosmeticSet.OnSetActivatedHandler onSetActivatedHandler = this.onSetActivatedEvent;
+					CosmeticsController.CosmeticSet.OnSetActivatedHandler onSetActivatedHandler2;
+					do
+					{
+						onSetActivatedHandler2 = onSetActivatedHandler;
+						CosmeticsController.CosmeticSet.OnSetActivatedHandler onSetActivatedHandler3 = (CosmeticsController.CosmeticSet.OnSetActivatedHandler)Delegate.Remove(onSetActivatedHandler2, value);
+						onSetActivatedHandler = Interlocked.CompareExchange<CosmeticsController.CosmeticSet.OnSetActivatedHandler>(ref this.onSetActivatedEvent, onSetActivatedHandler3, onSetActivatedHandler2);
+					}
+					while (onSetActivatedHandler != onSetActivatedHandler2);
+				}
+			}
 
 			protected void OnSetActivated(CosmeticsController.CosmeticSet prevSet, CosmeticsController.CosmeticSet currentSet, NetPlayer netPlayer)
 			{
@@ -2085,9 +2704,27 @@ namespace GorillaNetworking
 
 			public CosmeticsController.CosmeticItem[] items;
 
+			[CompilerGenerated]
+			private CosmeticsController.CosmeticSet.OnSetActivatedHandler onSetActivatedEvent;
+
 			public string[] returnArray = new string[11];
 
 			public delegate void OnSetActivatedHandler(CosmeticsController.CosmeticSet prevSet, CosmeticsController.CosmeticSet currentSet, NetPlayer netPlayer);
+
+			[CompilerGenerated]
+			private sealed class <>c__DisplayClass25_0
+			{
+				public <>c__DisplayClass25_0()
+				{
+				}
+
+				internal bool <LoadFromPlayerPreferences>b__0(CosmeticsController.CosmeticItem x)
+				{
+					return this.item.itemName == x.itemName;
+				}
+
+				public CosmeticsController.CosmeticItem item;
+			}
 		}
 
 		[Serializable]
@@ -2145,6 +2782,10 @@ namespace GorillaNetworking
 		[Serializable]
 		public class IAPRequestBody
 		{
+			public IAPRequestBody()
+			{
+			}
+
 			public string accessToken;
 
 			public string userID;
@@ -2158,6 +2799,722 @@ namespace GorillaNetworking
 			public string playFabId;
 
 			public bool[] debugParameters;
+		}
+
+		[CompilerGenerated]
+		[Serializable]
+		private sealed class <>c
+		{
+			// Note: this type is marked as 'beforefieldinit'.
+			static <>c()
+			{
+			}
+
+			public <>c()
+			{
+			}
+
+			internal void <Start>b__90_1(PlayFabError e)
+			{
+				Debug.LogError(string.Format("Error getting bundle data: {0}", e));
+			}
+
+			internal void <GetMyDaily>b__124_1(PlayFabError error)
+			{
+				if (error.Error == PlayFabErrorCode.NotAuthenticated)
+				{
+					PlayFabAuthenticator.instance.AuthenticateWithPlayFab();
+					return;
+				}
+				if (error.Error == PlayFabErrorCode.AccountBanned)
+				{
+					Application.Quit();
+					PhotonNetwork.Disconnect();
+					Object.DestroyImmediate(PhotonNetworkController.Instance);
+					Object.DestroyImmediate(GorillaLocomotion.Player.Instance);
+					GameObject[] array = Object.FindObjectsOfType<GameObject>();
+					for (int i = 0; i < array.Length; i++)
+					{
+						Object.Destroy(array[i]);
+					}
+				}
+			}
+
+			internal bool <GetUserCosmeticsAllowed>b__125_4(CosmeticsController.CosmeticItem x)
+			{
+				return "Slingshot" == x.itemName;
+			}
+
+			internal void <SteamPurchase>b__126_1(PlayFabError error)
+			{
+				if (error.Error == PlayFabErrorCode.NotAuthenticated)
+				{
+					PlayFabAuthenticator.instance.AuthenticateWithPlayFab();
+				}
+				else if (error.Error == PlayFabErrorCode.AccountBanned)
+				{
+					Application.Quit();
+					PhotonNetwork.Disconnect();
+					Object.DestroyImmediate(PhotonNetworkController.Instance);
+					Object.DestroyImmediate(GorillaLocomotion.Player.Instance);
+					GameObject[] array = Object.FindObjectsOfType<GameObject>();
+					for (int i = 0; i < array.Length; i++)
+					{
+						Object.Destroy(array[i]);
+					}
+				}
+				Debug.Log("error in starting purchase!");
+			}
+
+			internal void <GetCurrencyBalance>b__133_1(PlayFabError error)
+			{
+				if (error.Error == PlayFabErrorCode.NotAuthenticated)
+				{
+					PlayFabAuthenticator.instance.AuthenticateWithPlayFab();
+					return;
+				}
+				if (error.Error == PlayFabErrorCode.AccountBanned)
+				{
+					Application.Quit();
+					PhotonNetwork.Disconnect();
+					Object.DestroyImmediate(PhotonNetworkController.Instance);
+					Object.DestroyImmediate(GorillaLocomotion.Player.Instance);
+					GameObject[] array = Object.FindObjectsOfType<GameObject>();
+					for (int i = 0; i < array.Length; i++)
+					{
+						Object.Destroy(array[i]);
+					}
+				}
+			}
+
+			public static readonly CosmeticsController.<>c <>9 = new CosmeticsController.<>c();
+
+			public static Action<PlayFabError> <>9__90_1;
+
+			public static Action<PlayFabError> <>9__124_1;
+
+			public static Predicate<CosmeticsController.CosmeticItem> <>9__125_4;
+
+			public static Action<PlayFabError> <>9__126_1;
+
+			public static Action<PlayFabError> <>9__133_1;
+		}
+
+		[CompilerGenerated]
+		private sealed class <>c__DisplayClass113_0
+		{
+			public <>c__DisplayClass113_0()
+			{
+			}
+
+			internal bool <UnlockItem>b__0(CosmeticsController.CosmeticItem x)
+			{
+				return this.itemIdToUnlock == x.itemName;
+			}
+
+			public string itemIdToUnlock;
+		}
+
+		[CompilerGenerated]
+		private sealed class <>c__DisplayClass114_0
+		{
+			public <>c__DisplayClass114_0()
+			{
+			}
+
+			internal void <CheckIfMyCosmeticsUpdated>b__0(GetSharedGroupDataResult result)
+			{
+				this.<>4__this.attempts = this.<>4__this.attempts + 1;
+				foreach (KeyValuePair<string, SharedGroupDataRecord> keyValuePair in result.Data)
+				{
+					if (keyValuePair.Value.Value.Contains(this.itemToBuyID))
+					{
+						PhotonNetwork.RaiseEvent(199, null, new RaiseEventOptions
+						{
+							Receivers = ReceiverGroup.Others
+						}, SendOptions.SendReliable);
+						this.<>4__this.foundCosmetic = true;
+					}
+				}
+				if (this.<>4__this.foundCosmetic)
+				{
+					this.<>4__this.UpdateWornCosmetics(true);
+				}
+			}
+
+			internal void <CheckIfMyCosmeticsUpdated>b__1(PlayFabError error)
+			{
+				this.<>4__this.attempts = this.<>4__this.attempts + 1;
+				if (error.Error == PlayFabErrorCode.NotAuthenticated)
+				{
+					PlayFabAuthenticator.instance.AuthenticateWithPlayFab();
+					return;
+				}
+				if (error.Error == PlayFabErrorCode.AccountBanned)
+				{
+					Application.Quit();
+					PhotonNetwork.Disconnect();
+					Object.DestroyImmediate(PhotonNetworkController.Instance);
+					Object.DestroyImmediate(GorillaLocomotion.Player.Instance);
+					GameObject[] array = Object.FindObjectsOfType<GameObject>();
+					for (int i = 0; i < array.Length; i++)
+					{
+						Object.Destroy(array[i]);
+					}
+				}
+			}
+
+			public CosmeticsController <>4__this;
+
+			public string itemToBuyID;
+		}
+
+		[CompilerGenerated]
+		private sealed class <>c__DisplayClass125_0
+		{
+			public <>c__DisplayClass125_0()
+			{
+			}
+
+			internal void <GetUserCosmeticsAllowed>b__2(GetCatalogItemsResult result2)
+			{
+				this.<>4__this.unlockedCosmetics.Clear();
+				this.<>4__this.unlockedHats.Clear();
+				this.<>4__this.unlockedBadges.Clear();
+				this.<>4__this.unlockedFaces.Clear();
+				this.<>4__this.unlockedHoldable.Clear();
+				this.<>4__this.catalogItems = result2.Catalog;
+				using (List<CatalogItem>.Enumerator enumerator = this.<>4__this.catalogItems.GetEnumerator())
+				{
+					while (enumerator.MoveNext())
+					{
+						CosmeticsController.<>c__DisplayClass125_1 CS$<>8__locals1 = new CosmeticsController.<>c__DisplayClass125_1();
+						CS$<>8__locals1.catalogItem = enumerator.Current;
+						this.<>4__this.searchIndex = this.<>4__this.allCosmetics.FindIndex((CosmeticsController.CosmeticItem x) => CS$<>8__locals1.catalogItem.DisplayName == x.displayName);
+						if (this.<>4__this.searchIndex > -1)
+						{
+							this.<>4__this.tempStringArray = null;
+							this.<>4__this.hasPrice = false;
+							if (CS$<>8__locals1.catalogItem.Bundle != null)
+							{
+								this.<>4__this.tempStringArray = CS$<>8__locals1.catalogItem.Bundle.BundledItems.ToArray();
+							}
+							uint num;
+							if (CS$<>8__locals1.catalogItem.VirtualCurrencyPrices.TryGetValue(this.<>4__this.currencyName, out num))
+							{
+								this.<>4__this.hasPrice = true;
+							}
+							this.<>4__this.allCosmetics[this.<>4__this.searchIndex] = new CosmeticsController.CosmeticItem
+							{
+								itemName = CS$<>8__locals1.catalogItem.ItemId,
+								displayName = CS$<>8__locals1.catalogItem.DisplayName,
+								cost = (int)num,
+								itemPicture = this.<>4__this.allCosmetics[this.<>4__this.searchIndex].itemPicture,
+								itemPictureResourceString = this.<>4__this.allCosmetics[this.<>4__this.searchIndex].itemPictureResourceString,
+								itemCategory = this.<>4__this.allCosmetics[this.<>4__this.searchIndex].itemCategory,
+								bundledItems = this.<>4__this.tempStringArray,
+								canTryOn = this.<>4__this.hasPrice,
+								bothHandsHoldable = this.<>4__this.allCosmetics[this.<>4__this.searchIndex].bothHandsHoldable,
+								overrideDisplayName = this.<>4__this.allCosmetics[this.<>4__this.searchIndex].overrideDisplayName,
+								bLoadsFromResources = this.<>4__this.allCosmetics[this.<>4__this.searchIndex].bLoadsFromResources,
+								bUsesMeshAtlas = this.<>4__this.allCosmetics[this.<>4__this.searchIndex].bUsesMeshAtlas,
+								rotationOffset = this.<>4__this.allCosmetics[this.<>4__this.searchIndex].rotationOffset,
+								positionOffset = this.<>4__this.allCosmetics[this.<>4__this.searchIndex].positionOffset,
+								meshAtlasResourceString = this.<>4__this.allCosmetics[this.<>4__this.searchIndex].meshAtlasResourceString,
+								meshResourceString = this.<>4__this.allCosmetics[this.<>4__this.searchIndex].meshResourceString,
+								materialResourceString = this.<>4__this.allCosmetics[this.<>4__this.searchIndex].materialResourceString
+							};
+							this.<>4__this.allCosmeticsDict[this.<>4__this.allCosmetics[this.<>4__this.searchIndex].itemName] = this.<>4__this.allCosmetics[this.<>4__this.searchIndex];
+							this.<>4__this.allCosmeticsItemIDsfromDisplayNamesDict[this.<>4__this.allCosmetics[this.<>4__this.searchIndex].displayName] = this.<>4__this.allCosmetics[this.<>4__this.searchIndex].itemName;
+						}
+					}
+				}
+				for (int i = this.<>4__this.allCosmetics.Count - 1; i > -1; i--)
+				{
+					this.<>4__this.tempItem = this.<>4__this.allCosmetics[i];
+					if (this.<>4__this.tempItem.itemCategory == CosmeticsController.CosmeticCategory.Set && this.<>4__this.tempItem.canTryOn)
+					{
+						string[] bundledItems = this.<>4__this.tempItem.bundledItems;
+						for (int j = 0; j < bundledItems.Length; j++)
+						{
+							CosmeticsController.<>c__DisplayClass125_2 CS$<>8__locals2 = new CosmeticsController.<>c__DisplayClass125_2();
+							CS$<>8__locals2.setItemName = bundledItems[j];
+							this.<>4__this.searchIndex = this.<>4__this.allCosmetics.FindIndex((CosmeticsController.CosmeticItem x) => CS$<>8__locals2.setItemName == x.itemName);
+							if (this.<>4__this.searchIndex > -1)
+							{
+								this.<>4__this.tempItem = new CosmeticsController.CosmeticItem
+								{
+									itemName = this.<>4__this.allCosmetics[this.<>4__this.searchIndex].itemName,
+									displayName = this.<>4__this.allCosmetics[this.<>4__this.searchIndex].displayName,
+									cost = this.<>4__this.allCosmetics[this.<>4__this.searchIndex].cost,
+									itemPicture = this.<>4__this.allCosmetics[this.<>4__this.searchIndex].itemPicture,
+									itemCategory = this.<>4__this.allCosmetics[this.<>4__this.searchIndex].itemCategory,
+									overrideDisplayName = this.<>4__this.allCosmetics[this.<>4__this.searchIndex].overrideDisplayName,
+									bothHandsHoldable = this.<>4__this.allCosmetics[this.<>4__this.searchIndex].bothHandsHoldable,
+									canTryOn = true
+								};
+								this.<>4__this.allCosmetics[this.<>4__this.searchIndex] = this.<>4__this.tempItem;
+								this.<>4__this.allCosmeticsDict[this.<>4__this.allCosmetics[this.<>4__this.searchIndex].itemName] = this.<>4__this.allCosmetics[this.<>4__this.searchIndex];
+								this.<>4__this.allCosmeticsItemIDsfromDisplayNamesDict[this.<>4__this.allCosmetics[this.<>4__this.searchIndex].displayName] = this.<>4__this.allCosmetics[this.<>4__this.searchIndex].itemName;
+							}
+						}
+					}
+				}
+				using (List<ItemInstance>.Enumerator enumerator2 = this.result.Inventory.GetEnumerator())
+				{
+					while (enumerator2.MoveNext())
+					{
+						CosmeticsController.<>c__DisplayClass125_3 CS$<>8__locals3 = new CosmeticsController.<>c__DisplayClass125_3();
+						CS$<>8__locals3.item = enumerator2.Current;
+						if (CS$<>8__locals3.item.ItemId == "Early Access Supporter Pack")
+						{
+							this.<>4__this.unlockedCosmetics.Add(this.<>4__this.allCosmetics[1]);
+							this.<>4__this.unlockedCosmetics.Add(this.<>4__this.allCosmetics[10]);
+							this.<>4__this.unlockedCosmetics.Add(this.<>4__this.allCosmetics[11]);
+							this.<>4__this.unlockedCosmetics.Add(this.<>4__this.allCosmetics[12]);
+							this.<>4__this.unlockedCosmetics.Add(this.<>4__this.allCosmetics[13]);
+							this.<>4__this.unlockedCosmetics.Add(this.<>4__this.allCosmetics[14]);
+							this.<>4__this.unlockedCosmetics.Add(this.<>4__this.allCosmetics[15]);
+							this.<>4__this.unlockedCosmetics.Add(this.<>4__this.allCosmetics[31]);
+							this.<>4__this.unlockedCosmetics.Add(this.<>4__this.allCosmetics[32]);
+							this.<>4__this.unlockedCosmetics.Add(this.<>4__this.allCosmetics[38]);
+							this.<>4__this.unlockedCosmetics.Add(this.<>4__this.allCosmetics[67]);
+							this.<>4__this.unlockedCosmetics.Add(this.<>4__this.allCosmetics[68]);
+						}
+						else
+						{
+							if (CS$<>8__locals3.item.ItemId == this.<>4__this.BundlePlayfabItemName)
+							{
+								foreach (EarlyAccessButton earlyAccessButton in this.<>4__this.earlyAccessButtons)
+								{
+									this.<>4__this.AlreadyOwnAllBundleButtons();
+								}
+							}
+							this.<>4__this.searchIndex = this.<>4__this.allCosmetics.FindIndex((CosmeticsController.CosmeticItem x) => CS$<>8__locals3.item.ItemId == x.itemName);
+							if (this.<>4__this.searchIndex > -1)
+							{
+								this.<>4__this.unlockedCosmetics.Add(this.<>4__this.allCosmetics[this.<>4__this.searchIndex]);
+							}
+						}
+					}
+				}
+				this.<>4__this.searchIndex = this.<>4__this.allCosmetics.FindIndex((CosmeticsController.CosmeticItem x) => "Slingshot" == x.itemName);
+				this.<>4__this.allCosmeticsDict["Slingshot"] = this.<>4__this.allCosmetics[this.<>4__this.searchIndex];
+				this.<>4__this.allCosmeticsItemIDsfromDisplayNamesDict[this.<>4__this.allCosmetics[this.<>4__this.searchIndex].displayName] = this.<>4__this.allCosmetics[this.<>4__this.searchIndex].itemName;
+				foreach (CosmeticsController.CosmeticItem cosmeticItem in this.<>4__this.unlockedCosmetics)
+				{
+					if (cosmeticItem.itemCategory == CosmeticsController.CosmeticCategory.Hat && !this.<>4__this.unlockedHats.Contains(cosmeticItem))
+					{
+						this.<>4__this.unlockedHats.Add(cosmeticItem);
+					}
+					else if (cosmeticItem.itemCategory == CosmeticsController.CosmeticCategory.Face && !this.<>4__this.unlockedFaces.Contains(cosmeticItem))
+					{
+						this.<>4__this.unlockedFaces.Add(cosmeticItem);
+					}
+					else if (cosmeticItem.itemCategory == CosmeticsController.CosmeticCategory.Badge && !this.<>4__this.unlockedBadges.Contains(cosmeticItem))
+					{
+						this.<>4__this.unlockedBadges.Add(cosmeticItem);
+					}
+					else if (cosmeticItem.itemCategory == CosmeticsController.CosmeticCategory.Skin && !this.<>4__this.unlockedBadges.Contains(cosmeticItem))
+					{
+						this.<>4__this.unlockedBadges.Add(cosmeticItem);
+					}
+					else if (cosmeticItem.itemCategory == CosmeticsController.CosmeticCategory.Holdable && !this.<>4__this.unlockedHoldable.Contains(cosmeticItem))
+					{
+						this.<>4__this.unlockedHoldable.Add(cosmeticItem);
+					}
+					else if (cosmeticItem.itemCategory == CosmeticsController.CosmeticCategory.Gloves && !this.<>4__this.unlockedHoldable.Contains(cosmeticItem))
+					{
+						this.<>4__this.unlockedHoldable.Add(cosmeticItem);
+					}
+					else if (cosmeticItem.itemCategory == CosmeticsController.CosmeticCategory.Slingshot && !this.<>4__this.unlockedHoldable.Contains(cosmeticItem))
+					{
+						this.<>4__this.unlockedHoldable.Add(cosmeticItem);
+					}
+					this.<>4__this.concatStringCosmeticsAllowed = this.<>4__this.concatStringCosmeticsAllowed + cosmeticItem.itemName;
+				}
+				foreach (CosmeticStand cosmeticStand in this.<>4__this.cosmeticStands)
+				{
+					if (cosmeticStand != null)
+					{
+						cosmeticStand.InitializeCosmetic();
+					}
+				}
+				this.<>4__this.currencyBalance = this.result.VirtualCurrency[this.<>4__this.currencyName];
+				int num2;
+				this.<>4__this.playedInBeta = this.result.VirtualCurrency.TryGetValue("TC", out num2) && num2 > 0;
+				this.<>4__this.currentWornSet.LoadFromPlayerPreferences(this.<>4__this);
+				this.<>4__this.SwitchToStage(CosmeticsController.ATMStages.Begin);
+				this.<>4__this.ProcessPurchaseItemState(null, false);
+				this.<>4__this.UpdateShoppingCart();
+				this.<>4__this.UpdateWornCosmetics(false);
+				this.<>4__this.UpdateCurrencyBoard();
+			}
+
+			public GetUserInventoryResult result;
+
+			public CosmeticsController <>4__this;
+		}
+
+		[CompilerGenerated]
+		private sealed class <>c__DisplayClass125_1
+		{
+			public <>c__DisplayClass125_1()
+			{
+			}
+
+			internal bool <GetUserCosmeticsAllowed>b__5(CosmeticsController.CosmeticItem x)
+			{
+				return this.catalogItem.DisplayName == x.displayName;
+			}
+
+			public CatalogItem catalogItem;
+		}
+
+		[CompilerGenerated]
+		private sealed class <>c__DisplayClass125_2
+		{
+			public <>c__DisplayClass125_2()
+			{
+			}
+
+			internal bool <GetUserCosmeticsAllowed>b__6(CosmeticsController.CosmeticItem x)
+			{
+				return this.setItemName == x.itemName;
+			}
+
+			public string setItemName;
+		}
+
+		[CompilerGenerated]
+		private sealed class <>c__DisplayClass125_3
+		{
+			public <>c__DisplayClass125_3()
+			{
+			}
+
+			internal bool <GetUserCosmeticsAllowed>b__7(CosmeticsController.CosmeticItem x)
+			{
+				return this.item.ItemId == x.itemName;
+			}
+
+			public ItemInstance item;
+		}
+
+		[CompilerGenerated]
+		private sealed class <CheckCanGetDaily>d__123 : IEnumerator<object>, IEnumerator, IDisposable
+		{
+			[DebuggerHidden]
+			public <CheckCanGetDaily>d__123(int <>1__state)
+			{
+				this.<>1__state = <>1__state;
+			}
+
+			[DebuggerHidden]
+			void IDisposable.Dispose()
+			{
+			}
+
+			bool IEnumerator.MoveNext()
+			{
+				int num = this.<>1__state;
+				CosmeticsController cosmeticsController = this;
+				switch (num)
+				{
+				case 0:
+					this.<>1__state = -1;
+					break;
+				case 1:
+					this.<>1__state = -1;
+					break;
+				case 2:
+					this.<>1__state = -1;
+					break;
+				default:
+					return false;
+				}
+				if (GorillaComputer.instance != null && GorillaComputer.instance.startupMillis != 0L)
+				{
+					cosmeticsController.currentTime = new DateTime((GorillaComputer.instance.startupMillis + (long)(Time.realtimeSinceStartup * 1000f)) * 10000L);
+					cosmeticsController.secondsUntilTomorrow = (int)(cosmeticsController.currentTime.AddDays(1.0).Date - cosmeticsController.currentTime).TotalSeconds;
+					if (cosmeticsController.lastDailyLogin == null || cosmeticsController.lastDailyLogin == "")
+					{
+						cosmeticsController.GetLastDailyLogin();
+					}
+					else if (cosmeticsController.currentTime.ToString("o").Substring(0, 10) == cosmeticsController.lastDailyLogin)
+					{
+						cosmeticsController.checkedDaily = true;
+						cosmeticsController.gotMyDaily = true;
+					}
+					else if (cosmeticsController.currentTime.ToString("o").Substring(0, 10) != cosmeticsController.lastDailyLogin)
+					{
+						cosmeticsController.checkedDaily = true;
+						cosmeticsController.gotMyDaily = false;
+						cosmeticsController.StartCoroutine(cosmeticsController.GetMyDaily());
+					}
+					else if (cosmeticsController.lastDailyLogin == "FAILED")
+					{
+						cosmeticsController.GetLastDailyLogin();
+					}
+					cosmeticsController.secondsToWaitToCheckDaily = (cosmeticsController.checkedDaily ? 60f : 10f);
+					cosmeticsController.UpdateCurrencyBoard();
+					this.<>2__current = new WaitForSeconds(cosmeticsController.secondsToWaitToCheckDaily);
+					this.<>1__state = 1;
+					return true;
+				}
+				this.<>2__current = new WaitForSeconds(1f);
+				this.<>1__state = 2;
+				return true;
+			}
+
+			object IEnumerator<object>.Current
+			{
+				[DebuggerHidden]
+				get
+				{
+					return this.<>2__current;
+				}
+			}
+
+			[DebuggerHidden]
+			void IEnumerator.Reset()
+			{
+				throw new NotSupportedException();
+			}
+
+			object IEnumerator.Current
+			{
+				[DebuggerHidden]
+				get
+				{
+					return this.<>2__current;
+				}
+			}
+
+			private int <>1__state;
+
+			private object <>2__current;
+
+			public CosmeticsController <>4__this;
+		}
+
+		[CompilerGenerated]
+		private sealed class <CheckIfMyCosmeticsUpdated>d__114 : IEnumerator<object>, IEnumerator, IDisposable
+		{
+			[DebuggerHidden]
+			public <CheckIfMyCosmeticsUpdated>d__114(int <>1__state)
+			{
+				this.<>1__state = <>1__state;
+			}
+
+			[DebuggerHidden]
+			void IDisposable.Dispose()
+			{
+			}
+
+			bool IEnumerator.MoveNext()
+			{
+				int num = this.<>1__state;
+				CosmeticsController cosmeticsController = this;
+				switch (num)
+				{
+				case 0:
+					this.<>1__state = -1;
+					CS$<>8__locals1 = new CosmeticsController.<>c__DisplayClass114_0();
+					CS$<>8__locals1.<>4__this = this;
+					CS$<>8__locals1.itemToBuyID = itemToBuyID;
+					this.<>2__current = new WaitForSeconds(1f);
+					this.<>1__state = 1;
+					return true;
+				case 1:
+					this.<>1__state = -1;
+					cosmeticsController.foundCosmetic = false;
+					cosmeticsController.attempts = 0;
+					break;
+				case 2:
+					this.<>1__state = -1;
+					break;
+				default:
+					return false;
+				}
+				if (cosmeticsController.foundCosmetic || cosmeticsController.attempts >= 10 || !PhotonNetwork.InRoom)
+				{
+					return false;
+				}
+				cosmeticsController.playerIDList.Clear();
+				cosmeticsController.playerIDList.Add(PhotonNetwork.LocalPlayer.ActorNumber.ToString());
+				PlayFabClientAPI.GetSharedGroupData(new GetSharedGroupDataRequest
+				{
+					Keys = cosmeticsController.playerIDList,
+					SharedGroupId = PhotonNetwork.CurrentRoom.Name + Regex.Replace(PhotonNetwork.CloudRegion, "[^a-zA-Z0-9]", "").ToUpper()
+				}, delegate(GetSharedGroupDataResult result)
+				{
+					CS$<>8__locals1.<>4__this.attempts = CS$<>8__locals1.<>4__this.attempts + 1;
+					foreach (KeyValuePair<string, SharedGroupDataRecord> keyValuePair in result.Data)
+					{
+						if (keyValuePair.Value.Value.Contains(CS$<>8__locals1.itemToBuyID))
+						{
+							PhotonNetwork.RaiseEvent(199, null, new RaiseEventOptions
+							{
+								Receivers = ReceiverGroup.Others
+							}, SendOptions.SendReliable);
+							CS$<>8__locals1.<>4__this.foundCosmetic = true;
+						}
+					}
+					if (CS$<>8__locals1.<>4__this.foundCosmetic)
+					{
+						CS$<>8__locals1.<>4__this.UpdateWornCosmetics(true);
+					}
+				}, delegate(PlayFabError error)
+				{
+					CS$<>8__locals1.<>4__this.attempts = CS$<>8__locals1.<>4__this.attempts + 1;
+					if (error.Error == PlayFabErrorCode.NotAuthenticated)
+					{
+						PlayFabAuthenticator.instance.AuthenticateWithPlayFab();
+						return;
+					}
+					if (error.Error == PlayFabErrorCode.AccountBanned)
+					{
+						Application.Quit();
+						PhotonNetwork.Disconnect();
+						Object.DestroyImmediate(PhotonNetworkController.Instance);
+						Object.DestroyImmediate(GorillaLocomotion.Player.Instance);
+						GameObject[] array = Object.FindObjectsOfType<GameObject>();
+						for (int i = 0; i < array.Length; i++)
+						{
+							Object.Destroy(array[i]);
+						}
+					}
+				}, null, null);
+				this.<>2__current = new WaitForSeconds(1f);
+				this.<>1__state = 2;
+				return true;
+			}
+
+			object IEnumerator<object>.Current
+			{
+				[DebuggerHidden]
+				get
+				{
+					return this.<>2__current;
+				}
+			}
+
+			[DebuggerHidden]
+			void IEnumerator.Reset()
+			{
+				throw new NotSupportedException();
+			}
+
+			object IEnumerator.Current
+			{
+				[DebuggerHidden]
+				get
+				{
+					return this.<>2__current;
+				}
+			}
+
+			private int <>1__state;
+
+			private object <>2__current;
+
+			public CosmeticsController <>4__this;
+
+			public string itemToBuyID;
+
+			private CosmeticsController.<>c__DisplayClass114_0 <>8__1;
+		}
+
+		[CompilerGenerated]
+		private sealed class <GetMyDaily>d__124 : IEnumerator<object>, IEnumerator, IDisposable
+		{
+			[DebuggerHidden]
+			public <GetMyDaily>d__124(int <>1__state)
+			{
+				this.<>1__state = <>1__state;
+			}
+
+			[DebuggerHidden]
+			void IDisposable.Dispose()
+			{
+			}
+
+			bool IEnumerator.MoveNext()
+			{
+				int num = this.<>1__state;
+				CosmeticsController cosmeticsController = this;
+				if (num == 0)
+				{
+					this.<>1__state = -1;
+					this.<>2__current = new WaitForSeconds(10f);
+					this.<>1__state = 1;
+					return true;
+				}
+				if (num != 1)
+				{
+					return false;
+				}
+				this.<>1__state = -1;
+				ExecuteCloudScriptRequest executeCloudScriptRequest = new ExecuteCloudScriptRequest();
+				executeCloudScriptRequest.FunctionName = "TryDistributeCurrency";
+				executeCloudScriptRequest.FunctionParameter = new { };
+				PlayFabClientAPI.ExecuteCloudScript(executeCloudScriptRequest, delegate(ExecuteCloudScriptResult result)
+				{
+					base.GetCurrencyBalance();
+					base.GetLastDailyLogin();
+				}, delegate(PlayFabError error)
+				{
+					if (error.Error == PlayFabErrorCode.NotAuthenticated)
+					{
+						PlayFabAuthenticator.instance.AuthenticateWithPlayFab();
+						return;
+					}
+					if (error.Error == PlayFabErrorCode.AccountBanned)
+					{
+						Application.Quit();
+						PhotonNetwork.Disconnect();
+						Object.DestroyImmediate(PhotonNetworkController.Instance);
+						Object.DestroyImmediate(GorillaLocomotion.Player.Instance);
+						GameObject[] array = Object.FindObjectsOfType<GameObject>();
+						for (int i = 0; i < array.Length; i++)
+						{
+							Object.Destroy(array[i]);
+						}
+					}
+				}, null, null);
+				return false;
+			}
+
+			object IEnumerator<object>.Current
+			{
+				[DebuggerHidden]
+				get
+				{
+					return this.<>2__current;
+				}
+			}
+
+			[DebuggerHidden]
+			void IEnumerator.Reset()
+			{
+				throw new NotSupportedException();
+			}
+
+			object IEnumerator.Current
+			{
+				[DebuggerHidden]
+				get
+				{
+					return this.<>2__current;
+				}
+			}
+
+			private int <>1__state;
+
+			private object <>2__current;
+
+			public CosmeticsController <>4__this;
 		}
 	}
 }

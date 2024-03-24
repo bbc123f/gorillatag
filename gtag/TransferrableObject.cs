@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using GorillaExtensions;
 using JetBrains.Annotations;
 using Photon.Pun;
@@ -84,9 +85,33 @@ public class TransferrableObject : HoldableObject, ISelfValidator, IRequestableO
 		}
 	}
 
-	public bool isRigidbodySet { get; private set; }
+	public bool isRigidbodySet
+	{
+		[CompilerGenerated]
+		get
+		{
+			return this.<isRigidbodySet>k__BackingField;
+		}
+		[CompilerGenerated]
+		private set
+		{
+			this.<isRigidbodySet>k__BackingField = value;
+		}
+	}
 
-	private protected bool appIsQuitting { protected get; private set; }
+	private protected bool appIsQuitting
+	{
+		[CompilerGenerated]
+		protected get
+		{
+			return this.<appIsQuitting>k__BackingField;
+		}
+		[CompilerGenerated]
+		private set
+		{
+			this.<appIsQuitting>k__BackingField = value;
+		}
+	}
 
 	protected virtual void Awake()
 	{
@@ -1673,6 +1698,21 @@ public class TransferrableObject : HoldableObject, ISelfValidator, IRequestableO
 		Object.Destroy(base.gameObject);
 	}
 
+	public TransferrableObject()
+	{
+	}
+
+	// Note: this type is marked as 'beforefieldinit'.
+	static TransferrableObject()
+	{
+	}
+
+	[CompilerGenerated]
+	private void <Awake>b__93_0()
+	{
+		this.appIsQuitting = true;
+	}
+
 	public VRRig myRig;
 
 	public VRRig myOnlineRig;
@@ -1811,6 +1851,9 @@ public class TransferrableObject : HoldableObject, ISelfValidator, IRequestableO
 
 	public Rigidbody rigidbodyInstance;
 
+	[CompilerGenerated]
+	private bool <isRigidbodySet>k__BackingField;
+
 	public bool canDrop;
 
 	public bool allowReparenting;
@@ -1850,6 +1893,9 @@ public class TransferrableObject : HoldableObject, ISelfValidator, IRequestableO
 
 	private AudioSource audioSrc;
 
+	[CompilerGenerated]
+	private bool <appIsQuitting>k__BackingField;
+
 	protected Transform _defaultAnchor;
 
 	protected bool _isDefaultAnchorSet;
@@ -1885,5 +1931,62 @@ public class TransferrableObject : HoldableObject, ISelfValidator, IRequestableO
 	{
 		None,
 		Interpolating
+	}
+
+	[CompilerGenerated]
+	[Serializable]
+	private sealed class <>c
+	{
+		// Note: this type is marked as 'beforefieldinit'.
+		static <>c()
+		{
+		}
+
+		public <>c()
+		{
+		}
+
+		internal void <WorldShareableRequestOwnership>b__56_0()
+		{
+		}
+
+		internal void <OnDisable>b__97_0()
+		{
+		}
+
+		internal void <ResetToDefaultState>b__136_0()
+		{
+		}
+
+		internal void <OnGrab>b__137_0()
+		{
+		}
+
+		public static readonly TransferrableObject.<>c <>9 = new TransferrableObject.<>c();
+
+		public static Action <>9__56_0;
+
+		public static Action <>9__97_0;
+
+		public static Action <>9__136_0;
+
+		public static Action <>9__137_0;
+	}
+
+	[CompilerGenerated]
+	private sealed class <>c__DisplayClass104_0
+	{
+		public <>c__DisplayClass104_0()
+		{
+		}
+
+		internal void <SpawnTransferableObjectViews>b__0()
+		{
+			this.<>4__this.worldShareableInstance.SetupSharableObject(this.<>4__this.myIndex, this.owner, this.<>4__this.transform);
+		}
+
+		public TransferrableObject <>4__this;
+
+		public Player owner;
 	}
 }

@@ -61,6 +61,15 @@ public class CosmeticAnchorManager : MonoBehaviour
 		}
 	}
 
+	public CosmeticAnchorManager()
+	{
+	}
+
+	// Note: this type is marked as 'beforefieldinit'.
+	static CosmeticAnchorManager()
+	{
+	}
+
 	public static CosmeticAnchorManager instance;
 
 	public static bool hasInstance = false;

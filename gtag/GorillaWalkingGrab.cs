@@ -37,6 +37,10 @@ public class GorillaWalkingGrab : MonoBehaviour
 		}
 	}
 
+	public GorillaWalkingGrab()
+	{
+	}
+
 	public GameObject handToStickTo;
 
 	public float ratioToUse;

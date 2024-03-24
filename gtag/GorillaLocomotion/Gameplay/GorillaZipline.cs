@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using GorillaLocomotion.Climbing;
 using Unity.Mathematics;
 using UnityEngine;
@@ -7,7 +8,19 @@ namespace GorillaLocomotion.Gameplay
 {
 	public class GorillaZipline : MonoBehaviour
 	{
-		public float currentSpeed { get; private set; }
+		public float currentSpeed
+		{
+			[CompilerGenerated]
+			get
+			{
+				return this.<currentSpeed>k__BackingField;
+			}
+			[CompilerGenerated]
+			private set
+			{
+				this.<currentSpeed>k__BackingField = value;
+			}
+		}
 
 		private void FindTFromDistance(ref float t, float distance, int steps = 1000)
 		{
@@ -157,6 +170,10 @@ namespace GorillaLocomotion.Gameplay
 			this.currentSpeed = 0f;
 		}
 
+		public GorillaZipline()
+		{
+		}
+
 		[SerializeField]
 		private Transform segmentsRoot;
 
@@ -176,6 +193,9 @@ namespace GorillaLocomotion.Gameplay
 
 		[SerializeField]
 		private GorillaZiplineSettings settings;
+
+		[CompilerGenerated]
+		private float <currentSpeed>k__BackingField;
 
 		[SerializeField]
 		private float ziplineDistance = 15f;

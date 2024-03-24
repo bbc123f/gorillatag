@@ -14,6 +14,15 @@ public class BlinkingLight : SceneBakeTask
 		}
 	}
 
+	public BlinkingLight()
+	{
+	}
+
+	// Note: this type is marked as 'beforefieldinit'.
+	static BlinkingLight()
+	{
+	}
+
 	[SerializeField]
 	private Material[] materialArray;
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -68,6 +69,15 @@ public class BubbleGumEvents : MonoBehaviour
 		bubble2.InflateDelayed();
 	}
 
+	public BubbleGumEvents()
+	{
+	}
+
+	// Note: this type is marked as 'beforefieldinit'.
+	static BubbleGumEvents()
+	{
+	}
+
 	[SerializeField]
 	private EdibleHoldable _edible;
 
@@ -82,5 +92,28 @@ public class BubbleGumEvents : MonoBehaviour
 		B,
 		C = 4,
 		D = 8
+	}
+
+	[CompilerGenerated]
+	[Serializable]
+	private sealed class <>c
+	{
+		// Note: this type is marked as 'beforefieldinit'.
+		static <>c()
+		{
+		}
+
+		public <>c()
+		{
+		}
+
+		internal bool <OnBite>b__7_0(GumBubble g)
+		{
+			return g.transform.parent.name == "$gum";
+		}
+
+		public static readonly BubbleGumEvents.<>c <>9 = new BubbleGumEvents.<>c();
+
+		public static Func<GumBubble, bool> <>9__7_0;
 	}
 }

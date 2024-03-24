@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -176,6 +177,16 @@ public class TransferrableItemSlotTransformOverride : MonoBehaviour
 		{
 			TransferrableItemSlotTransformOverride.OnBringUpWindow(base.GetComponent<TransferrableObject>());
 		}
+	}
+
+	public TransferrableItemSlotTransformOverride()
+	{
+	}
+
+	[CompilerGenerated]
+	private bool <Update>b__9_0(SlotTransformOverride x)
+	{
+		return (x.positionState & this.followingTransferrableObject.currentState) > TransferrableObject.PositionState.None;
 	}
 
 	[FormerlySerializedAs("transformOverridesList")]

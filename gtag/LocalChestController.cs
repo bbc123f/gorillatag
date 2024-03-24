@@ -33,6 +33,10 @@ public class LocalChestController : MonoBehaviour
 		this.director.Play();
 	}
 
+	public LocalChestController()
+	{
+	}
+
 	public PlayableDirector director;
 
 	public MazePlayerCollection playerCollectionVolume;

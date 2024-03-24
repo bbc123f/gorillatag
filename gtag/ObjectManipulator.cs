@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -327,6 +330,10 @@ public class ObjectManipulator : MonoBehaviour
 		}
 	}
 
+	public ObjectManipulator()
+	{
+	}
+
 	private OVRInput.Controller controller = OVRInput.Controller.RTouch;
 
 	private GameObject hoverObject;
@@ -364,4 +371,92 @@ public class ObjectManipulator : MonoBehaviour
 	public GameObject demoObjects;
 
 	public OVRPassthroughLayer passthrough;
+
+	[CompilerGenerated]
+	private sealed class <StartDemo>d__23 : IEnumerator<object>, IEnumerator, IDisposable
+	{
+		[DebuggerHidden]
+		public <StartDemo>d__23(int <>1__state)
+		{
+			this.<>1__state = <>1__state;
+		}
+
+		[DebuggerHidden]
+		void IDisposable.Dispose()
+		{
+		}
+
+		bool IEnumerator.MoveNext()
+		{
+			int num = this.<>1__state;
+			ObjectManipulator objectManipulator = this;
+			if (num != 0)
+			{
+				if (num != 1)
+				{
+					return false;
+				}
+				this.<>1__state = -1;
+			}
+			else
+			{
+				this.<>1__state = -1;
+				objectManipulator.demoObjects.SetActive(false);
+				timer = 0f;
+				fadeTime = 1f;
+			}
+			if (timer > fadeTime)
+			{
+				objectManipulator.demoObjects.SetActive(true);
+				Vector3 normalized = new Vector3(Camera.main.transform.forward.x, 0f, Camera.main.transform.forward.z).normalized;
+				objectManipulator.demoObjects.transform.position = Camera.main.transform.position + normalized;
+				objectManipulator.demoObjects.transform.rotation = Quaternion.LookRotation(normalized);
+				return false;
+			}
+			timer += Time.deltaTime;
+			float num2 = Mathf.Clamp01(timer / fadeTime);
+			if (objectManipulator.passthrough)
+			{
+				objectManipulator.passthrough.colorMapEditorBrightness = Mathf.Lerp(-1f, 0f, num2);
+				objectManipulator.passthrough.colorMapEditorContrast = Mathf.Lerp(-1f, 0f, num2);
+			}
+			this.<>2__current = null;
+			this.<>1__state = 1;
+			return true;
+		}
+
+		object IEnumerator<object>.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		[DebuggerHidden]
+		void IEnumerator.Reset()
+		{
+			throw new NotSupportedException();
+		}
+
+		object IEnumerator.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		private int <>1__state;
+
+		private object <>2__current;
+
+		public ObjectManipulator <>4__this;
+
+		private float <timer>5__2;
+
+		private float <fadeTime>5__3;
+	}
 }

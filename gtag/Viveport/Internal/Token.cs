@@ -21,5 +21,9 @@ namespace Viveport.Internal
 
 		[DllImport("viveport_api64", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi, EntryPoint = "IViveportToken_GetSessionToken")]
 		internal static extern int GetSessionToken_64(StatusCallback2 GetSessionTokenCallback);
+
+		public Token()
+		{
+		}
 	}
 }

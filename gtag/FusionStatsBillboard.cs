@@ -64,6 +64,10 @@ public class FusionStatsBillboard : Fusion.Behaviour
 		FusionStatsBillboard._lastCameraFindTime = 0f;
 	}
 
+	public FusionStatsBillboard()
+	{
+	}
+
 	[InlineHelp]
 	public Camera Camera;
 

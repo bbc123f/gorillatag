@@ -79,6 +79,11 @@ public static class Utils
 		return Utils.reusableSB.ToString();
 	}
 
+	// Note: this type is marked as 'beforefieldinit'.
+	static Utils()
+	{
+	}
+
 	private static List<IPreDisable> tempDisableCallbacks = new List<IPreDisable>();
 
 	private static int tempListcount = 0;

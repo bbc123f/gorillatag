@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using GorillaNetworking;
 using UnityEngine;
 
@@ -35,7 +37,10 @@ namespace GameObjectScheduling
 
 		private void OnDisable()
 		{
-			base.StopCoroutine(this.monitor);
+			if (this.monitor != null)
+			{
+				base.StopCoroutine(this.monitor);
+			}
 			this.monitor = null;
 		}
 
@@ -115,6 +120,10 @@ namespace GameObjectScheduling
 			}
 		}
 
+		public GameObjectScheduler()
+		{
+		}
+
 		[SerializeField]
 		private GameObjectSchedule schedule;
 
@@ -125,5 +134,96 @@ namespace GameObjectScheduling
 		private int currentNodeIndex = -1;
 
 		private Coroutine monitor;
+
+		[CompilerGenerated]
+		private sealed class <MonitorTime>d__8 : IEnumerator<object>, IEnumerator, IDisposable
+		{
+			[DebuggerHidden]
+			public <MonitorTime>d__8(int <>1__state)
+			{
+				this.<>1__state = <>1__state;
+			}
+
+			[DebuggerHidden]
+			void IDisposable.Dispose()
+			{
+			}
+
+			bool IEnumerator.MoveNext()
+			{
+				int num = this.<>1__state;
+				GameObjectScheduler gameObjectScheduler = this;
+				switch (num)
+				{
+				case 0:
+					this.<>1__state = -1;
+					break;
+				case 1:
+					this.<>1__state = -1;
+					break;
+				case 2:
+				{
+					this.<>1__state = -1;
+					bool activeState = gameObjectScheduler.getActiveState();
+					if (previousState != activeState)
+					{
+						gameObjectScheduler.changeActiveState(activeState);
+						previousState = activeState;
+						goto IL_91;
+					}
+					goto IL_91;
+				}
+				default:
+					return false;
+				}
+				if (GorillaComputer.instance == null || GorillaComputer.instance.startupMillis == 0L)
+				{
+					this.<>2__current = null;
+					this.<>1__state = 1;
+					return true;
+				}
+				previousState = gameObjectScheduler.getActiveState();
+				for (int i = 0; i < gameObjectScheduler.scheduledGameObject.Length; i++)
+				{
+					gameObjectScheduler.scheduledGameObject[i].SetActive(previousState);
+				}
+				IL_91:
+				this.<>2__current = new WaitForSeconds(60f);
+				this.<>1__state = 2;
+				return true;
+			}
+
+			object IEnumerator<object>.Current
+			{
+				[DebuggerHidden]
+				get
+				{
+					return this.<>2__current;
+				}
+			}
+
+			[DebuggerHidden]
+			void IEnumerator.Reset()
+			{
+				throw new NotSupportedException();
+			}
+
+			object IEnumerator.Current
+			{
+				[DebuggerHidden]
+				get
+				{
+					return this.<>2__current;
+				}
+			}
+
+			private int <>1__state;
+
+			private object <>2__current;
+
+			public GameObjectScheduler <>4__this;
+
+			private bool <previousState>5__2;
+		}
 	}
 }

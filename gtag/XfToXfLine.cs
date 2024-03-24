@@ -14,6 +14,10 @@ public class XfToXfLine : MonoBehaviour
 		this.lineRenderer.SetPosition(1, this.pt1.transform.position);
 	}
 
+	public XfToXfLine()
+	{
+	}
+
 	public Transform pt0;
 
 	public Transform pt1;

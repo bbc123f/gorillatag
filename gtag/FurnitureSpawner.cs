@@ -16,8 +16,8 @@ public class FurnitureSpawner : MonoBehaviour
 
 	private void SpawnSpawnable()
 	{
-		Spawnable spawnable;
-		if (!this.FindValidSpawnable(out spawnable))
+		SimpleResizable simpleResizable;
+		if (!this.FindValidSpawnable(out simpleResizable))
 		{
 			return;
 		}
@@ -31,7 +31,7 @@ public class FurnitureSpawner : MonoBehaviour
 		{
 			vector = component.Dimensions;
 			vector.z = 1f;
-			if (this._classification.Contains("DESK") || this._classification.Contains("COUCH"))
+			if (this._classification.Contains("TABLE") || this._classification.Contains("COUCH"))
 			{
 				this.GetVolumeFromTopPlane(base.transform, component.Dimensions, base.transform.position.y, out position, out rotation, out localScale);
 				vector = localScale;
@@ -45,10 +45,10 @@ public class FurnitureSpawner : MonoBehaviour
 		GameObject gameObject = new GameObject("Root");
 		gameObject.transform.parent = base.transform;
 		gameObject.transform.SetPositionAndRotation(position, rotation);
-		new SimpleResizer().CreateResizedObject(vector, gameObject, spawnable.ResizablePrefab);
+		new SimpleResizer().CreateResizedObject(vector, gameObject, simpleResizable);
 	}
 
-	private bool FindValidSpawnable(out Spawnable currentSpawnable)
+	private bool FindValidSpawnable(out SimpleResizable currentSpawnable)
 	{
 		currentSpawnable = null;
 		if (!this._classification)
@@ -63,9 +63,14 @@ public class FurnitureSpawner : MonoBehaviour
 		{
 			if (this._classification.Contains(spawnable.ClassificationLabel))
 			{
-				currentSpawnable = spawnable;
+				currentSpawnable = spawnable.ResizablePrefab;
 				return true;
 			}
+		}
+		if (this.FallbackPrefab != null)
+		{
+			currentSpawnable = this.FallbackPrefab;
+			return true;
 		}
 		return false;
 	}
@@ -90,8 +95,15 @@ public class FurnitureSpawner : MonoBehaviour
 		localScale = new Vector3(dimensions.x, num * 2f, dimensions.y);
 	}
 
+	public FurnitureSpawner()
+	{
+	}
+
 	[Tooltip("Add a point at ceiling.")]
 	public GameObject RoomLightPrefab;
+
+	[Tooltip("This prefab will be used if the label is not in the SpawnablesPrefabs")]
+	public SimpleResizable FallbackPrefab;
 
 	public List<Spawnable> SpawnablePrefabs;
 

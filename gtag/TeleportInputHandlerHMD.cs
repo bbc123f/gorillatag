@@ -1,9 +1,22 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class TeleportInputHandlerHMD : TeleportInputHandler
 {
-	public Transform Pointer { get; private set; }
+	public Transform Pointer
+	{
+		[CompilerGenerated]
+		get
+		{
+			return this.<Pointer>k__BackingField;
+		}
+		[CompilerGenerated]
+		private set
+		{
+			this.<Pointer>k__BackingField = value;
+		}
+	}
 
 	public override LocomotionTeleport.TeleportIntentions GetIntention()
 	{
@@ -46,6 +59,13 @@ public class TeleportInputHandlerHMD : TeleportInputHandler
 		Transform centerEyeAnchor = base.LocomotionTeleport.LocomotionController.CameraRig.centerEyeAnchor;
 		aimRay = new Ray(centerEyeAnchor.position, centerEyeAnchor.forward);
 	}
+
+	public TeleportInputHandlerHMD()
+	{
+	}
+
+	[CompilerGenerated]
+	private Transform <Pointer>k__BackingField;
 
 	[Tooltip("The button used to begin aiming for a teleport.")]
 	public OVRInput.RawButton AimButton;

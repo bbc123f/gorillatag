@@ -60,6 +60,10 @@ public class ColliderEnabledManager : MonoBehaviour
 		this.timeDisabled = Time.time;
 	}
 
+	public ColliderEnabledManager()
+	{
+	}
+
 	public static ColliderEnabledManager instance;
 
 	public Collider[] floorCollider;

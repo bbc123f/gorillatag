@@ -43,5 +43,9 @@ public class CosmeticBoundaryTrigger : GorillaTriggerBox
 		this.rigRef.myBodyDockPositions.RefreshTransferrableItems();
 	}
 
+	public CosmeticBoundaryTrigger()
+	{
+	}
+
 	public VRRig rigRef;
 }

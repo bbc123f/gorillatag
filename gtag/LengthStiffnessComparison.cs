@@ -49,6 +49,10 @@ public class LengthStiffnessComparison : MonoBehaviour
 		}
 	}
 
+	public LengthStiffnessComparison()
+	{
+	}
+
 	public float Run = 11f;
 
 	public float Tilt = 15f;

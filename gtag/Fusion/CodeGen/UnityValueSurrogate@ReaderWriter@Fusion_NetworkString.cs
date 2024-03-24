@@ -18,6 +18,10 @@ namespace Fusion.CodeGen
 			}
 		}
 
+		public UnityValueSurrogate@ReaderWriter@Fusion_NetworkString()
+		{
+		}
+
 		public NetworkString<_16> Data;
 	}
 }

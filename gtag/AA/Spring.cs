@@ -233,5 +233,9 @@ namespace AA
 			x = num3 * (x + num2 * dt);
 			v = num3 * (v - num2 * num * dt);
 		}
+
+		public Spring()
+		{
+		}
 	}
 }

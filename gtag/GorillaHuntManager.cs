@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using GorillaGameModes;
 using Photon.Pun;
 using Photon.Realtime;
@@ -513,6 +515,10 @@ public class GorillaHuntManager : GorillaGameManager
 		base.InfrequentUpdate();
 	}
 
+	public GorillaHuntManager()
+	{
+	}
+
 	public float tagCoolDown = 5f;
 
 	public int[] currentHuntedArray = new int[10];
@@ -552,4 +558,177 @@ public class GorillaHuntManager : GorillaGameManager
 	private int copyListToArrayIndex;
 
 	private int copyArrayToListIndex;
+
+	[CompilerGenerated]
+	private sealed class <HuntEnd>d__31 : IEnumerator<object>, IEnumerator, IDisposable
+	{
+		[DebuggerHidden]
+		public <HuntEnd>d__31(int <>1__state)
+		{
+			this.<>1__state = <>1__state;
+		}
+
+		[DebuggerHidden]
+		void IDisposable.Dispose()
+		{
+		}
+
+		bool IEnumerator.MoveNext()
+		{
+			int num = this.<>1__state;
+			GorillaHuntManager gorillaHuntManager = this;
+			switch (num)
+			{
+			case 0:
+				this.<>1__state = -1;
+				if (!PhotonNetwork.LocalPlayer.IsMasterClient)
+				{
+					goto IL_9D;
+				}
+				break;
+			case 1:
+				this.<>1__state = -1;
+				break;
+			case 2:
+				this.<>1__state = -1;
+				goto IL_9D;
+			case 3:
+				this.<>1__state = -1;
+				return false;
+			default:
+				return false;
+			}
+			if ((double)Time.time >= gorillaHuntManager.timeHuntGameEnded + (double)gorillaHuntManager.tagCoolDown)
+			{
+				if (gorillaHuntManager.waitingToStartNextHuntGame)
+				{
+					gorillaHuntManager.StartCoroutine(gorillaHuntManager.StartHuntCountdown());
+				}
+				this.<>2__current = null;
+				this.<>1__state = 2;
+				return true;
+			}
+			this.<>2__current = new WaitForSeconds(0.1f);
+			this.<>1__state = 1;
+			return true;
+			IL_9D:
+			this.<>2__current = null;
+			this.<>1__state = 3;
+			return true;
+		}
+
+		object IEnumerator<object>.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		[DebuggerHidden]
+		void IEnumerator.Reset()
+		{
+			throw new NotSupportedException();
+		}
+
+		object IEnumerator.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		private int <>1__state;
+
+		private object <>2__current;
+
+		public GorillaHuntManager <>4__this;
+	}
+
+	[CompilerGenerated]
+	private sealed class <StartHuntCountdown>d__28 : IEnumerator<object>, IEnumerator, IDisposable
+	{
+		[DebuggerHidden]
+		public <StartHuntCountdown>d__28(int <>1__state)
+		{
+			this.<>1__state = <>1__state;
+		}
+
+		[DebuggerHidden]
+		void IDisposable.Dispose()
+		{
+		}
+
+		bool IEnumerator.MoveNext()
+		{
+			int num = this.<>1__state;
+			GorillaHuntManager gorillaHuntManager = this;
+			switch (num)
+			{
+			case 0:
+				this.<>1__state = -1;
+				if (!PhotonNetwork.LocalPlayer.IsMasterClient || gorillaHuntManager.inStartCountdown)
+				{
+					goto IL_90;
+				}
+				gorillaHuntManager.inStartCountdown = true;
+				gorillaHuntManager.countDownTime = 5;
+				gorillaHuntManager.CleanUpHunt();
+				break;
+			case 1:
+				this.<>1__state = -1;
+				gorillaHuntManager.countDownTime--;
+				break;
+			case 2:
+				this.<>1__state = -1;
+				return false;
+			default:
+				return false;
+			}
+			if (gorillaHuntManager.countDownTime > 0)
+			{
+				this.<>2__current = new WaitForSeconds(1f);
+				this.<>1__state = 1;
+				return true;
+			}
+			gorillaHuntManager.StartHunt();
+			IL_90:
+			this.<>2__current = null;
+			this.<>1__state = 2;
+			return true;
+		}
+
+		object IEnumerator<object>.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		[DebuggerHidden]
+		void IEnumerator.Reset()
+		{
+			throw new NotSupportedException();
+		}
+
+		object IEnumerator.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		private int <>1__state;
+
+		private object <>2__current;
+
+		public GorillaHuntManager <>4__this;
+	}
 }

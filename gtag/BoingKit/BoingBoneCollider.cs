@@ -136,6 +136,10 @@ namespace BoingKit
 			}
 		}
 
+		public BoingBoneCollider()
+		{
+		}
+
 		public BoingBoneCollider.Type Shape;
 
 		public float Radius = 0.1f;

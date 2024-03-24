@@ -26,6 +26,10 @@ internal class OwnershipGaurd : MonoBehaviour
 		OwnershipGaurdHandler.RemoveViews(this.photonViews);
 	}
 
+	public OwnershipGaurd()
+	{
+	}
+
 	[SerializeField]
 	private PhotonView[] photonViews;
 

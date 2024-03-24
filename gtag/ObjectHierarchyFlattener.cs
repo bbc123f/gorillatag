@@ -48,6 +48,10 @@ public class ObjectHierarchyFlattener : MonoBehaviour
 		base.Invoke("ResetTransform", 0f);
 	}
 
+	public ObjectHierarchyFlattener()
+	{
+	}
+
 	private GameObject originalParentGO;
 
 	private Transform originalParentTransform;

@@ -110,6 +110,10 @@ namespace GorillaTag.Cosmetics
 			return false;
 		}
 
+		public DrillFX()
+		{
+		}
+
 		[SerializeField]
 		private ParticleSystem fx;
 

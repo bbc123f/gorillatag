@@ -131,6 +131,10 @@ namespace Viveport
 			return stringBuilder.ToString();
 		}
 
+		public Deeplink()
+		{
+		}
+
 		private const int MaxIdLength = 256;
 
 		private static StatusCallback isReadyIl2cppCallback;

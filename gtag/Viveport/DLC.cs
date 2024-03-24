@@ -62,6 +62,10 @@ namespace Viveport
 			return DLC.IsSubscribed();
 		}
 
+		public DLC()
+		{
+		}
+
 		private static StatusCallback isDlcReadyIl2cppCallback;
 
 		private const int AppIdLength = 37;

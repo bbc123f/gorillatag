@@ -29,6 +29,10 @@ public class MagicIngredient : TransferrableObject
 		base.gameObject.SetActive(false);
 	}
 
+	public MagicIngredient()
+	{
+	}
+
 	[FormerlySerializedAs("IngredientType")]
 	public MagicIngredientType IngredientTypeSO;
 

@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace OculusSampleFramework
@@ -183,6 +186,10 @@ namespace OculusSampleFramework
 			this._reverse = !this._reverse;
 		}
 
+		public TrainLocomotive()
+		{
+		}
+
 		private const float MIN_SPEED = 0.2f;
 
 		private const float MAX_SPEED = 2.7f;
@@ -265,6 +272,124 @@ namespace OculusSampleFramework
 			Start,
 			AccelerateOrSetProperSpeed,
 			Stop
+		}
+
+		[CompilerGenerated]
+		private sealed class <StartStopTrain>d__34 : IEnumerator<object>, IEnumerator, IDisposable
+		{
+			[DebuggerHidden]
+			public <StartStopTrain>d__34(int <>1__state)
+			{
+				this.<>1__state = <>1__state;
+			}
+
+			[DebuggerHidden]
+			void IDisposable.Dispose()
+			{
+			}
+
+			bool IEnumerator.MoveNext()
+			{
+				int num = this.<>1__state;
+				TrainLocomotive trainLocomotive = this;
+				if (num != 0)
+				{
+					if (num != 1)
+					{
+						return false;
+					}
+					this.<>1__state = -1;
+				}
+				else
+				{
+					this.<>1__state = -1;
+					endSpeed = (startTrain ? trainLocomotive._initialSpeed : 0f);
+					timePeriodForSpeedChange = 3f;
+					if (startTrain)
+					{
+						trainLocomotive._smoke1.Play();
+						trainLocomotive._isMoving = true;
+						ParticleSystem.EmissionModule emission = trainLocomotive._smoke1.emission;
+						ParticleSystem.MainModule main = trainLocomotive._smoke1.main;
+						emission.rateOverTimeMultiplier = trainLocomotive._standardRateOverTimeMultiplier;
+						main.maxParticles = trainLocomotive._standardMaxParticles;
+						timePeriodForSpeedChange = trainLocomotive.PlayEngineSound(TrainLocomotive.EngineSoundState.Start);
+					}
+					else
+					{
+						timePeriodForSpeedChange = trainLocomotive.PlayEngineSound(TrainLocomotive.EngineSoundState.Stop);
+					}
+					trainLocomotive._engineAudioSource.loop = false;
+					timePeriodForSpeedChange *= 0.9f;
+					startTime = Time.time;
+					endTime = Time.time + timePeriodForSpeedChange;
+					startSpeed = trainLocomotive._currentSpeed;
+				}
+				if (Time.time >= endTime)
+				{
+					trainLocomotive._currentSpeed = endSpeed;
+					trainLocomotive._startStopTrainCr = null;
+					trainLocomotive._isMoving = startTrain;
+					if (!trainLocomotive._isMoving)
+					{
+						trainLocomotive._smoke1.Stop();
+					}
+					else
+					{
+						trainLocomotive._engineAudioSource.loop = true;
+						trainLocomotive.PlayEngineSound(TrainLocomotive.EngineSoundState.AccelerateOrSetProperSpeed);
+					}
+					return false;
+				}
+				float num2 = (Time.time - startTime) / timePeriodForSpeedChange;
+				trainLocomotive._currentSpeed = startSpeed * (1f - num2) + endSpeed * num2;
+				trainLocomotive.UpdateSmokeEmissionBasedOnSpeed();
+				this.<>2__current = null;
+				this.<>1__state = 1;
+				return true;
+			}
+
+			object IEnumerator<object>.Current
+			{
+				[DebuggerHidden]
+				get
+				{
+					return this.<>2__current;
+				}
+			}
+
+			[DebuggerHidden]
+			void IEnumerator.Reset()
+			{
+				throw new NotSupportedException();
+			}
+
+			object IEnumerator.Current
+			{
+				[DebuggerHidden]
+				get
+				{
+					return this.<>2__current;
+				}
+			}
+
+			private int <>1__state;
+
+			private object <>2__current;
+
+			public bool startTrain;
+
+			public TrainLocomotive <>4__this;
+
+			private float <endSpeed>5__2;
+
+			private float <timePeriodForSpeedChange>5__3;
+
+			private float <startTime>5__4;
+
+			private float <endTime>5__5;
+
+			private float <startSpeed>5__6;
 		}
 	}
 }

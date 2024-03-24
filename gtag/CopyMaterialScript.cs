@@ -19,6 +19,10 @@ public class CopyMaterialScript : MonoBehaviour
 		}
 	}
 
+	public CopyMaterialScript()
+	{
+	}
+
 	public SkinnedMeshRenderer sourceToCopyMaterialFrom;
 
 	public SkinnedMeshRenderer mySkinnedMeshRenderer;

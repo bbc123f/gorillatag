@@ -28,6 +28,10 @@ public class MagicRingCosmetic : MonoBehaviour
 		this.ringRenderer.SetPropertyBlock(this.materialPropertyBlock);
 	}
 
+	public MagicRingCosmetic()
+	{
+	}
+
 	[Tooltip("The ring will fade in the emissive texture based on temperature from this ThermalReceiver.")]
 	public ThermalReceiver thermalReceiver;
 

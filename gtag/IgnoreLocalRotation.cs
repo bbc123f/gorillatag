@@ -7,4 +7,8 @@ public class IgnoreLocalRotation : MonoBehaviour
 	{
 		base.transform.rotation = Quaternion.identity;
 	}
+
+	public IgnoreLocalRotation()
+	{
+	}
 }

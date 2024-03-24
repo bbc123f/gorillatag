@@ -23,6 +23,10 @@ public class SelectivePassthroughExperience : MonoBehaviour
 		}
 	}
 
+	public SelectivePassthroughExperience()
+	{
+	}
+
 	public GameObject leftMaskObject;
 
 	public GameObject rightMaskObject;

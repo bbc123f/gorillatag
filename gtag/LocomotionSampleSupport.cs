@@ -218,6 +218,10 @@ public class LocomotionSampleSupport : MonoBehaviour
 		this.TeleportController.GetComponent<TeleportOrientationHandlerThumbstick>().Thumbstick = OVRInput.Controller.RTouch;
 	}
 
+	public LocomotionSampleSupport()
+	{
+	}
+
 	private LocomotionController lc;
 
 	private bool inMenu;

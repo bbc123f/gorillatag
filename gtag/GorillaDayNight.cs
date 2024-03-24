@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using UnityEngine;
 
@@ -124,6 +127,22 @@ public class GorillaDayNight : MonoBehaviour
 		yield break;
 	}
 
+	public GorillaDayNight()
+	{
+	}
+
+	[CompilerGenerated]
+	private bool <LightMapSet>b__25_0()
+	{
+		return this.finishedStep;
+	}
+
+	[CompilerGenerated]
+	private bool <LightMapSet>b__25_1()
+	{
+		return this.finishedStep;
+	}
+
 	[OnEnterPlay_SetNull]
 	public static volatile GorillaDayNight instance;
 
@@ -164,4 +183,104 @@ public class GorillaDayNight : MonoBehaviour
 	public bool test;
 
 	public bool working;
+
+	[CompilerGenerated]
+	private sealed class <LightMapSet>d__25 : IEnumerator<object>, IEnumerator, IDisposable
+	{
+		[DebuggerHidden]
+		public <LightMapSet>d__25(int <>1__state)
+		{
+			this.<>1__state = <>1__state;
+		}
+
+		[DebuggerHidden]
+		void IDisposable.Dispose()
+		{
+		}
+
+		bool IEnumerator.MoveNext()
+		{
+			int num = this.<>1__state;
+			GorillaDayNight gorillaDayNight = this;
+			switch (num)
+			{
+			case 0:
+				this.<>1__state = -1;
+				gorillaDayNight.working = true;
+				gorillaDayNight.firstData = setFirstData;
+				gorillaDayNight.secondData = setSecondData;
+				gorillaDayNight.lerpValue = setLerp;
+				gorillaDayNight.k = 0;
+				break;
+			case 1:
+				this.<>1__state = -1;
+				gorillaDayNight.finishedStep = false;
+				gorillaDayNight.workingLightMapData.lightmapColor.SetPixels(gorillaDayNight.mixedPixels);
+				gorillaDayNight.workingLightMapData.lightmapColor.Apply(false);
+				gorillaDayNight.dirsThread = new Thread(new ThreadStart(gorillaDayNight.DoDirsStep));
+				gorillaDayNight.dirsThread.Start();
+				this.<>2__current = new WaitUntil(() => gorillaDayNight.finishedStep);
+				this.<>1__state = 2;
+				return true;
+			case 2:
+				this.<>1__state = -1;
+				gorillaDayNight.finishedStep = false;
+				gorillaDayNight.workingLightMapData.lightmapDir.SetPixels(gorillaDayNight.mixedPixels);
+				gorillaDayNight.workingLightMapData.lightmapDir.Apply(false);
+				gorillaDayNight.workingLightMapDatas[gorillaDayNight.k] = gorillaDayNight.workingLightMapData;
+				gorillaDayNight.k++;
+				break;
+			default:
+				return false;
+			}
+			if (gorillaDayNight.k >= gorillaDayNight.lightmapDatas[gorillaDayNight.firstData].lights.Length)
+			{
+				LightmapSettings.lightmaps = gorillaDayNight.workingLightMapDatas;
+				gorillaDayNight.working = false;
+				gorillaDayNight.done = true;
+				return false;
+			}
+			gorillaDayNight.lightsThread = new Thread(new ThreadStart(gorillaDayNight.DoLightsStep));
+			gorillaDayNight.lightsThread.Start();
+			this.<>2__current = new WaitUntil(() => gorillaDayNight.finishedStep);
+			this.<>1__state = 1;
+			return true;
+		}
+
+		object IEnumerator<object>.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		[DebuggerHidden]
+		void IEnumerator.Reset()
+		{
+			throw new NotSupportedException();
+		}
+
+		object IEnumerator.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		private int <>1__state;
+
+		private object <>2__current;
+
+		public GorillaDayNight <>4__this;
+
+		public int setFirstData;
+
+		public int setSecondData;
+
+		public float setLerp;
+	}
 }

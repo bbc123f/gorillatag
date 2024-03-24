@@ -13,6 +13,10 @@ public class CallLimitType<T> where T : CallLimiter
 		};
 	}
 
+	public CallLimitType()
+	{
+	}
+
 	public FXType Key;
 
 	public bool UseNetWorkTime;

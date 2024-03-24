@@ -8,13 +8,13 @@ public class SimpleResizer
 		GameObject gameObject = Object.Instantiate<GameObject>(sourcePrefab.gameObject, Vector3.zero, Quaternion.identity);
 		gameObject.name = sourcePrefab.name;
 		SimpleResizable component = gameObject.GetComponent<SimpleResizable>();
-		component.NewSize = newSize;
+		component.SetNewSize(newSize);
 		if (component == null)
 		{
 			Debug.LogError("Resizable component missing.");
 			return;
 		}
-		Mesh mesh = this.ProcessVertices(component, newSize);
+		Mesh mesh = SimpleResizer.ProcessVertices(component, newSize, false);
 		MeshFilter component2 = gameObject.GetComponent<MeshFilter>();
 		component2.sharedMesh = mesh;
 		component2.sharedMesh.RecalculateBounds();
@@ -24,31 +24,36 @@ public class SimpleResizer
 		Object.Destroy(component);
 	}
 
-	private Mesh ProcessVertices(SimpleResizable resizable, Vector3 newSize)
+	internal static Mesh ProcessVertices(SimpleResizable resizable, Vector3 newSize, bool pivot = false)
 	{
-		Mesh mesh = resizable.Mesh;
-		Vector3 size = mesh.bounds.size;
-		SimpleResizable.Method method = ((size.x < newSize.x) ? resizable.ScalingX : SimpleResizable.Method.Scale);
-		SimpleResizable.Method method2 = ((size.y < newSize.y) ? resizable.ScalingY : SimpleResizable.Method.Scale);
-		SimpleResizable.Method method3 = ((size.z < newSize.z) ? resizable.ScalingZ : SimpleResizable.Method.Scale);
-		Vector3[] vertices = mesh.vertices;
-		float num = 1f / resizable.DefaultSize.x * resizable.PivotPosition.x;
-		float num2 = 1f / resizable.DefaultSize.y * resizable.PivotPosition.y;
-		float num3 = 1f / resizable.DefaultSize.z * resizable.PivotPosition.z;
+		Mesh originalMesh = resizable.OriginalMesh;
+		Vector3 defaultSize = resizable.DefaultSize;
+		SimpleResizable.Method method = ((defaultSize.x < newSize.x) ? resizable.ScalingX : SimpleResizable.Method.Scale);
+		SimpleResizable.Method method2 = ((defaultSize.y < newSize.y) ? resizable.ScalingY : SimpleResizable.Method.Scale);
+		SimpleResizable.Method method3 = ((defaultSize.z < newSize.z) ? resizable.ScalingZ : SimpleResizable.Method.Scale);
+		Vector3[] vertices = originalMesh.vertices;
+		Vector3 vector = resizable.transform.InverseTransformPoint(resizable.PivotPosition);
+		float num = 1f / resizable.DefaultSize.x * vector.x;
+		float num2 = 1f / resizable.DefaultSize.y * vector.y;
+		float num3 = 1f / resizable.DefaultSize.z * vector.z;
 		for (int i = 0; i < vertices.Length; i++)
 		{
-			Vector3 vector = vertices[i];
-			vector.x = this.CalculateNewVertexPosition(method, vector.x, size.x, newSize.x, resizable.PaddingX, resizable.PaddingXMax, num);
-			vector.y = this.CalculateNewVertexPosition(method2, vector.y, size.y, newSize.y, resizable.PaddingY, resizable.PaddingYMax, num2);
-			vector.z = this.CalculateNewVertexPosition(method3, vector.z, size.z, newSize.z, resizable.PaddingZ, resizable.PaddingZMax, num3);
-			vertices[i] = vector;
+			Vector3 vector2 = vertices[i];
+			vector2.x = SimpleResizer.CalculateNewVertexPosition(method, vector2.x, defaultSize.x, newSize.x, resizable.PaddingX, resizable.PaddingXMax, num);
+			vector2.y = SimpleResizer.CalculateNewVertexPosition(method2, vector2.y, defaultSize.y, newSize.y, resizable.PaddingY, resizable.PaddingYMax, num2);
+			vector2.z = SimpleResizer.CalculateNewVertexPosition(method3, vector2.z, defaultSize.z, newSize.z, resizable.PaddingZ, resizable.PaddingZMax, num3);
+			if (pivot)
+			{
+				vector2 += vector;
+			}
+			vertices[i] = vector2;
 		}
-		Mesh mesh2 = Object.Instantiate<Mesh>(mesh);
-		mesh2.vertices = vertices;
-		return mesh2;
+		Mesh mesh = Object.Instantiate<Mesh>(originalMesh);
+		mesh.vertices = vertices;
+		return mesh;
 	}
 
-	private float CalculateNewVertexPosition(SimpleResizable.Method resizeMethod, float currentPosition, float currentSize, float newSize, float padding, float paddingMax, float pivot)
+	private static float CalculateNewVertexPosition(SimpleResizable.Method resizeMethod, float currentPosition, float currentSize, float newSize, float padding, float paddingMax, float pivot)
 	{
 		float num = currentSize / 2f * (newSize / 2f * (1f / (currentSize / 2f))) - currentSize / 2f;
 		switch (resizeMethod)
@@ -76,5 +81,9 @@ public class SimpleResizer
 		float num2 = newSize * -pivot;
 		currentPosition += num2;
 		return currentPosition;
+	}
+
+	public SimpleResizer()
+	{
 	}
 }

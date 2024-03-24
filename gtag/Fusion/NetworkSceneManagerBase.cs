@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -9,7 +10,19 @@ namespace Fusion
 {
 	public abstract class NetworkSceneManagerBase : Behaviour, INetworkSceneManager
 	{
-		public NetworkRunner Runner { get; private set; }
+		public NetworkRunner Runner
+		{
+			[CompilerGenerated]
+			get
+			{
+				return this.<Runner>k__BackingField;
+			}
+			[CompilerGenerated]
+			private set
+			{
+				this.<Runner>k__BackingField = value;
+			}
+		}
 
 		protected virtual void OnEnable()
 		{
@@ -242,6 +255,15 @@ namespace Fusion
 			yield break;
 		}
 
+		protected NetworkSceneManagerBase()
+		{
+		}
+
+		// Note: this type is marked as 'beforefieldinit'.
+		static NetworkSceneManagerBase()
+		{
+		}
+
 		private static WeakReference<NetworkSceneManagerBase> s_currentlyLoading = new WeakReference<NetworkSceneManagerBase>(null);
 
 		[InlineHelp]
@@ -255,6 +277,185 @@ namespace Fusion
 
 		private SceneRef _currentScene;
 
+		[CompilerGenerated]
+		private NetworkRunner <Runner>k__BackingField;
+
 		protected delegate void FinishedLoadingDelegate(IEnumerable<NetworkObject> sceneObjects);
+
+		[CompilerGenerated]
+		private sealed class <>c__DisplayClass28_0
+		{
+			public <>c__DisplayClass28_0()
+			{
+			}
+
+			internal void <SwitchSceneWrapper>b__0(IEnumerable<NetworkObject> objects)
+			{
+				this.finishCalled = true;
+				foreach (NetworkObject networkObject in objects)
+				{
+					this.sceneObjects.Add(networkObject.NetworkGuid, networkObject);
+				}
+			}
+
+			public bool finishCalled;
+
+			public Dictionary<Guid, NetworkObject> sceneObjects;
+		}
+
+		[CompilerGenerated]
+		private sealed class <SwitchSceneWrapper>d__28 : IEnumerator<object>, IEnumerator, IDisposable
+		{
+			[DebuggerHidden]
+			public <SwitchSceneWrapper>d__28(int <>1__state)
+			{
+				this.<>1__state = <>1__state;
+			}
+
+			[DebuggerHidden]
+			void IDisposable.Dispose()
+			{
+				int num = this.<>1__state;
+				if (num == -3 || num == 1)
+				{
+					try
+					{
+					}
+					finally
+					{
+						this.<>m__Finally1();
+					}
+				}
+			}
+
+			bool IEnumerator.MoveNext()
+			{
+				bool flag;
+				try
+				{
+					int num = this.<>1__state;
+					NetworkSceneManagerBase networkSceneManagerBase = this;
+					if (num != 0)
+					{
+						if (num != 1)
+						{
+							return false;
+						}
+						this.<>1__state = -3;
+					}
+					else
+					{
+						this.<>1__state = -1;
+						CS$<>8__locals1 = new NetworkSceneManagerBase.<>c__DisplayClass28_0();
+						CS$<>8__locals1.finishCalled = false;
+						CS$<>8__locals1.sceneObjects = new Dictionary<Guid, NetworkObject>();
+						error = null;
+						NetworkSceneManagerBase.FinishedLoadingDelegate finishedLoadingDelegate = delegate(IEnumerable<NetworkObject> objects)
+						{
+							CS$<>8__locals1.finishCalled = true;
+							foreach (NetworkObject networkObject in objects)
+							{
+								CS$<>8__locals1.sceneObjects.Add(networkObject.NetworkGuid, networkObject);
+							}
+						};
+						this.<>1__state = -3;
+						NetworkSceneManagerBase.s_currentlyLoading.SetTarget(networkSceneManagerBase);
+						networkSceneManagerBase.Runner.InvokeSceneLoadStart();
+						coro = networkSceneManagerBase.SwitchScene(prevScene, newScene, finishedLoadingDelegate);
+						next = true;
+					}
+					while (next)
+					{
+						try
+						{
+							next = coro.MoveNext();
+						}
+						catch (Exception ex)
+						{
+							error = ex;
+							break;
+						}
+						if (next)
+						{
+							this.<>2__current = coro.Current;
+							this.<>1__state = 1;
+							return true;
+						}
+					}
+					coro = null;
+					this.<>m__Finally1();
+					if (error != null)
+					{
+						networkSceneManagerBase.LogError(string.Format("Failed to switch scenes: {0}", error));
+					}
+					else if (!CS$<>8__locals1.finishCalled)
+					{
+						networkSceneManagerBase.LogError("Failed to switch scenes: SwitchScene implementation did not invoke finished delegate");
+					}
+					else
+					{
+						networkSceneManagerBase.Runner.RegisterSceneObjects(CS$<>8__locals1.sceneObjects.Values);
+						networkSceneManagerBase.Runner.InvokeSceneLoadDone();
+					}
+					flag = false;
+				}
+				catch
+				{
+					this.System.IDisposable.Dispose();
+					throw;
+				}
+				return flag;
+			}
+
+			private void <>m__Finally1()
+			{
+				this.<>1__state = -1;
+				NetworkSceneManagerBase networkSceneManagerBase = this;
+				NetworkSceneManagerBase.s_currentlyLoading.SetTarget(null);
+				networkSceneManagerBase._runningCoroutine = null;
+			}
+
+			object IEnumerator<object>.Current
+			{
+				[DebuggerHidden]
+				get
+				{
+					return this.<>2__current;
+				}
+			}
+
+			[DebuggerHidden]
+			void IEnumerator.Reset()
+			{
+				throw new NotSupportedException();
+			}
+
+			object IEnumerator.Current
+			{
+				[DebuggerHidden]
+				get
+				{
+					return this.<>2__current;
+				}
+			}
+
+			private int <>1__state;
+
+			private object <>2__current;
+
+			public NetworkSceneManagerBase <>4__this;
+
+			public SceneRef prevScene;
+
+			public SceneRef newScene;
+
+			private NetworkSceneManagerBase.<>c__DisplayClass28_0 <>8__1;
+
+			private Exception <error>5__2;
+
+			private IEnumerator <coro>5__3;
+
+			private bool <next>5__4;
+		}
 	}
 }

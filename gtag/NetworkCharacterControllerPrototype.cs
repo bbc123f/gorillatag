@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using Fusion;
 using UnityEngine;
 
@@ -70,7 +71,19 @@ public class NetworkCharacterControllerPrototype : NetworkTransform
 		}
 	}
 
-	public CharacterController Controller { get; private set; }
+	public CharacterController Controller
+	{
+		[CompilerGenerated]
+		get
+		{
+			return this.<Controller>k__BackingField;
+		}
+		[CompilerGenerated]
+		private set
+		{
+			this.<Controller>k__BackingField = value;
+		}
+	}
 
 	protected override void Awake()
 	{
@@ -139,6 +152,10 @@ public class NetworkCharacterControllerPrototype : NetworkTransform
 		this.IsGrounded = this.Controller.isGrounded;
 	}
 
+	public NetworkCharacterControllerPrototype()
+	{
+	}
+
 	public override void CopyBackingFieldsToState(bool A_1)
 	{
 		base.CopyBackingFieldsToState(A_1);
@@ -175,6 +192,9 @@ public class NetworkCharacterControllerPrototype : NetworkTransform
 	[SerializeField]
 	[DefaultForProperty("Velocity", 21, 3)]
 	private Vector3 _Velocity;
+
+	[CompilerGenerated]
+	private CharacterController <Controller>k__BackingField;
 
 	static Changed<NetworkCharacterControllerPrototype> $IL2CPP_CHANGED;
 

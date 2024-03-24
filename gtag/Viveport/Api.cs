@@ -225,6 +225,15 @@ namespace Viveport
 			return false;
 		}
 
+		public Api()
+		{
+		}
+
+		// Note: this type is marked as 'beforefieldinit'.
+		static Api()
+		{
+		}
+
 		internal static readonly List<GetLicenseCallback> InternalGetLicenseCallbacks = new List<GetLicenseCallback>();
 
 		internal static readonly List<StatusCallback> InternalStatusCallbacks = new List<StatusCallback>();
@@ -252,6 +261,10 @@ namespace Viveport
 			public abstract void OnSuccess(long issueTime, long expirationTime, int latestVersion, bool updateRequired);
 
 			public abstract void OnFailure(int errorCode, string errorMessage);
+
+			protected LicenseChecker()
+			{
+			}
 		}
 	}
 }

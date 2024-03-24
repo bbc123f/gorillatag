@@ -5,6 +5,10 @@ namespace GorillaLocomotion.Gameplay
 {
 	public class GorillaZiplineSegment : MonoBehaviour
 	{
+		public GorillaZiplineSegment()
+		{
+		}
+
 		public float startT;
 	}
 }

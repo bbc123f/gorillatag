@@ -1,15 +1,64 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public abstract class BasePageHandler : MonoBehaviour
 {
-	private protected int selectedIndex { protected get; private set; }
+	private protected int selectedIndex
+	{
+		[CompilerGenerated]
+		protected get
+		{
+			return this.<selectedIndex>k__BackingField;
+		}
+		[CompilerGenerated]
+		private set
+		{
+			this.<selectedIndex>k__BackingField = value;
+		}
+	}
 
-	private protected int currentPage { protected get; private set; }
+	private protected int currentPage
+	{
+		[CompilerGenerated]
+		protected get
+		{
+			return this.<currentPage>k__BackingField;
+		}
+		[CompilerGenerated]
+		private set
+		{
+			this.<currentPage>k__BackingField = value;
+		}
+	}
 
-	private protected int pages { protected get; private set; }
+	private protected int pages
+	{
+		[CompilerGenerated]
+		protected get
+		{
+			return this.<pages>k__BackingField;
+		}
+		[CompilerGenerated]
+		private set
+		{
+			this.<pages>k__BackingField = value;
+		}
+	}
 
-	private protected int maxEntires { protected get; private set; }
+	private protected int maxEntires
+	{
+		[CompilerGenerated]
+		protected get
+		{
+			return this.<maxEntires>k__BackingField;
+		}
+		[CompilerGenerated]
+		private set
+		{
+			this.<maxEntires>k__BackingField = value;
+		}
+	}
 
 	protected abstract int pageSize { get; }
 
@@ -62,4 +111,20 @@ public abstract class BasePageHandler : MonoBehaviour
 	protected abstract void ShowPage(int selectedPage, int startIndex, int endIndex);
 
 	protected abstract void PageEntrySelected(int pageEntry, int selectionIndex);
+
+	protected BasePageHandler()
+	{
+	}
+
+	[CompilerGenerated]
+	private int <selectedIndex>k__BackingField;
+
+	[CompilerGenerated]
+	private int <currentPage>k__BackingField;
+
+	[CompilerGenerated]
+	private int <pages>k__BackingField;
+
+	[CompilerGenerated]
+	private int <maxEntires>k__BackingField;
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using ExitGames.Client.Photon;
 using GorillaExtensions;
 using GorillaNetworking;
@@ -7,6 +8,7 @@ using Photon.Realtime;
 using Photon.Voice.Unity;
 using UnityEngine;
 using UnityEngine.UI;
+using WebSocketSharp;
 
 public class GorillaPlayerScoreboardLine : MonoBehaviour
 {
@@ -51,11 +53,14 @@ public class GorillaPlayerScoreboardLine : MonoBehaviour
 		this.reportButton.UpdateColor();
 		this.SwapToReportState(this.reportInProgress);
 		this.muteButton.gameObject.SetActive(true);
+		this.isMuteManual = PlayerPrefs.HasKey(this.linePlayer.UserId);
 		this.mute = PlayerPrefs.GetInt(this.linePlayer.UserId, 0);
 		this.muteButton.isOn = this.mute != 0;
+		this.muteButton.isAutoOn = false;
 		this.muteButton.UpdateColor();
 		if (this.rigContainer != null)
 		{
+			this.rigContainer.hasManualMute = this.isMuteManual;
 			this.rigContainer.Muted = this.mute != 0;
 		}
 	}
@@ -92,7 +97,7 @@ public class GorillaPlayerScoreboardLine : MonoBehaviour
 		{
 			if (this.linePlayer != null)
 			{
-				if (this.playerName.text != this.playerVRRig.playerText.text)
+				if (this.playerNameVisible != this.playerVRRig.playerNameVisible)
 				{
 					this.UpdatePlayerText();
 				}
@@ -113,15 +118,18 @@ public class GorillaPlayerScoreboardLine : MonoBehaviour
 							}
 						}
 					}
-					if (this.playerVRRig.setMatIndex != this.currentMatIndex && this.playerVRRig.setMatIndex != 0 && this.playerVRRig.setMatIndex > -1 && this.playerVRRig.setMatIndex < this.playerVRRig.materialsToChangeTo.Length)
+					Material material;
+					if (this.playerVRRig.setMatIndex == 0)
 					{
-						this.playerSwatch.material = this.playerVRRig.materialsToChangeTo[this.playerVRRig.setMatIndex];
-						this.currentMatIndex = this.playerVRRig.setMatIndex;
+						material = this.playerVRRig.scoreboardMaterial;
 					}
-					if (this.playerVRRig.setMatIndex == 0 && this.playerSwatch.material != null)
+					else
 					{
-						this.playerSwatch.material = null;
-						this.currentMatIndex = 0;
+						material = this.playerVRRig.materialsToChangeTo[this.playerVRRig.setMatIndex];
+					}
+					if (this.playerSwatch.material != material)
+					{
+						this.playerSwatch.material = material;
 					}
 					if (this.playerSwatch.color != this.playerVRRig.materialsToChangeTo[0].color)
 					{
@@ -157,6 +165,15 @@ public class GorillaPlayerScoreboardLine : MonoBehaviour
 					{
 						this.speakerIcon.enabled = false;
 					}
+					if (!this.isMuteManual)
+					{
+						bool isPlayerAutoMuted = this.rigContainer.GetIsPlayerAutoMuted();
+						if (this.muteButton.isAutoOn != isPlayerAutoMuted)
+						{
+							this.muteButton.isAutoOn = isPlayerAutoMuted;
+							this.muteButton.UpdateColor();
+						}
+					}
 				}
 			}
 		}
@@ -171,17 +188,17 @@ public class GorillaPlayerScoreboardLine : MonoBehaviour
 		{
 			this.playerName.text = this.NormalizeName(this.linePlayer.NickName != this.currentNickname, this.linePlayer.NickName);
 			this.currentNickname = this.linePlayer.NickName;
-			return;
 		}
-		if (this.rigContainer.Rig.Initialized)
+		else if (this.rigContainer.Rig.Initialized)
 		{
 			this.playerName.text = this.playerVRRig.playerText.text;
 		}
-		else if (this.currentNickname == null || GorillaComputer.instance.friendJoinCollider.playerIDsCurrentlyTouching.Contains(this.linePlayer.UserId))
+		else if (this.currentNickname.IsNullOrEmpty() || GorillaComputer.instance.friendJoinCollider.playerIDsCurrentlyTouching.Contains(this.linePlayer.UserId))
 		{
-			this.playerName.text = this.NormalizeName(this.linePlayer.NickName != this.currentNickname, this.linePlayer.NickName);
+			this.playerNameVisible = this.NormalizeName(this.linePlayer.NickName != this.currentNickname, this.linePlayer.NickName);
 		}
 		this.currentNickname = this.linePlayer.NickName;
+		this.playerName.text = (PlayFabAuthenticator.instance.GetSafety() ? this.linePlayer.DefaultName : this.playerNameVisible);
 	}
 
 	public void PressButton(bool isOn, GorillaPlayerLineButton.ButtonType buttonType)
@@ -197,15 +214,18 @@ public class GorillaPlayerScoreboardLine : MonoBehaviour
 		}
 		else if (this.linePlayer != null && this.playerVRRig != null)
 		{
+			this.isMuteManual = true;
+			this.muteButton.isAutoOn = false;
 			this.mute = (isOn ? 1 : 0);
 			PlayerPrefs.SetInt(this.linePlayer.UserId, this.mute);
 			if (this.rigContainer != null)
 			{
+				this.rigContainer.hasManualMute = this.isMuteManual;
 				this.rigContainer.Muted = this.mute != 0;
 			}
 			PlayerPrefs.Save();
 			this.muteButton.UpdateColor();
-			GorillaPlayerScoreboardLine.MutePlayer(this.linePlayer.UserId, this.playerName.text, this.mute);
+			GorillaPlayerScoreboardLine.MutePlayer(this.linePlayer.UserId, this.playerNameVisible, this.mute);
 			return;
 		}
 	}
@@ -225,7 +245,7 @@ public class GorillaPlayerScoreboardLine : MonoBehaviour
 			{
 				if ((!this.reportedHateSpeech && buttonType == GorillaPlayerLineButton.ButtonType.HateSpeech) || (!this.reportedToxicity && buttonType == GorillaPlayerLineButton.ButtonType.Toxicity) || (!this.reportedCheating && buttonType == GorillaPlayerLineButton.ButtonType.Cheating))
 				{
-					GorillaPlayerScoreboardLine.ReportPlayer(this.linePlayer.UserId, buttonType, this.playerName.text);
+					GorillaPlayerScoreboardLine.ReportPlayer(this.linePlayer.UserId, buttonType, this.playerNameVisible);
 					this.doneReporting = true;
 				}
 				this.reportedCheating = this.reportedCheating || buttonType == GorillaPlayerLineButton.ButtonType.Cheating;
@@ -315,6 +335,8 @@ public class GorillaPlayerScoreboardLine : MonoBehaviour
 		this.playerActorNumber = -1;
 		this.linePlayer = null;
 		this.playerNameValue = string.Empty;
+		this.currentNickname = string.Empty;
+		this.normalizedNickName = string.Empty;
 	}
 
 	private void OnEnable()
@@ -336,6 +358,15 @@ public class GorillaPlayerScoreboardLine : MonoBehaviour
 		this.cancelButton.SetActive(reportInProgress);
 	}
 
+	public GorillaPlayerScoreboardLine()
+	{
+	}
+
+	// Note: this type is marked as 'beforefieldinit'.
+	static GorillaPlayerScoreboardLine()
+	{
+	}
+
 	private static int[] targetActors = new int[] { -1 };
 
 	public Text playerName;
@@ -352,13 +383,13 @@ public class GorillaPlayerScoreboardLine : MonoBehaviour
 
 	public VRRig playerVRRig;
 
-	public int currentMatIndex;
-
 	public string playerLevelValue;
 
 	public string playerMMRValue;
 
 	public string playerNameValue;
+
+	public string playerNameVisible;
 
 	public int playerActorNumber;
 
@@ -388,6 +419,8 @@ public class GorillaPlayerScoreboardLine : MonoBehaviour
 
 	private Recorder myRecorder;
 
+	private bool isMuteManual;
+
 	private int mute;
 
 	private int emptyRigCount;
@@ -404,6 +437,8 @@ public class GorillaPlayerScoreboardLine : MonoBehaviour
 
 	private string currentNickname;
 
+	internal string normalizedNickName;
+
 	public bool doneReporting;
 
 	public bool lastVisible = true;
@@ -415,4 +450,27 @@ public class GorillaPlayerScoreboardLine : MonoBehaviour
 	public float emptyRigCooldown = 10f;
 
 	internal RigContainer rigContainer;
+
+	[CompilerGenerated]
+	[Serializable]
+	private sealed class <>c
+	{
+		// Note: this type is marked as 'beforefieldinit'.
+		static <>c()
+		{
+		}
+
+		public <>c()
+		{
+		}
+
+		internal bool <NormalizeName>b__51_0(char c)
+		{
+			return char.IsLetterOrDigit(c);
+		}
+
+		public static readonly GorillaPlayerScoreboardLine.<>c <>9 = new GorillaPlayerScoreboardLine.<>c();
+
+		public static Predicate<char> <>9__51_0;
+	}
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using GorillaNetworking;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,6 +16,16 @@ public class CosmeticStand : GorillaPressableButton
 	{
 		base.ButtonActivation();
 		CosmeticsController.instance.PressCosmeticStandButton(this);
+	}
+
+	public CosmeticStand()
+	{
+	}
+
+	[CompilerGenerated]
+	private bool <InitializeCosmetic>b__6_0(CosmeticsController.CosmeticItem x)
+	{
+		return this.thisCosmeticName == x.displayName;
 	}
 
 	public CosmeticsController.CosmeticItem thisCosmeticItem;

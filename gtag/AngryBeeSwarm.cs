@@ -423,6 +423,10 @@ public class AngryBeeSwarm : MonoBehaviourPunCallbacks, IInRoomCallbacks, IPunOb
 		this.Emerge(this.testEmergeFrom.transform.position, this.testEmergeTo.transform.position);
 	}
 
+	public AngryBeeSwarm()
+	{
+	}
+
 	public static AngryBeeSwarm instance;
 
 	public float heightAboveNavmesh = 0.5f;

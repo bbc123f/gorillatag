@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using FXP;
 using Photon.Pun;
 using PlayFab;
@@ -386,6 +388,18 @@ namespace GorillaNetworking.Store
 			}
 		}
 
+		public StoreUpdater()
+		{
+		}
+
+		[CompilerGenerated]
+		private void <GetEventsFromTitleData>b__28_0(string result)
+		{
+			Debug.Log("StoreUpdater - Recieved TitleData : " + result);
+			List<StoreUpdateEvent> list = StoreUpdateEvent.DeserializeFromJSonList(result);
+			this.HandleRecievingEventsFromTitleData(list);
+		}
+
 		public static volatile StoreUpdater instance;
 
 		private DateTime StoreItemsChangeTimeUTC;
@@ -407,5 +421,258 @@ namespace GorillaNetworking.Store
 		private bool bLoadFromJSON = true;
 
 		private bool bUsePlaceHolderJSON;
+
+		[CompilerGenerated]
+		[Serializable]
+		private sealed class <>c
+		{
+			// Note: this type is marked as 'beforefieldinit'.
+			static <>c()
+			{
+			}
+
+			public <>c()
+			{
+			}
+
+			internal void <GetEventsFromTitleData>b__28_1(PlayFabError error)
+			{
+				Debug.Log("StoreUpdater - Error Title Data : " + error.ErrorMessage);
+			}
+
+			public static readonly StoreUpdater.<>c <>9 = new StoreUpdater.<>c();
+
+			public static Action<PlayFabError> <>9__28_1;
+		}
+
+		[CompilerGenerated]
+		private sealed class <HandleClearCart>d__22 : IEnumerator<object>, IEnumerator, IDisposable
+		{
+			[DebuggerHidden]
+			public <HandleClearCart>d__22(int <>1__state)
+			{
+				this.<>1__state = <>1__state;
+			}
+
+			[DebuggerHidden]
+			void IDisposable.Dispose()
+			{
+			}
+
+			bool IEnumerator.MoveNext()
+			{
+				int num = this.<>1__state;
+				StoreUpdater storeUpdater = this;
+				if (num == 0)
+				{
+					this.<>1__state = -1;
+					float num2 = Math.Clamp((float)(updateEvent.EndTimeUTC.ToUniversalTime() - storeUpdater.DateTimeNowServerAdjusted).TotalSeconds + 60f, 0f, 60f);
+					this.<>2__current = new WaitForSeconds(num2);
+					this.<>1__state = 1;
+					return true;
+				}
+				if (num != 1)
+				{
+					return false;
+				}
+				this.<>1__state = -1;
+				if (CosmeticsController.instance.RemoveItemFromCart(CosmeticsController.instance.GetItemFromDict(updateEvent.ItemName)))
+				{
+					CosmeticsController.instance.ClearCheckout();
+					CosmeticsController.instance.UpdateShoppingCart();
+					CosmeticsController.instance.UpdateWornCosmetics(true);
+				}
+				return false;
+			}
+
+			object IEnumerator<object>.Current
+			{
+				[DebuggerHidden]
+				get
+				{
+					return this.<>2__current;
+				}
+			}
+
+			[DebuggerHidden]
+			void IEnumerator.Reset()
+			{
+				throw new NotSupportedException();
+			}
+
+			object IEnumerator.Current
+			{
+				[DebuggerHidden]
+				get
+				{
+					return this.<>2__current;
+				}
+			}
+
+			private int <>1__state;
+
+			private object <>2__current;
+
+			public StoreUpdateEvent updateEvent;
+
+			public StoreUpdater <>4__this;
+		}
+
+		[CompilerGenerated]
+		private sealed class <HandlePedestalUpdate>d__21 : IEnumerator<object>, IEnumerator, IDisposable
+		{
+			[DebuggerHidden]
+			public <HandlePedestalUpdate>d__21(int <>1__state)
+			{
+				this.<>1__state = <>1__state;
+			}
+
+			[DebuggerHidden]
+			void IDisposable.Dispose()
+			{
+			}
+
+			bool IEnumerator.MoveNext()
+			{
+				int num = this.<>1__state;
+				StoreUpdater storeUpdater = this;
+				if (num == 0)
+				{
+					this.<>1__state = -1;
+					storeUpdater.cosmeticItemPrefabsDictionary[updateEvent.PedestalID].SetStoreUpdateEvent(updateEvent, playFX);
+					this.<>2__current = new WaitForSeconds((float)(updateEvent.EndTimeUTC.ToUniversalTime() - storeUpdater.DateTimeNowServerAdjusted).TotalSeconds);
+					this.<>1__state = 1;
+					return true;
+				}
+				if (num != 1)
+				{
+					return false;
+				}
+				this.<>1__state = -1;
+				if (storeUpdater.pedestalClearCartCoroutines.ContainsKey(updateEvent.PedestalID))
+				{
+					if (storeUpdater.pedestalClearCartCoroutines[updateEvent.PedestalID] != null)
+					{
+						storeUpdater.StopCoroutine(storeUpdater.pedestalClearCartCoroutines[updateEvent.PedestalID]);
+					}
+					storeUpdater.pedestalClearCartCoroutines[updateEvent.PedestalID] = storeUpdater.StartCoroutine(storeUpdater.HandleClearCart(updateEvent));
+				}
+				else
+				{
+					storeUpdater.pedestalClearCartCoroutines.Add(updateEvent.PedestalID, storeUpdater.StartCoroutine(storeUpdater.HandleClearCart(updateEvent)));
+				}
+				if (storeUpdater.cosmeticItemPrefabsDictionary[updateEvent.PedestalID].gameObject.activeInHierarchy)
+				{
+					storeUpdater.pedestalUpdateEvents[updateEvent.PedestalID].RemoveAt(0);
+					storeUpdater.StartNextEvent(updateEvent.PedestalID, true);
+				}
+				return false;
+			}
+
+			object IEnumerator<object>.Current
+			{
+				[DebuggerHidden]
+				get
+				{
+					return this.<>2__current;
+				}
+			}
+
+			[DebuggerHidden]
+			void IEnumerator.Reset()
+			{
+				throw new NotSupportedException();
+			}
+
+			object IEnumerator.Current
+			{
+				[DebuggerHidden]
+				get
+				{
+					return this.<>2__current;
+				}
+			}
+
+			private int <>1__state;
+
+			private object <>2__current;
+
+			public StoreUpdater <>4__this;
+
+			public StoreUpdateEvent updateEvent;
+
+			public bool playFX;
+		}
+
+		[CompilerGenerated]
+		private sealed class <InitializeTitleData>d__27 : IEnumerator<object>, IEnumerator, IDisposable
+		{
+			[DebuggerHidden]
+			public <InitializeTitleData>d__27(int <>1__state)
+			{
+				this.<>1__state = <>1__state;
+			}
+
+			[DebuggerHidden]
+			void IDisposable.Dispose()
+			{
+			}
+
+			bool IEnumerator.MoveNext()
+			{
+				int num = this.<>1__state;
+				StoreUpdater storeUpdater = this;
+				switch (num)
+				{
+				case 0:
+					this.<>1__state = -1;
+					this.<>2__current = new WaitForSeconds(1f);
+					this.<>1__state = 1;
+					return true;
+				case 1:
+					this.<>1__state = -1;
+					PlayFabTitleDataCache.Instance.UpdateData();
+					this.<>2__current = new WaitForSeconds(1f);
+					this.<>1__state = 2;
+					return true;
+				case 2:
+					this.<>1__state = -1;
+					storeUpdater.GetEventsFromTitleData();
+					return false;
+				default:
+					return false;
+				}
+			}
+
+			object IEnumerator<object>.Current
+			{
+				[DebuggerHidden]
+				get
+				{
+					return this.<>2__current;
+				}
+			}
+
+			[DebuggerHidden]
+			void IEnumerator.Reset()
+			{
+				throw new NotSupportedException();
+			}
+
+			object IEnumerator.Current
+			{
+				[DebuggerHidden]
+				get
+				{
+					return this.<>2__current;
+				}
+			}
+
+			private int <>1__state;
+
+			private object <>2__current;
+
+			public StoreUpdater <>4__this;
+		}
 	}
 }

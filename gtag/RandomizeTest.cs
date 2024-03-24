@@ -42,6 +42,10 @@ public class RandomizeTest : MonoBehaviour
 		}
 	}
 
+	public RandomizeTest()
+	{
+	}
+
 	public List<int> testList = new List<int>();
 
 	public int[] testListArray = new int[10];

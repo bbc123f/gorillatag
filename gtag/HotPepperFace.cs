@@ -16,6 +16,7 @@ public class HotPepperFace : MonoBehaviour
 	public void PlayFX()
 	{
 		this._faceMesh.SetActive(true);
+		this._thermalSourceVolume.SetActive(true);
 		this._fireFX.Play();
 		this._flameSpeaker.Play();
 		this._breathSpeaker.Play();
@@ -25,9 +26,14 @@ public class HotPepperFace : MonoBehaviour
 	public void StopFX()
 	{
 		this._faceMesh.SetActive(false);
+		this._thermalSourceVolume.SetActive(false);
 		this._fireFX.Stop();
 		this._flameSpeaker.Stop();
 		this._breathSpeaker.Stop();
+	}
+
+	public HotPepperFace()
+	{
 	}
 
 	[SerializeField]
@@ -44,4 +50,7 @@ public class HotPepperFace : MonoBehaviour
 
 	[SerializeField]
 	private float _effectLength = 1.5f;
+
+	[SerializeField]
+	private GameObject _thermalSourceVolume;
 }

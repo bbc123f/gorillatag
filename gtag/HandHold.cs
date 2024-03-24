@@ -28,6 +28,10 @@ public class HandHold : MonoBehaviour, IGorillaGrabable
 		return null;
 	}
 
+	public HandHold()
+	{
+	}
+
 	private Dictionary<Transform, Transform> attached = new Dictionary<Transform, Transform>();
 
 	[SerializeField]

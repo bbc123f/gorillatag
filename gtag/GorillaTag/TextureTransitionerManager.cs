@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace GorillaTag
@@ -7,7 +8,19 @@ namespace GorillaTag
 	[ExecuteAlways]
 	public class TextureTransitionerManager : MonoBehaviour
 	{
-		public static TextureTransitionerManager instance { get; private set; }
+		public static TextureTransitionerManager instance
+		{
+			[CompilerGenerated]
+			get
+			{
+				return TextureTransitionerManager.<instance>k__BackingField;
+			}
+			[CompilerGenerated]
+			private set
+			{
+				TextureTransitionerManager.<instance>k__BackingField = value;
+			}
+		}
 
 		protected void Awake()
 		{
@@ -85,6 +98,18 @@ namespace GorillaTag
 		{
 			TextureTransitionerManager.components.Remove(component);
 		}
+
+		public TextureTransitionerManager()
+		{
+		}
+
+		// Note: this type is marked as 'beforefieldinit'.
+		static TextureTransitionerManager()
+		{
+		}
+
+		[CompilerGenerated]
+		private static TextureTransitionerManager <instance>k__BackingField;
 
 		public static readonly List<TextureTransitioner> components = new List<TextureTransitioner>(256);
 

@@ -5,6 +5,10 @@ namespace GorillaTag.GuidedRefs.Internal
 {
 	public class RelayInfo
 	{
+		public RelayInfo()
+		{
+		}
+
 		[NonSerialized]
 		public IGuidedRefTargetMono targetMono;
 

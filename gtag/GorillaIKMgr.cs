@@ -111,6 +111,10 @@ public class GorillaIKMgr : MonoBehaviour
 		this.firstFrame = false;
 	}
 
+	public GorillaIKMgr()
+	{
+	}
+
 	[OnEnterPlay_SetNull]
 	private static GorillaIKMgr _instance;
 

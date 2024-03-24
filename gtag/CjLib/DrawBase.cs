@@ -19,6 +19,10 @@ namespace CjLib
 
 		protected abstract void Draw(Color color, DebugUtil.Style style, bool depthTest);
 
+		protected DrawBase()
+		{
+		}
+
 		public Color WireframeColor = Color.white;
 
 		public Color ShadededColor = Color.gray;

@@ -69,6 +69,15 @@ public class InteractionPointManager : MonoBehaviour
 		}
 	}
 
+	public InteractionPointManager()
+	{
+	}
+
+	// Note: this type is marked as 'beforefieldinit'.
+	static InteractionPointManager()
+	{
+	}
+
 	public static InteractionPointManager instance;
 
 	public static bool hasInstance = false;

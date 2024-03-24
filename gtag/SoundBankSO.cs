@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class SoundBankSO : ScriptableObject
 {
+	public SoundBankSO()
+	{
+	}
+
 	public AudioClip[] sounds;
 
 	public Vector2 volumeRange = new Vector2(0.5f, 0.5f);

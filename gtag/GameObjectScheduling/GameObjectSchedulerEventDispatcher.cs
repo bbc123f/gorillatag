@@ -22,6 +22,10 @@ namespace GameObjectScheduling
 			}
 		}
 
+		public GameObjectSchedulerEventDispatcher()
+		{
+		}
+
 		[SerializeField]
 		private UnityEvent onScheduledActivation;
 

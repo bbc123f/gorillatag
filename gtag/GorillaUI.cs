@@ -10,4 +10,8 @@ public class GorillaUI : MonoBehaviour
 	private void Update()
 	{
 	}
+
+	public GorillaUI()
+	{
+	}
 }

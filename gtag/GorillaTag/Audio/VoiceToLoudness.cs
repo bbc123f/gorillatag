@@ -26,6 +26,10 @@ namespace GorillaTag.Audio
 			}
 		}
 
+		public VoiceToLoudness()
+		{
+		}
+
 		[NonSerialized]
 		public float loudness;
 

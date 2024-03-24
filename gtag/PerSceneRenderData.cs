@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class PerSceneRenderData : MonoBehaviour
@@ -104,6 +105,10 @@ public class PerSceneRenderData : MonoBehaviour
 		}
 	}
 
+	public PerSceneRenderData()
+	{
+	}
+
 	public Renderer representativeRenderer;
 
 	public string lightmapsResourcePath;
@@ -115,4 +120,32 @@ public class PerSceneRenderData : MonoBehaviour
 	private Dictionary<string, ResourceRequest> resourceRequests = new Dictionary<string, ResourceRequest>();
 
 	private Dictionary<string, Texture2D> lightmapsCache = new Dictionary<string, Texture2D>();
+
+	[CompilerGenerated]
+	private sealed class <>c__DisplayClass14_0
+	{
+		public <>c__DisplayClass14_0()
+		{
+		}
+
+		internal void <GetLightmap>b__0(AsyncOperation ao)
+		{
+			if (this.<>4__this == null)
+			{
+				return;
+			}
+			this.<>4__this.lightmapsCache.Add(this.timeOfDay, (Texture2D)this.request.asset);
+			this.<>4__this.resourceRequests.Remove(this.timeOfDay);
+			if (BetterDayNightManager.instance != null)
+			{
+				BetterDayNightManager.instance.RequestRepopulateLightmaps();
+			}
+		}
+
+		public PerSceneRenderData <>4__this;
+
+		public string timeOfDay;
+
+		public ResourceRequest request;
+	}
 }

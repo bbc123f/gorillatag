@@ -7,4 +7,8 @@ public class GorillaNetworkLeaveTutorialTrigger : GorillaTriggerBox
 		base.OnBoxTriggered();
 		NetworkSystem.Instance.SetMyTutorialComplete();
 	}
+
+	public GorillaNetworkLeaveTutorialTrigger()
+	{
+	}
 }

@@ -8,6 +8,10 @@ public class LookAtTransform : MonoBehaviour
 		base.transform.rotation = Quaternion.LookRotation(this.lookAt.position - base.transform.position);
 	}
 
+	public LookAtTransform()
+	{
+	}
+
 	[SerializeField]
 	private Transform lookAt;
 }

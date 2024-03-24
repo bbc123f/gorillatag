@@ -85,6 +85,15 @@ public class LiquidMain : MonoBehaviour
 		}
 	}
 
+	public LiquidMain()
+	{
+	}
+
+	// Note: this type is marked as 'beforefieldinit'.
+	static LiquidMain()
+	{
+	}
+
 	public Material PlaneMaterial;
 
 	public BoingReactorField ReactorField;

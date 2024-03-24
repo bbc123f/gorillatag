@@ -12,6 +12,10 @@ public class SpawnOnEnter : MonoBehaviour
 		}
 	}
 
+	public SpawnOnEnter()
+	{
+	}
+
 	public GameObject prefab;
 
 	public float cooldown = 0.1f;

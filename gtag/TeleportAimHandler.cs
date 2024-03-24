@@ -20,4 +20,8 @@ public abstract class TeleportAimHandler : TeleportSupport
 	}
 
 	public abstract void GetPoints(List<Vector3> points);
+
+	protected TeleportAimHandler()
+	{
+	}
 }

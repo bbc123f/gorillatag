@@ -5,6 +5,10 @@ namespace GorillaNetworking
 {
 	public class GorillaNetworkLobbyJoinTrigger : GorillaTriggerBox
 	{
+		public GorillaNetworkLobbyJoinTrigger()
+		{
+		}
+
 		public GameObject[] makeSureThisIsDisabled;
 
 		public GameObject[] makeSureThisIsEnabled;

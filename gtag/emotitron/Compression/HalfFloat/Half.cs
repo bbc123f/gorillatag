@@ -284,6 +284,11 @@ namespace emotitron.Compression.HalfFloat
 			return Convert.ToUInt64(this);
 		}
 
+		// Note: this type is marked as 'beforefieldinit'.
+		static Half()
+		{
+		}
+
 		private ushort value;
 
 		public const int PrecisionDigits = 3;

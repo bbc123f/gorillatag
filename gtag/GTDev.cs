@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Security;
 using System.Text;
+using System.Threading;
 using BuildSafe;
 using UnityEngine;
 
@@ -89,7 +90,35 @@ public static class GTDev
 		}
 	}
 
-	public static event Action<GTDev.LogEntry> OnLogEntry;
+	public static event Action<GTDev.LogEntry> OnLogEntry
+	{
+		[CompilerGenerated]
+		add
+		{
+			Action<GTDev.LogEntry> action = GTDev.OnLogEntry;
+			Action<GTDev.LogEntry> action2;
+			do
+			{
+				action2 = action;
+				Action<GTDev.LogEntry> action3 = (Action<GTDev.LogEntry>)Delegate.Combine(action2, value);
+				action = Interlocked.CompareExchange<Action<GTDev.LogEntry>>(ref GTDev.OnLogEntry, action3, action2);
+			}
+			while (action != action2);
+		}
+		[CompilerGenerated]
+		remove
+		{
+			Action<GTDev.LogEntry> action = GTDev.OnLogEntry;
+			Action<GTDev.LogEntry> action2;
+			do
+			{
+				action2 = action;
+				Action<GTDev.LogEntry> action3 = (Action<GTDev.LogEntry>)Delegate.Remove(action2, value);
+				action = Interlocked.CompareExchange<Action<GTDev.LogEntry>>(ref GTDev.OnLogEntry, action3, action2);
+			}
+			while (action != action2);
+		}
+	}
 
 	public static int DevID
 	{
@@ -229,6 +258,14 @@ public static class GTDev
 		return stringBuilder.ToString();
 	}
 
+	// Note: this type is marked as 'beforefieldinit'.
+	static GTDev()
+	{
+	}
+
+	[CompilerGenerated]
+	private static Action<GTDev.LogEntry> OnLogEntry;
+
 	[OnEnterPlay_Set(0)]
 	private static int gDevID;
 
@@ -247,6 +284,9 @@ public static class GTDev
 
 	public class HideInCallStackAttribute : Attribute
 	{
+		public HideInCallStackAttribute()
+		{
+		}
 	}
 
 	[Serializable]
@@ -257,5 +297,28 @@ public static class GTDev
 		public DateTime time;
 
 		public string message;
+	}
+
+	[CompilerGenerated]
+	[Serializable]
+	private sealed class <>c
+	{
+		// Note: this type is marked as 'beforefieldinit'.
+		static <>c()
+		{
+		}
+
+		public <>c()
+		{
+		}
+
+		internal bool <CacheProjectFolder>b__28_0(FieldInfo f)
+		{
+			return f.Name == "projectFolder";
+		}
+
+		public static readonly GTDev.<>c <>9 = new GTDev.<>c();
+
+		public static Func<FieldInfo, bool> <>9__28_0;
 	}
 }

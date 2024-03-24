@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using ExitGames.Client.Photon;
 using GorillaNetworking;
@@ -11,7 +12,19 @@ using UnityEngine;
 
 internal class PlayerCosmeticsSystem : MonoBehaviour, ITickSystemPre
 {
-	bool ITickSystemPre.PreTickRunning { get; set; }
+	bool ITickSystemPre.PreTickRunning
+	{
+		[CompilerGenerated]
+		get
+		{
+			return this.<ITickSystemPre.PreTickRunning>k__BackingField;
+		}
+		[CompilerGenerated]
+		set
+		{
+			this.<ITickSystemPre.PreTickRunning>k__BackingField = value;
+		}
+	}
 
 	private void Awake()
 	{
@@ -253,6 +266,18 @@ internal class PlayerCosmeticsSystem : MonoBehaviour, ITickSystemPre
 		PlayerCosmeticsSystem.playersWaiting.Clear();
 	}
 
+	public PlayerCosmeticsSystem()
+	{
+	}
+
+	// Note: this type is marked as 'beforefieldinit'.
+	static PlayerCosmeticsSystem()
+	{
+	}
+
+	[CompilerGenerated]
+	private bool <ITickSystemPre.PreTickRunning>k__BackingField;
+
 	public float playerLookUpCooldown = 3f;
 
 	private float startSearchingTime = float.MinValue;
@@ -276,4 +301,37 @@ internal class PlayerCosmeticsSystem : MonoBehaviour, ITickSystemPre
 	private static List<string> playerIDsList = new List<string>(10);
 
 	private static HashSet<int> playersWaiting = new HashSet<int>();
+
+	[CompilerGenerated]
+	[Serializable]
+	private sealed class <>c
+	{
+		// Note: this type is marked as 'beforefieldinit'.
+		static <>c()
+		{
+		}
+
+		public <>c()
+		{
+		}
+
+		internal void <PreTick>b__14_0(PlayFabError error)
+		{
+			Debug.Log("Got error retrieving user data:");
+			Debug.Log(error.GenerateErrorReport());
+			if (error.Error == PlayFabErrorCode.NotAuthenticated)
+			{
+				PlayFabAuthenticator.instance.AuthenticateWithPlayFab();
+				return;
+			}
+			if (error.Error == PlayFabErrorCode.AccountBanned)
+			{
+				GorillaGameManager.ForceStopGame_DisconnectAndDestroy();
+			}
+		}
+
+		public static readonly PlayerCosmeticsSystem.<>c <>9 = new PlayerCosmeticsSystem.<>c();
+
+		public static Action<PlayFabError> <>9__14_0;
+	}
 }

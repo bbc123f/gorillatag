@@ -28,6 +28,15 @@ public class ScaleSpring : MonoBehaviour
 		base.GetComponent<BoingEffector>().MoveDistance *= Mathf.Min(0.99f, 35f * Time.fixedDeltaTime);
 	}
 
+	public ScaleSpring()
+	{
+	}
+
+	// Note: this type is marked as 'beforefieldinit'.
+	static ScaleSpring()
+	{
+	}
+
 	private static readonly float kInterval = 2f;
 
 	private static readonly float kSmallScale = 0.6f;

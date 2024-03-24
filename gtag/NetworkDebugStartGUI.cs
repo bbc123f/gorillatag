@@ -376,6 +376,10 @@ public class NetworkDebugStartGUI : Fusion.Behaviour
 		return nonalloc;
 	}
 
+	public NetworkDebugStartGUI()
+	{
+	}
+
 	[InlineHelp]
 	public bool EnableHotkeys;
 

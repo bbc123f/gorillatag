@@ -16,6 +16,10 @@ public class GorillaHandHistory : MonoBehaviour
 		this.lastPosition = base.transform.position;
 	}
 
+	public GorillaHandHistory()
+	{
+	}
+
 	public Vector3 direction;
 
 	private Vector3 lastPosition;

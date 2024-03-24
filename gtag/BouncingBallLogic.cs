@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class BouncingBallLogic : MonoBehaviour
@@ -81,6 +84,10 @@ public class BouncingBallLogic : MonoBehaviour
 		yield break;
 	}
 
+	public BouncingBallLogic()
+	{
+	}
+
 	[SerializeField]
 	private float TTL = 5f;
 
@@ -110,4 +117,71 @@ public class BouncingBallLogic : MonoBehaviour
 	private bool isReleased;
 
 	private bool isReadyForDestroy;
+
+	[CompilerGenerated]
+	private sealed class <PlayPopCallback>d__18 : IEnumerator<object>, IEnumerator, IDisposable
+	{
+		[DebuggerHidden]
+		public <PlayPopCallback>d__18(int <>1__state)
+		{
+			this.<>1__state = <>1__state;
+		}
+
+		[DebuggerHidden]
+		void IDisposable.Dispose()
+		{
+		}
+
+		bool IEnumerator.MoveNext()
+		{
+			int num = this.<>1__state;
+			BouncingBallLogic bouncingBallLogic = this;
+			if (num == 0)
+			{
+				this.<>1__state = -1;
+				this.<>2__current = new WaitForSeconds(clipLength);
+				this.<>1__state = 1;
+				return true;
+			}
+			if (num != 1)
+			{
+				return false;
+			}
+			this.<>1__state = -1;
+			Object.Destroy(bouncingBallLogic.gameObject);
+			return false;
+		}
+
+		object IEnumerator<object>.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		[DebuggerHidden]
+		void IEnumerator.Reset()
+		{
+			throw new NotSupportedException();
+		}
+
+		object IEnumerator.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		private int <>1__state;
+
+		private object <>2__current;
+
+		public float clipLength;
+
+		public BouncingBallLogic <>4__this;
+	}
 }

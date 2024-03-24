@@ -372,6 +372,10 @@ public class BezierSpline : MonoBehaviour
 		this.modes = new BezierControlPointMode[2];
 	}
 
+	public BezierSpline()
+	{
+	}
+
 	[SerializeField]
 	private Vector3[] points;
 

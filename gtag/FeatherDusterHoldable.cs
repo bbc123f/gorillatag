@@ -35,6 +35,10 @@ public class FeatherDusterHoldable : MonoBehaviour
 		this.lastWorldPos = position;
 	}
 
+	public FeatherDusterHoldable()
+	{
+	}
+
 	public LayerMask collisionLayer;
 
 	public float overlapSphereRadius = 0.08f;

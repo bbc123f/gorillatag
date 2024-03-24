@@ -27,6 +27,10 @@ public class SceneSampler : MonoBehaviour
 		this.displayText.transform.rotation = Quaternion.LookRotation(vector - Camera.main.transform.position);
 	}
 
+	public SceneSampler()
+	{
+	}
+
 	private int currentSceneIndex;
 
 	public GameObject displayText;

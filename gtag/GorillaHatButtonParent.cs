@@ -103,6 +103,10 @@ public class GorillaHatButtonParent : MonoBehaviourPunCallbacks, IInRoomCallback
 		}
 	}
 
+	public GorillaHatButtonParent()
+	{
+	}
+
 	public GorillaHatButton[] hatButtons;
 
 	public GameObject[] adminObjects;

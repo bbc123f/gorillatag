@@ -1,12 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using Photon.Realtime;
 using UnityEngine;
 
 internal class VRRigCache : MonoBehaviour
 {
-	public static VRRigCache Instance { get; private set; }
+	public static VRRigCache Instance
+	{
+		[CompilerGenerated]
+		get
+		{
+			return VRRigCache.<Instance>k__BackingField;
+		}
+		[CompilerGenerated]
+		private set
+		{
+			VRRigCache.<Instance>k__BackingField = value;
+		}
+	}
 
 	public Transform NetworkParent
 	{
@@ -256,6 +269,19 @@ internal class VRRigCache : MonoBehaviour
 	private void LogError(string log)
 	{
 	}
+
+	public VRRigCache()
+	{
+	}
+
+	// Note: this type is marked as 'beforefieldinit'.
+	static VRRigCache()
+	{
+	}
+
+	[CompilerGenerated]
+	[OnEnterPlay_SetNull]
+	private static VRRigCache <Instance>k__BackingField;
 
 	public RigContainer localRig;
 

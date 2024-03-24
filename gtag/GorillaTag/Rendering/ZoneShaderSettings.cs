@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using GorillaExtensions;
 using UnityEngine;
 
@@ -7,14 +8,62 @@ namespace GorillaTag.Rendering
 	public class ZoneShaderSettings : MonoBehaviour, ITickSystemPost
 	{
 		[DebugReadout]
-		public static ZoneShaderSettings defaultsInstance { get; private set; }
+		public static ZoneShaderSettings defaultsInstance
+		{
+			[CompilerGenerated]
+			get
+			{
+				return ZoneShaderSettings.<defaultsInstance>k__BackingField;
+			}
+			[CompilerGenerated]
+			private set
+			{
+				ZoneShaderSettings.<defaultsInstance>k__BackingField = value;
+			}
+		}
 
-		public static bool hasDefaultsInstance { get; private set; }
+		public static bool hasDefaultsInstance
+		{
+			[CompilerGenerated]
+			get
+			{
+				return ZoneShaderSettings.<hasDefaultsInstance>k__BackingField;
+			}
+			[CompilerGenerated]
+			private set
+			{
+				ZoneShaderSettings.<hasDefaultsInstance>k__BackingField = value;
+			}
+		}
 
 		[DebugReadout]
-		public static ZoneShaderSettings activeInstance { get; private set; }
+		public static ZoneShaderSettings activeInstance
+		{
+			[CompilerGenerated]
+			get
+			{
+				return ZoneShaderSettings.<activeInstance>k__BackingField;
+			}
+			[CompilerGenerated]
+			private set
+			{
+				ZoneShaderSettings.<activeInstance>k__BackingField = value;
+			}
+		}
 
-		public static bool hasActiveInstance { get; private set; }
+		public static bool hasActiveInstance
+		{
+			[CompilerGenerated]
+			get
+			{
+				return ZoneShaderSettings.<hasActiveInstance>k__BackingField;
+			}
+			[CompilerGenerated]
+			private set
+			{
+				ZoneShaderSettings.<hasActiveInstance>k__BackingField = value;
+			}
+		}
 
 		public bool isActiveInstance
 		{
@@ -86,7 +135,19 @@ namespace GorillaTag.Rendering
 			Shader.DisableKeyword("_ZONE_LIQUID_SHAPE__CYLINDER");
 		}
 
-		public static int shaderParam_ZoneLiquidPosRadiusSq { get; private set; } = Shader.PropertyToID("_ZoneLiquidPosRadiusSq");
+		public static int shaderParam_ZoneLiquidPosRadiusSq
+		{
+			[CompilerGenerated]
+			get
+			{
+				return ZoneShaderSettings.<shaderParam_ZoneLiquidPosRadiusSq>k__BackingField;
+			}
+			[CompilerGenerated]
+			private set
+			{
+				ZoneShaderSettings.<shaderParam_ZoneLiquidPosRadiusSq>k__BackingField = value;
+			}
+		} = Shader.PropertyToID("_ZoneLiquidPosRadiusSq");
 
 		public static float GetWaterY()
 		{
@@ -130,7 +191,19 @@ namespace GorillaTag.Rendering
 			}
 		}
 
-		bool ITickSystemPost.PostTickRunning { get; set; }
+		bool ITickSystemPost.PostTickRunning
+		{
+			[CompilerGenerated]
+			get
+			{
+				return this.<ITickSystemPost.PostTickRunning>k__BackingField;
+			}
+			[CompilerGenerated]
+			set
+			{
+				this.<ITickSystemPost.PostTickRunning>k__BackingField = value;
+			}
+		}
 
 		void ITickSystemPost.PostTick()
 		{
@@ -372,8 +445,33 @@ namespace GorillaTag.Rendering
 			}
 		}
 
+		public ZoneShaderSettings()
+		{
+		}
+
+		// Note: this type is marked as 'beforefieldinit'.
+		static ZoneShaderSettings()
+		{
+		}
+
 		[OnEnterPlay_Set(false)]
 		private static bool isInitialized;
+
+		[CompilerGenerated]
+		[OnEnterPlay_SetNull]
+		private static ZoneShaderSettings <defaultsInstance>k__BackingField;
+
+		[CompilerGenerated]
+		[OnEnterPlay_Set(false)]
+		private static bool <hasDefaultsInstance>k__BackingField;
+
+		[CompilerGenerated]
+		[OnEnterPlay_SetNull]
+		private static ZoneShaderSettings <activeInstance>k__BackingField;
+
+		[CompilerGenerated]
+		[OnEnterPlay_Set(false)]
+		private static bool <hasActiveInstance>k__BackingField;
 
 		[Tooltip("Set this to true for cases like it is the first ZoneShaderSettings that should be activated when entering a scene.")]
 		[SerializeField]
@@ -434,6 +532,9 @@ namespace GorillaTag.Rendering
 
 		[OnEnterPlay_Set(ZoneShaderSettings.ELiquidShape.Plane)]
 		private static ZoneShaderSettings.ELiquidShape liquidShape_previousValue = ZoneShaderSettings.ELiquidShape.Plane;
+
+		[CompilerGenerated]
+		private static int <shaderParam_ZoneLiquidPosRadiusSq>k__BackingField;
 
 		[SerializeField]
 		private ZoneShaderSettings.EOverrideMode liquidShapeRadius_overrideMode;
@@ -549,6 +650,9 @@ namespace GorillaTag.Rendering
 		[Range(0f, 1f)]
 		[SerializeField]
 		private float zoneWeatherMapDissolveProgress = 1f;
+
+		[CompilerGenerated]
+		private bool <ITickSystemPost.PostTickRunning>k__BackingField;
 
 		public enum EOverrideMode
 		{

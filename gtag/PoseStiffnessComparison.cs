@@ -57,6 +57,10 @@ public class PoseStiffnessComparison : MonoBehaviour
 		}
 	}
 
+	public PoseStiffnessComparison()
+	{
+	}
+
 	public float Run = 11f;
 
 	public float Tilt = 15f;

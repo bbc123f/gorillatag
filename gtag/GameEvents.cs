@@ -5,6 +5,15 @@ using UnityEngine.Events;
 
 public class GameEvents
 {
+	public GameEvents()
+	{
+	}
+
+	// Note: this type is marked as 'beforefieldinit'.
+	static GameEvents()
+	{
+	}
+
 	public static UnityEvent<GorillaKeyboardBindings> OnGorrillaKeyboardButtonPressedEvent = new UnityEvent<GorillaKeyboardBindings>();
 
 	internal static UnityEvent<string> ScreenTextChangedEvent = new UnityEvent<string>();

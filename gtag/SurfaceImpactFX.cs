@@ -24,6 +24,10 @@ public class SurfaceImpactFX : MonoBehaviour
 		base.transform.localScale = this.startingScale * scale;
 	}
 
+	public SurfaceImpactFX()
+	{
+	}
+
 	public ParticleSystem particleFX;
 
 	public float startingGravityModifier;

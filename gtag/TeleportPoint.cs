@@ -23,6 +23,10 @@ public class TeleportPoint : MonoBehaviour
 		this.lastLookAtTime = Time.time;
 	}
 
+	public TeleportPoint()
+	{
+	}
+
 	public float dimmingSpeed = 1f;
 
 	public float fullIntensity = 1f;

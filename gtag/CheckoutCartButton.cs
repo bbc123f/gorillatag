@@ -34,6 +34,10 @@ public class CheckoutCartButton : GorillaPressableButton
 		CosmeticsController.instance.PressCheckoutCartButton(this, isLeftHand);
 	}
 
+	public CheckoutCartButton()
+	{
+	}
+
 	public CosmeticsController.CosmeticItem currentCosmeticItem;
 
 	public Image currentImage;

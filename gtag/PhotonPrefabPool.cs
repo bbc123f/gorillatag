@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using GorillaExtensions;
 using Photon.Pun;
 using Photon.Realtime;
@@ -8,7 +9,19 @@ using UnityEngine;
 
 public class PhotonPrefabPool : MonoBehaviour, IPunPrefabPool, ITickSystemPre
 {
-	bool ITickSystemPre.PreTickRunning { get; set; }
+	bool ITickSystemPre.PreTickRunning
+	{
+		[CompilerGenerated]
+		get
+		{
+			return this.<ITickSystemPre.PreTickRunning>k__BackingField;
+		}
+		[CompilerGenerated]
+		set
+		{
+			this.<ITickSystemPre.PreTickRunning>k__BackingField = value;
+		}
+	}
 
 	private void Start()
 	{
@@ -116,6 +129,13 @@ public class PhotonPrefabPool : MonoBehaviour, IPunPrefabPool, ITickSystemPre
 			Debug.LogError(ex.ToString());
 		}
 	}
+
+	public PhotonPrefabPool()
+	{
+	}
+
+	[CompilerGenerated]
+	private bool <ITickSystemPre.PreTickRunning>k__BackingField;
 
 	[SerializeField]
 	private PrefabType[] networkPrefabsData;

@@ -12,6 +12,10 @@ public class SpitballEvents : SubEmitterListener
 		}
 	}
 
+	public SpitballEvents()
+	{
+	}
+
 	[SerializeField]
 	private AudioSource _audioSource;
 

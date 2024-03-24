@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using Photon.Voice;
 using Photon.Voice.Unity;
 using UnityEngine;
@@ -23,6 +24,10 @@ public class SpeakerVoiceToLoudness : MonoBehaviour
 		return () => new SpeakerVoiceLoudnessAudioOut(this, speaker.GetComponent<AudioSource>(), pdc, speaker.Logger, string.Empty, speaker.Logger.IsDebugEnabled);
 	}
 
+	public SpeakerVoiceToLoudness()
+	{
+	}
+
 	[SerializeField]
 	private PlaybackDelaySettings playbackDelaySettings = new PlaybackDelaySettings
 	{
@@ -32,4 +37,23 @@ public class SpeakerVoiceToLoudness : MonoBehaviour
 	};
 
 	public float loudness;
+
+	[CompilerGenerated]
+	private sealed class <>c__DisplayClass3_0
+	{
+		public <>c__DisplayClass3_0()
+		{
+		}
+
+		internal IAudioOut<float> <GetVolumeTracking>b__0()
+		{
+			return new SpeakerVoiceLoudnessAudioOut(this.<>4__this, this.speaker.GetComponent<AudioSource>(), this.pdc, this.speaker.Logger, string.Empty, this.speaker.Logger.IsDebugEnabled);
+		}
+
+		public SpeakerVoiceToLoudness <>4__this;
+
+		public Speaker speaker;
+
+		public AudioOutDelayControl.PlayDelayConfig pdc;
+	}
 }

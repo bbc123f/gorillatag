@@ -34,6 +34,10 @@ public class UnlockCompButton : GorillaPressableButton
 		}
 	}
 
+	public UnlockCompButton()
+	{
+	}
+
 	public string gameMode;
 
 	private bool initialized;

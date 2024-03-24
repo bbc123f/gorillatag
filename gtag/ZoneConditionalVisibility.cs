@@ -26,6 +26,10 @@ public class ZoneConditionalVisibility : MonoBehaviour
 		base.gameObject.SetActive(ZoneManagement.IsInZone(this.zone));
 	}
 
+	public ZoneConditionalVisibility()
+	{
+	}
+
 	[SerializeField]
 	private GTZone zone;
 

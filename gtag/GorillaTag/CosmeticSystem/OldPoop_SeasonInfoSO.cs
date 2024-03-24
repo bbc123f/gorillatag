@@ -33,6 +33,10 @@ namespace GorillaTag.CosmeticSystem
 			return "Could not parse _releaseDateString value \"" + this._releaseDateString + "\" expected format is \"yyyy-MM-dd\".";
 		}
 
+		public OldPoop_SeasonInfoSO()
+		{
+		}
+
 		private const string kDateFormat = "yyyy-MM-dd";
 
 		public string displayName;

@@ -49,6 +49,10 @@ namespace GorillaLocomotion.Gameplay
 			}
 		}
 
+		public CustomRopeSimulation()
+		{
+		}
+
 		private List<Transform> nodes = new List<Transform>();
 
 		[SerializeField]

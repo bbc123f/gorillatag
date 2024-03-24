@@ -33,6 +33,10 @@ public class PlayerAOIPrototype : NetworkBehaviour
 		}
 	}
 
+	public PlayerAOIPrototype()
+	{
+	}
+
 	public override void CopyBackingFieldsToState(bool A_1)
 	{
 	}

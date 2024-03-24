@@ -12,6 +12,10 @@ public class LerpScale : LerpComponent
 		}
 	}
 
+	public LerpScale()
+	{
+	}
+
 	[Space]
 	public Transform target;
 

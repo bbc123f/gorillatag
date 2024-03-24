@@ -26,6 +26,10 @@ namespace GorillaTag
 			StaticLodManager.Unregister(this.index);
 		}
 
+		public StaticLodGroup()
+		{
+		}
+
 		private int index;
 
 		public float collisionEnableDistance = 3f;

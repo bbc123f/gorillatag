@@ -105,6 +105,10 @@ public class GorillaCaveCrystalVisuals : MonoBehaviour
 		}
 	}
 
+	public GorillaCaveCrystalVisuals()
+	{
+	}
+
 	public CrystalVisualsPreset crysalPreset;
 
 	[SerializeField]

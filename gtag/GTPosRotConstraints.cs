@@ -13,5 +13,9 @@ public class GTPosRotConstraints : MonoBehaviour
 		GTPosRotConstraintManager.Unregister(this);
 	}
 
+	public GTPosRotConstraints()
+	{
+	}
+
 	public GorillaPosRotConstraint[] constraints;
 }

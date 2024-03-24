@@ -38,6 +38,10 @@ public class SplineDecorator : MonoBehaviour
 		}
 	}
 
+	public SplineDecorator()
+	{
+	}
+
 	public BezierSpline spline;
 
 	public int frequency;

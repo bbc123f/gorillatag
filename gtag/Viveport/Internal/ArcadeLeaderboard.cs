@@ -51,5 +51,9 @@ namespace Viveport.Internal
 
 		[DllImport("viveport_api64", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi, EntryPoint = "IViveportArcadeLeaderboard_GetLeaderboardUserScore")]
 		internal static extern int GetLeaderboardUserScore_64();
+
+		public ArcadeLeaderboard()
+		{
+		}
 	}
 }

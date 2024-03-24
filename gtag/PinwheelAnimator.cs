@@ -20,6 +20,10 @@ public class PinwheelAnimator : MonoBehaviour
 		this.oldPos = position;
 	}
 
+	public PinwheelAnimator()
+	{
+	}
+
 	public Transform spinnerTransform;
 
 	[Tooltip("In revolutions per second.")]

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using GorillaExtensions;
 using GorillaLocomotion.Climbing;
 using Photon.Pun;
@@ -16,9 +17,33 @@ namespace GorillaLocomotion.Gameplay
 			this.CalculateId(true);
 		}
 
-		public bool isIdle { get; private set; }
+		public bool isIdle
+		{
+			[CompilerGenerated]
+			get
+			{
+				return this.<isIdle>k__BackingField;
+			}
+			[CompilerGenerated]
+			private set
+			{
+				this.<isIdle>k__BackingField = value;
+			}
+		}
 
-		public bool isFullyIdle { get; private set; }
+		public bool isFullyIdle
+		{
+			[CompilerGenerated]
+			get
+			{
+				return this.<isFullyIdle>k__BackingField;
+			}
+			[CompilerGenerated]
+			private set
+			{
+				this.<isFullyIdle>k__BackingField = value;
+			}
+		}
 
 		public bool SupportsMovingAtRuntime
 		{
@@ -333,6 +358,10 @@ namespace GorillaLocomotion.Gameplay
 			}
 		}
 
+		public GorillaRopeSwing()
+		{
+		}
+
 		public int ropeId;
 
 		public string staticId;
@@ -368,6 +397,12 @@ namespace GorillaLocomotion.Gameplay
 		private const float MAX_VELOCITY_FOR_IDLE = 0.5f;
 
 		private const float TIME_FOR_IDLE = 2f;
+
+		[CompilerGenerated]
+		private bool <isIdle>k__BackingField;
+
+		[CompilerGenerated]
+		private bool <isFullyIdle>k__BackingField;
 
 		private float potentialIdleTimer;
 

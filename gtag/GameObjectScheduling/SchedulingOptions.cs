@@ -14,6 +14,10 @@ namespace GameObjectScheduling
 			}
 		}
 
+		public SchedulingOptions()
+		{
+		}
+
 		[SerializeField]
 		private string debugServerTime;
 

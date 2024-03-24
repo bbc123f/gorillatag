@@ -31,6 +31,10 @@ namespace GorillaTag.Reactions
 			FireManager.OnTriggerEnter(this, other);
 		}
 
+		public FireInstance()
+		{
+		}
+
 		[Header("Scene References")]
 		[Tooltip("If not assigned it will try to auto assign to a component on the same GameObject.")]
 		[SerializeField]

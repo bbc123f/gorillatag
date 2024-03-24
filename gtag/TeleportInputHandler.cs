@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public abstract class TeleportInputHandler : TeleportSupport
@@ -62,7 +65,165 @@ public abstract class TeleportInputHandler : TeleportSupport
 
 	public abstract void GetAimData(out Ray aimRay);
 
+	[CompilerGenerated]
+	private void <.ctor>b__2_0()
+	{
+		base.StartCoroutine(this.TeleportReadyCoroutine());
+	}
+
+	[CompilerGenerated]
+	private void <.ctor>b__2_1()
+	{
+		base.StartCoroutine(this.TeleportAimCoroutine());
+	}
+
 	private readonly Action _startReadyAction;
 
 	private readonly Action _startAimAction;
+
+	[CompilerGenerated]
+	private sealed class <TeleportAimCoroutine>d__6 : IEnumerator<object>, IEnumerator, IDisposable
+	{
+		[DebuggerHidden]
+		public <TeleportAimCoroutine>d__6(int <>1__state)
+		{
+			this.<>1__state = <>1__state;
+		}
+
+		[DebuggerHidden]
+		void IDisposable.Dispose()
+		{
+		}
+
+		bool IEnumerator.MoveNext()
+		{
+			int num = this.<>1__state;
+			TeleportInputHandler teleportInputHandler = this;
+			LocomotionTeleport.TeleportIntentions teleportIntentions;
+			if (num != 0)
+			{
+				if (num != 1)
+				{
+					return false;
+				}
+				this.<>1__state = -1;
+				teleportIntentions = teleportInputHandler.GetIntention();
+			}
+			else
+			{
+				this.<>1__state = -1;
+				teleportIntentions = teleportInputHandler.GetIntention();
+			}
+			if (teleportIntentions != LocomotionTeleport.TeleportIntentions.Aim && teleportIntentions != LocomotionTeleport.TeleportIntentions.PreTeleport)
+			{
+				teleportInputHandler.LocomotionTeleport.CurrentIntention = teleportIntentions;
+				return false;
+			}
+			teleportInputHandler.LocomotionTeleport.CurrentIntention = teleportIntentions;
+			this.<>2__current = null;
+			this.<>1__state = 1;
+			return true;
+		}
+
+		object IEnumerator<object>.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		[DebuggerHidden]
+		void IEnumerator.Reset()
+		{
+			throw new NotSupportedException();
+		}
+
+		object IEnumerator.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		private int <>1__state;
+
+		private object <>2__current;
+
+		public TeleportInputHandler <>4__this;
+	}
+
+	[CompilerGenerated]
+	private sealed class <TeleportReadyCoroutine>d__5 : IEnumerator<object>, IEnumerator, IDisposable
+	{
+		[DebuggerHidden]
+		public <TeleportReadyCoroutine>d__5(int <>1__state)
+		{
+			this.<>1__state = <>1__state;
+		}
+
+		[DebuggerHidden]
+		void IDisposable.Dispose()
+		{
+		}
+
+		bool IEnumerator.MoveNext()
+		{
+			int num = this.<>1__state;
+			TeleportInputHandler teleportInputHandler = this;
+			if (num != 0)
+			{
+				if (num != 1)
+				{
+					return false;
+				}
+				this.<>1__state = -1;
+			}
+			else
+			{
+				this.<>1__state = -1;
+			}
+			if (teleportInputHandler.GetIntention() == LocomotionTeleport.TeleportIntentions.Aim)
+			{
+				teleportInputHandler.LocomotionTeleport.CurrentIntention = LocomotionTeleport.TeleportIntentions.Aim;
+				return false;
+			}
+			this.<>2__current = null;
+			this.<>1__state = 1;
+			return true;
+		}
+
+		object IEnumerator<object>.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		[DebuggerHidden]
+		void IEnumerator.Reset()
+		{
+			throw new NotSupportedException();
+		}
+
+		object IEnumerator.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		private int <>1__state;
+
+		private object <>2__current;
+
+		public TeleportInputHandler <>4__this;
+	}
 }

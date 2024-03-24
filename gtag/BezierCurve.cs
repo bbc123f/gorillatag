@@ -29,5 +29,9 @@ public class BezierCurve : MonoBehaviour
 		};
 	}
 
+	public BezierCurve()
+	{
+	}
+
 	public Vector3[] points;
 }

@@ -7,4 +7,8 @@ public class PostVRRigPhysicsSynch : MonoBehaviour
 	{
 		Physics.SyncTransforms();
 	}
+
+	public PostVRRigPhysicsSynch()
+	{
+	}
 }

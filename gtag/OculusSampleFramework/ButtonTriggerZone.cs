@@ -1,13 +1,38 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace OculusSampleFramework
 {
 	public class ButtonTriggerZone : MonoBehaviour, ColliderZone
 	{
-		public Collider Collider { get; private set; }
+		public Collider Collider
+		{
+			[CompilerGenerated]
+			get
+			{
+				return this.<Collider>k__BackingField;
+			}
+			[CompilerGenerated]
+			private set
+			{
+				this.<Collider>k__BackingField = value;
+			}
+		}
 
-		public Interactable ParentInteractable { get; private set; }
+		public Interactable ParentInteractable
+		{
+			[CompilerGenerated]
+			get
+			{
+				return this.<ParentInteractable>k__BackingField;
+			}
+			[CompilerGenerated]
+			private set
+			{
+				this.<ParentInteractable>k__BackingField = value;
+			}
+		}
 
 		public InteractableCollisionDepth CollisionDepth
 		{
@@ -35,7 +60,17 @@ namespace OculusSampleFramework
 			this.ParentInteractable = this._parentInteractableObj.GetComponent<Interactable>();
 		}
 
+		public ButtonTriggerZone()
+		{
+		}
+
 		[SerializeField]
 		private GameObject _parentInteractableObj;
+
+		[CompilerGenerated]
+		private Collider <Collider>k__BackingField;
+
+		[CompilerGenerated]
+		private Interactable <ParentInteractable>k__BackingField;
 	}
 }

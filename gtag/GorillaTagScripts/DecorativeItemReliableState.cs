@@ -36,6 +36,10 @@ namespace GorillaTagScripts
 			}
 		}
 
+		public DecorativeItemReliableState()
+		{
+		}
+
 		public bool isSnapped;
 
 		public Vector3 snapPosition = Vector3.zero;

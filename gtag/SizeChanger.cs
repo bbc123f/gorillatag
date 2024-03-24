@@ -183,6 +183,10 @@ public class SizeChanger : GorillaTriggerBox
 		}
 	}
 
+	public SizeChanger()
+	{
+	}
+
 	[SerializeField]
 	private SizeChanger.ChangerType myType;
 

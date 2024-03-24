@@ -52,5 +52,9 @@ public class ZoneBasedObject : MonoBehaviour
 		return zoneBasedObject2;
 	}
 
+	public ZoneBasedObject()
+	{
+	}
+
 	public GTZone[] zones;
 }

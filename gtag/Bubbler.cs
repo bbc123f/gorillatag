@@ -186,6 +186,10 @@ public class Bubbler : TransferrableObject
 		return !this.disableDeactivation;
 	}
 
+	public Bubbler()
+	{
+	}
+
 	[SerializeField]
 	private bool _worksInWater = true;
 

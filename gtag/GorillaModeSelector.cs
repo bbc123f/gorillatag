@@ -10,4 +10,8 @@ public class GorillaModeSelector : MonoBehaviour
 	private void Update()
 	{
 	}
+
+	public GorillaModeSelector()
+	{
+	}
 }

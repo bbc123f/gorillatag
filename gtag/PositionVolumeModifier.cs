@@ -8,5 +8,9 @@ public class PositionVolumeModifier : MonoBehaviour
 		this.audioToMod.isModified = true;
 	}
 
+	public PositionVolumeModifier()
+	{
+	}
+
 	public TimeOfDayDependentAudio audioToMod;
 }

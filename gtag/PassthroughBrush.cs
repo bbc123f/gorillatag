@@ -87,6 +87,10 @@ public class PassthroughBrush : MonoBehaviour
 		}
 	}
 
+	public PassthroughBrush()
+	{
+	}
+
 	public OVRInput.Controller controllerHand;
 
 	public GameObject lineSegmentPrefab;

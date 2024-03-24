@@ -13,4 +13,8 @@ public class TeleportTargetHandlerPhysical : TeleportTargetHandler
 		}
 		return false;
 	}
+
+	public TeleportTargetHandlerPhysical()
+	{
+	}
 }

@@ -22,6 +22,10 @@ public class GroupJoinButton : GorillaPressableButton
 		}
 	}
 
+	public GroupJoinButton()
+	{
+	}
+
 	public int gameModeIndex;
 
 	public GorillaFriendCollider friendCollider;

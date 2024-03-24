@@ -147,6 +147,10 @@ public class LegacyWorldShareableItem : MonoBehaviourPunCallbacks, IPunInstantia
 		this.rpcCallBack();
 	}
 
+	public LegacyWorldShareableItem()
+	{
+	}
+
 	private bool validShareable = true;
 
 	private PhotonView view;

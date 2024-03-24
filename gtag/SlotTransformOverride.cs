@@ -37,6 +37,10 @@ public class SlotTransformOverride
 		this.multiPoints.Add(subGrabPoint);
 	}
 
+	public SlotTransformOverride()
+	{
+	}
+
 	public Transform overrideTransform;
 
 	public TransferrableObject.PositionState positionState;

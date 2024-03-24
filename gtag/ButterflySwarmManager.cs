@@ -1,41 +1,234 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Photon.Pun;
 using UnityEngine;
 
 public class ButterflySwarmManager : MonoBehaviourPun
 {
-	public float PerchedFlapSpeed { get; private set; }
+	public float PerchedFlapSpeed
+	{
+		[CompilerGenerated]
+		get
+		{
+			return this.<PerchedFlapSpeed>k__BackingField;
+		}
+		[CompilerGenerated]
+		private set
+		{
+			this.<PerchedFlapSpeed>k__BackingField = value;
+		}
+	}
 
-	public float PerchedFlapPhase { get; private set; }
+	public float PerchedFlapPhase
+	{
+		[CompilerGenerated]
+		get
+		{
+			return this.<PerchedFlapPhase>k__BackingField;
+		}
+		[CompilerGenerated]
+		private set
+		{
+			this.<PerchedFlapPhase>k__BackingField = value;
+		}
+	}
 
-	public float BeeSpeed { get; private set; }
+	public float BeeSpeed
+	{
+		[CompilerGenerated]
+		get
+		{
+			return this.<BeeSpeed>k__BackingField;
+		}
+		[CompilerGenerated]
+		private set
+		{
+			this.<BeeSpeed>k__BackingField = value;
+		}
+	}
 
-	public float BeeMaxTravelTime { get; private set; }
+	public float BeeMaxTravelTime
+	{
+		[CompilerGenerated]
+		get
+		{
+			return this.<BeeMaxTravelTime>k__BackingField;
+		}
+		[CompilerGenerated]
+		private set
+		{
+			this.<BeeMaxTravelTime>k__BackingField = value;
+		}
+	}
 
-	public float BeeAcceleration { get; private set; }
+	public float BeeAcceleration
+	{
+		[CompilerGenerated]
+		get
+		{
+			return this.<BeeAcceleration>k__BackingField;
+		}
+		[CompilerGenerated]
+		private set
+		{
+			this.<BeeAcceleration>k__BackingField = value;
+		}
+	}
 
-	public float BeeJitterStrength { get; private set; }
+	public float BeeJitterStrength
+	{
+		[CompilerGenerated]
+		get
+		{
+			return this.<BeeJitterStrength>k__BackingField;
+		}
+		[CompilerGenerated]
+		private set
+		{
+			this.<BeeJitterStrength>k__BackingField = value;
+		}
+	}
 
-	public float BeeJitterDamping { get; private set; }
+	public float BeeJitterDamping
+	{
+		[CompilerGenerated]
+		get
+		{
+			return this.<BeeJitterDamping>k__BackingField;
+		}
+		[CompilerGenerated]
+		private set
+		{
+			this.<BeeJitterDamping>k__BackingField = value;
+		}
+	}
 
-	public float BeeMaxJitterRadius { get; private set; }
+	public float BeeMaxJitterRadius
+	{
+		[CompilerGenerated]
+		get
+		{
+			return this.<BeeMaxJitterRadius>k__BackingField;
+		}
+		[CompilerGenerated]
+		private set
+		{
+			this.<BeeMaxJitterRadius>k__BackingField = value;
+		}
+	}
 
-	public float BeeNearDestinationRadius { get; private set; }
+	public float BeeNearDestinationRadius
+	{
+		[CompilerGenerated]
+		get
+		{
+			return this.<BeeNearDestinationRadius>k__BackingField;
+		}
+		[CompilerGenerated]
+		private set
+		{
+			this.<BeeNearDestinationRadius>k__BackingField = value;
+		}
+	}
 
-	public float DestRotationAlignmentSpeed { get; private set; }
+	public float DestRotationAlignmentSpeed
+	{
+		[CompilerGenerated]
+		get
+		{
+			return this.<DestRotationAlignmentSpeed>k__BackingField;
+		}
+		[CompilerGenerated]
+		private set
+		{
+			this.<DestRotationAlignmentSpeed>k__BackingField = value;
+		}
+	}
 
-	public Vector3 TravellingLocalRotationEuler { get; private set; }
+	public Vector3 TravellingLocalRotationEuler
+	{
+		[CompilerGenerated]
+		get
+		{
+			return this.<TravellingLocalRotationEuler>k__BackingField;
+		}
+		[CompilerGenerated]
+		private set
+		{
+			this.<TravellingLocalRotationEuler>k__BackingField = value;
+		}
+	}
 
-	public Quaternion TravellingLocalRotation { get; private set; }
+	public Quaternion TravellingLocalRotation
+	{
+		[CompilerGenerated]
+		get
+		{
+			return this.<TravellingLocalRotation>k__BackingField;
+		}
+		[CompilerGenerated]
+		private set
+		{
+			this.<TravellingLocalRotation>k__BackingField = value;
+		}
+	}
 
-	public float AvoidPointRadius { get; private set; }
+	public float AvoidPointRadius
+	{
+		[CompilerGenerated]
+		get
+		{
+			return this.<AvoidPointRadius>k__BackingField;
+		}
+		[CompilerGenerated]
+		private set
+		{
+			this.<AvoidPointRadius>k__BackingField = value;
+		}
+	}
 
-	public float BeeMinFlowerDuration { get; private set; }
+	public float BeeMinFlowerDuration
+	{
+		[CompilerGenerated]
+		get
+		{
+			return this.<BeeMinFlowerDuration>k__BackingField;
+		}
+		[CompilerGenerated]
+		private set
+		{
+			this.<BeeMinFlowerDuration>k__BackingField = value;
+		}
+	}
 
-	public float BeeMaxFlowerDuration { get; private set; }
+	public float BeeMaxFlowerDuration
+	{
+		[CompilerGenerated]
+		get
+		{
+			return this.<BeeMaxFlowerDuration>k__BackingField;
+		}
+		[CompilerGenerated]
+		private set
+		{
+			this.<BeeMaxFlowerDuration>k__BackingField = value;
+		}
+	}
 
-	public Color[] BeeColors { get; private set; }
+	public Color[] BeeColors
+	{
+		[CompilerGenerated]
+		get
+		{
+			return this.<BeeColors>k__BackingField;
+		}
+		[CompilerGenerated]
+		private set
+		{
+			this.<BeeColors>k__BackingField = value;
+		}
+	}
 
 	private void Awake()
 	{
@@ -159,6 +352,10 @@ public class ButterflySwarmManager : MonoBehaviourPun
 		}
 	}
 
+	public ButterflySwarmManager()
+	{
+	}
+
 	[SerializeField]
 	private XSceneRef[] perchSections;
 
@@ -176,6 +373,74 @@ public class ButterflySwarmManager : MonoBehaviourPun
 
 	[SerializeField]
 	private float minFlapSpeed;
+
+	[CompilerGenerated]
+	[SerializeField]
+	private float <PerchedFlapSpeed>k__BackingField;
+
+	[CompilerGenerated]
+	[SerializeField]
+	private float <PerchedFlapPhase>k__BackingField;
+
+	[CompilerGenerated]
+	[SerializeField]
+	private float <BeeSpeed>k__BackingField;
+
+	[CompilerGenerated]
+	[SerializeField]
+	private float <BeeMaxTravelTime>k__BackingField;
+
+	[CompilerGenerated]
+	[SerializeField]
+	private float <BeeAcceleration>k__BackingField;
+
+	[CompilerGenerated]
+	[SerializeField]
+	private float <BeeJitterStrength>k__BackingField;
+
+	[CompilerGenerated]
+	[SerializeField]
+	[Tooltip("Should be 0-1; closer to 1 = less damping")]
+	private float <BeeJitterDamping>k__BackingField;
+
+	[CompilerGenerated]
+	[SerializeField]
+	[Tooltip("Limits how far the bee can get off course")]
+	private float <BeeMaxJitterRadius>k__BackingField;
+
+	[CompilerGenerated]
+	[SerializeField]
+	[Tooltip("Bees stop jittering when close to their destination")]
+	private float <BeeNearDestinationRadius>k__BackingField;
+
+	[CompilerGenerated]
+	[SerializeField]
+	[Tooltip(">0 to get butterflies to align to their destination rotation as they land")]
+	private float <DestRotationAlignmentSpeed>k__BackingField;
+
+	[CompilerGenerated]
+	[SerializeField]
+	[Tooltip("Model orientation relative to the direction vector while flying")]
+	private Vector3 <TravellingLocalRotationEuler>k__BackingField;
+
+	[CompilerGenerated]
+	private Quaternion <TravellingLocalRotation>k__BackingField;
+
+	[CompilerGenerated]
+	[SerializeField]
+	private float <AvoidPointRadius>k__BackingField;
+
+	[CompilerGenerated]
+	[SerializeField]
+	private float <BeeMinFlowerDuration>k__BackingField;
+
+	[CompilerGenerated]
+	[SerializeField]
+	private float <BeeMaxFlowerDuration>k__BackingField;
+
+	[CompilerGenerated]
+	[SerializeField]
+	private Color[] <BeeColors>k__BackingField;
 
 	private List<AnimatedButterfly> butterflies;
 

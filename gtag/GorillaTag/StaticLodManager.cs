@@ -158,6 +158,15 @@ namespace GorillaTag
 			}
 		}
 
+		public StaticLodManager()
+		{
+		}
+
+		// Note: this type is marked as 'beforefieldinit'.
+		static StaticLodManager()
+		{
+		}
+
 		[OnEnterPlay_Clear]
 		private static readonly List<StaticLodGroup> groupMonoBehaviours = new List<StaticLodGroup>(32);
 

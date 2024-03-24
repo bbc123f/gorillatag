@@ -80,6 +80,10 @@ namespace GorillaNetworking
 			unityEvent2.Invoke(this.currentMaterials);
 		}
 
+		public GorillaText()
+		{
+		}
+
 		[SerializeField]
 		private Text text;
 

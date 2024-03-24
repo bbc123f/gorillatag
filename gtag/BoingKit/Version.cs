@@ -1,14 +1,36 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 
 namespace BoingKit
 {
 	public struct Version : IEquatable<Version>
 	{
-		public readonly int MajorVersion { get; }
+		public readonly int MajorVersion
+		{
+			[CompilerGenerated]
+			get
+			{
+				return this.<MajorVersion>k__BackingField;
+			}
+		}
 
-		public readonly int MinorVersion { get; }
+		public readonly int MinorVersion
+		{
+			[CompilerGenerated]
+			get
+			{
+				return this.<MinorVersion>k__BackingField;
+			}
+		}
 
-		public readonly int Revision { get; }
+		public readonly int Revision
+		{
+			[CompilerGenerated]
+			get
+			{
+				return this.<Revision>k__BackingField;
+			}
+		}
 
 		public override string ToString()
 		{
@@ -59,10 +81,24 @@ namespace BoingKit
 			return ((366299368 * -1521134295 + this.MajorVersion.GetHashCode()) * -1521134295 + this.MinorVersion.GetHashCode()) * -1521134295 + this.Revision.GetHashCode();
 		}
 
+		// Note: this type is marked as 'beforefieldinit'.
+		static Version()
+		{
+		}
+
 		public static readonly Version Invalid = new Version(-1, -1, -1);
 
 		public static readonly Version FirstTracked = new Version(1, 2, 33);
 
 		public static readonly Version LastUntracked = new Version(1, 2, 32);
+
+		[CompilerGenerated]
+		private readonly int <MajorVersion>k__BackingField;
+
+		[CompilerGenerated]
+		private readonly int <MinorVersion>k__BackingField;
+
+		[CompilerGenerated]
+		private readonly int <Revision>k__BackingField;
 	}
 }

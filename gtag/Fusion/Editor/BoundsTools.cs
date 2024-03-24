@@ -131,6 +131,11 @@ namespace Fusion.Editor
 			return go.CollectMyBounds(factorIn, out num, includeChildren, false);
 		}
 
+		// Note: this type is marked as 'beforefieldinit'.
+		static BoundsTools()
+		{
+		}
+
 		private static readonly List<MeshFilter> meshFilters = new List<MeshFilter>();
 
 		private static readonly List<Renderer> meshRenderers = new List<Renderer>();

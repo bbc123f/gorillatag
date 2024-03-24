@@ -364,6 +364,10 @@ public class OneStringGuitar : TransferrableObject
 		base.transform.position = this.chestColliderRight.transform.position + base.transform.rotation * this.chestOffsetRight;
 	}
 
+	public OneStringGuitar()
+	{
+	}
+
 	public Vector3 chestOffsetLeft;
 
 	public Vector3 chestOffsetRight;

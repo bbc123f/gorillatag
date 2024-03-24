@@ -86,6 +86,10 @@ public class FingerTorch : MonoBehaviour
 		}
 	}
 
+	public FingerTorch()
+	{
+	}
+
 	[Header("Wearable Settings")]
 	public bool attachedToLeftHand = true;
 

@@ -276,6 +276,10 @@ public class MaterialInstance : MonoBehaviour
 		}
 	}
 
+	public MaterialInstance()
+	{
+	}
+
 	private Renderer cachedRenderer;
 
 	[SerializeField]

@@ -89,6 +89,10 @@ namespace GorillaTagScripts
 			}
 		}
 
+		public MenorahCandle()
+		{
+		}
+
 		public int day;
 
 		public int month;

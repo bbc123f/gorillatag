@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using GorillaNetworking;
@@ -90,6 +93,10 @@ public class LegalAgreementBodyText : MonoBehaviour
 		}
 	}
 
+	public LegalAgreementBodyText()
+	{
+	}
+
 	[SerializeField]
 	private Text textBox;
 
@@ -110,5 +117,85 @@ public class LegalAgreementBodyText : MonoBehaviour
 		Ready,
 		Loading,
 		Error
+	}
+
+	[CompilerGenerated]
+	[StructLayout(LayoutKind.Auto)]
+	private struct <UpdateTextFromPlayFabTitleData>d__10 : IAsyncStateMachine
+	{
+		void IAsyncStateMachine.MoveNext()
+		{
+			int num2;
+			int num = num2;
+			LegalAgreementBodyText legalAgreementBodyText = this;
+			bool flag;
+			try
+			{
+				if (num != 0)
+				{
+					string text = key + "_" + version;
+					legalAgreementBodyText.state = LegalAgreementBodyText.State.Loading;
+					PlayFabTitleDataCache.Instance.GetTitleData(text, new Action<string>(legalAgreementBodyText.OnTitleDataReceived), new Action<PlayFabError>(legalAgreementBodyText.OnPlayFabError));
+					goto IL_B8;
+				}
+				YieldAwaitable.YieldAwaiter yieldAwaiter2;
+				YieldAwaitable.YieldAwaiter yieldAwaiter = yieldAwaiter2;
+				yieldAwaiter2 = default(YieldAwaitable.YieldAwaiter);
+				num2 = -1;
+				IL_B1:
+				yieldAwaiter.GetResult();
+				IL_B8:
+				if (legalAgreementBodyText.state != LegalAgreementBodyText.State.Loading)
+				{
+					if (legalAgreementBodyText.cachedText != null)
+					{
+						legalAgreementBodyText.SetText(legalAgreementBodyText.cachedText.Substring(1, legalAgreementBodyText.cachedText.Length - 2));
+						flag = true;
+					}
+					else
+					{
+						flag = false;
+					}
+				}
+				else
+				{
+					yieldAwaiter = Task.Yield().GetAwaiter();
+					if (!yieldAwaiter.IsCompleted)
+					{
+						num2 = 0;
+						yieldAwaiter2 = yieldAwaiter;
+						this.<>t__builder.AwaitUnsafeOnCompleted<YieldAwaitable.YieldAwaiter, LegalAgreementBodyText.<UpdateTextFromPlayFabTitleData>d__10>(ref yieldAwaiter, ref this);
+						return;
+					}
+					goto IL_B1;
+				}
+			}
+			catch (Exception ex)
+			{
+				num2 = -2;
+				this.<>t__builder.SetException(ex);
+				return;
+			}
+			num2 = -2;
+			this.<>t__builder.SetResult(flag);
+		}
+
+		[DebuggerHidden]
+		void IAsyncStateMachine.SetStateMachine(IAsyncStateMachine stateMachine)
+		{
+			this.<>t__builder.SetStateMachine(stateMachine);
+		}
+
+		public int <>1__state;
+
+		public AsyncTaskMethodBuilder<bool> <>t__builder;
+
+		public string key;
+
+		public string version;
+
+		public LegalAgreementBodyText <>4__this;
+
+		private YieldAwaitable.YieldAwaiter <>u__1;
 	}
 }

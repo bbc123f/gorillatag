@@ -1,15 +1,52 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Photon.Pun;
 using UnityEngine;
 
 public class RandomTimedSeedManager : MonoBehaviourPun, IPunObservable, ITickSystemTick
 {
-	public static RandomTimedSeedManager instance { get; private set; }
+	public static RandomTimedSeedManager instance
+	{
+		[CompilerGenerated]
+		get
+		{
+			return RandomTimedSeedManager.<instance>k__BackingField;
+		}
+		[CompilerGenerated]
+		private set
+		{
+			RandomTimedSeedManager.<instance>k__BackingField = value;
+		}
+	}
 
-	public int seed { get; private set; }
+	public int seed
+	{
+		[CompilerGenerated]
+		get
+		{
+			return this.<seed>k__BackingField;
+		}
+		[CompilerGenerated]
+		private set
+		{
+			this.<seed>k__BackingField = value;
+		}
+	}
 
-	public float currentSyncTime { get; private set; }
+	public float currentSyncTime
+	{
+		[CompilerGenerated]
+		get
+		{
+			return this.<currentSyncTime>k__BackingField;
+		}
+		[CompilerGenerated]
+		private set
+		{
+			this.<currentSyncTime>k__BackingField = value;
+		}
+	}
 
 	private void Awake()
 	{
@@ -30,7 +67,19 @@ public class RandomTimedSeedManager : MonoBehaviourPun, IPunObservable, ITickSys
 		this.callbacksOnSeedChanged.Remove(callback);
 	}
 
-	bool ITickSystemTick.TickRunning { get; set; }
+	bool ITickSystemTick.TickRunning
+	{
+		[CompilerGenerated]
+		get
+		{
+			return this.<ITickSystemTick.TickRunning>k__BackingField;
+		}
+		[CompilerGenerated]
+		set
+		{
+			this.<ITickSystemTick.TickRunning>k__BackingField = value;
+		}
+	}
 
 	void ITickSystemTick.Tick()
 	{
@@ -80,9 +129,23 @@ public class RandomTimedSeedManager : MonoBehaviourPun, IPunObservable, ITickSys
 		}
 	}
 
+	public RandomTimedSeedManager()
+	{
+	}
+
+	[CompilerGenerated]
+	[OnEnterPlay_SetNull]
+	private static RandomTimedSeedManager <instance>k__BackingField;
+
 	private List<Action> callbacksOnSeedChanged = new List<Action>();
 
+	[CompilerGenerated]
+	private int <seed>k__BackingField;
+
 	private float idealSyncTime;
+
+	[CompilerGenerated]
+	private float <currentSyncTime>k__BackingField;
 
 	private int cachedSeed;
 
@@ -91,4 +154,7 @@ public class RandomTimedSeedManager : MonoBehaviourPun, IPunObservable, ITickSys
 	private const int SeedMax = -1000000;
 
 	private const float MaxSyncTime = 1E+09f;
+
+	[CompilerGenerated]
+	private bool <ITickSystemTick.TickRunning>k__BackingField;
 }

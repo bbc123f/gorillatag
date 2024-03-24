@@ -353,12 +353,16 @@ internal class RoomSystem : MonoBehaviour, IInRoomCallbacks, IMatchmakingCallbac
 		GorillaNot.IncrementRPCCall(info, "JoinPubWithFriends");
 		string text = (string)shuffleData[0];
 		string text2 = (string)shuffleData[1];
-		if (GorillaComputer.instance.friendJoinCollider.playerIDsCurrentlyTouching.Contains(PhotonNetwork.LocalPlayer.UserId))
+		if (!GorillaComputer.instance.friendJoinCollider.playerIDsCurrentlyTouching.Contains(PhotonNetwork.LocalPlayer.UserId))
 		{
-			PhotonNetworkController.Instance.AttemptToFollowFriendIntoPub(info.Sender.UserId, info.Sender.ActorNumber, text2, text);
+			GorillaNot.instance.SendReport("possible kick attempt", info.Sender.UserId, info.Sender.NickName);
 			return;
 		}
-		GorillaNot.instance.SendReport("possible kick attempt", info.Sender.UserId, info.Sender.NickName);
+		if (PlayFabAuthenticator.instance.GetSafety())
+		{
+			return;
+		}
+		PhotonNetworkController.Instance.AttemptToFollowFriendIntoPub(info.Sender.UserId, info.Sender.ActorNumber, text2, text);
 	}
 
 	internal static void JoinPubWithFriends(GorillaFriendCollider friendCollider, string shuffler, string keyStr)
@@ -713,6 +717,10 @@ internal class RoomSystem : MonoBehaviour, IInRoomCallbacks, IMatchmakingCallbac
 		RoomSystem.playerEffectData[1] = effect;
 	}
 
+	public RoomSystem()
+	{
+	}
+
 	private static RoomSystem.ImpactFxContainer impactEffect = new RoomSystem.ImpactFxContainer();
 
 	private static RoomSystem.LaunchProjectileContainer launchProjectile = new RoomSystem.LaunchProjectileContainer();
@@ -822,6 +830,10 @@ internal class RoomSystem : MonoBehaviour, IInRoomCallbacks, IMatchmakingCallbac
 			gameObject.GetComponent<GorillaColorizableBase>().SetColor(this.colour);
 		}
 
+		public ImpactFxContainer()
+		{
+		}
+
 		public VRRig targetRig;
 
 		public Vector3 position;
@@ -836,6 +848,10 @@ internal class RoomSystem : MonoBehaviour, IInRoomCallbacks, IMatchmakingCallbac
 		public override void OnPlayFX()
 		{
 			this.targetRig.slingshot.LaunchNetworkedProjectile(this.position, this.velocity, this.projectileSource, this.projectileCount, this.targetRig.scaleFactor, this.overridecolour, this.colour, this.messageInfo);
+		}
+
+		public LaunchProjectileContainer()
+		{
 		}
 
 		public Vector3 velocity;

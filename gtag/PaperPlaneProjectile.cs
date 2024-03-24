@@ -1,10 +1,40 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.Serialization;
 
 public class PaperPlaneProjectile : MonoBehaviour
 {
-	public event PaperPlaneProjectile.PaperPlaneHit OnHit;
+	public event PaperPlaneProjectile.PaperPlaneHit OnHit
+	{
+		[CompilerGenerated]
+		add
+		{
+			PaperPlaneProjectile.PaperPlaneHit paperPlaneHit = this.OnHit;
+			PaperPlaneProjectile.PaperPlaneHit paperPlaneHit2;
+			do
+			{
+				paperPlaneHit2 = paperPlaneHit;
+				PaperPlaneProjectile.PaperPlaneHit paperPlaneHit3 = (PaperPlaneProjectile.PaperPlaneHit)Delegate.Combine(paperPlaneHit2, value);
+				paperPlaneHit = Interlocked.CompareExchange<PaperPlaneProjectile.PaperPlaneHit>(ref this.OnHit, paperPlaneHit3, paperPlaneHit2);
+			}
+			while (paperPlaneHit != paperPlaneHit2);
+		}
+		[CompilerGenerated]
+		remove
+		{
+			PaperPlaneProjectile.PaperPlaneHit paperPlaneHit = this.OnHit;
+			PaperPlaneProjectile.PaperPlaneHit paperPlaneHit2;
+			do
+			{
+				paperPlaneHit2 = paperPlaneHit;
+				PaperPlaneProjectile.PaperPlaneHit paperPlaneHit3 = (PaperPlaneProjectile.PaperPlaneHit)Delegate.Remove(paperPlaneHit2, value);
+				paperPlaneHit = Interlocked.CompareExchange<PaperPlaneProjectile.PaperPlaneHit>(ref this.OnHit, paperPlaneHit3, paperPlaneHit2);
+			}
+			while (paperPlaneHit != paperPlaneHit2);
+		}
+	}
 
 	public new Transform transform
 	{
@@ -76,6 +106,10 @@ public class PaperPlaneProjectile : MonoBehaviour
 		this.crashingObject.SetActive(true);
 	}
 
+	public PaperPlaneProjectile()
+	{
+	}
+
 	public Vector3 startPos;
 
 	public Vector3 endPos;
@@ -83,6 +117,9 @@ public class PaperPlaneProjectile : MonoBehaviour
 	[FormerlySerializedAs("_flyTimeOut")]
 	[Range(1f, 128f)]
 	public float flyTimeOut = 32f;
+
+	[CompilerGenerated]
+	private PaperPlaneProjectile.PaperPlaneHit OnHit;
 
 	[Space]
 	public float curveTime = 0.4f;

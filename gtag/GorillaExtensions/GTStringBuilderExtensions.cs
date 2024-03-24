@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Text;
 using UnityEngine;
 
@@ -122,6 +125,130 @@ namespace GorillaExtensions
 				.Append(h)
 				.Append(i)
 				.Append(j);
+		}
+
+		[CompilerGenerated]
+		private sealed class <GetChunks>d__0 : IEnumerable<string>, IEnumerable, IEnumerator<string>, IEnumerator, IDisposable
+		{
+			[DebuggerHidden]
+			public <GetChunks>d__0(int <>1__state)
+			{
+				this.<>1__state = <>1__state;
+				this.<>l__initialThreadId = Environment.CurrentManagedThreadId;
+			}
+
+			[DebuggerHidden]
+			void IDisposable.Dispose()
+			{
+			}
+
+			bool IEnumerator.MoveNext()
+			{
+				int num = this.<>1__state;
+				int num2;
+				if (num != 0)
+				{
+					if (num != 1)
+					{
+						return false;
+					}
+					this.<>1__state = -1;
+					num2 = end + 1;
+				}
+				else
+				{
+					this.<>1__state = -1;
+					num2 = 0;
+				}
+				if (num2 >= sb.Length)
+				{
+					return false;
+				}
+				end = Math.Min(num2 + max, sb.Length);
+				if (end < sb.Length)
+				{
+					int num3 = -1;
+					for (int i = end - 1; i >= num2; i--)
+					{
+						if (sb[i] == '\n')
+						{
+							num3 = i;
+							break;
+						}
+					}
+					if (num3 != -1)
+					{
+						end = num3;
+					}
+				}
+				this.<>2__current = sb.ToString(num2, end - num2);
+				this.<>1__state = 1;
+				return true;
+			}
+
+			string IEnumerator<string>.Current
+			{
+				[DebuggerHidden]
+				get
+				{
+					return this.<>2__current;
+				}
+			}
+
+			[DebuggerHidden]
+			void IEnumerator.Reset()
+			{
+				throw new NotSupportedException();
+			}
+
+			object IEnumerator.Current
+			{
+				[DebuggerHidden]
+				get
+				{
+					return this.<>2__current;
+				}
+			}
+
+			[DebuggerHidden]
+			IEnumerator<string> IEnumerable<string>.GetEnumerator()
+			{
+				GTStringBuilderExtensions.<GetChunks>d__0 <GetChunks>d__;
+				if (this.<>1__state == -2 && this.<>l__initialThreadId == Environment.CurrentManagedThreadId)
+				{
+					this.<>1__state = 0;
+					<GetChunks>d__ = this;
+				}
+				else
+				{
+					<GetChunks>d__ = new GTStringBuilderExtensions.<GetChunks>d__0(0);
+				}
+				<GetChunks>d__.sb = sb;
+				<GetChunks>d__.max = max;
+				return <GetChunks>d__;
+			}
+
+			[DebuggerHidden]
+			IEnumerator IEnumerable.GetEnumerator()
+			{
+				return this.System.Collections.Generic.IEnumerable<System.String>.GetEnumerator();
+			}
+
+			private int <>1__state;
+
+			private string <>2__current;
+
+			private int <>l__initialThreadId;
+
+			private int max;
+
+			public int <>3__max;
+
+			private StringBuilder sb;
+
+			public StringBuilder <>3__sb;
+
+			private int <end>5__2;
 		}
 	}
 }

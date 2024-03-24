@@ -45,6 +45,10 @@ public class TransformReset : MonoBehaviour
 		}
 	}
 
+	public TransformReset()
+	{
+	}
+
 	private TransformReset.OriginalGameObjectTransform[] transformList;
 
 	private TransformReset.OriginalGameObjectTransform[] tempTransformList;

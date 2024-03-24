@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using Photon.Pun;
 using UnityEngine;
 
@@ -8,7 +9,19 @@ namespace GorillaTagScripts
 {
 	public class FlowersManager : MonoBehaviourPunCallbacks, IPunObservable
 	{
-		public static FlowersManager Instance { get; private set; }
+		public static FlowersManager Instance
+		{
+			[CompilerGenerated]
+			get
+			{
+				return FlowersManager.<Instance>k__BackingField;
+			}
+			[CompilerGenerated]
+			private set
+			{
+				FlowersManager.<Instance>k__BackingField = value;
+			}
+		}
 
 		private void Awake()
 		{
@@ -154,6 +167,10 @@ namespace GorillaTagScripts
 			}
 		}
 
+		public FlowersManager()
+		{
+		}
+
 		public List<FlowersManager.FlowersInZone> sections;
 
 		private readonly List<Flower> allFlowers = new List<Flower>();
@@ -166,9 +183,16 @@ namespace GorillaTagScripts
 
 		private bool hasBeenSerialized;
 
+		[CompilerGenerated]
+		private static FlowersManager <Instance>k__BackingField;
+
 		[Serializable]
 		public class FlowersInZone
 		{
+			public FlowersInZone()
+			{
+			}
+
 			public GTZone zone;
 
 			public List<GameObject> sections;

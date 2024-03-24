@@ -8,6 +8,10 @@ namespace GorillaTag.CosmeticSystem
 	[CreateAssetMenu(fileName = "CosmeticInfo", menuName = "Gorilla Tag/Cosmetic Info", order = 0)]
 	public class OldPoop_CosmeticInfoSO : ScriptableObject
 	{
+		public OldPoop_CosmeticInfoSO()
+		{
+		}
+
 		[Tooltip("If set to false this cosmetic will be completely ignored by the cosmetic system.")]
 		public bool includeInGame = true;
 

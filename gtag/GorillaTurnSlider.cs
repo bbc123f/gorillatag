@@ -41,6 +41,10 @@ public class GorillaTurnSlider : MonoBehaviour
 		}
 	}
 
+	public GorillaTurnSlider()
+	{
+	}
+
 	public float zRange;
 
 	public float maxValue;

@@ -34,5 +34,9 @@ namespace Viveport.Internal
 
 		[DllImport("viveport_api64", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi, EntryPoint = "IViveportDlc_IsSubscribed")]
 		internal static extern int IsSubscribed_64();
+
+		public DLC()
+		{
+		}
 	}
 }

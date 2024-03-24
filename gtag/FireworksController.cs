@@ -165,6 +165,10 @@ public class FireworksController : MonoBehaviour
 		Gizmos.DrawWireCube(position2, Vector3.one * 0.5f);
 	}
 
+	public FireworksController()
+	{
+	}
+
 	public Firework[] fireworks;
 
 	public AudioClip[] whistles;

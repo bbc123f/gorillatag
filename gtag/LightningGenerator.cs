@@ -36,6 +36,10 @@ public class LightningGenerator : MonoBehaviour
 		return this.strikes[this.index];
 	}
 
+	public LightningGenerator()
+	{
+	}
+
 	[SerializeField]
 	private uint maxConcurrentStrikes = 10U;
 

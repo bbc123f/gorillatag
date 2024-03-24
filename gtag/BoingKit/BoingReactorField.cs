@@ -1054,6 +1054,11 @@ namespace BoingKit
 			resZ = MathUtil.Modulo(z + baseMult * this.m_iCellBaseZ, this.CellsZ);
 		}
 
+		// Note: this type is marked as 'beforefieldinit'.
+		static BoingReactorField()
+		{
+		}
+
 		private static BoingReactorField.ShaderPropertyIdSet s_shaderPropertyId;
 
 		private BoingReactorField.FieldParams m_fieldParams;
@@ -1252,6 +1257,11 @@ namespace BoingKit
 				this.m_padding4 = this.m_padding5;
 			}
 
+			// Note: this type is marked as 'beforefieldinit'.
+			static FieldParams()
+			{
+			}
+
 			public static readonly int Stride = 112;
 
 			public int CellsX;
@@ -1301,6 +1311,10 @@ namespace BoingKit
 
 		private class ComputeKernelId
 		{
+			public ComputeKernelId()
+			{
+			}
+
 			public int InitKernel;
 
 			public int MoveKernel;

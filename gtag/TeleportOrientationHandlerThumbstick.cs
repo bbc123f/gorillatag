@@ -76,6 +76,10 @@ public class TeleportOrientationHandlerThumbstick : TeleportOrientationHandler
 		base.LocomotionTeleport.OnUpdateTeleportDestination(this.AimData.TargetValid, this.AimData.Destination, new Quaternion?(this._currentRotation), new Quaternion?(base.GetLandingOrientation(this.OrientationMode, this._currentRotation)));
 	}
 
+	public TeleportOrientationHandlerThumbstick()
+	{
+	}
+
 	[Tooltip("HeadRelative=Character will orient to match the arrow. ForwardFacing=When user orients to match the arrow, they will be facing the sensors.")]
 	public TeleportOrientationHandler.OrientationModes OrientationMode;
 

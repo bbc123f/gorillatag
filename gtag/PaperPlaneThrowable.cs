@@ -173,6 +173,10 @@ public class PaperPlaneThrowable : TransferrableObject
 		base.DropItem();
 	}
 
+	public PaperPlaneThrowable()
+	{
+	}
+
 	[SerializeField]
 	private MeshRenderer _renderer;
 

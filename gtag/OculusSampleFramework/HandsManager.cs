@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace OculusSampleFramework
@@ -127,7 +129,19 @@ namespace OculusSampleFramework
 			}
 		}
 
-		public static HandsManager Instance { get; private set; }
+		public static HandsManager Instance
+		{
+			[CompilerGenerated]
+			get
+			{
+				return HandsManager.<Instance>k__BackingField;
+			}
+			[CompilerGenerated]
+			private set
+			{
+				HandsManager.<Instance>k__BackingField = value;
+			}
+		}
 
 		private void Awake()
 		{
@@ -262,6 +276,10 @@ namespace OculusSampleFramework
 			return this.LeftHandSkeleton && this.LeftHandSkeleton.IsInitialized && this.RightHandSkeleton && this.RightHandSkeleton.IsInitialized && this.LeftHandMesh && this.LeftHandMesh.IsInitialized && this.RightHandMesh && this.RightHandMesh.IsInitialized;
 		}
 
+		public HandsManager()
+		{
+		}
+
 		private const string SKELETON_VISUALIZER_NAME = "SkeletonRenderer";
 
 		[SerializeField]
@@ -294,11 +312,101 @@ namespace OculusSampleFramework
 
 		private int HandAlphaId = Shader.PropertyToID("_HandAlpha");
 
+		[CompilerGenerated]
+		private static HandsManager <Instance>k__BackingField;
+
 		public enum HandsVisualMode
 		{
 			Mesh,
 			Skeleton,
 			Both
+		}
+
+		[CompilerGenerated]
+		private sealed class <FindSkeletonVisualGameObjects>d__52 : IEnumerator<object>, IEnumerator, IDisposable
+		{
+			[DebuggerHidden]
+			public <FindSkeletonVisualGameObjects>d__52(int <>1__state)
+			{
+				this.<>1__state = <>1__state;
+			}
+
+			[DebuggerHidden]
+			void IDisposable.Dispose()
+			{
+			}
+
+			bool IEnumerator.MoveNext()
+			{
+				int num = this.<>1__state;
+				HandsManager handsManager = this;
+				if (num != 0)
+				{
+					if (num != 1)
+					{
+						return false;
+					}
+					this.<>1__state = -1;
+				}
+				else
+				{
+					this.<>1__state = -1;
+				}
+				if (handsManager._leftSkeletonVisual && handsManager._rightSkeletonVisual)
+				{
+					handsManager.SetToCurrentVisualMode();
+					return false;
+				}
+				if (!handsManager._leftSkeletonVisual)
+				{
+					Transform transform = handsManager.LeftHand.transform.Find("SkeletonRenderer");
+					if (transform)
+					{
+						handsManager._leftSkeletonVisual = transform.gameObject;
+					}
+				}
+				if (!handsManager._rightSkeletonVisual)
+				{
+					Transform transform2 = handsManager.RightHand.transform.Find("SkeletonRenderer");
+					if (transform2)
+					{
+						handsManager._rightSkeletonVisual = transform2.gameObject;
+					}
+				}
+				this.<>2__current = null;
+				this.<>1__state = 1;
+				return true;
+			}
+
+			object IEnumerator<object>.Current
+			{
+				[DebuggerHidden]
+				get
+				{
+					return this.<>2__current;
+				}
+			}
+
+			[DebuggerHidden]
+			void IEnumerator.Reset()
+			{
+				throw new NotSupportedException();
+			}
+
+			object IEnumerator.Current
+			{
+				[DebuggerHidden]
+				get
+				{
+					return this.<>2__current;
+				}
+			}
+
+			private int <>1__state;
+
+			private object <>2__current;
+
+			public HandsManager <>4__this;
 		}
 	}
 }

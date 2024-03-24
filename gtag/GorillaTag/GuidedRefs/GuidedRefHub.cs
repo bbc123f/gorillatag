@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using GorillaExtensions;
 using GorillaTag.CosmeticSystem;
 using GorillaTag.GuidedRefs.Internal;
@@ -632,6 +633,15 @@ namespace GorillaTag.GuidedRefs
 			return "FieldNameOnlyAvailableInEditor";
 		}
 
+		public GuidedRefHub()
+		{
+		}
+
+		// Note: this type is marked as 'beforefieldinit'.
+		static GuidedRefHub()
+		{
+		}
+
 		Transform IGuidedRefMonoBehaviour.get_transform()
 		{
 			return base.transform;
@@ -678,5 +688,22 @@ namespace GorillaTag.GuidedRefs
 		[DebugReadout]
 		[OnEnterPlay_Clear]
 		internal static readonly HashSet<IGuidedRefReceiverMono> kReceiversFullyRegistered = new HashSet<IGuidedRefReceiverMono>(256);
+
+		[CompilerGenerated]
+		private sealed class <>c__DisplayClass26_0<TIGuidedRefReceiverMono> where TIGuidedRefReceiverMono : IGuidedRefReceiverMono
+		{
+			public <>c__DisplayClass26_0()
+			{
+			}
+
+			internal bool <UnregisterReceiver>b__0(RegisteredReceiverFieldInfo fieldInfo)
+			{
+				return fieldInfo.receiverMono == this.iReceiverMono;
+			}
+
+			public IGuidedRefReceiverMono iReceiverMono;
+
+			public Predicate<RegisteredReceiverFieldInfo> <>9__0;
+		}
 	}
 }

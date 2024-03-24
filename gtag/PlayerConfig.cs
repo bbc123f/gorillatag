@@ -2,6 +2,10 @@
 
 public class PlayerConfig
 {
+	public PlayerConfig()
+	{
+	}
+
 	public const string Player_Nickname = "playerName";
 
 	public const string Player_HasDoneTutorial = "didTutorial";

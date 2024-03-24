@@ -10,4 +10,8 @@ public class GorillaHeadset : MonoBehaviour
 	private void Update()
 	{
 	}
+
+	public GorillaHeadset()
+	{
+	}
 }

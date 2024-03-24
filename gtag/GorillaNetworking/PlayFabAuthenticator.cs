@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Text;
 using Photon.Pun;
 using Photon.Realtime;
@@ -45,8 +47,14 @@ namespace GorillaNetworking
 			this.platform = "Steam";
 			Debug.Log("Environment is *************** PRODUCTION *******************");
 			PlayFabSettings.TitleId = "63FDD";
+			PhotonNetwork.PhotonServerSettings.AppSettings.AppIdRealtime = "75dc33b5-d5fc-4b4c-bf88-eb70baabe183";
+			PhotonNetwork.PhotonServerSettings.AppSettings.AppIdVoice = "c5fddf06-024c-41f9-81ec-9411dc9c1b27";
 			this.AuthenticateWithPlayFab();
 			PlayFabSettings.DisableFocusTimeCollection = true;
+		}
+
+		private void Start()
+		{
 		}
 
 		public void AuthenticateWithPlayFab()
@@ -462,11 +470,81 @@ namespace GorillaNetworking
 			yield break;
 		}
 
+		public void SetSafety(bool isSafety, bool isAutoSet, bool setPlayfab = false)
+		{
+			Action<bool> onSafetyUpdate = this.OnSafetyUpdate;
+			if (onSafetyUpdate != null)
+			{
+				onSafetyUpdate(isSafety);
+			}
+			this.isSafeAccount = isSafety;
+			this.safetyType = PlayFabAuthenticator.SafetyType.None;
+			if (isSafety)
+			{
+				if (isAutoSet)
+				{
+					PlayerPrefs.SetInt("autoSafety", 1);
+					this.safetyType = PlayFabAuthenticator.SafetyType.Auto;
+				}
+				else
+				{
+					PlayerPrefs.SetInt("optSafety", 1);
+					this.safetyType = PlayFabAuthenticator.SafetyType.OptIn;
+				}
+				if (GorillaComputer.instance != null)
+				{
+					GorillaComputer.instance.voiceChatOn = "FALSE";
+					PlayerPrefs.SetString("voiceChatOn", "FALSE");
+				}
+				PlayerPrefs.Save();
+				RigContainer.RefreshAllRigVoices();
+				return;
+			}
+			this.safetyType = PlayFabAuthenticator.SafetyType.None;
+			if (isAutoSet)
+			{
+				PlayerPrefs.SetInt("autoSafety", 0);
+			}
+			else
+			{
+				PlayerPrefs.SetInt("optSafety", 0);
+			}
+			PlayerPrefs.Save();
+		}
+
+		public bool GetSafety()
+		{
+			return this.isSafeAccount;
+		}
+
+		public PlayFabAuthenticator.SafetyType GetSafetyType()
+		{
+			return this.safetyType;
+		}
+
+		public PlayFabAuthenticator()
+		{
+		}
+
+		[CompilerGenerated]
+		private void <GetPlayerDisplayName>b__54_0(GetPlayerProfileResult result)
+		{
+			this._displayName = result.PlayerProfile.DisplayName;
+		}
+
 		public static volatile PlayFabAuthenticator instance;
 
 		public const string Playfab_TitleId_Prod = "63FDD";
 
 		public const string Playfab_TitleId_Dev = "195C0";
+
+		public const string Photon_AppIdRealtime_Prod = "75dc33b5-d5fc-4b4c-bf88-eb70baabe183";
+
+		public const string Photon_AppIdVoice_Prod = "c5fddf06-024c-41f9-81ec-9411dc9c1b27";
+
+		public const string Photon_AppIdRealtime_Dev = "6a3946c5-d4ea-4705-bdb7-0a0c7e831ca7";
+
+		public const string Photon_AppIdVoice_Dev = "456d1e18-05c7-4a54-abc9-330fa0bcd2aa";
 
 		public const string Playfab_Auth_API = "https://auth-prod.gtag-cf.com";
 
@@ -484,9 +562,17 @@ namespace GorillaNetworking
 
 		public string userID;
 
+		private ulong userIDLong;
+
 		private string userToken;
 
 		private string platform;
+
+		private bool isSafeAccount;
+
+		public Action<bool> OnSafetyUpdate;
+
+		private PlayFabAuthenticator.SafetyType safetyType;
 
 		private byte[] m_Ticket;
 
@@ -519,9 +605,20 @@ namespace GorillaNetworking
 
 		protected Callback<GetAuthSessionTicketResponse_t> m_GetAuthSessionTicketResponse;
 
+		public enum SafetyType
+		{
+			None,
+			Auto,
+			OptIn
+		}
+
 		[Serializable]
 		public class CachePlayFabIdRequest
 		{
+			public CachePlayFabIdRequest()
+			{
+			}
+
 			public string Platform;
 
 			public string SessionTicket;
@@ -532,6 +629,10 @@ namespace GorillaNetworking
 		[Serializable]
 		public class PlayfabAuthRequestData
 		{
+			public PlayfabAuthRequestData()
+			{
+			}
+
 			public string CustomId;
 
 			public string AppId;
@@ -548,6 +649,10 @@ namespace GorillaNetworking
 		[Serializable]
 		public class PlayfabAuthResponseData
 		{
+			public PlayfabAuthResponseData()
+			{
+			}
+
 			public string SessionTicket;
 
 			public string EntityToken;
@@ -561,9 +666,487 @@ namespace GorillaNetworking
 
 		public class BanInfo
 		{
+			public BanInfo()
+			{
+			}
+
 			public string BanMessage;
 
 			public string BanExpirationTime;
+		}
+
+		[CompilerGenerated]
+		[Serializable]
+		private sealed class <>c
+		{
+			// Note: this type is marked as 'beforefieldinit'.
+			static <>c()
+			{
+			}
+
+			public <>c()
+			{
+			}
+
+			internal void <AuthenticateWithPhoton>b__49_0(ExecuteCloudScriptResult result)
+			{
+				Debug.Log("got results! updating!");
+				if (GorillaTagger.Instance != null)
+				{
+					GorillaTagger.Instance.offlineVRRig.GetUserCosmeticsAllowed();
+				}
+			}
+
+			internal void <AuthenticateWithPhoton>b__49_1(PlayFabError error)
+			{
+				Debug.Log("Got error retrieving user data:");
+				Debug.Log(error.GenerateErrorReport());
+				if (GorillaTagger.Instance != null)
+				{
+					GorillaTagger.Instance.offlineVRRig.GetUserCosmeticsAllowed();
+				}
+			}
+
+			internal void <AddGenericId>b__52_0(AddGenericIDResult _)
+			{
+			}
+
+			internal void <AddGenericId>b__52_1(PlayFabError _)
+			{
+				Debug.LogError("Error setting generic id");
+			}
+
+			internal void <GetPlayerDisplayName>b__54_1(PlayFabError error)
+			{
+				Debug.LogError(error.GenerateErrorReport());
+			}
+
+			internal void <SetDisplayName>b__55_1(PlayFabError error)
+			{
+				Debug.LogError(error.GenerateErrorReport());
+			}
+
+			public static readonly PlayFabAuthenticator.<>c <>9 = new PlayFabAuthenticator.<>c();
+
+			public static Action<ExecuteCloudScriptResult> <>9__49_0;
+
+			public static Action<PlayFabError> <>9__49_1;
+
+			public static Action<AddGenericIDResult> <>9__52_0;
+
+			public static Action<PlayFabError> <>9__52_1;
+
+			public static Action<PlayFabError> <>9__54_1;
+
+			public static Action<PlayFabError> <>9__55_1;
+		}
+
+		[CompilerGenerated]
+		private sealed class <>c__DisplayClass55_0
+		{
+			public <>c__DisplayClass55_0()
+			{
+			}
+
+			internal void <SetDisplayName>b__0(UpdateUserTitleDisplayNameResult result)
+			{
+				this.<>4__this._displayName = this.playerName;
+			}
+
+			public PlayFabAuthenticator <>4__this;
+
+			public string playerName;
+		}
+
+		[CompilerGenerated]
+		private sealed class <CachePlayFabId>d__64 : IEnumerator<object>, IEnumerator, IDisposable
+		{
+			[DebuggerHidden]
+			public <CachePlayFabId>d__64(int <>1__state)
+			{
+				this.<>1__state = <>1__state;
+			}
+
+			[DebuggerHidden]
+			void IDisposable.Dispose()
+			{
+			}
+
+			bool IEnumerator.MoveNext()
+			{
+				int num = this.<>1__state;
+				PlayFabAuthenticator playFabAuthenticator = this;
+				switch (num)
+				{
+				case 0:
+				{
+					this.<>1__state = -1;
+					Debug.Log("Trying to cache playfab Id");
+					request = new UnityWebRequest("https://auth-prod.gtag-cf.com/api/CachePlayFabId", "POST");
+					byte[] bytes = Encoding.UTF8.GetBytes(JsonUtility.ToJson(data));
+					retry = false;
+					request.uploadHandler = new UploadHandlerRaw(bytes);
+					request.downloadHandler = new DownloadHandlerBuffer();
+					request.SetRequestHeader("Content-Type", "application/json");
+					this.<>2__current = request.SendWebRequest();
+					this.<>1__state = 1;
+					return true;
+				}
+				case 1:
+					this.<>1__state = -1;
+					if (!request.isNetworkError && !request.isHttpError)
+					{
+						if (request.responseCode == 200L)
+						{
+							callback(true);
+						}
+					}
+					else if (request.isHttpError && request.responseCode != 400L)
+					{
+						retry = true;
+						Debug.LogError(string.Format("HTTP {0} error: {1}", request.responseCode, request.error));
+					}
+					else if (request.isNetworkError)
+					{
+						retry = true;
+					}
+					if (retry)
+					{
+						if (playFabAuthenticator.playFabCacheRetryCount < playFabAuthenticator.playFabCacheMaxRetries)
+						{
+							int num2 = (int)Mathf.Pow(2f, (float)(playFabAuthenticator.playFabCacheRetryCount + 1));
+							Debug.LogWarning(string.Format("Retrying PlayFab auth... Retry attempt #{0}, waiting for {1} seconds", playFabAuthenticator.playFabCacheRetryCount + 1, num2));
+							playFabAuthenticator.playFabCacheRetryCount++;
+							this.<>2__current = new WaitForSeconds((float)num2);
+							this.<>1__state = 2;
+							return true;
+						}
+						Debug.LogError("Maximum retries attempted. Please check your network connection.");
+						callback(false);
+					}
+					break;
+				case 2:
+					this.<>1__state = -1;
+					playFabAuthenticator.StartCoroutine(playFabAuthenticator.CachePlayFabId(new PlayFabAuthenticator.CachePlayFabIdRequest
+					{
+						Platform = playFabAuthenticator.platform,
+						SessionTicket = playFabAuthenticator._sessionTicket,
+						PlayFabId = playFabAuthenticator._playFabId
+					}, new Action<bool>(playFabAuthenticator.OnCachePlayFabIdRequest)));
+					break;
+				default:
+					return false;
+				}
+				return false;
+			}
+
+			object IEnumerator<object>.Current
+			{
+				[DebuggerHidden]
+				get
+				{
+					return this.<>2__current;
+				}
+			}
+
+			[DebuggerHidden]
+			void IEnumerator.Reset()
+			{
+				throw new NotSupportedException();
+			}
+
+			object IEnumerator.Current
+			{
+				[DebuggerHidden]
+				get
+				{
+					return this.<>2__current;
+				}
+			}
+
+			private int <>1__state;
+
+			private object <>2__current;
+
+			public PlayFabAuthenticator.CachePlayFabIdRequest data;
+
+			public Action<bool> callback;
+
+			public PlayFabAuthenticator <>4__this;
+
+			private UnityWebRequest <request>5__2;
+
+			private bool <retry>5__3;
+		}
+
+		[CompilerGenerated]
+		private sealed class <ComputerOnConnectedToMaster>d__50 : IEnumerator<object>, IEnumerator, IDisposable
+		{
+			[DebuggerHidden]
+			public <ComputerOnConnectedToMaster>d__50(int <>1__state)
+			{
+				this.<>1__state = <>1__state;
+			}
+
+			[DebuggerHidden]
+			void IDisposable.Dispose()
+			{
+			}
+
+			bool IEnumerator.MoveNext()
+			{
+				int num = this.<>1__state;
+				PlayFabAuthenticator playFabAuthenticator = this;
+				if (num != 0)
+				{
+					if (num != 1)
+					{
+						return false;
+					}
+					this.<>1__state = -1;
+				}
+				else
+				{
+					this.<>1__state = -1;
+					frameYield = new WaitForEndOfFrame();
+				}
+				if (!(playFabAuthenticator.gorillaComputer == null))
+				{
+					playFabAuthenticator.gorillaComputer.OnConnectedToMasterStuff();
+					return false;
+				}
+				this.<>2__current = frameYield;
+				this.<>1__state = 1;
+				return true;
+			}
+
+			object IEnumerator<object>.Current
+			{
+				[DebuggerHidden]
+				get
+				{
+					return this.<>2__current;
+				}
+			}
+
+			[DebuggerHidden]
+			void IEnumerator.Reset()
+			{
+				throw new NotSupportedException();
+			}
+
+			object IEnumerator.Current
+			{
+				[DebuggerHidden]
+				get
+				{
+					return this.<>2__current;
+				}
+			}
+
+			private int <>1__state;
+
+			private object <>2__current;
+
+			public PlayFabAuthenticator <>4__this;
+
+			private WaitForEndOfFrame <frameYield>5__2;
+		}
+
+		[CompilerGenerated]
+		private sealed class <DisplayGeneralFailureMessageOnGorillaComputerAfter1Frame>d__42 : IEnumerator<object>, IEnumerator, IDisposable
+		{
+			[DebuggerHidden]
+			public <DisplayGeneralFailureMessageOnGorillaComputerAfter1Frame>d__42(int <>1__state)
+			{
+				this.<>1__state = <>1__state;
+			}
+
+			[DebuggerHidden]
+			void IDisposable.Dispose()
+			{
+			}
+
+			bool IEnumerator.MoveNext()
+			{
+				int num = this.<>1__state;
+				PlayFabAuthenticator playFabAuthenticator = this;
+				if (num == 0)
+				{
+					this.<>1__state = -1;
+					this.<>2__current = null;
+					this.<>1__state = 1;
+					return true;
+				}
+				if (num != 1)
+				{
+					return false;
+				}
+				this.<>1__state = -1;
+				if (playFabAuthenticator.gorillaComputer != null)
+				{
+					playFabAuthenticator.gorillaComputer.GeneralFailureMessage("UNABLE TO AUTHENTICATE YOUR STEAM ACCOUNT! PLEASE MAKE SURE STEAM IS RUNNING AND YOU ARE LAUNCHING THE GAME DIRECTLY FROM STEAM.");
+					playFabAuthenticator.gorillaComputer.screenText.Text = "UNABLE TO AUTHENTICATE YOUR STEAM ACCOUNT! PLEASE MAKE SURE STEAM IS RUNNING AND YOU ARE LAUNCHING THE GAME DIRECTLY FROM STEAM.";
+					Debug.Log("Couldn't authenticate steam account");
+				}
+				else
+				{
+					Debug.LogError("PlayFabAuthenticator: gorillaComputer is null, so could not set GeneralFailureMessage notifying user that the steam account could not be authenticated.", playFabAuthenticator);
+				}
+				return false;
+			}
+
+			object IEnumerator<object>.Current
+			{
+				[DebuggerHidden]
+				get
+				{
+					return this.<>2__current;
+				}
+			}
+
+			[DebuggerHidden]
+			void IEnumerator.Reset()
+			{
+				throw new NotSupportedException();
+			}
+
+			object IEnumerator.Current
+			{
+				[DebuggerHidden]
+				get
+				{
+					return this.<>2__current;
+				}
+			}
+
+			private int <>1__state;
+
+			private object <>2__current;
+
+			public PlayFabAuthenticator <>4__this;
+		}
+
+		[CompilerGenerated]
+		private sealed class <PlayfabAuthenticate>d__62 : IEnumerator<object>, IEnumerator, IDisposable
+		{
+			[DebuggerHidden]
+			public <PlayfabAuthenticate>d__62(int <>1__state)
+			{
+				this.<>1__state = <>1__state;
+			}
+
+			[DebuggerHidden]
+			void IDisposable.Dispose()
+			{
+			}
+
+			bool IEnumerator.MoveNext()
+			{
+				int num = this.<>1__state;
+				PlayFabAuthenticator playFabAuthenticator = this;
+				switch (num)
+				{
+				case 0:
+				{
+					this.<>1__state = -1;
+					request = new UnityWebRequest("https://auth-prod.gtag-cf.com/api/PlayFabAuthentication", "POST");
+					byte[] bytes = Encoding.UTF8.GetBytes(JsonUtility.ToJson(data));
+					retry = false;
+					request.uploadHandler = new UploadHandlerRaw(bytes);
+					request.downloadHandler = new DownloadHandlerBuffer();
+					request.SetRequestHeader("Content-Type", "application/json");
+					this.<>2__current = request.SendWebRequest();
+					this.<>1__state = 1;
+					return true;
+				}
+				case 1:
+					this.<>1__state = -1;
+					if (!request.isNetworkError && !request.isHttpError)
+					{
+						PlayFabAuthenticator.PlayfabAuthResponseData playfabAuthResponseData = JsonUtility.FromJson<PlayFabAuthenticator.PlayfabAuthResponseData>(request.downloadHandler.text);
+						callback(playfabAuthResponseData);
+					}
+					else
+					{
+						if (request.responseCode == 403L)
+						{
+							Debug.LogError(string.Format("HTTP {0}: {1}, with body: {2}", request.responseCode, request.error, request.downloadHandler.text));
+							PlayFabAuthenticator.BanInfo banInfo = JsonUtility.FromJson<PlayFabAuthenticator.BanInfo>(request.downloadHandler.text);
+							playFabAuthenticator.ShowBanMessage(banInfo);
+							callback(null);
+						}
+						if (request.isHttpError && request.responseCode != 400L)
+						{
+							retry = true;
+							Debug.LogError(string.Format("HTTP {0} error: {1}", request.responseCode, request.error));
+						}
+						else if (request.isNetworkError)
+						{
+							retry = true;
+						}
+					}
+					if (retry)
+					{
+						if (playFabAuthenticator.playFabAuthRetryCount < playFabAuthenticator.playFabMaxRetries)
+						{
+							int num2 = (int)Mathf.Pow(2f, (float)(playFabAuthenticator.playFabAuthRetryCount + 1));
+							Debug.LogWarning(string.Format("Retrying PlayFab auth... Retry attempt #{0}, waiting for {1} seconds", playFabAuthenticator.playFabAuthRetryCount + 1, num2));
+							playFabAuthenticator.playFabAuthRetryCount++;
+							this.<>2__current = new WaitForSeconds((float)num2);
+							this.<>1__state = 2;
+							return true;
+						}
+						Debug.LogError("Maximum retries attempted. Please check your network connection.");
+						callback(null);
+					}
+					break;
+				case 2:
+					this.<>1__state = -1;
+					break;
+				default:
+					return false;
+				}
+				return false;
+			}
+
+			object IEnumerator<object>.Current
+			{
+				[DebuggerHidden]
+				get
+				{
+					return this.<>2__current;
+				}
+			}
+
+			[DebuggerHidden]
+			void IEnumerator.Reset()
+			{
+				throw new NotSupportedException();
+			}
+
+			object IEnumerator.Current
+			{
+				[DebuggerHidden]
+				get
+				{
+					return this.<>2__current;
+				}
+			}
+
+			private int <>1__state;
+
+			private object <>2__current;
+
+			public PlayFabAuthenticator.PlayfabAuthRequestData data;
+
+			public Action<PlayFabAuthenticator.PlayfabAuthResponseData> callback;
+
+			public PlayFabAuthenticator <>4__this;
+
+			private UnityWebRequest <request>5__2;
+
+			private bool <retry>5__3;
 		}
 	}
 }

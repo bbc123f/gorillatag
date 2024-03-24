@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using GorillaGameModes;
 using GorillaLocomotion.Swimming;
 using Photon.Pun;
@@ -7,7 +9,35 @@ using UnityEngine;
 
 public class SlingshotProjectile : MonoBehaviour
 {
-	public event SlingshotProjectile.ProjectileHitEvent OnHitPlayer;
+	public event SlingshotProjectile.ProjectileHitEvent OnHitPlayer
+	{
+		[CompilerGenerated]
+		add
+		{
+			SlingshotProjectile.ProjectileHitEvent projectileHitEvent = this.OnHitPlayer;
+			SlingshotProjectile.ProjectileHitEvent projectileHitEvent2;
+			do
+			{
+				projectileHitEvent2 = projectileHitEvent;
+				SlingshotProjectile.ProjectileHitEvent projectileHitEvent3 = (SlingshotProjectile.ProjectileHitEvent)Delegate.Combine(projectileHitEvent2, value);
+				projectileHitEvent = Interlocked.CompareExchange<SlingshotProjectile.ProjectileHitEvent>(ref this.OnHitPlayer, projectileHitEvent3, projectileHitEvent2);
+			}
+			while (projectileHitEvent != projectileHitEvent2);
+		}
+		[CompilerGenerated]
+		remove
+		{
+			SlingshotProjectile.ProjectileHitEvent projectileHitEvent = this.OnHitPlayer;
+			SlingshotProjectile.ProjectileHitEvent projectileHitEvent2;
+			do
+			{
+				projectileHitEvent2 = projectileHitEvent;
+				SlingshotProjectile.ProjectileHitEvent projectileHitEvent3 = (SlingshotProjectile.ProjectileHitEvent)Delegate.Remove(projectileHitEvent2, value);
+				projectileHitEvent = Interlocked.CompareExchange<SlingshotProjectile.ProjectileHitEvent>(ref this.OnHitPlayer, projectileHitEvent3, projectileHitEvent2);
+			}
+			while (projectileHitEvent != projectileHitEvent2);
+		}
+	}
 
 	public void Launch(Vector3 position, Vector3 velocity, Player player, bool blueTeam, bool orangeTeam, int projectileCount, float scale, bool shouldOverrideColor = false, Color overrideColor = default(Color))
 	{
@@ -250,6 +280,15 @@ public class SlingshotProjectile : MonoBehaviour
 		}
 	}
 
+	public SlingshotProjectile()
+	{
+	}
+
+	// Note: this type is marked as 'beforefieldinit'.
+	static SlingshotProjectile()
+	{
+	}
+
 	public Player projectileOwner;
 
 	[Tooltip("Rotates to point along the Y axis after spawn.")]
@@ -296,6 +335,9 @@ public class SlingshotProjectile : MonoBehaviour
 	private Vector3 previousPosition;
 
 	private ConstantForce forceComponent;
+
+	[CompilerGenerated]
+	private SlingshotProjectile.ProjectileHitEvent OnHitPlayer;
 
 	private MaterialPropertyBlock matPropBlock;
 

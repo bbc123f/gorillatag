@@ -19,4 +19,8 @@ public class NMeshTarget : SceneBakeTask
 	{
 		NMesh.Add(base.gameObject);
 	}
+
+	public NMeshTarget()
+	{
+	}
 }

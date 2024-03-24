@@ -166,6 +166,10 @@ public class StopwatchFace : MonoBehaviour
 		}
 	}
 
+	public StopwatchFace()
+	{
+	}
+
 	[SerializeField]
 	private Transform _hand;
 

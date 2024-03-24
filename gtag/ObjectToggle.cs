@@ -76,6 +76,10 @@ public class ObjectToggle : MonoBehaviour
 		this._toggled = new bool?(false);
 	}
 
+	public ObjectToggle()
+	{
+	}
+
 	public List<GameObject> objectsToToggle = new List<GameObject>();
 
 	[SerializeField]

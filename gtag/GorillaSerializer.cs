@@ -94,6 +94,10 @@ internal class GorillaSerializer : MonoBehaviour, IPunObservable, IPunInstantiat
 		this.photonView.RPC(rpcName, targetPlayer, data);
 	}
 
+	public GorillaSerializer()
+	{
+	}
+
 	protected bool successfullInstantiate;
 
 	protected IGorillaSerializeable serializeTarget;

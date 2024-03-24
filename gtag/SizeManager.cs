@@ -171,6 +171,10 @@ public class SizeManager : MonoBehaviour
 		return Mathf.MoveTowards(this.targetRig.scaleFactor, targetSize, deltaTime / easing);
 	}
 
+	public SizeManager()
+	{
+	}
+
 	public List<SizeChanger> touchingChangers;
 
 	private LineRenderer[] lineRenderers;

@@ -61,6 +61,15 @@ public class SizeManagerManager : MonoBehaviour
 		}
 	}
 
+	public SizeManagerManager()
+	{
+	}
+
+	// Note: this type is marked as 'beforefieldinit'.
+	static SizeManagerManager()
+	{
+	}
+
 	[OnEnterPlay_SetNull]
 	public static SizeManagerManager instance;
 

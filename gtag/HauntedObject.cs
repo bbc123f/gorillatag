@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using GorillaTagScripts;
 using UnityEngine;
 using UnityEngine.Events;
@@ -105,6 +108,10 @@ public class HauntedObject : MonoBehaviour
 		yield break;
 	}
 
+	public HauntedObject()
+	{
+	}
+
 	[Tooltip("If this box is checked, then object will rattle when hunted")]
 	public bool rattle;
 
@@ -139,4 +146,151 @@ public class HauntedObject : MonoBehaviour
 
 	[FormerlySerializedAs("rattlingSound")]
 	public AudioClip hauntedSound;
+
+	[CompilerGenerated]
+	private sealed class <Shake>d__19 : IEnumerator<object>, IEnumerator, IDisposable
+	{
+		[DebuggerHidden]
+		public <Shake>d__19(int <>1__state)
+		{
+			this.<>1__state = <>1__state;
+		}
+
+		[DebuggerHidden]
+		void IDisposable.Dispose()
+		{
+		}
+
+		bool IEnumerator.MoveNext()
+		{
+			int num = this.<>1__state;
+			HauntedObject hauntedObject = this;
+			if (num != 0)
+			{
+				if (num != 1)
+				{
+					return false;
+				}
+				this.<>1__state = -1;
+			}
+			else
+			{
+				this.<>1__state = -1;
+			}
+			if (hauntedObject.passedTime >= hauntedObject.duration)
+			{
+				hauntedObject.passedTime = 0f;
+				return false;
+			}
+			hauntedObject.passedTime += Time.deltaTime;
+			hauntedObject.transform.position = new Vector3(hauntedObject.initialPos.x + Mathf.Sin(Time.time * hauntedObject.speed) * hauntedObject.amount, hauntedObject.initialPos.y + Mathf.Sin(Time.time * hauntedObject.speed) * hauntedObject.amount, hauntedObject.initialPos.z);
+			this.<>2__current = null;
+			this.<>1__state = 1;
+			return true;
+		}
+
+		object IEnumerator<object>.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		[DebuggerHidden]
+		void IEnumerator.Reset()
+		{
+			throw new NotSupportedException();
+		}
+
+		object IEnumerator.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		private int <>1__state;
+
+		private object <>2__current;
+
+		public HauntedObject <>4__this;
+	}
+
+	[CompilerGenerated]
+	private sealed class <TurnOff>d__20 : IEnumerator<object>, IEnumerator, IDisposable
+	{
+		[DebuggerHidden]
+		public <TurnOff>d__20(int <>1__state)
+		{
+			this.<>1__state = <>1__state;
+		}
+
+		[DebuggerHidden]
+		void IDisposable.Dispose()
+		{
+		}
+
+		bool IEnumerator.MoveNext()
+		{
+			int num = this.<>1__state;
+			HauntedObject hauntedObject = this;
+			if (num != 0)
+			{
+				if (num != 1)
+				{
+					return false;
+				}
+				this.<>1__state = -1;
+			}
+			else
+			{
+				this.<>1__state = -1;
+				hauntedObject.TurnOffLight.gameObject.SetActive(false);
+			}
+			if (hauntedObject.lightPassedTime >= hauntedObject.TurnOffDuration)
+			{
+				hauntedObject.TurnOffLight.SetActive(true);
+				hauntedObject.lightPassedTime = 0f;
+				return false;
+			}
+			hauntedObject.lightPassedTime += Time.deltaTime;
+			this.<>2__current = null;
+			this.<>1__state = 1;
+			return true;
+		}
+
+		object IEnumerator<object>.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		[DebuggerHidden]
+		void IEnumerator.Reset()
+		{
+			throw new NotSupportedException();
+		}
+
+		object IEnumerator.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		private int <>1__state;
+
+		private object <>2__current;
+
+		public HauntedObject <>4__this;
+	}
 }

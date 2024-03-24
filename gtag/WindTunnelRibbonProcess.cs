@@ -10,4 +10,8 @@ public class WindTunnelRibbonProcess : MonoBehaviour
 	private void Update()
 	{
 	}
+
+	public WindTunnelRibbonProcess()
+	{
+	}
 }

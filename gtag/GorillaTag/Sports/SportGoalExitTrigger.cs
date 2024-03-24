@@ -14,6 +14,10 @@ namespace GorillaTag.Sports
 			}
 		}
 
+		public SportGoalExitTrigger()
+		{
+		}
+
 		[SerializeField]
 		private SportGoalTrigger goalTrigger;
 	}

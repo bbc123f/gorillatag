@@ -209,6 +209,10 @@ public class EquipmentInteractor : MonoBehaviour
 		}
 	}
 
+	public EquipmentInteractor()
+	{
+	}
+
 	[OnEnterPlay_SetNull]
 	public static volatile EquipmentInteractor instance;
 

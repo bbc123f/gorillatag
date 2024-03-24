@@ -28,6 +28,10 @@ public class AddCollidersToParticleSystemTriggers : MonoBehaviour
 		}
 	}
 
+	public AddCollidersToParticleSystemTriggers()
+	{
+	}
+
 	public Collider[] collidersToAdd;
 
 	public ParticleSystem particleSystemToUpdate;

@@ -40,6 +40,10 @@ namespace GorillaTag.GuidedRefs
 			GuidedRefHub.RegisterTarget<GuidedRefTargetMonoGameObject>(this, this.guidedRefTargetInfo.hubIds, this);
 		}
 
+		public GuidedRefTargetMonoGameObject()
+		{
+		}
+
 		Transform IGuidedRefMonoBehaviour.get_transform()
 		{
 			return base.transform;

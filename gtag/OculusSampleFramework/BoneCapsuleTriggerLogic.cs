@@ -50,6 +50,10 @@ namespace OculusSampleFramework
 			}
 		}
 
+		public BoneCapsuleTriggerLogic()
+		{
+		}
+
 		public InteractableToolTags ToolTags;
 
 		public HashSet<ColliderZone> CollidersTouchingUs = new HashSet<ColliderZone>();

@@ -8,6 +8,10 @@ public class GorillaBodyPhysics : MonoBehaviour
 		this.bodyCollider.transform.position = this.headsetTransform.position + this.bodyColliderOffset;
 	}
 
+	public GorillaBodyPhysics()
+	{
+	}
+
 	public GameObject bodyCollider;
 
 	public Vector3 bodyColliderOffset;

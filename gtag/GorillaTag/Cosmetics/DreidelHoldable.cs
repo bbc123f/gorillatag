@@ -145,6 +145,10 @@ namespace GorillaTag.Cosmetics
 			}
 		}
 
+		public DreidelHoldable()
+		{
+		}
+
 		[SerializeField]
 		private Dreidel dreidelAnimation;
 

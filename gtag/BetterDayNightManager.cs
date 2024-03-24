@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using GorillaNetworking;
 using UnityEngine;
 
@@ -16,7 +18,19 @@ public class BetterDayNightManager : MonoBehaviour, ITimeOfDaySystem
 		BetterDayNightManager.allScenesRenderData.Remove(data);
 	}
 
-	public string currentTimeOfDay { get; private set; }
+	public string currentTimeOfDay
+	{
+		[CompilerGenerated]
+		get
+		{
+			return this.<currentTimeOfDay>k__BackingField;
+		}
+		[CompilerGenerated]
+		private set
+		{
+			this.<currentTimeOfDay>k__BackingField = value;
+		}
+	}
 
 	double ITimeOfDaySystem.currentTimeInSeconds
 	{
@@ -416,6 +430,20 @@ public class BetterDayNightManager : MonoBehaviour, ITimeOfDaySystem
 		this.currentSetting = TimeSettings.Static;
 	}
 
+	public void FastForward(float seconds)
+	{
+		this.baseSeconds += (double)seconds;
+	}
+
+	public BetterDayNightManager()
+	{
+	}
+
+	// Note: this type is marked as 'beforefieldinit'.
+	static BetterDayNightManager()
+	{
+	}
+
 	[OnEnterPlay_SetNull]
 	public static volatile BetterDayNightManager instance;
 
@@ -504,6 +532,9 @@ public class BetterDayNightManager : MonoBehaviour, ITimeOfDaySystem
 
 	public BetterDayNightManager.WeatherType[] weatherCycle;
 
+	[CompilerGenerated]
+	private string <currentTimeOfDay>k__BackingField;
+
 	public float rainChance = 0.3f;
 
 	public int maxRainDuration = 5;
@@ -574,10 +605,284 @@ public class BetterDayNightManager : MonoBehaviour, ITimeOfDaySystem
 
 	private class ScheduledEvent
 	{
+		public ScheduledEvent()
+		{
+		}
+
 		public long lastDayCalled;
 
 		public int hour;
 
 		public Action action;
+	}
+
+	[CompilerGenerated]
+	private sealed class <AnimateLightFlashCo>d__104 : IEnumerator<object>, IEnumerator, IDisposable
+	{
+		[DebuggerHidden]
+		public <AnimateLightFlashCo>d__104(int <>1__state)
+		{
+			this.<>1__state = <>1__state;
+		}
+
+		[DebuggerHidden]
+		void IDisposable.Dispose()
+		{
+		}
+
+		bool IEnumerator.MoveNext()
+		{
+			int num = this.<>1__state;
+			BetterDayNightManager betterDayNightManager = this;
+			switch (num)
+			{
+			case 0:
+				this.<>1__state = -1;
+				startMap = ((betterDayNightManager.currentLerp < 0.5f) ? betterDayNightManager.currentTimeIndex : ((betterDayNightManager.currentTimeIndex + 1) % betterDayNightManager.timeOfDayRange.Length));
+				betterDayNightManager.ChangeMaps(startMap, index);
+				endTimestamp = Time.time + fadeInDuration;
+				break;
+			case 1:
+				this.<>1__state = -1;
+				break;
+			case 2:
+				this.<>1__state = -1;
+				goto IL_10A;
+			case 3:
+				this.<>1__state = -1;
+				goto IL_173;
+			default:
+				return false;
+			}
+			if (Time.time < endTimestamp)
+			{
+				betterDayNightManager.ChangeLerps(1f - (endTimestamp - Time.time) / fadeInDuration);
+				this.<>2__current = null;
+				this.<>1__state = 1;
+				return true;
+			}
+			betterDayNightManager.ChangeMaps(index, index);
+			betterDayNightManager.ChangeLerps(0f);
+			endTimestamp = Time.time + fadeInDuration;
+			IL_10A:
+			if (Time.time < endTimestamp)
+			{
+				this.<>2__current = null;
+				this.<>1__state = 2;
+				return true;
+			}
+			betterDayNightManager.ChangeMaps(index, startMap);
+			endTimestamp = Time.time + fadeOutDuration;
+			IL_173:
+			if (Time.time >= endTimestamp)
+			{
+				betterDayNightManager.ChangeMaps(betterDayNightManager.currentTimeIndex, (betterDayNightManager.currentTimeIndex + 1) % betterDayNightManager.timeOfDayRange.Length);
+				betterDayNightManager.ChangeLerps(betterDayNightManager.currentLerp);
+				betterDayNightManager.animatingLightFlash = null;
+				return false;
+			}
+			betterDayNightManager.ChangeLerps(1f - (endTimestamp - Time.time) / fadeInDuration);
+			this.<>2__current = null;
+			this.<>1__state = 3;
+			return true;
+		}
+
+		object IEnumerator<object>.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		[DebuggerHidden]
+		void IEnumerator.Reset()
+		{
+			throw new NotSupportedException();
+		}
+
+		object IEnumerator.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		private int <>1__state;
+
+		private object <>2__current;
+
+		public BetterDayNightManager <>4__this;
+
+		public int index;
+
+		public float fadeInDuration;
+
+		public float fadeOutDuration;
+
+		private int <startMap>5__2;
+
+		private float <endTimestamp>5__3;
+	}
+
+	[CompilerGenerated]
+	private sealed class <UpdateTimeOfDay>d__79 : IEnumerator<object>, IEnumerator, IDisposable
+	{
+		[DebuggerHidden]
+		public <UpdateTimeOfDay>d__79(int <>1__state)
+		{
+			this.<>1__state = <>1__state;
+		}
+
+		[DebuggerHidden]
+		void IDisposable.Dispose()
+		{
+		}
+
+		bool IEnumerator.MoveNext()
+		{
+			int num = this.<>1__state;
+			BetterDayNightManager betterDayNightManager = this;
+			switch (num)
+			{
+			case 0:
+				this.<>1__state = -1;
+				this.<>2__current = 0;
+				this.<>1__state = 1;
+				return true;
+			case 1:
+				this.<>1__state = -1;
+				break;
+			case 2:
+				this.<>1__state = -1;
+				break;
+			case 3:
+				this.<>1__state = -1;
+				break;
+			default:
+				return false;
+			}
+			if (betterDayNightManager.animatingLightFlash != null)
+			{
+				this.<>2__current = new WaitForSeconds(betterDayNightManager.currentTimestep);
+				this.<>1__state = 2;
+				return true;
+			}
+			try
+			{
+				if (!betterDayNightManager.computerInit && GorillaComputer.instance != null && GorillaComputer.instance.startupMillis != 0L)
+				{
+					betterDayNightManager.computerInit = true;
+					betterDayNightManager.initialDayCycles = (long)(TimeSpan.FromMilliseconds((double)GorillaComputer.instance.startupMillis).TotalSeconds * betterDayNightManager.timeMultiplier / betterDayNightManager.totalSeconds);
+					betterDayNightManager.currentWeatherIndex = (int)(betterDayNightManager.initialDayCycles * (long)betterDayNightManager.dayNightLightmapNames.Length) % betterDayNightManager.weatherCycle.Length;
+					betterDayNightManager.baseSeconds = TimeSpan.FromMilliseconds((double)GorillaComputer.instance.startupMillis).TotalSeconds * betterDayNightManager.timeMultiplier % betterDayNightManager.totalSeconds;
+					betterDayNightManager.currentTime = (betterDayNightManager.baseSeconds + (double)Time.realtimeSinceStartup * betterDayNightManager.timeMultiplier) % betterDayNightManager.totalSeconds;
+					betterDayNightManager.currentIndexSeconds = 0.0;
+					for (int i = 0; i < betterDayNightManager.timeOfDayRange.Length; i++)
+					{
+						betterDayNightManager.currentIndexSeconds += betterDayNightManager.timeOfDayRange[i] * 3600.0;
+						if (betterDayNightManager.currentIndexSeconds > betterDayNightManager.currentTime)
+						{
+							betterDayNightManager.currentTimeIndex = i;
+							break;
+						}
+					}
+					betterDayNightManager.currentWeatherIndex += betterDayNightManager.currentTimeIndex;
+				}
+				else if (!betterDayNightManager.computerInit && betterDayNightManager.baseSeconds == 0.0)
+				{
+					betterDayNightManager.initialDayCycles = (long)(TimeSpan.FromTicks(DateTime.UtcNow.Ticks).TotalSeconds * betterDayNightManager.timeMultiplier / betterDayNightManager.totalSeconds);
+					betterDayNightManager.currentWeatherIndex = (int)(betterDayNightManager.initialDayCycles * (long)betterDayNightManager.dayNightLightmapNames.Length) % betterDayNightManager.weatherCycle.Length;
+					betterDayNightManager.baseSeconds = TimeSpan.FromTicks(DateTime.UtcNow.Ticks).TotalSeconds * betterDayNightManager.timeMultiplier % betterDayNightManager.totalSeconds;
+					betterDayNightManager.currentTime = betterDayNightManager.baseSeconds % betterDayNightManager.totalSeconds;
+					betterDayNightManager.currentIndexSeconds = 0.0;
+					for (int j = 0; j < betterDayNightManager.timeOfDayRange.Length; j++)
+					{
+						betterDayNightManager.currentIndexSeconds += betterDayNightManager.timeOfDayRange[j] * 3600.0;
+						if (betterDayNightManager.currentIndexSeconds > betterDayNightManager.currentTime)
+						{
+							betterDayNightManager.currentTimeIndex = j;
+							break;
+						}
+					}
+					betterDayNightManager.currentWeatherIndex += betterDayNightManager.currentTimeIndex - 1;
+					if (betterDayNightManager.currentWeatherIndex < 0)
+					{
+						betterDayNightManager.currentWeatherIndex = betterDayNightManager.weatherCycle.Length - 1;
+					}
+				}
+				betterDayNightManager.currentTime = ((betterDayNightManager.currentSetting == TimeSettings.Normal) ? ((betterDayNightManager.baseSeconds + (double)Time.realtimeSinceStartup * betterDayNightManager.timeMultiplier) % betterDayNightManager.totalSeconds) : betterDayNightManager.currentTime);
+				betterDayNightManager.currentIndexSeconds = 0.0;
+				for (int k = 0; k < betterDayNightManager.timeOfDayRange.Length; k++)
+				{
+					betterDayNightManager.currentIndexSeconds += betterDayNightManager.timeOfDayRange[k] * 3600.0;
+					if (betterDayNightManager.currentIndexSeconds > betterDayNightManager.currentTime)
+					{
+						betterDayNightManager.currentTimeIndex = k;
+						break;
+					}
+				}
+				if (betterDayNightManager.currentTimeIndex != betterDayNightManager.lastIndex)
+				{
+					betterDayNightManager.currentWeatherIndex = (betterDayNightManager.currentWeatherIndex + 1) % betterDayNightManager.weatherCycle.Length;
+					betterDayNightManager.ChangeMaps(betterDayNightManager.currentTimeIndex, (betterDayNightManager.currentTimeIndex + 1) % betterDayNightManager.timeOfDayRange.Length);
+				}
+				betterDayNightManager.currentLerp = (float)(1.0 - (betterDayNightManager.currentIndexSeconds - betterDayNightManager.currentTime) / (betterDayNightManager.timeOfDayRange[betterDayNightManager.currentTimeIndex] * 3600.0));
+				betterDayNightManager.ChangeLerps(betterDayNightManager.currentLerp);
+				betterDayNightManager.lastIndex = betterDayNightManager.currentTimeIndex;
+				betterDayNightManager.currentTimeOfDay = betterDayNightManager.dayNightLightmapNames[betterDayNightManager.currentTimeIndex];
+			}
+			catch (Exception ex)
+			{
+				string text = "Error in BetterDayNightManager: ";
+				Exception ex2 = ex;
+				Debug.LogError(text + ((ex2 != null) ? ex2.ToString() : null), betterDayNightManager);
+			}
+			betterDayNightManager.gameEpochDay = (long)((betterDayNightManager.baseSeconds + (double)Time.realtimeSinceStartup * betterDayNightManager.timeMultiplier) / betterDayNightManager.totalSeconds + (double)betterDayNightManager.initialDayCycles);
+			foreach (BetterDayNightManager.ScheduledEvent scheduledEvent in BetterDayNightManager.scheduledEvents.Values)
+			{
+				if (scheduledEvent.lastDayCalled != betterDayNightManager.gameEpochDay && scheduledEvent.hour == betterDayNightManager.currentTimeIndex)
+				{
+					scheduledEvent.lastDayCalled = betterDayNightManager.gameEpochDay;
+					scheduledEvent.action();
+				}
+			}
+			this.<>2__current = new WaitForSeconds(betterDayNightManager.currentTimestep);
+			this.<>1__state = 3;
+			return true;
+		}
+
+		object IEnumerator<object>.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		[DebuggerHidden]
+		void IEnumerator.Reset()
+		{
+			throw new NotSupportedException();
+		}
+
+		object IEnumerator.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		private int <>1__state;
+
+		private object <>2__current;
+
+		public BetterDayNightManager <>4__this;
 	}
 }

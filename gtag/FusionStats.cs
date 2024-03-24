@@ -1266,6 +1266,15 @@ public class FusionStats : Fusion.Behaviour
 		this._layoutDirty++;
 	}
 
+	public FusionStats()
+	{
+	}
+
+	// Note: this type is marked as 'beforefieldinit'.
+	static FusionStats()
+	{
+	}
+
 	private static Dictionary<NetworkRunner, List<FusionStats>> _statsForRunnerLookup = new Dictionary<NetworkRunner, List<FusionStats>>();
 
 	private static Dictionary<string, FusionStats> _activeGuids = new Dictionary<string, FusionStats>();

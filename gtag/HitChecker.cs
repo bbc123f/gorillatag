@@ -59,4 +59,8 @@ public class HitChecker : MonoBehaviour
 		}
 		return 1;
 	}
+
+	public HitChecker()
+	{
+	}
 }

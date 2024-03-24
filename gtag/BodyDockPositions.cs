@@ -691,6 +691,10 @@ public class BodyDockPositions : MonoBehaviourPunCallbacks
 		return this.rightHandThrowables[num];
 	}
 
+	public BodyDockPositions()
+	{
+	}
+
 	public VRRig myRig;
 
 	public GameObject[] leftHandThrowables;

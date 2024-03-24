@@ -8,4 +8,8 @@ public class GTDisableStaticOnAwake : MonoBehaviour
 		base.gameObject.isStatic = false;
 		Object.Destroy(this);
 	}
+
+	public GTDisableStaticOnAwake()
+	{
+	}
 }

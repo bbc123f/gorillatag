@@ -51,6 +51,10 @@ public class WaterRippleEffect : MonoBehaviour
 		}
 	}
 
+	public WaterRippleEffect()
+	{
+	}
+
 	[SerializeField]
 	private float ripplePlaybackSpeed = 1f;
 

@@ -17,6 +17,10 @@ public class GorillaTriggerColliderHandIndicator : MonoBehaviour
 		}
 	}
 
+	public GorillaTriggerColliderHandIndicator()
+	{
+	}
+
 	public Vector3 currentVelocity;
 
 	public Vector3 lastPosition = Vector3.zero;

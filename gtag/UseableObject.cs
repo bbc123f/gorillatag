@@ -150,6 +150,10 @@ public class UseableObject : TransferrableObject
 		return !this.disableDeactivation;
 	}
 
+	public UseableObject()
+	{
+	}
+
 	[DebugOption]
 	public bool disableActivation;
 

@@ -88,6 +88,10 @@ namespace GorillaLocomotion.Swimming
 			return !float.IsNaN(vector.x) && !float.IsNaN(vector.y) && !float.IsNaN(vector.z);
 		}
 
+		public UnderwaterParticleEffects()
+		{
+		}
+
 		public ParticleSystem underwaterFloaterParticles;
 
 		public ParticleSystem underwaterBubbleParticles;

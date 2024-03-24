@@ -63,6 +63,15 @@ namespace GorillaLocomotion.Swimming
 			}
 		}
 
+		public RigidbodyWaterInteractionManager()
+		{
+		}
+
+		// Note: this type is marked as 'beforefieldinit'.
+		static RigidbodyWaterInteractionManager()
+		{
+		}
+
 		public static RigidbodyWaterInteractionManager instance;
 
 		[OnEnterPlay_Set(false)]

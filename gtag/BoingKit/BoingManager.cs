@@ -526,6 +526,11 @@ namespace BoingKit
 			}
 		}
 
+		// Note: this type is marked as 'beforefieldinit'.
+		static BoingManager()
+		{
+		}
+
 		public static BoingManager.BehaviorRegisterDelegate OnBehaviorRegister;
 
 		public static BoingManager.BehaviorUnregisterDelegate OnBehaviorUnregister;

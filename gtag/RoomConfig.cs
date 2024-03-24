@@ -84,6 +84,10 @@ public class RoomConfig
 		return array;
 	}
 
+	public RoomConfig()
+	{
+	}
+
 	public const string Room_GameModePropKey = "gameMode";
 
 	public bool isPublic;

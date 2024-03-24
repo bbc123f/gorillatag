@@ -640,6 +640,15 @@ public class MonkeyeAI : MonoBehaviour
 		this.targetRig = rig;
 	}
 
+	public MonkeyeAI()
+	{
+	}
+
+	// Note: this type is marked as 'beforefieldinit'.
+	static MonkeyeAI()
+	{
+	}
+
 	public List<Transform> patrolPts;
 
 	public Transform sleepPt;

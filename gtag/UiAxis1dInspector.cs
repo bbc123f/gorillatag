@@ -24,6 +24,10 @@ public class UiAxis1dInspector : MonoBehaviour
 		this.m_slider.value = value;
 	}
 
+	public UiAxis1dInspector()
+	{
+	}
+
 	[Header("Settings")]
 	[SerializeField]
 	private float m_minExtent;

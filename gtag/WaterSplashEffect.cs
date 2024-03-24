@@ -125,6 +125,15 @@ public class WaterSplashEffect : MonoBehaviour
 		}
 	}
 
+	public WaterSplashEffect()
+	{
+	}
+
+	// Note: this type is marked as 'beforefieldinit'.
+	static WaterSplashEffect()
+	{
+	}
+
 	private static int lastPlayedBigSplashAudioClipIndex = -1;
 
 	private static int lastPlayedSmallSplashEntryAudioClipIndex = -1;

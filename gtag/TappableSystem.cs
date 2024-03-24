@@ -15,4 +15,8 @@ public class TappableSystem : GTSystem<Tappable>
 		tapStrength = Mathf.Clamp(tapStrength, 0f, 1f);
 		this._instances[key].OnTapLocal(tapStrength, Time.time);
 	}
+
+	public TappableSystem()
+	{
+	}
 }

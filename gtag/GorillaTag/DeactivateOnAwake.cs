@@ -10,5 +10,9 @@ namespace GorillaTag
 			base.gameObject.SetActive(false);
 			Object.Destroy(this);
 		}
+
+		public DeactivateOnAwake()
+		{
+		}
 	}
 }

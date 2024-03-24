@@ -19,6 +19,10 @@ public class NonCosmeticItemProvider : MonoBehaviour
 		}
 	}
 
+	public NonCosmeticItemProvider()
+	{
+	}
+
 	public GTZone zone;
 
 	[Tooltip("only for honeycomb")]

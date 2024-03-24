@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using ExitGames.Client.Photon;
 using GorillaGameModes;
 using GorillaLocomotion;
@@ -10,7 +12,35 @@ using UnityEngine;
 
 public abstract class GorillaGameManager : MonoBehaviour, IInRoomCallbacks, IGorillaSerializeable, ITickSystemTick
 {
-	public static event GorillaGameManager.OnTouchDelegate OnTouch;
+	public static event GorillaGameManager.OnTouchDelegate OnTouch
+	{
+		[CompilerGenerated]
+		add
+		{
+			GorillaGameManager.OnTouchDelegate onTouchDelegate = GorillaGameManager.OnTouch;
+			GorillaGameManager.OnTouchDelegate onTouchDelegate2;
+			do
+			{
+				onTouchDelegate2 = onTouchDelegate;
+				GorillaGameManager.OnTouchDelegate onTouchDelegate3 = (GorillaGameManager.OnTouchDelegate)Delegate.Combine(onTouchDelegate2, value);
+				onTouchDelegate = Interlocked.CompareExchange<GorillaGameManager.OnTouchDelegate>(ref GorillaGameManager.OnTouch, onTouchDelegate3, onTouchDelegate2);
+			}
+			while (onTouchDelegate != onTouchDelegate2);
+		}
+		[CompilerGenerated]
+		remove
+		{
+			GorillaGameManager.OnTouchDelegate onTouchDelegate = GorillaGameManager.OnTouch;
+			GorillaGameManager.OnTouchDelegate onTouchDelegate2;
+			do
+			{
+				onTouchDelegate2 = onTouchDelegate;
+				GorillaGameManager.OnTouchDelegate onTouchDelegate3 = (GorillaGameManager.OnTouchDelegate)Delegate.Remove(onTouchDelegate2, value);
+				onTouchDelegate = Interlocked.CompareExchange<GorillaGameManager.OnTouchDelegate>(ref GorillaGameManager.OnTouch, onTouchDelegate3, onTouchDelegate2);
+			}
+			while (onTouchDelegate != onTouchDelegate2);
+		}
+	}
 
 	public static GorillaGameManager instance
 	{
@@ -20,7 +50,19 @@ public abstract class GorillaGameManager : MonoBehaviour, IInRoomCallbacks, IGor
 		}
 	}
 
-	bool ITickSystemTick.TickRunning { get; set; }
+	bool ITickSystemTick.TickRunning
+	{
+		[CompilerGenerated]
+		get
+		{
+			return this.<ITickSystemTick.TickRunning>k__BackingField;
+		}
+		[CompilerGenerated]
+		set
+		{
+			this.<ITickSystemTick.TickRunning>k__BackingField = value;
+		}
+	}
 
 	public virtual void Awake()
 	{
@@ -68,6 +110,7 @@ public abstract class GorillaGameManager : MonoBehaviour, IInRoomCallbacks, IGor
 
 	public virtual void InfrequentUpdate()
 	{
+		GameMode.RefreshPlayers();
 		this.currentPlayerArray = PhotonNetwork.PlayerList;
 	}
 
@@ -276,6 +319,13 @@ public abstract class GorillaGameManager : MonoBehaviour, IInRoomCallbacks, IGor
 		}
 	}
 
+	protected GorillaGameManager()
+	{
+	}
+
+	[CompilerGenerated]
+	private static GorillaGameManager.OnTouchDelegate OnTouch;
+
 	public Room currentRoom;
 
 	public object obj;
@@ -326,6 +376,9 @@ public abstract class GorillaGameManager : MonoBehaviour, IInRoomCallbacks, IGor
 
 	private RigContainer outContainer;
 
+	[CompilerGenerated]
+	private bool <ITickSystemTick.TickRunning>k__BackingField;
+
 	private static Action onInstanceReady;
 
 	private static bool replicatedClientReady;
@@ -335,4 +388,24 @@ public abstract class GorillaGameManager : MonoBehaviour, IInRoomCallbacks, IGor
 	private GameModeSerializer serializer;
 
 	public delegate void OnTouchDelegate(Photon.Realtime.Player taggedPlayer, Photon.Realtime.Player taggingPlayer);
+
+	[CompilerGenerated]
+	private sealed class <>c__DisplayClass51_0
+	{
+		public <>c__DisplayClass51_0()
+		{
+		}
+
+		internal void <OnInstanceReady>b__0()
+		{
+			if (GorillaGameManager.instance)
+			{
+				this.action();
+				return;
+			}
+			GorillaGameManager.onInstanceReady = (Action)Delegate.Combine(GorillaGameManager.onInstanceReady, this.action);
+		}
+
+		public Action action;
+	}
 }

@@ -51,6 +51,10 @@ namespace OculusSampleFramework
 			this._selectionCylinder.CurrSelectionState = ((this._toolInteractingWithMe.ToolInputState == ToolInputState.PrimaryInputDown || this._toolInteractingWithMe.ToolInputState == ToolInputState.PrimaryInputDownStay) ? SelectionCylinder.SelectionState.Highlighted : SelectionCylinder.SelectionState.Selected);
 		}
 
+		public WindmillController()
+		{
+		}
+
 		[SerializeField]
 		private GameObject _startStopButton;
 

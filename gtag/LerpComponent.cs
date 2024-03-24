@@ -90,6 +90,10 @@ public abstract class LerpComponent : MonoBehaviour
 	{
 	}
 
+	protected LerpComponent()
+	{
+	}
+
 	[SerializeField]
 	[Range(0f, 1f)]
 	protected float _lerp;

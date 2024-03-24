@@ -3,4 +3,7 @@ using UnityEngine;
 
 public abstract class EditorOnlyComponent : MonoBehaviour
 {
+	protected EditorOnlyComponent()
+	{
+	}
 }

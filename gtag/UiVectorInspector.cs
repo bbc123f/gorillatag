@@ -14,6 +14,10 @@ public class UiVectorInspector : MonoBehaviour
 		this.m_valueLabel.text = string.Format("[{0}]", value);
 	}
 
+	public UiVectorInspector()
+	{
+	}
+
 	[Header("Components")]
 	[SerializeField]
 	private TextMeshProUGUI m_nameLabel;

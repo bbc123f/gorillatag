@@ -9,6 +9,10 @@ namespace GorillaTag.CosmeticSystem
 	[CreateAssetMenu(fileName = "CosmeticsAllSeasonsSO", menuName = "- Gorilla Tag/Guided Ref Array", order = 0)]
 	public class CosmeticsAllSeasonsSO : ScriptableObject
 	{
+		public CosmeticsAllSeasonsSO()
+		{
+		}
+
 		public GuidedRefHubIdSO hubId;
 
 		[FormerlySerializedAs("targetArrays")]

@@ -99,5 +99,9 @@ public class ToggleRunnerVisibility : Fusion.Behaviour
 		}
 	}
 
+	public ToggleRunnerVisibility()
+	{
+	}
+
 	private static ToggleRunnerVisibility _instance;
 }

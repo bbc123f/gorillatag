@@ -95,5 +95,9 @@ public class ToggleRunnerProvideInput : Fusion.Behaviour
 		}
 	}
 
+	public ToggleRunnerProvideInput()
+	{
+	}
+
 	private static ToggleRunnerProvideInput _instance;
 }

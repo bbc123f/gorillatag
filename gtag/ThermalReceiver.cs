@@ -40,6 +40,10 @@ public class ThermalReceiver : MonoBehaviour, IDynamicFloat, IResettableItem
 		this.celsius = this.defaultCelsius;
 	}
 
+	public ThermalReceiver()
+	{
+	}
+
 	public float radius = 0.2f;
 
 	[Tooltip("How fast the temperature should change overtime. 1.0 would be instantly.")]

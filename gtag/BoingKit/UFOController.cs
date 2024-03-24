@@ -137,6 +137,10 @@ namespace BoingKit
 			}
 		}
 
+		public UFOController()
+		{
+		}
+
 		public float LinearThrust = 3f;
 
 		public float MaxLinearSpeed = 2.5f;

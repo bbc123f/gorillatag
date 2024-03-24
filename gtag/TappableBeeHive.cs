@@ -48,6 +48,10 @@ public class TappableBeeHive : Tappable
 		}
 	}
 
+	public TappableBeeHive()
+	{
+	}
+
 	[SerializeField]
 	private GameObject swarmEmergeFromPoint;
 

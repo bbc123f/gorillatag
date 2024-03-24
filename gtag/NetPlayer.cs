@@ -16,7 +16,13 @@ public abstract class NetPlayer
 
 	public abstract string NickName { get; }
 
+	public abstract string DefaultName { get; }
+
 	public abstract bool InRoom { get; }
 
 	public abstract bool Equals(NetPlayer myPlayer, NetPlayer other);
+
+	protected NetPlayer()
+	{
+	}
 }

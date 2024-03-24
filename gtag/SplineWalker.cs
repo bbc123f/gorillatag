@@ -53,6 +53,10 @@ public class SplineWalker : MonoBehaviour, IPunObservable
 		stream.Serialize(ref this.progress);
 	}
 
+	public SplineWalker()
+	{
+	}
+
 	public BezierSpline spline;
 
 	public float duration;

@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Fusion;
 using Fusion.Sockets;
@@ -102,5 +105,67 @@ public class FusionCallbackHandler : MonoBehaviour, INetworkRunnerCallbacks
 	{
 	}
 
+	public FusionCallbackHandler()
+	{
+	}
+
 	private NetworkSystemFusion parent;
+
+	[CompilerGenerated]
+	[StructLayout(LayoutKind.Auto)]
+	private struct <RemoveCallbacks>d__3 : IAsyncStateMachine
+	{
+		void IAsyncStateMachine.MoveNext()
+		{
+			int num2;
+			int num = num2;
+			FusionCallbackHandler fusionCallbackHandler = this;
+			try
+			{
+				TaskAwaiter taskAwaiter;
+				if (num != 0)
+				{
+					taskAwaiter = Task.Delay(500).GetAwaiter();
+					if (!taskAwaiter.IsCompleted)
+					{
+						num2 = 0;
+						TaskAwaiter taskAwaiter2 = taskAwaiter;
+						this.<>t__builder.AwaitUnsafeOnCompleted<TaskAwaiter, FusionCallbackHandler.<RemoveCallbacks>d__3>(ref taskAwaiter, ref this);
+						return;
+					}
+				}
+				else
+				{
+					TaskAwaiter taskAwaiter2;
+					taskAwaiter = taskAwaiter2;
+					taskAwaiter2 = default(TaskAwaiter);
+					num2 = -1;
+				}
+				taskAwaiter.GetResult();
+				fusionCallbackHandler.parent.runner.RemoveCallbacks(new INetworkRunnerCallbacks[] { fusionCallbackHandler });
+			}
+			catch (Exception ex)
+			{
+				num2 = -2;
+				this.<>t__builder.SetException(ex);
+				return;
+			}
+			num2 = -2;
+			this.<>t__builder.SetResult();
+		}
+
+		[DebuggerHidden]
+		void IAsyncStateMachine.SetStateMachine(IAsyncStateMachine stateMachine)
+		{
+			this.<>t__builder.SetStateMachine(stateMachine);
+		}
+
+		public int <>1__state;
+
+		public AsyncVoidMethodBuilder <>t__builder;
+
+		public FusionCallbackHandler <>4__this;
+
+		private TaskAwaiter <>u__1;
+	}
 }

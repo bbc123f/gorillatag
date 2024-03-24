@@ -82,6 +82,10 @@ public class RubberDuckEvents : MonoBehaviour
 		this.Deactivate = null;
 	}
 
+	public RubberDuckEvents()
+	{
+	}
+
 	public int PlayerId;
 
 	public string PlayerIdString;

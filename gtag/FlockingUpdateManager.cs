@@ -61,6 +61,15 @@ public class FlockingUpdateManager : MonoBehaviour
 		}
 	}
 
+	public FlockingUpdateManager()
+	{
+	}
+
+	// Note: this type is marked as 'beforefieldinit'.
+	static FlockingUpdateManager()
+	{
+	}
+
 	public static FlockingUpdateManager instance;
 
 	public static bool hasInstance = false;

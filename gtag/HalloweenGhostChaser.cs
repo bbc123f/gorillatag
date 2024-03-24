@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
@@ -540,6 +541,10 @@ public class HalloweenGhostChaser : MonoBehaviourPunCallbacks, IInRoomCallbacks,
 		this.nextTimeToChasePlayer = Time.time + Random.Range(this.minGrabCooldown, this.maxNextTimeToChasePlayer);
 	}
 
+	public HalloweenGhostChaser()
+	{
+	}
+
 	public float heightAboveNavmesh = 0.5f;
 
 	public Transform followTarget;
@@ -688,5 +693,22 @@ public class HalloweenGhostChaser : MonoBehaviourPunCallbacks, IInRoomCallbacks,
 		Gong = 4,
 		Chasing = 8,
 		Grabbing = 16
+	}
+
+	[CompilerGenerated]
+	private sealed class <>c__DisplayClass73_0
+	{
+		public <>c__DisplayClass73_0()
+		{
+		}
+
+		internal bool <ChooseRandomTarget>b__0(VRRig x)
+		{
+			return x.creator != null && x.creator == this.<>4__this.possibleTarget[this.randomTarget];
+		}
+
+		public HalloweenGhostChaser <>4__this;
+
+		public int randomTarget;
 	}
 }

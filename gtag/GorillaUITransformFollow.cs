@@ -16,6 +16,10 @@ public class GorillaUITransformFollow : MonoBehaviour
 		}
 	}
 
+	public GorillaUITransformFollow()
+	{
+	}
+
 	public Transform transformToFollow;
 
 	public Vector3 offset;

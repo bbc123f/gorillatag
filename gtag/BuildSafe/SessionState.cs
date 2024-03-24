@@ -15,6 +15,15 @@ namespace BuildSafe
 			}
 		}
 
+		public SessionState()
+		{
+		}
+
+		// Note: this type is marked as 'beforefieldinit'.
+		static SessionState()
+		{
+		}
+
 		public static readonly SessionState Shared = new SessionState();
 	}
 }

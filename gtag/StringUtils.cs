@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using UnityEngine;
@@ -102,4 +103,27 @@ public static class StringUtils
 	public const string kUnderScore = "_";
 
 	public const string kColon = ":";
+
+	[CompilerGenerated]
+	[Serializable]
+	private sealed class <>c
+	{
+		// Note: this type is marked as 'beforefieldinit'.
+		static <>c()
+		{
+		}
+
+		public <>c()
+		{
+		}
+
+		internal string <ToQueryString>b__12_0(KeyValuePair<string, string> x)
+		{
+			return x.Key + "=" + x.Value;
+		}
+
+		public static readonly StringUtils.<>c <>9 = new StringUtils.<>c();
+
+		public static Func<KeyValuePair<string, string>, string> <>9__12_0;
+	}
 }

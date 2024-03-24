@@ -139,6 +139,10 @@ public class UmbrellaItem : TransferrableObject
 		return true;
 	}
 
+	public UmbrellaItem()
+	{
+	}
+
 	[AssignInCorePrefab]
 	public Transform[] umbrellaBones;
 

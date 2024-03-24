@@ -17,6 +17,10 @@ namespace CjLib
 			DebugUtil.DrawLine(base.transform.position, base.transform.position + base.transform.TransformVector(this.LocalEndVector), color, depthTest);
 		}
 
+		public DrawLine()
+		{
+		}
+
 		public Vector3 LocalEndVector = Vector3.right;
 	}
 }

@@ -20,6 +20,10 @@ namespace CjLib
 			DebugUtil.DrawArc(base.transform.position, base.transform.rotation * quaternion * Vector3.right, base.transform.rotation * Vector3.forward, this.ArcAngle * MathUtil.Deg2Rad, this.Radius, this.NumSegments, color, depthTest);
 		}
 
+		public DrawArc()
+		{
+		}
+
 		public float Radius = 1f;
 
 		public int NumSegments = 64;

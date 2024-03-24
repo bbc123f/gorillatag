@@ -28,5 +28,9 @@ public class ModeSelectButton : GorillaPressableButton
 		this.buttonRenderer.material = ((newGameMode == this.gameMode) ? this.pressedMaterial : this.unpressedMaterial);
 	}
 
+	public ModeSelectButton()
+	{
+	}
+
 	public string gameMode;
 }

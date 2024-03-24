@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -341,6 +342,10 @@ public class DebugUIBuilder : MonoBehaviour
 		}
 	}
 
+	public DebugUIBuilder()
+	{
+	}
+
 	public const int DEBUG_PANE_CENTER = 0;
 
 	public const int DEBUG_PANE_RIGHT = 1;
@@ -420,4 +425,85 @@ public class DebugUIBuilder : MonoBehaviour
 	public delegate void OnSlider(float f);
 
 	public delegate bool ActiveUpdate();
+
+	[CompilerGenerated]
+	private sealed class <>c__DisplayClass41_0
+	{
+		public <>c__DisplayClass41_0()
+		{
+		}
+
+		internal void <AddButton>b__0()
+		{
+			this.handler();
+		}
+
+		public DebugUIBuilder.OnClick handler;
+	}
+
+	[CompilerGenerated]
+	private sealed class <>c__DisplayClass43_0
+	{
+		public <>c__DisplayClass43_0()
+		{
+		}
+
+		internal void <AddSlider>b__0(float f)
+		{
+			this.onValueChanged(f);
+		}
+
+		public DebugUIBuilder.OnSlider onValueChanged;
+	}
+
+	[CompilerGenerated]
+	private sealed class <>c__DisplayClass45_0
+	{
+		public <>c__DisplayClass45_0()
+		{
+		}
+
+		internal void <AddToggle>b__0(bool <p0>)
+		{
+			this.onValueChanged(this.t);
+		}
+
+		public DebugUIBuilder.OnToggleValueChange onValueChanged;
+
+		public Toggle t;
+	}
+
+	[CompilerGenerated]
+	private sealed class <>c__DisplayClass46_0
+	{
+		public <>c__DisplayClass46_0()
+		{
+		}
+
+		internal void <AddToggle>b__0(bool <p0>)
+		{
+			this.onValueChanged(this.t);
+		}
+
+		public DebugUIBuilder.OnToggleValueChange onValueChanged;
+
+		public Toggle t;
+	}
+
+	[CompilerGenerated]
+	private sealed class <>c__DisplayClass47_0
+	{
+		public <>c__DisplayClass47_0()
+		{
+		}
+
+		internal void <AddRadio>b__0(bool <p0>)
+		{
+			this.handler(this.tb);
+		}
+
+		public DebugUIBuilder.OnToggleValueChange handler;
+
+		public Toggle tb;
+	}
 }

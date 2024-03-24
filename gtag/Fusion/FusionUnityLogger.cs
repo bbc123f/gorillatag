@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using System.Text;
 using UnityEngine;
 
@@ -7,7 +8,19 @@ namespace Fusion
 	[Serializable]
 	public class FusionUnityLogger : ILogger
 	{
-		public Func<object, int> GetColor { get; set; }
+		public Func<object, int> GetColor
+		{
+			[CompilerGenerated]
+			get
+			{
+				return this.<GetColor>k__BackingField;
+			}
+			[CompilerGenerated]
+			set
+			{
+				this.<GetColor>k__BackingField = value;
+			}
+		}
 
 		public FusionUnityLogger()
 		{
@@ -156,6 +169,18 @@ namespace Fusion
 			}
 		}
 
+		[CompilerGenerated]
+		private int <.ctor>b__12_0(object obj)
+		{
+			NetworkRunner networkRunner = obj as NetworkRunner;
+			if (networkRunner != null)
+			{
+				int hashCodeForLogger = networkRunner.GetHashCodeForLogger();
+				return this.GetRandomColor(hashCodeForLogger);
+			}
+			return 0;
+		}
+
 		private StringBuilder _builder = new StringBuilder();
 
 		public bool UseGlobalPrefix;
@@ -169,5 +194,8 @@ namespace Fusion
 		public Color32 MaxRandomColor;
 
 		public Color ServerColor;
+
+		[CompilerGenerated]
+		private Func<object, int> <GetColor>k__BackingField;
 	}
 }

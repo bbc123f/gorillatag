@@ -20,6 +20,10 @@ internal class SoundIdRemapping
 		}
 	}
 
+	public SoundIdRemapping()
+	{
+	}
+
 	[GorillaSoundLookup]
 	[SerializeField]
 	private int soundIn = 1;

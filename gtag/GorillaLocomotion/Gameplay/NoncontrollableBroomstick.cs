@@ -113,6 +113,10 @@ namespace GorillaLocomotion.Gameplay
 			return base.transform;
 		}
 
+		public NoncontrollableBroomstick()
+		{
+		}
+
 		public BezierSpline spline;
 
 		public float duration = 30f;

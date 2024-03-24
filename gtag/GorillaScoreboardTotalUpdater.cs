@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using GorillaNetworking;
 using UnityEngine;
 
@@ -134,19 +135,23 @@ public class GorillaScoreboardTotalUpdater : MonoBehaviour
 				sB.notInRoomText.gameObject.SetActive(true);
 				sB.notInRoomText.text = ((this.offlineTextErrorString != null) ? this.offlineTextErrorString : GorillaComputer.instance.offlineTextInitialString);
 			}
+			for (int i = 0; i < sB.lines.Count; i++)
+			{
+				sB.lines[i].ResetData();
+			}
 			return;
 		}
 		if (sB.notInRoomText != null)
 		{
 			sB.notInRoomText.gameObject.SetActive(false);
 		}
-		for (int i = 0; i < sB.lines.Count; i++)
+		for (int j = 0; j < sB.lines.Count; j++)
 		{
-			GorillaPlayerScoreboardLine gorillaPlayerScoreboardLine = sB.lines[i];
-			if (i < this.playersInRoom.Count)
+			GorillaPlayerScoreboardLine gorillaPlayerScoreboardLine = sB.lines[j];
+			if (j < this.playersInRoom.Count)
 			{
 				gorillaPlayerScoreboardLine.gameObject.SetActive(true);
-				gorillaPlayerScoreboardLine.SetLineData(this.playersInRoom[i]);
+				gorillaPlayerScoreboardLine.SetLineData(this.playersInRoom[j]);
 			}
 			else
 			{
@@ -231,6 +236,15 @@ public class GorillaScoreboardTotalUpdater : MonoBehaviour
 		}
 	}
 
+	public GorillaScoreboardTotalUpdater()
+	{
+	}
+
+	// Note: this type is marked as 'beforefieldinit'.
+	static GorillaScoreboardTotalUpdater()
+	{
+	}
+
 	public static GorillaScoreboardTotalUpdater instance;
 
 	[OnEnterPlay_Set(false)]
@@ -285,5 +299,28 @@ public class GorillaScoreboardTotalUpdater : MonoBehaviour
 		public bool hateSpeech;
 
 		public bool pressedReport;
+	}
+
+	[CompilerGenerated]
+	[Serializable]
+	private sealed class <>c
+	{
+		// Note: this type is marked as 'beforefieldinit'.
+		static <>c()
+		{
+		}
+
+		public <>c()
+		{
+		}
+
+		internal int <JoinedRoom>b__31_0(NetPlayer x, NetPlayer y)
+		{
+			return x.ID.CompareTo(y.ID);
+		}
+
+		public static readonly GorillaScoreboardTotalUpdater.<>c <>9 = new GorillaScoreboardTotalUpdater.<>c();
+
+		public static Comparison<NetPlayer> <>9__31_0;
 	}
 }

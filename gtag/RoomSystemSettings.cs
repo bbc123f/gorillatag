@@ -36,6 +36,10 @@ internal class RoomSystemSettings : ScriptableObject
 		}
 	}
 
+	public RoomSystemSettings()
+	{
+	}
+
 	[SerializeField]
 	private CallLimiterWithCooldown statusEffectLimiter;
 

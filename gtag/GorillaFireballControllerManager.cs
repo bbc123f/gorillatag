@@ -77,6 +77,10 @@ public class GorillaFireballControllerManager : MonoBehaviour
 		PhotonNetwork.Instantiate("GorillaPrefabs/GorillaFireball", vector, Quaternion.identity, 0, array);
 	}
 
+	public GorillaFireballControllerManager()
+	{
+	}
+
 	public InputDevice leftHand;
 
 	public InputDevice rightHand;

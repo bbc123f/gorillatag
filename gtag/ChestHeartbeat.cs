@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using Photon.Pun;
 using UnityEngine;
 
@@ -50,6 +53,10 @@ public class ChestHeartbeat : MonoBehaviour
 		yield break;
 	}
 
+	public ChestHeartbeat()
+	{
+	}
+
 	public int millisToWait;
 
 	public int millisMin = 300;
@@ -73,4 +80,92 @@ public class ChestHeartbeat : MonoBehaviour
 	private float endtime = 0.25f;
 
 	private float currentTime;
+
+	[CompilerGenerated]
+	private sealed class <HeartBeat>d__13 : IEnumerator<object>, IEnumerator, IDisposable
+	{
+		[DebuggerHidden]
+		public <HeartBeat>d__13(int <>1__state)
+		{
+			this.<>1__state = <>1__state;
+		}
+
+		[DebuggerHidden]
+		void IDisposable.Dispose()
+		{
+		}
+
+		bool IEnumerator.MoveNext()
+		{
+			int num = this.<>1__state;
+			ChestHeartbeat chestHeartbeat = this;
+			if (num != 0)
+			{
+				if (num != 1)
+				{
+					return false;
+				}
+				this.<>1__state = -1;
+			}
+			else
+			{
+				this.<>1__state = -1;
+				startTime = Time.time;
+			}
+			if (Time.time >= startTime + chestHeartbeat.endtime)
+			{
+				return false;
+			}
+			if (Time.time < startTime + chestHeartbeat.minTime)
+			{
+				chestHeartbeat.deltaTime = Time.time - startTime;
+				chestHeartbeat.scaleTransform.localScale = Vector3.Lerp(Vector3.one, Vector3.one * chestHeartbeat.heartMinSize, chestHeartbeat.deltaTime / chestHeartbeat.minTime);
+			}
+			else if (Time.time < startTime + chestHeartbeat.maxTime)
+			{
+				chestHeartbeat.deltaTime = Time.time - startTime - chestHeartbeat.minTime;
+				chestHeartbeat.scaleTransform.localScale = Vector3.Lerp(Vector3.one * chestHeartbeat.heartMinSize, Vector3.one * chestHeartbeat.heartMaxSize, chestHeartbeat.deltaTime / (chestHeartbeat.maxTime - chestHeartbeat.minTime));
+			}
+			else if (Time.time < startTime + chestHeartbeat.endtime)
+			{
+				chestHeartbeat.deltaTime = Time.time - startTime - chestHeartbeat.maxTime;
+				chestHeartbeat.scaleTransform.localScale = Vector3.Lerp(Vector3.one * chestHeartbeat.heartMaxSize, Vector3.one, chestHeartbeat.deltaTime / (chestHeartbeat.endtime - chestHeartbeat.maxTime));
+			}
+			this.<>2__current = new WaitForFixedUpdate();
+			this.<>1__state = 1;
+			return true;
+		}
+
+		object IEnumerator<object>.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		[DebuggerHidden]
+		void IEnumerator.Reset()
+		{
+			throw new NotSupportedException();
+		}
+
+		object IEnumerator.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		private int <>1__state;
+
+		private object <>2__current;
+
+		public ChestHeartbeat <>4__this;
+
+		private float <startTime>5__2;
+	}
 }

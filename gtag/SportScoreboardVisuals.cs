@@ -9,6 +9,10 @@ public class SportScoreboardVisuals : MonoBehaviour
 		SportScoreboard.Instance.RegisterTeamVisual(this.TeamIndex, this);
 	}
 
+	public SportScoreboardVisuals()
+	{
+	}
+
 	[SerializeField]
 	public MaterialUVOffsetListSetter score1s;
 

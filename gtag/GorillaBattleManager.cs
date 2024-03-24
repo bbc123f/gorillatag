@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using GorillaGameModes;
 using GorillaNetworking;
 using Photon.Pun;
@@ -749,6 +751,10 @@ public class GorillaBattleManager : GorillaGameManager
 		}
 	}
 
+	public GorillaBattleManager()
+	{
+	}
+
 	private float playerMin = 2f;
 
 	public float tagCoolDown = 5f;
@@ -826,5 +832,110 @@ public class GorillaBattleManager : GorillaGameManager
 		CountingDownToStart,
 		GameStart,
 		GameRunning
+	}
+
+	[CompilerGenerated]
+	private sealed class <>c__DisplayClass80_0
+	{
+		public <>c__DisplayClass80_0()
+		{
+		}
+
+		internal int <RandomizeTeams>b__0(int x)
+		{
+			return this.rand.Next();
+		}
+
+		public Random rand;
+	}
+
+	[CompilerGenerated]
+	private sealed class <StartBattleCountdown>d__44 : IEnumerator<object>, IEnumerator, IDisposable
+	{
+		[DebuggerHidden]
+		public <StartBattleCountdown>d__44(int <>1__state)
+		{
+			this.<>1__state = <>1__state;
+		}
+
+		[DebuggerHidden]
+		void IDisposable.Dispose()
+		{
+		}
+
+		bool IEnumerator.MoveNext()
+		{
+			int num = this.<>1__state;
+			GorillaBattleManager gorillaBattleManager = this;
+			switch (num)
+			{
+			case 0:
+				this.<>1__state = -1;
+				gorillaBattleManager.coroutineRunning = true;
+				gorillaBattleManager.countDownTime = 5;
+				break;
+			case 1:
+				this.<>1__state = -1;
+				gorillaBattleManager.countDownTime--;
+				break;
+			case 2:
+				this.<>1__state = -1;
+				return false;
+			default:
+				return false;
+			}
+			if (gorillaBattleManager.countDownTime <= 0)
+			{
+				gorillaBattleManager.coroutineRunning = false;
+				gorillaBattleManager.currentState = GorillaBattleManager.BattleState.GameStart;
+				this.<>2__current = null;
+				this.<>1__state = 2;
+				return true;
+			}
+			try
+			{
+				RoomSystem.SendSoundEffectAll(6, 0.25f);
+				foreach (Player player in RoomSystem.PlayersInRoom)
+				{
+					gorillaBattleManager.playerLives[player.ActorNumber] = 3;
+				}
+			}
+			catch
+			{
+			}
+			this.<>2__current = new WaitForSeconds(1f);
+			this.<>1__state = 1;
+			return true;
+		}
+
+		object IEnumerator<object>.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		[DebuggerHidden]
+		void IEnumerator.Reset()
+		{
+			throw new NotSupportedException();
+		}
+
+		object IEnumerator.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		private int <>1__state;
+
+		private object <>2__current;
+
+		public GorillaBattleManager <>4__this;
 	}
 }

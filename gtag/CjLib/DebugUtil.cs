@@ -525,6 +525,15 @@ namespace CjLib
 			DebugUtil.DrawArrow(from, to, 0.5f * size, size, 8, 0f, color, depthTest, style);
 		}
 
+		public DebugUtil()
+		{
+		}
+
+		// Note: this type is marked as 'beforefieldinit'.
+		static DebugUtil()
+		{
+		}
+
 		private static float s_wireframeZBias = 0.0001f;
 
 		private const int kNormalFlag = 1;

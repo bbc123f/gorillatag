@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using GorillaExtensions;
 using GorillaGameModes;
 using GorillaLocomotion;
@@ -152,7 +153,19 @@ namespace GorillaTag
 			}
 		}
 
-		bool ITickSystemPost.PostTickRunning { get; set; }
+		bool ITickSystemPost.PostTickRunning
+		{
+			[CompilerGenerated]
+			get
+			{
+				return this.<ITickSystemPost.PostTickRunning>k__BackingField;
+			}
+			[CompilerGenerated]
+			set
+			{
+				this.<ITickSystemPost.PostTickRunning>k__BackingField = value;
+			}
+		}
 
 		void ITickSystemPost.PostTick()
 		{
@@ -606,7 +619,19 @@ namespace GorillaTag
 		{
 		}
 
-		int IGuidedRefReceiverMono.GuidedRefsWaitingToResolveCount { get; set; }
+		int IGuidedRefReceiverMono.GuidedRefsWaitingToResolveCount
+		{
+			[CompilerGenerated]
+			get
+			{
+				return this.<GorillaTag.GuidedRefs.IGuidedRefReceiverMono.GuidedRefsWaitingToResolveCount>k__BackingField;
+			}
+			[CompilerGenerated]
+			set
+			{
+				this.<GorillaTag.GuidedRefs.IGuidedRefReceiverMono.GuidedRefsWaitingToResolveCount>k__BackingField = value;
+			}
+		}
 
 		void IGuidedRefReceiverMono.OnAllGuidedRefsResolved()
 		{
@@ -637,6 +662,15 @@ namespace GorillaTag
 		bool IGuidedRefReceiverMono.GuidedRefTryResolveReference(GuidedRefTryResolveInfo target)
 		{
 			return GuidedRefHub.TryResolveField<InfectionLavaController, Transform>(this, ref this.lavaMeshTransform, this.lavaMeshTransform_gRef, target) || GuidedRefHub.TryResolveField<InfectionLavaController, Transform>(this, ref this.lavaSurfacePlaneTransform, this.lavaSurfacePlaneTransform_gRef, target) || GuidedRefHub.TryResolveField<InfectionLavaController, WaterVolume>(this, ref this.lavaVolume, this.lavaVolume_gRef, target) || GuidedRefHub.TryResolveField<InfectionLavaController, MeshRenderer>(this, ref this.lavaActivationRenderer, this.lavaActivationRenderer_gRef, target) || GuidedRefHub.TryResolveField<InfectionLavaController, Transform>(this, ref this.lavaActivationStartPos, this.lavaActivationStartPos_gRef, target) || GuidedRefHub.TryResolveField<InfectionLavaController, Transform>(this, ref this.lavaActivationEndPos, this.lavaActivationEndPos_gRef, target) || GuidedRefHub.TryResolveField<InfectionLavaController, SlingshotProjectileHitNotifier>(this, ref this.lavaActivationProjectileHitNotifier, this.lavaActivationProjectileHitNotifier_gRef, target) || GuidedRefHub.TryResolveArrayItem<InfectionLavaController, VolcanoEffects>(this, this.volcanoEffects, this.volcanoEffects_gRefs, target);
+		}
+
+		public InfectionLavaController()
+		{
+		}
+
+		// Note: this type is marked as 'beforefieldinit'.
+		static InfectionLavaController()
+		{
 		}
 
 		Transform IGuidedRefMonoBehaviour.get_transform()
@@ -781,7 +815,13 @@ namespace GorillaTag
 
 		private GorillaSerializerScene networkObject;
 
+		[CompilerGenerated]
+		private bool <ITickSystemPost.PostTickRunning>k__BackingField;
+
 		private bool guidedRefsFullyResolved;
+
+		[CompilerGenerated]
+		private int <GorillaTag.GuidedRefs.IGuidedRefReceiverMono.GuidedRefsWaitingToResolveCount>k__BackingField;
 
 		public enum RisingLavaState
 		{

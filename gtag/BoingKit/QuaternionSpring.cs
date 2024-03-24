@@ -133,6 +133,11 @@ namespace BoingKit
 			return this.TrackDampingRatio(targetValue, num, num2, deltaTime);
 		}
 
+		// Note: this type is marked as 'beforefieldinit'.
+		static QuaternionSpring()
+		{
+		}
+
 		public static readonly int Stride = 32;
 
 		public Vector4 ValueVec;

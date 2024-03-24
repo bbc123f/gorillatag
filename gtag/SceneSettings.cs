@@ -24,6 +24,10 @@ public class SceneSettings : MonoBehaviour
 		}
 	}
 
+	public SceneSettings()
+	{
+	}
+
 	[Header("Time")]
 	[SerializeField]
 	private float m_fixedTimeStep = 0.01f;

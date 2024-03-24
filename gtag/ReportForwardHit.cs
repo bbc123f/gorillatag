@@ -64,6 +64,15 @@ public class ReportForwardHit : MonoBehaviour
 		}
 	}
 
+	public ReportForwardHit()
+	{
+	}
+
+	// Note: this type is marked as 'beforefieldinit'.
+	static ReportForwardHit()
+	{
+	}
+
 	private static SRand rand = new SRand("ReportForwardHit");
 
 	[SerializeField]

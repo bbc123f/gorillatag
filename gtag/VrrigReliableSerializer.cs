@@ -21,4 +21,8 @@ internal class VrrigReliableSerializer : GorillaSerializer
 		}
 		return false;
 	}
+
+	public VrrigReliableSerializer()
+	{
+	}
 }

@@ -24,6 +24,10 @@ public class JellyfishUFOCamera : MonoBehaviour
 		base.transform.rotation = Quaternion.LookRotation(normalized);
 	}
 
+	public JellyfishUFOCamera()
+	{
+	}
+
 	public Transform Target;
 
 	private Vector3Spring m_spring;

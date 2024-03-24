@@ -13,5 +13,9 @@ namespace GorillaTag
 				return base.Value;
 			}
 		}
+
+		public WatchableIntSO()
+		{
+		}
 	}
 }

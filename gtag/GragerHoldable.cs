@@ -33,6 +33,10 @@ public class GragerHoldable : MonoBehaviour
 		}
 	}
 
+	public GragerHoldable()
+	{
+	}
+
 	[SerializeField]
 	private Vector3 LocalCenterOfMass;
 

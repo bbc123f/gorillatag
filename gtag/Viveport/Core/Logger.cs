@@ -59,6 +59,15 @@ namespace Viveport.Core
 			return null;
 		}
 
+		public Logger()
+		{
+		}
+
+		// Note: this type is marked as 'beforefieldinit'.
+		static Logger()
+		{
+		}
+
 		private const string LoggerTypeNameUnity = "UnityEngine.Debug";
 
 		private static bool _hasDetected;

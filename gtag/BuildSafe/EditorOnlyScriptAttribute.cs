@@ -7,5 +7,8 @@ namespace BuildSafe
 	[AttributeUsage(AttributeTargets.Class)]
 	public class EditorOnlyScriptAttribute : Attribute
 	{
+		public EditorOnlyScriptAttribute()
+		{
+		}
 	}
 }

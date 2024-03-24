@@ -9,4 +9,8 @@ public class PlayerSpawnerPrototype : SpawnerPrototype<PlayerSpawnPointPrototype
 		base.RegisterPlayerAndObject(player, playerObject);
 		this.Runner.SetPlayerObject(player, playerObject);
 	}
+
+	public PlayerSpawnerPrototype()
+	{
+	}
 }

@@ -46,6 +46,10 @@ public class GorillaThrowingRock : GorillaThrowable, IPunInstantiateMagicCallbac
 		}
 	}
 
+	public GorillaThrowingRock()
+	{
+	}
+
 	public float bonkSpeedMin = 1f;
 
 	public float bonkSpeedMax = 5f;

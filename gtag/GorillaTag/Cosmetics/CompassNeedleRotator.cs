@@ -21,6 +21,10 @@ namespace GorillaTag.Cosmetics
 			transform.Rotate(transform.up, num, Space.World);
 		}
 
+		public CompassNeedleRotator()
+		{
+		}
+
 		private const float smoothTime = 0.005f;
 
 		private float currentVelocity;

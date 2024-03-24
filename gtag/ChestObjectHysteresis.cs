@@ -31,6 +31,10 @@ public class ChestObjectHysteresis : MonoBehaviour
 		base.transform.rotation = this.lastAngleQuat;
 	}
 
+	public ChestObjectHysteresis()
+	{
+	}
+
 	public float angleHysteresis;
 
 	public float angleBetween;

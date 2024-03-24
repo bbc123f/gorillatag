@@ -1,11 +1,24 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace OculusSampleFramework
 {
 	public class FingerTipPokeToolView : MonoBehaviour, InteractableToolView
 	{
-		public InteractableTool InteractableTool { get; set; }
+		public InteractableTool InteractableTool
+		{
+			[CompilerGenerated]
+			get
+			{
+				return this.<InteractableTool>k__BackingField;
+			}
+			[CompilerGenerated]
+			set
+			{
+				this.<InteractableTool>k__BackingField = value;
+			}
+		}
 
 		public bool EnableState
 		{
@@ -19,9 +32,33 @@ namespace OculusSampleFramework
 			}
 		}
 
-		public bool ToolActivateState { get; set; }
+		public bool ToolActivateState
+		{
+			[CompilerGenerated]
+			get
+			{
+				return this.<ToolActivateState>k__BackingField;
+			}
+			[CompilerGenerated]
+			set
+			{
+				this.<ToolActivateState>k__BackingField = value;
+			}
+		}
 
-		public float SphereRadius { get; private set; }
+		public float SphereRadius
+		{
+			[CompilerGenerated]
+			get
+			{
+				return this.<SphereRadius>k__BackingField;
+			}
+			[CompilerGenerated]
+			private set
+			{
+				this.<SphereRadius>k__BackingField = value;
+			}
+		}
 
 		private void Awake()
 		{
@@ -32,7 +69,20 @@ namespace OculusSampleFramework
 		{
 		}
 
+		public FingerTipPokeToolView()
+		{
+		}
+
 		[SerializeField]
 		private MeshRenderer _sphereMeshRenderer;
+
+		[CompilerGenerated]
+		private InteractableTool <InteractableTool>k__BackingField;
+
+		[CompilerGenerated]
+		private bool <ToolActivateState>k__BackingField;
+
+		[CompilerGenerated]
+		private float <SphereRadius>k__BackingField;
 	}
 }

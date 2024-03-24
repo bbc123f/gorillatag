@@ -18,6 +18,10 @@ namespace GorillaTagScripts
 		{
 		}
 
+		public CrystalVisualsPreset()
+		{
+		}
+
 		public CrystalVisualsPreset.VisualState stateA;
 
 		public CrystalVisualsPreset.VisualState stateB;

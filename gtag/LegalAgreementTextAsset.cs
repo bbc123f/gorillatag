@@ -4,6 +4,10 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "NewLegalAgreementAsset", menuName = "Gorilla Tag/Legal Agreement Asset")]
 public class LegalAgreementTextAsset : ScriptableObject
 {
+	public LegalAgreementTextAsset()
+	{
+	}
+
 	public string title;
 
 	public string playFabKey;

@@ -56,4 +56,8 @@ public class PhotonUserCache : IInRoomCallbacks, IMatchmakingCallbacks
 	void IInRoomCallbacks.OnMasterClientSwitched(Player newMasterClient)
 	{
 	}
+
+	public PhotonUserCache()
+	{
+	}
 }

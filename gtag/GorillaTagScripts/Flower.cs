@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -6,7 +7,19 @@ namespace GorillaTagScripts
 {
 	public class Flower : MonoBehaviour
 	{
-		public bool IsWatered { get; private set; }
+		public bool IsWatered
+		{
+			[CompilerGenerated]
+			get
+			{
+				return this.<IsWatered>k__BackingField;
+			}
+			[CompilerGenerated]
+			private set
+			{
+				this.<IsWatered>k__BackingField = value;
+			}
+		}
 
 		private void Awake()
 		{
@@ -160,6 +173,15 @@ namespace GorillaTagScripts
 			this.meshStatesGameObject.SetActive(enable);
 		}
 
+		public Flower()
+		{
+		}
+
+		// Note: this type is marked as 'beforefieldinit'.
+		static Flower()
+		{
+		}
+
 		private Animator anim;
 
 		private SkinnedMeshRenderer meshRenderer;
@@ -192,6 +214,9 @@ namespace GorillaTagScripts
 		private bool shouldUpdateVisuals;
 
 		private Flower.FlowerState lastState;
+
+		[CompilerGenerated]
+		private bool <IsWatered>k__BackingField;
 
 		public enum FlowerState
 		{

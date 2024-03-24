@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using GorillaExtensions;
 using GorillaNetworking;
@@ -501,6 +502,10 @@ namespace FXP
 			yield break;
 		}
 
+		public CosmeticItemPrefab()
+		{
+		}
+
 		public string PedestalID = "";
 
 		[SerializeField]
@@ -661,6 +666,311 @@ namespace FXP
 			ATTRACT,
 			PURCHASE,
 			POSTPURCHASE
+		}
+
+		[CompilerGenerated]
+		private sealed class <DoAttractTimer>d__78 : IEnumerator<object>, IEnumerator, IDisposable
+		{
+			[DebuggerHidden]
+			public <DoAttractTimer>d__78(int <>1__state)
+			{
+				this.<>1__state = <>1__state;
+			}
+
+			[DebuggerHidden]
+			void IDisposable.Dispose()
+			{
+			}
+
+			bool IEnumerator.MoveNext()
+			{
+				int num = this.<>1__state;
+				CosmeticItemPrefab cosmeticItemPrefab = this;
+				switch (num)
+				{
+				case 0:
+					this.<>1__state = -1;
+					if (!cosmeticItemPrefab.isValid)
+					{
+						return false;
+					}
+					timerDone = false;
+					remainingTime = ReleaseTime - DateTime.UtcNow;
+					break;
+				case 1:
+					this.<>1__state = -1;
+					remainingTime = remainingTime.Subtract(TimeSpan.FromSeconds((double)delayTime));
+					if (remainingTime.TotalSeconds <= 0.0)
+					{
+						timerDone = true;
+					}
+					break;
+				case 2:
+					this.<>1__state = -1;
+					remainingTime = default(TimeSpan);
+					return false;
+				default:
+					return false;
+				}
+				if (timerDone)
+				{
+					cosmeticItemPrefab.SwitchDisplayMode(CosmeticItemPrefab.EDisplayMode.HIDDEN);
+					this.<>2__current = null;
+					this.<>1__state = 2;
+					return true;
+				}
+				string text;
+				if (remainingTime.TotalSeconds <= 59.0)
+				{
+					text = remainingTime.Seconds.ToString() + "s";
+					delayTime = 1;
+				}
+				else
+				{
+					delayTime = 60;
+					text = string.Empty;
+					if (remainingTime.Days > 0)
+					{
+						text = text + remainingTime.Days.ToString() + "d ";
+					}
+					if (remainingTime.Hours > 0)
+					{
+						text = text + remainingTime.Hours.ToString() + "h ";
+					}
+					if (remainingTime.Minutes > 0)
+					{
+						text = text + remainingTime.Minutes.ToString() + "m ";
+					}
+					text = text.TrimEnd();
+				}
+				cosmeticItemPrefab.goClock.GetComponent<TextMesh>().text = text;
+				this.<>2__current = new WaitForSecondsRealtime((float)delayTime);
+				this.<>1__state = 1;
+				return true;
+			}
+
+			object IEnumerator<object>.Current
+			{
+				[DebuggerHidden]
+				get
+				{
+					return this.<>2__current;
+				}
+			}
+
+			[DebuggerHidden]
+			void IEnumerator.Reset()
+			{
+				throw new NotSupportedException();
+			}
+
+			object IEnumerator.Current
+			{
+				[DebuggerHidden]
+				get
+				{
+					return this.<>2__current;
+				}
+			}
+
+			private int <>1__state;
+
+			private object <>2__current;
+
+			public CosmeticItemPrefab <>4__this;
+
+			public DateTime ReleaseTime;
+
+			private bool <timerDone>5__2;
+
+			private TimeSpan <remainingTime>5__3;
+
+			private int <delayTime>5__4;
+		}
+
+		[CompilerGenerated]
+		private sealed class <DoPreviewTimer>d__75 : IEnumerator<object>, IEnumerator, IDisposable
+		{
+			[DebuggerHidden]
+			public <DoPreviewTimer>d__75(int <>1__state)
+			{
+				this.<>1__state = <>1__state;
+			}
+
+			[DebuggerHidden]
+			void IDisposable.Dispose()
+			{
+			}
+
+			bool IEnumerator.MoveNext()
+			{
+				int num = this.<>1__state;
+				CosmeticItemPrefab cosmeticItemPrefab = this;
+				switch (num)
+				{
+				case 0:
+					this.<>1__state = -1;
+					if (!cosmeticItemPrefab.isValid)
+					{
+						return false;
+					}
+					timerDone = false;
+					remainingTime = ReleaseTime - DateTime.UtcNow;
+					break;
+				case 1:
+					this.<>1__state = -1;
+					remainingTime = remainingTime.Subtract(TimeSpan.FromSeconds((double)delayTime));
+					if (remainingTime.TotalSeconds <= 0.0)
+					{
+						timerDone = true;
+					}
+					break;
+				case 2:
+					this.<>1__state = -1;
+					remainingTime = default(TimeSpan);
+					return false;
+				default:
+					return false;
+				}
+				if (timerDone)
+				{
+					cosmeticItemPrefab.SwitchDisplayMode(CosmeticItemPrefab.EDisplayMode.ATTRACT);
+					this.<>2__current = null;
+					this.<>1__state = 2;
+					return true;
+				}
+				string text;
+				if (remainingTime.TotalSeconds <= 59.0)
+				{
+					text = remainingTime.Seconds.ToString() + "s";
+					delayTime = 1;
+				}
+				else
+				{
+					delayTime = 60;
+					text = string.Empty;
+					if (remainingTime.Days > 0)
+					{
+						text = text + remainingTime.Days.ToString() + "d ";
+					}
+					if (remainingTime.Hours > 0)
+					{
+						text = text + remainingTime.Hours.ToString() + "h ";
+					}
+					if (remainingTime.Minutes > 0)
+					{
+						text = text + remainingTime.Minutes.ToString() + "m ";
+					}
+					text = text.TrimEnd();
+				}
+				cosmeticItemPrefab.clockTextMesh.text = text;
+				this.<>2__current = new WaitForSecondsRealtime((float)delayTime);
+				this.<>1__state = 1;
+				return true;
+			}
+
+			object IEnumerator<object>.Current
+			{
+				[DebuggerHidden]
+				get
+				{
+					return this.<>2__current;
+				}
+			}
+
+			[DebuggerHidden]
+			void IEnumerator.Reset()
+			{
+				throw new NotSupportedException();
+			}
+
+			object IEnumerator.Current
+			{
+				[DebuggerHidden]
+				get
+				{
+					return this.<>2__current;
+				}
+			}
+
+			private int <>1__state;
+
+			private object <>2__current;
+
+			public CosmeticItemPrefab <>4__this;
+
+			public DateTime ReleaseTime;
+
+			private bool <timerDone>5__2;
+
+			private TimeSpan <remainingTime>5__3;
+
+			private int <delayTime>5__4;
+		}
+
+		[CompilerGenerated]
+		private sealed class <PlayCountdownTimer>d__69 : IEnumerator<object>, IEnumerator, IDisposable
+		{
+			[DebuggerHidden]
+			public <PlayCountdownTimer>d__69(int <>1__state)
+			{
+				this.<>1__state = <>1__state;
+			}
+
+			[DebuggerHidden]
+			void IDisposable.Dispose()
+			{
+			}
+
+			bool IEnumerator.MoveNext()
+			{
+				int num = this.<>1__state;
+				CosmeticItemPrefab cosmeticItemPrefab = this;
+				if (num == 0)
+				{
+					this.<>1__state = -1;
+					this.<>2__current = new WaitForSeconds(Mathf.Clamp((float)((cosmeticItemPrefab.currentUpdateEvent.EndTimeUTC.ToUniversalTime() - StoreUpdater.instance.DateTimeNowServerAdjusted).TotalSeconds - 10.0), 0f, float.MaxValue));
+					this.<>1__state = 1;
+					return true;
+				}
+				if (num != 1)
+				{
+					return false;
+				}
+				this.<>1__state = -1;
+				cosmeticItemPrefab.PlaySFX();
+				return false;
+			}
+
+			object IEnumerator<object>.Current
+			{
+				[DebuggerHidden]
+				get
+				{
+					return this.<>2__current;
+				}
+			}
+
+			[DebuggerHidden]
+			void IEnumerator.Reset()
+			{
+				throw new NotSupportedException();
+			}
+
+			object IEnumerator.Current
+			{
+				[DebuggerHidden]
+				get
+				{
+					return this.<>2__current;
+				}
+			}
+
+			private int <>1__state;
+
+			private object <>2__current;
+
+			public CosmeticItemPrefab <>4__this;
 		}
 	}
 }

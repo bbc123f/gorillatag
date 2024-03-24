@@ -9,6 +9,10 @@ namespace GorillaTag.GuidedRefs
 		{
 		}
 
+		protected GuidedRefIdBaseSO()
+		{
+		}
+
 		int IGuidedRefObject.GetInstanceID()
 		{
 			return base.GetInstanceID();

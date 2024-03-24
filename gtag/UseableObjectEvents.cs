@@ -79,6 +79,10 @@ public class UseableObjectEvents : MonoBehaviour
 		this.Deactivate = null;
 	}
 
+	public UseableObjectEvents()
+	{
+	}
+
 	[NonSerialized]
 	private string PlayerIdString;
 

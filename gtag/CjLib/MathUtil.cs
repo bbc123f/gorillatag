@@ -21,6 +21,15 @@ namespace CjLib
 			return 0.5f * (2f * p1 + (-p0 + p2) * t + (2f * p0 - 5f * p1 + 4f * p2 - p3) * num + (-p0 + 3f * p1 - 3f * p2 + p3) * num * t);
 		}
 
+		public MathUtil()
+		{
+		}
+
+		// Note: this type is marked as 'beforefieldinit'.
+		static MathUtil()
+		{
+		}
+
 		public static readonly float Pi = 3.1415927f;
 
 		public static readonly float TwoPi = 6.2831855f;

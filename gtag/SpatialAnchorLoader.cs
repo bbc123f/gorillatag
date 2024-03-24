@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class SpatialAnchorLoader : MonoBehaviour
@@ -24,7 +25,6 @@ public class SpatialAnchorLoader : MonoBehaviour
 		}
 		this.Load(new OVRSpatialAnchor.LoadOptions
 		{
-			MaxAnchorCount = 100,
 			Timeout = 0.0,
 			StorageLocation = OVRSpace.StorageLocation.Local,
 			Uuids = array
@@ -79,6 +79,31 @@ public class SpatialAnchorLoader : MonoBehaviour
 	private static void Log(string message)
 	{
 		Debug.Log("[SpatialAnchorsUnity]: " + message);
+	}
+
+	public SpatialAnchorLoader()
+	{
+	}
+
+	[CompilerGenerated]
+	private void <Load>b__4_0(OVRSpatialAnchor.UnboundAnchor[] anchors)
+	{
+		if (anchors == null)
+		{
+			SpatialAnchorLoader.Log("Query failed.");
+			return;
+		}
+		foreach (OVRSpatialAnchor.UnboundAnchor unboundAnchor in anchors)
+		{
+			if (unboundAnchor.Localized)
+			{
+				this._onLoadAnchor(unboundAnchor, true);
+			}
+			else if (!unboundAnchor.Localizing)
+			{
+				unboundAnchor.Localize(this._onLoadAnchor, 0.0);
+			}
+		}
 	}
 
 	[SerializeField]

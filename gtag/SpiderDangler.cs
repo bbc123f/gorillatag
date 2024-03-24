@@ -84,6 +84,10 @@ public class SpiderDangler : MonoBehaviour
 		this.lineRenderer.SetPositions(array);
 	}
 
+	public SpiderDangler()
+	{
+	}
+
 	public Transform endTransform;
 
 	public Vector4 spinSpeeds = new Vector4(0.1f, 0.2f, 0.3f, 0.4f);

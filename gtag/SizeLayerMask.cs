@@ -29,6 +29,10 @@ public class SizeLayerMask
 		}
 	}
 
+	public SizeLayerMask()
+	{
+	}
+
 	[SerializeField]
 	private bool affectLayerA = true;
 

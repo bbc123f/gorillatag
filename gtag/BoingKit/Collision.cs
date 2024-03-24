@@ -116,5 +116,9 @@ namespace BoingKit
 			push = Vector3.zero;
 			return false;
 		}
+
+		public Collision()
+		{
+		}
 	}
 }

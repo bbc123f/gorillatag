@@ -27,6 +27,10 @@ public class AutomaticAdjustIPD : MonoBehaviour
 		}
 	}
 
+	public AutomaticAdjustIPD()
+	{
+	}
+
 	public InputDevice headset;
 
 	public float currentIPD;

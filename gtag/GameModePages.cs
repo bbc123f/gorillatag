@@ -132,6 +132,15 @@ public class GameModePages : BasePageHandler
 		}
 	}
 
+	public GameModePages()
+	{
+	}
+
+	// Note: this type is marked as 'beforefieldinit'.
+	static GameModePages()
+	{
+	}
+
 	private int currentButtonIndex;
 
 	private int maxEntries;

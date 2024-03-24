@@ -27,6 +27,10 @@ public class PlantablePoint : MonoBehaviour
 	{
 	}
 
+	public PlantablePoint()
+	{
+	}
+
 	public bool shouldBeSet;
 
 	public LayerMask floorMask;

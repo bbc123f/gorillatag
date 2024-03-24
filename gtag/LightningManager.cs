@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using GorillaNetworking;
 using UnityEngine;
 
@@ -87,6 +89,10 @@ public class LightningManager : MonoBehaviour
 		yield break;
 	}
 
+	public LightningManager()
+	{
+	}
+
 	public int lightMapIndex;
 
 	public float minTimeBetweenFlashes;
@@ -114,4 +120,92 @@ public class LightningManager : MonoBehaviour
 	public AudioClip muffledLightning;
 
 	private Coroutine lightningRunner;
+
+	[CompilerGenerated]
+	private sealed class <LightningEffectRunner>d__19 : IEnumerator<object>, IEnumerator, IDisposable
+	{
+		[DebuggerHidden]
+		public <LightningEffectRunner>d__19(int <>1__state)
+		{
+			this.<>1__state = <>1__state;
+		}
+
+		[DebuggerHidden]
+		void IDisposable.Dispose()
+		{
+		}
+
+		bool IEnumerator.MoveNext()
+		{
+			int num = this.<>1__state;
+			LightningManager lightningManager = this;
+			switch (num)
+			{
+			case 0:
+				this.<>1__state = -1;
+				break;
+			case 1:
+			{
+				this.<>1__state = -1;
+				float num2 = lightningManager.lightningTimestampsRealtime[lightningManager.nextLightningTimestampIndex];
+				lightningManager.nextLightningTimestampIndex++;
+				if (Time.realtimeSinceStartup - num2 < 1f && lightningManager.lightningTimestampsRealtime.Count > lightningManager.nextLightningTimestampIndex)
+				{
+					lightningManager.DoLightningStrike();
+					goto IL_CE;
+				}
+				goto IL_CE;
+			}
+			case 2:
+				this.<>1__state = -1;
+				break;
+			default:
+				return false;
+			}
+			if (lightningManager.lightningTimestampsRealtime.Count <= lightningManager.nextLightningTimestampIndex)
+			{
+				lightningManager.InitializeRng();
+			}
+			if (lightningManager.lightningTimestampsRealtime.Count > lightningManager.nextLightningTimestampIndex)
+			{
+				this.<>2__current = new WaitForSecondsRealtime(lightningManager.lightningTimestampsRealtime[lightningManager.nextLightningTimestampIndex] - Time.realtimeSinceStartup);
+				this.<>1__state = 1;
+				return true;
+			}
+			IL_CE:
+			this.<>2__current = null;
+			this.<>1__state = 2;
+			return true;
+		}
+
+		object IEnumerator<object>.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		[DebuggerHidden]
+		void IEnumerator.Reset()
+		{
+			throw new NotSupportedException();
+		}
+
+		object IEnumerator.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		private int <>1__state;
+
+		private object <>2__current;
+
+		public LightningManager <>4__this;
+	}
 }

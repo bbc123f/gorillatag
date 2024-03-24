@@ -15,6 +15,10 @@ public class TransformFollow : MonoBehaviour
 		base.transform.position = this.transformToFollow.position + this.transformToFollow.rotation * this.offset;
 	}
 
+	public TransformFollow()
+	{
+	}
+
 	public Transform transformToFollow;
 
 	public Vector3 offset;

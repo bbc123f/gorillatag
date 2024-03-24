@@ -5,6 +5,10 @@ namespace GorillaLocomotion.Swimming
 {
 	public class WaterSplashOverride : MonoBehaviour
 	{
+		public WaterSplashOverride()
+		{
+		}
+
 		public bool suppressWaterEffects;
 
 		public bool playBigSplash;

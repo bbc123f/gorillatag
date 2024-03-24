@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using GorillaLocomotion;
 using UnityEngine;
 
@@ -64,6 +67,10 @@ public class HalloweenWatcherEyes : MonoBehaviour
 		this.lerpValue = 0f;
 	}
 
+	public HalloweenWatcherEyes()
+	{
+	}
+
 	public float timeBetweenUpdates = 5f;
 
 	public float watchRange;
@@ -87,4 +94,81 @@ public class HalloweenWatcherEyes : MonoBehaviour
 	private float pretendingToBeNormalUntilTimestamp;
 
 	private float lerpValue;
+
+	[CompilerGenerated]
+	private sealed class <CheckIfNearPlayer>d__13 : IEnumerator<object>, IEnumerator, IDisposable
+	{
+		[DebuggerHidden]
+		public <CheckIfNearPlayer>d__13(int <>1__state)
+		{
+			this.<>1__state = <>1__state;
+		}
+
+		[DebuggerHidden]
+		void IDisposable.Dispose()
+		{
+		}
+
+		bool IEnumerator.MoveNext()
+		{
+			int num = this.<>1__state;
+			HalloweenWatcherEyes halloweenWatcherEyes = this;
+			switch (num)
+			{
+			case 0:
+				this.<>1__state = -1;
+				this.<>2__current = new WaitForSeconds(initialSleep);
+				this.<>1__state = 1;
+				return true;
+			case 1:
+				this.<>1__state = -1;
+				break;
+			case 2:
+				this.<>1__state = -1;
+				break;
+			default:
+				return false;
+			}
+			halloweenWatcherEyes.enabled = (halloweenWatcherEyes.transform.position - Player.Instance.transform.position).sqrMagnitude < halloweenWatcherEyes.watchRange * halloweenWatcherEyes.watchRange;
+			if (!halloweenWatcherEyes.enabled)
+			{
+				halloweenWatcherEyes.LookNormal();
+			}
+			this.<>2__current = new WaitForSeconds(halloweenWatcherEyes.timeBetweenUpdates);
+			this.<>1__state = 2;
+			return true;
+		}
+
+		object IEnumerator<object>.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		[DebuggerHidden]
+		void IEnumerator.Reset()
+		{
+			throw new NotSupportedException();
+		}
+
+		object IEnumerator.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		private int <>1__state;
+
+		private object <>2__current;
+
+		public float initialSleep;
+
+		public HalloweenWatcherEyes <>4__this;
+	}
 }

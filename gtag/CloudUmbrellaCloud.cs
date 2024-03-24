@@ -19,6 +19,10 @@ public class CloudUmbrellaCloud : MonoBehaviour
 		this.cloudRotateXform.up = Vector3.up;
 	}
 
+	public CloudUmbrellaCloud()
+	{
+	}
+
 	public UmbrellaItem umbrella;
 
 	public Transform cloudRotateXform;

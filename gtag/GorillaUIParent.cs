@@ -16,6 +16,10 @@ public class GorillaUIParent : MonoBehaviour
 		}
 	}
 
+	public GorillaUIParent()
+	{
+	}
+
 	[OnEnterPlay_SetNull]
 	public static volatile GorillaUIParent instance;
 }

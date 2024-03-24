@@ -6,6 +6,10 @@ namespace GorillaLocomotion.Gameplay
 	[CreateAssetMenu(fileName = "GorillaZiplineSettings", menuName = "ScriptableObjects/GorillaZiplineSettings", order = 0)]
 	public class GorillaZiplineSettings : ScriptableObject
 	{
+		public GorillaZiplineSettings()
+		{
+		}
+
 		public float minSlidePitch = 0.5f;
 
 		public float maxSlidePitch = 1f;

@@ -113,6 +113,10 @@ public class SubEmitterListener : MonoBehaviour
 		}
 	}
 
+	public SubEmitterListener()
+	{
+	}
+
 	public ParticleSystem target;
 
 	public ParticleSystem subEmitter;

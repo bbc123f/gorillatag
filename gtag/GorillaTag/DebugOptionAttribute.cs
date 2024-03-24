@@ -6,5 +6,8 @@ namespace GorillaTag
 	[IncludeMyAttributes]
 	public class DebugOptionAttribute : Attribute
 	{
+		public DebugOptionAttribute()
+		{
+		}
 	}
 }

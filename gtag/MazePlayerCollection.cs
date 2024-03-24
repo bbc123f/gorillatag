@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class MazePlayerCollection : MonoBehaviour
@@ -54,7 +55,26 @@ public class MazePlayerCollection : MonoBehaviour
 		this.containedRigs.RemoveAll((VRRig r) => ((r != null) ? r.creatorWrapped : null) == null || r.creatorWrapped == otherPlayer);
 	}
 
+	public MazePlayerCollection()
+	{
+	}
+
 	public List<VRRig> containedRigs = new List<VRRig>();
 
 	public List<MonkeyeAI> monkeyeAis = new List<MonkeyeAI>();
+
+	[CompilerGenerated]
+	private sealed class <>c__DisplayClass6_0
+	{
+		public <>c__DisplayClass6_0()
+		{
+		}
+
+		internal bool <OnPlayerLeftRoom>b__0(VRRig r)
+		{
+			return ((r != null) ? r.creatorWrapped : null) == null || r.creatorWrapped == this.otherPlayer;
+		}
+
+		public NetPlayer otherPlayer;
+	}
 }

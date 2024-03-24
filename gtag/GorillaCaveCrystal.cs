@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using GorillaExtensions;
 using GorillaTagScripts;
 using UnityEngine;
@@ -146,6 +147,10 @@ public class GorillaCaveCrystal : Tappable
 		GorillaCaveCrystal.GorillaCaveCrystalManager.UnregisterGorillaCaveCrystal(this);
 	}
 
+	public GorillaCaveCrystal()
+	{
+	}
+
 	public bool overrideSoundAndMaterial;
 
 	public CrystalOctave octave;
@@ -239,10 +244,34 @@ public class GorillaCaveCrystal : Tappable
 			}
 		}
 
+		public GorillaCaveCrystalManager()
+		{
+		}
+
+		// Note: this type is marked as 'beforefieldinit'.
+		static GorillaCaveCrystalManager()
+		{
+		}
+
 		public static GorillaCaveCrystal.GorillaCaveCrystalManager instance;
 
 		public static bool hasInstance = false;
 
 		public static List<GorillaCaveCrystal> allCrystals = new List<GorillaCaveCrystal>();
+	}
+
+	[CompilerGenerated]
+	private sealed class <>c__DisplayClass14_0
+	{
+		public <>c__DisplayClass14_0()
+		{
+		}
+
+		internal bool <AddVisuals>b__0(GorillaCaveCrystalSetup.CrystalDef cd)
+		{
+			return cd.keyMaterial == this.crystalMat;
+		}
+
+		public Material crystalMat;
 	}
 }

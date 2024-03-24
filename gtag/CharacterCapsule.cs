@@ -144,6 +144,10 @@ public class CharacterCapsule : MonoBehaviour
 		this._meshFilter.sharedMesh.RecalculateNormals();
 	}
 
+	public CharacterCapsule()
+	{
+	}
+
 	private CharacterController _character;
 
 	private MeshFilter _meshFilter;

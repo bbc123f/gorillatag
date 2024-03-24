@@ -7,5 +7,8 @@ namespace Microsoft.CodeAnalysis
 	[Embedded]
 	internal sealed class EmbeddedAttribute : Attribute
 	{
+		public EmbeddedAttribute()
+		{
+		}
 	}
 }

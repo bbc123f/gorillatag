@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class FlashlightController : MonoBehaviour
@@ -157,6 +160,10 @@ public class FlashlightController : MonoBehaviour
 		yield break;
 	}
 
+	public FlashlightController()
+	{
+	}
+
 	public Light sceneLight;
 
 	public Transform flashlightRoot;
@@ -176,4 +183,96 @@ public class FlashlightController : MonoBehaviour
 	private int handIndex = -1;
 
 	private bool pinching;
+
+	[CompilerGenerated]
+	private sealed class <FadeLighting>d__17 : IEnumerator<object>, IEnumerator, IDisposable
+	{
+		[DebuggerHidden]
+		public <FadeLighting>d__17(int <>1__state)
+		{
+			this.<>1__state = <>1__state;
+		}
+
+		[DebuggerHidden]
+		void IDisposable.Dispose()
+		{
+		}
+
+		bool IEnumerator.MoveNext()
+		{
+			int num = this.<>1__state;
+			FlashlightController flashlightController = this;
+			if (num != 0)
+			{
+				if (num != 1)
+				{
+					return false;
+				}
+				this.<>1__state = -1;
+			}
+			else
+			{
+				this.<>1__state = -1;
+				timer = 0f;
+				currentColor = Camera.main.backgroundColor;
+				currentLight = (flashlightController.sceneLight ? flashlightController.sceneLight.intensity : 0f);
+			}
+			if (timer > fadeTime)
+			{
+				return false;
+			}
+			timer += Time.deltaTime;
+			float num2 = Mathf.Clamp01(timer / fadeTime);
+			Camera.main.backgroundColor = Color.Lerp(currentColor, newColor, num2);
+			if (flashlightController.sceneLight)
+			{
+				flashlightController.sceneLight.intensity = Mathf.Lerp(currentLight, sceneLightIntensity, num2);
+			}
+			this.<>2__current = null;
+			this.<>1__state = 1;
+			return true;
+		}
+
+		object IEnumerator<object>.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		[DebuggerHidden]
+		void IEnumerator.Reset()
+		{
+			throw new NotSupportedException();
+		}
+
+		object IEnumerator.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		private int <>1__state;
+
+		private object <>2__current;
+
+		public FlashlightController <>4__this;
+
+		public float fadeTime;
+
+		public Color newColor;
+
+		public float sceneLightIntensity;
+
+		private float <timer>5__2;
+
+		private Color <currentColor>5__3;
+
+		private float <currentLight>5__4;
+	}
 }

@@ -10,4 +10,8 @@ public class OnPlayChange_BaseAttribute : Attribute
 	public virtual void OnEnterPlay(MethodInfo method)
 	{
 	}
+
+	public OnPlayChange_BaseAttribute()
+	{
+	}
 }

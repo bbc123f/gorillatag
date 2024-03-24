@@ -5,4 +5,7 @@ using UnityEngine.Events;
 [Serializable]
 public class LightningDispatcherEvent : UnityEvent<Vector3, Vector3>
 {
+	public LightningDispatcherEvent()
+	{
+	}
 }

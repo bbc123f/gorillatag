@@ -34,6 +34,10 @@ public class GrabObject : MonoBehaviour
 		cursorPositionDelegate(cursorPos);
 	}
 
+	public GrabObject()
+	{
+	}
+
 	[TextArea]
 	public string ObjectName;
 

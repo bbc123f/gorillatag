@@ -1743,6 +1743,34 @@ namespace GorillaLocomotion
 			}
 		}
 
+		public Player()
+		{
+		}
+
+		[CompilerGenerated]
+		private bool <GetSlidePercentage>b__257_2(Player.MaterialData matData)
+		{
+			return matData.matName == this.findMatName;
+		}
+
+		[CompilerGenerated]
+		private bool <GetSlidePercentage>b__257_3(Player.MaterialData matData)
+		{
+			return matData.matName == this.findMatName;
+		}
+
+		[CompilerGenerated]
+		private bool <GetSlidePercentage>b__257_0(Player.MaterialData matData)
+		{
+			return matData.matName == this.findMatName;
+		}
+
+		[CompilerGenerated]
+		private bool <GetSlidePercentage>b__257_1(Player.MaterialData matData)
+		{
+			return matData.matName == this.findMatName;
+		}
+
 		[CompilerGenerated]
 		internal static void <BeginClimbing>g__SnapAxis|259_0(ref float val, float maxDist)
 		{

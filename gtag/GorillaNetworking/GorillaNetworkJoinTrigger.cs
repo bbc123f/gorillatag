@@ -26,6 +26,10 @@ namespace GorillaNetworking
 			}
 		}
 
+		public GorillaNetworkJoinTrigger()
+		{
+		}
+
 		public GameObject[] makeSureThisIsDisabled;
 
 		public GameObject[] makeSureThisIsEnabled;

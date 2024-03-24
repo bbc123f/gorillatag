@@ -57,6 +57,10 @@ internal class BundleList
 		return this.data[this.activeBundleIdx];
 	}
 
+	public BundleList()
+	{
+	}
+
 	private int activeBundleIdx;
 
 	public BundleData[] data;

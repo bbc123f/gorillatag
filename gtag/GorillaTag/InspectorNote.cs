@@ -9,5 +9,9 @@ namespace GorillaTag
 		{
 			Object.Destroy(this);
 		}
+
+		public InspectorNote()
+		{
+		}
 	}
 }

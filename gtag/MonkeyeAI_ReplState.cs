@@ -36,6 +36,10 @@ public class MonkeyeAI_ReplState : MonoBehaviour, IPunObservable
 		this.state = (MonkeyeAI_ReplState.EStates)stream.ReceiveNext();
 	}
 
+	public MonkeyeAI_ReplState()
+	{
+	}
+
 	public MonkeyeAI_ReplState.EStates state;
 
 	public string userId;

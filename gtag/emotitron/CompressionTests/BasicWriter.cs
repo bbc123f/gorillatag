@@ -23,6 +23,10 @@ namespace emotitron.CompressionTests
 			return b;
 		}
 
+		public BasicWriter()
+		{
+		}
+
 		public static int pos;
 	}
 }

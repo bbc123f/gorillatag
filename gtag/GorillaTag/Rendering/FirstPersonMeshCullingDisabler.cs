@@ -41,6 +41,10 @@ namespace GorillaTag.Rendering
 			}
 		}
 
+		public FirstPersonMeshCullingDisabler()
+		{
+		}
+
 		private Mesh[] meshes;
 
 		private Transform[] xforms;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -253,6 +254,10 @@ public class PlantableObject : TransferrableObject
 		});
 	}
 
+	public PlantableObject()
+	{
+	}
+
 	public PlantablePoint point;
 
 	public SkinnedMeshRenderer flagRenderer;
@@ -292,5 +297,43 @@ public class PlantableObject : TransferrableObject
 		Green,
 		Blue,
 		Black
+	}
+
+	[CompilerGenerated]
+	private sealed class <>c__DisplayClass37_0
+	{
+		public <>c__DisplayClass37_0()
+		{
+		}
+
+		internal void <OnOwnershipTransferred>b__0()
+		{
+			VRRig vrrig = GorillaGameManager.instance.FindPlayerVRRig(this.toPlayer);
+			if (vrrig == null)
+			{
+				return;
+			}
+			VRRig vrrig2 = vrrig;
+			Action<Color> action;
+			if ((action = this.<>9__1) == null)
+			{
+				action = (this.<>9__1 = delegate(Color color1)
+				{
+					this.<>4__this.colorG = color1;
+				});
+			}
+			vrrig2.OnColorInitialized(action);
+		}
+
+		internal void <OnOwnershipTransferred>b__1(Color color1)
+		{
+			this.<>4__this.colorG = color1;
+		}
+
+		public Player toPlayer;
+
+		public PlantableObject <>4__this;
+
+		public Action<Color> <>9__1;
 	}
 }

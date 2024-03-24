@@ -8,7 +8,7 @@ using Photon.Voice.PUN;
 using UnityEngine;
 using UnityEngine.Scripting;
 
-[NetworkBehaviourWeaved(18)]
+[NetworkBehaviourWeaved(35)]
 internal class VRRigSerializer : GorillaWrappedSerializer<InputStruct>, IFXContextParems<HandTapArgs>, IFXContextParems<GeoSoundArg>
 {
 	[Networked]
@@ -34,7 +34,29 @@ internal class VRRigSerializer : GorillaWrappedSerializer<InputStruct>, IFXConte
 	}
 
 	[Networked]
-	[NetworkedWeaved(17, 1)]
+	[NetworkedWeaved(17, 17)]
+	public unsafe NetworkString<_16> defaultName
+	{
+		get
+		{
+			if (this.Ptr == null)
+			{
+				throw new InvalidOperationException("Error when accessing VRRigSerializer.defaultName. Networked properties can only be accessed when Spawned() has been called.");
+			}
+			return *(NetworkString<_16>*)(this.Ptr + 17);
+		}
+		set
+		{
+			if (this.Ptr == null)
+			{
+				throw new InvalidOperationException("Error when accessing VRRigSerializer.defaultName. Networked properties can only be accessed when Spawned() has been called.");
+			}
+			*(NetworkString<_16>*)(this.Ptr + 17) = value;
+		}
+	}
+
+	[Networked]
+	[NetworkedWeaved(34, 1)]
 	public bool tutorialComplete
 	{
 		get
@@ -43,7 +65,7 @@ internal class VRRigSerializer : GorillaWrappedSerializer<InputStruct>, IFXConte
 			{
 				throw new InvalidOperationException("Error when accessing VRRigSerializer.tutorialComplete. Networked properties can only be accessed when Spawned() has been called.");
 			}
-			return ReadWriteUtilsForWeaver.ReadBoolean(this.Ptr + 17);
+			return ReadWriteUtilsForWeaver.ReadBoolean(this.Ptr + 34);
 		}
 		set
 		{
@@ -51,7 +73,7 @@ internal class VRRigSerializer : GorillaWrappedSerializer<InputStruct>, IFXConte
 			{
 				throw new InvalidOperationException("Error when accessing VRRigSerializer.tutorialComplete. Networked properties can only be accessed when Spawned() has been called.");
 			}
-			ReadWriteUtilsForWeaver.WriteBoolean(this.Ptr + 17, value);
+			ReadWriteUtilsForWeaver.WriteBoolean(this.Ptr + 34, value);
 		}
 	}
 
@@ -474,10 +496,15 @@ internal class VRRigSerializer : GorillaWrappedSerializer<InputStruct>, IFXConte
 		vrrig.EnableNonCosmeticHandItemRPC(enable, isLeftHand, info);
 	}
 
+	public VRRigSerializer()
+	{
+	}
+
 	public override void CopyBackingFieldsToState(bool A_1)
 	{
 		base.CopyBackingFieldsToState(A_1);
 		this.nickName = this._nickName;
+		this.defaultName = this._defaultName;
 		this.tutorialComplete = this._tutorialComplete;
 	}
 
@@ -485,6 +512,7 @@ internal class VRRigSerializer : GorillaWrappedSerializer<InputStruct>, IFXConte
 	{
 		base.CopyStateToBackingFields();
 		this._nickName = this.nickName;
+		this._defaultName = this.defaultName;
 		this._tutorialComplete = this.tutorialComplete;
 	}
 
@@ -547,7 +575,11 @@ internal class VRRigSerializer : GorillaWrappedSerializer<InputStruct>, IFXConte
 	private NetworkString<_16> _nickName;
 
 	[SerializeField]
-	[DefaultForProperty("tutorialComplete", 17, 1)]
+	[DefaultForProperty("defaultName", 17, 17)]
+	private NetworkString<_16> _defaultName;
+
+	[SerializeField]
+	[DefaultForProperty("tutorialComplete", 34, 1)]
 	private bool _tutorialComplete;
 
 	[SerializeField]

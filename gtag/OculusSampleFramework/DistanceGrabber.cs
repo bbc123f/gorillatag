@@ -263,6 +263,10 @@ namespace OculusSampleFramework
 			base.OffhandGrabbed(grabbable);
 		}
 
+		public DistanceGrabber()
+		{
+		}
+
 		[SerializeField]
 		private float m_spherecastRadius;
 

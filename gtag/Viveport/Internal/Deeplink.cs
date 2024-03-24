@@ -46,5 +46,9 @@ namespace Viveport.Internal
 
 		[DllImport("viveport_api64", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi, EntryPoint = "IViveportDeeplink_GetAppLaunchData")]
 		internal static extern int GetAppLaunchData_64(StringBuilder userId, int size);
+
+		public Deeplink()
+		{
+		}
 	}
 }

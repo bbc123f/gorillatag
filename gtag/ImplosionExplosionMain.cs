@@ -37,6 +37,15 @@ public class ImplosionExplosionMain : MonoBehaviour
 		}
 	}
 
+	public ImplosionExplosionMain()
+	{
+	}
+
+	// Note: this type is marked as 'beforefieldinit'.
+	static ImplosionExplosionMain()
+	{
+	}
+
 	public BoingReactorField ReactorField;
 
 	public GameObject Diamond;

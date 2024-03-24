@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using UnityEngine;
@@ -817,12 +818,7 @@ namespace GorillaExtensions
 
 		public static bool IsValid(this Quaternion q)
 		{
-			bool flag = !Mathf.Approximately(q.x, 0f);
-			bool flag2 = !Mathf.Approximately(q.y, 0f);
-			bool flag3 = !Mathf.Approximately(q.z, 0f);
-			bool flag4 = !Mathf.Approximately(q.w, 0f);
-			bool flag5 = flag && flag2 && flag3 && flag4;
-			return !(q).IsNan() && !(q).IsInfinity() && flag5;
+			return !(q).IsNan() && !(q).IsInfinity();
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1863,6 +1859,11 @@ namespace GorillaExtensions
 			return current;
 		}
 
+		// Note: this type is marked as 'beforefieldinit'.
+		static GTExt()
+		{
+		}
+
 		[CompilerGenerated]
 		internal static void <GetComponentsInChildrenUntil>g__GetRecursive|6_0<T, TStop1, TStop2, TStop3>(Transform currentTransform, ref List<T> components, ref GTExt.<>c__DisplayClass6_0<T, TStop1, TStop2, TStop3> A_2) where T : Component where TStop1 : Component where TStop2 : Component where TStop3 : Component
 		{
@@ -1889,6 +1890,13 @@ namespace GorillaExtensions
 			YFlip,
 			ZFlip,
 			AllFlip
+		}
+
+		[CompilerGenerated]
+		[StructLayout(LayoutKind.Auto)]
+		private struct <>c__DisplayClass6_0<T, TStop1, TStop2, TStop3> where T : Component where TStop1 : Component where TStop2 : Component where TStop3 : Component
+		{
+			public bool includeInactive;
 		}
 	}
 }

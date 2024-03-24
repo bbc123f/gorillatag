@@ -83,6 +83,10 @@ public class AppDeeplinkUI : MonoBehaviour
 		}
 	}
 
+	public AppDeeplinkUI()
+	{
+	}
+
 	private const ulong UNITY_COMPANION_APP_ID = 3535750239844224UL;
 
 	private const ulong UNREAL_COMPANION_APP_ID = 4055411724486843UL;

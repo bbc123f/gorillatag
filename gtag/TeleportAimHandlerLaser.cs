@@ -12,6 +12,10 @@ public class TeleportAimHandlerLaser : TeleportAimHandler
 		points.Add(ray.origin + ray.direction * this.Range);
 	}
 
+	public TeleportAimHandlerLaser()
+	{
+	}
+
 	[Tooltip("Maximum range for aiming.")]
 	public float Range = 100f;
 }

@@ -298,6 +298,11 @@ namespace BoingKit
 				this.m_padding2 = (float)this.m_padding0;
 			}
 
+			// Note: this type is marked as 'beforefieldinit'.
+			static Params()
+			{
+			}
+
 			public static readonly int Stride = 112 + BoingWork.Params.InstanceData.Stride;
 
 			public int InstanceID;
@@ -790,6 +795,11 @@ namespace BoingKit
 					this.m_padding5 = this.m_padding0;
 				}
 
+				// Note: this type is marked as 'beforefieldinit'.
+				static InstanceData()
+				{
+				}
+
 				public static readonly int Stride = 144 + 2 * Vector3Spring.Stride + QuaternionSpring.Stride;
 
 				public Vector3 PositionTarget;
@@ -889,6 +899,11 @@ namespace BoingKit
 				this.m_padding0 = this.m_padding1;
 				this.m_padding1 = this.m_padding2;
 				this.m_padding2 = this.m_padding0;
+			}
+
+			// Note: this type is marked as 'beforefieldinit'.
+			static Output()
+			{
 			}
 
 			public static readonly int Stride = 16 + Vector3Spring.Stride + QuaternionSpring.Stride;

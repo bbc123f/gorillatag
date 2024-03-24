@@ -42,6 +42,10 @@ public class TeleportTargetHandlerNavMesh : TeleportTargetHandler
 	{
 	}
 
+	public TeleportTargetHandlerNavMesh()
+	{
+	}
+
 	public int NavMeshAreaMask = -1;
 
 	private NavMeshPath _path;

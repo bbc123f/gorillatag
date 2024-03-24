@@ -50,6 +50,10 @@ namespace Viveport
 			Token.GetSessionToken(new StatusCallback2(Token.GetSessionTokenIl2cppCallback));
 		}
 
+		public Token()
+		{
+		}
+
 		private static StatusCallback isReadyIl2cppCallback;
 
 		private static StatusCallback2 getSessionTokenIl2cppCallback;

@@ -16,6 +16,10 @@ public class RequestCaptureFlow : MonoBehaviour
 		}
 	}
 
+	public RequestCaptureFlow()
+	{
+	}
+
 	public OVRInput.Button RequestCaptureBtn = OVRInput.Button.Two;
 
 	private OVRSceneManager _sceneManager;

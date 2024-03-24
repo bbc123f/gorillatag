@@ -55,10 +55,6 @@ public class FlockingManager : MonoBehaviourPunCallbacks, IPunObservable
 
 	private void Update()
 	{
-		if (!base.photonView.IsMine)
-		{
-			return;
-		}
 		if (Random.Range(0, 10000) < 50)
 		{
 			foreach (FlockingManager.FishArea fishArea in this.fishAreaList)
@@ -135,10 +131,6 @@ public class FlockingManager : MonoBehaviourPunCallbacks, IPunObservable
 
 	private void ProjectileHitReceiver(SlingshotProjectile projectile, Collider collider)
 	{
-		if (!base.photonView.IsMine)
-		{
-			return;
-		}
 		bool flag = projectile.CompareTag(this.foodProjectileTag);
 		UnityAction<SlingshotProjectile, bool> unityAction = this.onFoodDetected;
 		if (unityAction == null)
@@ -150,10 +142,6 @@ public class FlockingManager : MonoBehaviourPunCallbacks, IPunObservable
 
 	private void ProjectileHitExit(SlingshotProjectile projectile, Collider collider1)
 	{
-		if (!base.photonView.IsMine)
-		{
-			return;
-		}
 		UnityAction unityAction = this.onFoodDestroyed;
 		if (unityAction == null)
 		{
@@ -164,27 +152,6 @@ public class FlockingManager : MonoBehaviourPunCallbacks, IPunObservable
 
 	public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
 	{
-		if (info.Sender != PhotonNetwork.MasterClient)
-		{
-			return;
-		}
-		if (stream.IsWriting)
-		{
-			stream.SendNext(this.allFish.Count);
-			for (int i = 0; i < this.allFish.Count; i++)
-			{
-				stream.SendNext(this.allFish[i].pos);
-				stream.SendNext(this.allFish[i].rot);
-			}
-			return;
-		}
-		int num = (int)stream.ReceiveNext();
-		for (int j = 0; j < num; j++)
-		{
-			Vector3 vector = (Vector3)stream.ReceiveNext();
-			Quaternion quaternion = (Quaternion)stream.ReceiveNext();
-			this.allFish[j].SetSyncPosRot(vector, quaternion);
-		}
 	}
 
 	public static void RegisterAvoidPoint(GameObject obj)
@@ -195,6 +162,15 @@ public class FlockingManager : MonoBehaviourPunCallbacks, IPunObservable
 	public static void UnregisterAvoidPoint(GameObject obj)
 	{
 		FlockingManager.avoidPoints.Remove(obj);
+	}
+
+	public FlockingManager()
+	{
+	}
+
+	// Note: this type is marked as 'beforefieldinit'.
+	static FlockingManager()
+	{
 	}
 
 	public List<GameObject> fishAreaContainer;
@@ -217,6 +193,10 @@ public class FlockingManager : MonoBehaviourPunCallbacks, IPunObservable
 
 	public class FishArea
 	{
+		public FishArea()
+		{
+		}
+
 		public string id;
 
 		public List<Flocking> fishList = new List<Flocking>();

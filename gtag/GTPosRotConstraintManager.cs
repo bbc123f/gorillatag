@@ -93,6 +93,15 @@ public class GTPosRotConstraintManager : MonoBehaviour
 		}
 	}
 
+	public GTPosRotConstraintManager()
+	{
+	}
+
+	// Note: this type is marked as 'beforefieldinit'.
+	static GTPosRotConstraintManager()
+	{
+	}
+
 	public static GTPosRotConstraintManager instance;
 
 	public static bool hasInstance = false;

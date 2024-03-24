@@ -54,6 +54,10 @@ internal class NMesh
 		NMesh.__initialized = true;
 	}
 
+	public NMesh()
+	{
+	}
+
 	private static Dictionary<string, GameObject> __Meshes;
 
 	private static bool __initialized;

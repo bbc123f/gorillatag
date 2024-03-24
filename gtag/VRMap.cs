@@ -45,6 +45,10 @@ public class VRMap
 	{
 	}
 
+	public VRMap()
+	{
+	}
+
 	public XRNode vrTargetNode;
 
 	public Transform overrideTarget;

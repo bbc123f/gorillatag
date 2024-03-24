@@ -211,6 +211,15 @@ public class OVROverlayCanvas : MonoBehaviour
 		}
 	}
 
+	public OVROverlayCanvas()
+	{
+	}
+
+	// Note: this type is marked as 'beforefieldinit'.
+	static OVROverlayCanvas()
+	{
+	}
+
 	[SerializeField]
 	[HideInInspector]
 	private Shader _transparentShader;

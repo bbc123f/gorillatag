@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -79,6 +80,34 @@ public class DebugUISample : MonoBehaviour
 	private void LogButtonPressed()
 	{
 		Debug.Log("Button pressed");
+	}
+
+	public DebugUISample()
+	{
+	}
+
+	[CompilerGenerated]
+	private void <Start>b__2_0(Toggle t)
+	{
+		this.RadioPressed("Radio1", "group", t);
+	}
+
+	[CompilerGenerated]
+	private void <Start>b__2_1(Toggle t)
+	{
+		this.RadioPressed("Radio2", "group", t);
+	}
+
+	[CompilerGenerated]
+	private void <Start>b__2_2(Toggle t)
+	{
+		this.RadioPressed("Side Radio 1", "group2", t);
+	}
+
+	[CompilerGenerated]
+	private void <Start>b__2_3(Toggle t)
+	{
+		this.RadioPressed("Side Radio 2", "group2", t);
 	}
 
 	private bool inMenu;

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using GorillaLocomotion;
 using UnityEngine;
 using UnityEngine.Events;
@@ -80,6 +82,10 @@ public class CosmeticPlaySoundOnColision : MonoBehaviour
 		this.previousFramePosition = base.transform.position;
 	}
 
+	public CosmeticPlaySoundOnColision()
+	{
+	}
+
 	[GorillaSoundLookup]
 	[SerializeField]
 	private int defaultSound = 1;
@@ -116,4 +122,79 @@ public class CosmeticPlaySoundOnColision : MonoBehaviour
 
 	[SerializeField]
 	private bool invokeEventOnDefaultSound;
+
+	[CompilerGenerated]
+	private sealed class <waitForStopPlayback>d__17 : IEnumerator<object>, IEnumerator, IDisposable
+	{
+		[DebuggerHidden]
+		public <waitForStopPlayback>d__17(int <>1__state)
+		{
+			this.<>1__state = <>1__state;
+		}
+
+		[DebuggerHidden]
+		void IDisposable.Dispose()
+		{
+		}
+
+		bool IEnumerator.MoveNext()
+		{
+			int num = this.<>1__state;
+			CosmeticPlaySoundOnColision cosmeticPlaySoundOnColision = this;
+			if (num != 0)
+			{
+				if (num != 1)
+				{
+					return false;
+				}
+				this.<>1__state = -1;
+			}
+			else
+			{
+				this.<>1__state = -1;
+			}
+			if (!cosmeticPlaySoundOnColision.audioSource.isPlaying)
+			{
+				if (cosmeticPlaySoundOnColision.invokeEventsOnAllClients || cosmeticPlaySoundOnColision.transferrableObject.IsMyItem())
+				{
+					cosmeticPlaySoundOnColision.OnStopPlayback.Invoke();
+				}
+				cosmeticPlaySoundOnColision.crWaitForStopPlayback = null;
+				return false;
+			}
+			this.<>2__current = null;
+			this.<>1__state = 1;
+			return true;
+		}
+
+		object IEnumerator<object>.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		[DebuggerHidden]
+		void IEnumerator.Reset()
+		{
+			throw new NotSupportedException();
+		}
+
+		object IEnumerator.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		private int <>1__state;
+
+		private object <>2__current;
+
+		public CosmeticPlaySoundOnColision <>4__this;
+	}
 }

@@ -80,6 +80,10 @@ public class SinglePool
 		return this.inactivePool.Count;
 	}
 
+	public SinglePool()
+	{
+	}
+
 	public GameObject objectToPool;
 
 	public int initAmountToPool = 32;

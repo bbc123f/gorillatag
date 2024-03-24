@@ -21,6 +21,10 @@ public class UFOEffector : MonoBehaviour
 		base.transform.localPosition = Vector3.right * 0.25f * Mathf.Sin(5.23f * Time.time + 9.87f) + Vector3.forward * 0.25f * Mathf.Sin(4.93f * Time.time + 7.39f);
 	}
 
+	public UFOEffector()
+	{
+	}
+
 	private float m_radius;
 
 	private float m_moveDistance;

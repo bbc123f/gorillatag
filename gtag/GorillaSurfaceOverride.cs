@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class GorillaSurfaceOverride : MonoBehaviour
 {
+	public GorillaSurfaceOverride()
+	{
+	}
+
 	[GorillaSoundLookup]
 	public int overrideIndex;
 

@@ -13,4 +13,8 @@ public class OnExitPlay_Run : OnExitPlay_Attribute
 		}
 		method.Invoke(null, new object[0]);
 	}
+
+	public OnExitPlay_Run()
+	{
+	}
 }

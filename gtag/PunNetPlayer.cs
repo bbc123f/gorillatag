@@ -1,10 +1,23 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using Photon.Pun;
 using Photon.Realtime;
 
 public class PunNetPlayer : NetPlayer
 {
-	public Player playerRef { get; private set; }
+	public Player playerRef
+	{
+		[CompilerGenerated]
+		get
+		{
+			return this.<playerRef>k__BackingField;
+		}
+		[CompilerGenerated]
+		private set
+		{
+			this.<playerRef>k__BackingField = value;
+		}
+	}
 
 	public PunNetPlayer(Player playerRef)
 	{
@@ -67,6 +80,14 @@ public class PunNetPlayer : NetPlayer
 		}
 	}
 
+	public override string DefaultName
+	{
+		get
+		{
+			return this.playerRef.DefaultName;
+		}
+	}
+
 	public override bool InRoom
 	{
 		get
@@ -87,4 +108,7 @@ public class PunNetPlayer : NetPlayer
 	{
 		return myPlayer != null && other != null && ((PunNetPlayer)myPlayer).playerRef.Equals(((PunNetPlayer)other).playerRef);
 	}
+
+	[CompilerGenerated]
+	private Player <playerRef>k__BackingField;
 }

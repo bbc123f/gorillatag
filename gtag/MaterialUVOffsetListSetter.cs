@@ -24,6 +24,10 @@ public class MaterialUVOffsetListSetter : MonoBehaviour
 		this.meshRenderer.SetPropertyBlock(this.matPropertyBlock);
 	}
 
+	public MaterialUVOffsetListSetter()
+	{
+	}
+
 	[SerializeField]
 	private List<Vector2> uvOffsetList = new List<Vector2>();
 

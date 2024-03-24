@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace GameObjectScheduling
@@ -60,6 +62,10 @@ namespace GameObjectScheduling
 			this.nodes = list.ToArray();
 		}
 
+		public GameObjectSchedule()
+		{
+		}
+
 		[SerializeField]
 		private bool initialState;
 
@@ -94,12 +100,16 @@ namespace GameObjectScheduling
 			{
 				try
 				{
-					this.dateTime = DateTime.Parse(this.activeDateTime);
+					this.dateTime = DateTime.Parse(this.activeDateTime, CultureInfo.InvariantCulture);
 				}
 				catch
 				{
 					this.dateTime = DateTime.MinValue;
 				}
+			}
+
+			public GameObjectScheduleNode()
+			{
 			}
 
 			[SerializeField]
@@ -110,6 +120,29 @@ namespace GameObjectScheduling
 			private bool activeState = true;
 
 			private DateTime dateTime;
+		}
+
+		[CompilerGenerated]
+		[Serializable]
+		private sealed class <>c
+		{
+			// Note: this type is marked as 'beforefieldinit'.
+			static <>c()
+			{
+			}
+
+			public <>c()
+			{
+			}
+
+			internal int <_validate>b__11_0(GameObjectSchedule.GameObjectScheduleNode e1, GameObjectSchedule.GameObjectScheduleNode e2)
+			{
+				return e1.DateTime.CompareTo(e2.DateTime);
+			}
+
+			public static readonly GameObjectSchedule.<>c <>9 = new GameObjectSchedule.<>c();
+
+			public static Comparison<GameObjectSchedule.GameObjectScheduleNode> <>9__11_0;
 		}
 	}
 }

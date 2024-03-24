@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using ExitGames.Client.Photon;
 using GorillaNetworking;
@@ -371,6 +372,15 @@ public class GorillaNot : MonoBehaviourPunCallbacks
 		PhotonNetwork.CurrentRoom.MaxPlayers = PhotonNetworkController.Instance.GetRoomSize(PhotonNetworkController.Instance.currentGameType);
 	}
 
+	public GorillaNot()
+	{
+	}
+
+	// Note: this type is marked as 'beforefieldinit'.
+	static GorillaNot()
+	{
+	}
+
 	[OnEnterPlay_SetNull]
 	public static volatile GorillaNot instance;
 
@@ -434,8 +444,189 @@ public class GorillaNot : MonoBehaviourPunCallbacks
 
 	private class RPCCallTracker
 	{
+		public RPCCallTracker()
+		{
+		}
+
 		public int RPCCalls;
 
 		public int RPCCallsMax;
+	}
+
+	[CompilerGenerated]
+	private sealed class <CheckReports>d__47 : IEnumerator<object>, IEnumerator, IDisposable
+	{
+		[DebuggerHidden]
+		public <CheckReports>d__47(int <>1__state)
+		{
+			this.<>1__state = <>1__state;
+		}
+
+		[DebuggerHidden]
+		void IDisposable.Dispose()
+		{
+		}
+
+		bool IEnumerator.MoveNext()
+		{
+			int num = this.<>1__state;
+			GorillaNot gorillaNot = this;
+			if (num != 0)
+			{
+				if (num != 1)
+				{
+					return false;
+				}
+				this.<>1__state = -1;
+			}
+			else
+			{
+				this.<>1__state = -1;
+			}
+			try
+			{
+				gorillaNot.logErrorCount = 0;
+				if (NetworkSystem.Instance.InRoom)
+				{
+					gorillaNot.lastCheck = Time.time;
+					gorillaNot.lastServerTimestamp = NetworkSystem.Instance.SimTick;
+					if (!PhotonNetwork.CurrentRoom.PublishUserId)
+					{
+						gorillaNot.sendReport = true;
+						gorillaNot.suspiciousReason = "missing player ids";
+						gorillaNot.SetToRoomCreatorIfHere();
+						gorillaNot.CloseInvalidRoom();
+						Debug.Log("publish user id's is off");
+					}
+					else if (gorillaNot.cachedPlayerList.Length > (int)PhotonNetworkController.Instance.GetRoomSize(PhotonNetworkController.Instance.currentGameType))
+					{
+						gorillaNot.sendReport = true;
+						gorillaNot.suspiciousReason = "too many players";
+						gorillaNot.SetToRoomCreatorIfHere();
+						gorillaNot.CloseInvalidRoom();
+					}
+					if (gorillaNot.currentMasterClient != PhotonNetwork.MasterClient || gorillaNot.LowestActorNumber() != PhotonNetwork.MasterClient.ActorNumber)
+					{
+						foreach (Player player in gorillaNot.cachedPlayerList)
+						{
+							if (gorillaNot.currentMasterClient == player)
+							{
+								gorillaNot.sendReport = true;
+								gorillaNot.suspiciousReason = "room host force changed";
+								gorillaNot.suspiciousPlayerId = PhotonNetwork.MasterClient.UserId;
+								gorillaNot.suspiciousPlayerName = PhotonNetwork.MasterClient.NickName;
+							}
+						}
+						gorillaNot.currentMasterClient = PhotonNetwork.MasterClient;
+					}
+					gorillaNot.DispatchReport();
+					foreach (Dictionary<string, GorillaNot.RPCCallTracker> dictionary in gorillaNot.userRPCCalls.Values)
+					{
+						foreach (GorillaNot.RPCCallTracker rpccallTracker in dictionary.Values)
+						{
+							rpccallTracker.RPCCalls = 0;
+						}
+					}
+				}
+			}
+			catch
+			{
+			}
+			this.<>2__current = new WaitForSeconds(1.01f);
+			this.<>1__state = 1;
+			return true;
+		}
+
+		object IEnumerator<object>.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		[DebuggerHidden]
+		void IEnumerator.Reset()
+		{
+			throw new NotSupportedException();
+		}
+
+		object IEnumerator.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		private int <>1__state;
+
+		private object <>2__current;
+
+		public GorillaNot <>4__this;
+	}
+
+	[CompilerGenerated]
+	private sealed class <QuitDelay>d__57 : IEnumerator<object>, IEnumerator, IDisposable
+	{
+		[DebuggerHidden]
+		public <QuitDelay>d__57(int <>1__state)
+		{
+			this.<>1__state = <>1__state;
+		}
+
+		[DebuggerHidden]
+		void IDisposable.Dispose()
+		{
+		}
+
+		bool IEnumerator.MoveNext()
+		{
+			int num = this.<>1__state;
+			if (num == 0)
+			{
+				this.<>1__state = -1;
+				this.<>2__current = new WaitForSeconds(1f);
+				this.<>1__state = 1;
+				return true;
+			}
+			if (num != 1)
+			{
+				return false;
+			}
+			this.<>1__state = -1;
+			NetworkSystem.Instance.ReturnToSinglePlayer();
+			return false;
+		}
+
+		object IEnumerator<object>.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		[DebuggerHidden]
+		void IEnumerator.Reset()
+		{
+			throw new NotSupportedException();
+		}
+
+		object IEnumerator.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		private int <>1__state;
+
+		private object <>2__current;
 	}
 }

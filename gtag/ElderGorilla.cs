@@ -69,6 +69,10 @@ public class ElderGorilla : MonoBehaviour
 		float currentPeakAmp = GorillaTagger.Instance.myRecorder.LevelMeter.CurrentPeakAmp;
 	}
 
+	public ElderGorilla()
+	{
+	}
+
 	private const float MAX_HAND_DIST = 1f;
 
 	private const float COOLDOWN_HAND_DIST = 1f;

@@ -47,6 +47,10 @@ namespace GorillaNetworking
 			return this.nameToCosmeticMap[itemName];
 		}
 
+		public CosmeticItemRegistry()
+		{
+		}
+
 		private Dictionary<string, CosmeticItemInstance> nameToCosmeticMap = new Dictionary<string, CosmeticItemInstance>();
 
 		private GameObject nullItem;

@@ -14,6 +14,10 @@ public class PlayerAudioManager : MonoBehaviour
 		this.defaultSnapshot.TransitionTo(transitionTime);
 	}
 
+	public PlayerAudioManager()
+	{
+	}
+
 	public AudioMixerSnapshot defaultSnapshot;
 
 	public AudioMixerSnapshot underwaterSnapshot;

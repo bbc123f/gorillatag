@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using CjLib;
 using GorillaLocomotion;
 using GorillaLocomotion.Climbing;
@@ -383,6 +384,10 @@ public class TransferrableBall : TransferrableObject
 		this.onGround = num > num3;
 	}
 
+	public TransferrableBall()
+	{
+	}
+
 	[Header("Transferrable Ball")]
 	public float ballRadius = 0.1f;
 
@@ -470,4 +475,26 @@ public class TransferrableBall : TransferrableObject
 	private float hitSoundSpamCooldownResetTime = 0.2f;
 
 	private string gorillaHeadTriggerTag = "PlayerHeadTrigger";
+
+	[CompilerGenerated]
+	[Serializable]
+	private sealed class <>c
+	{
+		// Note: this type is marked as 'beforefieldinit'.
+		static <>c()
+		{
+		}
+
+		public <>c()
+		{
+		}
+
+		internal void <TakeOwnershipAndEnablePhysics>b__44_0()
+		{
+		}
+
+		public static readonly TransferrableBall.<>c <>9 = new TransferrableBall.<>c();
+
+		public static Action <>9__44_0;
+	}
 }

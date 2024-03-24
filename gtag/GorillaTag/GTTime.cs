@@ -7,7 +7,19 @@ namespace GorillaTag
 {
 	public class GTTime
 	{
-		public static bool usingServerTime { get; private set; }
+		public static bool usingServerTime
+		{
+			[CompilerGenerated]
+			get
+			{
+				return GTTime.<usingServerTime>k__BackingField;
+			}
+			[CompilerGenerated]
+			private set
+			{
+				GTTime.<usingServerTime>k__BackingField = value;
+			}
+		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		private static long GetServerStartupTimeAsMilliseconds()
@@ -47,5 +59,12 @@ namespace GorillaTag
 		{
 			return (double)GTTime.GetStartupTimeAsMilliseconds() / 1000.0 + Time.realtimeSinceStartupAsDouble;
 		}
+
+		public GTTime()
+		{
+		}
+
+		[CompilerGenerated]
+		private static bool <usingServerTime>k__BackingField;
 	}
 }

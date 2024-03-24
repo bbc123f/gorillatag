@@ -18,5 +18,9 @@ namespace BoingKit
 		{
 			base.PrepareExecute(true);
 		}
+
+		public BoingReactor()
+		{
+		}
 	}
 }

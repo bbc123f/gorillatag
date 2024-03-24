@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using GorillaTag;
 using UnityEngine;
 
@@ -66,7 +67,26 @@ public class PlayerCollection : MonoBehaviour
 		this.containedRigs.RemoveAll((VRRig r) => r.creatorWrapped == null || r.creatorWrapped == otherPlayer);
 	}
 
+	public PlayerCollection()
+	{
+	}
+
 	[DebugReadout]
 	[NonSerialized]
 	public readonly List<VRRig> containedRigs = new List<VRRig>(10);
+
+	[CompilerGenerated]
+	private sealed class <>c__DisplayClass5_0
+	{
+		public <>c__DisplayClass5_0()
+		{
+		}
+
+		internal bool <OnPlayerLeftRoom>b__0(VRRig r)
+		{
+			return r.creatorWrapped == null || r.creatorWrapped == this.otherPlayer;
+		}
+
+		public NetPlayer otherPlayer;
+	}
 }

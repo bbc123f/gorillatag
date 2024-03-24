@@ -37,6 +37,10 @@ public class CurveBall : MonoBehaviour
 		this.m_timer += deltaTime;
 	}
 
+	public CurveBall()
+	{
+	}
+
 	public float Interval = 2f;
 
 	private float m_speedX;

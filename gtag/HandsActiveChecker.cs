@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class HandsActiveChecker : MonoBehaviour
@@ -38,6 +41,10 @@ public class HandsActiveChecker : MonoBehaviour
 		yield break;
 	}
 
+	public HandsActiveChecker()
+	{
+	}
+
 	[SerializeField]
 	private GameObject _notificationPrefab;
 
@@ -46,4 +53,79 @@ public class HandsActiveChecker : MonoBehaviour
 	private OVRCameraRig _cameraRig;
 
 	private Transform _centerEye;
+
+	[CompilerGenerated]
+	private sealed class <GetCenterEye>d__6 : IEnumerator<object>, IEnumerator, IDisposable
+	{
+		[DebuggerHidden]
+		public <GetCenterEye>d__6(int <>1__state)
+		{
+			this.<>1__state = <>1__state;
+		}
+
+		[DebuggerHidden]
+		void IDisposable.Dispose()
+		{
+		}
+
+		bool IEnumerator.MoveNext()
+		{
+			int num = this.<>1__state;
+			HandsActiveChecker handsActiveChecker = this;
+			if (num != 0)
+			{
+				if (num != 1)
+				{
+					return false;
+				}
+				this.<>1__state = -1;
+			}
+			else
+			{
+				this.<>1__state = -1;
+				if (!((handsActiveChecker._cameraRig = Object.FindObjectOfType<OVRCameraRig>()) != null))
+				{
+					return false;
+				}
+			}
+			if (!handsActiveChecker._centerEye)
+			{
+				handsActiveChecker._centerEye = handsActiveChecker._cameraRig.centerEyeAnchor;
+				this.<>2__current = null;
+				this.<>1__state = 1;
+				return true;
+			}
+			return false;
+		}
+
+		object IEnumerator<object>.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		[DebuggerHidden]
+		void IEnumerator.Reset()
+		{
+			throw new NotSupportedException();
+		}
+
+		object IEnumerator.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		private int <>1__state;
+
+		private object <>2__current;
+
+		public HandsActiveChecker <>4__this;
+	}
 }

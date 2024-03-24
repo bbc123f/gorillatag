@@ -138,6 +138,10 @@ public class LaserPointer : OVRCursor
 		OVRManager.InputFocusLost -= this.OnInputFocusLost;
 	}
 
+	public LaserPointer()
+	{
+	}
+
 	public GameObject cursorVisual;
 
 	public float maxLength = 10f;

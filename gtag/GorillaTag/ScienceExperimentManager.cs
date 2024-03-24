@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using CjLib;
 using ExitGames.Client.Photon;
@@ -192,7 +193,19 @@ namespace GorillaTag
 			}
 		}
 
-		bool ITickSystemTick.TickRunning { get; set; }
+		bool ITickSystemTick.TickRunning
+		{
+			[CompilerGenerated]
+			get
+			{
+				return this.<ITickSystemTick.TickRunning>k__BackingField;
+			}
+			[CompilerGenerated]
+			set
+			{
+				this.<ITickSystemTick.TickRunning>k__BackingField = value;
+			}
+		}
 
 		void ITickSystemTick.Tick()
 		{
@@ -1186,6 +1199,10 @@ namespace GorillaTag
 		{
 		}
 
+		public ScienceExperimentManager()
+		{
+		}
+
 		[CompilerGenerated]
 		private int <UpdateReliableState>g__GetAlivePlayerCount|105_0()
 		{
@@ -1380,6 +1397,9 @@ namespace GorillaTag
 
 		private bool hasPlayedDrainEffects;
 
+		[CompilerGenerated]
+		private bool <ITickSystemTick.TickRunning>k__BackingField;
+
 		[SerializeField]
 		private float debugRotateRingsTime = 10f;
 
@@ -1448,6 +1468,89 @@ namespace GorillaTag
 			public Transform target;
 
 			public float heightOffset;
+		}
+
+		[CompilerGenerated]
+		private sealed class <RotateRingsCoroutine>d__123 : IEnumerator<object>, IEnumerator, IDisposable
+		{
+			[DebuggerHidden]
+			public <RotateRingsCoroutine>d__123(int <>1__state)
+			{
+				this.<>1__state = <>1__state;
+			}
+
+			[DebuggerHidden]
+			void IDisposable.Dispose()
+			{
+			}
+
+			bool IEnumerator.MoveNext()
+			{
+				int num = this.<>1__state;
+				ScienceExperimentManager scienceExperimentManager = this;
+				if (num != 0)
+				{
+					if (num != 1)
+					{
+						return false;
+					}
+					this.<>1__state = -1;
+				}
+				else
+				{
+					this.<>1__state = -1;
+					if (scienceExperimentManager.debugRotateRingsTime <= 0.01f)
+					{
+						goto IL_87;
+					}
+					routineStartTime = Time.time;
+					scienceExperimentManager.ringRotationProgress = 0f;
+					scienceExperimentManager.debugRandomizingRings = true;
+				}
+				if (scienceExperimentManager.ringRotationProgress < 1f)
+				{
+					scienceExperimentManager.ringRotationProgress = (Time.time - routineStartTime) / scienceExperimentManager.debugRotateRingsTime;
+					this.<>2__current = null;
+					this.<>1__state = 1;
+					return true;
+				}
+				IL_87:
+				scienceExperimentManager.debugRandomizingRings = false;
+				scienceExperimentManager.ringRotationProgress = 1f;
+				return false;
+			}
+
+			object IEnumerator<object>.Current
+			{
+				[DebuggerHidden]
+				get
+				{
+					return this.<>2__current;
+				}
+			}
+
+			[DebuggerHidden]
+			void IEnumerator.Reset()
+			{
+				throw new NotSupportedException();
+			}
+
+			object IEnumerator.Current
+			{
+				[DebuggerHidden]
+				get
+				{
+					return this.<>2__current;
+				}
+			}
+
+			private int <>1__state;
+
+			private object <>2__current;
+
+			public ScienceExperimentManager <>4__this;
+
+			private float <routineStartTime>5__2;
 		}
 	}
 }

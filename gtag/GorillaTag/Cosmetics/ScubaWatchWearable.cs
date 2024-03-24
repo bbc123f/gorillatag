@@ -34,6 +34,10 @@ namespace GorillaTag.Cosmetics
 			this.dialNeedle.localRotation = this.initialDialRotation * Quaternion.AngleAxis(num2, this.dialRotationAxis);
 		}
 
+		public ScubaWatchWearable()
+		{
+		}
+
 		public bool onLeftHand;
 
 		[Tooltip("The transform that will be rotated to indicate the current depth.")]

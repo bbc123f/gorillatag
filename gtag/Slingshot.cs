@@ -83,8 +83,8 @@ public class Slingshot : TransferrableObject
 		}
 		this.center.position = vector;
 		this.elasticLeftPoints[0] = this.leftArm.position;
-		this.elasticLeftPoints[1] = (this.elasticRightPoints[0] = vector);
-		this.elasticRightPoints[1] = this.rightArm.position;
+		this.elasticLeftPoints[1] = (this.elasticRightPoints[1] = vector);
+		this.elasticRightPoints[0] = this.rightArm.position;
 		this.elasticLeft.SetPositions(this.elasticLeftPoints);
 		this.elasticRight.SetPositions(this.elasticRightPoints);
 		if (!PhotonNetwork.InRoom && this.disableWhenNotInRoom)
@@ -377,6 +377,10 @@ public class Slingshot : TransferrableObject
 	private bool InDrawingState()
 	{
 		return this.itemState == TransferrableObject.ItemStates.State2 || this.itemState == TransferrableObject.ItemStates.State3;
+	}
+
+	public Slingshot()
+	{
 	}
 
 	[FormerlySerializedAs("elastic")]

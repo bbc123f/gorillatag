@@ -33,6 +33,10 @@ public class AmbientSoundRandomizer : MonoBehaviour
 		this.timer = 0f;
 	}
 
+	public AmbientSoundRandomizer()
+	{
+	}
+
 	[SerializeField]
 	private AudioSource[] audioSources;
 

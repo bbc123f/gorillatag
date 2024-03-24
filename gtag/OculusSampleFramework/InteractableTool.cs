@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace OculusSampleFramework
@@ -15,7 +16,19 @@ namespace OculusSampleFramework
 			}
 		}
 
-		public bool IsRightHandedTool { get; set; }
+		public bool IsRightHandedTool
+		{
+			[CompilerGenerated]
+			get
+			{
+				return this.<IsRightHandedTool>k__BackingField;
+			}
+			[CompilerGenerated]
+			set
+			{
+				this.<IsRightHandedTool>k__BackingField = value;
+			}
+		}
 
 		public abstract InteractableToolTags ToolTags { get; }
 
@@ -23,9 +36,33 @@ namespace OculusSampleFramework
 
 		public abstract bool IsFarFieldTool { get; }
 
-		public Vector3 Velocity { get; protected set; }
+		public Vector3 Velocity
+		{
+			[CompilerGenerated]
+			get
+			{
+				return this.<Velocity>k__BackingField;
+			}
+			[CompilerGenerated]
+			protected set
+			{
+				this.<Velocity>k__BackingField = value;
+			}
+		}
 
-		public Vector3 InteractionPosition { get; protected set; }
+		public Vector3 InteractionPosition
+		{
+			[CompilerGenerated]
+			get
+			{
+				return this.<InteractionPosition>k__BackingField;
+			}
+			[CompilerGenerated]
+			protected set
+			{
+				this.<InteractionPosition>k__BackingField = value;
+			}
+		}
 
 		public List<InteractableCollisionInfo> GetCurrentIntersectingObjects()
 		{
@@ -112,6 +149,19 @@ namespace OculusSampleFramework
 			}
 			this._prevInteractableToCollisionInfos = new Dictionary<Interactable, InteractableCollisionInfo>(this._currInteractableToCollisionInfos);
 		}
+
+		protected InteractableTool()
+		{
+		}
+
+		[CompilerGenerated]
+		private bool <IsRightHandedTool>k__BackingField;
+
+		[CompilerGenerated]
+		private Vector3 <Velocity>k__BackingField;
+
+		[CompilerGenerated]
+		private Vector3 <InteractionPosition>k__BackingField;
 
 		protected List<InteractableCollisionInfo> _currentIntersectingObjects = new List<InteractableCollisionInfo>();
 

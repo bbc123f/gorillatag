@@ -64,6 +64,10 @@ public class WaterInteractionEvents : MonoBehaviour
 		}
 	}
 
+	public WaterInteractionEvents()
+	{
+	}
+
 	public UnityEvent onEnterWater = new UnityEvent();
 
 	public UnityEvent onExitWater = new UnityEvent();

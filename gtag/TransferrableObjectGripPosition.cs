@@ -17,6 +17,10 @@ public class TransferrableObjectGripPosition : MonoBehaviour
 		return new SubGrabPoint();
 	}
 
+	public TransferrableObjectGripPosition()
+	{
+	}
+
 	[SerializeField]
 	private TransferrableItemSlotTransformOverride parentObject;
 

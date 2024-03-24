@@ -1,11 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class WatchableGenericSO<T> : ScriptableObject
 {
 	[DebugReadOnly]
-	private T _value { get; set; }
+	private T _value
+	{
+		[CompilerGenerated]
+		get
+		{
+			return this.<_value>k__BackingField;
+		}
+		[CompilerGenerated]
+		set
+		{
+			this.<_value>k__BackingField = value;
+		}
+	}
 
 	public T Value
 	{
@@ -55,7 +68,14 @@ public class WatchableGenericSO<T> : ScriptableObject
 		this.callbacks.Remove(callback);
 	}
 
+	public WatchableGenericSO()
+	{
+	}
+
 	public T InitialValue;
+
+	[CompilerGenerated]
+	private T <_value>k__BackingField;
 
 	private EnterPlayID enterPlayID;
 

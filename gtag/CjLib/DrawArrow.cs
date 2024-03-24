@@ -19,6 +19,10 @@ namespace CjLib
 			DebugUtil.DrawArrow(base.transform.position, base.transform.position + base.transform.TransformVector(this.LocalEndVector), this.ConeRadius, this.ConeHeight, this.NumSegments, this.StemThickness, color, depthTest, style);
 		}
 
+		public DrawArrow()
+		{
+		}
+
 		public Vector3 LocalEndVector = Vector3.right;
 
 		public float ConeRadius = 0.05f;

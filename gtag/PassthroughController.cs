@@ -28,5 +28,9 @@ public class PassthroughController : MonoBehaviour
 		base.transform.rotation = Quaternion.LookRotation(new Vector3(Camera.main.transform.forward.x, 0f, Camera.main.transform.forward.z).normalized);
 	}
 
+	public PassthroughController()
+	{
+	}
+
 	private OVRPassthroughLayer passthroughLayer;
 }

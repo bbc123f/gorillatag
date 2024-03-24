@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using GorillaExtensions;
 using JetBrains.Annotations;
 using Photon.Pun;
@@ -785,6 +787,16 @@ public class RequestableOwnershipGuard : MonoBehaviourPunCallbacks, ISelfValidat
 		}
 	}
 
+	public RequestableOwnershipGuard()
+	{
+	}
+
+	[CompilerGenerated]
+	private void <OnEnable>b__17_0()
+	{
+		this.SetOwnership(PhotonNetwork.LocalPlayer, false, false);
+	}
+
 	[DevInspectorShow]
 	[DevInspectorColor("#ff5")]
 	public NetworkingState currentState;
@@ -835,4 +847,156 @@ public class RequestableOwnershipGuard : MonoBehaviourPunCallbacks, ISelfValidat
 	public string ownershipRequestNonce;
 
 	public List<IRequestableOwnershipGuardCallbacks> callbacksList = new List<IRequestableOwnershipGuardCallbacks>();
+
+	[CompilerGenerated]
+	[Serializable]
+	private sealed class <>c
+	{
+		// Note: this type is marked as 'beforefieldinit'.
+		static <>c()
+		{
+		}
+
+		public <>c()
+		{
+		}
+
+		internal void <OnPreLeavingRoom>b__20_0(IRequestableOwnershipGuardCallbacks callback)
+		{
+			callback.OnMyOwnerLeft();
+		}
+
+		internal void <OnPlayerLeftRoom>b__22_0(IRequestableOwnershipGuardCallbacks callback)
+		{
+			callback.OnMyCreatorLeft();
+		}
+
+		internal void <OnPlayerLeftRoom>b__22_1(IRequestableOwnershipGuardCallbacks callback)
+		{
+			callback.OnMyOwnerLeft();
+		}
+
+		internal void <OnPlayerLeftRoom>b__22_2(IRequestableOwnershipGuardCallbacks callback)
+		{
+			callback.OnMyCreatorLeft();
+		}
+
+		internal void <OnPlayerLeftRoom>b__22_3(IRequestableOwnershipGuardCallbacks callback)
+		{
+			callback.OnMyOwnerLeft();
+		}
+
+		public static readonly RequestableOwnershipGuard.<>c <>9 = new RequestableOwnershipGuard.<>c();
+
+		public static Action<IRequestableOwnershipGuardCallbacks> <>9__20_0;
+
+		public static Action<IRequestableOwnershipGuardCallbacks> <>9__22_0;
+
+		public static Action<IRequestableOwnershipGuardCallbacks> <>9__22_1;
+
+		public static Action<IRequestableOwnershipGuardCallbacks> <>9__22_2;
+
+		public static Action<IRequestableOwnershipGuardCallbacks> <>9__22_3;
+	}
+
+	[CompilerGenerated]
+	private sealed class <>c__DisplayClass33_0
+	{
+		public <>c__DisplayClass33_0()
+		{
+		}
+
+		internal void <SetOwnership>b__0(IRequestableOwnershipGuardCallbacks actualOwner)
+		{
+			actualOwner.OnOwnershipTransferred(this.player, this.<>4__this.currentOwner);
+		}
+
+		public Player player;
+
+		public RequestableOwnershipGuard <>4__this;
+	}
+
+	[CompilerGenerated]
+	private sealed class <RequestTimeout>d__42 : IEnumerator<object>, IEnumerator, IDisposable
+	{
+		[DebuggerHidden]
+		public <RequestTimeout>d__42(int <>1__state)
+		{
+			this.<>1__state = <>1__state;
+		}
+
+		[DebuggerHidden]
+		void IDisposable.Dispose()
+		{
+		}
+
+		bool IEnumerator.MoveNext()
+		{
+			int num = this.<>1__state;
+			RequestableOwnershipGuard requestableOwnershipGuard = this;
+			if (num == 0)
+			{
+				this.<>1__state = -1;
+				Debug.Log(string.Format("Timeout request started...  {0} ", requestableOwnershipGuard.currentState));
+				this.<>2__current = new WaitForSecondsRealtime(2f);
+				this.<>1__state = 1;
+				return true;
+			}
+			if (num != 1)
+			{
+				return false;
+			}
+			this.<>1__state = -1;
+			Debug.Log(string.Format("Timeout request ended! {0} ", requestableOwnershipGuard.currentState));
+			switch (requestableOwnershipGuard.currentState)
+			{
+			case NetworkingState.IsOwner:
+			case NetworkingState.IsBlindClient:
+			case NetworkingState.IsClient:
+				break;
+			case NetworkingState.ForcefullyTakingOver:
+			case NetworkingState.RequestingOwnership:
+				requestableOwnershipGuard.currentState = NetworkingState.IsClient;
+				requestableOwnershipGuard.SetOwnership(requestableOwnershipGuard.actualOwner, false, false);
+				break;
+			case NetworkingState.RequestingOwnershipWaitingForSight:
+			case NetworkingState.ForcefullyTakingOverWaitingForSight:
+				requestableOwnershipGuard.photonView.RPC("OwnershipRequested", requestableOwnershipGuard.actualOwner, new object[] { requestableOwnershipGuard.ownershipRequestNonce });
+				break;
+			default:
+				throw new ArgumentOutOfRangeException();
+			}
+			return false;
+		}
+
+		object IEnumerator<object>.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		[DebuggerHidden]
+		void IEnumerator.Reset()
+		{
+			throw new NotSupportedException();
+		}
+
+		object IEnumerator.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		private int <>1__state;
+
+		private object <>2__current;
+
+		public RequestableOwnershipGuard <>4__this;
+	}
 }

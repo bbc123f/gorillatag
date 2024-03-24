@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using GorillaExtensions;
 using GorillaTag.GuidedRefs;
 using UnityEngine;
@@ -64,7 +65,23 @@ public class GorillaGeoHideShowTrigger : GorillaTriggerBox, IGuidedRefReceiverMo
 		this._guidedRefsAreFullyResolved = false;
 	}
 
-	int IGuidedRefReceiverMono.GuidedRefsWaitingToResolveCount { get; set; }
+	int IGuidedRefReceiverMono.GuidedRefsWaitingToResolveCount
+	{
+		[CompilerGenerated]
+		get
+		{
+			return this.<GorillaTag.GuidedRefs.IGuidedRefReceiverMono.GuidedRefsWaitingToResolveCount>k__BackingField;
+		}
+		[CompilerGenerated]
+		set
+		{
+			this.<GorillaTag.GuidedRefs.IGuidedRefReceiverMono.GuidedRefsWaitingToResolveCount>k__BackingField = value;
+		}
+	}
+
+	public GorillaGeoHideShowTrigger()
+	{
+	}
 
 	Transform IGuidedRefMonoBehaviour.get_transform()
 	{
@@ -89,4 +106,7 @@ public class GorillaGeoHideShowTrigger : GorillaTriggerBox, IGuidedRefReceiverMo
 	private GuidedRefReceiverArrayInfo makeSureThisIsEnabled_gRefs = new GuidedRefReceiverArrayInfo(false);
 
 	private bool _guidedRefsAreFullyResolved;
+
+	[CompilerGenerated]
+	private int <GorillaTag.GuidedRefs.IGuidedRefReceiverMono.GuidedRefsWaitingToResolveCount>k__BackingField;
 }

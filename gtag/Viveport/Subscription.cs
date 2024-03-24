@@ -92,6 +92,10 @@ namespace Viveport
 			return subscriptionStatus;
 		}
 
+		public Subscription()
+		{
+		}
+
 		private static StatusCallback2 isReadyIl2cppCallback;
 	}
 }

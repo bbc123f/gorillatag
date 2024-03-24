@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using GorillaLocomotion;
 using GorillaNetworking;
 using Photon.Pun;
@@ -105,6 +108,10 @@ public class GorillaNetworkPublicTestsJoin : GorillaTriggerBox
 		yield break;
 	}
 
+	public GorillaNetworkPublicTestsJoin()
+	{
+	}
+
 	public GameObject[] makeSureThisIsDisabled;
 
 	public GameObject[] makeSureThisIsEnabled;
@@ -134,4 +141,114 @@ public class GorillaNetworkPublicTestsJoin : GorillaTriggerBox
 	private Vector3 lastPosition;
 
 	private VRRig tempRig;
+
+	[CompilerGenerated]
+	private sealed class <GracePeriod>d__17 : IEnumerator<object>, IEnumerator, IDisposable
+	{
+		[DebuggerHidden]
+		public <GracePeriod>d__17(int <>1__state)
+		{
+			this.<>1__state = <>1__state;
+		}
+
+		[DebuggerHidden]
+		void IDisposable.Dispose()
+		{
+		}
+
+		bool IEnumerator.MoveNext()
+		{
+			int num = this.<>1__state;
+			GorillaNetworkPublicTestsJoin gorillaNetworkPublicTestsJoin = this;
+			if (num == 0)
+			{
+				this.<>1__state = -1;
+				gorillaNetworkPublicTestsJoin.waiting = true;
+				this.<>2__current = new WaitForSeconds(30f);
+				this.<>1__state = 1;
+				return true;
+			}
+			if (num != 1)
+			{
+				return false;
+			}
+			this.<>1__state = -1;
+			try
+			{
+				if (PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.IsVisible)
+				{
+					if ((!Player.Instance.GetComponent<Rigidbody>().useGravity && !Player.Instance.isClimbing) || Player.Instance.GetComponent<Rigidbody>().isKinematic)
+					{
+						GorillaNot.instance.SendReport("gorvity bisdabled", PhotonNetwork.LocalPlayer.UserId, PhotonNetwork.LocalPlayer.NickName);
+					}
+					if (Player.Instance.jumpMultiplier > GorillaGameManager.instance.fastJumpMultiplier * 2f || Player.Instance.maxJumpSpeed > GorillaGameManager.instance.fastJumpLimit * 2f)
+					{
+						GorillaNot.instance.SendReport(string.Concat(new string[]
+						{
+							"jimp 2mcuh.",
+							Player.Instance.jumpMultiplier.ToString(),
+							".",
+							Player.Instance.maxJumpSpeed.ToString(),
+							"."
+						}), PhotonNetwork.LocalPlayer.UserId, PhotonNetwork.LocalPlayer.NickName);
+					}
+					if (GorillaTagger.Instance.sphereCastRadius > 0.04f)
+					{
+						GorillaNot.instance.SendReport("wack rad. " + GorillaTagger.Instance.sphereCastRadius.ToString(), PhotonNetwork.LocalPlayer.UserId, PhotonNetwork.LocalPlayer.NickName);
+					}
+				}
+				if (PhotonNetwork.InRoom && GorillaTagger.Instance.otherPlayer != null && GorillaGameManager.instance != null)
+				{
+					gorillaNetworkPublicTestsJoin.tempRig = GorillaGameManager.StaticFindRigForPlayer(GorillaTagger.Instance.otherPlayer);
+					if (gorillaNetworkPublicTestsJoin.tempRig != null && GorillaTagger.Instance.offlineVRRig != null && (gorillaNetworkPublicTestsJoin.tempRig.transform.position - GorillaTagger.Instance.offlineVRRig.transform.position).magnitude > 8f)
+					{
+						gorillaNetworkPublicTestsJoin.count++;
+						if (gorillaNetworkPublicTestsJoin.count >= 3)
+						{
+							GorillaNot.instance.SendReport("tee hee", PhotonNetwork.LocalPlayer.UserId, PhotonNetwork.LocalPlayer.NickName);
+						}
+					}
+				}
+				else
+				{
+					gorillaNetworkPublicTestsJoin.count = 0;
+				}
+				gorillaNetworkPublicTestsJoin.waiting = false;
+			}
+			catch
+			{
+			}
+			return false;
+		}
+
+		object IEnumerator<object>.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		[DebuggerHidden]
+		void IEnumerator.Reset()
+		{
+			throw new NotSupportedException();
+		}
+
+		object IEnumerator.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		private int <>1__state;
+
+		private object <>2__current;
+
+		public GorillaNetworkPublicTestsJoin <>4__this;
+	}
 }

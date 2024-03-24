@@ -219,6 +219,10 @@ public class CatmullRomSpline : MonoBehaviour
 		return CatmullRomSpline.CatmullRom(num3, controlPoints[num4], controlPoints[num4 + 1], controlPoints[num4 + 2], controlPoints[num4 + 3]);
 	}
 
+	public CatmullRomSpline()
+	{
+	}
+
 	public Transform[] controlPointTransforms = new Transform[0];
 
 	public Transform debugTransform;

@@ -75,6 +75,10 @@ public class Tappable : MonoBehaviour
 		this.CalculateId(false);
 	}
 
+	public Tappable()
+	{
+	}
+
 	public int tappableId;
 
 	public string staticId;

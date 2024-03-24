@@ -1,10 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Fusion;
+using UnityEngine;
 
 public class FusionNetPlayer : NetPlayer
 {
-	public PlayerRef playerRef { get; private set; }
+	public PlayerRef playerRef
+	{
+		[CompilerGenerated]
+		get
+		{
+			return this.<playerRef>k__BackingField;
+		}
+		[CompilerGenerated]
+		private set
+		{
+			this.<playerRef>k__BackingField = value;
+		}
+	}
 
 	public FusionNetPlayer(PlayerRef playerRef)
 	{
@@ -76,6 +90,14 @@ public class FusionNetPlayer : NetPlayer
 		}
 	}
 
+	public override string DefaultName
+	{
+		get
+		{
+			return "gorilla" + Random.Range(0, 9999).ToString().PadLeft(4, '0');
+		}
+	}
+
 	public override bool InRoom
 	{
 		get
@@ -98,4 +120,7 @@ public class FusionNetPlayer : NetPlayer
 	{
 		return myPlayer != null && other != null && ((FusionNetPlayer)myPlayer).playerRef.Equals(((FusionNetPlayer)other).playerRef);
 	}
+
+	[CompilerGenerated]
+	private PlayerRef <playerRef>k__BackingField;
 }

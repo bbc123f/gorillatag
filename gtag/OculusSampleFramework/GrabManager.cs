@@ -23,6 +23,10 @@ namespace OculusSampleFramework
 			}
 		}
 
+		public GrabManager()
+		{
+		}
+
 		private Collider m_grabVolume;
 
 		public Color OutlineColorInRange;

@@ -28,6 +28,10 @@ public class EnclosedSpaceVolume : GorillaTriggerBox
 		}
 	}
 
+	public EnclosedSpaceVolume()
+	{
+	}
+
 	public AudioSource audioSourceInside;
 
 	public AudioSource audioSourceOutside;

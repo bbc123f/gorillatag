@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using Fusion;
 using GorillaExtensions;
 using GorillaGameModes;
@@ -291,11 +293,9 @@ public class VRRig : MonoBehaviour, IWrappedSerializable, INetworkStruct, IPreDi
 		this.cosmetics = this.cosmetics.Concat(this.overrideCosmetics).ToArray<GameObject>();
 		this.cosmeticsObjectRegistry.Initialize(this.cosmetics);
 		this.lastPosition = base.transform.position;
+		PlayFabAuthenticator instance = PlayFabAuthenticator.instance;
+		instance.OnSafetyUpdate = (Action<bool>)Delegate.Combine(instance.OnSafetyUpdate, new Action<bool>(this.UpdateName));
 		this.SharedStart();
-	}
-
-	private void Start()
-	{
 	}
 
 	private void EnsureInstantiatedMaterial()
@@ -309,9 +309,10 @@ public class VRRig : MonoBehaviour, IWrappedSerializable, INetworkStruct, IPreDi
 
 	private void ApplyColorCode()
 	{
-		float @float = PlayerPrefs.GetFloat("redValue", 0.16f);
-		float float2 = PlayerPrefs.GetFloat("greenValue", 0.16f);
-		float float3 = PlayerPrefs.GetFloat("blueValue", 0.16f);
+		float num = 0.0627451f;
+		float @float = PlayerPrefs.GetFloat("redValue", num);
+		float float2 = PlayerPrefs.GetFloat("greenValue", num);
+		float float3 = PlayerPrefs.GetFloat("blueValue", num);
 		GorillaTagger.Instance.UpdateColor(@float, float2, float3);
 	}
 
@@ -341,6 +342,7 @@ public class VRRig : MonoBehaviour, IWrappedSerializable, INetworkStruct, IPreDi
 				Object.Destroy(this.spectatorSkin);
 			}
 			base.StartCoroutine(this.OccasionalUpdate());
+			this.initialized = true;
 		}
 		else if (!this.isOfflineVRRig)
 		{
@@ -641,6 +643,68 @@ public class VRRig : MonoBehaviour, IWrappedSerializable, INetworkStruct, IPreDi
 		this.AddVelocityToQueue(this.syncPos, inputStruct.serverTimeStamp);
 	}
 
+	void IWrappedSerializable.OnSerializeWrite(PhotonStream stream, PhotonMessageInfo info)
+	{
+		stream.SendNext(this.head.rigTarget.localRotation);
+		stream.SendNext(this.rightHand.rigTarget.localPosition);
+		stream.SendNext(this.rightHand.rigTarget.localRotation);
+		stream.SendNext(this.leftHand.rigTarget.localPosition);
+		stream.SendNext(this.leftHand.rigTarget.localRotation);
+		stream.SendNext(base.transform.position);
+		stream.SendNext(Mathf.RoundToInt(base.transform.rotation.eulerAngles.y));
+		stream.SendNext(this.ReturnHandPosition());
+		stream.SendNext(this.currentState);
+		stream.SendNext(this.remoteUseReplacementVoice);
+		stream.SendNext(this.speakingLoudness);
+		stream.SendNext(this.grabbedRopeIndex);
+		if (this.grabbedRopeIndex > 0)
+		{
+			stream.SendNext(this.grabbedRopeBoneIndex);
+			stream.SendNext(this.grabbedRopeIsLeft);
+			stream.SendNext(this.grabbedRopeOffset);
+		}
+	}
+
+	void IWrappedSerializable.OnSerializeRead(PhotonStream stream, PhotonMessageInfo info)
+	{
+		this.head.syncRotation = this.SanitizeQuaternion((Quaternion)stream.ReceiveNext());
+		this.rightHand.syncPos = this.SanitizeVector3((Vector3)stream.ReceiveNext());
+		this.rightHand.syncRotation = this.SanitizeQuaternion((Quaternion)stream.ReceiveNext());
+		this.leftHand.syncPos = this.SanitizeVector3((Vector3)stream.ReceiveNext());
+		this.leftHand.syncRotation = this.SanitizeQuaternion((Quaternion)stream.ReceiveNext());
+		this.syncPos = this.SanitizeVector3((Vector3)stream.ReceiveNext());
+		this.syncRotation.eulerAngles = this.SanitizeVector3(new Vector3(0f, (float)((int)stream.ReceiveNext()), 0f));
+		this.handSync = (int)stream.ReceiveNext();
+		this.currentState = (TransferrableObject.PositionState)stream.ReceiveNext();
+		this.lastPosition = this.syncPos;
+		this.remoteUseReplacementVoice = (bool)stream.ReceiveNext();
+		this.speakingLoudness = (float)stream.ReceiveNext();
+		this.UpdateReplacementVoice();
+		this.grabbedRopeIndex = (int)stream.ReceiveNext();
+		if (this.grabbedRopeIndex > 0)
+		{
+			this.grabbedRopeBoneIndex = (int)stream.ReceiveNext();
+			this.grabbedRopeIsLeft = (bool)stream.ReceiveNext();
+			this.grabbedRopeOffset = this.SanitizeVector3((Vector3)stream.ReceiveNext());
+		}
+		this.UpdateRopeData();
+		this.AddVelocityToQueue(this.syncPos, info.timestamp);
+	}
+
+	private void UpdateExtrapolationTarget()
+	{
+		float num = (float)(PhotonNetwork.Time - this.remoteLatestTimestamp);
+		num -= 0.15f;
+		num = Mathf.Clamp(num, -0.5f, 0.5f);
+		this.syncPos += this.remoteVelocity * num;
+		this.remoteCorrectionNeeded = this.syncPos - base.transform.position;
+		if (this.remoteCorrectionNeeded.magnitude > 1.5f && this.grabbedRopeIndex <= 0)
+		{
+			base.transform.position = this.syncPos;
+			this.remoteCorrectionNeeded = Vector3.zero;
+		}
+	}
+
 	private void UpdateRopeData()
 	{
 		if (this.previousGrabbedRope == this.grabbedRopeIndex && this.previousGrabbedRopeBoneIndex == this.grabbedRopeBoneIndex && this.previousGrabbedRopeWasLeft == this.grabbedRopeIsLeft)
@@ -798,22 +862,27 @@ public class VRRig : MonoBehaviour, IWrappedSerializable, INetworkStruct, IPreDi
 		this.EnsureInstantiatedMaterial();
 		if (this.myDefaultSkinMaterialInstance != null)
 		{
-			color.r = Mathf.Clamp(color.r, 0.16f, 1f);
-			color.g = Mathf.Clamp(color.g, 0.16f, 1f);
-			color.b = Mathf.Clamp(color.b, 0.16f, 1f);
+			color.r = Mathf.Clamp(color.r, 0.0627451f, 1f);
+			color.g = Mathf.Clamp(color.g, 0.0627451f, 1f);
+			color.b = Mathf.Clamp(color.b, 0.0627451f, 1f);
 			this.myDefaultSkinMaterialInstance.color = color;
 		}
+		this.SetColor(color);
+		this.UpdateName(PlayFabAuthenticator.instance.GetSafety());
+	}
+
+	public void UpdateName(bool isSafety)
+	{
 		if (this.rigSerializer != null)
 		{
-			string nickName = this.OwningNetPlayer.NickName;
-			this.playerText.text = this.NormalizeName(true, nickName);
+			string text = (isSafety ? this.OwningNetPlayer.DefaultName : this.OwningNetPlayer.NickName);
+			this.playerNameVisible = this.NormalizeName(true, text);
 		}
-		else if (this.showName)
+		else if (this.showName && NetworkSystem.Instance != null)
 		{
-			this.playerText.text = NetworkSystem.Instance.GetMyNickName();
+			this.playerNameVisible = (isSafety ? NetworkSystem.Instance.GetMyDefaultName() : NetworkSystem.Instance.GetMyNickName());
 		}
-		Debug.Log("Set Color");
-		this.SetColor(color);
+		this.playerText.text = this.playerNameVisible;
 	}
 
 	public string NormalizeName(bool doIt, string text)
@@ -1526,7 +1595,19 @@ public class VRRig : MonoBehaviour, IWrappedSerializable, INetworkStruct, IPreDi
 		}
 	}
 
-	int IGuidedRefReceiverMono.GuidedRefsWaitingToResolveCount { get; set; }
+	int IGuidedRefReceiverMono.GuidedRefsWaitingToResolveCount
+	{
+		[CompilerGenerated]
+		get
+		{
+			return this.<GorillaTag.GuidedRefs.IGuidedRefReceiverMono.GuidedRefsWaitingToResolveCount>k__BackingField;
+		}
+		[CompilerGenerated]
+		set
+		{
+			this.<GorillaTag.GuidedRefs.IGuidedRefReceiverMono.GuidedRefsWaitingToResolveCount>k__BackingField = value;
+		}
+	}
 
 	bool IGuidedRefReceiverMono.GuidedRefTryResolveReference(GuidedRefTryResolveInfo target)
 	{
@@ -1541,9 +1622,42 @@ public class VRRig : MonoBehaviour, IWrappedSerializable, INetworkStruct, IPreDi
 	{
 	}
 
+	public VRRig()
+	{
+	}
+
+	// Note: this type is marked as 'beforefieldinit'.
+	static VRRig()
+	{
+	}
+
 	Transform IGuidedRefMonoBehaviour.get_transform()
 	{
 		return base.transform;
+	}
+
+	[CompilerGenerated]
+	private void <GetUserCosmeticsAllowed>b__240_0(GetUserInventoryResult result)
+	{
+		foreach (ItemInstance itemInstance in result.Inventory)
+		{
+			if (itemInstance.CatalogVersion == CosmeticsController.instance.catalog)
+			{
+				this.concatStringOfCosmeticsAllowed += itemInstance.ItemId;
+			}
+		}
+		Debug.Log("successful result. allowed cosmetics are: " + this.concatStringOfCosmeticsAllowed);
+		this.CheckForEarlyAccess();
+		this.SetCosmeticsActive();
+	}
+
+	[CompilerGenerated]
+	private void <GetUserCosmeticsAllowed>b__240_1(PlayFabError error)
+	{
+		Debug.Log("Got error retrieving user data:");
+		Debug.Log(error.GenerateErrorReport());
+		this.initializedCosmetics = true;
+		this.SetCosmeticsActive();
 	}
 
 	public static Action newPlayerJoined;
@@ -1650,6 +1764,8 @@ public class VRRig : MonoBehaviour, IWrappedSerializable, INetworkStruct, IPreDi
 
 	public Material myDefaultSkinMaterialInstance;
 
+	public Material scoreboardMaterial;
+
 	public GameObject spectatorSkin;
 
 	public int handSync;
@@ -1665,6 +1781,8 @@ public class VRRig : MonoBehaviour, IWrappedSerializable, INetworkStruct, IPreDi
 	public string playerName;
 
 	public Text playerText;
+
+	public string playerNameVisible;
 
 	[Tooltip("- True in 'Gorilla Player Networked.prefab'.\n- True in 'Local VRRig.prefab/Local Gorilla Player'.\n- False in 'Local VRRig.prefab/Actual Gorilla'")]
 	public bool showName;
@@ -1717,6 +1835,16 @@ public class VRRig : MonoBehaviour, IWrappedSerializable, INetworkStruct, IPreDi
 	public VRRigReliableState reliableState;
 
 	internal RigContainer rigContainer;
+
+	private Vector3 remoteVelocity;
+
+	private double remoteLatestTimestamp;
+
+	private Vector3 remoteCorrectionNeeded;
+
+	private const float REMOTE_CORRECTION_RATE = 5f;
+
+	private const bool USE_NEW_NETCODE = false;
 
 	public static readonly GTBitOps.BitWriteInfo[] WearablePackedStatesBitWriteInfos = new GTBitOps.BitWriteInfo[]
 	{
@@ -1866,6 +1994,9 @@ public class VRRig : MonoBehaviour, IWrappedSerializable, INetworkStruct, IPreDi
 	[SerializeField]
 	private GuidedRefBasicTargetInfo guidedRefTargetInfo;
 
+	[CompilerGenerated]
+	private int <GorillaTag.GuidedRefs.IGuidedRefReceiverMono.GuidedRefsWaitingToResolveCount>k__BackingField;
+
 	public enum WearablePackedStateSlots
 	{
 		Hat,
@@ -1884,5 +2015,107 @@ public class VRRig : MonoBehaviour, IWrappedSerializable, INetworkStruct, IPreDi
 		public Vector3 vel;
 
 		public double time;
+	}
+
+	[CompilerGenerated]
+	[Serializable]
+	private sealed class <>c
+	{
+		// Note: this type is marked as 'beforefieldinit'.
+		static <>c()
+		{
+		}
+
+		public <>c()
+		{
+		}
+
+		internal bool <NormalizeName>b__220_0(char c)
+		{
+			return char.IsLetterOrDigit(c);
+		}
+
+		internal void <SetColor>b__255_0(Color color1)
+		{
+		}
+
+		public static readonly VRRig.<>c <>9 = new VRRig.<>c();
+
+		public static Predicate<char> <>9__220_0;
+
+		public static Action<Color> <>9__255_0;
+	}
+
+	[CompilerGenerated]
+	private sealed class <OccasionalUpdate>d__195 : IEnumerator<object>, IEnumerator, IDisposable
+	{
+		[DebuggerHidden]
+		public <OccasionalUpdate>d__195(int <>1__state)
+		{
+			this.<>1__state = <>1__state;
+		}
+
+		[DebuggerHidden]
+		void IDisposable.Dispose()
+		{
+		}
+
+		bool IEnumerator.MoveNext()
+		{
+			int num = this.<>1__state;
+			if (num != 0)
+			{
+				if (num != 1)
+				{
+					return false;
+				}
+				this.<>1__state = -1;
+			}
+			else
+			{
+				this.<>1__state = -1;
+			}
+			try
+			{
+				if (RoomSystem.JoinedRoom && NetworkSystem.Instance.IsMasterClient && GorillaGameModes.GameMode.ActiveNetworkHandler.IsNull())
+				{
+					GorillaGameModes.GameMode.LoadGameModeFromProperty();
+				}
+			}
+			catch
+			{
+			}
+			this.<>2__current = new WaitForSeconds(1f);
+			this.<>1__state = 1;
+			return true;
+		}
+
+		object IEnumerator<object>.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		[DebuggerHidden]
+		void IEnumerator.Reset()
+		{
+			throw new NotSupportedException();
+		}
+
+		object IEnumerator.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		private int <>1__state;
+
+		private object <>2__current;
 	}
 }

@@ -8,6 +8,11 @@ public class XSceneRefTarget : MonoBehaviour
 		this.Register(false);
 	}
 
+	private void Reset()
+	{
+		this.UniqueID = XSceneRefTarget.CreateNewID();
+	}
+
 	private void OnValidate()
 	{
 		if (!Application.isPlaying)
@@ -35,7 +40,39 @@ public class XSceneRefTarget : MonoBehaviour
 		XSceneRefGlobalHub.Unregister(this.UniqueID, this);
 	}
 
+	private void AssignNewID()
+	{
+		this.UniqueID = XSceneRefTarget.CreateNewID();
+		this.Register(false);
+	}
+
+	public static int CreateNewID()
+	{
+		int num = (int)((DateTime.Now - XSceneRefTarget.epoch).TotalSeconds * 8.0 % 2147483646.0) + 1;
+		if (num <= XSceneRefTarget.lastAssignedID)
+		{
+			XSceneRefTarget.lastAssignedID++;
+			return XSceneRefTarget.lastAssignedID;
+		}
+		XSceneRefTarget.lastAssignedID = num;
+		return num;
+	}
+
+	public XSceneRefTarget()
+	{
+	}
+
+	// Note: this type is marked as 'beforefieldinit'.
+	static XSceneRefTarget()
+	{
+	}
+
 	public int UniqueID;
 
+	[NonSerialized]
 	private int lastRegisteredID = -1;
+
+	private static DateTime epoch = new DateTime(2024, 1, 1);
+
+	private static int lastAssignedID;
 }

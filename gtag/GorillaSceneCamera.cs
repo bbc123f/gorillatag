@@ -9,5 +9,9 @@ public class GorillaSceneCamera : MonoBehaviour
 		base.transform.eulerAngles = this.sceneTransforms[sceneIndex].sceneRotation;
 	}
 
+	public GorillaSceneCamera()
+	{
+	}
+
 	public GorillaSceneTransform[] sceneTransforms;
 }

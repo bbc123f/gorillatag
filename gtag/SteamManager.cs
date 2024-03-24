@@ -117,6 +117,10 @@ public class SteamManager : MonoBehaviour
 		SteamAPI.RunCallbacks();
 	}
 
+	public SteamManager()
+	{
+	}
+
 	protected static bool s_EverInitialized;
 
 	protected static SteamManager s_instance;

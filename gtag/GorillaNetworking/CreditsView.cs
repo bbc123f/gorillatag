@@ -116,6 +116,22 @@ namespace GorillaNetworking
 			return stringBuilder.ToString();
 		}
 
+		public CreditsView()
+		{
+		}
+
+		[CompilerGenerated]
+		private int <get_TotalPages>b__4_0(CreditsSection section)
+		{
+			return this.PagesPerSection(section);
+		}
+
+		[CompilerGenerated]
+		private void <Start>b__6_0(string result)
+		{
+			this.creditsSections = JsonMapper.ToObject<CreditsSection[]>(result);
+		}
+
 		private CreditsSection[] creditsSections;
 
 		public int pageSize = 7;
@@ -123,5 +139,28 @@ namespace GorillaNetworking
 		private int currentPage;
 
 		private const string PlayFabKey = "CreditsData";
+
+		[CompilerGenerated]
+		[Serializable]
+		private sealed class <>c
+		{
+			// Note: this type is marked as 'beforefieldinit'.
+			static <>c()
+			{
+			}
+
+			public <>c()
+			{
+			}
+
+			internal void <Start>b__6_1(PlayFabError error)
+			{
+				Debug.Log("Error fetching credits data: " + error.ErrorMessage);
+			}
+
+			public static readonly CreditsView.<>c <>9 = new CreditsView.<>c();
+
+			public static Action<PlayFabError> <>9__6_1;
+		}
 	}
 }

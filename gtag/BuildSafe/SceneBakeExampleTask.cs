@@ -27,5 +27,9 @@ namespace BuildSafe
 				color = Random.ColorHSV(0f, 1f, 1f, 1f, 1f, 1f, 1f, 1f)
 			};
 		}
+
+		public SceneBakeExampleTask()
+		{
+		}
 	}
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace OculusSampleFramework
@@ -47,7 +48,19 @@ namespace OculusSampleFramework
 			});
 		}
 
-		public InteractableTool InteractableTool { get; set; }
+		public InteractableTool InteractableTool
+		{
+			[CompilerGenerated]
+			get
+			{
+				return this.<InteractableTool>k__BackingField;
+			}
+			[CompilerGenerated]
+			set
+			{
+				this.<InteractableTool>k__BackingField = value;
+			}
+		}
 
 		public void SetFocusedInteractable(Interactable interactable)
 		{
@@ -86,6 +99,10 @@ namespace OculusSampleFramework
 			return num * num2 * p0 + 3f * num2 * t * p1 + 3f * num * num3 * p2 + t * num3 * p3;
 		}
 
+		public RayToolView()
+		{
+		}
+
 		private const int NUM_RAY_LINE_POSITIONS = 25;
 
 		private const float DEFAULT_RAY_CAST_DISTANCE = 3f;
@@ -105,5 +122,8 @@ namespace OculusSampleFramework
 		private Gradient _oldColorGradient;
 
 		private Gradient _highLightColorGradient;
+
+		[CompilerGenerated]
+		private InteractableTool <InteractableTool>k__BackingField;
 	}
 }

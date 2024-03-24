@@ -221,6 +221,10 @@ namespace OculusSampleFramework
 			this._focusedInteractable = null;
 		}
 
+		public RayTool()
+		{
+		}
+
 		private const float MINIMUM_RAY_CAST_DISTANCE = 0.8f;
 
 		private const float COLLIDER_RADIUS = 0.01f;

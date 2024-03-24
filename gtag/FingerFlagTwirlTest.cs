@@ -12,6 +12,10 @@ public class FingerFlagTwirlTest : MonoBehaviour
 		base.transform.localRotation = Quaternion.Euler(this.rotXAnimCurve.Evaluate(this.animTimes.x) * this.rotAnimAmplitudes.x, this.rotYAnimCurve.Evaluate(this.animTimes.y) * this.rotAnimAmplitudes.y, this.rotZAnimCurve.Evaluate(this.animTimes.z) * this.rotAnimAmplitudes.z);
 	}
 
+	public FingerFlagTwirlTest()
+	{
+	}
+
 	public Vector3 rotAnimDurations = new Vector3(0.2f, 0.1f, 0.5f);
 
 	public Vector3 rotAnimAmplitudes = Vector3.one * 360f;

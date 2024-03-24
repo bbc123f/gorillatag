@@ -405,6 +405,10 @@ public class LegacyBalloonHoldable : LegacyTransferrableObject
 		}
 	}
 
+	public LegacyBalloonHoldable()
+	{
+	}
+
 	private BalloonDynamics balloonDynamics;
 
 	private MeshRenderer mesh;

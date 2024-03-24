@@ -142,6 +142,10 @@ namespace GorillaLocomotion.Swimming
 			}
 		}
 
+		public WaterCurrent()
+		{
+		}
+
 		[SerializeField]
 		private List<CatmullRomSpline> splines = new List<CatmullRomSpline>();
 

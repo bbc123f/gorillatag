@@ -22,6 +22,10 @@ internal class BattleRPCs : RPCNetworkBase
 		this.battleTarget.ReportSlingshotHit(taggedPlayer, hitLocation, projectileCount, info);
 	}
 
+	public BattleRPCs()
+	{
+	}
+
 	private GameModeSerializer serializer;
 
 	private GorillaBattleManager battleTarget;

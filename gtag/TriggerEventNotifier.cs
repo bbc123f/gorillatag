@@ -1,11 +1,69 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using UnityEngine;
 
 public class TriggerEventNotifier : MonoBehaviour
 {
-	public event TriggerEventNotifier.TriggerEvent TriggerEnterEvent;
+	public event TriggerEventNotifier.TriggerEvent TriggerEnterEvent
+	{
+		[CompilerGenerated]
+		add
+		{
+			TriggerEventNotifier.TriggerEvent triggerEvent = this.TriggerEnterEvent;
+			TriggerEventNotifier.TriggerEvent triggerEvent2;
+			do
+			{
+				triggerEvent2 = triggerEvent;
+				TriggerEventNotifier.TriggerEvent triggerEvent3 = (TriggerEventNotifier.TriggerEvent)Delegate.Combine(triggerEvent2, value);
+				triggerEvent = Interlocked.CompareExchange<TriggerEventNotifier.TriggerEvent>(ref this.TriggerEnterEvent, triggerEvent3, triggerEvent2);
+			}
+			while (triggerEvent != triggerEvent2);
+		}
+		[CompilerGenerated]
+		remove
+		{
+			TriggerEventNotifier.TriggerEvent triggerEvent = this.TriggerEnterEvent;
+			TriggerEventNotifier.TriggerEvent triggerEvent2;
+			do
+			{
+				triggerEvent2 = triggerEvent;
+				TriggerEventNotifier.TriggerEvent triggerEvent3 = (TriggerEventNotifier.TriggerEvent)Delegate.Remove(triggerEvent2, value);
+				triggerEvent = Interlocked.CompareExchange<TriggerEventNotifier.TriggerEvent>(ref this.TriggerEnterEvent, triggerEvent3, triggerEvent2);
+			}
+			while (triggerEvent != triggerEvent2);
+		}
+	}
 
-	public event TriggerEventNotifier.TriggerEvent TriggerExitEvent;
+	public event TriggerEventNotifier.TriggerEvent TriggerExitEvent
+	{
+		[CompilerGenerated]
+		add
+		{
+			TriggerEventNotifier.TriggerEvent triggerEvent = this.TriggerExitEvent;
+			TriggerEventNotifier.TriggerEvent triggerEvent2;
+			do
+			{
+				triggerEvent2 = triggerEvent;
+				TriggerEventNotifier.TriggerEvent triggerEvent3 = (TriggerEventNotifier.TriggerEvent)Delegate.Combine(triggerEvent2, value);
+				triggerEvent = Interlocked.CompareExchange<TriggerEventNotifier.TriggerEvent>(ref this.TriggerExitEvent, triggerEvent3, triggerEvent2);
+			}
+			while (triggerEvent != triggerEvent2);
+		}
+		[CompilerGenerated]
+		remove
+		{
+			TriggerEventNotifier.TriggerEvent triggerEvent = this.TriggerExitEvent;
+			TriggerEventNotifier.TriggerEvent triggerEvent2;
+			do
+			{
+				triggerEvent2 = triggerEvent;
+				TriggerEventNotifier.TriggerEvent triggerEvent3 = (TriggerEventNotifier.TriggerEvent)Delegate.Remove(triggerEvent2, value);
+				triggerEvent = Interlocked.CompareExchange<TriggerEventNotifier.TriggerEvent>(ref this.TriggerExitEvent, triggerEvent3, triggerEvent2);
+			}
+			while (triggerEvent != triggerEvent2);
+		}
+	}
 
 	private void OnTriggerEnter(Collider other)
 	{
@@ -26,6 +84,16 @@ public class TriggerEventNotifier : MonoBehaviour
 		}
 		triggerExitEvent(this, other);
 	}
+
+	public TriggerEventNotifier()
+	{
+	}
+
+	[CompilerGenerated]
+	private TriggerEventNotifier.TriggerEvent TriggerEnterEvent;
+
+	[CompilerGenerated]
+	private TriggerEventNotifier.TriggerEvent TriggerExitEvent;
 
 	public int maskIndex;
 

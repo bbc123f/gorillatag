@@ -49,6 +49,10 @@ public class NetworkWrapper : MonoBehaviour
 		this.playerCountTextRef.text = string.Format("{0}/{1}", this.activeNetworkSystem.AllPlayerIDs.Length, this.netSysConfig.MaxPlayerCount);
 	}
 
+	public NetworkWrapper()
+	{
+	}
+
 	[HideInInspector]
 	public NetworkSystem activeNetworkSystem;
 
@@ -58,6 +62,8 @@ public class NetworkWrapper : MonoBehaviour
 	public NetworkSystemConfig netSysConfig;
 
 	public string[] networkRegionNames;
+
+	public string[] devNetworkRegionNames;
 
 	[Header("Debug output refs")]
 	public Text stateTextRef;

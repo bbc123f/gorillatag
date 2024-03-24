@@ -29,6 +29,10 @@ public class HeightVolume : MonoBehaviour
 		}
 	}
 
+	public HeightVolume()
+	{
+	}
+
 	public Transform heightTop;
 
 	public Transform heightBottom;

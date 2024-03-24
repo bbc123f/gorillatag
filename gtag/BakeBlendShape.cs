@@ -11,4 +11,8 @@ public class BakeBlendShape : MonoBehaviour
 		component.sharedMesh = null;
 		component.sharedMesh = mesh;
 	}
+
+	public BakeBlendShape()
+	{
+	}
 }

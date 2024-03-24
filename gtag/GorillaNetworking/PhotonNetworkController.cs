@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using ExitGames.Client.Photon;
 using Fusion;
 using GorillaGameModes;
@@ -96,6 +98,24 @@ namespace GorillaNetworking
 			this.lastHeadRightHandDistance = this.headRightHandDistance;
 			this.lastHeadLeftHandDistance = this.headLeftHandDistance;
 			this.lastHeadQuat = this.headQuat;
+			if (this.deferredJoin)
+			{
+				if (NetworkSystem.Instance.netState == NetSystemState.Idle && this.currentJoinTrigger != null)
+				{
+					this.deferredJoin = false;
+					if (this.currentJoinTrigger == this.privateTrigger)
+					{
+						this.AttemptToJoinSpecificRoom(this.customRoomID);
+						return;
+					}
+					this.AttemptToJoinPublicRoom(this.currentJoinTrigger, this.joiningWithFriend);
+					return;
+				}
+				else if (NetworkSystem.Instance.netState != NetSystemState.PingRecon && NetworkSystem.Instance.netState != NetSystemState.Initialization)
+				{
+					this.deferredJoin = false;
+				}
+			}
 		}
 
 		public void AttemptToJoinPublicRoom(GorillaNetworkJoinTrigger triggeredTrigger, bool joinWithFriends = false)
@@ -105,6 +125,15 @@ namespace GorillaNetworking
 				Debug.Log("Cant join Public room, Still connecting or disconnecting");
 				return;
 			}
+			if (NetworkSystem.Instance.netState == NetSystemState.Initialization || NetworkSystem.Instance.netState == NetSystemState.PingRecon)
+			{
+				Debug.Log("Can't join public room, still connecting, but will try later");
+				this.currentJoinTrigger = triggeredTrigger;
+				this.joiningWithFriend = joinWithFriends;
+				this.deferredJoin = true;
+				return;
+			}
+			this.deferredJoin = false;
 			Debug.Log("Attempting To Join public room.");
 			Debug.Log("Joining with friends: " + joinWithFriends.ToString());
 			if (this.joiningWithFriend)
@@ -157,6 +186,15 @@ namespace GorillaNetworking
 
 		public void AttemptToJoinSpecificRoom(string roomID)
 		{
+			if (NetworkSystem.Instance.netState == NetSystemState.Initialization || NetworkSystem.Instance.netState == NetSystemState.PingRecon)
+			{
+				Debug.Log("Can't join private room, still connecting, but will try later");
+				this.deferredJoin = true;
+				this.customRoomID = roomID;
+				this.joiningWithFriend = false;
+				this.currentJoinTrigger = this.privateTrigger;
+				return;
+			}
 			if (NetworkSystem.Instance.netState != NetSystemState.Idle && NetworkSystem.Instance.netState != NetSystemState.InGame)
 			{
 				return;
@@ -164,6 +202,7 @@ namespace GorillaNetworking
 			this.customRoomID = roomID;
 			this.joiningWithFriend = false;
 			this.currentJoinTrigger = this.privateTrigger;
+			this.deferredJoin = false;
 			string gameModeName = this.currentJoinTrigger.gameModeName;
 			string currentQueue = GorillaComputer.instance.currentQueue;
 			string text = ((this.currentJoinTrigger.gameModeName == "city" || this.currentJoinTrigger.gameModeName == "basement") ? "CASUAL" : GorillaComputer.instance.currentGameMode);
@@ -472,6 +511,10 @@ namespace GorillaNetworking
 			}
 		}
 
+		public PhotonNetworkController()
+		{
+		}
+
 		public static volatile PhotonNetworkController Instance;
 
 		public int incrementCounter;
@@ -556,10 +599,72 @@ namespace GorillaNetworking
 
 		public bool allowedInPubRoom;
 
+		public string autoJoinRoom;
+
+		private bool deferredJoin;
+
 		private DateTime? timeWhenApplicationPaused;
 
 		[NetworkPrefab]
 		[SerializeField]
 		private NetworkObject testPlayerPrefab;
+
+		[CompilerGenerated]
+		private sealed class <DisableOnStart>d__57 : IEnumerator<object>, IEnumerator, IDisposable
+		{
+			[DebuggerHidden]
+			public <DisableOnStart>d__57(int <>1__state)
+			{
+				this.<>1__state = <>1__state;
+			}
+
+			[DebuggerHidden]
+			void IDisposable.Dispose()
+			{
+			}
+
+			bool IEnumerator.MoveNext()
+			{
+				int num = this.<>1__state;
+				PhotonNetworkController photonNetworkController = this;
+				if (num != 0)
+				{
+					return false;
+				}
+				this.<>1__state = -1;
+				ZoneManagement.SetActiveZone(photonNetworkController.StartZone);
+				return false;
+			}
+
+			object IEnumerator<object>.Current
+			{
+				[DebuggerHidden]
+				get
+				{
+					return this.<>2__current;
+				}
+			}
+
+			[DebuggerHidden]
+			void IEnumerator.Reset()
+			{
+				throw new NotSupportedException();
+			}
+
+			object IEnumerator.Current
+			{
+				[DebuggerHidden]
+				get
+				{
+					return this.<>2__current;
+				}
+			}
+
+			private int <>1__state;
+
+			private object <>2__current;
+
+			public PhotonNetworkController <>4__this;
+		}
 	}
 }

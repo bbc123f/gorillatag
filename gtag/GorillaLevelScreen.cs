@@ -23,6 +23,10 @@ public class GorillaLevelScreen : MonoBehaviour
 		base.GetComponent<MeshRenderer>().materials = materials;
 	}
 
+	public GorillaLevelScreen()
+	{
+	}
+
 	public string startingText;
 
 	public Material goodMaterial;

@@ -60,6 +60,10 @@ public class SlingshotProjectileTrail : MonoBehaviour
 		trailRenderer.startColor = color;
 	}
 
+	public SlingshotProjectileTrail()
+	{
+	}
+
 	public TrailRenderer trailRenderer;
 
 	public Color defaultColor = Color.white;

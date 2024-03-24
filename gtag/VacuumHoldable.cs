@@ -102,6 +102,10 @@ public class VacuumHoldable : TransferrableObject
 		this.itemState = TransferrableObject.ItemStates.State0;
 	}
 
+	public VacuumHoldable()
+	{
+	}
+
 	[Tooltip("Emission rate will be increase when the trigger button is pressed.")]
 	public ParticleSystem particleFX;
 

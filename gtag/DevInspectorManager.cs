@@ -15,5 +15,9 @@ public class DevInspectorManager : MonoBehaviour
 		}
 	}
 
+	public DevInspectorManager()
+	{
+	}
+
 	private static DevInspectorManager _instance;
 }

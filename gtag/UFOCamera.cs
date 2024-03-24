@@ -24,6 +24,10 @@ public class UFOCamera : MonoBehaviour
 		base.transform.position = this.m_spring.TrackExponential(vector, 0.02f, Time.fixedDeltaTime);
 	}
 
+	public UFOCamera()
+	{
+	}
+
 	public Transform Target;
 
 	private Vector3 m_targetOffset;

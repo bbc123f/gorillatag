@@ -40,6 +40,10 @@ namespace OculusSampleFramework
 			}
 		}
 
+		public GrabbableCrosshair()
+		{
+		}
+
 		private GrabbableCrosshair.CrosshairState m_state;
 
 		private Transform m_centerEyeAnchor;

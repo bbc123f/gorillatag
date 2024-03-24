@@ -89,6 +89,10 @@ public class SoundEffects : MonoBehaviour
 		}
 	}
 
+	public SoundEffects()
+	{
+	}
+
 	public AudioSource source;
 
 	[Space]

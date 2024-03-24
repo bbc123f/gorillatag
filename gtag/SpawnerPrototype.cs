@@ -153,6 +153,10 @@ public class SpawnerPrototype<T> : SimulationBehaviour, IPlayerJoined, IPlayerLe
 		}
 	}
 
+	public SpawnerPrototype()
+	{
+	}
+
 	protected Dictionary<PlayerRef, List<NetworkObject>> _spawnedLookup = new Dictionary<PlayerRef, List<NetworkObject>>();
 
 	[InlineHelp]

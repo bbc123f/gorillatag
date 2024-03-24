@@ -29,6 +29,10 @@ namespace OVRTouchSample
 			}
 		}
 
+		public HandPose()
+		{
+		}
+
 		[SerializeField]
 		private bool m_allowPointing;
 

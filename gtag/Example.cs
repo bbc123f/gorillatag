@@ -52,6 +52,10 @@ public class Example : MonoBehaviour
 		DebugExtension.DebugCapsule(new Vector3(70f, 0f, 0f), this.debugCapsule_End, this.debugCapsule_Color, this.debugCapsule_Radius, 0f, true);
 	}
 
+	public Example()
+	{
+	}
+
 	public bool debugPoint;
 
 	public Vector3 debugPoint_Position;

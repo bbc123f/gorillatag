@@ -28,11 +28,13 @@ public class AnchorUIManager : MonoBehaviour
 	private void Start()
 	{
 		this._raycastOrigin = this._trackedDevice;
+		this._mode = AnchorUIManager.AnchorMode.Select;
+		this.StartSelectMode();
+		this._menuIndex = 0;
 		this._selectedButton = this._buttonList[0];
-		this._buttonList[0].OnSelect(null);
+		this._selectedButton.OnSelect(null);
 		this._lineRenderer.startWidth = 0.005f;
 		this._lineRenderer.endWidth = 0.005f;
-		this.ToggleCreateMode();
 	}
 
 	private void Update()
@@ -237,6 +239,10 @@ public class AnchorUIManager : MonoBehaviour
 		}
 	}
 
+	public AnchorUIManager()
+	{
+	}
+
 	public static AnchorUIManager Instance;
 
 	[SerializeField]
@@ -263,7 +269,7 @@ public class AnchorUIManager : MonoBehaviour
 
 	private Anchor _selectedAnchor;
 
-	private AnchorUIManager.AnchorMode _mode;
+	private AnchorUIManager.AnchorMode _mode = AnchorUIManager.AnchorMode.Select;
 
 	[SerializeField]
 	[FormerlySerializedAs("buttonList_")]

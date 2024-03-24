@@ -45,6 +45,10 @@ public class AngryBeeAnimator : MonoBehaviour
 		}
 	}
 
+	public AngryBeeAnimator()
+	{
+	}
+
 	[SerializeField]
 	private GameObject beePrefab;
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using AOT;
 using LitJson;
@@ -230,6 +231,10 @@ namespace Viveport
 				return;
 			}
 			IAPurchase.CancelSubscription(new IAPurchaseCallback(IAPurchase.CancelSubscriptionIl2cppCallback), pchSubscriptionId);
+		}
+
+		public IAPurchase()
+		{
 		}
 
 		private static IAPurchaseCallback isReadyIl2cppCallback;
@@ -1071,6 +1076,10 @@ namespace Viveport
 			protected abstract void QuerySubscriptionListHandler(int code, [MarshalAs(UnmanagedType.LPStr)] string message);
 
 			protected abstract void CancelSubscriptionHandler(int code, [MarshalAs(UnmanagedType.LPStr)] string message);
+
+			protected BaseHandler()
+			{
+			}
 		}
 
 		public class IAPurchaseListener
@@ -1126,112 +1135,748 @@ namespace Viveport
 			public virtual void OnCancelSubscriptionSuccess(bool bCanceled)
 			{
 			}
+
+			public IAPurchaseListener()
+			{
+			}
 		}
 
 		public class QueryResponse
 		{
-			public string order_id { get; set; }
+			public string order_id
+			{
+				[CompilerGenerated]
+				get
+				{
+					return this.<order_id>k__BackingField;
+				}
+				[CompilerGenerated]
+				set
+				{
+					this.<order_id>k__BackingField = value;
+				}
+			}
 
-			public string purchase_id { get; set; }
+			public string purchase_id
+			{
+				[CompilerGenerated]
+				get
+				{
+					return this.<purchase_id>k__BackingField;
+				}
+				[CompilerGenerated]
+				set
+				{
+					this.<purchase_id>k__BackingField = value;
+				}
+			}
 
-			public string status { get; set; }
+			public string status
+			{
+				[CompilerGenerated]
+				get
+				{
+					return this.<status>k__BackingField;
+				}
+				[CompilerGenerated]
+				set
+				{
+					this.<status>k__BackingField = value;
+				}
+			}
 
-			public string price { get; set; }
+			public string price
+			{
+				[CompilerGenerated]
+				get
+				{
+					return this.<price>k__BackingField;
+				}
+				[CompilerGenerated]
+				set
+				{
+					this.<price>k__BackingField = value;
+				}
+			}
 
-			public string currency { get; set; }
+			public string currency
+			{
+				[CompilerGenerated]
+				get
+				{
+					return this.<currency>k__BackingField;
+				}
+				[CompilerGenerated]
+				set
+				{
+					this.<currency>k__BackingField = value;
+				}
+			}
 
-			public long paid_timestamp { get; set; }
+			public long paid_timestamp
+			{
+				[CompilerGenerated]
+				get
+				{
+					return this.<paid_timestamp>k__BackingField;
+				}
+				[CompilerGenerated]
+				set
+				{
+					this.<paid_timestamp>k__BackingField = value;
+				}
+			}
+
+			public QueryResponse()
+			{
+			}
+
+			[CompilerGenerated]
+			private string <order_id>k__BackingField;
+
+			[CompilerGenerated]
+			private string <purchase_id>k__BackingField;
+
+			[CompilerGenerated]
+			private string <status>k__BackingField;
+
+			[CompilerGenerated]
+			private string <price>k__BackingField;
+
+			[CompilerGenerated]
+			private string <currency>k__BackingField;
+
+			[CompilerGenerated]
+			private long <paid_timestamp>k__BackingField;
 		}
 
 		public class QueryResponse2
 		{
-			public string order_id { get; set; }
+			public string order_id
+			{
+				[CompilerGenerated]
+				get
+				{
+					return this.<order_id>k__BackingField;
+				}
+				[CompilerGenerated]
+				set
+				{
+					this.<order_id>k__BackingField = value;
+				}
+			}
 
-			public string app_id { get; set; }
+			public string app_id
+			{
+				[CompilerGenerated]
+				get
+				{
+					return this.<app_id>k__BackingField;
+				}
+				[CompilerGenerated]
+				set
+				{
+					this.<app_id>k__BackingField = value;
+				}
+			}
 
-			public string purchase_id { get; set; }
+			public string purchase_id
+			{
+				[CompilerGenerated]
+				get
+				{
+					return this.<purchase_id>k__BackingField;
+				}
+				[CompilerGenerated]
+				set
+				{
+					this.<purchase_id>k__BackingField = value;
+				}
+			}
 
-			public string user_data { get; set; }
+			public string user_data
+			{
+				[CompilerGenerated]
+				get
+				{
+					return this.<user_data>k__BackingField;
+				}
+				[CompilerGenerated]
+				set
+				{
+					this.<user_data>k__BackingField = value;
+				}
+			}
 
-			public string price { get; set; }
+			public string price
+			{
+				[CompilerGenerated]
+				get
+				{
+					return this.<price>k__BackingField;
+				}
+				[CompilerGenerated]
+				set
+				{
+					this.<price>k__BackingField = value;
+				}
+			}
 
-			public string currency { get; set; }
+			public string currency
+			{
+				[CompilerGenerated]
+				get
+				{
+					return this.<currency>k__BackingField;
+				}
+				[CompilerGenerated]
+				set
+				{
+					this.<currency>k__BackingField = value;
+				}
+			}
 
-			public long paid_timestamp { get; set; }
+			public long paid_timestamp
+			{
+				[CompilerGenerated]
+				get
+				{
+					return this.<paid_timestamp>k__BackingField;
+				}
+				[CompilerGenerated]
+				set
+				{
+					this.<paid_timestamp>k__BackingField = value;
+				}
+			}
+
+			public QueryResponse2()
+			{
+			}
+
+			[CompilerGenerated]
+			private string <order_id>k__BackingField;
+
+			[CompilerGenerated]
+			private string <app_id>k__BackingField;
+
+			[CompilerGenerated]
+			private string <purchase_id>k__BackingField;
+
+			[CompilerGenerated]
+			private string <user_data>k__BackingField;
+
+			[CompilerGenerated]
+			private string <price>k__BackingField;
+
+			[CompilerGenerated]
+			private string <currency>k__BackingField;
+
+			[CompilerGenerated]
+			private long <paid_timestamp>k__BackingField;
 		}
 
 		public class QueryListResponse
 		{
-			public int total { get; set; }
+			public int total
+			{
+				[CompilerGenerated]
+				get
+				{
+					return this.<total>k__BackingField;
+				}
+				[CompilerGenerated]
+				set
+				{
+					this.<total>k__BackingField = value;
+				}
+			}
 
-			public int from { get; set; }
+			public int from
+			{
+				[CompilerGenerated]
+				get
+				{
+					return this.<from>k__BackingField;
+				}
+				[CompilerGenerated]
+				set
+				{
+					this.<from>k__BackingField = value;
+				}
+			}
 
-			public int to { get; set; }
+			public int to
+			{
+				[CompilerGenerated]
+				get
+				{
+					return this.<to>k__BackingField;
+				}
+				[CompilerGenerated]
+				set
+				{
+					this.<to>k__BackingField = value;
+				}
+			}
+
+			public QueryListResponse()
+			{
+			}
+
+			[CompilerGenerated]
+			private int <total>k__BackingField;
+
+			[CompilerGenerated]
+			private int <from>k__BackingField;
+
+			[CompilerGenerated]
+			private int <to>k__BackingField;
 
 			public List<IAPurchase.QueryResponse2> purchaseList;
 		}
 
 		public class StatusDetailTransaction
 		{
-			public long create_time { get; set; }
+			public long create_time
+			{
+				[CompilerGenerated]
+				get
+				{
+					return this.<create_time>k__BackingField;
+				}
+				[CompilerGenerated]
+				set
+				{
+					this.<create_time>k__BackingField = value;
+				}
+			}
 
-			public string payment_method { get; set; }
+			public string payment_method
+			{
+				[CompilerGenerated]
+				get
+				{
+					return this.<payment_method>k__BackingField;
+				}
+				[CompilerGenerated]
+				set
+				{
+					this.<payment_method>k__BackingField = value;
+				}
+			}
 
-			public string status { get; set; }
+			public string status
+			{
+				[CompilerGenerated]
+				get
+				{
+					return this.<status>k__BackingField;
+				}
+				[CompilerGenerated]
+				set
+				{
+					this.<status>k__BackingField = value;
+				}
+			}
+
+			public StatusDetailTransaction()
+			{
+			}
+
+			[CompilerGenerated]
+			private long <create_time>k__BackingField;
+
+			[CompilerGenerated]
+			private string <payment_method>k__BackingField;
+
+			[CompilerGenerated]
+			private string <status>k__BackingField;
 		}
 
 		public class StatusDetail
 		{
-			public long date_next_charge { get; set; }
+			public long date_next_charge
+			{
+				[CompilerGenerated]
+				get
+				{
+					return this.<date_next_charge>k__BackingField;
+				}
+				[CompilerGenerated]
+				set
+				{
+					this.<date_next_charge>k__BackingField = value;
+				}
+			}
 
-			public IAPurchase.StatusDetailTransaction[] transactions { get; set; }
+			public IAPurchase.StatusDetailTransaction[] transactions
+			{
+				[CompilerGenerated]
+				get
+				{
+					return this.<transactions>k__BackingField;
+				}
+				[CompilerGenerated]
+				set
+				{
+					this.<transactions>k__BackingField = value;
+				}
+			}
 
-			public string cancel_reason { get; set; }
+			public string cancel_reason
+			{
+				[CompilerGenerated]
+				get
+				{
+					return this.<cancel_reason>k__BackingField;
+				}
+				[CompilerGenerated]
+				set
+				{
+					this.<cancel_reason>k__BackingField = value;
+				}
+			}
+
+			public StatusDetail()
+			{
+			}
+
+			[CompilerGenerated]
+			private long <date_next_charge>k__BackingField;
+
+			[CompilerGenerated]
+			private IAPurchase.StatusDetailTransaction[] <transactions>k__BackingField;
+
+			[CompilerGenerated]
+			private string <cancel_reason>k__BackingField;
 		}
 
 		public class TimePeriod
 		{
-			public string time_type { get; set; }
+			public string time_type
+			{
+				[CompilerGenerated]
+				get
+				{
+					return this.<time_type>k__BackingField;
+				}
+				[CompilerGenerated]
+				set
+				{
+					this.<time_type>k__BackingField = value;
+				}
+			}
 
-			public int value { get; set; }
+			public int value
+			{
+				[CompilerGenerated]
+				get
+				{
+					return this.<value>k__BackingField;
+				}
+				[CompilerGenerated]
+				set
+				{
+					this.<value>k__BackingField = value;
+				}
+			}
+
+			public TimePeriod()
+			{
+			}
+
+			[CompilerGenerated]
+			private string <time_type>k__BackingField;
+
+			[CompilerGenerated]
+			private int <value>k__BackingField;
 		}
 
 		public class Subscription
 		{
-			public string app_id { get; set; }
+			public string app_id
+			{
+				[CompilerGenerated]
+				get
+				{
+					return this.<app_id>k__BackingField;
+				}
+				[CompilerGenerated]
+				set
+				{
+					this.<app_id>k__BackingField = value;
+				}
+			}
 
-			public string order_id { get; set; }
+			public string order_id
+			{
+				[CompilerGenerated]
+				get
+				{
+					return this.<order_id>k__BackingField;
+				}
+				[CompilerGenerated]
+				set
+				{
+					this.<order_id>k__BackingField = value;
+				}
+			}
 
-			public string subscription_id { get; set; }
+			public string subscription_id
+			{
+				[CompilerGenerated]
+				get
+				{
+					return this.<subscription_id>k__BackingField;
+				}
+				[CompilerGenerated]
+				set
+				{
+					this.<subscription_id>k__BackingField = value;
+				}
+			}
 
-			public string price { get; set; }
+			public string price
+			{
+				[CompilerGenerated]
+				get
+				{
+					return this.<price>k__BackingField;
+				}
+				[CompilerGenerated]
+				set
+				{
+					this.<price>k__BackingField = value;
+				}
+			}
 
-			public string currency { get; set; }
+			public string currency
+			{
+				[CompilerGenerated]
+				get
+				{
+					return this.<currency>k__BackingField;
+				}
+				[CompilerGenerated]
+				set
+				{
+					this.<currency>k__BackingField = value;
+				}
+			}
 
-			public long subscribed_timestamp { get; set; }
+			public long subscribed_timestamp
+			{
+				[CompilerGenerated]
+				get
+				{
+					return this.<subscribed_timestamp>k__BackingField;
+				}
+				[CompilerGenerated]
+				set
+				{
+					this.<subscribed_timestamp>k__BackingField = value;
+				}
+			}
 
-			public IAPurchase.TimePeriod free_trial_period { get; set; }
+			public IAPurchase.TimePeriod free_trial_period
+			{
+				[CompilerGenerated]
+				get
+				{
+					return this.<free_trial_period>k__BackingField;
+				}
+				[CompilerGenerated]
+				set
+				{
+					this.<free_trial_period>k__BackingField = value;
+				}
+			}
 
-			public IAPurchase.TimePeriod charge_period { get; set; }
+			public IAPurchase.TimePeriod charge_period
+			{
+				[CompilerGenerated]
+				get
+				{
+					return this.<charge_period>k__BackingField;
+				}
+				[CompilerGenerated]
+				set
+				{
+					this.<charge_period>k__BackingField = value;
+				}
+			}
 
-			public int number_of_charge_period { get; set; }
+			public int number_of_charge_period
+			{
+				[CompilerGenerated]
+				get
+				{
+					return this.<number_of_charge_period>k__BackingField;
+				}
+				[CompilerGenerated]
+				set
+				{
+					this.<number_of_charge_period>k__BackingField = value;
+				}
+			}
 
-			public string plan_id { get; set; }
+			public string plan_id
+			{
+				[CompilerGenerated]
+				get
+				{
+					return this.<plan_id>k__BackingField;
+				}
+				[CompilerGenerated]
+				set
+				{
+					this.<plan_id>k__BackingField = value;
+				}
+			}
 
-			public string plan_name { get; set; }
+			public string plan_name
+			{
+				[CompilerGenerated]
+				get
+				{
+					return this.<plan_name>k__BackingField;
+				}
+				[CompilerGenerated]
+				set
+				{
+					this.<plan_name>k__BackingField = value;
+				}
+			}
 
-			public string status { get; set; }
+			public string status
+			{
+				[CompilerGenerated]
+				get
+				{
+					return this.<status>k__BackingField;
+				}
+				[CompilerGenerated]
+				set
+				{
+					this.<status>k__BackingField = value;
+				}
+			}
 
-			public IAPurchase.StatusDetail status_detail { get; set; }
+			public IAPurchase.StatusDetail status_detail
+			{
+				[CompilerGenerated]
+				get
+				{
+					return this.<status_detail>k__BackingField;
+				}
+				[CompilerGenerated]
+				set
+				{
+					this.<status_detail>k__BackingField = value;
+				}
+			}
+
+			public Subscription()
+			{
+			}
+
+			[CompilerGenerated]
+			private string <app_id>k__BackingField;
+
+			[CompilerGenerated]
+			private string <order_id>k__BackingField;
+
+			[CompilerGenerated]
+			private string <subscription_id>k__BackingField;
+
+			[CompilerGenerated]
+			private string <price>k__BackingField;
+
+			[CompilerGenerated]
+			private string <currency>k__BackingField;
+
+			[CompilerGenerated]
+			private long <subscribed_timestamp>k__BackingField;
+
+			[CompilerGenerated]
+			private IAPurchase.TimePeriod <free_trial_period>k__BackingField;
+
+			[CompilerGenerated]
+			private IAPurchase.TimePeriod <charge_period>k__BackingField;
+
+			[CompilerGenerated]
+			private int <number_of_charge_period>k__BackingField;
+
+			[CompilerGenerated]
+			private string <plan_id>k__BackingField;
+
+			[CompilerGenerated]
+			private string <plan_name>k__BackingField;
+
+			[CompilerGenerated]
+			private string <status>k__BackingField;
+
+			[CompilerGenerated]
+			private IAPurchase.StatusDetail <status_detail>k__BackingField;
 		}
 
 		public class QuerySubscritionResponse
 		{
-			public int statusCode { get; set; }
+			public int statusCode
+			{
+				[CompilerGenerated]
+				get
+				{
+					return this.<statusCode>k__BackingField;
+				}
+				[CompilerGenerated]
+				set
+				{
+					this.<statusCode>k__BackingField = value;
+				}
+			}
 
-			public string message { get; set; }
+			public string message
+			{
+				[CompilerGenerated]
+				get
+				{
+					return this.<message>k__BackingField;
+				}
+				[CompilerGenerated]
+				set
+				{
+					this.<message>k__BackingField = value;
+				}
+			}
 
-			public List<IAPurchase.Subscription> subscriptions { get; set; }
+			public List<IAPurchase.Subscription> subscriptions
+			{
+				[CompilerGenerated]
+				get
+				{
+					return this.<subscriptions>k__BackingField;
+				}
+				[CompilerGenerated]
+				set
+				{
+					this.<subscriptions>k__BackingField = value;
+				}
+			}
+
+			public QuerySubscritionResponse()
+			{
+			}
+
+			[CompilerGenerated]
+			private int <statusCode>k__BackingField;
+
+			[CompilerGenerated]
+			private string <message>k__BackingField;
+
+			[CompilerGenerated]
+			private List<IAPurchase.Subscription> <subscriptions>k__BackingField;
 		}
 	}
 }

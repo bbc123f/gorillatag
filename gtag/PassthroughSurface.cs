@@ -9,6 +9,10 @@ public class PassthroughSurface : MonoBehaviour
 		this.passthroughLayer.AddSurfaceGeometry(this.projectionObject.gameObject, true);
 	}
 
+	public PassthroughSurface()
+	{
+	}
+
 	public OVRPassthroughLayer passthroughLayer;
 
 	public MeshFilter projectionObject;

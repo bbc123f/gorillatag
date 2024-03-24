@@ -8,6 +8,10 @@ public class BeePerchPoint : MonoBehaviour
 		return base.transform.TransformPoint(this.localPosition);
 	}
 
+	public BeePerchPoint()
+	{
+	}
+
 	[SerializeField]
 	private Vector3 localPosition;
 }

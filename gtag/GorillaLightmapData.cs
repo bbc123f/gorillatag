@@ -17,6 +17,10 @@ public class GorillaLightmapData : MonoBehaviour
 		}
 	}
 
+	public GorillaLightmapData()
+	{
+	}
+
 	[SerializeField]
 	public Texture2D[] dirTextures;
 

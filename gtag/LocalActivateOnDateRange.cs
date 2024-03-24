@@ -41,6 +41,10 @@ public class LocalActivateOnDateRange : MonoBehaviour
 		}
 	}
 
+	public LocalActivateOnDateRange()
+	{
+	}
+
 	[Header("Activation Date and Time (UTC)")]
 	public int activationYear = 2023;
 

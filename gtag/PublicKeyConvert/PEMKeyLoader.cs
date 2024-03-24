@@ -150,6 +150,15 @@ namespace PublicKeyConvert
 			return null;
 		}
 
+		public PEMKeyLoader()
+		{
+		}
+
+		// Note: this type is marked as 'beforefieldinit'.
+		static PEMKeyLoader()
+		{
+		}
+
 		private static byte[] SeqOID = new byte[]
 		{
 			48, 13, 6, 9, 42, 134, 72, 134, 247, 13,

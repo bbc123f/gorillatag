@@ -232,6 +232,10 @@ public class EdibleHoldable : TransferrableObject
 		return true;
 	}
 
+	public EdibleHoldable()
+	{
+	}
+
 	public AudioClip[] eatSounds;
 
 	public GameObject[] edibleMeshObjects;
@@ -275,5 +279,8 @@ public class EdibleHoldable : TransferrableObject
 	[Serializable]
 	public class BiteEvent : UnityEvent<VRRig, int>
 	{
+		public BiteEvent()
+		{
+		}
 	}
 }

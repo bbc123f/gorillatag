@@ -17,6 +17,10 @@ namespace CjLib
 			DebugUtil.DrawCircle(base.transform.position, base.transform.rotation * Vector3.back, this.Radius, this.NumSegments, color, depthTest, style);
 		}
 
+		public DrawCircle()
+		{
+		}
+
 		public float Radius = 1f;
 
 		public int NumSegments = 64;

@@ -24,6 +24,10 @@ public class ShoppingCart : MonoBehaviour
 	{
 	}
 
+	public ShoppingCart()
+	{
+	}
+
 	[OnEnterPlay_SetNull]
 	public static volatile ShoppingCart instance;
 }

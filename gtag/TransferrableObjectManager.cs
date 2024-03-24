@@ -69,6 +69,15 @@ public class TransferrableObjectManager : MonoBehaviour
 		}
 	}
 
+	public TransferrableObjectManager()
+	{
+	}
+
+	// Note: this type is marked as 'beforefieldinit'.
+	static TransferrableObjectManager()
+	{
+	}
+
 	public static TransferrableObjectManager instance;
 
 	public static bool hasInstance = false;

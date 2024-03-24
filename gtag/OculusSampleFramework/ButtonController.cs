@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace OculusSampleFramework
@@ -22,7 +23,19 @@ namespace OculusSampleFramework
 			}
 		}
 
-		public InteractableState CurrentButtonState { get; private set; }
+		public InteractableState CurrentButtonState
+		{
+			[CompilerGenerated]
+			get
+			{
+				return this.<CurrentButtonState>k__BackingField;
+			}
+			[CompilerGenerated]
+			private set
+			{
+				this.<CurrentButtonState>k__BackingField = value;
+			}
+		}
 
 		protected override void Awake()
 		{
@@ -242,6 +255,10 @@ namespace OculusSampleFramework
 			return Vector3.Dot(vector, buttonDirection) >= 0.5f;
 		}
 
+		public ButtonController()
+		{
+		}
+
 		private const float ENTRY_DOT_THRESHOLD = 0.8f;
 
 		private const float PERP_DOT_THRESHOLD = 0.5f;
@@ -274,6 +291,9 @@ namespace OculusSampleFramework
 
 		[SerializeField]
 		private bool _allowMultipleNearFieldInteraction;
+
+		[CompilerGenerated]
+		private InteractableState <CurrentButtonState>k__BackingField;
 
 		private Dictionary<InteractableTool, InteractableState> _toolToState = new Dictionary<InteractableTool, InteractableState>();
 

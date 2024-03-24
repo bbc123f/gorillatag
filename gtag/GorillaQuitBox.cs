@@ -11,4 +11,8 @@ public class GorillaQuitBox : GorillaTriggerBox
 	{
 		Application.Quit();
 	}
+
+	public GorillaQuitBox()
+	{
+	}
 }

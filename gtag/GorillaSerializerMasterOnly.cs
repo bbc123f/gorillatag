@@ -7,4 +7,8 @@ internal class GorillaSerializerMasterOnly : GorillaSerializer
 	{
 		return info.Sender == PhotonNetwork.MasterClient;
 	}
+
+	public GorillaSerializerMasterOnly()
+	{
+	}
 }

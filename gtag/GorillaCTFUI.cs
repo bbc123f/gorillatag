@@ -10,4 +10,8 @@ public class GorillaCTFUI : MonoBehaviour
 	private void Update()
 	{
 	}
+
+	public GorillaCTFUI()
+	{
+	}
 }

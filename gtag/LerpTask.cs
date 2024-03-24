@@ -48,6 +48,10 @@ public class LerpTask<T>
 		this.Finish();
 	}
 
+	public LerpTask()
+	{
+	}
+
 	public float elapsed;
 
 	public float duration;

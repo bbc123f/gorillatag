@@ -46,6 +46,10 @@ public class Monkeye_LazerFX : MonoBehaviour
 		}
 	}
 
+	public Monkeye_LazerFX()
+	{
+	}
+
 	private Transform[] eyeBones;
 
 	private VRRig rig;

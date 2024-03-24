@@ -400,6 +400,10 @@ namespace GorillaTag.Cosmetics
 			this.spinTransform.TransformPoint(this.bottomPointOffset);
 		}
 
+		public Dreidel()
+		{
+		}
+
 		[Header("References")]
 		[SerializeField]
 		private Transform spinTransform;

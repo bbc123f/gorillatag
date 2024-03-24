@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Photon.Pun;
+using GorillaExtensions;
 using UnityEngine;
 
 public class GorillaParent : MonoBehaviour
@@ -31,28 +31,15 @@ public class GorillaParent : MonoBehaviour
 
 	public void LateUpdate()
 	{
-		this.i = this.vrrigs.Count - 1;
-		while (this.i > -1)
+		if (RoomSystem.JoinedRoom && GorillaTagger.Instance.myVRRig.IsNull())
 		{
-			if (this.vrrigs[this.i] == null)
+			GameObject gameObject;
+			VRRigCache.Instance.GetComponent<PhotonPrefabPool>().networkPrefabs.TryGetValue("Player Network Controller", out gameObject);
+			if (gameObject == null)
 			{
-				this.vrrigs.RemoveAt(this.i);
-			}
-			this.i--;
-		}
-		if (NetworkSystem.Instance.InRoom && this.joinedRoom)
-		{
-			if (GorillaTagger.Instance.offlineVRRig.photonView == null)
-			{
-				Debug.LogError("IS THIS BEING HIT?");
-				Debug.Log("online rig missing, re-instantiating it", base.gameObject);
-				PhotonNetwork.Instantiate("GorillaPrefabs/Gorilla Player Networked", Vector3.zero, Quaternion.identity, 0, null);
 				return;
 			}
-		}
-		else if (!NetworkSystem.Instance.InRoom && this.joinedRoom)
-		{
-			this.joinedRoom = false;
+			NetworkSystem.Instance.NetInstantiate(gameObject, GorillaTagger.Instance.offlineVRRig.transform.position, GorillaTagger.Instance.offlineVRRig.transform.rotation, false);
 		}
 	}
 
@@ -75,6 +62,10 @@ public class GorillaParent : MonoBehaviour
 			return;
 		}
 		GorillaParent.onReplicatedClientReady = (Action)Delegate.Combine(GorillaParent.onReplicatedClientReady, action);
+	}
+
+	public GorillaParent()
+	{
 	}
 
 	public GameObject tagUI;

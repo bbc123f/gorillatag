@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Text;
 using Unity.Profiling;
 using Unity.Profiling.LowLevel.Unsafe;
@@ -157,6 +158,15 @@ namespace GorillaTag.Dev.Benchmarks
 			}
 		}
 
+		public VisualBenchmark()
+		{
+		}
+
+		// Note: this type is marked as 'beforefieldinit'.
+		static VisualBenchmark()
+		{
+		}
+
 		[Tooltip("the camera will be moved and rotated to these spots and record stats.")]
 		public Transform[] benchmarkLocations;
 
@@ -196,6 +206,29 @@ namespace GorillaTag.Dev.Benchmarks
 			WaitingBeforeCollectingGarbage,
 			WaitingBeforeRecordingStats,
 			TearDown
+		}
+
+		[CompilerGenerated]
+		[Serializable]
+		private sealed class <>c
+		{
+			// Note: this type is marked as 'beforefieldinit'.
+			static <>c()
+			{
+			}
+
+			public <>c()
+			{
+			}
+
+			internal void <Awake>b__13_0()
+			{
+				VisualBenchmark.isQuitting = true;
+			}
+
+			public static readonly VisualBenchmark.<>c <>9 = new VisualBenchmark.<>c();
+
+			public static Action <>9__13_0;
 		}
 	}
 }

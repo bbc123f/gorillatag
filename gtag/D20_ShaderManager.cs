@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class D20_ShaderManager : MonoBehaviour
@@ -27,6 +30,10 @@ public class D20_ShaderManager : MonoBehaviour
 		yield break;
 	}
 
+	public D20_ShaderManager()
+	{
+	}
+
 	private Rigidbody rb;
 
 	private Vector3 lastPosition;
@@ -36,4 +43,74 @@ public class D20_ShaderManager : MonoBehaviour
 	public Vector3 velocity;
 
 	private Material material;
+
+	[CompilerGenerated]
+	private sealed class <UpdateVelocityCoroutine>d__6 : IEnumerator<object>, IEnumerator, IDisposable
+	{
+		[DebuggerHidden]
+		public <UpdateVelocityCoroutine>d__6(int <>1__state)
+		{
+			this.<>1__state = <>1__state;
+		}
+
+		[DebuggerHidden]
+		void IDisposable.Dispose()
+		{
+		}
+
+		bool IEnumerator.MoveNext()
+		{
+			int num = this.<>1__state;
+			D20_ShaderManager d20_ShaderManager = this;
+			if (num != 0)
+			{
+				if (num != 1)
+				{
+					return false;
+				}
+				this.<>1__state = -1;
+			}
+			else
+			{
+				this.<>1__state = -1;
+			}
+			Vector3 position = d20_ShaderManager.transform.position;
+			d20_ShaderManager.velocity = (position - d20_ShaderManager.lastPosition) / d20_ShaderManager.updateInterval;
+			d20_ShaderManager.lastPosition = position;
+			d20_ShaderManager.material.SetVector("_Velocity", d20_ShaderManager.velocity);
+			this.<>2__current = new WaitForSeconds(d20_ShaderManager.updateInterval);
+			this.<>1__state = 1;
+			return true;
+		}
+
+		object IEnumerator<object>.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		[DebuggerHidden]
+		void IEnumerator.Reset()
+		{
+			throw new NotSupportedException();
+		}
+
+		object IEnumerator.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		private int <>1__state;
+
+		private object <>2__current;
+
+		public D20_ShaderManager <>4__this;
+	}
 }

@@ -94,6 +94,10 @@ public class AutoCatchThrowBall : MonoBehaviour
 		Debug.Log(string.Format("Throwing {0} in direction {1} at position {2}", transferrable.gameObject.name, throwDir, transferrable.transform.position));
 	}
 
+	public AutoCatchThrowBall()
+	{
+	}
+
 	public GameObject ballPrefab;
 
 	public float throwPitch = 20f;

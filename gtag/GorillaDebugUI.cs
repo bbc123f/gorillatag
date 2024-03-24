@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class GorillaDebugUI : MonoBehaviour
 {
+	public GorillaDebugUI()
+	{
+	}
+
 	private readonly float Delay = 0.5f;
 
 	public GameObject parentCanvas;

@@ -15,4 +15,8 @@ public abstract class TeleportTransition : TeleportSupport
 	}
 
 	protected abstract void LocomotionTeleportOnEnterStateTeleporting();
+
+	protected TeleportTransition()
+	{
+	}
 }

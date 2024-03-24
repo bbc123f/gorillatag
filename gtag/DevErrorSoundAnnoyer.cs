@@ -4,6 +4,10 @@ using UnityEngine.UI;
 
 public class DevErrorSoundAnnoyer : MonoBehaviour
 {
+	public DevErrorSoundAnnoyer()
+	{
+	}
+
 	[SerializeField]
 	private AudioClip errorSound;
 

@@ -96,6 +96,10 @@ public class SoundBankPlayer : MonoBehaviour
 		this.nextIndex = (this.nextIndex + 1) % this.playlist.Length;
 	}
 
+	public SoundBankPlayer()
+	{
+	}
+
 	[Tooltip("Optional. AudioSource Settings will be used if this is not defined.")]
 	public AudioSource audioSource;
 

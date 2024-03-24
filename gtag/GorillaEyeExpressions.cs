@@ -40,6 +40,10 @@ public class GorillaEyeExpressions : MonoBehaviour
 		material.SetVector(this._EyeOverrideUVTransform, new Vector4(1f, 1f, this.overrideUV.x, this.overrideUV.y));
 	}
 
+	public GorillaEyeExpressions()
+	{
+	}
+
 	public GameObject targetFace;
 
 	[Space]

@@ -138,6 +138,10 @@ public class CosmeticAnchors : MonoBehaviour
 		return this.huntComputerAnchor != null;
 	}
 
+	public CosmeticAnchors()
+	{
+	}
+
 	[SerializeField]
 	protected GameObject nameAnchor;
 

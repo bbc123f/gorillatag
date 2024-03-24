@@ -82,5 +82,9 @@ namespace Viveport.Internal
 
 		[DllImport("viveport_api64", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi, EntryPoint = "IViveportIAPurchase_CancelSubscription")]
 		public static extern void CancelSubscription_64(IAPurchaseCallback callback, string pchSubscriptionId);
+
+		public IAPurchase()
+		{
+		}
 	}
 }

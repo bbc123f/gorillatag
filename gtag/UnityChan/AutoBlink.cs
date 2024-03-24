@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace UnityChan
@@ -99,6 +102,10 @@ namespace UnityChan
 			yield break;
 		}
 
+		public AutoBlink()
+		{
+		}
+
 		public bool isActive = true;
 
 		public SkinnedMeshRenderer ref_SMR_EYE_DEF;
@@ -131,6 +138,77 @@ namespace UnityChan
 			Close,
 			HalfClose,
 			Open
+		}
+
+		[CompilerGenerated]
+		private sealed class <RandomChange>d__22 : IEnumerator<object>, IEnumerator, IDisposable
+		{
+			[DebuggerHidden]
+			public <RandomChange>d__22(int <>1__state)
+			{
+				this.<>1__state = <>1__state;
+			}
+
+			[DebuggerHidden]
+			void IDisposable.Dispose()
+			{
+			}
+
+			bool IEnumerator.MoveNext()
+			{
+				int num = this.<>1__state;
+				AutoBlink autoBlink = this;
+				if (num != 0)
+				{
+					if (num != 1)
+					{
+						return false;
+					}
+					this.<>1__state = -1;
+				}
+				else
+				{
+					this.<>1__state = -1;
+				}
+				float num2 = Random.Range(0f, 1f);
+				if (!autoBlink.isBlink && num2 > autoBlink.threshold)
+				{
+					autoBlink.isBlink = true;
+				}
+				this.<>2__current = new WaitForSeconds(autoBlink.interval);
+				this.<>1__state = 1;
+				return true;
+			}
+
+			object IEnumerator<object>.Current
+			{
+				[DebuggerHidden]
+				get
+				{
+					return this.<>2__current;
+				}
+			}
+
+			[DebuggerHidden]
+			void IEnumerator.Reset()
+			{
+				throw new NotSupportedException();
+			}
+
+			object IEnumerator.Current
+			{
+				[DebuggerHidden]
+				get
+				{
+					return this.<>2__current;
+				}
+			}
+
+			private int <>1__state;
+
+			private object <>2__current;
+
+			public AutoBlink <>4__this;
 		}
 	}
 }

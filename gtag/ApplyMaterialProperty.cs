@@ -138,6 +138,10 @@ public class ApplyMaterialProperty : MonoBehaviour
 		this._renderer.SetPropertyBlock(this._block);
 	}
 
+	public ApplyMaterialProperty()
+	{
+	}
+
 	public ApplyMaterialProperty.ApplyMode mode;
 
 	[FormerlySerializedAs("materialToApplyBlock")]
@@ -179,6 +183,10 @@ public class ApplyMaterialProperty : MonoBehaviour
 		public override int GetHashCode()
 		{
 			return new ValueTuple<string, ApplyMaterialProperty.SuportedTypes, Color, float, Vector2, Vector3, Vector4, ValueTuple<Texture2D>>(this.name, this.dataType, this.color, this.@float, this.vector2, this.vector3, this.vector4, new ValueTuple<Texture2D>(this.texture2D)).GetHashCode();
+		}
+
+		public CustomMaterialData()
+		{
 		}
 
 		public string name;

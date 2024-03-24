@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -28,7 +29,9 @@ namespace GorillaNetworking
 		{
 			get
 			{
-				return this.stateStack.Peek();
+				GorillaComputer.ComputerState computerState;
+				this.stateStack.TryPeek(out computerState);
+				return computerState;
 			}
 		}
 
@@ -50,7 +53,13 @@ namespace GorillaNetworking
 		{
 			Debug.Log("Computer Init");
 			this.Initialise();
-			base.StartCoroutine(this.<Start>g__Start_Local|97_0());
+			base.StartCoroutine(this.<Start>g__Start_Local|98_0());
+		}
+
+		private void OnEnable()
+		{
+			PlayFabAuthenticator playFabAuthenticator = PlayFabAuthenticator.instance;
+			playFabAuthenticator.OnSafetyUpdate = (Action<bool>)Delegate.Combine(playFabAuthenticator.OnSafetyUpdate, new Action<bool>(this.SetComputerSettingsBySafety));
 		}
 
 		protected void OnDestroy()
@@ -60,6 +69,8 @@ namespace GorillaNetworking
 				GorillaComputer.hasInstance = false;
 				GorillaComputer.instance = null;
 			}
+			PlayFabAuthenticator playFabAuthenticator = PlayFabAuthenticator.instance;
+			playFabAuthenticator.OnSafetyUpdate = (Action<bool>)Delegate.Remove(playFabAuthenticator.OnSafetyUpdate, new Action<bool>(this.SetComputerSettingsBySafety));
 		}
 
 		private void Update()
@@ -130,6 +141,7 @@ namespace GorillaNetworking
 			this.InitializeMicState();
 			this.InitializeGroupState();
 			this.InitializeVoiceState();
+			this.InitializeAutoMuteState();
 			this.InitializeGameMode();
 			this.InitializeVisualsState();
 			this.InitializeCreditsState();
@@ -191,6 +203,25 @@ namespace GorillaNetworking
 		private void InitializeMicState()
 		{
 			this.pttType = PlayerPrefs.GetString("pttType", "ALL CHAT");
+		}
+
+		private void InitializeAutoMuteState()
+		{
+			int @int = PlayerPrefs.GetInt("autoMute", 1);
+			if (@int == 0)
+			{
+				this.autoMuteType = "OFF";
+				return;
+			}
+			if (@int == 1)
+			{
+				this.autoMuteType = "MODERATE";
+				return;
+			}
+			if (@int == 2)
+			{
+				this.autoMuteType = "AGGRESSIVE";
+			}
 		}
 
 		private void InitializeQueueState()
@@ -277,6 +308,10 @@ namespace GorillaNetworking
 				}
 				RuntimePlatform platform = Application.platform;
 				this.SaveModAccountData();
+				if (PlayFabAuthenticator.instance.GetSafety())
+				{
+					this.SetComputerSettingsBySafety(PlayFabAuthenticator.instance.GetSafety());
+				}
 			}
 		}
 
@@ -388,6 +423,9 @@ namespace GorillaNetworking
 					break;
 				case GorillaComputer.ComputerState.Voice:
 					this.ProcessVoiceState(buttonPressed);
+					break;
+				case GorillaComputer.ComputerState.AutoMute:
+					this.ProcessAutoMuteState(buttonPressed);
 					break;
 				case GorillaComputer.ComputerState.Credits:
 					this.ProcessCreditsState(buttonPressed);
@@ -622,17 +660,18 @@ namespace GorillaNetworking
 
 		private void ProcessRoomState(GorillaKeyboardBindings buttonPressed)
 		{
+			bool safety = PlayFabAuthenticator.instance.GetSafety();
 			switch (buttonPressed)
 			{
 			case GorillaKeyboardBindings.delete:
-				if (this.roomToJoin.Length > 0)
+				if (!safety && this.roomToJoin.Length > 0)
 				{
 					this.roomToJoin = this.roomToJoin.Substring(0, this.roomToJoin.Length - 1);
 					return;
 				}
 				break;
 			case GorillaKeyboardBindings.enter:
-				if (this.roomToJoin != "")
+				if (!safety && this.roomToJoin != "")
 				{
 					this.CheckAutoBanListForRoomName(this.roomToJoin);
 					return;
@@ -645,7 +684,7 @@ namespace GorillaNetworking
 			case GorillaKeyboardBindings.option3:
 				break;
 			default:
-				if (this.roomToJoin.Length < 10)
+				if (!safety && this.roomToJoin.Length < 10)
 				{
 					string text = this.roomToJoin;
 					string text2;
@@ -812,6 +851,32 @@ namespace GorillaNetworking
 			RigContainer.RefreshAllRigVoices();
 		}
 
+		private void ProcessAutoMuteState(GorillaKeyboardBindings buttonPressed)
+		{
+			switch (buttonPressed)
+			{
+			case GorillaKeyboardBindings.option1:
+				this.autoMuteType = "AGGRESSIVE";
+				PlayerPrefs.SetInt("autoMute", 2);
+				PlayerPrefs.Save();
+				RigContainer.RefreshAllRigVoices();
+				break;
+			case GorillaKeyboardBindings.option2:
+				this.autoMuteType = "MODERATE";
+				PlayerPrefs.SetInt("autoMute", 1);
+				PlayerPrefs.Save();
+				RigContainer.RefreshAllRigVoices();
+				break;
+			case GorillaKeyboardBindings.option3:
+				this.autoMuteType = "OFF";
+				PlayerPrefs.SetInt("autoMute", 0);
+				PlayerPrefs.Save();
+				RigContainer.RefreshAllRigVoices();
+				break;
+			}
+			this.UpdateScreen();
+		}
+
 		private void ProcessVisualsState(GorillaKeyboardBindings buttonPressed)
 		{
 			if (buttonPressed < GorillaKeyboardBindings.up)
@@ -910,6 +975,9 @@ namespace GorillaNetworking
 				case GorillaComputer.ComputerState.Voice:
 					this.VoiceScreen();
 					break;
+				case GorillaComputer.ComputerState.AutoMute:
+					this.AutomuteScreen();
+					break;
 				case GorillaComputer.ComputerState.Credits:
 					this.CreditsScreen();
 					break;
@@ -936,7 +1004,7 @@ namespace GorillaNetworking
 		private void LoadingScreen()
 		{
 			this.screenText.Text = "LOADING";
-			this.LoadingRoutine = base.StartCoroutine(this.<LoadingScreen>g__LoadingScreenLocal|144_0());
+			this.LoadingRoutine = base.StartCoroutine(this.<LoadingScreen>g__LoadingScreenLocal|148_0());
 		}
 
 		private void NameWarningScreen()
@@ -1007,6 +1075,11 @@ namespace GorillaNetworking
 			this.screenText.Text = "CHOOSE WHICH TYPE OF VOICE YOU WANT TO HEAR AND SPEAK. \nPRESS OPTION 1 = HUMAN VOICES. \nPRESS OPTION 2 = MONKE VOICES. \n\nVOICE TYPE: " + ((this.voiceChatOn == "TRUE") ? "HUMAN" : ((this.voiceChatOn == "FALSE") ? "MONKE" : "OFF"));
 		}
 
+		private void AutomuteScreen()
+		{
+			this.screenText.Text = "AUTOMOD AUTOMATICALLY MUTES PLAYERS WHEN THEY JOIN YOUR ROOM IF A LOT OF OTHER PLAYERS HAVE MUTED THEM\nPRESS OPTION 1 FOR AGGRESSIVE MUTING\nPRESS OPTION 2 FOR MODERATE MUTING\nPRESS OPTION 3 TO TURN AUTOMOD OFF\n\nCURRENT AUTOMOD LEVEL: " + this.autoMuteType;
+		}
+
 		private void GroupScreen()
 		{
 			if (this.allowedMapsToJoin.Length == 1)
@@ -1069,33 +1142,44 @@ namespace GorillaNetworking
 
 		private void RoomScreen()
 		{
-			this.screenText.Text = "PRESS ENTER TO JOIN OR CREATE A CUSTOM ROOM WITH THE ENTERED CODE. PRESS OPTION 1 TO DISCONNECT FROM THE CURRENT ROOM.\n\nCURRENT ROOM: ";
-			if (NetworkSystem.Instance.InRoom)
+			bool safety = PlayFabAuthenticator.instance.GetSafety();
+			this.screenText.Text = "";
+			if (!safety)
 			{
 				GorillaText gorillaText = this.screenText;
-				gorillaText.Text += NetworkSystem.Instance.RoomName;
-				GorillaText gorillaText2 = this.screenText;
-				gorillaText2.Text = gorillaText2.Text + "\n\nPLAYERS IN ROOM: " + NetworkSystem.Instance.RoomPlayerCount.ToString();
+				gorillaText.Text += "PRESS ENTER TO JOIN OR CREATE A CUSTOM ROOM WITH THE ENTERED CODE. ";
+			}
+			GorillaText gorillaText2 = this.screenText;
+			gorillaText2.Text += "PRESS OPTION 1 TO DISCONNECT FROM THE CURRENT ROOM.\n\nCURRENT ROOM: ";
+			if (NetworkSystem.Instance.InRoom)
+			{
+				GorillaText gorillaText3 = this.screenText;
+				gorillaText3.Text += NetworkSystem.Instance.RoomName;
+				GorillaText gorillaText4 = this.screenText;
+				gorillaText4.Text = gorillaText4.Text + "\n\nPLAYERS IN ROOM: " + NetworkSystem.Instance.RoomPlayerCount.ToString();
 			}
 			else
 			{
-				GorillaText gorillaText3 = this.screenText;
-				gorillaText3.Text += "-NOT IN ROOM-";
-				GorillaText gorillaText4 = this.screenText;
-				gorillaText4.Text = gorillaText4.Text + "\n\nPLAYERS ONLINE: " + NetworkSystem.Instance.GlobalPlayerCount().ToString();
-			}
-			GorillaText gorillaText5 = this.screenText;
-			gorillaText5.Text = gorillaText5.Text + "\n\nROOM TO JOIN: " + this.roomToJoin;
-			if (this.roomFull)
-			{
+				GorillaText gorillaText5 = this.screenText;
+				gorillaText5.Text += "-NOT IN ROOM-";
 				GorillaText gorillaText6 = this.screenText;
-				gorillaText6.Text += "\n\nROOM FULL. JOIN ROOM FAILED.";
-				return;
+				gorillaText6.Text = gorillaText6.Text + "\n\nPLAYERS ONLINE: " + NetworkSystem.Instance.GlobalPlayerCount().ToString();
 			}
-			if (this.roomNotAllowed)
+			if (!safety)
 			{
 				GorillaText gorillaText7 = this.screenText;
-				gorillaText7.Text += "\n\nCANNOT JOIN ROOM TYPE FROM HERE.";
+				gorillaText7.Text = gorillaText7.Text + "\n\nROOM TO JOIN: " + this.roomToJoin;
+				if (this.roomFull)
+				{
+					GorillaText gorillaText8 = this.screenText;
+					gorillaText8.Text += "\n\nROOM FULL. JOIN ROOM FAILED.";
+					return;
+				}
+				if (this.roomNotAllowed)
+				{
+					GorillaText gorillaText9 = this.screenText;
+					gorillaText9.Text += "\n\nCANNOT JOIN ROOM TYPE FROM HERE.";
+				}
 			}
 		}
 
@@ -1447,11 +1531,84 @@ namespace GorillaNetworking
 			this.UpdateScreen();
 		}
 
+		public void SetNameBySafety(bool isSafety)
+		{
+			if (!isSafety)
+			{
+				return;
+			}
+			PlayerPrefs.SetString("playerNameBackup", this.currentName);
+			this.currentName = "gorilla" + Random.Range(0, 9999).ToString().PadLeft(4, '0');
+			this.savedName = this.currentName;
+			NetworkSystem.Instance.SetMyNickName(this.currentName);
+			this.offlineVRRigNametagText.text = this.currentName;
+			PlayerPrefs.SetString("playerName", this.currentName);
+			PlayerPrefs.Save();
+			if (PhotonNetwork.InRoom)
+			{
+				GorillaTagger.Instance.myVRRig.RPC("InitializeNoobMaterial", RpcTarget.All, new object[] { this.redValue, this.greenValue, this.blueValue, this.leftHanded });
+			}
+		}
+
+		public void SetComputerSettingsBySafety(bool isSafety)
+		{
+			if (!isSafety)
+			{
+				return;
+			}
+			int i = 0;
+			int num = this.OrderList.Count;
+			while (i < num)
+			{
+				if (this.OrderList[i].State == GorillaComputer.ComputerState.Name || this.OrderList[i].State == GorillaComputer.ComputerState.Group || this.OrderList[i].State == GorillaComputer.ComputerState.Voice || this.OrderList[i].State == GorillaComputer.ComputerState.AutoMute)
+				{
+					this.OrderList.RemoveAt(i);
+					i--;
+					num--;
+					this.FunctionsCount--;
+				}
+				i++;
+			}
+			this.FunctionNames.Clear();
+			this.OrderList.ForEach(delegate(GorillaComputer.StateOrderItem s)
+			{
+				string name = s.GetName();
+				if (name.Length > this.highestCharacterCount)
+				{
+					this.highestCharacterCount = name.Length;
+				}
+				this.FunctionNames.Add(name);
+			});
+			for (int j = 0; j < this.FunctionsCount; j++)
+			{
+				int num2 = this.highestCharacterCount - this.FunctionNames[j].Length;
+				for (int k = 0; k < num2; k++)
+				{
+					List<string> functionNames = this.FunctionNames;
+					int num3 = j;
+					functionNames[num3] += " ";
+				}
+			}
+			this.UpdateScreen();
+			this.voiceChatOn = "FALSE";
+			PlayerPrefs.SetString("voiceChatOn", this.voiceChatOn);
+			PlayerPrefs.Save();
+			RigContainer.RefreshAllRigVoices();
+		}
+
+		public GorillaComputer()
+		{
+		}
+
 		[CompilerGenerated]
-		private IEnumerator <Start>g__Start_Local|97_0()
+		private IEnumerator <Start>g__Start_Local|98_0()
 		{
 			yield return null;
-			if (BacktraceClient.Instance && this.includeUpdatedServerSynchTest == 1)
+			if (BacktraceClient.Instance)
+			{
+				int num = this.includeUpdatedServerSynchTest;
+			}
+			if (BacktraceClient.Instance && BacktraceClient.Instance.gameObject)
 			{
 				Object.Destroy(BacktraceClient.Instance.gameObject);
 			}
@@ -1459,7 +1616,7 @@ namespace GorillaNetworking
 		}
 
 		[CompilerGenerated]
-		private IEnumerator <LoadingScreen>g__LoadingScreenLocal|144_0()
+		private IEnumerator <LoadingScreen>g__LoadingScreenLocal|148_0()
 		{
 			int dotsCount = 0;
 			while (this.currentState == GorillaComputer.ComputerState.Loading)
@@ -1479,6 +1636,17 @@ namespace GorillaNetworking
 				yield return this.waitOneSecond;
 			}
 			yield break;
+		}
+
+		[CompilerGenerated]
+		private void <SetComputerSettingsBySafety>b__189_0(GorillaComputer.StateOrderItem s)
+		{
+			string name = s.GetName();
+			if (name.Length > this.highestCharacterCount)
+			{
+				this.highestCharacterCount = name.Length;
+			}
+			this.FunctionNames.Add(name);
 		}
 
 		[OnEnterPlay_SetNull]
@@ -1558,6 +1726,7 @@ namespace GorillaNetworking
 			new GorillaComputer.StateOrderItem(GorillaComputer.ComputerState.Queue),
 			new GorillaComputer.StateOrderItem(GorillaComputer.ComputerState.Group),
 			new GorillaComputer.StateOrderItem(GorillaComputer.ComputerState.Voice),
+			new GorillaComputer.StateOrderItem(GorillaComputer.ComputerState.AutoMute, "Automod"),
 			new GorillaComputer.StateOrderItem(GorillaComputer.ComputerState.Visuals, "Items"),
 			new GorillaComputer.StateOrderItem(GorillaComputer.ComputerState.Credits),
 			new GorillaComputer.StateOrderItem(GorillaComputer.ComputerState.Support)
@@ -1580,6 +1749,9 @@ namespace GorillaNetworking
 
 		[Header("Mic vars")]
 		public string pttType;
+
+		[Header("Automute vars")]
+		public string autoMuteType;
 
 		[Header("Queue vars")]
 		public string currentQueue;
@@ -1702,6 +1874,7 @@ namespace GorillaNetworking
 			Queue,
 			Group,
 			Voice,
+			AutoMute,
 			Credits,
 			Visuals,
 			Time,
@@ -1748,6 +1921,237 @@ namespace GorillaNetworking
 
 			[Tooltip("Case not important - ToUpper applied at runtime")]
 			public string OverrideName = "";
+		}
+
+		[CompilerGenerated]
+		private sealed class <<LoadingScreen>g__LoadingScreenLocal|148_0>d : IEnumerator<object>, IEnumerator, IDisposable
+		{
+			[DebuggerHidden]
+			public <<LoadingScreen>g__LoadingScreenLocal|148_0>d(int <>1__state)
+			{
+				this.<>1__state = <>1__state;
+			}
+
+			[DebuggerHidden]
+			void IDisposable.Dispose()
+			{
+			}
+
+			bool IEnumerator.MoveNext()
+			{
+				int num = this.<>1__state;
+				GorillaComputer gorillaComputer = this;
+				if (num != 0)
+				{
+					if (num != 1)
+					{
+						return false;
+					}
+					this.<>1__state = -1;
+				}
+				else
+				{
+					this.<>1__state = -1;
+					dotsCount = 0;
+				}
+				if (gorillaComputer.currentState != GorillaComputer.ComputerState.Loading)
+				{
+					return false;
+				}
+				int num2 = dotsCount;
+				dotsCount = num2 + 1;
+				if (dotsCount == 3)
+				{
+					dotsCount = 0;
+				}
+				gorillaComputer.screenText.Text = "LOADING";
+				for (int i = 0; i < dotsCount; i++)
+				{
+					GorillaText screenText = gorillaComputer.screenText;
+					screenText.Text += ". ";
+				}
+				this.<>2__current = gorillaComputer.waitOneSecond;
+				this.<>1__state = 1;
+				return true;
+			}
+
+			object IEnumerator<object>.Current
+			{
+				[DebuggerHidden]
+				get
+				{
+					return this.<>2__current;
+				}
+			}
+
+			[DebuggerHidden]
+			void IEnumerator.Reset()
+			{
+				throw new NotSupportedException();
+			}
+
+			object IEnumerator.Current
+			{
+				[DebuggerHidden]
+				get
+				{
+					return this.<>2__current;
+				}
+			}
+
+			private int <>1__state;
+
+			private object <>2__current;
+
+			public GorillaComputer <>4__this;
+
+			private int <dotsCount>5__2;
+		}
+
+		[CompilerGenerated]
+		private sealed class <<Start>g__Start_Local|98_0>d : IEnumerator<object>, IEnumerator, IDisposable
+		{
+			[DebuggerHidden]
+			public <<Start>g__Start_Local|98_0>d(int <>1__state)
+			{
+				this.<>1__state = <>1__state;
+			}
+
+			[DebuggerHidden]
+			void IDisposable.Dispose()
+			{
+			}
+
+			bool IEnumerator.MoveNext()
+			{
+				int num = this.<>1__state;
+				GorillaComputer gorillaComputer = this;
+				if (num == 0)
+				{
+					this.<>1__state = -1;
+					this.<>2__current = null;
+					this.<>1__state = 1;
+					return true;
+				}
+				if (num != 1)
+				{
+					return false;
+				}
+				this.<>1__state = -1;
+				if (BacktraceClient.Instance)
+				{
+					int includeUpdatedServerSynchTest = gorillaComputer.includeUpdatedServerSynchTest;
+				}
+				if (BacktraceClient.Instance && BacktraceClient.Instance.gameObject)
+				{
+					Object.Destroy(BacktraceClient.Instance.gameObject);
+				}
+				return false;
+			}
+
+			object IEnumerator<object>.Current
+			{
+				[DebuggerHidden]
+				get
+				{
+					return this.<>2__current;
+				}
+			}
+
+			[DebuggerHidden]
+			void IEnumerator.Reset()
+			{
+				throw new NotSupportedException();
+			}
+
+			object IEnumerator.Current
+			{
+				[DebuggerHidden]
+				get
+				{
+					return this.<>2__current;
+				}
+			}
+
+			private int <>1__state;
+
+			private object <>2__current;
+
+			public GorillaComputer <>4__this;
+		}
+
+		[CompilerGenerated]
+		[Serializable]
+		private sealed class <>c
+		{
+			// Note: this type is marked as 'beforefieldinit'.
+			static <>c()
+			{
+			}
+
+			public <>c()
+			{
+			}
+
+			internal void <SaveModAccountData>b__124_1(PlayFabError error)
+			{
+				if (error.Error == PlayFabErrorCode.NotAuthenticated)
+				{
+					PlayFabAuthenticator.instance.AuthenticateWithPlayFab();
+					return;
+				}
+				if (error.Error == PlayFabErrorCode.AccountBanned)
+				{
+					GorillaGameManager.ForceStopGame_DisconnectAndDestroy();
+				}
+			}
+
+			internal bool <CheckAutoBanListForName>b__172_0(char c)
+			{
+				return char.IsLetterOrDigit(c);
+			}
+
+			public static readonly GorillaComputer.<>c <>9 = new GorillaComputer.<>c();
+
+			public static Action<PlayFabError> <>9__124_1;
+
+			public static Predicate<char> <>9__172_0;
+		}
+
+		[CompilerGenerated]
+		private sealed class <>c__DisplayClass124_0
+		{
+			public <>c__DisplayClass124_0()
+			{
+			}
+
+			internal void <SaveModAccountData>b__0(PlayFab.ClientModels.ExecuteCloudScriptResult result)
+			{
+				object obj;
+				if (((JsonObject)result.FunctionResult).TryGetValue("oculusHash", out obj))
+				{
+					StreamWriter streamWriter = new StreamWriter(this.path);
+					streamWriter.Write(PlayFabAuthenticator.instance._playFabPlayerIdCache + "." + (string)obj);
+					streamWriter.Close();
+				}
+			}
+
+			public string path;
+		}
+
+		[CompilerGenerated]
+		private sealed class <>c__DisplayClass181_0
+		{
+			public <>c__DisplayClass181_0()
+			{
+			}
+
+			internal bool <GetStateIndex>b__0(GorillaComputer.StateOrderItem s)
+			{
+				return s.State == this.state;
+			}
+
+			public GorillaComputer.ComputerState state;
 		}
 	}
 }

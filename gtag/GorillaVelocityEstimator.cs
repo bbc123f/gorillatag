@@ -1,14 +1,51 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using GorillaLocomotion;
 using UnityEngine;
 
 public class GorillaVelocityEstimator : MonoBehaviour
 {
-	public Vector3 linearVelocity { get; private set; }
+	public Vector3 linearVelocity
+	{
+		[CompilerGenerated]
+		get
+		{
+			return this.<linearVelocity>k__BackingField;
+		}
+		[CompilerGenerated]
+		private set
+		{
+			this.<linearVelocity>k__BackingField = value;
+		}
+	}
 
-	public Vector3 angularVelocity { get; private set; }
+	public Vector3 angularVelocity
+	{
+		[CompilerGenerated]
+		get
+		{
+			return this.<angularVelocity>k__BackingField;
+		}
+		[CompilerGenerated]
+		private set
+		{
+			this.<angularVelocity>k__BackingField = value;
+		}
+	}
 
-	public Vector3 handPos { get; private set; }
+	public Vector3 handPos
+	{
+		[CompilerGenerated]
+		get
+		{
+			return this.<handPos>k__BackingField;
+		}
+		[CompilerGenerated]
+		private set
+		{
+			this.<handPos>k__BackingField = value;
+		}
+	}
 
 	private void Awake()
 	{
@@ -81,7 +118,20 @@ public class GorillaVelocityEstimator : MonoBehaviour
 		this.lastRotation = rotation;
 	}
 
+	public GorillaVelocityEstimator()
+	{
+	}
+
 	private int numFrames = 8;
+
+	[CompilerGenerated]
+	private Vector3 <linearVelocity>k__BackingField;
+
+	[CompilerGenerated]
+	private Vector3 <angularVelocity>k__BackingField;
+
+	[CompilerGenerated]
+	private Vector3 <handPos>k__BackingField;
 
 	private GorillaVelocityEstimator.VelocityHistorySample[] history;
 

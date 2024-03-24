@@ -40,6 +40,10 @@ namespace GorillaTag.Rendering
 			}
 		}
 
+		public RendererCullerByTriggers()
+		{
+		}
+
 		[Tooltip("These renderers will be enabled/disabled depending on if the main camera is the colliders.")]
 		public Renderer[] renderers;
 

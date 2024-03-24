@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using CjLib;
 using GorillaLocomotion.Climbing;
 using GorillaTag.GuidedRefs;
@@ -10,13 +12,125 @@ namespace GorillaLocomotion.Swimming
 	[RequireComponent(typeof(Collider))]
 	public class WaterVolume : BaseGuidedRefTargetMono
 	{
-		public event WaterVolume.WaterVolumeEvent ColliderEnteredVolume;
+		public event WaterVolume.WaterVolumeEvent ColliderEnteredVolume
+		{
+			[CompilerGenerated]
+			add
+			{
+				WaterVolume.WaterVolumeEvent waterVolumeEvent = this.ColliderEnteredVolume;
+				WaterVolume.WaterVolumeEvent waterVolumeEvent2;
+				do
+				{
+					waterVolumeEvent2 = waterVolumeEvent;
+					WaterVolume.WaterVolumeEvent waterVolumeEvent3 = (WaterVolume.WaterVolumeEvent)Delegate.Combine(waterVolumeEvent2, value);
+					waterVolumeEvent = Interlocked.CompareExchange<WaterVolume.WaterVolumeEvent>(ref this.ColliderEnteredVolume, waterVolumeEvent3, waterVolumeEvent2);
+				}
+				while (waterVolumeEvent != waterVolumeEvent2);
+			}
+			[CompilerGenerated]
+			remove
+			{
+				WaterVolume.WaterVolumeEvent waterVolumeEvent = this.ColliderEnteredVolume;
+				WaterVolume.WaterVolumeEvent waterVolumeEvent2;
+				do
+				{
+					waterVolumeEvent2 = waterVolumeEvent;
+					WaterVolume.WaterVolumeEvent waterVolumeEvent3 = (WaterVolume.WaterVolumeEvent)Delegate.Remove(waterVolumeEvent2, value);
+					waterVolumeEvent = Interlocked.CompareExchange<WaterVolume.WaterVolumeEvent>(ref this.ColliderEnteredVolume, waterVolumeEvent3, waterVolumeEvent2);
+				}
+				while (waterVolumeEvent != waterVolumeEvent2);
+			}
+		}
 
-		public event WaterVolume.WaterVolumeEvent ColliderExitedVolume;
+		public event WaterVolume.WaterVolumeEvent ColliderExitedVolume
+		{
+			[CompilerGenerated]
+			add
+			{
+				WaterVolume.WaterVolumeEvent waterVolumeEvent = this.ColliderExitedVolume;
+				WaterVolume.WaterVolumeEvent waterVolumeEvent2;
+				do
+				{
+					waterVolumeEvent2 = waterVolumeEvent;
+					WaterVolume.WaterVolumeEvent waterVolumeEvent3 = (WaterVolume.WaterVolumeEvent)Delegate.Combine(waterVolumeEvent2, value);
+					waterVolumeEvent = Interlocked.CompareExchange<WaterVolume.WaterVolumeEvent>(ref this.ColliderExitedVolume, waterVolumeEvent3, waterVolumeEvent2);
+				}
+				while (waterVolumeEvent != waterVolumeEvent2);
+			}
+			[CompilerGenerated]
+			remove
+			{
+				WaterVolume.WaterVolumeEvent waterVolumeEvent = this.ColliderExitedVolume;
+				WaterVolume.WaterVolumeEvent waterVolumeEvent2;
+				do
+				{
+					waterVolumeEvent2 = waterVolumeEvent;
+					WaterVolume.WaterVolumeEvent waterVolumeEvent3 = (WaterVolume.WaterVolumeEvent)Delegate.Remove(waterVolumeEvent2, value);
+					waterVolumeEvent = Interlocked.CompareExchange<WaterVolume.WaterVolumeEvent>(ref this.ColliderExitedVolume, waterVolumeEvent3, waterVolumeEvent2);
+				}
+				while (waterVolumeEvent != waterVolumeEvent2);
+			}
+		}
 
-		public event WaterVolume.WaterVolumeEvent ColliderEnteredWater;
+		public event WaterVolume.WaterVolumeEvent ColliderEnteredWater
+		{
+			[CompilerGenerated]
+			add
+			{
+				WaterVolume.WaterVolumeEvent waterVolumeEvent = this.ColliderEnteredWater;
+				WaterVolume.WaterVolumeEvent waterVolumeEvent2;
+				do
+				{
+					waterVolumeEvent2 = waterVolumeEvent;
+					WaterVolume.WaterVolumeEvent waterVolumeEvent3 = (WaterVolume.WaterVolumeEvent)Delegate.Combine(waterVolumeEvent2, value);
+					waterVolumeEvent = Interlocked.CompareExchange<WaterVolume.WaterVolumeEvent>(ref this.ColliderEnteredWater, waterVolumeEvent3, waterVolumeEvent2);
+				}
+				while (waterVolumeEvent != waterVolumeEvent2);
+			}
+			[CompilerGenerated]
+			remove
+			{
+				WaterVolume.WaterVolumeEvent waterVolumeEvent = this.ColliderEnteredWater;
+				WaterVolume.WaterVolumeEvent waterVolumeEvent2;
+				do
+				{
+					waterVolumeEvent2 = waterVolumeEvent;
+					WaterVolume.WaterVolumeEvent waterVolumeEvent3 = (WaterVolume.WaterVolumeEvent)Delegate.Remove(waterVolumeEvent2, value);
+					waterVolumeEvent = Interlocked.CompareExchange<WaterVolume.WaterVolumeEvent>(ref this.ColliderEnteredWater, waterVolumeEvent3, waterVolumeEvent2);
+				}
+				while (waterVolumeEvent != waterVolumeEvent2);
+			}
+		}
 
-		public event WaterVolume.WaterVolumeEvent ColliderExitedWater;
+		public event WaterVolume.WaterVolumeEvent ColliderExitedWater
+		{
+			[CompilerGenerated]
+			add
+			{
+				WaterVolume.WaterVolumeEvent waterVolumeEvent = this.ColliderExitedWater;
+				WaterVolume.WaterVolumeEvent waterVolumeEvent2;
+				do
+				{
+					waterVolumeEvent2 = waterVolumeEvent;
+					WaterVolume.WaterVolumeEvent waterVolumeEvent3 = (WaterVolume.WaterVolumeEvent)Delegate.Combine(waterVolumeEvent2, value);
+					waterVolumeEvent = Interlocked.CompareExchange<WaterVolume.WaterVolumeEvent>(ref this.ColliderExitedWater, waterVolumeEvent3, waterVolumeEvent2);
+				}
+				while (waterVolumeEvent != waterVolumeEvent2);
+			}
+			[CompilerGenerated]
+			remove
+			{
+				WaterVolume.WaterVolumeEvent waterVolumeEvent = this.ColliderExitedWater;
+				WaterVolume.WaterVolumeEvent waterVolumeEvent2;
+				do
+				{
+					waterVolumeEvent2 = waterVolumeEvent;
+					WaterVolume.WaterVolumeEvent waterVolumeEvent3 = (WaterVolume.WaterVolumeEvent)Delegate.Remove(waterVolumeEvent2, value);
+					waterVolumeEvent = Interlocked.CompareExchange<WaterVolume.WaterVolumeEvent>(ref this.ColliderExitedWater, waterVolumeEvent3, waterVolumeEvent2);
+				}
+				while (waterVolumeEvent != waterVolumeEvent2);
+			}
+		}
 
 		public Player.LiquidType LiquidType
 		{
@@ -589,6 +703,15 @@ namespace GorillaLocomotion.Swimming
 			}
 		}
 
+		public WaterVolume()
+		{
+		}
+
+		// Note: this type is marked as 'beforefieldinit'.
+		static WaterVolume()
+		{
+		}
+
 		[SerializeField]
 		public Transform surfacePlane;
 
@@ -623,6 +746,18 @@ namespace GorillaLocomotion.Swimming
 		private int[] sharedMeshTris;
 
 		private Vector3[] sharedMeshVerts;
+
+		[CompilerGenerated]
+		private WaterVolume.WaterVolumeEvent ColliderEnteredVolume;
+
+		[CompilerGenerated]
+		private WaterVolume.WaterVolumeEvent ColliderExitedVolume;
+
+		[CompilerGenerated]
+		private WaterVolume.WaterVolumeEvent ColliderEnteredWater;
+
+		[CompilerGenerated]
+		private WaterVolume.WaterVolumeEvent ColliderExitedWater;
 
 		private VRRig playerVRRig;
 

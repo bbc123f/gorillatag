@@ -158,6 +158,10 @@ public class AdvancedItemState
 		return advancedItemState;
 	}
 
+	public AdvancedItemState()
+	{
+	}
+
 	private int _encodedValue;
 
 	public Vector2 angleVectorWhereUpIsStandard;
@@ -177,6 +181,10 @@ public class AdvancedItemState
 	[Serializable]
 	public class PreData
 	{
+		public PreData()
+		{
+		}
+
 		public float distAlongLine;
 
 		public AdvancedItemState.PointType pointType;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using GorillaExtensions;
 using UnityEngine;
 
@@ -48,6 +49,16 @@ namespace GorillaTag
 			{
 				this.ownerRig.HauntedRingVoicePitch = this.hauntedVoicePitch;
 			}
+		}
+
+		public HeartRingCosmetic()
+		{
+		}
+
+		[CompilerGenerated]
+		private void <Awake>b__13_0()
+		{
+			base.enabled = false;
 		}
 
 		public GameObject effects;

@@ -9,10 +9,34 @@ namespace GorillaTag.Reactions
 	public class FireManager : ITickSystemPost
 	{
 		[OnEnterPlay_SetNull]
-		internal static FireManager instance { get; private set; }
+		internal static FireManager instance
+		{
+			[CompilerGenerated]
+			get
+			{
+				return FireManager.<instance>k__BackingField;
+			}
+			[CompilerGenerated]
+			private set
+			{
+				FireManager.<instance>k__BackingField = value;
+			}
+		}
 
 		[OnEnterPlay_Set(false)]
-		internal static bool hasInstance { get; private set; }
+		internal static bool hasInstance
+		{
+			[CompilerGenerated]
+			get
+			{
+				return FireManager.<hasInstance>k__BackingField;
+			}
+			[CompilerGenerated]
+			private set
+			{
+				FireManager.<hasInstance>k__BackingField = value;
+			}
+		}
 
 		[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
 		private static void Initialize()
@@ -189,7 +213,19 @@ namespace GorillaTag.Reactions
 			}
 		}
 
-		bool ITickSystemPost.PostTickRunning { get; set; }
+		bool ITickSystemPost.PostTickRunning
+		{
+			[CompilerGenerated]
+			get
+			{
+				return this.<ITickSystemPost.PostTickRunning>k__BackingField;
+			}
+			[CompilerGenerated]
+			set
+			{
+				this.<ITickSystemPost.PostTickRunning>k__BackingField = value;
+			}
+		}
 
 		void ITickSystemPost.PostTick()
 		{
@@ -261,6 +297,21 @@ namespace GorillaTag.Reactions
 			FireManager._kFiresToDespawn.Clear();
 		}
 
+		public FireManager()
+		{
+		}
+
+		// Note: this type is marked as 'beforefieldinit'.
+		static FireManager()
+		{
+		}
+
+		[CompilerGenerated]
+		private static FireManager <instance>k__BackingField;
+
+		[CompilerGenerated]
+		private static bool <hasInstance>k__BackingField;
+
 		[OnEnterPlay_Clear]
 		private static readonly Dictionary<int, FireInstance> _kGObjInstId_to_fire = new Dictionary<int, FireInstance>(256);
 
@@ -283,5 +334,8 @@ namespace GorillaTag.Reactions
 		private static MaterialPropertyBlock _matPropBlock = new MaterialPropertyBlock();
 
 		private static readonly int shaderProp_EmissionColor = Shader.PropertyToID("_EmissionColor");
+
+		[CompilerGenerated]
+		private bool <ITickSystemPost.PostTickRunning>k__BackingField;
 	}
 }

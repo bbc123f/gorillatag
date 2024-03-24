@@ -120,4 +120,8 @@ public class InputBehaviourPrototype : Fusion.Behaviour, INetworkRunnerCallbacks
 	public void OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken)
 	{
 	}
+
+	public InputBehaviourPrototype()
+	{
+	}
 }

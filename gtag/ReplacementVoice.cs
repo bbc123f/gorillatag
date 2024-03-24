@@ -25,6 +25,10 @@ public class ReplacementVoice : MonoBehaviour
 		}
 	}
 
+	public ReplacementVoice()
+	{
+	}
+
 	public AudioSource replacementVoiceSource;
 
 	public AudioClip[] replacementVoiceClips;

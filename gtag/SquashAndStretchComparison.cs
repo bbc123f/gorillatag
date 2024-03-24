@@ -48,6 +48,10 @@ public class SquashAndStretchComparison : MonoBehaviour
 		}
 	}
 
+	public SquashAndStretchComparison()
+	{
+	}
+
 	public float Run = 11f;
 
 	public float Period = 3f;

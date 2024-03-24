@@ -90,6 +90,10 @@ public class InteractionPoint : MonoBehaviour
 		}
 	}
 
+	public InteractionPoint()
+	{
+	}
+
 	public TransferrableObject parentTransferrableObject;
 
 	public Collider myCollider;

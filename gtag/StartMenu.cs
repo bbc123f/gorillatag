@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -28,9 +29,30 @@ public class StartMenu : MonoBehaviour
 		SceneManager.LoadScene(idx);
 	}
 
+	public StartMenu()
+	{
+	}
+
 	public OVROverlay overlay;
 
 	public OVROverlay text;
 
 	public OVRCameraRig vrRig;
+
+	[CompilerGenerated]
+	private sealed class <>c__DisplayClass3_0
+	{
+		public <>c__DisplayClass3_0()
+		{
+		}
+
+		internal void <Start>b__0()
+		{
+			this.<>4__this.LoadScene(this.sceneIndex);
+		}
+
+		public int sceneIndex;
+
+		public StartMenu <>4__this;
+	}
 }

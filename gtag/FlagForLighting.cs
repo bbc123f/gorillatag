@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class FlagForLighting : MonoBehaviour
 {
+	public FlagForLighting()
+	{
+	}
+
 	public FlagForLighting.TimeOfDay myTimeOfDay;
 
 	public enum TimeOfDay

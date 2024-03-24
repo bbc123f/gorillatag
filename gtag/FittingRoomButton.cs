@@ -34,6 +34,10 @@ public class FittingRoomButton : GorillaPressableButton
 		CosmeticsController.instance.PressFittingRoomButton(this, isLeftHand);
 	}
 
+	public FittingRoomButton()
+	{
+	}
+
 	public CosmeticsController.CosmeticItem currentCosmeticItem;
 
 	public Image currentImage;

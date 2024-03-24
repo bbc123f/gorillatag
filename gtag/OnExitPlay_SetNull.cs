@@ -13,4 +13,8 @@ public class OnExitPlay_SetNull : OnExitPlay_Attribute
 		}
 		field.SetValue(null, null);
 	}
+
+	public OnExitPlay_SetNull()
+	{
+	}
 }

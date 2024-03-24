@@ -27,6 +27,10 @@ public static class JSonHelper
 	[Serializable]
 	private class Wrapper<T>
 	{
+		public Wrapper()
+		{
+		}
+
 		public T[] Items;
 	}
 }

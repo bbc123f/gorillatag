@@ -4,4 +4,7 @@ using Sirenix.OdinInspector;
 [IncludeMyAttributes]
 public class DebugReadOnlyAttribute : Attribute
 {
+	public DebugReadOnlyAttribute()
+	{
+	}
 }

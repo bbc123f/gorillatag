@@ -61,6 +61,15 @@ public class ObjectHierarchyFlattenerManager : MonoBehaviour
 		}
 	}
 
+	public ObjectHierarchyFlattenerManager()
+	{
+	}
+
+	// Note: this type is marked as 'beforefieldinit'.
+	static ObjectHierarchyFlattenerManager()
+	{
+	}
+
 	public static ObjectHierarchyFlattenerManager instance;
 
 	[OnEnterPlay_Set(false)]

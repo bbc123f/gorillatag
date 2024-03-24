@@ -10,4 +10,8 @@ public class TeleportOrientationHandler360 : TeleportOrientationHandler
 	{
 		base.LocomotionTeleport.OnUpdateTeleportDestination(this.AimData.TargetValid, this.AimData.Destination, null, null);
 	}
+
+	public TeleportOrientationHandler360()
+	{
+	}
 }

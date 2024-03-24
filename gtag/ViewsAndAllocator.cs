@@ -5,6 +5,10 @@ using Photon.Pun;
 [Serializable]
 public class ViewsAndAllocator
 {
+	public ViewsAndAllocator()
+	{
+	}
+
 	public List<PhotonView> views;
 
 	public string path;

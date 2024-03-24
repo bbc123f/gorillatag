@@ -11,6 +11,11 @@ namespace BuildSafe
 			return false;
 		}
 
+		// Note: this type is marked as 'beforefieldinit'.
+		static SceneViewUtils()
+		{
+		}
+
 		public static readonly SceneViewUtils.FuncRaycastWorld RaycastWorld = new SceneViewUtils.FuncRaycastWorld(SceneViewUtils.RaycastWorldSafe);
 
 		public delegate bool FuncRaycastWorld(Vector2 screenPos, out RaycastHit hit);

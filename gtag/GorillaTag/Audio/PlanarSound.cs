@@ -30,6 +30,10 @@ namespace GorillaTag.Audio
 			transform.localPosition = vector;
 		}
 
+		public PlanarSound()
+		{
+		}
+
 		private Transform cameraXform;
 
 		private bool hasCamera;

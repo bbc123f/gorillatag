@@ -1,12 +1,20 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace BuildSafe
 {
 	public static class Reflection<T>
 	{
-		public static Type Type { get; } = typeof(T);
+		public static Type Type
+		{
+			[CompilerGenerated]
+			get
+			{
+				return Reflection<T>.<Type>k__BackingField;
+			}
+		} = typeof(T);
 
 		public static EventInfo[] Events
 		{
@@ -76,6 +84,11 @@ namespace BuildSafe
 			return Reflection<T>.gFieldsCache = Reflection<T>.Type.GetRuntimeFields().ToArray<FieldInfo>();
 		}
 
+		// Note: this type is marked as 'beforefieldinit'.
+		static Reflection()
+		{
+		}
+
 		private static Type gCachedType;
 
 		private static MethodInfo[] gMethodsCache;
@@ -85,5 +98,8 @@ namespace BuildSafe
 		private static PropertyInfo[] gPropertiesCache;
 
 		private static EventInfo[] gEventsCache;
+
+		[CompilerGenerated]
+		private static readonly Type <Type>k__BackingField;
 	}
 }

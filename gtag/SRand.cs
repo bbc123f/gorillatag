@@ -24,6 +24,12 @@ public struct SRand
 		this._state = this._seed;
 	}
 
+	public SRand(DateTime seed)
+	{
+		this._seed = (uint)StaticHash.Calculate(seed);
+		this._state = this._seed;
+	}
+
 	public SRand(string seed)
 	{
 		if (string.IsNullOrEmpty(seed))
@@ -231,6 +237,12 @@ public struct SRand
 		this._state = this._seed;
 	}
 
+	public void Reset(DateTime seed)
+	{
+		this._seed = (uint)StaticHash.Calculate(seed);
+		this._state = this._seed;
+	}
+
 	public void Reset(string seed)
 	{
 		if (string.IsNullOrEmpty(seed))
@@ -278,7 +290,7 @@ public struct SRand
 
 	public static SRand New()
 	{
-		return new SRand(DateTime.UtcNow.ToBinary());
+		return new SRand(DateTime.UtcNow);
 	}
 
 	public static explicit operator SRand(int seed)
@@ -302,6 +314,11 @@ public struct SRand
 	}
 
 	public static explicit operator SRand(byte[] seed)
+	{
+		return new SRand(seed);
+	}
+
+	public static explicit operator SRand(DateTime seed)
 	{
 		return new SRand(seed);
 	}

@@ -20,5 +20,9 @@ namespace OculusSampleFramework
 		{
 			Time.timeScale = 1f;
 		}
+
+		public PauseOnInputLoss()
+		{
+		}
 	}
 }

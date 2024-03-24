@@ -8,6 +8,10 @@ public class GorillaTurning : GorillaTriggerBox
 	{
 	}
 
+	public GorillaTurning()
+	{
+	}
+
 	public Material redMaterial;
 
 	public Material blueMaterial;

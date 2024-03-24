@@ -27,6 +27,10 @@ public class Spawnable : ISerializationCallbackReceiver
 		}
 	}
 
+	public Spawnable()
+	{
+	}
+
 	[CompilerGenerated]
 	internal static int <OnAfterDeserialize>g__IndexOf|4_0(string label, IEnumerable<string> collection)
 	{

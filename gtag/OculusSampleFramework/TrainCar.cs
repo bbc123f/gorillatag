@@ -25,6 +25,10 @@ namespace OculusSampleFramework
 			base.RotateCarWheels();
 		}
 
+		public TrainCar()
+		{
+		}
+
 		[SerializeField]
 		private TrainCarBase _parentLocomotive;
 

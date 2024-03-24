@@ -10,6 +10,10 @@ namespace GorillaLocomotion.Climbing
 			this.colliderCache = base.GetComponent<Collider>();
 		}
 
+		public GorillaClimbable()
+		{
+		}
+
 		public bool snapX;
 
 		public bool snapY;

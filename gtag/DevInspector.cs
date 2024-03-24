@@ -9,6 +9,10 @@ public class DevInspector : MonoBehaviour
 		Object.Destroy(base.gameObject);
 	}
 
+	public DevInspector()
+	{
+	}
+
 	public GameObject pivot;
 
 	public Text outputInfo;

@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class FlagCauldronColorer : MonoBehaviour
 {
+	public FlagCauldronColorer()
+	{
+	}
+
 	public FlagCauldronColorer.ColorMode mode;
 
 	public Transform colorPoint;

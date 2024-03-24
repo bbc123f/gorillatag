@@ -49,6 +49,10 @@ public class GorillaIK : MonoBehaviour
 		hand.rotation = target.rotation;
 	}
 
+	public GorillaIK()
+	{
+	}
+
 	public Transform headBone;
 
 	public Transform leftUpperArm;

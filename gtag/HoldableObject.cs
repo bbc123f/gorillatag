@@ -16,4 +16,8 @@ public class HoldableObject : MonoBehaviourPunCallbacks
 	public virtual void DropItemCleanup()
 	{
 	}
+
+	public HoldableObject()
+	{
+	}
 }

@@ -39,5 +39,9 @@ public class GorillaHasUITransformFollow : MonoBehaviour
 		}
 	}
 
+	public GorillaHasUITransformFollow()
+	{
+	}
+
 	public GorillaUITransformFollow[] transformFollowers;
 }

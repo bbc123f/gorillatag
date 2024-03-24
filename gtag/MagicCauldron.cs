@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using GorillaLocomotion;
 using GorillaLocomotion.Gameplay;
 using Photon.Pun;
@@ -341,6 +343,10 @@ public class MagicCauldron : MonoBehaviourPunCallbacks, IPunObservable
 		}
 	}
 
+	public MagicCauldron()
+	{
+	}
+
 	public List<MagicCauldron.Recipe> recipes = new List<MagicCauldron.Recipe>();
 
 	public float maxTimeToAddAllIngredients = 30f;
@@ -443,6 +449,10 @@ public class MagicCauldron : MonoBehaviourPunCallbacks, IPunObservable
 
 	private class IngredientArgs : FXSArgs
 	{
+		public IngredientArgs()
+		{
+		}
+
 		public int key;
 	}
 
@@ -461,10 +471,80 @@ public class MagicCauldron : MonoBehaviourPunCallbacks, IPunObservable
 			this.fxCallBack(args.key);
 		}
 
+		public IngrediantFXContext()
+		{
+		}
+
 		public FXSystemSettings playerSettings;
 
 		public MagicCauldron.IngrediantFXContext.Callback fxCallBack;
 
 		public delegate void Callback(int key);
+	}
+
+	[CompilerGenerated]
+	private sealed class <LevitationSpellCoroutine>d__45 : IEnumerator<object>, IEnumerator, IDisposable
+	{
+		[DebuggerHidden]
+		public <LevitationSpellCoroutine>d__45(int <>1__state)
+		{
+			this.<>1__state = <>1__state;
+		}
+
+		[DebuggerHidden]
+		void IDisposable.Dispose()
+		{
+		}
+
+		bool IEnumerator.MoveNext()
+		{
+			int num = this.<>1__state;
+			MagicCauldron magicCauldron = this;
+			if (num == 0)
+			{
+				this.<>1__state = -1;
+				Player.Instance.SetHalloweenLevitation(magicCauldron.levitationStrength, magicCauldron.levitationDuration, magicCauldron.levitationBlendOutDuration, magicCauldron.levitationBonusStrength, magicCauldron.levitationBonusOffAtYSpeed, magicCauldron.levitationBonusFullAtYSpeed);
+				this.<>2__current = new WaitForSeconds(magicCauldron.levitationSpellDuration);
+				this.<>1__state = 1;
+				return true;
+			}
+			if (num != 1)
+			{
+				return false;
+			}
+			this.<>1__state = -1;
+			Player.Instance.SetHalloweenLevitation(0f, magicCauldron.levitationDuration, magicCauldron.levitationBlendOutDuration, 0f, magicCauldron.levitationBonusOffAtYSpeed, magicCauldron.levitationBonusFullAtYSpeed);
+			return false;
+		}
+
+		object IEnumerator<object>.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		[DebuggerHidden]
+		void IEnumerator.Reset()
+		{
+			throw new NotSupportedException();
+		}
+
+		object IEnumerator.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		private int <>1__state;
+
+		private object <>2__current;
+
+		public MagicCauldron <>4__this;
 	}
 }

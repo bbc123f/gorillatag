@@ -22,6 +22,10 @@ internal abstract class TickSystem<T> : MonoBehaviour
 		TickSystem<T>.postTickCallbacks.TryRunCallbacks();
 	}
 
+	static TickSystem()
+	{
+	}
+
 	private static void OnEnterPlay()
 	{
 		TickSystem<T>.preTickCallbacks.Clear();
@@ -177,6 +181,10 @@ internal abstract class TickSystem<T> : MonoBehaviour
 		}
 	}
 
+	protected TickSystem()
+	{
+	}
+
 	private static readonly ObjectPool<TickSystem<T>.TickCallbackWrapperPre> preTickWrapperPool = new ObjectPool<TickSystem<T>.TickCallbackWrapperPre>(100);
 
 	private static readonly CallbackContainer<TickSystem<T>.TickCallbackWrapperPre> preTickCallbacks = new CallbackContainer<TickSystem<T>.TickCallbackWrapperPre>();
@@ -210,6 +218,10 @@ internal abstract class TickSystem<T> : MonoBehaviour
 			this.target = default(U);
 		}
 
+		public TickCallbackWrapper()
+		{
+		}
+
 		public U target;
 	}
 
@@ -219,6 +231,10 @@ internal abstract class TickSystem<T> : MonoBehaviour
 		{
 			this.target.PreTick();
 		}
+
+		public TickCallbackWrapperPre()
+		{
+		}
 	}
 
 	private class TickCallbackWrapperTick : TickSystem<T>.TickCallbackWrapper<ITickSystemTick>
@@ -227,6 +243,10 @@ internal abstract class TickSystem<T> : MonoBehaviour
 		{
 			this.target.Tick();
 		}
+
+		public TickCallbackWrapperTick()
+		{
+		}
 	}
 
 	private class TickCallbackWrapperPost : TickSystem<T>.TickCallbackWrapper<ITickSystemPost>
@@ -234,6 +254,10 @@ internal abstract class TickSystem<T> : MonoBehaviour
 		public override void CallBack()
 		{
 			this.target.PostTick();
+		}
+
+		public TickCallbackWrapperPost()
+		{
 		}
 	}
 }

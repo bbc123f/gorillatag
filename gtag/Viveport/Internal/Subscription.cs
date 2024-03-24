@@ -33,5 +33,9 @@ namespace Viveport.Internal
 
 		[DllImport("viveport_api64", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi, EntryPoint = "IViveportSubscription_GetTransactionType")]
 		internal static extern ESubscriptionTransactionType GetTransactionType_64();
+
+		public Subscription()
+		{
+		}
 	}
 }

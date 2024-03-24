@@ -14,6 +14,10 @@ public class LegacyWorldTargetItem
 		this.owner = null;
 	}
 
+	public LegacyWorldTargetItem()
+	{
+	}
+
 	public Player owner;
 
 	public int itemIdx;

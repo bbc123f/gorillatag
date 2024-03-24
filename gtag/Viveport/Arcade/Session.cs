@@ -60,6 +60,10 @@ namespace Viveport.Arcade
 			Session.Stop(new SessionCallback(Session.StopIl2cppCallback));
 		}
 
+		public Session()
+		{
+		}
+
 		private static SessionCallback isReadyIl2cppCallback;
 
 		private static SessionCallback startIl2cppCallback;
@@ -297,6 +301,10 @@ namespace Viveport.Arcade
 			protected abstract void StartHandler(int code, [MarshalAs(UnmanagedType.LPStr)] string message);
 
 			protected abstract void StopHandler(int code, [MarshalAs(UnmanagedType.LPStr)] string message);
+
+			protected BaseHandler()
+			{
+			}
 		}
 
 		public class SessionListener
@@ -314,6 +322,10 @@ namespace Viveport.Arcade
 			}
 
 			public virtual void OnFailure(int nCode, string pchMessage)
+			{
+			}
+
+			public SessionListener()
 			{
 			}
 		}

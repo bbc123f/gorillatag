@@ -10,4 +10,8 @@ public class VRRigLookupTableGenerator : MonoBehaviour
 	private void Update()
 	{
 	}
+
+	public VRRigLookupTableGenerator()
+	{
+	}
 }

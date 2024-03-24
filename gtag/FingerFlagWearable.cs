@@ -128,6 +128,10 @@ public class FingerFlagWearable : MonoBehaviour
 		}
 	}
 
+	public FingerFlagWearable()
+	{
+	}
+
 	[Header("Wearable Settings")]
 	public bool attachedToLeftHand = true;
 

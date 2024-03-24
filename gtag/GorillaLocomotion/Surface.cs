@@ -5,6 +5,10 @@ namespace GorillaLocomotion
 {
 	public class Surface : MonoBehaviour
 	{
+		public Surface()
+		{
+		}
+
 		public float slipPercentage;
 	}
 }

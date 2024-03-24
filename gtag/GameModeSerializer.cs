@@ -99,6 +99,10 @@ internal class GameModeSerializer : GorillaSerializerMasterOnly, IOnPhotonViewPr
 		}
 	}
 
+	public GameModeSerializer()
+	{
+	}
+
 	private GameModeType gameModeKey;
 
 	private GorillaGameManager gameModeInstance;

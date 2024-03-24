@@ -34,6 +34,10 @@ public class HandedInputSelector : MonoBehaviour
 		this.m_InputModule.rayTransform = transform;
 	}
 
+	public HandedInputSelector()
+	{
+	}
+
 	private OVRCameraRig m_CameraRig;
 
 	private OVRInputModule m_InputModule;

@@ -9,6 +9,10 @@ public class PuppetFollow : MonoBehaviour
 		base.transform.localRotation = this.sourceTarget.localRotation;
 	}
 
+	public PuppetFollow()
+	{
+	}
+
 	public Transform sourceTarget;
 
 	public Transform sourceBase;

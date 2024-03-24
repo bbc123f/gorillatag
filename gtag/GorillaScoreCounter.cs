@@ -24,6 +24,10 @@ public class GorillaScoreCounter : MonoBehaviour
 		}
 	}
 
+	public GorillaScoreCounter()
+	{
+	}
+
 	public bool isRedTeam;
 
 	public Text text;

@@ -35,6 +35,10 @@ namespace GorillaNetworking.Store
 			storeItem.MaterialResrouceName = cosmeticItem.materialResourceString;
 		}
 
+		public StoreItem()
+		{
+		}
+
 		public string itemName = "";
 
 		public int itemCategory;

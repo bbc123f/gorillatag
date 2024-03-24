@@ -54,6 +54,10 @@ namespace NetSynchrony
 			this.serverTime += (double)Time.deltaTime;
 		}
 
+		public RandomDispatcherManager()
+		{
+		}
+
 		[SerializeField]
 		private RandomDispatcher[] randomDispatchers;
 

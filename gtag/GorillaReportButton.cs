@@ -45,6 +45,10 @@ public class GorillaReportButton : MonoBehaviour
 		base.GetComponent<MeshRenderer>().material = this.offMaterial;
 	}
 
+	public GorillaReportButton()
+	{
+	}
+
 	public GorillaReportButton.MetaReportReason metaReportType;
 
 	public GorillaPlayerLineButton.ButtonType buttonType;

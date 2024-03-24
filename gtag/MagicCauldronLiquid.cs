@@ -80,6 +80,10 @@ public class MagicCauldronLiquid : MonoBehaviour
 		this._animProgress += Time.deltaTime;
 	}
 
+	public MagicCauldronLiquid()
+	{
+	}
+
 	[SerializeField]
 	private ApplyMaterialProperty _applyMaterial;
 

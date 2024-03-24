@@ -311,6 +311,10 @@ namespace GorillaTag
 			}), this);
 		}
 
+		public VolcanoEffects()
+		{
+		}
+
 		[Tooltip("Only one VolcanoEffects should change shader globals in the scene (lava color, lava light) at a time.")]
 		[SerializeField]
 		private bool applyShaderGlobals = true;
@@ -391,6 +395,10 @@ namespace GorillaTag
 		[Serializable]
 		public class LavaStateFX
 		{
+			public LavaStateFX()
+			{
+			}
+
 			public AudioClip startSound;
 
 			public AudioSource startSoundAudioSrc;

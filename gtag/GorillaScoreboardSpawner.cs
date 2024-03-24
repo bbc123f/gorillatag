@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using GorillaLocomotion;
 using UnityEngine;
 using UnityEngine.UI;
@@ -99,6 +102,10 @@ public class GorillaScoreboardSpawner : MonoBehaviour
 		}
 	}
 
+	public GorillaScoreboardSpawner()
+	{
+	}
+
 	public string gameType;
 
 	public bool includeMMR;
@@ -116,4 +123,95 @@ public class GorillaScoreboardSpawner : MonoBehaviour
 	public bool lastVisible;
 
 	public bool forOverlay;
+
+	[CompilerGenerated]
+	private sealed class <UpdateBoard>d__14 : IEnumerator<object>, IEnumerator, IDisposable
+	{
+		[DebuggerHidden]
+		public <UpdateBoard>d__14(int <>1__state)
+		{
+			this.<>1__state = <>1__state;
+		}
+
+		[DebuggerHidden]
+		void IDisposable.Dispose()
+		{
+		}
+
+		bool IEnumerator.MoveNext()
+		{
+			int num = this.<>1__state;
+			GorillaScoreboardSpawner gorillaScoreboardSpawner = this;
+			if (num != 0)
+			{
+				if (num != 1)
+				{
+					return false;
+				}
+				this.<>1__state = -1;
+			}
+			else
+			{
+				this.<>1__state = -1;
+			}
+			try
+			{
+				if (gorillaScoreboardSpawner.currentScoreboard != null)
+				{
+					bool flag = gorillaScoreboardSpawner.IsVisible();
+					foreach (GorillaPlayerScoreboardLine gorillaPlayerScoreboardLine in gorillaScoreboardSpawner.currentScoreboard.lines)
+					{
+						if (flag != gorillaPlayerScoreboardLine.lastVisible)
+						{
+							gorillaPlayerScoreboardLine.lastVisible = flag;
+						}
+					}
+					if (gorillaScoreboardSpawner.currentScoreboard.boardText.enabled != flag)
+					{
+						gorillaScoreboardSpawner.currentScoreboard.boardText.enabled = flag;
+					}
+					if (gorillaScoreboardSpawner.currentScoreboard.buttonText.enabled != flag)
+					{
+						gorillaScoreboardSpawner.currentScoreboard.buttonText.enabled = flag;
+					}
+				}
+			}
+			catch
+			{
+			}
+			this.<>2__current = new WaitForSeconds(1f);
+			this.<>1__state = 1;
+			return true;
+		}
+
+		object IEnumerator<object>.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		[DebuggerHidden]
+		void IEnumerator.Reset()
+		{
+			throw new NotSupportedException();
+		}
+
+		object IEnumerator.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		private int <>1__state;
+
+		private object <>2__current;
+
+		public GorillaScoreboardSpawner <>4__this;
+	}
 }

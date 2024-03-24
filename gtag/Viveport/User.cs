@@ -70,6 +70,10 @@ namespace Viveport
 			return stringBuilder.ToString();
 		}
 
+		public User()
+		{
+		}
+
 		private static StatusCallback isReadyIl2cppCallback;
 
 		private const int MaxIdLength = 256;

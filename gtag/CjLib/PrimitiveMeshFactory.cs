@@ -2014,6 +2014,15 @@ namespace CjLib
 			return mesh;
 		}
 
+		public PrimitiveMeshFactory()
+		{
+		}
+
+		// Note: this type is marked as 'beforefieldinit'.
+		static PrimitiveMeshFactory()
+		{
+		}
+
 		private static int s_lastDrawLineFrame = -1;
 
 		private static int s_iPooledMesh = 0;

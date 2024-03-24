@@ -19,6 +19,10 @@ public class GorillaIKHandTarget : MonoBehaviour
 	{
 	}
 
+	public GorillaIKHandTarget()
+	{
+	}
+
 	public GameObject handToStickTo;
 
 	public bool isLeftHand;

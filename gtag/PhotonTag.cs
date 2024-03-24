@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using BuildSafe;
 using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
@@ -57,7 +56,7 @@ public class PhotonTag : MonoBehaviour, IOnEventCallback, IEquatable<PhotonTag>
 		{
 			return;
 		}
-		this._tagId = BuildSafe.ComponentUtils.GetComponentID(this, 0);
+		this._tagId = ComponentUtils.ComputeStaticHash128(this, 0);
 	}
 
 	public bool Equals(PhotonTag other)
@@ -97,6 +96,10 @@ public class PhotonTag : MonoBehaviour, IOnEventCallback, IEquatable<PhotonTag>
 	public static bool operator !=(PhotonTag x, PhotonTag y)
 	{
 		return !object.Equals(x, y);
+	}
+
+	public PhotonTag()
+	{
 	}
 
 	public const byte PHOTON_TAG_CODE = 177;

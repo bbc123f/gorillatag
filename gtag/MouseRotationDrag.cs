@@ -35,6 +35,10 @@ public class MouseRotationDrag : MonoBehaviour
 		}
 	}
 
+	public MouseRotationDrag()
+	{
+	}
+
 	private bool m_currFrameHasFocus;
 
 	private bool m_prevFrameHasFocus;

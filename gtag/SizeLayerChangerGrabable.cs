@@ -27,6 +27,10 @@ public class SizeLayerChangerGrabable : MonoBehaviour, IGorillaGrabable
 		return base.transform;
 	}
 
+	public SizeLayerChangerGrabable()
+	{
+	}
+
 	[SerializeField]
 	private bool grabChangesSizeLayer = true;
 

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using GorillaLocomotion;
 using UnityEngine;
 using UnityEngine.XR;
@@ -8,7 +10,19 @@ using UnityEngine.XR.Interaction.Toolkit;
 
 internal class ConnectedControllerHandler : MonoBehaviour
 {
-	public static ConnectedControllerHandler Instance { get; private set; }
+	public static ConnectedControllerHandler Instance
+	{
+		[CompilerGenerated]
+		get
+		{
+			return ConnectedControllerHandler.<Instance>k__BackingField;
+		}
+		[CompilerGenerated]
+		private set
+		{
+			ConnectedControllerHandler.<Instance>k__BackingField = value;
+		}
+	}
 
 	public bool RightValid
 	{
@@ -225,6 +239,14 @@ internal class ConnectedControllerHandler : MonoBehaviour
 		return flag;
 	}
 
+	public ConnectedControllerHandler()
+	{
+	}
+
+	[CompilerGenerated]
+	[OnEnterPlay_SetNull]
+	private static ConnectedControllerHandler <Instance>k__BackingField;
+
 	[SerializeField]
 	private HandTransformFollowOffest rightHandFollower;
 
@@ -281,4 +303,121 @@ internal class ConnectedControllerHandler : MonoBehaviour
 
 	[SerializeField]
 	private OverrideControllers overrideController;
+
+	[CompilerGenerated]
+	private sealed class <ControllerValidator>d__36 : IEnumerator<object>, IEnumerator, IDisposable
+	{
+		[DebuggerHidden]
+		public <ControllerValidator>d__36(int <>1__state)
+		{
+			this.<>1__state = <>1__state;
+		}
+
+		[DebuggerHidden]
+		void IDisposable.Dispose()
+		{
+		}
+
+		bool IEnumerator.MoveNext()
+		{
+			int num = this.<>1__state;
+			ConnectedControllerHandler connectedControllerHandler = this;
+			switch (num)
+			{
+			case 0:
+				this.<>1__state = -1;
+				this.<>2__current = null;
+				this.<>1__state = 1;
+				return true;
+			case 1:
+				this.<>1__state = -1;
+				connectedControllerHandler.lastRightPos = ControllerInputPoller.DevicePosition(XRNode.RightHand);
+				connectedControllerHandler.lastLeftPos = ControllerInputPoller.DevicePosition(XRNode.LeftHand);
+				break;
+			case 2:
+				this.<>1__state = -1;
+				connectedControllerHandler.updateControllers = false;
+				if (!connectedControllerHandler.playerHandler.inOverlay)
+				{
+					if (connectedControllerHandler.rightControllerValid)
+					{
+						connectedControllerHandler.tempRightPos = ControllerInputPoller.DevicePosition(XRNode.RightHand);
+						if (connectedControllerHandler.tempRightPos == connectedControllerHandler.lastRightPos)
+						{
+							if ((connectedControllerHandler.overrideController & OverrideControllers.RightController) != OverrideControllers.RightController)
+							{
+								connectedControllerHandler.overrideController |= OverrideControllers.RightController;
+								connectedControllerHandler.updateControllers = true;
+							}
+						}
+						else if ((connectedControllerHandler.overrideController & OverrideControllers.RightController) == OverrideControllers.RightController)
+						{
+							connectedControllerHandler.overrideController &= ~OverrideControllers.RightController;
+							connectedControllerHandler.updateControllers = true;
+						}
+						connectedControllerHandler.lastRightPos = connectedControllerHandler.tempRightPos;
+					}
+					if (connectedControllerHandler.leftControllerValid)
+					{
+						connectedControllerHandler.tempLeftPos = ControllerInputPoller.DevicePosition(XRNode.LeftHand);
+						if (connectedControllerHandler.tempLeftPos == connectedControllerHandler.lastLeftPos)
+						{
+							if ((connectedControllerHandler.overrideController & OverrideControllers.LeftController) != OverrideControllers.LeftController)
+							{
+								connectedControllerHandler.overrideController |= OverrideControllers.LeftController;
+								connectedControllerHandler.updateControllers = true;
+							}
+						}
+						else if ((connectedControllerHandler.overrideController & OverrideControllers.LeftController) == OverrideControllers.LeftController)
+						{
+							connectedControllerHandler.overrideController &= ~OverrideControllers.LeftController;
+							connectedControllerHandler.updateControllers = true;
+						}
+						connectedControllerHandler.lastLeftPos = connectedControllerHandler.tempLeftPos;
+					}
+					if (connectedControllerHandler.updateControllers)
+					{
+						connectedControllerHandler.overrideEnabled = connectedControllerHandler.overrideController > OverrideControllers.None;
+						connectedControllerHandler.UpdateControllerStates();
+					}
+				}
+				break;
+			default:
+				return false;
+			}
+			this.<>2__current = new WaitForSeconds(connectedControllerHandler.overridePollRate);
+			this.<>1__state = 2;
+			return true;
+		}
+
+		object IEnumerator<object>.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		[DebuggerHidden]
+		void IEnumerator.Reset()
+		{
+			throw new NotSupportedException();
+		}
+
+		object IEnumerator.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		private int <>1__state;
+
+		private object <>2__current;
+
+		public ConnectedControllerHandler <>4__this;
+	}
 }

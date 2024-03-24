@@ -128,6 +128,15 @@ public class TappableManager : MonoBehaviourPun
 		}
 	}
 
+	public TappableManager()
+	{
+	}
+
+	// Note: this type is marked as 'beforefieldinit'.
+	static TappableManager()
+	{
+	}
+
 	private static TappableManager gManager;
 
 	[SerializeField]

@@ -19,6 +19,10 @@ public class ScheduledTimelinePlayer : MonoBehaviour
 		this.timeline.Play();
 	}
 
+	public ScheduledTimelinePlayer()
+	{
+	}
+
 	public PlayableDirector timeline;
 
 	public int eventHour = 7;

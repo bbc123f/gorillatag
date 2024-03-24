@@ -1,12 +1,70 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using UnityEngine;
 
 public class CompositeTriggerEvents : MonoBehaviour
 {
-	public event CompositeTriggerEvents.TriggerEvent CompositeTriggerEnter;
+	public event CompositeTriggerEvents.TriggerEvent CompositeTriggerEnter
+	{
+		[CompilerGenerated]
+		add
+		{
+			CompositeTriggerEvents.TriggerEvent triggerEvent = this.CompositeTriggerEnter;
+			CompositeTriggerEvents.TriggerEvent triggerEvent2;
+			do
+			{
+				triggerEvent2 = triggerEvent;
+				CompositeTriggerEvents.TriggerEvent triggerEvent3 = (CompositeTriggerEvents.TriggerEvent)Delegate.Combine(triggerEvent2, value);
+				triggerEvent = Interlocked.CompareExchange<CompositeTriggerEvents.TriggerEvent>(ref this.CompositeTriggerEnter, triggerEvent3, triggerEvent2);
+			}
+			while (triggerEvent != triggerEvent2);
+		}
+		[CompilerGenerated]
+		remove
+		{
+			CompositeTriggerEvents.TriggerEvent triggerEvent = this.CompositeTriggerEnter;
+			CompositeTriggerEvents.TriggerEvent triggerEvent2;
+			do
+			{
+				triggerEvent2 = triggerEvent;
+				CompositeTriggerEvents.TriggerEvent triggerEvent3 = (CompositeTriggerEvents.TriggerEvent)Delegate.Remove(triggerEvent2, value);
+				triggerEvent = Interlocked.CompareExchange<CompositeTriggerEvents.TriggerEvent>(ref this.CompositeTriggerEnter, triggerEvent3, triggerEvent2);
+			}
+			while (triggerEvent != triggerEvent2);
+		}
+	}
 
-	public event CompositeTriggerEvents.TriggerEvent CompositeTriggerExit;
+	public event CompositeTriggerEvents.TriggerEvent CompositeTriggerExit
+	{
+		[CompilerGenerated]
+		add
+		{
+			CompositeTriggerEvents.TriggerEvent triggerEvent = this.CompositeTriggerExit;
+			CompositeTriggerEvents.TriggerEvent triggerEvent2;
+			do
+			{
+				triggerEvent2 = triggerEvent;
+				CompositeTriggerEvents.TriggerEvent triggerEvent3 = (CompositeTriggerEvents.TriggerEvent)Delegate.Combine(triggerEvent2, value);
+				triggerEvent = Interlocked.CompareExchange<CompositeTriggerEvents.TriggerEvent>(ref this.CompositeTriggerExit, triggerEvent3, triggerEvent2);
+			}
+			while (triggerEvent != triggerEvent2);
+		}
+		[CompilerGenerated]
+		remove
+		{
+			CompositeTriggerEvents.TriggerEvent triggerEvent = this.CompositeTriggerExit;
+			CompositeTriggerEvents.TriggerEvent triggerEvent2;
+			do
+			{
+				triggerEvent2 = triggerEvent;
+				CompositeTriggerEvents.TriggerEvent triggerEvent3 = (CompositeTriggerEvents.TriggerEvent)Delegate.Remove(triggerEvent2, value);
+				triggerEvent = Interlocked.CompareExchange<CompositeTriggerEvents.TriggerEvent>(ref this.CompositeTriggerExit, triggerEvent3, triggerEvent2);
+			}
+			while (triggerEvent != triggerEvent2);
+		}
+	}
 
 	private void Awake()
 	{
@@ -123,6 +181,16 @@ public class CompositeTriggerEvents : MonoBehaviour
 		}
 		return text;
 	}
+
+	public CompositeTriggerEvents()
+	{
+	}
+
+	[CompilerGenerated]
+	private CompositeTriggerEvents.TriggerEvent CompositeTriggerEnter;
+
+	[CompilerGenerated]
+	private CompositeTriggerEvents.TriggerEvent CompositeTriggerExit;
 
 	[SerializeField]
 	private List<Collider> individualTriggerColliders = new List<Collider>();

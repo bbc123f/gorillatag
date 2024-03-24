@@ -1,14 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace GorillaTag.Rendering
 {
 	public class ZoneLiquidEffectableManager : MonoBehaviour
 	{
-		public static ZoneLiquidEffectableManager instance { get; private set; }
+		public static ZoneLiquidEffectableManager instance
+		{
+			[CompilerGenerated]
+			get
+			{
+				return ZoneLiquidEffectableManager.<instance>k__BackingField;
+			}
+			[CompilerGenerated]
+			private set
+			{
+				ZoneLiquidEffectableManager.<instance>k__BackingField = value;
+			}
+		}
 
-		public static bool hasInstance { get; private set; }
+		public static bool hasInstance
+		{
+			[CompilerGenerated]
+			get
+			{
+				return ZoneLiquidEffectableManager.<hasInstance>k__BackingField;
+			}
+			[CompilerGenerated]
+			private set
+			{
+				ZoneLiquidEffectableManager.<hasInstance>k__BackingField = value;
+			}
+		}
 
 		protected void Awake()
 		{
@@ -105,6 +130,16 @@ namespace GorillaTag.Rendering
 		{
 			ZoneLiquidEffectableManager.instance.zoneLiquidEffectables.Remove(effect);
 		}
+
+		public ZoneLiquidEffectableManager()
+		{
+		}
+
+		[CompilerGenerated]
+		private static ZoneLiquidEffectableManager <instance>k__BackingField;
+
+		[CompilerGenerated]
+		private static bool <hasInstance>k__BackingField;
 
 		private readonly List<ZoneLiquidEffectable> zoneLiquidEffectables = new List<ZoneLiquidEffectable>(32);
 	}

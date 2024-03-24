@@ -134,6 +134,10 @@ public class SubGrabPoint
 		return num + Mathf.Abs(num2) * 0.0001f;
 	}
 
+	public SubGrabPoint()
+	{
+	}
+
 	[FormerlySerializedAs("transform")]
 	public Transform gripPoint;
 

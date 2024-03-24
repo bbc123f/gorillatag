@@ -15,6 +15,10 @@ public class GiantSnowflakeAudio : MonoBehaviour
 		}
 	}
 
+	public GiantSnowflakeAudio()
+	{
+	}
+
 	public List<GiantSnowflakeAudio.SnowflakeScaleOverride> audioOverrides;
 
 	[Serializable]

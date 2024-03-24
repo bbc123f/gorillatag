@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using GorillaTag;
 using GorillaTagScripts;
 using Photon.Pun;
@@ -9,7 +11,35 @@ using UnityEngine.Serialization;
 
 public class SnowballThrowable : HoldableObject
 {
-	public event SnowballThrowable.SnowballHitEvent OnSnowballHitPlayer;
+	public event SnowballThrowable.SnowballHitEvent OnSnowballHitPlayer
+	{
+		[CompilerGenerated]
+		add
+		{
+			SnowballThrowable.SnowballHitEvent snowballHitEvent = this.OnSnowballHitPlayer;
+			SnowballThrowable.SnowballHitEvent snowballHitEvent2;
+			do
+			{
+				snowballHitEvent2 = snowballHitEvent;
+				SnowballThrowable.SnowballHitEvent snowballHitEvent3 = (SnowballThrowable.SnowballHitEvent)Delegate.Combine(snowballHitEvent2, value);
+				snowballHitEvent = Interlocked.CompareExchange<SnowballThrowable.SnowballHitEvent>(ref this.OnSnowballHitPlayer, snowballHitEvent3, snowballHitEvent2);
+			}
+			while (snowballHitEvent != snowballHitEvent2);
+		}
+		[CompilerGenerated]
+		remove
+		{
+			SnowballThrowable.SnowballHitEvent snowballHitEvent = this.OnSnowballHitPlayer;
+			SnowballThrowable.SnowballHitEvent snowballHitEvent2;
+			do
+			{
+				snowballHitEvent2 = snowballHitEvent;
+				SnowballThrowable.SnowballHitEvent snowballHitEvent3 = (SnowballThrowable.SnowballHitEvent)Delegate.Remove(snowballHitEvent2, value);
+				snowballHitEvent = Interlocked.CompareExchange<SnowballThrowable.SnowballHitEvent>(ref this.OnSnowballHitPlayer, snowballHitEvent3, snowballHitEvent2);
+			}
+			while (snowballHitEvent != snowballHitEvent2);
+		}
+	}
 
 	internal int ProjectileHash
 	{
@@ -266,6 +296,15 @@ public class SnowballThrowable : HoldableObject
 		}
 	}
 
+	public SnowballThrowable()
+	{
+	}
+
+	// Note: this type is marked as 'beforefieldinit'.
+	static SnowballThrowable()
+	{
+	}
+
 	[GorillaSoundLookup]
 	public List<int> matDataIndexes = new List<int> { 32 };
 
@@ -287,6 +326,9 @@ public class SnowballThrowable : HoldableObject
 	public float maxWristSpeed = 4f;
 
 	public bool isLeftHanded;
+
+	[CompilerGenerated]
+	private SnowballThrowable.SnowballHitEvent OnSnowballHitPlayer;
 
 	[Tooltip("Check this part only if we want to randomize the prefab meshes and projectile")]
 	public bool randomModelSelection;

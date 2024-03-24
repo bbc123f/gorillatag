@@ -15,6 +15,10 @@ public class UiBoolInspector : MonoBehaviour
 		this.m_toggle.isOn = value;
 	}
 
+	public UiBoolInspector()
+	{
+	}
+
 	[Header("Components")]
 	[SerializeField]
 	private TextMeshProUGUI m_nameLabel;

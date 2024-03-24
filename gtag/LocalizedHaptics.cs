@@ -18,6 +18,10 @@ public class LocalizedHaptics : MonoBehaviour
 		OVRInput.SetControllerLocalizedVibration(OVRInput.HapticsLocation.Hand, 0f, num3, this.m_controller);
 	}
 
+	public LocalizedHaptics()
+	{
+	}
+
 	[Header("Settings")]
 	[SerializeField]
 	private OVRInput.Handedness m_handedness = OVRInput.Handedness.LeftHanded;

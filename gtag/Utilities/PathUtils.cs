@@ -14,6 +14,11 @@ namespace Utilities
 			return Uri.UnescapeDataString(new Uri(string.Join("/", array)).AbsolutePath);
 		}
 
+		// Note: this type is marked as 'beforefieldinit'.
+		static PathUtils()
+		{
+		}
+
 		private static readonly char[] kPathSeps = new char[] { '\\', '/' };
 
 		private const string kFwdSlash = "/";

@@ -20,6 +20,10 @@ public class PlatformerCollectiblesMain : MonoBehaviour
 		}
 	}
 
+	public PlatformerCollectiblesMain()
+	{
+	}
+
 	public GameObject Coin;
 
 	public float CoinGridCount = 5f;

@@ -13,5 +13,9 @@ public class GorillaJoinTeamBox : GorillaTriggerBox
 		}
 	}
 
+	public GorillaJoinTeamBox()
+	{
+	}
+
 	public bool joinRedTeam;
 }

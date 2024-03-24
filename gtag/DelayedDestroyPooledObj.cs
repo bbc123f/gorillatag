@@ -20,6 +20,10 @@ public class DelayedDestroyPooledObj : MonoBehaviour
 		}
 	}
 
+	public DelayedDestroyPooledObj()
+	{
+	}
+
 	[Tooltip("Return to the object pool after this many seconds.")]
 	public float destroyDelay;
 

@@ -46,6 +46,10 @@ public class AugmentedObject : MonoBehaviour
 		this.groundShadow = !this.groundShadow;
 	}
 
+	public AugmentedObject()
+	{
+	}
+
 	public OVRInput.Controller controllerHand;
 
 	public Transform shadow;

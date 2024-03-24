@@ -99,6 +99,10 @@ public class GumBubble : LerpComponent
 		this.target.localScale = this.targetScale * this._lerpCurve.Evaluate(t);
 	}
 
+	public GumBubble()
+	{
+	}
+
 	public Transform target;
 
 	public Vector3 targetScale = Vector3.one;

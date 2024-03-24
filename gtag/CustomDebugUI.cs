@@ -11,14 +11,6 @@ public class CustomDebugUI : MonoBehaviour
 		CustomDebugUI.instance = this;
 	}
 
-	private void Start()
-	{
-	}
-
-	private void Update()
-	{
-	}
-
 	public RectTransform AddTextField(string label, int targetCanvas = 0)
 	{
 		RectTransform component = Object.Instantiate<RectTransform>(this.textPrefab).GetComponent<RectTransform>();
@@ -40,6 +32,10 @@ public class CustomDebugUI : MonoBehaviour
 			element.SetParent(null);
 			method.Invoke(debugUIBuilder, new object[0]);
 		}
+	}
+
+	public CustomDebugUI()
+	{
 	}
 
 	[SerializeField]

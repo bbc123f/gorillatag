@@ -76,6 +76,10 @@ public class CalibrationCube : MonoBehaviour
 		}
 	}
 
+	public CalibrationCube()
+	{
+	}
+
 	public PrimaryButtonWatcher watcher;
 
 	public GameObject rightController;

@@ -58,6 +58,15 @@ public class ThermalManager : MonoBehaviour
 		ThermalManager.receivers.Remove(receiver);
 	}
 
+	public ThermalManager()
+	{
+	}
+
+	// Note: this type is marked as 'beforefieldinit'.
+	static ThermalManager()
+	{
+	}
+
 	public static readonly List<ThermalSourceVolume> sources = new List<ThermalSourceVolume>(256);
 
 	public static readonly List<ThermalReceiver> receivers = new List<ThermalReceiver>(256);

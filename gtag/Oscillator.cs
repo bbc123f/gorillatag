@@ -59,6 +59,10 @@ public class Oscillator : MonoBehaviour
 		base.transform.position = vector;
 	}
 
+	public Oscillator()
+	{
+	}
+
 	public Oscillator.WaveTypeEnum WaveType;
 
 	private Vector3 m_initCenter;

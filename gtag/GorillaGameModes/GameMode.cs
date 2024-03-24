@@ -341,6 +341,10 @@ namespace GorillaGameModes
 			return player.InRoom() && !GameMode.optOutPlayers.Contains(player.ActorNumber) && (!player.CustomProperties.TryGetValue("didTutorial", out obj) || (bool)obj);
 		}
 
+		public GameMode()
+		{
+		}
+
 		[OnEnterPlay_SetNull]
 		private static GameMode instance;
 

@@ -6,4 +6,8 @@ public class GorillaTrigger : MonoBehaviour
 	public virtual void OnTriggered()
 	{
 	}
+
+	public GorillaTrigger()
+	{
+	}
 }

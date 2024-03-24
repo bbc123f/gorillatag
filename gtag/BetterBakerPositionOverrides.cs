@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class BetterBakerPositionOverrides : MonoBehaviour
 {
+	public BetterBakerPositionOverrides()
+	{
+	}
+
 	public List<BetterBakerPositionOverrides.OverridePosition> overridePositions;
 
 	[Serializable]

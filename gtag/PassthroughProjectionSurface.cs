@@ -41,6 +41,10 @@ public class PassthroughProjectionSurface : MonoBehaviour
 		}
 	}
 
+	public PassthroughProjectionSurface()
+	{
+	}
+
 	private OVRPassthroughLayer passthroughLayer;
 
 	public MeshFilter projectionObject;

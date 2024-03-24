@@ -12,6 +12,10 @@ public class SoundOnCollisionTagSpecific : MonoBehaviour
 		}
 	}
 
+	public SoundOnCollisionTagSpecific()
+	{
+	}
+
 	public string tagName;
 
 	public float noiseCooldown = 1f;

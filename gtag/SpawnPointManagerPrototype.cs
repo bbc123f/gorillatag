@@ -93,6 +93,10 @@ public abstract class SpawnPointManagerPrototype<T> : Fusion.Behaviour, ISpawnPo
 		return num > 0;
 	}
 
+	protected SpawnPointManagerPrototype()
+	{
+	}
+
 	[InlineHelp]
 	public SpawnPointManagerPrototype<T>.SpawnSequence Sequence;
 

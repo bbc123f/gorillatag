@@ -130,6 +130,10 @@ namespace GorillaLocomotion.Climbing
 			this.player.EndClimbing(this, startingNewClimb, doDontReclimb);
 		}
 
+		public GorillaHandClimber()
+		{
+		}
+
 		[SerializeField]
 		private Player player;
 

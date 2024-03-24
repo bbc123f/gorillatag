@@ -15,6 +15,10 @@ public class GorillaVRConstraint : MonoBehaviour
 		}
 	}
 
+	public GorillaVRConstraint()
+	{
+	}
+
 	public bool isConstrained;
 
 	public float angle = 3600f;

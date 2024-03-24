@@ -431,6 +431,10 @@ namespace BoingKit
 			}
 		}
 
+		public BoingBones()
+		{
+		}
+
 		[SerializeField]
 		internal BoingBones.Bone[][] BoneData;
 
@@ -571,6 +575,10 @@ namespace BoingKit
 				default:
 					return 0f;
 				}
+			}
+
+			public Chain()
+			{
 			}
 
 			[Tooltip("Root Transform object from which to build a chain (or tree if a bone has multiple children) of bouncy boing bones.")]

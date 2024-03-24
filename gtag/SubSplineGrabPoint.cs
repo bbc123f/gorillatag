@@ -40,6 +40,10 @@ public class SubSplineGrabPoint : SubLineGrabPoint
 		return Vector3.SqrMagnitude(vector2 - vector);
 	}
 
+	public SubSplineGrabPoint()
+	{
+	}
+
 	public CatmullRomSpline spline;
 
 	public List<Vector3> controlPointsRelativeToGrabOrigin = new List<Vector3>();

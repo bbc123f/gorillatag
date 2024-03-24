@@ -412,6 +412,11 @@ namespace Fusion.StatsInternal
 			return rectTransform;
 		}
 
+		// Note: this type is marked as 'beforefieldinit'.
+		static FusionStatsUtilities()
+		{
+		}
+
 		public const int PAD = 10;
 
 		public const int MARGIN = 6;

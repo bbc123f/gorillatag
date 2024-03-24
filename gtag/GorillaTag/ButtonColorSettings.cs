@@ -6,6 +6,10 @@ namespace GorillaTag
 	[CreateAssetMenu(fileName = "GorillaButtonColorSettings", menuName = "ScriptableObjects/GorillaButtonColorSettings", order = 0)]
 	public class ButtonColorSettings : ScriptableObject
 	{
+		public ButtonColorSettings()
+		{
+		}
+
 		public Color UnpressedColor;
 
 		public Color PressedColor;

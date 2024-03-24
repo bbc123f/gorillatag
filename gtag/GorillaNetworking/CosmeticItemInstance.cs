@@ -68,6 +68,10 @@ namespace GorillaNetworking
 			}
 		}
 
+		public CosmeticItemInstance()
+		{
+		}
+
 		public List<GameObject> leftObjects = new List<GameObject>();
 
 		public List<GameObject> rightObjects = new List<GameObject>();

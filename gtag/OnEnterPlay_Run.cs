@@ -13,4 +13,8 @@ public class OnEnterPlay_Run : OnEnterPlay_Attribute
 		}
 		method.Invoke(null, new object[0]);
 	}
+
+	public OnEnterPlay_Run()
+	{
+	}
 }

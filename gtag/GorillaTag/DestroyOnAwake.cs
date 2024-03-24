@@ -37,5 +37,9 @@ namespace GorillaTag
 			{
 			}
 		}
+
+		public DestroyOnAwake()
+		{
+		}
 	}
 }

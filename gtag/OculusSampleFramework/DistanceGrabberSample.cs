@@ -62,6 +62,10 @@ namespace OculusSampleFramework
 			this.AllowGrabThroughWalls = !this.AllowGrabThroughWalls;
 		}
 
+		public DistanceGrabberSample()
+		{
+		}
+
 		private bool useSpherecast;
 
 		private bool allowGrabThroughWalls;

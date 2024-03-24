@@ -722,6 +722,10 @@ public class FusionGraph : FusionGraphBase
 		this.LabelLast.enabled = flag8;
 	}
 
+	public FusionGraph()
+	{
+	}
+
 	private const int GRPH_TOP_PAD = 36;
 
 	private const int GRPH_BTM_PAD = 36;

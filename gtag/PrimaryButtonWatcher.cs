@@ -65,6 +65,10 @@ public class PrimaryButtonWatcher : MonoBehaviour
 		}
 	}
 
+	public PrimaryButtonWatcher()
+	{
+	}
+
 	public PrimaryButtonEvent primaryButtonPress;
 
 	private bool lastButtonState;

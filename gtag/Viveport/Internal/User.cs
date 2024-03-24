@@ -34,5 +34,9 @@ namespace Viveport.Internal
 
 		[DllImport("viveport_api64", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi, EntryPoint = "IViveportUser_GetUserAvatarUrl")]
 		internal static extern int GetUserAvatarUrl_64(StringBuilder userAvatarUrl, int size);
+
+		public User()
+		{
+		}
 	}
 }

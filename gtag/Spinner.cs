@@ -14,6 +14,10 @@ public class Spinner : MonoBehaviour
 		base.transform.rotation = Quaternion.Euler(0f, -this.m_angle, 0f);
 	}
 
+	public Spinner()
+	{
+	}
+
 	public float Speed;
 
 	private float m_angle;

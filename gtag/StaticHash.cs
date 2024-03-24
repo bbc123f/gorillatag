@@ -16,6 +16,17 @@ public static class StaticHash
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static int Calculate(uint u)
+	{
+		uint num = u + 2127912214U + (u << 12);
+		num = num ^ 3345072700U ^ (num >> 19);
+		num = num + 374761393U + (num << 5);
+		num = (num + 3550635116U) ^ (num << 9);
+		num = num + 4251993797U + (num << 3);
+		return (int)(num ^ 3042594569U ^ (num >> 16));
+	}
+
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static int Calculate(float f)
 	{
 		return StaticHash.Calculate(new StaticHash.SingleInt32
@@ -340,6 +351,82 @@ public static class StaticHash
 			StaticHash.Finalize(ref num2, ref num3, ref num4);
 		}
 		return (int)num4;
+	}
+
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static int Combine(uint[] values)
+	{
+		if (values == null || values.Length == 0)
+		{
+			return 224428569;
+		}
+		int num = values.Length;
+		uint num2 = (uint)(-559038737 + (num << 2));
+		uint num3 = num2;
+		uint num4 = num2;
+		int num5 = 0;
+		while (num - num5 > 3)
+		{
+			num2 += values[num5];
+			num3 += values[num5 + 1];
+			num4 += values[num5 + 2];
+			StaticHash.Mix(ref num2, ref num3, ref num4);
+			num5 += 3;
+		}
+		if (num - num5 > 2)
+		{
+			num4 += values[num5 + 2];
+		}
+		if (num - num5 > 1)
+		{
+			num3 += values[num5 + 1];
+		}
+		if (num - num5 > 0)
+		{
+			num2 += values[num5];
+			StaticHash.Finalize(ref num2, ref num3, ref num4);
+		}
+		return (int)num4;
+	}
+
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static int Combine(uint u1, uint u2)
+	{
+		uint num = 3735928567U;
+		uint num2 = num;
+		uint num3 = num;
+		num += u1;
+		num2 += u2;
+		StaticHash.Finalize(ref num, ref num2, ref num3);
+		return (int)num3;
+	}
+
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static int Combine(uint u1, uint u2, uint u3)
+	{
+		uint num = 3735928571U;
+		uint num2 = num;
+		uint num3 = num;
+		num += u1;
+		num2 += u2;
+		num3 += u3;
+		StaticHash.Finalize(ref num, ref num2, ref num3);
+		return (int)num3;
+	}
+
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static int Combine(uint u1, uint u2, uint u3, uint u4)
+	{
+		uint num = 3735928575U;
+		uint num2 = num;
+		uint num3 = num;
+		num += u1;
+		num2 += u2;
+		num3 += u3;
+		StaticHash.Mix(ref num, ref num2, ref num3);
+		num += u4;
+		StaticHash.Finalize(ref num, ref num2, ref num3);
+		return (int)num3;
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]

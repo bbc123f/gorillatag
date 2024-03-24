@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{EDF1C910-0278-49E3-90D4-E18914973107}</ProjectGuid>
+    <ProjectGuid>{62B5248A-2FC4-41B4-9F65-606AF815E6DA}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>Assembly-CSharp</RootNamespace>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -198,17 +198,24 @@
     <Reference Include="UnityEngine.XRModule">
       <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Gorilla Tag\Gorilla Tag_Data\Managed\UnityEngine.XRModule.dll</HintPath>
     </Reference>
-    <Reference Include="VoiceSDK.Dictation.Runtime">
-      <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Gorilla Tag\Gorilla Tag_Data\Managed\VoiceSDK.Dictation.Runtime.dll</HintPath>
+    <Reference Include="VoiceSDK.Runtime">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Gorilla Tag\Gorilla Tag_Data\Managed\VoiceSDK.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="websocket-sharp">
       <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Gorilla Tag\Gorilla Tag_Data\Managed\websocket-sharp.dll</HintPath>
+    </Reference>
+    <Reference Include="ZString">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Gorilla Tag\Gorilla Tag_Data\Managed\ZString.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="--f__AnonymousType0.cs" />
+    <Compile Include="--f__AnonymousType1.cs" />
+    <Compile Include="--f__AnonymousType2.cs" />
+    <Compile Include="-PrivateImplementationDetails-.cs" />
     <Compile Include="AA\Spring.cs" />
     <Compile Include="AddCollidersToParticleSystemTriggers.cs" />
     <Compile Include="AdvancedItemState.cs" />
@@ -239,6 +246,7 @@
     <Compile Include="BarrelCannon.cs" />
     <Compile Include="BasePageHandler.cs" />
     <Compile Include="BasePlatform.cs" />
+    <Compile Include="BasicSceneManager.cs" />
     <Compile Include="BattleBalloons.cs" />
     <Compile Include="BattleRPCs.cs" />
     <Compile Include="BeeAvoiderTest.cs" />
@@ -302,7 +310,6 @@
     <Compile Include="Bubbler.cs" />
     <Compile Include="BuildSafe\AssetDatabase.cs" />
     <Compile Include="BuildSafe\Callbacks.cs" />
-    <Compile Include="BuildSafe\ComponentUtils.cs" />
     <Compile Include="BuildSafe\DevUtils.cs" />
     <Compile Include="BuildSafe\EditorApplication.cs" />
     <Compile Include="BuildSafe\EditorGUIUtility.cs" />
@@ -372,6 +379,7 @@
     <Compile Include="ConsoleMode.cs" />
     <Compile Include="Constants\GamePlayConfig.cs" />
     <Compile Include="Constants\Network.cs" />
+    <Compile Include="Constants\Strings.cs" />
     <Compile Include="ControllerInputPoller.cs" />
     <Compile Include="ControllerPrototype.cs" />
     <Compile Include="CooldownType.cs" />
@@ -420,6 +428,11 @@
     <Compile Include="DropZone.cs" />
     <Compile Include="Drum.cs" />
     <Compile Include="DrumsItem.cs" />
+    <Compile Include="DynamicSceneManager.cs" />
+    <Compile Include="DynamicSceneManagerHelper\ObjectPool.cs" />
+    <Compile Include="DynamicSceneManagerHelper\SceneSnapshot.cs" />
+    <Compile Include="DynamicSceneManagerHelper\SnapshotComparer.cs" />
+    <Compile Include="DynamicSceneManagerHelper\UnityObjectUpdater.cs" />
     <Compile Include="EarlyAccessButton.cs" />
     <Compile Include="EdibleHoldable.cs" />
     <Compile Include="EditorOnlyComponent.cs" />
@@ -451,6 +464,7 @@
     <Compile Include="EnclosedSpaceVolume.cs" />
     <Compile Include="EnterPlayID.cs" />
     <Compile Include="EnumFlagsAttribute.cs" />
+    <Compile Include="EnumHelper.cs" />
     <Compile Include="EquipmentInteractor.cs" />
     <Compile Include="Example.cs" />
     <Compile Include="FacePlayer.cs" />
@@ -536,6 +550,7 @@
     <Compile Include="GorillaColorizableParticle.cs" />
     <Compile Include="GorillaColorSlider.cs" />
     <Compile Include="GorillaComputerTerminal.cs" />
+    <Compile Include="GorillaConstants.cs" />
     <Compile Include="GorillaControllerType.cs" />
     <Compile Include="GorillaCTFUI.cs" />
     <Compile Include="GorillaDayNight.cs" />
@@ -626,6 +641,7 @@
     <Compile Include="GorillaNetworking\PhotonNetworkController.cs" />
     <Compile Include="GorillaNetworking\PlayFabAuthenticator.cs" />
     <Compile Include="GorillaNetworking\PlayFabTitleDataCache.cs" />
+    <Compile Include="GorillaNetworking\SafeAccountObjectSwapper.cs" />
     <Compile Include="GorillaNetworking\SO_NetworkVoiceSettings.cs" />
     <Compile Include="GorillaNetworking\Store\StoreItem.cs" />
     <Compile Include="GorillaNetworking\Store\StoreUpdateEvent.cs" />
@@ -803,9 +819,11 @@
     <Compile Include="GTPosRotConstraintManager.cs" />
     <Compile Include="GTPosRotConstraints.cs" />
     <Compile Include="GTShaderColorSource.cs" />
+    <Compile Include="GTShaderGlobals.cs" />
     <Compile Include="GTShaderLightingType.cs" />
     <Compile Include="GTShaderTransparencyMode.cs" />
     <Compile Include="GTShaderUVSource.cs" />
+    <Compile Include="GTShopEventType.cs" />
     <Compile Include="GTSubZone.cs" />
     <Compile Include="GTSystem.cs" />
     <Compile Include="GTZone.cs" />
@@ -823,6 +841,7 @@
     <Compile Include="HauntedObject.cs" />
     <Compile Include="HeadModel.cs" />
     <Compile Include="HeightVolume.cs" />
+    <Compile Include="HideAlwaysAttribute.cs" />
     <Compile Include="HitChecker.cs" />
     <Compile Include="HitTargetNetworkState.cs" />
     <Compile Include="HitTargetScoreDisplay.cs" />
@@ -1089,6 +1108,7 @@
     <Compile Include="PositionVolumeModifier.cs" />
     <Compile Include="PostVRRigPhysicsSynch.cs" />
     <Compile Include="PredicatableRandomRotation.cs" />
+    <Compile Include="PrefabSceneManager.cs" />
     <Compile Include="PrefabType.cs" />
     <Compile Include="PrimaryButtonEvent.cs" />
     <Compile Include="PrimaryButtonWatcher.cs" />
@@ -1124,6 +1144,7 @@
     <Compile Include="ScaleSpring.cs" />
     <Compile Include="SceneIndex.cs" />
     <Compile Include="SceneIndexExtensions.cs" />
+    <Compile Include="SceneManagerHelper.cs" />
     <Compile Include="ScenePreparer.cs" />
     <Compile Include="SceneSampler.cs" />
     <Compile Include="SceneSettings.cs" />
@@ -1132,6 +1153,7 @@
     <Compile Include="ScienceExperimentSceneElement.cs" />
     <Compile Include="ScienceExperimentSceneElements.cs" />
     <Compile Include="SelectivePassthroughExperience.cs" />
+    <Compile Include="SetMeshBarycentricCoordinates.cs" />
     <Compile Include="ShaderGroup.cs" />
     <Compile Include="ShaderHashId.cs" />
     <Compile Include="ShaderIds.cs" />
@@ -1166,6 +1188,7 @@
     <Compile Include="SlotTransformOverride.cs" />
     <Compile Include="SlowCameraUpdate.cs" />
     <Compile Include="SmoothLoop.cs" />
+    <Compile Include="SnapshotSceneManager.cs" />
     <Compile Include="SnowballMaker.cs" />
     <Compile Include="SnowballThrowable.cs" />
     <Compile Include="SodaBubble.cs" />
@@ -1206,6 +1229,7 @@
     <Compile Include="SteamManager.cs" />
     <Compile Include="StopwatchCosmetic.cs" />
     <Compile Include="StopwatchFace.cs" />
+    <Compile Include="String.cs" />
     <Compile Include="StringUtils.cs" />
     <Compile Include="StringVertex.cs" />
     <Compile Include="StylusTip.cs" />
@@ -1391,8 +1415,9 @@
     <Compile Include="ZoneEntity.cs" />
     <Compile Include="ZoneGraph.cs" />
     <Compile Include="ZoneManagement.cs" />
+    <Compile Include="ZoneNode.cs" />
     <Compile Include="ZoneRootRegister.cs" />
-    <Compile Include="__JobReflectionRegistrationOutput__2997792272.cs" />
+    <Compile Include="__JobReflectionRegistrationOutput__2655142334.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

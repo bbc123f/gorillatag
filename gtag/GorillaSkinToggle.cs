@@ -23,39 +23,31 @@ public class GorillaSkinToggle : MonoBehaviour
 
 	private void OnDisable()
 	{
+		if (ApplicationQuittingState.IsQuitting)
+		{
+			return;
+		}
 		this.Remove();
 	}
 
 	public void Apply()
 	{
-		GorillaSkinToggle.ApplyToRig(this._rig, this._skin);
+		GorillaSkin.ApplyToRig(this._rig, this._skin);
 		this._applied = true;
 	}
 
 	public void Remove()
 	{
-		GorillaSkinToggle.ApplyToRig(this._rig, this._default);
-		float @float = PlayerPrefs.GetFloat("redValue", 0.16f);
-		float float2 = PlayerPrefs.GetFloat("greenValue", 0.16f);
-		float float3 = PlayerPrefs.GetFloat("blueValue", 0.16f);
+		GorillaSkin.ApplyToRig(this._rig, this._default);
+		float @float = PlayerPrefs.GetFloat("redValue", 0.0627451f);
+		float float2 = PlayerPrefs.GetFloat("greenValue", 0.0627451f);
+		float float3 = PlayerPrefs.GetFloat("blueValue", 0.0627451f);
 		GorillaTagger.Instance.UpdateColor(@float, float2, float3);
 		this._applied = false;
 	}
 
-	private static void ApplyToRig(VRRig rig, GorillaSkin skin)
+	public GorillaSkinToggle()
 	{
-		if (skin == rig.defaultSkin)
-		{
-			rig.materialsToChangeTo[0] = rig.myDefaultSkinMaterialInstance;
-		}
-		else
-		{
-			rig.materialsToChangeTo[0] = skin.bodyMaterial;
-		}
-		Material[] sharedMaterials = rig.mainSkin.sharedMaterials;
-		sharedMaterials[0] = rig.materialsToChangeTo[rig.setMatIndex];
-		sharedMaterials[1] = skin.chestMaterial;
-		rig.mainSkin.sharedMaterials = sharedMaterials;
 	}
 
 	[SerializeField]

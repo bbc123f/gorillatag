@@ -4,18 +4,18 @@ using UnityEngine.Serialization;
 
 public class GorillaSkin : ScriptableObject
 {
+	public Mesh bodyMesh
+	{
+		get
+		{
+			return this._bodyMesh;
+		}
+	}
+
 	public Material faceMaterial
 	{
 		get
 		{
-			if (Application.isPlaying)
-			{
-				if (this._faceRuntime == null)
-				{
-					this._faceRuntime = new Material(this._faceMaterial);
-				}
-				return this._faceRuntime;
-			}
 			return this._faceMaterial;
 		}
 	}
@@ -24,14 +24,6 @@ public class GorillaSkin : ScriptableObject
 	{
 		get
 		{
-			if (Application.isPlaying)
-			{
-				if (this._bodyRuntime == null)
-				{
-					this._bodyRuntime = new Material(this._bodyMaterial);
-				}
-				return this._bodyRuntime;
-			}
 			return this._bodyMaterial;
 		}
 	}
@@ -40,20 +32,24 @@ public class GorillaSkin : ScriptableObject
 	{
 		get
 		{
-			if (Application.isPlaying)
-			{
-				if (this._chestRuntime == null)
-				{
-					this._chestRuntime = new Material(this._chestMaterial);
-				}
-				return this._chestRuntime;
-			}
 			return this._chestMaterial;
+		}
+	}
+
+	public Material scoreboardMaterial
+	{
+		get
+		{
+			return this._scoreboardMaterial;
 		}
 	}
 
 	public static void ApplyToRig(VRRig rig, GorillaSkin skin)
 	{
+		if (skin.bodyMesh != null)
+		{
+			rig.mainSkin.sharedMesh = skin.bodyMesh;
+		}
 		if (skin == rig.defaultSkin)
 		{
 			rig.materialsToChangeTo[0] = rig.myDefaultSkinMaterialInstance;
@@ -66,10 +62,12 @@ public class GorillaSkin : ScriptableObject
 		sharedMaterials[0] = rig.materialsToChangeTo[rig.setMatIndex];
 		sharedMaterials[1] = skin.chestMaterial;
 		rig.mainSkin.sharedMaterials = sharedMaterials;
+		rig.scoreboardMaterial = skin.scoreboardMaterial;
 	}
 
-	[DebugReadOnly]
-	private int _id;
+	public GorillaSkin()
+	{
+	}
 
 	[FormerlySerializedAs("faceMaterial")]
 	[Space]
@@ -85,16 +83,23 @@ public class GorillaSkin : ScriptableObject
 	[SerializeField]
 	private Material _bodyMaterial;
 
+	[SerializeField]
+	private Material _scoreboardMaterial;
+
 	[Space]
-	[DebugReadOnly]
+	[SerializeField]
+	private Mesh _bodyMesh;
+
+	[Space]
 	[NonSerialized]
 	private Material _bodyRuntime;
 
-	[DebugReadOnly]
 	[NonSerialized]
 	private Material _chestRuntime;
 
-	[DebugReadOnly]
 	[NonSerialized]
 	private Material _faceRuntime;
+
+	[NonSerialized]
+	private Material _scoreRuntime;
 }

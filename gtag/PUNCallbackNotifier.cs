@@ -55,5 +55,9 @@ public class PUNCallbackNotifier : MonoBehaviourPunCallbacks
 		this.parentSystem.OnDisconnected(cause);
 	}
 
+	public PUNCallbackNotifier()
+	{
+	}
+
 	private NetworkSystemPUN parentSystem;
 }

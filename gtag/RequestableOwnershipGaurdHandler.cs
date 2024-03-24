@@ -118,6 +118,10 @@ internal class RequestableOwnershipGaurdHandler : IPunOwnershipCallbacks, IInRoo
 		}
 	}
 
+	public RequestableOwnershipGaurdHandler()
+	{
+	}
+
 	private static HashSet<PhotonView> gaurdedViews = new HashSet<PhotonView>();
 
 	private static readonly RequestableOwnershipGaurdHandler callbackInstance = new RequestableOwnershipGaurdHandler();

@@ -55,5 +55,9 @@ namespace BoingKit
 			BoingManager.PullReactorResults(BoingManager.UpdateMode.LateUpdate);
 			BoingManager.PullBonesResults(BoingManager.UpdateMode.LateUpdate);
 		}
+
+		public BoingManagerPostUpdatePump()
+		{
+		}
 	}
 }

@@ -25,6 +25,10 @@ public class AudioLooper : MonoBehaviour
 		}
 	}
 
+	public AudioLooper()
+	{
+	}
+
 	private AudioSource audioSource;
 
 	[SerializeField]

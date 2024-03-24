@@ -7,6 +7,10 @@ public class GorillaTurningChoice : GorillaTriggerBox
 		base.OnBoxTriggered();
 	}
 
+	public GorillaTurningChoice()
+	{
+	}
+
 	public string choiceName;
 
 	public GorillaTurning parent;

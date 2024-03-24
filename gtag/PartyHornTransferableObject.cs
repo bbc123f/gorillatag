@@ -154,6 +154,10 @@ public class PartyHornTransferableObject : TransferrableObject
 		onCooldownReset.Invoke();
 	}
 
+	public PartyHornTransferableObject()
+	{
+	}
+
 	[Tooltip("This GameObject will activate when held to any gorilla's mouth.")]
 	public GameObject effectsGameObject;
 

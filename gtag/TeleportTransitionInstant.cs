@@ -6,4 +6,8 @@ public class TeleportTransitionInstant : TeleportTransition
 	{
 		base.LocomotionTeleport.DoTeleport();
 	}
+
+	public TeleportTransitionInstant()
+	{
+	}
 }

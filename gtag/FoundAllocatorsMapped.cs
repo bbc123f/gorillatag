@@ -4,6 +4,10 @@ using System.Collections.Generic;
 [Serializable]
 public class FoundAllocatorsMapped
 {
+	public FoundAllocatorsMapped()
+	{
+	}
+
 	public string path;
 
 	public List<ViewsAndAllocator> allocators = new List<ViewsAndAllocator>();

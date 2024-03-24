@@ -49,6 +49,10 @@ public class UiDeviceInspector : MonoBehaviour
 		return "R";
 	}
 
+	public UiDeviceInspector()
+	{
+	}
+
 	[Header("Settings")]
 	[SerializeField]
 	private OVRInput.Handedness m_handedness = OVRInput.Handedness.LeftHanded;

@@ -2,4 +2,7 @@
 
 public class PlayerSpawnPointManagerPrototype : SpawnPointManagerPrototype<PlayerSpawnPointPrototype>
 {
+	public PlayerSpawnPointManagerPrototype()
+	{
+	}
 }

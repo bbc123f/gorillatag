@@ -11,5 +11,9 @@ public class TestScript : MonoBehaviour
 		}
 	}
 
+	public TestScript()
+	{
+	}
+
 	public GameObject testDelete;
 }

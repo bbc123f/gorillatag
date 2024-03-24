@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using GorillaExtensions;
 using Photon.Pun;
 using Photon.Realtime;
@@ -362,6 +363,10 @@ namespace GorillaTagScripts
 			}
 		}
 
+		public LurkerGhost()
+		{
+		}
+
 		public float patrolSpeed = 3f;
 
 		public float seekSpeed = 6f;
@@ -497,6 +502,21 @@ namespace GorillaTagScripts
 			seek,
 			charge,
 			possess
+		}
+
+		[CompilerGenerated]
+		private sealed class <>c__DisplayClass59_0
+		{
+			public <>c__DisplayClass59_0()
+			{
+			}
+
+			internal bool <PickPlayer>b__0(VRRig x)
+			{
+				return x.creator != null && x.creator == this.player;
+			}
+
+			public Player player;
 		}
 	}
 }

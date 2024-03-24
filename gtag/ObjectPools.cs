@@ -1,10 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class ObjectPools : MonoBehaviour
 {
-	public bool initialized { get; private set; }
+	public bool initialized
+	{
+		[CompilerGenerated]
+		get
+		{
+			return this.<initialized>k__BackingField;
+		}
+		[CompilerGenerated]
+		private set
+		{
+			this.<initialized>k__BackingField = value;
+		}
+	}
 
 	protected void Awake()
 	{
@@ -113,7 +126,14 @@ public class ObjectPools : MonoBehaviour
 		this.GetPoolByObjectType(obj).Destroy(obj);
 	}
 
+	public ObjectPools()
+	{
+	}
+
 	public static ObjectPools instance;
+
+	[CompilerGenerated]
+	private bool <initialized>k__BackingField;
 
 	[SerializeField]
 	private List<SinglePool> pools;

@@ -15,6 +15,15 @@ public class OrbitCamera : MonoBehaviour
 		base.transform.rotation = Quaternion.LookRotation((new Vector3(0f, 3f, 0f) - base.transform.position).normalized);
 	}
 
+	public OrbitCamera()
+	{
+	}
+
+	// Note: this type is marked as 'beforefieldinit'.
+	static OrbitCamera()
+	{
+	}
+
 	private static readonly float kOrbitSpeed = 0.01f;
 
 	private float m_phase;

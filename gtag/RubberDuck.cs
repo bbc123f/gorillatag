@@ -230,6 +230,10 @@ public class RubberDuck : TransferrableObject
 		return !this.disableDeactivation;
 	}
 
+	public RubberDuck()
+	{
+	}
+
 	[DebugOption]
 	public bool disableActivation;
 

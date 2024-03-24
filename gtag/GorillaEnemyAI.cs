@@ -100,6 +100,10 @@ public class GorillaEnemyAI : MonoBehaviourPun, IPunObservable, IInRoomCallbacks
 	{
 	}
 
+	public GorillaEnemyAI()
+	{
+	}
+
 	public Transform playerTransform;
 
 	private NavMeshAgent agent;

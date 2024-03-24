@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using GorillaLocomotion;
 using UnityEngine;
 
@@ -80,6 +81,16 @@ public class DebugSpawnPointChanger : MonoBehaviour
 				return;
 			}
 		}
+	}
+
+	public DebugSpawnPointChanger()
+	{
+	}
+
+	[CompilerGenerated]
+	private string <GetPlausibleJumpLocation>b__5_0(int index)
+	{
+		return this.levelTriggers[index].levelName;
 	}
 
 	[SerializeField]

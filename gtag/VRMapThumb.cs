@@ -60,6 +60,10 @@ public class VRMapThumb : VRMap
 		}
 	}
 
+	public VRMapThumb()
+	{
+	}
+
 	public InputFeatureUsage inputAxis;
 
 	public bool primaryButtonTouch;

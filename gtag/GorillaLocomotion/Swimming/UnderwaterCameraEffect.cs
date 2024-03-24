@@ -226,6 +226,10 @@ namespace GorillaLocomotion.Swimming
 			return num;
 		}
 
+		public UnderwaterCameraEffect()
+		{
+		}
+
 		private const float edgeBuffer = 0.04f;
 
 		[SerializeField]

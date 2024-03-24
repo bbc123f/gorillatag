@@ -77,6 +77,10 @@ public class GrowUntilCollision : MonoBehaviour
 		this.timeSinceTrigger += Time.deltaTime;
 	}
 
+	public GrowUntilCollision()
+	{
+	}
+
 	[SerializeField]
 	private float maxSize = 10f;
 

@@ -127,6 +127,10 @@ public class GeodeItem : TransferrableObject
 		return Random.Range(0, this.geodeCrackedMeshes.Length);
 	}
 
+	public GeodeItem()
+	{
+	}
+
 	[Tooltip("This GameObject will activate when the geode hits the ground with enough force.")]
 	public GameObject effectsGameObject;
 

@@ -114,6 +114,10 @@ public class Campfire : MonoBehaviour
 		}
 	}
 
+	public Campfire()
+	{
+	}
+
 	public Transform baseFire;
 
 	public Transform middleFire;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using GorillaLocomotion;
 using GorillaNetworking;
 using GorillaTag;
@@ -65,7 +66,24 @@ public class GorillaHuntComputer : MonoBehaviour
 					this.myRig = GorillaGameManager.instance.FindPlayerVRRig(this.myTarget);
 					if (this.myRig != null)
 					{
-						this.material.material = this.myRig.materialsToChangeTo[this.myRig.setMatIndex];
+						if (this.myRig.setMatIndex == 0)
+						{
+							if (this.myRig.scoreboardMaterial != null)
+							{
+								this.material.material = this.myRig.scoreboardMaterial;
+								this.material.color = Color.white;
+							}
+							else
+							{
+								this.material.material = null;
+								this.material.color = this.myRig.playerColor;
+							}
+						}
+						else
+						{
+							this.material.material = this.myRig.materialsToChangeTo[this.myRig.setMatIndex];
+							this.material.color = Color.white;
+						}
 						Text text = this.text;
 						string[] array = new string[5];
 						array[0] = "TARGET:\n";
@@ -159,6 +177,10 @@ public class GorillaHuntComputer : MonoBehaviour
 		}
 	}
 
+	public GorillaHuntComputer()
+	{
+	}
+
 	public Text text;
 
 	public Image material;
@@ -183,4 +205,27 @@ public class GorillaHuntComputer : MonoBehaviour
 	public Sprite tempSprite;
 
 	public CosmeticsController.CosmeticItem tempItem;
+
+	[CompilerGenerated]
+	[Serializable]
+	private sealed class <>c
+	{
+		// Note: this type is marked as 'beforefieldinit'.
+		static <>c()
+		{
+		}
+
+		public <>c()
+		{
+		}
+
+		internal bool <NormalizeName>b__14_0(char c)
+		{
+			return char.IsLetterOrDigit(c);
+		}
+
+		public static readonly GorillaHuntComputer.<>c <>9 = new GorillaHuntComputer.<>c();
+
+		public static Predicate<char> <>9__14_0;
+	}
 }

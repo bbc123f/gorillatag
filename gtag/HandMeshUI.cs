@@ -147,6 +147,10 @@ public class HandMeshUI : MonoBehaviour
 		}
 	}
 
+	public HandMeshUI()
+	{
+	}
+
 	public SphereCollider[] knobs;
 
 	public TextMesh[] readouts;

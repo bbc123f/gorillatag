@@ -47,6 +47,10 @@ namespace GorillaTagScripts
 			}
 		}
 
+		public GameObjectManagerWithId()
+		{
+		}
+
 		public GameObject objectsContainer;
 
 		public GTZone zone;
@@ -55,6 +59,10 @@ namespace GorillaTagScripts
 
 		private class gameObjectData
 		{
+			public gameObjectData()
+			{
+			}
+
 			public Transform transform;
 
 			public Transform followTransform;

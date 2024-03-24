@@ -176,6 +176,10 @@ public class StopwatchCosmetic : TransferrableObject
 		return !this.disableDeactivation;
 	}
 
+	public StopwatchCosmetic()
+	{
+	}
+
 	[SerializeField]
 	private StopwatchFace _watchFace;
 

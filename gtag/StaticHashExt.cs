@@ -7,6 +7,11 @@ public static class StaticHashExt
 		return StaticHash.Calculate(i);
 	}
 
+	public static int GetStaticHash(this uint u)
+	{
+		return StaticHash.Calculate(u);
+	}
+
 	public static int GetStaticHash(this float f)
 	{
 		return StaticHash.Calculate(f);

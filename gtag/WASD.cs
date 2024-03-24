@@ -38,6 +38,10 @@ public class WASD : MonoBehaviour
 		base.transform.rotation = quaternion * base.transform.rotation;
 	}
 
+	public WASD()
+	{
+	}
+
 	public float Speed = 1f;
 
 	public float Omega = 1f;

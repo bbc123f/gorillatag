@@ -1,10 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class ShaderPropertiesMapSO : ScriptableObject
 {
-	public static bool hasInstance { get; private set; }
+	public static bool hasInstance
+	{
+		[CompilerGenerated]
+		get
+		{
+			return ShaderPropertiesMapSO.<hasInstance>k__BackingField;
+		}
+		[CompilerGenerated]
+		private set
+		{
+			ShaderPropertiesMapSO.<hasInstance>k__BackingField = value;
+		}
+	}
 
 	public static ShaderPropertiesMapSO GetInstance()
 	{
@@ -21,9 +34,16 @@ public class ShaderPropertiesMapSO : ScriptableObject
 		return ShaderPropertiesMapSO._instance;
 	}
 
+	public ShaderPropertiesMapSO()
+	{
+	}
+
 	public Dictionary<string, string[]> shaderToTex2DProps = new Dictionary<string, string[]>(600);
 
 	private const string kResourcesAssetName = "ShaderPropertiesMapSO";
 
 	private static ShaderPropertiesMapSO _instance;
+
+	[CompilerGenerated]
+	private static bool <hasInstance>k__BackingField;
 }

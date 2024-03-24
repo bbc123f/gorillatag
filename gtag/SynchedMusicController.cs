@@ -432,6 +432,10 @@ public class SynchedMusicController : MonoBehaviour
 		this.totalLoopTime = num + num2;
 	}
 
+	public SynchedMusicController()
+	{
+	}
+
 	[SerializeField]
 	private bool usingNewSyncedSongsCode;
 

@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class SlingshotTestScenarioBodyShot : SlingshotTestScenario
 {
+	public SlingshotTestScenarioBodyShot()
+	{
+	}
+
 	public GameObject projectilePrefab;
 
 	public VRRig targetRig;

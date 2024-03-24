@@ -14,5 +14,9 @@ namespace emotitron.Compression
 		public abstract void WriteCValue(uint val, byte[] buffer, ref int bitposition);
 
 		public abstract T ReadValue(byte[] buffer, ref int bitposition);
+
+		protected LiteCrusher()
+		{
+		}
 	}
 }

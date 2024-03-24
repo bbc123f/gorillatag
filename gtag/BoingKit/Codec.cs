@@ -227,6 +227,15 @@ namespace BoingKit
 			return Codec.HashTransformHierarchyRecurvsive(Codec.FnvDefaultBasis, t);
 		}
 
+		public Codec()
+		{
+		}
+
+		// Note: this type is marked as 'beforefieldinit'.
+		static Codec()
+		{
+		}
+
 		public static readonly int FnvDefaultBasis = -2128831035;
 
 		public static readonly int FnvPrime = 16777619;

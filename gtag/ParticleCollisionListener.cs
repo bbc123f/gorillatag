@@ -22,6 +22,10 @@ public class ParticleCollisionListener : MonoBehaviour
 		}
 	}
 
+	public ParticleCollisionListener()
+	{
+	}
+
 	public ParticleSystem target;
 
 	[SerializeReference]

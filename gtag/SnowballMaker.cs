@@ -76,6 +76,10 @@ public class SnowballMaker : MonoBehaviour
 		}
 	}
 
+	public SnowballMaker()
+	{
+	}
+
 	public bool isLeftHand;
 
 	[RequiredListLength(1, 999, PrefabKind = PrefabKind.InstanceInScene)]

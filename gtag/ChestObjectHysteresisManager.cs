@@ -61,6 +61,15 @@ public class ChestObjectHysteresisManager : MonoBehaviour
 		}
 	}
 
+	public ChestObjectHysteresisManager()
+	{
+	}
+
+	// Note: this type is marked as 'beforefieldinit'.
+	static ChestObjectHysteresisManager()
+	{
+	}
+
 	public static ChestObjectHysteresisManager instance;
 
 	public static bool hasInstance = false;

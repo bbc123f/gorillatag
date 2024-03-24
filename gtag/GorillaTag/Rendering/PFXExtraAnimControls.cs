@@ -38,6 +38,10 @@ namespace GorillaTag.Rendering
 			}
 		}
 
+		public PFXExtraAnimControls()
+		{
+		}
+
 		public float emitRateMult = 1f;
 
 		public float emitBurstProbabilityMult = 1f;

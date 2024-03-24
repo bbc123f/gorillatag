@@ -4,6 +4,10 @@ namespace LitJson
 {
 	internal class WriterContext
 	{
+		public WriterContext()
+		{
+		}
+
 		public int Count;
 
 		public bool InArray;

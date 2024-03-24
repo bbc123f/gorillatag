@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using GorillaLocomotion.Swimming;
 using GorillaTag;
 using Photon.Pun;
@@ -480,6 +481,10 @@ public class BalloonHoldable : TransferrableObject, IFXContext
 		}
 	}
 
+	public BalloonHoldable()
+	{
+	}
+
 	private BalloonDynamics balloonDynamics;
 
 	private MeshRenderer mesh;
@@ -529,5 +534,27 @@ public class BalloonHoldable : TransferrableObject, IFXContext
 		WaitForOwnershipTransfer,
 		WaitForReDock,
 		Refilling
+	}
+
+	[CompilerGenerated]
+	[Serializable]
+	private sealed class <>c
+	{
+		// Note: this type is marked as 'beforefieldinit'.
+		static <>c()
+		{
+		}
+
+		public <>c()
+		{
+		}
+
+		internal void <OnTriggerEnter>b__45_0()
+		{
+		}
+
+		public static readonly BalloonHoldable.<>c <>9 = new BalloonHoldable.<>c();
+
+		public static Action <>9__45_0;
 	}
 }

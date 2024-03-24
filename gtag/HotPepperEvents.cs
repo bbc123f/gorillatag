@@ -35,6 +35,10 @@ public class HotPepperEvents : MonoBehaviour
 		rig.transform.Find("rig/body/head/gorillaface/spicy").gameObject.GetComponent<HotPepperFace>().PlayFX(1f);
 	}
 
+	public HotPepperEvents()
+	{
+	}
+
 	[SerializeField]
 	private EdibleHoldable _pepper;
 

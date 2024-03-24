@@ -34,6 +34,10 @@ namespace GorillaNetworking
 			}
 		}
 
+		public GorillaNetworkDisconnectTrigger()
+		{
+		}
+
 		public PhotonNetworkController photonNetworkController;
 
 		public GameObject offlineVRRig;

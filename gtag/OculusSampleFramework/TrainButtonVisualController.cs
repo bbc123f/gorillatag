@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -123,6 +126,10 @@ namespace OculusSampleFramework
 			yield break;
 		}
 
+		public TrainButtonVisualController()
+		{
+		}
+
 		private const float LERP_TO_OLD_POS_DURATION = 1f;
 
 		private const float LOCAL_SIZE_HALVED = 0.5f;
@@ -165,5 +172,84 @@ namespace OculusSampleFramework
 		private Coroutine _lerpToOldPositionCr;
 
 		private Vector3 _oldPosition;
+
+		[CompilerGenerated]
+		private sealed class <ResetPosition>d__26 : IEnumerator<object>, IEnumerator, IDisposable
+		{
+			[DebuggerHidden]
+			public <ResetPosition>d__26(int <>1__state)
+			{
+				this.<>1__state = <>1__state;
+			}
+
+			[DebuggerHidden]
+			void IDisposable.Dispose()
+			{
+			}
+
+			bool IEnumerator.MoveNext()
+			{
+				int num = this.<>1__state;
+				TrainButtonVisualController trainButtonVisualController = this;
+				if (num != 0)
+				{
+					if (num != 1)
+					{
+						return false;
+					}
+					this.<>1__state = -1;
+				}
+				else
+				{
+					this.<>1__state = -1;
+					startTime = Time.time;
+					endTime = Time.time + 1f;
+				}
+				if (Time.time >= endTime)
+				{
+					trainButtonVisualController.transform.localPosition = trainButtonVisualController._oldPosition;
+					trainButtonVisualController._lerpToOldPositionCr = null;
+					return false;
+				}
+				trainButtonVisualController.transform.localPosition = Vector3.Lerp(trainButtonVisualController.transform.localPosition, trainButtonVisualController._oldPosition, (Time.time - startTime) / 1f);
+				this.<>2__current = null;
+				this.<>1__state = 1;
+				return true;
+			}
+
+			object IEnumerator<object>.Current
+			{
+				[DebuggerHidden]
+				get
+				{
+					return this.<>2__current;
+				}
+			}
+
+			[DebuggerHidden]
+			void IEnumerator.Reset()
+			{
+				throw new NotSupportedException();
+			}
+
+			object IEnumerator.Current
+			{
+				[DebuggerHidden]
+				get
+				{
+					return this.<>2__current;
+				}
+			}
+
+			private int <>1__state;
+
+			private object <>2__current;
+
+			public TrainButtonVisualController <>4__this;
+
+			private float <startTime>5__2;
+
+			private float <endTime>5__3;
+		}
 	}
 }

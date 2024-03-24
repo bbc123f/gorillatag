@@ -1,11 +1,69 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using UnityEngine;
 
 public class SimpleCapsuleWithStickMovement : MonoBehaviour
 {
-	public event Action CameraUpdated;
+	public event Action CameraUpdated
+	{
+		[CompilerGenerated]
+		add
+		{
+			Action action = this.CameraUpdated;
+			Action action2;
+			do
+			{
+				action2 = action;
+				Action action3 = (Action)Delegate.Combine(action2, value);
+				action = Interlocked.CompareExchange<Action>(ref this.CameraUpdated, action3, action2);
+			}
+			while (action != action2);
+		}
+		[CompilerGenerated]
+		remove
+		{
+			Action action = this.CameraUpdated;
+			Action action2;
+			do
+			{
+				action2 = action;
+				Action action3 = (Action)Delegate.Remove(action2, value);
+				action = Interlocked.CompareExchange<Action>(ref this.CameraUpdated, action3, action2);
+			}
+			while (action != action2);
+		}
+	}
 
-	public event Action PreCharacterMove;
+	public event Action PreCharacterMove
+	{
+		[CompilerGenerated]
+		add
+		{
+			Action action = this.PreCharacterMove;
+			Action action2;
+			do
+			{
+				action2 = action;
+				Action action3 = (Action)Delegate.Combine(action2, value);
+				action = Interlocked.CompareExchange<Action>(ref this.PreCharacterMove, action3, action2);
+			}
+			while (action != action2);
+		}
+		[CompilerGenerated]
+		remove
+		{
+			Action action = this.PreCharacterMove;
+			Action action2;
+			do
+			{
+				action2 = action;
+				Action action3 = (Action)Delegate.Remove(action2, value);
+				action = Interlocked.CompareExchange<Action>(ref this.PreCharacterMove, action3, action2);
+			}
+			while (action != action2);
+		}
+	}
 
 	private void Awake()
 	{
@@ -93,6 +151,10 @@ public class SimpleCapsuleWithStickMovement : MonoBehaviour
 		}
 	}
 
+	public SimpleCapsuleWithStickMovement()
+	{
+	}
+
 	public bool EnableLinearMovement = true;
 
 	public bool EnableRotation = true;
@@ -110,4 +172,10 @@ public class SimpleCapsuleWithStickMovement : MonoBehaviour
 	private bool ReadyToSnapTurn;
 
 	private Rigidbody _rigidbody;
+
+	[CompilerGenerated]
+	private Action CameraUpdated;
+
+	[CompilerGenerated]
+	private Action PreCharacterMove;
 }

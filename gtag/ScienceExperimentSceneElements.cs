@@ -15,6 +15,10 @@ public class ScienceExperimentSceneElements : MonoBehaviour
 		ScienceExperimentManager.instance.DeInitElements();
 	}
 
+	public ScienceExperimentSceneElements()
+	{
+	}
+
 	public List<ScienceExperimentSceneElements.DisableByLiquidData> disableByLiquidList = new List<ScienceExperimentSceneElements.DisableByLiquidData>();
 
 	public ParticleSystem sodaFizzParticles;

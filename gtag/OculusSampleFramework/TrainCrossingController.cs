@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace OculusSampleFramework
@@ -101,6 +104,10 @@ namespace OculusSampleFramework
 			this._lightSide2Renderer.gameObject.SetActive(enableState);
 		}
 
+		public TrainCrossingController()
+		{
+		}
+
 		[SerializeField]
 		private AudioSource _audioSource;
 
@@ -125,5 +132,114 @@ namespace OculusSampleFramework
 		private Coroutine _xingAnimationCr;
 
 		private InteractableTool _toolInteractingWithMe;
+
+		[CompilerGenerated]
+		private sealed class <AnimateCrossing>d__15 : IEnumerator<object>, IEnumerator, IDisposable
+		{
+			[DebuggerHidden]
+			public <AnimateCrossing>d__15(int <>1__state)
+			{
+				this.<>1__state = <>1__state;
+			}
+
+			[DebuggerHidden]
+			void IDisposable.Dispose()
+			{
+			}
+
+			bool IEnumerator.MoveNext()
+			{
+				int num = this.<>1__state;
+				TrainCrossingController trainCrossingController = this;
+				if (num != 0)
+				{
+					if (num != 1)
+					{
+						return false;
+					}
+					this.<>1__state = -1;
+				}
+				else
+				{
+					this.<>1__state = -1;
+					trainCrossingController.ToggleLightObjects(true);
+					animationEndTime = Time.time + animationLength;
+					lightBlinkDuration = animationLength * 0.1f;
+					lightBlinkStartTime = Time.time;
+					lightBlinkEndTime = Time.time + lightBlinkDuration;
+					lightToBlinkOn = trainCrossingController._lightsSide1Mat;
+					lightToBlinkOff = trainCrossingController._lightsSide2Mat;
+					onColor = new Color(1f, 1f, 1f, 1f);
+					offColor = new Color(1f, 1f, 1f, 0f);
+				}
+				if (Time.time >= animationEndTime)
+				{
+					trainCrossingController.ToggleLightObjects(false);
+					return false;
+				}
+				float num2 = (Time.time - lightBlinkStartTime) / lightBlinkDuration;
+				lightToBlinkOn.SetColor(trainCrossingController._colorId, Color.Lerp(offColor, onColor, num2));
+				lightToBlinkOff.SetColor(trainCrossingController._colorId, Color.Lerp(onColor, offColor, num2));
+				if (Time.time > lightBlinkEndTime)
+				{
+					Material material = lightToBlinkOn;
+					lightToBlinkOn = lightToBlinkOff;
+					lightToBlinkOff = material;
+					lightBlinkStartTime = Time.time;
+					lightBlinkEndTime = Time.time + lightBlinkDuration;
+				}
+				this.<>2__current = null;
+				this.<>1__state = 1;
+				return true;
+			}
+
+			object IEnumerator<object>.Current
+			{
+				[DebuggerHidden]
+				get
+				{
+					return this.<>2__current;
+				}
+			}
+
+			[DebuggerHidden]
+			void IEnumerator.Reset()
+			{
+				throw new NotSupportedException();
+			}
+
+			object IEnumerator.Current
+			{
+				[DebuggerHidden]
+				get
+				{
+					return this.<>2__current;
+				}
+			}
+
+			private int <>1__state;
+
+			private object <>2__current;
+
+			public TrainCrossingController <>4__this;
+
+			public float animationLength;
+
+			private float <animationEndTime>5__2;
+
+			private float <lightBlinkDuration>5__3;
+
+			private float <lightBlinkStartTime>5__4;
+
+			private float <lightBlinkEndTime>5__5;
+
+			private Material <lightToBlinkOn>5__6;
+
+			private Material <lightToBlinkOff>5__7;
+
+			private Color <onColor>5__8;
+
+			private Color <offColor>5__9;
+		}
 	}
 }

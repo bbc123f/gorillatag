@@ -45,6 +45,10 @@ public class GorillaHatButton : MonoBehaviour
 		this.myText.text = this.offText;
 	}
 
+	public GorillaHatButton()
+	{
+	}
+
 	public GorillaHatButtonParent buttonParent;
 
 	public GorillaHatButton.HatButtonType buttonType;

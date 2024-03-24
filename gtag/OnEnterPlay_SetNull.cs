@@ -13,4 +13,8 @@ public class OnEnterPlay_SetNull : OnEnterPlay_Attribute
 		}
 		field.SetValue(null, null);
 	}
+
+	public OnEnterPlay_SetNull()
+	{
+	}
 }

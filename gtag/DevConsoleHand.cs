@@ -5,6 +5,10 @@ using UnityEngine.UI;
 
 public class DevConsoleHand : DevConsoleInstance
 {
+	public DevConsoleHand()
+	{
+	}
+
 	public List<GameObject> otherButtonsList;
 
 	private bool isActuallyEnabled = true;

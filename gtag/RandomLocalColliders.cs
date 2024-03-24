@@ -42,6 +42,15 @@ public class RandomLocalColliders : MonoBehaviour
 		}
 	}
 
+	public RandomLocalColliders()
+	{
+	}
+
+	// Note: this type is marked as 'beforefieldinit'.
+	static RandomLocalColliders()
+	{
+	}
+
 	private static SRand rand = new SRand("RandomLocalColliders");
 
 	[SerializeField]

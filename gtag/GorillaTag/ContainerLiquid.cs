@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using GorillaExtensions;
 using UnityEngine;
 
@@ -18,13 +19,61 @@ namespace GorillaTag
 			}
 		}
 
-		public Vector3 cupTopWorldPos { get; private set; }
+		public Vector3 cupTopWorldPos
+		{
+			[CompilerGenerated]
+			get
+			{
+				return this.<cupTopWorldPos>k__BackingField;
+			}
+			[CompilerGenerated]
+			private set
+			{
+				this.<cupTopWorldPos>k__BackingField = value;
+			}
+		}
 
-		public Vector3 bottomLipWorldPos { get; private set; }
+		public Vector3 bottomLipWorldPos
+		{
+			[CompilerGenerated]
+			get
+			{
+				return this.<bottomLipWorldPos>k__BackingField;
+			}
+			[CompilerGenerated]
+			private set
+			{
+				this.<bottomLipWorldPos>k__BackingField = value;
+			}
+		}
 
-		public Vector3 liquidPlaneWorldPos { get; private set; }
+		public Vector3 liquidPlaneWorldPos
+		{
+			[CompilerGenerated]
+			get
+			{
+				return this.<liquidPlaneWorldPos>k__BackingField;
+			}
+			[CompilerGenerated]
+			private set
+			{
+				this.<liquidPlaneWorldPos>k__BackingField = value;
+			}
+		}
 
-		public Vector3 liquidPlaneWorldNormal { get; private set; }
+		public Vector3 liquidPlaneWorldNormal
+		{
+			[CompilerGenerated]
+			get
+			{
+				return this.<liquidPlaneWorldNormal>k__BackingField;
+			}
+			[CompilerGenerated]
+			private set
+			{
+				this.<liquidPlaneWorldNormal>k__BackingField = value;
+			}
+		}
 
 		protected bool IsValidLiquidSurfaceValues()
 		{
@@ -194,6 +243,10 @@ namespace GorillaTag
 			return list.ToArray();
 		}
 
+		public ContainerLiquid()
+		{
+		}
+
 		[Tooltip("Used to determine the world space bounds of the container.")]
 		public MeshRenderer meshRenderer;
 
@@ -254,6 +307,18 @@ namespace GorillaTag
 		public float thickness = 1f;
 
 		public float maxSpillRate = 100f;
+
+		[CompilerGenerated]
+		private Vector3 <cupTopWorldPos>k__BackingField;
+
+		[CompilerGenerated]
+		private Vector3 <bottomLipWorldPos>k__BackingField;
+
+		[CompilerGenerated]
+		private Vector3 <liquidPlaneWorldPos>k__BackingField;
+
+		[CompilerGenerated]
+		private Vector3 <liquidPlaneWorldNormal>k__BackingField;
 
 		[DebugReadout]
 		private bool wasEmptyLastFrame;

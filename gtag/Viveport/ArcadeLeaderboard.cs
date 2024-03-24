@@ -122,6 +122,10 @@ namespace Viveport
 			return ArcadeLeaderboard.GetLeaderboardUserScore();
 		}
 
+		public ArcadeLeaderboard()
+		{
+		}
+
 		private static StatusCallback isReadyIl2cppCallback;
 
 		private static StatusCallback downloadLeaderboardScoresIl2cppCallback;

@@ -1,11 +1,24 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using GorillaNetworking;
 using Photon.Pun;
 using UnityEngine;
 
 public class VRRigReliableState : MonoBehaviourPunCallbacks, IGorillaSerializeable
 {
-	public bool isDirty { get; private set; } = true;
+	public bool isDirty
+	{
+		[CompilerGenerated]
+		get
+		{
+			return this.<isDirty>k__BackingField;
+		}
+		[CompilerGenerated]
+		private set
+		{
+			this.<isDirty>k__BackingField = value;
+		}
+	} = true;
 
 	private void Awake()
 	{
@@ -99,6 +112,10 @@ public class VRRigReliableState : MonoBehaviourPunCallbacks, IGorillaSerializeab
 		this.bDock.RefreshTransferrableItems();
 	}
 
+	public VRRigReliableState()
+	{
+	}
+
 	[NonSerialized]
 	public int[] activeTransferrableObjectIndex;
 
@@ -138,4 +155,7 @@ public class VRRigReliableState : MonoBehaviourPunCallbacks, IGorillaSerializeab
 
 	[NonSerialized]
 	public int sizeLayerMask = 1;
+
+	[CompilerGenerated]
+	private bool <isDirty>k__BackingField;
 }

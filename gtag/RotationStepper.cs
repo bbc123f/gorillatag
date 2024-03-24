@@ -31,6 +31,10 @@ public class RotationStepper : MonoBehaviour
 		}
 	}
 
+	public RotationStepper()
+	{
+	}
+
 	public RotationStepper.ModeEnum Mode;
 
 	[ConditionalField("Mode", RotationStepper.ModeEnum.Fixed, null, null, null, null, null)]

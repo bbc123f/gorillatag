@@ -77,6 +77,10 @@ namespace GorillaTag.Reactions
 			this._lastCollisionTime = num;
 		}
 
+		public FlameThrowerParticleCollisionHandler()
+		{
+		}
+
 		[Tooltip("The defaults are numbers for the flamethrower hair dryer.")]
 		private readonly float _maxParticleHitReactionRate = 2f;
 

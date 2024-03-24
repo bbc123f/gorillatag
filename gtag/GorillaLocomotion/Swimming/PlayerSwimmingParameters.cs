@@ -6,6 +6,10 @@ namespace GorillaLocomotion.Swimming
 	[CreateAssetMenu(fileName = "Data", menuName = "ScriptableObjects/PlayerSwimmingParameters", order = 1)]
 	public class PlayerSwimmingParameters : ScriptableObject
 	{
+		public PlayerSwimmingParameters()
+		{
+		}
+
 		[Header("Base Settings")]
 		public float floatingWaterLevelBelowHead = 0.6f;
 

@@ -39,6 +39,10 @@ namespace GorillaTag.Sports
 			}
 		}
 
+		public SportGoalTrigger()
+		{
+		}
+
 		[SerializeField]
 		private SportScoreboard scoreboard;
 

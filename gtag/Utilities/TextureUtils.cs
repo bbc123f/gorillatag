@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Runtime.CompilerServices;
 using Unity.Collections;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -100,6 +101,61 @@ namespace Utilities
 			RenderTexture.active = active;
 			RenderTexture.ReleaseTemporary(temporary);
 			return texture2D;
+		}
+
+		[CompilerGenerated]
+		private sealed class <>c__DisplayClass1_0
+		{
+			public <>c__DisplayClass1_0()
+			{
+			}
+
+			internal void <SaveToFile>b__0(AsyncGPUReadbackRequest request)
+			{
+				if (!request.hasError)
+				{
+					NativeArray<byte> nativeArray;
+					switch (this.fileFormat)
+					{
+					case SaveTextureFileFormat.EXR:
+						nativeArray = ImageConversion.EncodeNativeArrayToEXR<byte>(this.narray, this.resizeRT.graphicsFormat, (uint)this.width, (uint)this.height, 0U, Texture2D.EXRFlags.None);
+						goto IL_C8;
+					case SaveTextureFileFormat.JPG:
+						nativeArray = ImageConversion.EncodeNativeArrayToJPG<byte>(this.narray, this.resizeRT.graphicsFormat, (uint)this.width, (uint)this.height, 0U, this.jpgQuality);
+						goto IL_C8;
+					case SaveTextureFileFormat.TGA:
+						nativeArray = ImageConversion.EncodeNativeArrayToTGA<byte>(this.narray, this.resizeRT.graphicsFormat, (uint)this.width, (uint)this.height, 0U);
+						goto IL_C8;
+					}
+					nativeArray = ImageConversion.EncodeNativeArrayToPNG<byte>(this.narray, this.resizeRT.graphicsFormat, (uint)this.width, (uint)this.height, 0U);
+					IL_C8:
+					File.WriteAllBytes(this.filePath, nativeArray.ToArray());
+					nativeArray.Dispose();
+				}
+				this.narray.Dispose();
+				Action<bool> action = this.done;
+				if (action == null)
+				{
+					return;
+				}
+				action(!request.hasError);
+			}
+
+			public SaveTextureFileFormat fileFormat;
+
+			public NativeArray<byte> narray;
+
+			public RenderTexture resizeRT;
+
+			public int width;
+
+			public int height;
+
+			public int jpgQuality;
+
+			public string filePath;
+
+			public Action<bool> done;
 		}
 	}
 }

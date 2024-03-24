@@ -101,6 +101,15 @@ public class FusionStatsObjectIds : Fusion.Behaviour, IFusionStatsView
 		}
 	}
 
+	public FusionStatsObjectIds()
+	{
+	}
+
+	// Note: this type is marked as 'beforefieldinit'.
+	static FusionStatsObjectIds()
+	{
+	}
+
 	bool IFusionStatsView.get_isActiveAndEnabled()
 	{
 		return base.isActiveAndEnabled;

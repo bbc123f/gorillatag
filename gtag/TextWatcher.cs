@@ -20,6 +20,10 @@ public class TextWatcher : MonoBehaviour
 		this.myText.text = newText;
 	}
 
+	public TextWatcher()
+	{
+	}
+
 	public WatchableStringSO textToCopy;
 
 	private Text myText;

@@ -100,6 +100,10 @@ namespace GorillaLocomotion.Gameplay
 			return this.currentSpeedMultiplier;
 		}
 
+		public TraverseSpline()
+		{
+		}
+
 		public BezierSpline spline;
 
 		public float duration = 30f;

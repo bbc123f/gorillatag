@@ -27,6 +27,10 @@ public class TransformViewTeleportSerializer : MonoBehaviourPun, IPunObservable
 		}
 	}
 
+	public TransformViewTeleportSerializer()
+	{
+	}
+
 	private bool willTeleport;
 
 	private PhotonTransformView transformView;

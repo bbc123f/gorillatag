@@ -86,6 +86,10 @@ public class VRRigAnchorOverrides : MonoBehaviour
 		return fallback;
 	}
 
+	public VRRigAnchorOverrides()
+	{
+	}
+
 	[SerializeField]
 	protected Transform nameDefaultAnchor;
 

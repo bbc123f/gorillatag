@@ -42,6 +42,10 @@ public class PlayFabTitleDataTextDisplay : MonoBehaviour
 		PlayFabTitleDataCache.Instance.OnTitleDataUpdate.RemoveListener(new UnityAction<string>(this.OnNewTitleDataAdded));
 	}
 
+	public PlayFabTitleDataTextDisplay()
+	{
+	}
+
 	[SerializeField]
 	private Text textBox;
 

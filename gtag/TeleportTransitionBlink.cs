@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class TeleportTransitionBlink : TeleportTransition
@@ -29,6 +32,10 @@ public class TeleportTransitionBlink : TeleportTransition
 		yield break;
 	}
 
+	public TeleportTransitionBlink()
+	{
+	}
+
 	[Tooltip("How long the transition takes. Usually this is greater than Teleport Delay.")]
 	[Range(0.01f, 2f)]
 	public float TransitionDuration = 0.5f;
@@ -44,4 +51,91 @@ public class TeleportTransitionBlink : TeleportTransition
 		new Keyframe(0.5f, 1f),
 		new Keyframe(1f, 0f)
 	});
+
+	[CompilerGenerated]
+	private sealed class <BlinkCoroutine>d__4 : IEnumerator<object>, IEnumerator, IDisposable
+	{
+		[DebuggerHidden]
+		public <BlinkCoroutine>d__4(int <>1__state)
+		{
+			this.<>1__state = <>1__state;
+		}
+
+		[DebuggerHidden]
+		void IDisposable.Dispose()
+		{
+		}
+
+		bool IEnumerator.MoveNext()
+		{
+			int num = this.<>1__state;
+			TeleportTransitionBlink teleportTransitionBlink = this;
+			if (num != 0)
+			{
+				if (num != 1)
+				{
+					return false;
+				}
+				this.<>1__state = -1;
+				elapsedTime += Time.deltaTime;
+				if (!teleported && elapsedTime >= teleportTime)
+				{
+					teleported = true;
+					teleportTransitionBlink.LocomotionTeleport.DoTeleport();
+				}
+			}
+			else
+			{
+				this.<>1__state = -1;
+				teleportTransitionBlink.LocomotionTeleport.IsTransitioning = true;
+				elapsedTime = 0f;
+				teleportTime = teleportTransitionBlink.TransitionDuration * teleportTransitionBlink.TeleportDelay;
+				teleported = false;
+			}
+			if (elapsedTime >= teleportTransitionBlink.TransitionDuration)
+			{
+				teleportTransitionBlink.LocomotionTeleport.IsTransitioning = false;
+				return false;
+			}
+			this.<>2__current = null;
+			this.<>1__state = 1;
+			return true;
+		}
+
+		object IEnumerator<object>.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		[DebuggerHidden]
+		void IEnumerator.Reset()
+		{
+			throw new NotSupportedException();
+		}
+
+		object IEnumerator.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		private int <>1__state;
+
+		private object <>2__current;
+
+		public TeleportTransitionBlink <>4__this;
+
+		private float <elapsedTime>5__2;
+
+		private float <teleportTime>5__3;
+
+		private bool <teleported>5__4;
+	}
 }

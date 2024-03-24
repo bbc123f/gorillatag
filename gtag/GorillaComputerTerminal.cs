@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using GorillaNetworking;
 using UnityEngine;
@@ -53,6 +55,10 @@ public class GorillaComputerTerminal : MonoBehaviour
 		this.monitorMesh.materials = materials;
 	}
 
+	public GorillaComputerTerminal()
+	{
+	}
+
 	[CompilerGenerated]
 	private IEnumerator <OnEnable>g__OnEnable_Local|3_0()
 	{
@@ -67,4 +73,97 @@ public class GorillaComputerTerminal : MonoBehaviour
 	public Text myFunctionText;
 
 	public MeshRenderer monitorMesh;
+
+	[CompilerGenerated]
+	private sealed class <<OnEnable>g__OnEnable_Local|3_0>d : IEnumerator<object>, IEnumerator, IDisposable
+	{
+		[DebuggerHidden]
+		public <<OnEnable>g__OnEnable_Local|3_0>d(int <>1__state)
+		{
+			this.<>1__state = <>1__state;
+		}
+
+		[DebuggerHidden]
+		void IDisposable.Dispose()
+		{
+		}
+
+		bool IEnumerator.MoveNext()
+		{
+			int num = this.<>1__state;
+			GorillaComputerTerminal gorillaComputerTerminal = this;
+			switch (num)
+			{
+			case 0:
+				this.<>1__state = -1;
+				this.<>2__current = new WaitUntil(() => GorillaComputer.instance != null && GorillaComputer.instance.initialized);
+				this.<>1__state = 1;
+				return true;
+			case 1:
+				this.<>1__state = -1;
+				this.<>2__current = null;
+				this.<>1__state = 2;
+				return true;
+			case 2:
+				this.<>1__state = -1;
+				gorillaComputerTerminal.Init();
+				return false;
+			default:
+				return false;
+			}
+		}
+
+		object IEnumerator<object>.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		[DebuggerHidden]
+		void IEnumerator.Reset()
+		{
+			throw new NotSupportedException();
+		}
+
+		object IEnumerator.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		private int <>1__state;
+
+		private object <>2__current;
+
+		public GorillaComputerTerminal <>4__this;
+	}
+
+	[CompilerGenerated]
+	[Serializable]
+	private sealed class <>c
+	{
+		// Note: this type is marked as 'beforefieldinit'.
+		static <>c()
+		{
+		}
+
+		public <>c()
+		{
+		}
+
+		internal bool <OnEnable>b__3_1()
+		{
+			return GorillaComputer.instance != null && GorillaComputer.instance.initialized;
+		}
+
+		public static readonly GorillaComputerTerminal.<>c <>9 = new GorillaComputerTerminal.<>c();
+
+		public static Func<bool> <>9__3_1;
+	}
 }

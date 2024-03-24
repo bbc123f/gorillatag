@@ -50,6 +50,10 @@ public class GTDoorTrigger : MonoBehaviour
 		this.overlappingColliders.Remove(other);
 	}
 
+	public GTDoorTrigger()
+	{
+	}
+
 	[Tooltip("Optional timeline to play to animate the thing getting activated, play sound, particles, etc...")]
 	public PlayableDirector timeline;
 

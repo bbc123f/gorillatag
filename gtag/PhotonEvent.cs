@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
@@ -144,7 +146,35 @@ public class PhotonEvent : IOnEventCallback, IEquatable<PhotonEvent>
 		this._disposed = true;
 	}
 
-	public static event Action<PhotonEvent, Exception> OnError;
+	public static event Action<PhotonEvent, Exception> OnError
+	{
+		[CompilerGenerated]
+		add
+		{
+			Action<PhotonEvent, Exception> action = PhotonEvent.OnError;
+			Action<PhotonEvent, Exception> action2;
+			do
+			{
+				action2 = action;
+				Action<PhotonEvent, Exception> action3 = (Action<PhotonEvent, Exception>)Delegate.Combine(action2, value);
+				action = Interlocked.CompareExchange<Action<PhotonEvent, Exception>>(ref PhotonEvent.OnError, action3, action2);
+			}
+			while (action != action2);
+		}
+		[CompilerGenerated]
+		remove
+		{
+			Action<PhotonEvent, Exception> action = PhotonEvent.OnError;
+			Action<PhotonEvent, Exception> action2;
+			do
+			{
+				action2 = action;
+				Action<PhotonEvent, Exception> action3 = (Action<PhotonEvent, Exception>)Delegate.Remove(action2, value);
+				action = Interlocked.CompareExchange<Action<PhotonEvent, Exception>>(ref PhotonEvent.OnError, action3, action2);
+			}
+			while (action != action2);
+		}
+	}
 
 	void IOnEventCallback.OnEvent(EventData ev)
 	{
@@ -329,6 +359,9 @@ public class PhotonEvent : IOnEventCallback, IEquatable<PhotonEvent>
 	private bool _disposed;
 
 	private Action<int, int, object[]> _delegate;
+
+	[CompilerGenerated]
+	private static Action<PhotonEvent, Exception> OnError;
 
 	public const byte PHOTON_EVENT_CODE = 176;
 

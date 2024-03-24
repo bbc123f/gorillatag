@@ -70,6 +70,10 @@ namespace GorillaTag.Rendering
 			this.emissionEnabled = setEnabled;
 		}
 
+		public WaterBubbleParticleVolumeCollector()
+		{
+		}
+
 		public ParticleSystem[] particleSystems;
 
 		private ParticleSystem.TriggerModule[] particleTriggerModules;

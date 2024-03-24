@@ -8,6 +8,10 @@ public class RandomizeWavePhaseOffset : MonoBehaviour
 		base.GetComponent<MeshRenderer>().material.SetFloat(this._VertexWavePhaseOffset, Random.Range(this.minPhaseOffset, this.maxPhaseOffset));
 	}
 
+	public RandomizeWavePhaseOffset()
+	{
+	}
+
 	private ShaderHashId _VertexWavePhaseOffset = "_VertexWavePhaseOffset";
 
 	[SerializeField]

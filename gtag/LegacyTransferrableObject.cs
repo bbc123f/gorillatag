@@ -656,6 +656,10 @@ public class LegacyTransferrableObject : HoldableObject
 		return PhotonNetwork.LocalPlayer;
 	}
 
+	public LegacyTransferrableObject()
+	{
+	}
+
 	protected EquipmentInteractor interactor;
 
 	public VRRig myRig;

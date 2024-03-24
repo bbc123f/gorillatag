@@ -67,6 +67,10 @@ namespace GorillaTag
 			this.tex2Index = 0;
 		}
 
+		public TextureTransitioner()
+		{
+		}
+
 		public bool editorPreview;
 
 		[Tooltip("The component that will drive the texture transitions.")]

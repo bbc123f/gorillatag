@@ -195,6 +195,10 @@ namespace GorillaTagScripts
 			this.InvokeRespawn();
 		}
 
+		public DecorativeItem()
+		{
+		}
+
 		public DecorativeItemReliableState reliableState;
 
 		public UnityAction<DecorativeItem> respawnItem;

@@ -279,6 +279,10 @@ namespace CjLib
 			GizmosUtil.DrawArrow(from, to, 0.5f * size, size, 8, 0f, color, style);
 		}
 
+		public GizmosUtil()
+		{
+		}
+
 		public enum Style
 		{
 			Wireframe,

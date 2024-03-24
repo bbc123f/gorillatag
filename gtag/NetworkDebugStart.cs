@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Fusion;
 using Fusion.Sockets;
@@ -26,9 +28,33 @@ public class NetworkDebugStart : Fusion.Behaviour
 		}
 	}
 
-	public int LastCreatedClientIndex { get; internal set; }
+	public int LastCreatedClientIndex
+	{
+		[CompilerGenerated]
+		get
+		{
+			return this.<LastCreatedClientIndex>k__BackingField;
+		}
+		[CompilerGenerated]
+		internal set
+		{
+			this.<LastCreatedClientIndex>k__BackingField = value;
+		}
+	}
 
-	public GameMode CurrentServerMode { get; internal set; }
+	public GameMode CurrentServerMode
+	{
+		[CompilerGenerated]
+		get
+		{
+			return this.<CurrentServerMode>k__BackingField;
+		}
+		[CompilerGenerated]
+		internal set
+		{
+			this.<CurrentServerMode>k__BackingField = value;
+		}
+	}
 
 	protected bool CanAddClients
 	{
@@ -487,6 +513,10 @@ public class NetworkDebugStart : Fusion.Behaviour
 		});
 	}
 
+	public NetworkDebugStart()
+	{
+	}
+
 	[InlineHelp]
 	[WarnIf("RunnerPrefab", false, "No RunnerPrefab supplied. Will search for a NetworkRunner in the scene at startup.")]
 	[MultiPropertyDrawersFix]
@@ -535,6 +565,12 @@ public class NetworkDebugStart : Fusion.Behaviour
 	[MultiPropertyDrawersFix]
 	protected NetworkDebugStart.Stage _currentStage;
 
+	[CompilerGenerated]
+	private int <LastCreatedClientIndex>k__BackingField;
+
+	[CompilerGenerated]
+	private GameMode <CurrentServerMode>k__BackingField;
+
 	public enum StartModes
 	{
 		UserInterface,
@@ -550,5 +586,286 @@ public class NetworkDebugStart : Fusion.Behaviour
 		ConnectingServer,
 		ConnectingClients,
 		AllConnected
+	}
+
+	[CompilerGenerated]
+	[Serializable]
+	private sealed class <>c
+	{
+		// Note: this type is marked as 'beforefieldinit'.
+		static <>c()
+		{
+		}
+
+		public <>c()
+		{
+		}
+
+		internal void <StartWithClients>b__54_0(NetworkRunner runner)
+		{
+		}
+
+		public static readonly NetworkDebugStart.<>c <>9 = new NetworkDebugStart.<>c();
+
+		public static Action<NetworkRunner> <>9__54_0;
+	}
+
+	[CompilerGenerated]
+	private sealed class <StartClients>d__58 : IEnumerator<object>, IEnumerator, IDisposable
+	{
+		[DebuggerHidden]
+		public <StartClients>d__58(int <>1__state)
+		{
+			this.<>1__state = <>1__state;
+		}
+
+		[DebuggerHidden]
+		void IDisposable.Dispose()
+		{
+		}
+
+		bool IEnumerator.MoveNext()
+		{
+			int num = this.<>1__state;
+			NetworkDebugStart networkDebugStart = this;
+			switch (num)
+			{
+			case 0:
+				this.<>1__state = -1;
+				networkDebugStart.CurrentStage = NetworkDebugStart.Stage.ConnectingClients;
+				clientTasks = new List<Task>();
+				i = 0;
+				break;
+			case 1:
+			{
+				this.<>1__state = -1;
+				int num2 = i + 1;
+				i = num2;
+				break;
+			}
+			case 2:
+				this.<>1__state = -1;
+				goto IL_D2;
+			default:
+				return false;
+			}
+			if (i < clientCount)
+			{
+				clientTasks.Add(networkDebugStart.AddClient(serverMode, sceneRef));
+				this.<>2__current = new WaitForSeconds(0.1f);
+				this.<>1__state = 1;
+				return true;
+			}
+			clientsStartTask = Task.WhenAll(clientTasks);
+			IL_D2:
+			if (clientsStartTask.IsCompleted)
+			{
+				if (clientsStartTask.IsFaulted)
+				{
+					Debug.LogWarning(clientsStartTask.Exception);
+				}
+				networkDebugStart.CurrentStage = NetworkDebugStart.Stage.AllConnected;
+				return false;
+			}
+			this.<>2__current = new WaitForSeconds(1f);
+			this.<>1__state = 2;
+			return true;
+		}
+
+		object IEnumerator<object>.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		[DebuggerHidden]
+		void IEnumerator.Reset()
+		{
+			throw new NotSupportedException();
+		}
+
+		object IEnumerator.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		private int <>1__state;
+
+		private object <>2__current;
+
+		public NetworkDebugStart <>4__this;
+
+		public GameMode serverMode;
+
+		public SceneRef sceneRef;
+
+		public int clientCount;
+
+		private List<Task> <clientTasks>5__2;
+
+		private Task <clientsStartTask>5__3;
+
+		private int <i>5__4;
+	}
+
+	[CompilerGenerated]
+	private sealed class <StartWithClients>d__54 : IEnumerator<object>, IEnumerator, IDisposable
+	{
+		[DebuggerHidden]
+		public <StartWithClients>d__54(int <>1__state)
+		{
+			this.<>1__state = <>1__state;
+		}
+
+		[DebuggerHidden]
+		void IDisposable.Dispose()
+		{
+		}
+
+		bool IEnumerator.MoveNext()
+		{
+			int num = this.<>1__state;
+			NetworkDebugStart networkDebugStart = this;
+			switch (num)
+			{
+			case 0:
+			{
+				this.<>1__state = -1;
+				if (networkDebugStart.CurrentStage != NetworkDebugStart.Stage.Disconnected)
+				{
+					return false;
+				}
+				includesServerStart = serverMode != GameMode.Shared && serverMode != GameMode.Client && serverMode != GameMode.AutoHostOrClient;
+				if (!includesServerStart && clientCount == 0)
+				{
+					Debug.LogError(string.Format("{0} is set to {1}, and {2} is set to zero. Starting no network runners.", "GameMode", serverMode, "clientCount"));
+					return false;
+				}
+				networkDebugStart.CurrentStage = NetworkDebugStart.Stage.StartingUp;
+				SceneManager.GetActiveScene();
+				if (!networkDebugStart.RunnerPrefab)
+				{
+					Debug.LogError("RunnerPrefab not set, can't perform debug start.");
+					return false;
+				}
+				networkDebugStart.RunnerPrefab = Object.Instantiate<NetworkRunner>(networkDebugStart.RunnerPrefab);
+				Object.DontDestroyOnLoad(networkDebugStart.RunnerPrefab);
+				networkDebugStart.RunnerPrefab.name = "Temporary Runner Prefab";
+				NetworkProjectConfig global = NetworkProjectConfig.Global;
+				if (global.PeerMode != NetworkProjectConfig.PeerModes.Multiple)
+				{
+					int num2 = (includesServerStart ? 0 : 1);
+					if (clientCount > num2)
+					{
+						Debug.LogWarning(string.Format("Instance mode must be set to {0} to perform a debug start multiple peers. Restricting client count to {1}.", "Multiple", num2));
+						clientCount = num2;
+					}
+				}
+				if ((serverMode == GameMode.Shared || serverMode == GameMode.AutoHostOrClient || serverMode == GameMode.Server || serverMode == GameMode.Host) && clientCount > 1 && global.PeerMode == NetworkProjectConfig.PeerModes.Multiple && string.IsNullOrEmpty(networkDebugStart.DefaultRoomName))
+				{
+					networkDebugStart.DefaultRoomName = Guid.NewGuid().ToString();
+					Debug.Log("Generated Session Name: " + networkDebugStart.DefaultRoomName);
+				}
+				if (networkDebugStart.gameObject.transform.parent)
+				{
+					Debug.LogWarning("NetworkDebugStart can't be a child game object, un-parenting.");
+					networkDebugStart.gameObject.transform.parent = null;
+				}
+				Object.DontDestroyOnLoad(networkDebugStart.gameObject);
+				networkDebugStart.CurrentServerMode = serverMode;
+				if (!includesServerStart)
+				{
+					this.<>2__current = networkDebugStart.StartClients(clientCount, serverMode, sceneRef);
+					this.<>1__state = 3;
+					return true;
+				}
+				networkDebugStart._server = Object.Instantiate<NetworkRunner>(networkDebugStart.RunnerPrefab);
+				networkDebugStart._server.name = serverMode.ToString();
+				serverTask = networkDebugStart.InitializeNetworkRunner(networkDebugStart._server, serverMode, NetAddress.Any(networkDebugStart.ServerPort), sceneRef, delegate(NetworkRunner runner)
+				{
+				});
+				break;
+			}
+			case 1:
+				this.<>1__state = -1;
+				break;
+			case 2:
+				this.<>1__state = -1;
+				serverTask = null;
+				goto IL_310;
+			case 3:
+				this.<>1__state = -1;
+				goto IL_310;
+			default:
+				return false;
+			}
+			if (!serverTask.IsCompleted)
+			{
+				this.<>2__current = new WaitForSeconds(1f);
+				this.<>1__state = 1;
+				return true;
+			}
+			if (serverTask.IsFaulted)
+			{
+				networkDebugStart.ShutdownAll();
+				return false;
+			}
+			this.<>2__current = networkDebugStart.StartClients(clientCount, serverMode, sceneRef);
+			this.<>1__state = 2;
+			return true;
+			IL_310:
+			if (includesServerStart && networkDebugStart.AlwaysShowStats && serverMode != GameMode.Shared)
+			{
+				FusionStats.Create(null, networkDebugStart._server, new FusionStats.DefaultLayouts?(FusionStats.DefaultLayouts.Left), new FusionStats.DefaultLayouts?(FusionStats.DefaultLayouts.Left), null, null);
+			}
+			return false;
+		}
+
+		object IEnumerator<object>.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		[DebuggerHidden]
+		void IEnumerator.Reset()
+		{
+			throw new NotSupportedException();
+		}
+
+		object IEnumerator.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		private int <>1__state;
+
+		private object <>2__current;
+
+		public NetworkDebugStart <>4__this;
+
+		public GameMode serverMode;
+
+		public int clientCount;
+
+		public SceneRef sceneRef;
+
+		private bool <includesServerStart>5__2;
+
+		private Task <serverTask>5__3;
 	}
 }

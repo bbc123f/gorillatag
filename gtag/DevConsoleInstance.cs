@@ -9,6 +9,10 @@ public class DevConsoleInstance : MonoBehaviour
 		base.gameObject.SetActive(false);
 	}
 
+	public DevConsoleInstance()
+	{
+	}
+
 	public GorillaDevButton[] buttons;
 
 	public GameObject[] disableWhileActive;

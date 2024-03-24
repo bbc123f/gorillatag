@@ -36,6 +36,10 @@ public class BetaChecker : MonoBehaviour
 		}
 	}
 
+	public BetaChecker()
+	{
+	}
+
 	public GameObject[] objectsToEnable;
 
 	public bool doNotEnable;

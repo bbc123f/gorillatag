@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Text;
 using GorillaExtensions;
 using GorillaNetworking;
@@ -118,7 +119,19 @@ namespace GorillaTag.Reactions
 			TickSystem<object>.RemoveCallbackTarget(this);
 		}
 
-		bool ITickSystemPost.PostTickRunning { get; set; }
+		bool ITickSystemPost.PostTickRunning
+		{
+			[CompilerGenerated]
+			get
+			{
+				return this.<ITickSystemPost.PostTickRunning>k__BackingField;
+			}
+			[CompilerGenerated]
+			set
+			{
+				this.<ITickSystemPost.PostTickRunning>k__BackingField = value;
+			}
+		}
 
 		void ITickSystemPost.PostTick()
 		{
@@ -236,6 +249,10 @@ namespace GorillaTag.Reactions
 			}
 		}
 
+		public GorillaMaterialReaction()
+		{
+		}
+
 		[SerializeField]
 		private GorillaMaterialReaction.ReactionEntry[] _statusEffectReactions;
 
@@ -256,6 +273,9 @@ namespace GorillaTag.Reactions
 		private GameObject[][] _mat_x_moment_x_activeBool_to_gObjs;
 
 		private VRRig _ownerVRRig;
+
+		[CompilerGenerated]
+		private bool <ITickSystemPost.PostTickRunning>k__BackingField;
 
 		[Serializable]
 		public struct ReactionEntry
@@ -298,6 +318,9 @@ namespace GorillaTag.Reactions
 
 		public class MomentInStateAttribute : Attribute
 		{
+			public MomentInStateAttribute()
+			{
+			}
 		}
 	}
 }

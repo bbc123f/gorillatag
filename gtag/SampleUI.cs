@@ -1,6 +1,5 @@
 ﻿using System;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class SampleUI : MonoBehaviour
 {
@@ -27,9 +26,8 @@ public class SampleUI : MonoBehaviour
 		}
 	}
 
-	private string GetText()
+	public SampleUI()
 	{
-		return this.inputText.GetComponentInChildren<InputField>().text;
 	}
 
 	private RectTransform collectionButton;

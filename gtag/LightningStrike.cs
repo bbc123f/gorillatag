@@ -34,6 +34,15 @@ public class LightningStrike : MonoBehaviour
 		base.gameObject.SetActive(true);
 	}
 
+	public LightningStrike()
+	{
+	}
+
+	// Note: this type is marked as 'beforefieldinit'.
+	static LightningStrike()
+	{
+	}
+
 	private static SRand rand = new SRand("LightningStrike");
 
 	private ParticleSystem ps;

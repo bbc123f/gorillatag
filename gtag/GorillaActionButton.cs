@@ -10,6 +10,10 @@ public class GorillaActionButton : GorillaPressableButton
 		this.onPress.Invoke();
 	}
 
+	public GorillaActionButton()
+	{
+	}
+
 	[SerializeField]
 	public UnityEvent onPress;
 }

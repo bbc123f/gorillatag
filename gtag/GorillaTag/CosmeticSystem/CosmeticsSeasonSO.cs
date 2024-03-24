@@ -6,6 +6,10 @@ namespace GorillaTag.CosmeticSystem
 	[CreateAssetMenu(fileName = "UntitledSeason_CosmeticsSeasonSO", menuName = "- Gorilla Tag/CosmeticsSeasonSO", order = 0)]
 	public class CosmeticsSeasonSO : ScriptableObject
 	{
+		public CosmeticsSeasonSO()
+		{
+		}
+
 		public CosmeticSO[] cosmetics;
 	}
 }

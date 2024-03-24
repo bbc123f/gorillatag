@@ -42,6 +42,10 @@ public class CollectibleCoin : MonoBehaviour
 		this.m_taken = true;
 	}
 
+	public CollectibleCoin()
+	{
+	}
+
 	public float RespawnTime;
 
 	private bool m_taken;

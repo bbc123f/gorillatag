@@ -40,6 +40,10 @@ namespace BoingKit
 			this.m_currentVersion = newVersion;
 		}
 
+		public BoingBase()
+		{
+		}
+
 		[SerializeField]
 		private Version m_currentVersion;
 

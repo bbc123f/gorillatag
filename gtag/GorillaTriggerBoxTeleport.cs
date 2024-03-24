@@ -9,6 +9,10 @@ public class GorillaTriggerBoxTeleport : GorillaTriggerBox
 		this.cameraOffest.transform.position = this.teleportLocation;
 	}
 
+	public GorillaTriggerBoxTeleport()
+	{
+	}
+
 	public Vector3 teleportLocation;
 
 	public GameObject cameraOffest;

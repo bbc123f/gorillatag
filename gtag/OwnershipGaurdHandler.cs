@@ -74,6 +74,10 @@ internal class OwnershipGaurdHandler : IPunOwnershipCallbacks
 	{
 	}
 
+	public OwnershipGaurdHandler()
+	{
+	}
+
 	private static HashSet<PhotonView> gaurdedViews = new HashSet<PhotonView>();
 
 	private static readonly OwnershipGaurdHandler callbackInstance = new OwnershipGaurdHandler();

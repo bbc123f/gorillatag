@@ -60,6 +60,10 @@ public class YorickLook : MonoBehaviour
 		this.rightEye.rotation = Quaternion.LookRotation(vector5);
 	}
 
+	public YorickLook()
+	{
+	}
+
 	public Transform leftEye;
 
 	public Transform rightEye;

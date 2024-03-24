@@ -299,6 +299,15 @@ namespace GorillaLocomotion.Gameplay
 			this.lastDelta = num;
 		}
 
+		public VectorizedCustomRopeSimulation()
+		{
+		}
+
+		// Note: this type is marked as 'beforefieldinit'.
+		static VectorizedCustomRopeSimulation()
+		{
+		}
+
 		public static VectorizedCustomRopeSimulation instance;
 
 		public const int MAX_NODE_COUNT = 32;

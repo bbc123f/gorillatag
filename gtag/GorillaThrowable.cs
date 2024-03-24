@@ -167,6 +167,10 @@ public class GorillaThrowable : MonoBehaviourPun, IPunObservable, IPhotonViewCal
 		return (Mathf.Clamp(this.rigidbody.velocity.magnitude, this.minVelocity, this.maxVelocity) - this.minVelocity) / (this.maxVelocity - this.minVelocity) * (this.maxVolume - this.minVolume) + this.minVolume;
 	}
 
+	public GorillaThrowable()
+	{
+	}
+
 	public int trackingHistorySize;
 
 	public float throwMultiplier;

@@ -231,6 +231,10 @@ public class WanderingGhost : MonoBehaviourPunCallbacks, IPunObservable, IOnPhot
 		}
 	}
 
+	public WanderingGhost()
+	{
+	}
+
 	public float patrolSpeed = 3f;
 
 	public float idleStayDuration = 5f;

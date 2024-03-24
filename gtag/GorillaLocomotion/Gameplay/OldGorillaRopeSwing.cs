@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using Photon.Pun;
 using UnityEngine;
 using UnityEngine.XR;
@@ -9,7 +10,19 @@ namespace GorillaLocomotion.Gameplay
 {
 	public class OldGorillaRopeSwing : MonoBehaviourPun
 	{
-		public bool isIdle { get; private set; }
+		public bool isIdle
+		{
+			[CompilerGenerated]
+			get
+			{
+				return this.<isIdle>k__BackingField;
+			}
+			[CompilerGenerated]
+			private set
+			{
+				this.<isIdle>k__BackingField = value;
+			}
+		}
 
 		private void Awake()
 		{
@@ -244,6 +257,10 @@ namespace GorillaLocomotion.Gameplay
 			}
 		}
 
+		public OldGorillaRopeSwing()
+		{
+		}
+
 		public const float kPlayerMass = 0.8f;
 
 		public const float ropeBitGenOffset = 1f;
@@ -272,6 +289,9 @@ namespace GorillaLocomotion.Gameplay
 		private const float MAX_VELOCITY_FOR_IDLE = 0.1f;
 
 		private const float TIME_FOR_IDLE = 2f;
+
+		[CompilerGenerated]
+		private bool <isIdle>k__BackingField;
 
 		private float potentialIdleTimer;
 

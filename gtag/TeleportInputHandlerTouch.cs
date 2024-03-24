@@ -128,6 +128,10 @@ public class TeleportInputHandlerTouch : TeleportInputHandlerHMD
 		aimRay = new Ray(transform.position, transform.forward);
 	}
 
+	public TeleportInputHandlerTouch()
+	{
+	}
+
 	public Transform LeftHand;
 
 	public Transform RightHand;

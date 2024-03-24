@@ -78,6 +78,10 @@ namespace OculusSampleFramework
 			}
 		}
 
+		public TrainTrack()
+		{
+		}
+
 		[SerializeField]
 		private float _gridSize = 0.5f;
 

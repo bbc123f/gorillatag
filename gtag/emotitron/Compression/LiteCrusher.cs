@@ -18,6 +18,10 @@ namespace emotitron.Compression
 			return 32;
 		}
 
+		protected LiteCrusher()
+		{
+		}
+
 		[SerializeField]
 		protected int bits;
 	}

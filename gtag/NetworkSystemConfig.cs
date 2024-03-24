@@ -68,6 +68,11 @@ public struct NetworkSystemConfig
 		}
 	}
 
+	// Note: this type is marked as 'beforefieldinit'.
+	static NetworkSystemConfig()
+	{
+	}
+
 	[HideInInspector]
 	public int MaxPlayerCount;
 
@@ -77,7 +82,7 @@ public struct NetworkSystemConfig
 
 	public static int minorVersion = 1;
 
-	public static int minorVersion2 = 73;
+	public static int minorVersion2 = 75;
 
 	public static string GameVersionString = "";
 }

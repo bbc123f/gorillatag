@@ -74,6 +74,11 @@ namespace CjLib
 			return this.TrackDampingRatio(targetValue, num, num2, deltaTime);
 		}
 
+		// Note: this type is marked as 'beforefieldinit'.
+		static FloatSpring()
+		{
+		}
+
 		public static readonly int Stride = 8;
 
 		public float Value;

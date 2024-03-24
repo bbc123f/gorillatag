@@ -14,4 +14,8 @@ public class BeeAvoidPoint : MonoBehaviour
 		BeeSwarmManager.UnregisterAvoidPoint(base.gameObject);
 		FlockingManager.UnregisterAvoidPoint(base.gameObject);
 	}
+
+	public BeeAvoidPoint()
+	{
+	}
 }

@@ -183,6 +183,10 @@ public class ForceVolume : MonoBehaviour
 		Gizmos.DrawWireCube(Vector3.zero, new Vector3(this.pullTOCenterMinDistance / base.transform.lossyScale.x, 1f, this.pullTOCenterMinDistance / base.transform.lossyScale.z));
 	}
 
+	public ForceVolume()
+	{
+	}
+
 	[SerializeField]
 	public bool scaleWithSize = true;
 

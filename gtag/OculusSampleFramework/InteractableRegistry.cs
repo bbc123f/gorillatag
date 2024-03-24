@@ -24,6 +24,15 @@ namespace OculusSampleFramework
 			InteractableRegistry.Interactables.Remove(interactable);
 		}
 
+		public InteractableRegistry()
+		{
+		}
+
+		// Note: this type is marked as 'beforefieldinit'.
+		static InteractableRegistry()
+		{
+		}
+
 		public static HashSet<Interactable> _interactables = new HashSet<Interactable>();
 	}
 }

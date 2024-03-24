@@ -22,5 +22,9 @@ namespace Viveport.Internal.Arcade
 
 		[DllImport("viveport_api64", CallingConvention = CallingConvention.Cdecl, EntryPoint = "IViveportArcadeSession_Stop")]
 		internal static extern void Stop_64(SessionCallback callback);
+
+		public Session()
+		{
+		}
 	}
 }

@@ -73,6 +73,10 @@ public class GorillaFireball : GorillaThrowable, IPunInstantiateMagicCallback
 		this.LocalExplode();
 	}
 
+	public GorillaFireball()
+	{
+	}
+
 	public float maxExplosionScale;
 
 	public float totalExplosionTime;

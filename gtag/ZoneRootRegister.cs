@@ -14,6 +14,10 @@ public class ZoneRootRegister : MonoBehaviour
 		this.watchableSlot.Value = null;
 	}
 
+	public ZoneRootRegister()
+	{
+	}
+
 	[SerializeField]
 	private WatchableGameObjectSO watchableSlot;
 }

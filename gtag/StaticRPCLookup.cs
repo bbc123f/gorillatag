@@ -21,6 +21,10 @@ public class StaticRPCLookup
 		return this.entries[this.placeholderEntryLookup[placeholder]].code;
 	}
 
+	public StaticRPCLookup()
+	{
+	}
+
 	public List<StaticRPCEntry> entries = new List<StaticRPCEntry>();
 
 	private Dictionary<byte, int> eventCodeEntryLookup = new Dictionary<byte, int>();

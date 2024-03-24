@@ -90,6 +90,10 @@ public class UiSceneMenu : MonoBehaviour
 		textMeshProUGUI.transform.SetParent(this.m_layoutGroup.transform, false);
 	}
 
+	public UiSceneMenu()
+	{
+	}
+
 	[Header("Settings")]
 	[SerializeField]
 	private VerticalLayoutGroup m_layoutGroup;

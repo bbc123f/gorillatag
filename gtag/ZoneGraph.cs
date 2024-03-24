@@ -6,141 +6,122 @@ public class ZoneGraph : MonoBehaviour
 {
 	public static ZoneGraph Instance()
 	{
-		return ZoneGraph.gZoneGraph;
+		return ZoneGraph.gGraph;
 	}
 
-	public static void NotifyZoneEnter(ZoneEntity entity, int colliderID)
+	public static ZoneDef ColliderToZoneDef(BoxCollider collider)
 	{
-		ZoneGraph.gZoneGraph.NotifyZoneEnter_Internal(entity, colliderID);
-	}
-
-	public static void NotifyZoneExit(ZoneEntity entity, int colliderID)
-	{
-		ZoneGraph.gZoneGraph.NotifyZoneExit_Internal(entity, colliderID);
-	}
-
-	private void NotifyZoneEnter_Internal(ZoneEntity entity, int colliderID)
-	{
-		ZoneGraph.Node node;
-		if (this.ColliderToNode(colliderID, out node) > -1)
+		if (!(collider == null))
 		{
-			GorillaTelemetry.PostZoneEvent(node.zone, node.subZone, GTZoneEventType.zone_enter, true);
+			return ZoneGraph.gGraph._colliderToZoneDef[collider];
 		}
+		return null;
 	}
 
-	private void NotifyZoneExit_Internal(ZoneEntity entity, int colliderID)
+	public static ZoneNode ColliderToNode(BoxCollider collider)
 	{
-		ZoneGraph.Node node;
-		if (this.ColliderToNode(colliderID, out node) > -1)
+		if (!(collider == null))
 		{
-			GorillaTelemetry.PostZoneEvent(node.zone, node.subZone, GTZoneEventType.zone_exit, true);
+			return ZoneGraph.gGraph._colliderToNode[collider];
 		}
-	}
-
-	private int ColliderToNode(int colliderID, out ZoneGraph.Node node)
-	{
-		node = ZoneGraph.Node.Null;
-		for (int i = 0; i < this._colliders.Length; i++)
-		{
-			if (this._colliders[i].GetInstanceID() == colliderID)
-			{
-				node = this._nodes[i];
-				return i;
-			}
-		}
-		return -1;
+		return ZoneNode.Null;
 	}
 
 	private void Awake()
 	{
-		if (ZoneGraph.gZoneGraph != null && ZoneGraph.gZoneGraph != this)
+		if (ZoneGraph.gGraph != null && ZoneGraph.gGraph != this)
 		{
 			Object.Destroy(this);
 		}
 		else
 		{
-			ZoneGraph.gZoneGraph = this;
+			ZoneGraph.gGraph = this;
 		}
-		for (int i = 0; i < this._colliders.Length; i++)
+		this.CompileColliderMaps();
+	}
+
+	private void CompileColliderMaps()
+	{
+		for (int i = 0; i < this._zoneDefs.Length; i++)
 		{
-			BoxCollider boxCollider = this._colliders[i];
-			this._instIdToCollider.Add(boxCollider.GetInstanceID(), boxCollider);
+			ZoneDef zoneDef = this._zoneDefs[i];
+			for (int j = 0; j < zoneDef.colliders.Length; j++)
+			{
+				BoxCollider boxCollider = zoneDef.colliders[j];
+				this._colliderToZoneDef[boxCollider] = zoneDef;
+			}
+		}
+		for (int k = 0; k < this._colliders.Length; k++)
+		{
+			BoxCollider boxCollider2 = this._colliders[k];
+			this._colliderToNode[boxCollider2] = this._nodes[k];
 		}
 	}
 
-	public static void Register<T>(T entity) where T : ZoneEntity
+	public static int Compare(ZoneDef x, ZoneDef y)
 	{
-		T t = entity;
-		int num = ((t != null) ? t.entityID : 0);
-		if (num == 0)
+		if (x == null && y == null)
 		{
-			return;
+			return 0;
 		}
-		SortedList<int, ZoneEntity> entityList = ZoneGraph.gZoneGraph._entityList;
-		if (!entityList.ContainsKey(num))
+		if (x == null)
 		{
-			entityList.Add(num, entity);
+			return 1;
+		}
+		if (y == null)
+		{
+			return -1;
+		}
+		int num = (int)x.zoneId;
+		int num2 = num.CompareTo((int)y.zoneId);
+		if (num2 == 0)
+		{
+			num = (int)x.subZoneId;
+			num2 = num.CompareTo((int)y.subZoneId);
+		}
+		return num2;
+	}
+
+	public static void Register(ZoneEntity entity)
+	{
+		if (!ZoneGraph.gGraph._entityList.Contains(entity))
+		{
+			ZoneGraph.gGraph._entityList.Add(entity);
 		}
 	}
 
-	public static void Unregister<T>(T entity) where T : ZoneEntity
+	public static void Unregister(ZoneEntity entity)
 	{
-		T t = entity;
-		int num = ((t != null) ? t.entityID : 0);
-		if (num == 0)
-		{
-			return;
-		}
-		ZoneGraph.gZoneGraph._entityList.Remove(num);
+		ZoneGraph.gGraph._entityList.Remove(entity);
+	}
+
+	public ZoneGraph()
+	{
 	}
 
 	[SerializeField]
-	private LayerMask _layerMask;
-
-	private static ZoneGraph gZoneGraph;
-
-	[SerializeField]
-	private ZoneGraph.Node[] _nodes = new ZoneGraph.Node[0];
+	private ZoneDef[] _zoneDefs = new ZoneDef[0];
 
 	[SerializeField]
 	private BoxCollider[] _colliders = new BoxCollider[0];
 
-	private SortedList<int, ZoneEntity> _entityList = new SortedList<int, ZoneEntity>(16);
+	[SerializeField]
+	private ZoneNode[] _nodes = new ZoneNode[0];
 
 	[Space]
-	[SerializeField]
-	private ZoneDef[] _zoneDefs = new ZoneDef[0];
-
 	[DebugReadOnly]
 	[NonSerialized]
-	private Dictionary<int, BoxCollider> _instIdToCollider = new Dictionary<int, BoxCollider>(32);
+	private Dictionary<BoxCollider, ZoneDef> _colliderToZoneDef = new Dictionary<BoxCollider, ZoneDef>(64);
 
-	[Serializable]
-	public struct Node
-	{
-		public GTZone zone;
+	[Space]
+	[DebugReadOnly]
+	[NonSerialized]
+	private Dictionary<BoxCollider, ZoneNode> _colliderToNode = new Dictionary<BoxCollider, ZoneNode>(64);
 
-		public GTSubZone subZone;
+	[Space]
+	[DebugReadOnly]
+	[NonSerialized]
+	private List<ZoneEntity> _entityList = new List<ZoneEntity>(16);
 
-		public Vector3 center;
-
-		public Vector3 size;
-
-		public Quaternion rotation;
-
-		public Matrix4x4 TRS;
-
-		public int colliderID;
-
-		public static readonly ZoneGraph.Node Null = new ZoneGraph.Node
-		{
-			zone = GTZone.none,
-			subZone = GTSubZone.none,
-			center = Vector3.zero,
-			size = Vector3.zero,
-			rotation = Quaternion.identity,
-			TRS = Matrix4x4.zero,
-			colliderID = -1
-		};
-	}
+	private static ZoneGraph gGraph;
 }

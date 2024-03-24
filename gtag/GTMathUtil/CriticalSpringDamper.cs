@@ -25,6 +25,10 @@ namespace GTMathUtil
 			return this.x;
 		}
 
+		public CriticalSpringDamper()
+		{
+		}
+
 		public float x;
 
 		public float xGoal;

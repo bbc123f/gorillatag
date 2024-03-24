@@ -8,6 +8,10 @@ namespace GorillaTag
 	[CreateAssetMenu(fileName = "MaterialDatasSO", menuName = "Gorilla Tag/MaterialDatasSO")]
 	public class MaterialDatasSO : ScriptableObject
 	{
+		public MaterialDatasSO()
+		{
+		}
+
 		public List<Player.MaterialData> datas;
 	}
 }

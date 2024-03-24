@@ -36,6 +36,10 @@ namespace BoingKit
 			BoingManager.DispatchReactorFieldCompute();
 		}
 
+		public BoingManagerPreUpdatePump()
+		{
+		}
+
 		private int m_lastPumpedFrame = -1;
 	}
 }

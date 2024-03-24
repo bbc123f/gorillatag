@@ -17,6 +17,15 @@ public class WaterSurfaceMaterialController : MonoBehaviour
 		this.renderer.SetPropertyBlock(this.matPropBlock);
 	}
 
+	public WaterSurfaceMaterialController()
+	{
+	}
+
+	// Note: this type is marked as 'beforefieldinit'.
+	static WaterSurfaceMaterialController()
+	{
+	}
+
 	public float ScrollX = 0.6f;
 
 	public float ScrollY = 0.6f;

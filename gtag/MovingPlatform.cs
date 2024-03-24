@@ -186,6 +186,10 @@ public class MovingPlatform : BasePlatform
 		return this.deltaPosition;
 	}
 
+	public MovingPlatform()
+	{
+	}
+
 	public MovingPlatform.PlatformType platformType;
 
 	public float cycleLength;

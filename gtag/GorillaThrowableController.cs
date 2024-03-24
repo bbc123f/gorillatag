@@ -122,6 +122,10 @@ public class GorillaThrowableController : MonoBehaviour
 		GorillaTagger.Instance.StartVibration(isLeft, this.hoverVibrationStrength, this.hoverVibrationDuration);
 	}
 
+	public GorillaThrowableController()
+	{
+	}
+
 	public Transform leftHandController;
 
 	public Transform rightHandController;

@@ -10,5 +10,9 @@ public class GorillaTriggerBoxGameFlag : GorillaTriggerBox
 		PhotonView.Get(Object.FindObjectOfType<GorillaGameManager>()).RPC(this.functionName, RpcTarget.MasterClient, null);
 	}
 
+	public GorillaTriggerBoxGameFlag()
+	{
+	}
+
 	public string functionName;
 }

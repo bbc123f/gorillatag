@@ -2,4 +2,7 @@
 
 public class FXSArgs
 {
+	public FXSArgs()
+	{
+	}
 }

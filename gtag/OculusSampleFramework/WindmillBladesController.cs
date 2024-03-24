@@ -1,12 +1,27 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace OculusSampleFramework
 {
 	public class WindmillBladesController : MonoBehaviour
 	{
-		public bool IsMoving { get; private set; }
+		public bool IsMoving
+		{
+			[CompilerGenerated]
+			get
+			{
+				return this.<IsMoving>k__BackingField;
+			}
+			[CompilerGenerated]
+			private set
+			{
+				this.<IsMoving>k__BackingField = value;
+			}
+		}
 
 		private void Start()
 		{
@@ -75,6 +90,10 @@ namespace OculusSampleFramework
 			this._audioSource.Play();
 		}
 
+		public WindmillBladesController()
+		{
+		}
+
 		private const float MAX_TIME = 1f;
 
 		[SerializeField]
@@ -89,6 +108,9 @@ namespace OculusSampleFramework
 		[SerializeField]
 		private AudioClip _windMillStopSound;
 
+		[CompilerGenerated]
+		private bool <IsMoving>k__BackingField;
+
 		private float _currentSpeed;
 
 		private Coroutine _lerpSpeedCoroutine;
@@ -98,5 +120,173 @@ namespace OculusSampleFramework
 		private Quaternion _originalRotation;
 
 		private float _rotAngle;
+
+		[CompilerGenerated]
+		private sealed class <LerpToSpeed>d__17 : IEnumerator<object>, IEnumerator, IDisposable
+		{
+			[DebuggerHidden]
+			public <LerpToSpeed>d__17(int <>1__state)
+			{
+				this.<>1__state = <>1__state;
+			}
+
+			[DebuggerHidden]
+			void IDisposable.Dispose()
+			{
+			}
+
+			bool IEnumerator.MoveNext()
+			{
+				int num = this.<>1__state;
+				WindmillBladesController windmillBladesController = this;
+				float num2;
+				if (num != 0)
+				{
+					if (num != 1)
+					{
+						return false;
+					}
+					this.<>1__state = -1;
+					num2 = Mathf.Abs(windmillBladesController._currentSpeed - goalSpeed);
+				}
+				else
+				{
+					this.<>1__state = -1;
+					totalTime = 0f;
+					startSpeed = windmillBladesController._currentSpeed;
+					if (windmillBladesController._audioChangeCr != null)
+					{
+						windmillBladesController.StopCoroutine(windmillBladesController._audioChangeCr);
+					}
+					if (windmillBladesController.IsMoving)
+					{
+						windmillBladesController._audioChangeCr = windmillBladesController.StartCoroutine(windmillBladesController.PlaySoundDelayed(windmillBladesController._windMillStartSound, windmillBladesController._windMillRotationSound, windmillBladesController._windMillStartSound.length * 0.95f));
+					}
+					else
+					{
+						windmillBladesController.PlaySound(windmillBladesController._windMillStopSound, false);
+					}
+					num2 = Mathf.Abs(windmillBladesController._currentSpeed - goalSpeed);
+				}
+				if (num2 <= Mathf.Epsilon)
+				{
+					windmillBladesController._lerpSpeedCoroutine = null;
+					return false;
+				}
+				windmillBladesController._currentSpeed = Mathf.Lerp(startSpeed, goalSpeed, totalTime / 1f);
+				totalTime += Time.deltaTime;
+				this.<>2__current = null;
+				this.<>1__state = 1;
+				return true;
+			}
+
+			object IEnumerator<object>.Current
+			{
+				[DebuggerHidden]
+				get
+				{
+					return this.<>2__current;
+				}
+			}
+
+			[DebuggerHidden]
+			void IEnumerator.Reset()
+			{
+				throw new NotSupportedException();
+			}
+
+			object IEnumerator.Current
+			{
+				[DebuggerHidden]
+				get
+				{
+					return this.<>2__current;
+				}
+			}
+
+			private int <>1__state;
+
+			private object <>2__current;
+
+			public WindmillBladesController <>4__this;
+
+			public float goalSpeed;
+
+			private float <totalTime>5__2;
+
+			private float <startSpeed>5__3;
+		}
+
+		[CompilerGenerated]
+		private sealed class <PlaySoundDelayed>d__18 : IEnumerator<object>, IEnumerator, IDisposable
+		{
+			[DebuggerHidden]
+			public <PlaySoundDelayed>d__18(int <>1__state)
+			{
+				this.<>1__state = <>1__state;
+			}
+
+			[DebuggerHidden]
+			void IDisposable.Dispose()
+			{
+			}
+
+			bool IEnumerator.MoveNext()
+			{
+				int num = this.<>1__state;
+				WindmillBladesController windmillBladesController = this;
+				if (num == 0)
+				{
+					this.<>1__state = -1;
+					windmillBladesController.PlaySound(initial, false);
+					this.<>2__current = new WaitForSeconds(timeDelayAfterInitial);
+					this.<>1__state = 1;
+					return true;
+				}
+				if (num != 1)
+				{
+					return false;
+				}
+				this.<>1__state = -1;
+				windmillBladesController.PlaySound(clip, true);
+				return false;
+			}
+
+			object IEnumerator<object>.Current
+			{
+				[DebuggerHidden]
+				get
+				{
+					return this.<>2__current;
+				}
+			}
+
+			[DebuggerHidden]
+			void IEnumerator.Reset()
+			{
+				throw new NotSupportedException();
+			}
+
+			object IEnumerator.Current
+			{
+				[DebuggerHidden]
+				get
+				{
+					return this.<>2__current;
+				}
+			}
+
+			private int <>1__state;
+
+			private object <>2__current;
+
+			public WindmillBladesController <>4__this;
+
+			public AudioClip initial;
+
+			public float timeDelayAfterInitial;
+
+			public AudioClip clip;
+		}
 	}
 }

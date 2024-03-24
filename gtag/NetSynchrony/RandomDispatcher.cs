@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using UnityEngine;
 
 namespace NetSynchrony
@@ -7,7 +9,35 @@ namespace NetSynchrony
 	[CreateAssetMenu(fileName = "RandomDispatcher", menuName = "NetSynchrony/RandomDispatcher", order = 0)]
 	public class RandomDispatcher : ScriptableObject
 	{
-		public event RandomDispatcher.RandomDispatcherEvent Dispatch;
+		public event RandomDispatcher.RandomDispatcherEvent Dispatch
+		{
+			[CompilerGenerated]
+			add
+			{
+				RandomDispatcher.RandomDispatcherEvent randomDispatcherEvent = this.Dispatch;
+				RandomDispatcher.RandomDispatcherEvent randomDispatcherEvent2;
+				do
+				{
+					randomDispatcherEvent2 = randomDispatcherEvent;
+					RandomDispatcher.RandomDispatcherEvent randomDispatcherEvent3 = (RandomDispatcher.RandomDispatcherEvent)Delegate.Combine(randomDispatcherEvent2, value);
+					randomDispatcherEvent = Interlocked.CompareExchange<RandomDispatcher.RandomDispatcherEvent>(ref this.Dispatch, randomDispatcherEvent3, randomDispatcherEvent2);
+				}
+				while (randomDispatcherEvent != randomDispatcherEvent2);
+			}
+			[CompilerGenerated]
+			remove
+			{
+				RandomDispatcher.RandomDispatcherEvent randomDispatcherEvent = this.Dispatch;
+				RandomDispatcher.RandomDispatcherEvent randomDispatcherEvent2;
+				do
+				{
+					randomDispatcherEvent2 = randomDispatcherEvent;
+					RandomDispatcher.RandomDispatcherEvent randomDispatcherEvent3 = (RandomDispatcher.RandomDispatcherEvent)Delegate.Remove(randomDispatcherEvent2, value);
+					randomDispatcherEvent = Interlocked.CompareExchange<RandomDispatcher.RandomDispatcherEvent>(ref this.Dispatch, randomDispatcherEvent3, randomDispatcherEvent2);
+				}
+				while (randomDispatcherEvent != randomDispatcherEvent2);
+			}
+		}
 
 		public void Init(double seconds)
 		{
@@ -55,6 +85,13 @@ namespace NetSynchrony
 				}
 			}
 		}
+
+		public RandomDispatcher()
+		{
+		}
+
+		[CompilerGenerated]
+		private RandomDispatcher.RandomDispatcherEvent Dispatch;
 
 		[SerializeField]
 		private float minWaitTime = 1f;

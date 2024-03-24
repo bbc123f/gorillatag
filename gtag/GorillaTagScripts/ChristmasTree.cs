@@ -98,6 +98,10 @@ namespace GorillaTagScripts
 			}
 		}
 
+		public ChristmasTree()
+		{
+		}
+
 		public GameObject hangers;
 
 		public GameObject lights;

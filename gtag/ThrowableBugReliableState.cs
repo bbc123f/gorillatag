@@ -40,5 +40,9 @@ public class ThrowableBugReliableState : MonoBehaviour, IRequestableOwnershipGua
 		throw new NotImplementedException();
 	}
 
+	public ThrowableBugReliableState()
+	{
+	}
+
 	public Vector3 travelingDirection = Vector3.zero;
 }

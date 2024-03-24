@@ -48,6 +48,10 @@ public class VRMapMiddle : VRMap
 		}
 	}
 
+	public VRMapMiddle()
+	{
+	}
+
 	public InputFeatureUsage inputAxis;
 
 	public float gripValue;

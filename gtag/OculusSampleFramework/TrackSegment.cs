@@ -1,11 +1,24 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace OculusSampleFramework
 {
 	public class TrackSegment : MonoBehaviour
 	{
-		public float StartDistance { get; set; }
+		public float StartDistance
+		{
+			[CompilerGenerated]
+			get
+			{
+				return this.<StartDistance>k__BackingField;
+			}
+			[CompilerGenerated]
+			set
+			{
+				this.<StartDistance>k__BackingField = value;
+			}
+		}
 
 		public float GridSize
 		{
@@ -167,6 +180,10 @@ namespace OculusSampleFramework
 			this._mesh.transform.localScale = new Vector3(this.GridSize / 0.8f, this.GridSize / 0.8f, this.GridSize / 0.8f);
 		}
 
+		public TrackSegment()
+		{
+		}
+
 		[SerializeField]
 		private TrackSegment.SegmentType _segmentType;
 
@@ -188,6 +205,9 @@ namespace OculusSampleFramework
 		private const float _trackWidth = 0.15f;
 
 		private GameObject _mesh;
+
+		[CompilerGenerated]
+		private float <StartDistance>k__BackingField;
 
 		private Pose _p1 = new Pose();
 

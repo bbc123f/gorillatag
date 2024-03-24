@@ -109,6 +109,10 @@ public class MediaPlayerImage : Image
 		toFill.AddTriangle(2, 3, 0);
 	}
 
+	public MediaPlayerImage()
+	{
+	}
+
 	[SerializeField]
 	private MediaPlayerImage.ButtonType m_ButtonType;
 

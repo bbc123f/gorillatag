@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
+using System.Text;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -20,6 +23,21 @@ public class Anchor : MonoBehaviour
 		this._icon = base.GetComponent<Transform>().FindChildRecursive("Sphere").gameObject;
 	}
 
+	private static string ConvertUuidToString(Guid guid)
+	{
+		byte[] array = guid.ToByteArray();
+		StringBuilder stringBuilder = new StringBuilder(array.Length * 2 + 4);
+		for (int i = 0; i < array.Length; i++)
+		{
+			if (3 < i && i < 11 && i % 2 == 0)
+			{
+				stringBuilder.Append("-");
+			}
+			stringBuilder.AppendFormat("{0:x2}", array[i]);
+		}
+		return stringBuilder.ToString();
+	}
+
 	private IEnumerator Start()
 	{
 		while (this._spatialAnchor && !this._spatialAnchor.Created)
@@ -28,7 +46,7 @@ public class Anchor : MonoBehaviour
 		}
 		if (this._spatialAnchor)
 		{
-			this._anchorName.text = this._spatialAnchor.Uuid.ToString("D");
+			this._anchorName.text = Anchor.ConvertUuidToString(this._spatialAnchor.Uuid);
 		}
 		else
 		{
@@ -58,14 +76,19 @@ public class Anchor : MonoBehaviour
 				return;
 			}
 			this.ShowSaveIcon = true;
-			if (!PlayerPrefs.HasKey("numUuids"))
-			{
-				PlayerPrefs.SetInt("numUuids", 0);
-			}
-			int @int = PlayerPrefs.GetInt("numUuids");
-			PlayerPrefs.SetString("uuid" + @int.ToString(), anchor.Uuid.ToString());
-			PlayerPrefs.SetInt("numUuids", @int + 1);
+			this.SaveUuidToPlayerPrefs(anchor.Uuid);
 		});
+	}
+
+	private void SaveUuidToPlayerPrefs(Guid uuid)
+	{
+		if (!PlayerPrefs.HasKey("numUuids"))
+		{
+			PlayerPrefs.SetInt("numUuids", 0);
+		}
+		int @int = PlayerPrefs.GetInt("numUuids");
+		PlayerPrefs.SetString("uuid" + @int.ToString(), uuid.ToString());
+		PlayerPrefs.SetInt("numUuids", @int + 1);
 	}
 
 	public void OnHideButtonPressed()
@@ -213,6 +236,30 @@ public class Anchor : MonoBehaviour
 		this._selectedButton.OnSelect(null);
 	}
 
+	public Anchor()
+	{
+	}
+
+	[CompilerGenerated]
+	private void <OnSaveLocalButtonPressed>b__23_0(OVRSpatialAnchor anchor, bool success)
+	{
+		if (!success)
+		{
+			return;
+		}
+		this.ShowSaveIcon = true;
+		this.SaveUuidToPlayerPrefs(anchor.Uuid);
+	}
+
+	[CompilerGenerated]
+	private void <OnEraseButtonPressed>b__26_0(OVRSpatialAnchor anchor, bool success)
+	{
+		if (success)
+		{
+			this._saveIcon.SetActive(false);
+		}
+	}
+
 	public const string NumUuidsPlayerPref = "numUuids";
 
 	[SerializeField]
@@ -274,4 +321,82 @@ public class Anchor : MonoBehaviour
 	private OVRSpatialAnchor _spatialAnchor;
 
 	private GameObject _icon;
+
+	[CompilerGenerated]
+	private sealed class <Start>d__21 : IEnumerator<object>, IEnumerator, IDisposable
+	{
+		[DebuggerHidden]
+		public <Start>d__21(int <>1__state)
+		{
+			this.<>1__state = <>1__state;
+		}
+
+		[DebuggerHidden]
+		void IDisposable.Dispose()
+		{
+		}
+
+		bool IEnumerator.MoveNext()
+		{
+			int num = this.<>1__state;
+			Anchor anchor = this;
+			if (num != 0)
+			{
+				if (num != 1)
+				{
+					return false;
+				}
+				this.<>1__state = -1;
+			}
+			else
+			{
+				this.<>1__state = -1;
+			}
+			if (!anchor._spatialAnchor || anchor._spatialAnchor.Created)
+			{
+				if (anchor._spatialAnchor)
+				{
+					anchor._anchorName.text = Anchor.ConvertUuidToString(anchor._spatialAnchor.Uuid);
+				}
+				else
+				{
+					Object.Destroy(anchor.gameObject);
+				}
+				return false;
+			}
+			this.<>2__current = null;
+			this.<>1__state = 1;
+			return true;
+		}
+
+		object IEnumerator<object>.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		[DebuggerHidden]
+		void IEnumerator.Reset()
+		{
+			throw new NotSupportedException();
+		}
+
+		object IEnumerator.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		private int <>1__state;
+
+		private object <>2__current;
+
+		public Anchor <>4__this;
+	}
 }

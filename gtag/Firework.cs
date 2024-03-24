@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class Firework : MonoBehaviour
@@ -55,6 +56,10 @@ public class Firework : MonoBehaviour
 		this._controller.RenderGizmo(this, Color.yellow);
 	}
 
+	public Firework()
+	{
+	}
+
 	[SerializeField]
 	private FireworksController _controller;
 
@@ -85,4 +90,27 @@ public class Firework : MonoBehaviour
 	public bool doTrailAudio = true;
 
 	public bool doExplosion = true;
+
+	[CompilerGenerated]
+	[Serializable]
+	private sealed class <>c
+	{
+		// Note: this type is marked as 'beforefieldinit'.
+		static <>c()
+		{
+		}
+
+		public <>c()
+		{
+		}
+
+		internal bool <OnValidate>b__13_0(Firework x)
+		{
+			return x != null;
+		}
+
+		public static readonly Firework.<>c <>9 = new Firework.<>c();
+
+		public static Func<Firework, bool> <>9__13_0;
+	}
 }

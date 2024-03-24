@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using Unity.Collections;
 using Unity.Jobs;
 using UnityEngine;
@@ -119,6 +122,10 @@ public class DayNightCycle : MonoBehaviour
 		yield break;
 	}
 
+	public DayNightCycle()
+	{
+	}
+
 	public Texture2D _dayMap;
 
 	private Texture2D fromMap;
@@ -206,5 +213,145 @@ public class DayNightCycle : MonoBehaviour
 		public NativeArray<Color> mixedPixels;
 
 		public float lerpValue;
+	}
+
+	[CompilerGenerated]
+	private sealed class <UpdateWork>d__37 : IEnumerator<object>, IEnumerator, IDisposable
+	{
+		[DebuggerHidden]
+		public <UpdateWork>d__37(int <>1__state)
+		{
+			this.<>1__state = <>1__state;
+		}
+
+		[DebuggerHidden]
+		void IDisposable.Dispose()
+		{
+		}
+
+		bool IEnumerator.MoveNext()
+		{
+			int num = this.<>1__state;
+			DayNightCycle dayNightCycle = this;
+			int num2;
+			switch (num)
+			{
+			case 0:
+				this.<>1__state = -1;
+				this.<>2__current = 0;
+				this.<>1__state = 1;
+				return true;
+			case 1:
+				this.<>1__state = -1;
+				dayNightCycle.timeTakenStartingJob = Time.realtimeSinceStartup - dayNightCycle.startTime;
+				dayNightCycle.startTime = Time.realtimeSinceStartup;
+				dayNightCycle.startedCoroutine = true;
+				dayNightCycle.currentSubTexture = 0;
+				i = 0;
+				break;
+			case 2:
+				this.<>1__state = -1;
+				num2 = i;
+				i = num2 + 1;
+				break;
+			case 3:
+				this.<>1__state = -1;
+				num2 = j;
+				j = num2 + 1;
+				goto IL_239;
+			case 4:
+				this.<>1__state = -1;
+				Graphics.CopyTexture(dayNightCycle.subTextureArray[i], 0, 0, 0, 0, dayNightCycle.subTextureSize, dayNightCycle.subTextureSize, dayNightCycle.newTexture, 0, 0, i * dayNightCycle.subTextureSize % dayNightCycle.textureHeight, (int)Mathf.Floor((float)(dayNightCycle.subTextureSize * i / dayNightCycle.textureHeight)) * dayNightCycle.subTextureSize);
+				this.<>2__current = 0;
+				this.<>1__state = 5;
+				return true;
+			case 5:
+				this.<>1__state = -1;
+				num2 = i;
+				i = num2 + 1;
+				goto IL_34B;
+			default:
+				return false;
+			}
+			if (i >= dayNightCycle.subTextureArray.Length)
+			{
+				i = 0;
+				goto IL_261;
+			}
+			dayNightCycle.subTextureArray[i] = new Texture2D(dayNightCycle.subTextureSize, dayNightCycle.subTextureSize, dayNightCycle.fromMap.graphicsFormat, TextureCreationFlags.None);
+			this.<>2__current = 0;
+			this.<>1__state = 2;
+			return true;
+			IL_239:
+			if (j < dayNightCycle.textureHeight / dayNightCycle.subTextureSize)
+			{
+				dayNightCycle.currentRow = j;
+				dayNightCycle.workBlockFrom = dayNightCycle.fromMap.GetPixels(i * dayNightCycle.subTextureSize, j * dayNightCycle.subTextureSize, dayNightCycle.subTextureSize, dayNightCycle.subTextureSize);
+				dayNightCycle.workBlockTo = dayNightCycle.toMap.GetPixels(i * dayNightCycle.subTextureSize, j * dayNightCycle.subTextureSize, dayNightCycle.subTextureSize, dayNightCycle.subTextureSize);
+				for (int k = 0; k < dayNightCycle.subTextureSize * dayNightCycle.subTextureSize - 1; k++)
+				{
+					dayNightCycle.workBlockMix[k] = Color.Lerp(dayNightCycle.workBlockFrom[k], dayNightCycle.workBlockTo[k], dayNightCycle.lerpAmount);
+				}
+				dayNightCycle.subTextureArray[j * (dayNightCycle.textureWidth / dayNightCycle.subTextureSize) + i].SetPixels(0, 0, dayNightCycle.subTextureSize, dayNightCycle.subTextureSize, dayNightCycle.workBlockMix);
+				this.<>2__current = 0;
+				this.<>1__state = 3;
+				return true;
+			}
+			num2 = i;
+			i = num2 + 1;
+			IL_261:
+			if (i < dayNightCycle.textureWidth / dayNightCycle.subTextureSize)
+			{
+				dayNightCycle.currentColumn = i;
+				j = 0;
+				goto IL_239;
+			}
+			i = 0;
+			IL_34B:
+			if (i >= dayNightCycle.subTextureArray.Length)
+			{
+				dayNightCycle.finishedCoroutine = true;
+				return false;
+			}
+			dayNightCycle.currentSubTexture = i;
+			dayNightCycle.subTextureArray[i].Apply();
+			this.<>2__current = 0;
+			this.<>1__state = 4;
+			return true;
+		}
+
+		object IEnumerator<object>.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		[DebuggerHidden]
+		void IEnumerator.Reset()
+		{
+			throw new NotSupportedException();
+		}
+
+		object IEnumerator.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		private int <>1__state;
+
+		private object <>2__current;
+
+		public DayNightCycle <>4__this;
+
+		private int <i>5__2;
+
+		private int <j>5__3;
 	}
 }

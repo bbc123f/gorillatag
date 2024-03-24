@@ -269,6 +269,10 @@ namespace Viveport
 			return (UserStats.LeaderBoardDiaplayType)UserStats.GetLeaderboardDisplayType();
 		}
 
+		public UserStats()
+		{
+		}
+
 		private static StatusCallback isReadyIl2cppCallback;
 
 		private static StatusCallback downloadStatsIl2cppCallback;

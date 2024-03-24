@@ -19,6 +19,10 @@ public class GorillaTriggerBoxShaderSettings : GorillaTriggerBox
 		ZoneShaderSettings.ActivateDefaultSettings();
 	}
 
+	public GorillaTriggerBoxShaderSettings()
+	{
+	}
+
 	[SerializeField]
 	private XSceneRef settingsRef;
 

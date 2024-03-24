@@ -4,6 +4,10 @@ using UnityEngine.UI;
 
 public class DevInspectorScanner : MonoBehaviour
 {
+	public DevInspectorScanner()
+	{
+	}
+
 	public Text hintTextOutput;
 
 	public float scanDistance = 10f;

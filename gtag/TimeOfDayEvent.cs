@@ -115,6 +115,10 @@ public class TimeOfDayEvent : MonoBehaviour
 		return ev && ev.isOngoing;
 	}
 
+	public TimeOfDayEvent()
+	{
+	}
+
 	[SerializeField]
 	[Range(0f, 1f)]
 	private float _timeStart;

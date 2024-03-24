@@ -1,10 +1,23 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using GorillaTag;
 using UnityEngine;
 
 public class ScienceExperimentSceneElement : MonoBehaviour, ITickSystemPost
 {
-	bool ITickSystemPost.PostTickRunning { get; set; }
+	bool ITickSystemPost.PostTickRunning
+	{
+		[CompilerGenerated]
+		get
+		{
+			return this.<ITickSystemPost.PostTickRunning>k__BackingField;
+		}
+		[CompilerGenerated]
+		set
+		{
+			this.<ITickSystemPost.PostTickRunning>k__BackingField = value;
+		}
+	}
 
 	void ITickSystemPost.PostTick()
 	{
@@ -24,7 +37,14 @@ public class ScienceExperimentSceneElement : MonoBehaviour, ITickSystemPost
 		TickSystem<object>.RemovePostTickCallback(this);
 	}
 
+	public ScienceExperimentSceneElement()
+	{
+	}
+
 	public ScienceExperimentElementID elementID;
 
 	private Transform followElement;
+
+	[CompilerGenerated]
+	private bool <ITickSystemPost.PostTickRunning>k__BackingField;
 }

@@ -56,5 +56,9 @@ namespace Viveport.Internal
 			}
 			Api.LoadLibrary("x86/" + dllName + ".dll");
 		}
+
+		public Api()
+		{
+		}
 	}
 }

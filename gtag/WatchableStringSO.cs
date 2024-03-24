@@ -1,11 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "WatchableStringSO", menuName = "ScriptableObjects/WatchableStringSO")]
 public class WatchableStringSO : ScriptableObject
 {
-	private string _value { get; set; }
+	private string _value
+	{
+		[CompilerGenerated]
+		get
+		{
+			return this.<_value>k__BackingField;
+		}
+		[CompilerGenerated]
+		set
+		{
+			this.<_value>k__BackingField = value;
+		}
+	}
 
 	public string Value
 	{
@@ -60,8 +73,15 @@ public class WatchableStringSO : ScriptableObject
 		return this.Value;
 	}
 
+	public WatchableStringSO()
+	{
+	}
+
 	[TextArea]
 	public string InitialValue;
+
+	[CompilerGenerated]
+	private string <_value>k__BackingField;
 
 	private EnterPlayID enterPlayID;
 

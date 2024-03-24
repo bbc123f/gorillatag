@@ -61,6 +61,10 @@ namespace BoingKit
 			Gizmos.DrawWireSphere(base.transform.position, this.Radius * this.FullEffectRadiusRatio);
 		}
 
+		public BoingEffector()
+		{
+		}
+
 		[Header("Metrics")]
 		[Range(0f, 20f)]
 		[Tooltip("Maximum radius of influence.")]
@@ -143,6 +147,11 @@ namespace BoingKit
 				this.m_padding1 = this.m_padding2;
 				this.m_padding2 = (float)this.m_padding3;
 				this.m_padding3 = (int)this.m_padding0;
+			}
+
+			// Note: this type is marked as 'beforefieldinit'.
+			static Params()
+			{
 			}
 
 			public static readonly int Stride = 80;

@@ -25,6 +25,10 @@ public class CornOnCobCosmetic : MonoBehaviour
 		this.previousParticleCount = particleCount;
 	}
 
+	public CornOnCobCosmetic()
+	{
+	}
+
 	[Tooltip("The corn will start popping based on the temperature from this ThermalReceiver.")]
 	public ThermalReceiver thermalReceiver;
 

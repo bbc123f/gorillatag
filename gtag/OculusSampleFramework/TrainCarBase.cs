@@ -1,11 +1,24 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace OculusSampleFramework
 {
 	public abstract class TrainCarBase : MonoBehaviour
 	{
-		public float Distance { get; protected set; }
+		public float Distance
+		{
+			[CompilerGenerated]
+			get
+			{
+				return this.<Distance>k__BackingField;
+			}
+			[CompilerGenerated]
+			protected set
+			{
+				this.<Distance>k__BackingField = value;
+			}
+		}
 
 		public float Scale
 		{
@@ -59,6 +72,15 @@ namespace OculusSampleFramework
 
 		public abstract void UpdatePosition();
 
+		protected TrainCarBase()
+		{
+		}
+
+		// Note: this type is marked as 'beforefieldinit'.
+		static TrainCarBase()
+		{
+		}
+
 		private static Vector3 OFFSET = new Vector3(0f, 0.0195f, 0f);
 
 		private const float WHEEL_RADIUS = 0.027f;
@@ -76,6 +98,9 @@ namespace OculusSampleFramework
 
 		[SerializeField]
 		protected Transform[] _individualWheels;
+
+		[CompilerGenerated]
+		private float <Distance>k__BackingField;
 
 		protected float scale = 1f;
 

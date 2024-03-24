@@ -20,6 +20,10 @@ internal class HandTransformFollowOffest
 		}
 	}
 
+	public HandTransformFollowOffest()
+	{
+	}
+
 	internal Transform followTransform;
 
 	[SerializeField]

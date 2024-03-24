@@ -13,6 +13,10 @@ public class ThermalSourceVolume : MonoBehaviour
 		ThermalManager.Unregister(this);
 	}
 
+	public ThermalSourceVolume()
+	{
+	}
+
 	[Tooltip("Temperature in celsius. Default is 20 which is room temperature.")]
 	public float celsius = 20f;
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using ExitGames.Client.Photon;
 using GorillaGameModes;
@@ -41,9 +42,33 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiverMono, IGuidedRefMo
 		}
 	}
 
-	public Rigidbody rigidbody { get; private set; }
+	public Rigidbody rigidbody
+	{
+		[CompilerGenerated]
+		get
+		{
+			return this.<rigidbody>k__BackingField;
+		}
+		[CompilerGenerated]
+		private set
+		{
+			this.<rigidbody>k__BackingField = value;
+		}
+	}
 
-	public Recorder myRecorder { get; private set; }
+	public Recorder myRecorder
+	{
+		[CompilerGenerated]
+		get
+		{
+			return this.<myRecorder>k__BackingField;
+		}
+		[CompilerGenerated]
+		private set
+		{
+			this.<myRecorder>k__BackingField = value;
+		}
+	}
 
 	public float sphereCastRadius
 	{
@@ -67,8 +92,9 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiverMono, IGuidedRefMo
 			GorillaTagger.hasInstance = true;
 			GorillaTagger.onPlayerSpawnedRootCallback();
 		}
-		if (!this.disableTutorial && (this.testTutorial || (PlayerPrefs.GetString("tutorial") != "done" && NetworkSystemConfig.GameVersionString != "dev")))
+		if (!this.disableTutorial && (this.testTutorial || (PlayerPrefs.GetString("tutorial") != "done" && PlayerPrefs.GetString("didTutorial") != "done" && NetworkSystemConfig.GameVersionString != "dev")))
 		{
+			Debug.Log("Tutorial is not complete");
 			base.transform.parent.position = new Vector3(-140f, 28f, -102f);
 			base.transform.parent.eulerAngles = new Vector3(0f, 180f, 0f);
 			GorillaLocomotion.Player.Instance.InitializeValues();
@@ -82,6 +108,8 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiverMono, IGuidedRefMo
 			Hashtable hashtable = new Hashtable();
 			hashtable.Add("didTutorial", true);
 			PhotonNetwork.LocalPlayer.SetCustomProperties(hashtable, null, null);
+			PlayerPrefs.SetString("didTutorial", "done");
+			PlayerPrefs.Save();
 		}
 		this.thirdPersonCamera.SetActive(Application.platform != RuntimePlatform.Android);
 		this.inputDevice = InputDevices.GetDeviceAtXRNode(XRNode.RightHand);
@@ -367,12 +395,20 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiverMono, IGuidedRefMo
 					if (GorillaComputer.instance.pttType == "PUSH TO MUTE")
 					{
 						this.offlineVRRig.shouldSendSpeakingLoudness = false;
+						if (this.myRecorder.TransmitEnabled)
+						{
+							Debug.Log("Microphone: Pushed to mute, transmission disabled");
+						}
 						this.myRecorder.TransmitEnabled = false;
 						return;
 					}
 					if (GorillaComputer.instance.pttType == "PUSH TO TALK")
 					{
 						this.offlineVRRig.shouldSendSpeakingLoudness = true;
+						if (!this.myRecorder.TransmitEnabled)
+						{
+							Debug.Log("Microphone: Pushed to talk, transmission enabled");
+						}
 						this.myRecorder.TransmitEnabled = true;
 						return;
 					}
@@ -382,12 +418,20 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiverMono, IGuidedRefMo
 					if (GorillaComputer.instance.pttType == "PUSH TO MUTE")
 					{
 						this.offlineVRRig.shouldSendSpeakingLoudness = true;
+						if (!this.myRecorder.TransmitEnabled)
+						{
+							Debug.Log("Microphone: Released push to mute, transmission enabled");
+						}
 						this.myRecorder.TransmitEnabled = true;
 						return;
 					}
 					if (GorillaComputer.instance.pttType == "PUSH TO TALK")
 					{
 						this.offlineVRRig.shouldSendSpeakingLoudness = false;
+						if (this.myRecorder.TransmitEnabled)
+						{
+							Debug.Log("Microphone: Released push to talk, transmission disabled");
+						}
 						this.myRecorder.TransmitEnabled = false;
 						return;
 					}
@@ -397,6 +441,7 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiverMono, IGuidedRefMo
 			{
 				if (!this.myRecorder.TransmitEnabled)
 				{
+					Debug.Log("Microphone: Voice chat is ALL, transmission enabled");
 					this.myRecorder.TransmitEnabled = true;
 				}
 				if (!this.offlineVRRig.shouldSendSpeakingLoudness)
@@ -415,6 +460,7 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiverMono, IGuidedRefMo
 			}
 			if (this.myRecorder.TransmitEnabled)
 			{
+				Debug.Log("Microphone: Voice chat is FALSE, transmission disabled");
 				this.myRecorder.TransmitEnabled = false;
 			}
 			if (GorillaComputer.instance.pttType != "ALL CHAT")
@@ -473,6 +519,7 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiverMono, IGuidedRefMo
 			}
 			if (this.myRecorder.TransmitEnabled)
 			{
+				Debug.Log("Microphone: Voice chat setting is INVALID, transmission disabled");
 				this.myRecorder.TransmitEnabled = false;
 			}
 		}
@@ -545,8 +592,9 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiverMono, IGuidedRefMo
 
 	public void UpdateColor(float red, float green, float blue)
 	{
+		Debug.Log("calling InitializeNoobMaterialLocal");
 		this.offlineVRRig.InitializeNoobMaterialLocal(red, green, blue);
-		if (!NetworkSystem.Instance.InRoom)
+		if (NetworkSystem.Instance != null && !NetworkSystem.Instance.InRoom)
 		{
 			this.offlineVRRig.mainSkin.material = this.offlineVRRig.materialsToChangeTo[0];
 		}
@@ -646,7 +694,19 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiverMono, IGuidedRefMo
 		GuidedRefHub.ReceiverFullyRegistered<GorillaTagger>(this);
 	}
 
-	int IGuidedRefReceiverMono.GuidedRefsWaitingToResolveCount { get; set; }
+	int IGuidedRefReceiverMono.GuidedRefsWaitingToResolveCount
+	{
+		[CompilerGenerated]
+		get
+		{
+			return this.<GorillaTag.GuidedRefs.IGuidedRefReceiverMono.GuidedRefsWaitingToResolveCount>k__BackingField;
+		}
+		[CompilerGenerated]
+		set
+		{
+			this.<GorillaTag.GuidedRefs.IGuidedRefReceiverMono.GuidedRefsWaitingToResolveCount>k__BackingField = value;
+		}
+	}
 
 	bool IGuidedRefReceiverMono.GuidedRefTryResolveReference(GuidedRefTryResolveInfo target)
 	{
@@ -663,6 +723,10 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiverMono, IGuidedRefMo
 	}
 
 	void IGuidedRefReceiverMono.OnGuidedRefTargetDestroyed(int fieldId)
+	{
+	}
+
+	public GorillaTagger()
 	{
 	}
 
@@ -770,6 +834,9 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiverMono, IGuidedRefMo
 
 	public bool overrideNotInFocus;
 
+	[CompilerGenerated]
+	private Rigidbody <rigidbody>k__BackingField;
+
 	private Vector3 leftRaycastSweep;
 
 	private Vector3 leftHeadRaycastSweep;
@@ -834,6 +901,9 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiverMono, IGuidedRefMo
 
 	private int nonAllocHits;
 
+	[CompilerGenerated]
+	private Recorder <myRecorder>k__BackingField;
+
 	private bool xrSubsystemIsActive;
 
 	public string loadedDeviceName = "";
@@ -849,6 +919,9 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiverMono, IGuidedRefMo
 
 	private static Action onPlayerSpawnedRootCallback;
 
+	[CompilerGenerated]
+	private int <GorillaTag.GuidedRefs.IGuidedRefReceiverMono.GuidedRefsWaitingToResolveCount>k__BackingField;
+
 	public enum StatusEffect
 	{
 		None,
@@ -857,5 +930,98 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiverMono, IGuidedRefMo
 		Dead,
 		Infected,
 		It
+	}
+
+	[CompilerGenerated]
+	private sealed class <HapticPulses>d__102 : IEnumerator<object>, IEnumerator, IDisposable
+	{
+		[DebuggerHidden]
+		public <HapticPulses>d__102(int <>1__state)
+		{
+			this.<>1__state = <>1__state;
+		}
+
+		[DebuggerHidden]
+		void IDisposable.Dispose()
+		{
+		}
+
+		bool IEnumerator.MoveNext()
+		{
+			int num = this.<>1__state;
+			GorillaTagger gorillaTagger = this;
+			if (num != 0)
+			{
+				if (num != 1)
+				{
+					return false;
+				}
+				this.<>1__state = -1;
+			}
+			else
+			{
+				this.<>1__state = -1;
+				startTime = Time.time;
+				channel = 0U;
+				if (forLeftController)
+				{
+					device = InputDevices.GetDeviceAtXRNode(XRNode.LeftHand);
+				}
+				else
+				{
+					device = InputDevices.GetDeviceAtXRNode(XRNode.RightHand);
+				}
+			}
+			if (Time.time >= startTime + duration)
+			{
+				return false;
+			}
+			device.SendHapticImpulse(channel, amplitude, gorillaTagger.hapticWaitSeconds);
+			this.<>2__current = new WaitForSeconds(gorillaTagger.hapticWaitSeconds * 0.9f);
+			this.<>1__state = 1;
+			return true;
+		}
+
+		object IEnumerator<object>.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		[DebuggerHidden]
+		void IEnumerator.Reset()
+		{
+			throw new NotSupportedException();
+		}
+
+		object IEnumerator.Current
+		{
+			[DebuggerHidden]
+			get
+			{
+				return this.<>2__current;
+			}
+		}
+
+		private int <>1__state;
+
+		private object <>2__current;
+
+		public bool forLeftController;
+
+		public float amplitude;
+
+		public GorillaTagger <>4__this;
+
+		public float duration;
+
+		private float <startTime>5__2;
+
+		private InputDevice <device>5__3;
+
+		private uint <channel>5__4;
 	}
 }

@@ -18,6 +18,10 @@ namespace GorillaTag.Rendering
 		{
 		}
 
+		public ZoneLiquidEffectable()
+		{
+		}
+
 		public float radius = 1f;
 
 		[NonSerialized]
