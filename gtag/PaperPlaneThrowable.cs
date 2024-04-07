@@ -1,4 +1,5 @@
 ﻿using System;
+using GorillaExtensions;
 using GorillaLocomotion;
 using GorillaLocomotion.Climbing;
 using Photon.Realtime;
@@ -31,8 +32,13 @@ public class PaperPlaneThrowable : TransferrableObject
 			return;
 		}
 		Vector3 vector = (Vector3)args[1];
-		Vector3 vector2 = (Vector3)args[2];
-		this.LaunchProjectile(vector, vector2);
+		Quaternion quaternion = (Quaternion)args[2];
+		Vector3 vector2 = (Vector3)args[3];
+		if (!(vector).IsValid() || !(quaternion).IsValid() || !(vector2).IsValid() || this._renderer.forceRenderingOff)
+		{
+			return;
+		}
+		this.LaunchProjectile(vector, quaternion, vector2);
 	}
 
 	public override void OnEnable()
@@ -114,21 +120,26 @@ public class PaperPlaneThrowable : TransferrableObject
 		}
 		GorillaVelocityTracker gorillaVelocityTracker = ((releasingHand == EquipmentInteractor.instance.rightHand) ? GorillaLocomotion.Player.Instance.rightInteractPointVelocityTracker : GorillaLocomotion.Player.Instance.leftInteractPointVelocityTracker);
 		Vector3 vector = base.transform.TransformPoint(Vector3.zero);
+		Quaternion rotation = base.transform.rotation;
 		Vector3 averageVelocity = gorillaVelocityTracker.GetAverageVelocity(true, 0.15f, false);
 		int num = PaperPlaneThrowable.FetchViewID(this);
-		this.LaunchProjectile(vector, averageVelocity);
-		PaperPlaneThrowable.gLaunchRPC.RaiseOthers(new object[] { num, vector, averageVelocity });
+		this.LaunchProjectile(vector, rotation, averageVelocity);
+		PaperPlaneThrowable.gLaunchRPC.RaiseOthers(new object[] { num, vector, rotation, averageVelocity });
 		return true;
 	}
 
-	private void LaunchProjectile(Vector3 launchPos, Vector3 releaseVel)
+	private void LaunchProjectile(Vector3 launchPos, Quaternion launchRot, Vector3 releaseVel)
 	{
+		if (releaseVel.sqrMagnitude <= this.minThrowSpeed * base.transform.lossyScale.z * base.transform.lossyScale.z)
+		{
+			return;
+		}
 		GameObject gameObject = ObjectPools.instance.Instantiate(this._projectilePrefab.gameObject, launchPos);
 		gameObject.transform.localScale = base.transform.lossyScale;
 		PaperPlaneProjectile component = gameObject.GetComponent<PaperPlaneProjectile>();
 		component.OnHit += this.OnProjectileHit;
 		component.ResetProjectile();
-		component.Launch(launchPos, releaseVel);
+		component.Launch(launchPos, launchRot, releaseVel);
 		this._renderer.forceRenderingOff = true;
 	}
 
@@ -182,6 +193,9 @@ public class PaperPlaneThrowable : TransferrableObject
 
 	[SerializeField]
 	private GameObject _projectilePrefab;
+
+	[SerializeField]
+	private float minThrowSpeed;
 
 	private static Camera _playerView;
 

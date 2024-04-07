@@ -119,34 +119,40 @@ public class ForceVolume : MonoBehaviour
 		float num = vector3.magnitude + 0.0001f;
 		Vector3 vector4 = vector3 / num;
 		float num2 = Vector3.Dot(vector, vector4);
+		float num3 = this.accel;
 		if (this.maxDepth > -1f)
 		{
-			float num3 = Vector3.Dot(transform.position - this.enterPos, vector4);
-			float num4 = this.maxDepth - num3;
-			float num5 = 0f;
-			if (num4 > 0.0001f)
+			float num4 = Vector3.Dot(transform.position - this.enterPos, vector4);
+			float num5 = this.maxDepth - num4;
+			float num6 = 0f;
+			if (num5 > 0.0001f)
 			{
-				num5 = num2 * num2 / num4;
+				num6 = num2 * num2 / num5;
 			}
-			this.accel = Mathf.Max(this.accel, num5);
+			num3 = Mathf.Max(this.accel, num6);
 		}
 		float deltaTime = Time.deltaTime;
-		Vector3 vector5 = base.transform.up * this.accel * deltaTime;
+		Vector3 vector5 = base.transform.up * num3 * deltaTime;
 		vector += vector5;
 		Vector3 vector6 = Mathf.Min(Vector3.Dot(vector, base.transform.up), this.maxSpeed) * base.transform.up;
 		Vector3 vector7 = Vector3.Dot(vector, base.transform.right) * base.transform.right;
 		Vector3 vector8 = Vector3.Dot(vector, base.transform.forward) * base.transform.forward;
-		float num6 = 1f - this.dampenXVelPerc * 0.01f * deltaTime;
-		float num7 = 1f - this.dampenZVelPerc * 0.01f * deltaTime;
-		vector = vector6 + num6 * vector7 + num7 * vector8;
-		if (this.pullToCenterAccel > 0f && this.pullToCenterMaxSpeed > 0f)
+		float num7 = 1f;
+		float num8 = 1f;
+		if (this.dampenLateralVelocity)
+		{
+			num7 = 1f - this.dampenXVelPerc * 0.01f * deltaTime;
+			num8 = 1f - this.dampenZVelPerc * 0.01f * deltaTime;
+		}
+		vector = vector6 + num7 * vector7 + num8 * vector8;
+		if (this.applyPullToCenterAcceleration && this.pullToCenterAccel > 0f && this.pullToCenterMaxSpeed > 0f)
 		{
 			vector -= num2 * vector4;
 			if (num > this.pullTOCenterMinDistance)
 			{
 				num2 += this.pullToCenterAccel * deltaTime;
-				float num8 = Mathf.Min(this.pullToCenterMaxSpeed, num / deltaTime);
-				num2 = Mathf.Min(num2, num8);
+				float num9 = Mathf.Min(this.pullToCenterMaxSpeed, num / deltaTime);
+				num2 = Mathf.Min(num2, num9);
 			}
 			else
 			{
@@ -203,10 +209,16 @@ public class ForceVolume : MonoBehaviour
 	private bool disableGrip;
 
 	[SerializeField]
+	private bool dampenLateralVelocity = true;
+
+	[SerializeField]
 	private float dampenXVelPerc;
 
 	[SerializeField]
 	private float dampenZVelPerc;
+
+	[SerializeField]
+	private bool applyPullToCenterAcceleration = true;
 
 	[SerializeField]
 	private float pullToCenterAccel;

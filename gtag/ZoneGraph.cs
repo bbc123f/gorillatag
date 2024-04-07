@@ -37,14 +37,13 @@ public class ZoneGraph : MonoBehaviour
 		{
 			ZoneGraph.gGraph = this;
 		}
-		this.CompileColliderMaps();
+		this.CompileColliderMaps(this._zoneDefs);
 	}
 
-	private void CompileColliderMaps()
+	private void CompileColliderMaps(ZoneDef[] zones)
 	{
-		for (int i = 0; i < this._zoneDefs.Length; i++)
+		foreach (ZoneDef zoneDef in zones)
 		{
-			ZoneDef zoneDef = this._zoneDefs[i];
 			for (int j = 0; j < zoneDef.colliders.Length; j++)
 			{
 				BoxCollider boxCollider = zoneDef.colliders[j];

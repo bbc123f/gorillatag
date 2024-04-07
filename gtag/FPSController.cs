@@ -80,6 +80,18 @@ public class FPSController : MonoBehaviour
 
 	public float lookVertical = 0.25f;
 
+	[SerializeField]
+	private Vector3 leftControllerPosOffset = new Vector3(-0.2f, -0.25f, 0.3f);
+
+	[SerializeField]
+	private Vector3 leftControllerRotationOffset = new Vector3(265f, -82f, 28f);
+
+	[SerializeField]
+	private Vector3 rightControllerPosOffset = new Vector3(0.2f, -0.25f, 0.3f);
+
+	[SerializeField]
+	private Vector3 rightControllerRotationOffset = new Vector3(263f, 318f, 485f);
+
 	[CompilerGenerated]
 	private FPSController.OnStateChangeEventHandler OnStartEvent;
 

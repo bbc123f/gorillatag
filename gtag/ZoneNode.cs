@@ -13,7 +13,12 @@ public struct ZoneNode : IEquatable<ZoneNode>
 		{
 			return ZoneNode.<Null>k__BackingField;
 		}
-	}
+	} = new ZoneNode
+	{
+		zoneId = GTZone.none,
+		subZoneId = GTSubZone.none,
+		isValid = false
+	};
 
 	public int zoneKey
 	{
@@ -91,13 +96,9 @@ public struct ZoneNode : IEquatable<ZoneNode>
 
 	public Quaternion orientation;
 
+	public Bounds AABB;
+
 	public bool isValid;
-
-	public bool trackEnter;
-
-	public bool trackExit;
-
-	public bool trackStay;
 
 	[CompilerGenerated]
 	private static readonly ZoneNode <Null>k__BackingField;

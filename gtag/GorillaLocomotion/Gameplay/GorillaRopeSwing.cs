@@ -85,6 +85,7 @@ namespace GorillaLocomotion.Gameplay
 		private void OnEnable()
 		{
 			VectorizedCustomRopeSimulation.Register(this);
+			GorillaRopeSwingUpdateManager.RegisterRopeSwing(this);
 		}
 
 		private void OnDisable()
@@ -94,6 +95,7 @@ namespace GorillaLocomotion.Gameplay
 				this.SetIsIdle(true, true);
 			}
 			VectorizedCustomRopeSimulation.Unregister(this);
+			GorillaRopeSwingUpdateManager.UnregisterRopeSwing(this);
 		}
 
 		internal void CalculateId(bool force = false)
@@ -118,7 +120,7 @@ namespace GorillaLocomotion.Gameplay
 			this.ropeId = (Application.isPlaying ? num : 0);
 		}
 
-		private void Update()
+		public void InvokeUpdate()
 		{
 			if (this.isIdle)
 			{

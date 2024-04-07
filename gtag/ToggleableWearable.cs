@@ -35,6 +35,11 @@ public class ToggleableWearable : MonoBehaviour
 		}
 		this.hasAudioSource = this.audioSource != null;
 		this.assignedSlotBitIndex = (int)this.assignedSlot;
+		if (this.oneShot)
+		{
+			this.toggleCooldownRange.x = this.toggleCooldownRange.x + this.animationTransitionDuration;
+			this.toggleCooldownRange.y = this.toggleCooldownRange.y + this.animationTransitionDuration;
+		}
 	}
 
 	protected void LateUpdate()
@@ -43,17 +48,14 @@ public class ToggleableWearable : MonoBehaviour
 		{
 			this.toggleCooldownTimer -= Time.deltaTime;
 			Transform transform = base.transform;
-			if (Physics.OverlapSphereNonAlloc(transform.TransformPoint(this.triggerOffset), this.triggerRadius * transform.localScale.x, this.colliders, this.layerMask) > 0)
+			if (Physics.OverlapSphereNonAlloc(transform.TransformPoint(this.triggerOffset), this.triggerRadius * transform.localScale.x, this.colliders, this.layerMask) > 0 && this.toggleCooldownTimer < 0f)
 			{
-				if (this.toggleCooldownTimer < 0f)
+				XRController componentInParent = this.colliders[0].GetComponentInParent<XRController>();
+				if (componentInParent != null)
 				{
-					XRController componentInParent = this.colliders[0].GetComponentInParent<XRController>();
-					if (componentInParent != null)
-					{
-						this.LocalToggle(componentInParent.controllerNode == XRNode.LeftHand);
-					}
+					this.LocalToggle(componentInParent.controllerNode == XRNode.LeftHand, true);
 				}
-				this.toggleCooldownTimer = 0.2f;
+				this.toggleCooldownTimer = Random.Range(this.toggleCooldownRange.x, this.toggleCooldownRange.y);
 			}
 		}
 		else
@@ -61,10 +63,32 @@ public class ToggleableWearable : MonoBehaviour
 			bool flag = (this.ownerRig.WearablePackedStates & (1 << this.assignedSlotBitIndex)) != 0;
 			if (this.isOn != flag)
 			{
-				this.SharedSetState(flag);
+				this.SharedSetState(flag, true);
 			}
 		}
-		this.progress = Mathf.MoveTowards(this.progress, this.isOn ? 1f : 0f, Time.deltaTime / this.animationTransitionDuration);
+		if (this.oneShot)
+		{
+			if (this.isOn)
+			{
+				this.progress = Mathf.MoveTowards(this.progress, 1f, Time.deltaTime / this.animationTransitionDuration);
+				if (this.progress == 1f)
+				{
+					if (this.ownerIsLocal)
+					{
+						this.LocalToggle(false, false);
+					}
+					else
+					{
+						this.SharedSetState(false, false);
+					}
+					this.progress = 0f;
+				}
+			}
+		}
+		else
+		{
+			this.progress = Mathf.MoveTowards(this.progress, this.isOn ? 1f : 0f, Time.deltaTime / this.animationTransitionDuration);
+		}
 		Animator[] array = this.animators;
 		for (int i = 0; i < array.Length; i++)
 		{
@@ -72,17 +96,17 @@ public class ToggleableWearable : MonoBehaviour
 		}
 	}
 
-	private void LocalToggle(bool isLeftHand)
+	private void LocalToggle(bool isLeftHand, bool playAudio)
 	{
 		this.ownerRig.WearablePackedStates ^= 1 << this.assignedSlotBitIndex;
-		this.SharedSetState((this.ownerRig.WearablePackedStates & (1 << this.assignedSlotBitIndex)) != 0);
-		if (GorillaTagger.Instance)
+		this.SharedSetState((this.ownerRig.WearablePackedStates & (1 << this.assignedSlotBitIndex)) != 0, playAudio);
+		if (playAudio && GorillaTagger.Instance)
 		{
 			GorillaTagger.Instance.StartVibration(isLeftHand, this.isOn ? this.turnOnVibrationDuration : this.turnOffVibrationDuration, this.isOn ? this.turnOnVibrationStrength : this.turnOffVibrationStrength);
 		}
 	}
 
-	private void SharedSetState(bool state)
+	private void SharedSetState(bool state, bool playAudio)
 	{
 		this.isOn = state;
 		Renderer[] array = this.renderers;
@@ -90,10 +114,22 @@ public class ToggleableWearable : MonoBehaviour
 		{
 			array[i].enabled = this.isOn;
 		}
-		if (this.hasAudioSource)
+		if (!playAudio || !this.hasAudioSource)
 		{
-			this.audioSource.PlayOneShot(this.isOn ? this.toggleOnSound : this.toggleOffSound);
+			return;
 		}
+		AudioClip audioClip = (this.isOn ? this.toggleOnSound : this.toggleOffSound);
+		if (audioClip == null)
+		{
+			return;
+		}
+		if (this.oneShot)
+		{
+			this.audioSource.clip = audioClip;
+			this.audioSource.Play();
+			return;
+		}
+		this.audioSource.PlayOneShot(audioClip);
 	}
 
 	public ToggleableWearable()
@@ -150,7 +186,8 @@ public class ToggleableWearable : MonoBehaviour
 
 	private bool isOn;
 
-	private const float toggleCooldown = 0.2f;
+	[SerializeField]
+	private Vector2 toggleCooldownRange = new Vector2(0.2f, 0.2f);
 
 	private bool hasAudioSource;
 
@@ -165,4 +202,7 @@ public class ToggleableWearable : MonoBehaviour
 	private static readonly int animParam_Progress = Animator.StringToHash("Progress");
 
 	private float progress;
+
+	[SerializeField]
+	private bool oneShot;
 }

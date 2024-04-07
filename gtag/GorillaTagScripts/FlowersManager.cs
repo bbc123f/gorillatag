@@ -167,11 +167,26 @@ namespace GorillaTagScripts
 			}
 		}
 
+		private void Update()
+		{
+			int num = this.flowerCheckIndex + 1;
+			while (num < this.allFlowers.Count && num < this.flowerCheckIndex + this.flowersToCheck)
+			{
+				this.allFlowers[num].AnimCatch();
+				num++;
+			}
+			this.flowerCheckIndex = ((this.flowerCheckIndex + this.flowersToCheck >= this.allFlowers.Count) ? 0 : (this.flowerCheckIndex + this.flowersToCheck));
+		}
+
 		public FlowersManager()
 		{
 		}
 
 		public List<FlowersManager.FlowersInZone> sections;
+
+		public int flowersToCheck = 1;
+
+		public int flowerCheckIndex;
 
 		private readonly List<Flower> allFlowers = new List<Flower>();
 

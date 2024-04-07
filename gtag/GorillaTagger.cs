@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using CjLib;
 using ExitGames.Client.Photon;
 using GorillaGameModes;
 using GorillaLocomotion;
@@ -74,8 +75,22 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiverMono, IGuidedRefMo
 	{
 		get
 		{
-			return 0.03f;
+			if (this.tagRadiusOverride == null)
+			{
+				return 0.03f;
+			}
+			return this.tagRadiusOverride.Value;
 		}
+	}
+
+	public void SetTagRadiusOverride(float radius)
+	{
+		this.tagRadiusOverride = new float?(radius);
+	}
+
+	public void UnsetTagRadiusOverride()
+	{
+		this.tagRadiusOverride = null;
 	}
 
 	protected void Awake()
@@ -223,6 +238,17 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiverMono, IGuidedRefMo
 			int num = OVRManager.display.displayFrequenciesAvailable.Length - 1;
 			float num2 = OVRManager.display.displayFrequenciesAvailable[num];
 			float systemDisplayFrequency = OVRPlugin.systemDisplayFrequency;
+			if (systemDisplayFrequency != 60f)
+			{
+				if (systemDisplayFrequency == 71f)
+				{
+					num2 = 72f;
+				}
+			}
+			else
+			{
+				num2 = 60f;
+			}
 			while (num2 > 90f)
 			{
 				num--;
@@ -237,10 +263,10 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiverMono, IGuidedRefMo
 				float num3 = Time.fixedDeltaTime - 1f / num2 * 0.98f;
 				Debug.Log(" =========== adjusting refresh size =========");
 				Debug.Log("!!!!Time.fixedDeltaTime - (1f / newRefreshRate) * .98f)" + num3.ToString());
-				Debug.Log("Old Refresh rate: " + num2.ToString());
+				Debug.Log("Old Refresh rate: " + systemDisplayFrequency.ToString());
 				Debug.Log("New Refresh rate: " + num2.ToString());
 				Debug.Log(" fixedDeltaTime before:\t" + Time.fixedDeltaTime.ToString());
-				Debug.Log(" refresh rate         :\t" + num2.ToString());
+				Debug.Log(" fixedDeltaTime after :\t" + (1f / num2).ToString());
 				Time.fixedDeltaTime = 1f / num2 * 0.98f;
 				OVRPlugin.systemDisplayFrequency = num2;
 				GorillaLocomotion.Player.Instance.velocityHistorySize = Mathf.FloorToInt(num2 * 0.083333336f);
@@ -282,19 +308,19 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiverMono, IGuidedRefMo
 		this.touchedPlayer = null;
 		float num4 = this.sphereCastRadius * GorillaLocomotion.Player.Instance.scale;
 		this.nonAllocHits = Physics.SphereCastNonAlloc(this.lastLeftHandPositionForTag, num4, this.leftRaycastSweep.normalized, this.nonAllocRaycastHits, Mathf.Max(this.leftRaycastSweep.magnitude, num4), this.gorillaTagColliderLayerMask, QueryTriggerInteraction.Collide);
-		this.<LateUpdate>g__TryTaggingAllHits|99_0(false);
+		this.<LateUpdate>g__TryTaggingAllHits|102_0(false);
 		this.nonAllocHits = Physics.SphereCastNonAlloc(this.headCollider.transform.position, num4, this.leftHeadRaycastSweep.normalized, this.nonAllocRaycastHits, Mathf.Max(this.leftHeadRaycastSweep.magnitude, num4), this.gorillaTagColliderLayerMask, QueryTriggerInteraction.Collide);
-		this.<LateUpdate>g__TryTaggingAllHits|99_0(false);
+		this.<LateUpdate>g__TryTaggingAllHits|102_0(false);
 		this.nonAllocHits = Physics.SphereCastNonAlloc(this.lastRightHandPositionForTag, num4, this.rightRaycastSweep.normalized, this.nonAllocRaycastHits, Mathf.Max(this.rightRaycastSweep.magnitude, num4), this.gorillaTagColliderLayerMask, QueryTriggerInteraction.Collide);
-		this.<LateUpdate>g__TryTaggingAllHits|99_0(false);
+		this.<LateUpdate>g__TryTaggingAllHits|102_0(false);
 		this.nonAllocHits = Physics.SphereCastNonAlloc(this.headCollider.transform.position, num4, this.rightHeadRaycastSweep.normalized, this.nonAllocRaycastHits, Mathf.Max(this.rightHeadRaycastSweep.magnitude, num4), this.gorillaTagColliderLayerMask, QueryTriggerInteraction.Collide);
-		this.<LateUpdate>g__TryTaggingAllHits|99_0(false);
+		this.<LateUpdate>g__TryTaggingAllHits|102_0(false);
 		this.nonAllocHits = Physics.SphereCastNonAlloc(this.headCollider.transform.position, this.headCollider.radius * this.headCollider.transform.localScale.x * GorillaLocomotion.Player.Instance.scale, this.headRaycastSweep.normalized, this.nonAllocRaycastHits, Mathf.Max(this.headRaycastSweep.magnitude, num4), this.gorillaTagColliderLayerMask, QueryTriggerInteraction.Collide);
-		this.<LateUpdate>g__TryTaggingAllHits|99_0(true);
+		this.<LateUpdate>g__TryTaggingAllHits|102_0(true);
 		this.topVector = this.lastBodyPositionForTag + this.bodyVector;
 		this.bottomVector = this.lastBodyPositionForTag - this.bodyVector;
 		this.nonAllocHits = Physics.CapsuleCastNonAlloc(this.topVector, this.bottomVector, this.bodyCollider.radius * 2f * GorillaLocomotion.Player.Instance.scale, this.bodyRaycastSweep.normalized, this.nonAllocRaycastHits, Mathf.Max(this.bodyRaycastSweep.magnitude, num4), this.gorillaTagColliderLayerMask, QueryTriggerInteraction.Collide);
-		this.<LateUpdate>g__TryTaggingAllHits|99_0(true);
+		this.<LateUpdate>g__TryTaggingAllHits|102_0(true);
 		if (this.otherPlayer != null)
 		{
 			Debug.Log("tagging someone yeet");
@@ -688,6 +714,20 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiverMono, IGuidedRefMo
 		GorillaTagger.onPlayerSpawnedRootCallback = (Action)Delegate.Combine(GorillaTagger.onPlayerSpawnedRootCallback, action);
 	}
 
+	public void DebugDrawTagCasts(Color color)
+	{
+		float num = this.sphereCastRadius * GorillaLocomotion.Player.Instance.scale;
+		this.DrawSphereCast(this.lastLeftHandPositionForTag, this.leftRaycastSweep.normalized, num, Mathf.Max(this.leftRaycastSweep.magnitude, num), color);
+		this.DrawSphereCast(this.headCollider.transform.position, this.leftHeadRaycastSweep.normalized, num, Mathf.Max(this.leftHeadRaycastSweep.magnitude, num), color);
+		this.DrawSphereCast(this.lastRightHandPositionForTag, this.rightRaycastSweep.normalized, num, Mathf.Max(this.rightRaycastSweep.magnitude, num), color);
+		this.DrawSphereCast(this.headCollider.transform.position, this.rightHeadRaycastSweep.normalized, num, Mathf.Max(this.rightHeadRaycastSweep.magnitude, num), color);
+	}
+
+	private void DrawSphereCast(Vector3 start, Vector3 dir, float radius, float dist, Color color)
+	{
+		DebugUtil.DrawCapsule(start, start + dir * dist, radius, 16, 16, color, true, DebugUtil.Style.Wireframe);
+	}
+
 	public void GuidedRefInitialize()
 	{
 		GuidedRefHub.RegisterReceiverField<GorillaTagger>(this, "offlineVRRig", ref this.offlineVRRig_gRef);
@@ -741,7 +781,7 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiverMono, IGuidedRefMo
 	}
 
 	[CompilerGenerated]
-	private void <LateUpdate>g__TryTaggingAllHits|99_0(bool isBodyTag)
+	private void <LateUpdate>g__TryTaggingAllHits|102_0(bool isBodyTag)
 	{
 		for (int i = 0; i < this.nonAllocHits; i++)
 		{
@@ -917,6 +957,8 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiverMono, IGuidedRefMo
 
 	private bool isGameOverlayActive;
 
+	private float? tagRadiusOverride;
+
 	private static Action onPlayerSpawnedRootCallback;
 
 	[CompilerGenerated]
@@ -933,10 +975,10 @@ public class GorillaTagger : MonoBehaviour, IGuidedRefReceiverMono, IGuidedRefMo
 	}
 
 	[CompilerGenerated]
-	private sealed class <HapticPulses>d__102 : IEnumerator<object>, IEnumerator, IDisposable
+	private sealed class <HapticPulses>d__105 : IEnumerator<object>, IEnumerator, IDisposable
 	{
 		[DebuggerHidden]
-		public <HapticPulses>d__102(int <>1__state)
+		public <HapticPulses>d__105(int <>1__state)
 		{
 			this.<>1__state = <>1__state;
 		}

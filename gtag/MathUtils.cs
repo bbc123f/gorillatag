@@ -10,9 +10,33 @@ public static class MathUtils
 		return (a - b).sqrMagnitude <= epsilon * epsilon;
 	}
 
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool Approx(this Quaternion a, Quaternion b, float epsilon = 1E-06f)
 	{
 		return Quaternion.Dot(a, b) > 1f - epsilon;
+	}
+
+	public static Vector3[] OrientedBoxCorners(Vector3 center, Vector3 size, Quaternion angles)
+	{
+		Vector3 vector = size * 0.5f;
+		Vector3 vector2 = new Vector3(vector.x, 0f, 0f);
+		Vector3 vector3 = new Vector3(0f, vector.y, 0f);
+		Vector3 vector4 = new Vector3(0f, 0f, vector.z);
+		Matrix4x4 matrix4x = Matrix4x4.Rotate(angles);
+		vector2 = matrix4x.MultiplyVector(vector2);
+		vector3 = matrix4x.MultiplyVector(vector3);
+		vector4 = matrix4x.MultiplyVector(vector4);
+		return new Vector3[]
+		{
+			center + vector2 + vector3 + vector4,
+			center + vector2 + vector3 - vector4,
+			center - vector2 + vector3 - vector4,
+			center - vector2 + vector3 + vector4,
+			center + vector2 - vector3 + vector4,
+			center + vector2 - vector3 - vector4,
+			center - vector2 - vector3 - vector4,
+			center - vector2 - vector3 + vector4
+		};
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]

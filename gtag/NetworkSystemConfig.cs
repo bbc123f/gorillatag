@@ -82,7 +82,7 @@ public struct NetworkSystemConfig
 
 	public static int minorVersion = 1;
 
-	public static int minorVersion2 = 75;
+	public static int minorVersion2 = 76;
 
 	public static string GameVersionString = "";
 }

@@ -212,7 +212,7 @@ internal class RoomSystem : MonoBehaviour, IInRoomCallbacks, IMatchmakingCallbac
 		for (int i = 0; i < RoomSystem.sceneViews.Length; i++)
 		{
 			RoomSystem.sceneViews[i].ControllerActorNr = actorNumber;
-			RoomSystem.sceneViews[i].OwnerActorNr = actorNumber;
+			RoomSystem.sceneViews[i].OwnerActorNr = 0;
 		}
 		this.roomSettings.StatusEffectLimiter.Reset();
 		this.roomSettings.SoundEffectLimiter.Reset();

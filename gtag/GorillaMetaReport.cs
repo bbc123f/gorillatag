@@ -9,18 +9,21 @@ using Oculus.Platform.Models;
 using Photon.Pun;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.XR;
 using Valve.VR;
 
 public class GorillaMetaReport : MonoBehaviour
 {
-	private void Awake()
+	private Player localPlayer
 	{
-		this.closeButton = this.closeButtonObject.GetComponent<GorillaReportButton>();
-		this.currentScoreboard = this.sourceScoreboard.GetComponentInChildren<GorillaScoreBoard>();
-		this.currentScoreboard.gameObject.SetActive(false);
+		get
+		{
+			return Player.Instance;
+		}
+	}
+
+	private void Start()
+	{
 		this.localPlayer.inOverlay = false;
-		this.playerRB = this.localPlayer.GetComponent<Rigidbody>();
 		Core.AsyncInitialize(null).OnComplete(delegate(Message<PlatformInitialize> message)
 		{
 			if (!message.IsError)
@@ -28,10 +31,15 @@ public class GorillaMetaReport : MonoBehaviour
 				AbuseReport.SetReportButtonPressedNotificationCallback(new Message<string>.Callback(this.OnReportButtonIntentNotif));
 			}
 		});
+		base.gameObject.SetActive(false);
 	}
 
 	private void OnDisable()
 	{
+		if (ApplicationQuittingState.IsQuitting)
+		{
+			return;
+		}
 		this.localPlayer.inOverlay = false;
 		base.StopAllCoroutines();
 	}
@@ -64,71 +72,35 @@ public class GorillaMetaReport : MonoBehaviour
 		yield break;
 	}
 
-	private IEnumerator LockoutButtonPress()
-	{
-		this.canPress = false;
-		yield return new WaitForSeconds(0.75f);
-		this.canPress = true;
-		yield break;
-	}
-
-	private void DuplicateScoreboard(GameObject scoreboard)
+	private void DuplicateScoreboard()
 	{
 		this.currentScoreboard.gameObject.SetActive(true);
 		if (GorillaScoreboardTotalUpdater.instance != null)
 		{
 			GorillaScoreboardTotalUpdater.instance.UpdateScoreboard(this.currentScoreboard);
 		}
-		this.currentScoreboard.transform.SetPositionAndRotation(base.transform.position, base.transform.rotation);
-		this.reportScoreboard.transform.SetPositionAndRotation(base.transform.position, base.transform.rotation);
-	}
-
-	private void HandToggle(bool state)
-	{
-		this.leftHandObject.SetActive(state);
-		this.rightHandObject.SetActive(state);
-		if (state)
-		{
-			this.savedLeftTransform = this.leftTriggerCollider.GetComponent<TransformFollow>().transformToFollow;
-			this.savedRightTransform = this.rightTriggerCollider.GetComponent<TransformFollow>().transformToFollow;
-			this.leftTriggerCollider.GetComponent<TransformFollow>().transformToFollow = this.leftFingerTip.transform;
-			this.rightTriggerCollider.GetComponent<TransformFollow>().transformToFollow = this.rightFingerTip.transform;
-		}
+		Vector3 vector;
+		Quaternion quaternion;
+		Vector3 vector2;
+		this.GetIdealScreenPositionRotation(out vector, out quaternion, out vector2);
+		this.currentScoreboard.transform.SetPositionAndRotation(vector, quaternion);
+		this.reportScoreboard.transform.SetPositionAndRotation(vector, quaternion);
 	}
 
 	private void ToggleLevelVisibility(bool state)
 	{
-		for (int i = 0; i < this.levelRenderers.Count; i++)
+		Camera component = GorillaTagger.Instance.mainCamera.GetComponent<Camera>();
+		if (state)
 		{
-			MeshRenderer meshRenderer = this.levelRenderers[i];
-			if (!(meshRenderer == null))
-			{
-				meshRenderer.enabled = state;
-			}
+			component.cullingMask = this.savedCullingLayers;
+			return;
 		}
-	}
-
-	private void GetLevelVisibility()
-	{
-		this.levelRenderers.Clear();
-		ZoneRootRegister[] array = Object.FindObjectsOfType<ZoneRootRegister>();
-		for (int i = 0; i < array.Length; i++)
-		{
-			foreach (MeshRenderer meshRenderer in array[i].GetComponentsInChildren<MeshRenderer>())
-			{
-				if (meshRenderer.enabled)
-				{
-					this.levelRenderers.Add(meshRenderer);
-				}
-			}
-		}
+		this.savedCullingLayers = component.cullingMask;
+		component.cullingMask = this.visibleLayers;
 	}
 
 	private void Teardown()
 	{
-		this.HandToggle(false);
-		this.leftTriggerCollider.GetComponent<TransformFollow>().transformToFollow = this.savedLeftTransform;
-		this.rightTriggerCollider.GetComponent<TransformFollow>().transformToFollow = this.savedRightTransform;
 		this.ReportText.GetComponent<Text>().text = "NOT CURRENTLY CONNECTED TO A ROOM";
 		this.ReportText.SetActive(false);
 		this.localPlayer.inOverlay = false;
@@ -138,19 +110,7 @@ public class GorillaMetaReport : MonoBehaviour
 		this.closeButton.UpdateColor();
 		this.localPlayer.InReportMenu = false;
 		this.ToggleLevelVisibility(true);
-		this.levelRenderers.Clear();
-		this.occluder.GetComponent<Renderer>().enabled = false;
-		this.reportScoreboard.transform.position = Vector3.zero;
-		this.currentScoreboard.gameObject.SetActive(false);
-		foreach (object obj in this.reportScoreboard.transform)
-		{
-			Transform transform = (Transform)obj;
-			transform.gameObject.SetActive(false);
-			if (transform.GetComponent<Renderer>())
-			{
-				transform.GetComponent<Renderer>().enabled = false;
-			}
-		}
+		base.gameObject.SetActive(false);
 		foreach (GorillaPlayerScoreboardLine gorillaPlayerScoreboardLine in this.currentScoreboard.lines)
 		{
 			gorillaPlayerScoreboardLine.doneReporting = false;
@@ -176,61 +136,55 @@ public class GorillaMetaReport : MonoBehaviour
 		}
 	}
 
+	private void GetIdealScreenPositionRotation(out Vector3 position, out Quaternion rotation, out Vector3 scale)
+	{
+		GameObject mainCamera = GorillaTagger.Instance.mainCamera;
+		rotation = Quaternion.Euler(0f, mainCamera.transform.eulerAngles.y, 0f);
+		scale = this.localPlayer.turnParent.transform.localScale;
+		position = mainCamera.transform.position + rotation * this.playerLocalScreenPosition * scale.x;
+	}
+
 	private void StartOverlay()
 	{
-		if (!PhotonNetwork.InRoom)
+		Vector3 vector;
+		Quaternion quaternion;
+		Vector3 vector2;
+		this.GetIdealScreenPositionRotation(out vector, out quaternion, out vector2);
+		this.currentScoreboard.transform.localScale = vector2;
+		this.reportScoreboard.transform.localScale = vector2;
+		this.leftHandObject.transform.localScale = vector2;
+		this.rightHandObject.transform.localScale = vector2;
+		this.occluder.transform.localScale = vector2;
+		if (this.localPlayer.InReportMenu && !PhotonNetwork.InRoom)
 		{
-			this.localPlayer.InReportMenu = true;
-			this.localPlayer.disableMovement = true;
-			this.localPlayer.inOverlay = true;
-			this.positionStore = this.localPlayer.transform.position;
-			this.occluder.GetComponent<Renderer>().enabled = true;
+			return;
+		}
+		this.localPlayer.InReportMenu = true;
+		this.localPlayer.disableMovement = true;
+		this.localPlayer.inOverlay = true;
+		base.gameObject.SetActive(true);
+		if (PhotonNetwork.InRoom)
+		{
+			this.DuplicateScoreboard();
+		}
+		else
+		{
 			this.ReportText.SetActive(true);
-			foreach (object obj in this.reportScoreboard.transform)
-			{
-				Transform transform = (Transform)obj;
-				if (transform.GetComponent<Renderer>())
-				{
-					transform.gameObject.SetActive(true);
-					transform.GetComponent<Renderer>().enabled = true;
-				}
-			}
-			this.reportScoreboard.transform.SetPositionAndRotation(base.transform.position, base.transform.rotation);
-			this.currentScoreboard.transform.SetPositionAndRotation(base.transform.position, base.transform.rotation);
-			this.GetLevelVisibility();
-			this.ToggleLevelVisibility(false);
-			this.rightHandObject.transform.SetPositionAndRotation(this.localPlayer.rightControllerTransform.position, this.localPlayer.rightControllerTransform.rotation);
-			this.leftHandObject.transform.SetPositionAndRotation(this.localPlayer.leftControllerTransform.position, this.localPlayer.leftControllerTransform.rotation);
-			this.HandToggle(true);
+			this.reportScoreboard.transform.SetPositionAndRotation(vector, quaternion);
+			this.currentScoreboard.transform.SetPositionAndRotation(vector, quaternion);
 		}
-		if (!this.localPlayer.InReportMenu && PhotonNetwork.InRoom)
-		{
-			this.localPlayer.InReportMenu = true;
-			this.localPlayer.disableMovement = true;
-			this.localPlayer.inOverlay = true;
-			this.positionStore = this.localPlayer.transform.position;
-			this.occluder.GetComponent<Renderer>().enabled = true;
-			foreach (object obj2 in this.reportScoreboard.transform)
-			{
-				Transform transform2 = (Transform)obj2;
-				if (transform2.GetComponent<Renderer>())
-				{
-					transform2.gameObject.SetActive(true);
-					transform2.GetComponent<Renderer>().enabled = true;
-				}
-			}
-			this.GetLevelVisibility();
-			this.ToggleLevelVisibility(false);
-			this.DuplicateScoreboard(this.sourceScoreboard);
-			this.rightHandObject.transform.SetPositionAndRotation(this.localPlayer.rightControllerTransform.position, this.localPlayer.rightControllerTransform.rotation);
-			this.leftHandObject.transform.SetPositionAndRotation(this.localPlayer.leftControllerTransform.position, this.localPlayer.leftControllerTransform.rotation);
-			this.HandToggle(true);
-		}
+		this.ToggleLevelVisibility(false);
+		this.rightHandObject.transform.SetPositionAndRotation(this.localPlayer.rightControllerTransform.position, this.localPlayer.rightControllerTransform.rotation);
+		this.leftHandObject.transform.SetPositionAndRotation(this.localPlayer.leftControllerTransform.position, this.localPlayer.leftControllerTransform.rotation);
 	}
 
 	private void CheckDistance()
 	{
-		float num = Vector3.Distance(this.reportScoreboard.transform.position, base.transform.position);
+		Vector3 vector;
+		Quaternion quaternion;
+		Vector3 vector2;
+		this.GetIdealScreenPositionRotation(out vector, out quaternion, out vector2);
+		float num = Vector3.Distance(this.reportScoreboard.transform.position, vector);
 		float num2 = 1f;
 		if (num > num2 && !this.isMoving)
 		{
@@ -240,11 +194,11 @@ public class GorillaMetaReport : MonoBehaviour
 		if (this.isMoving)
 		{
 			this.movementTime += Time.deltaTime;
-			float num3 = Mathf.Clamp01(this.movementTime / 1f);
-			this.reportScoreboard.transform.SetPositionAndRotation(Vector3.Lerp(this.reportScoreboard.transform.position, base.transform.position, num3), Quaternion.Lerp(this.reportScoreboard.transform.rotation, base.transform.rotation, num3));
+			float num3 = this.movementTime;
+			this.reportScoreboard.transform.SetPositionAndRotation(Vector3.Lerp(this.reportScoreboard.transform.position, vector, num3), Quaternion.Lerp(this.reportScoreboard.transform.rotation, quaternion, num3));
 			if (this.currentScoreboard != null)
 			{
-				this.currentScoreboard.transform.SetPositionAndRotation(Vector3.Lerp(this.currentScoreboard.transform.position, base.transform.position, num3), Quaternion.Lerp(this.currentScoreboard.transform.rotation, base.transform.rotation, num3));
+				this.currentScoreboard.transform.SetPositionAndRotation(Vector3.Lerp(this.currentScoreboard.transform.position, vector, num3), Quaternion.Lerp(this.currentScoreboard.transform.rotation, quaternion, num3));
 			}
 			if (num3 >= 1f)
 			{
@@ -256,17 +210,14 @@ public class GorillaMetaReport : MonoBehaviour
 
 	private void Update()
 	{
-		if (!this.canPress)
+		if (this.blockButtonsUntilTimestamp > Time.time)
 		{
 			return;
 		}
-		this.leftController = ControllerInputPoller.instance.leftControllerDevice;
-		this.leftController.TryGetFeatureValue(CommonUsages.menuButton, out this.menuButtonPress);
-		this.menuButtonPress = SteamVR_Actions.gorillaTag_System.GetState(SteamVR_Input_Sources.LeftHand);
-		if (this.menuButtonPress && this.localPlayer.InReportMenu)
+		if (SteamVR_Actions.gorillaTag_System.GetState(SteamVR_Input_Sources.LeftHand) && this.localPlayer.InReportMenu)
 		{
 			this.Teardown();
-			base.StartCoroutine(this.LockoutButtonPress());
+			this.blockButtonsUntilTimestamp = Time.time + 0.75f;
 		}
 		if (this.localPlayer.InReportMenu)
 		{
@@ -293,7 +244,7 @@ public class GorillaMetaReport : MonoBehaviour
 	}
 
 	[CompilerGenerated]
-	private void <Awake>b__27_0(Message<PlatformInitialize> message)
+	private void <Start>b__14_0(Message<PlatformInitialize> message)
 	{
 		if (!message.IsError)
 		{
@@ -308,22 +259,13 @@ public class GorillaMetaReport : MonoBehaviour
 	private GameObject reportScoreboard;
 
 	[SerializeField]
-	private GameObject sourceScoreboard;
-
-	[SerializeField]
 	private GameObject ReportText;
 
 	[SerializeField]
-	private GameObject gorillaUI;
+	private LayerMask visibleLayers;
 
 	[SerializeField]
-	public GameObject tempLevel;
-
-	[SerializeField]
-	private Player localPlayer;
-
-	[SerializeField]
-	private GameObject closeButtonObject;
+	private GorillaReportButton closeButton;
 
 	[SerializeField]
 	private GameObject leftHandObject;
@@ -332,124 +274,26 @@ public class GorillaMetaReport : MonoBehaviour
 	private GameObject rightHandObject;
 
 	[SerializeField]
-	private GameObject rightTriggerCollider;
+	private Vector3 playerLocalScreenPosition;
+
+	private float blockButtonsUntilTimestamp;
 
 	[SerializeField]
-	private GameObject leftTriggerCollider;
+	private GorillaScoreBoard currentScoreboard;
 
-	[SerializeField]
-	private GameObject rightFingerTip;
-
-	[SerializeField]
-	private GameObject leftFingerTip;
-
-	private GorillaReportButton closeButton;
-
-	private bool canPress = true;
-
-	private List<MeshRenderer> levelRenderers = new List<MeshRenderer>(30000);
-
-	public GameObject buttons;
-
-	public GorillaScoreBoard currentScoreboard;
-
-	private Rigidbody playerRB;
-
-	private Transform savedLeftTransform;
-
-	private Transform savedRightTransform;
-
-	public bool menuButtonPress;
-
-	private GameObject newScoreboard;
-
-	private InputDevice leftController;
+	private int savedCullingLayers;
 
 	public bool testPress;
 
-	private Vector3 positionStore;
-
-	public float radius;
-
-	public float maxDistance;
-
-	public LayerMask layerMask;
-
 	public bool isMoving;
 
-	public float movementTime;
+	private float movementTime;
 
 	[CompilerGenerated]
-	private sealed class <LockoutButtonPress>d__31 : IEnumerator<object>, IEnumerator, IDisposable
+	private sealed class <Submitted>d__17 : IEnumerator<object>, IEnumerator, IDisposable
 	{
 		[DebuggerHidden]
-		public <LockoutButtonPress>d__31(int <>1__state)
-		{
-			this.<>1__state = <>1__state;
-		}
-
-		[DebuggerHidden]
-		void IDisposable.Dispose()
-		{
-		}
-
-		bool IEnumerator.MoveNext()
-		{
-			int num = this.<>1__state;
-			GorillaMetaReport gorillaMetaReport = this;
-			if (num == 0)
-			{
-				this.<>1__state = -1;
-				gorillaMetaReport.canPress = false;
-				this.<>2__current = new WaitForSeconds(0.75f);
-				this.<>1__state = 1;
-				return true;
-			}
-			if (num != 1)
-			{
-				return false;
-			}
-			this.<>1__state = -1;
-			gorillaMetaReport.canPress = true;
-			return false;
-		}
-
-		object IEnumerator<object>.Current
-		{
-			[DebuggerHidden]
-			get
-			{
-				return this.<>2__current;
-			}
-		}
-
-		[DebuggerHidden]
-		void IEnumerator.Reset()
-		{
-			throw new NotSupportedException();
-		}
-
-		object IEnumerator.Current
-		{
-			[DebuggerHidden]
-			get
-			{
-				return this.<>2__current;
-			}
-		}
-
-		private int <>1__state;
-
-		private object <>2__current;
-
-		public GorillaMetaReport <>4__this;
-	}
-
-	[CompilerGenerated]
-	private sealed class <Submitted>d__30 : IEnumerator<object>, IEnumerator, IDisposable
-	{
-		[DebuggerHidden]
-		public <Submitted>d__30(int <>1__state)
+		public <Submitted>d__17(int <>1__state)
 		{
 			this.<>1__state = <>1__state;
 		}

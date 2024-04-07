@@ -1,22 +1,23 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class InteractionPoint : MonoBehaviour
 {
+	public HoldableObject Holdable
+	{
+		get
+		{
+			return this.parentHoldable;
+		}
+	}
+
 	private void Awake()
 	{
 		this.interactor = EquipmentInteractor.instance;
 		this.myCollider = base.GetComponent<Collider>();
-		this.forLocalPlayer = false;
-		if (this.parentTransferrableObject.isSceneObject || this.parentTransferrableObject.canDrop)
-		{
-			this.forLocalPlayer = true;
-			return;
-		}
-		if (this.parentTransferrableObject.IsLocalObject())
-		{
-			this.forLocalPlayer = true;
-		}
+		TransferrableObject transferrableObject = this.parentHoldable as TransferrableObject;
+		this.forLocalPlayer = transferrableObject == null || transferrableObject.IsLocalObject() || transferrableObject.isSceneObject || transferrableObject.canDrop;
 	}
 
 	private void OnEnable()
@@ -94,7 +95,9 @@ public class InteractionPoint : MonoBehaviour
 	{
 	}
 
-	public TransferrableObject parentTransferrableObject;
+	[SerializeField]
+	[FormerlySerializedAs("parentTransferrableObject")]
+	private HoldableObject parentHoldable;
 
 	public Collider myCollider;
 

@@ -2,5 +2,5 @@
 
 public static class GorillaConstants
 {
-	public const float PlayerColorMin = 0.0627451f;
+	public const float PlayerColorMin = 0f;
 }

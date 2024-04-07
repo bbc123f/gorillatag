@@ -15,6 +15,10 @@ public class CosmeticBoundaryTrigger : GorillaTriggerBox
 		{
 			return;
 		}
+		if (CosmeticBoundaryTrigger.sinceLastTryOnEvent.HasElapsed(0.5f, true))
+		{
+			GorillaTelemetry.PostShopEvent(this.rigRef, GTShopEventType.item_try_on, this.rigRef.tryOnSet.items);
+		}
 		this.rigRef.inTryOnRoom = true;
 		this.rigRef.LocalUpdateCosmeticsWithTryon(this.rigRef.cosmeticSet, this.rigRef.tryOnSet);
 		this.rigRef.myBodyDockPositions.RefreshTransferrableItems();
@@ -47,5 +51,12 @@ public class CosmeticBoundaryTrigger : GorillaTriggerBox
 	{
 	}
 
+	// Note: this type is marked as 'beforefieldinit'.
+	static CosmeticBoundaryTrigger()
+	{
+	}
+
 	public VRRig rigRef;
+
+	private static TimeSince sinceLastTryOnEvent = 0f;
 }

@@ -549,7 +549,7 @@ public class LegacyTransferrableObject : HoldableObject
 		}
 	}
 
-	public virtual void OnHover(InteractionPoint pointHovered, GameObject hoveringHand)
+	public new virtual void OnHover(InteractionPoint pointHovered, GameObject hoveringHand)
 	{
 		if (!this.IsMyItem())
 		{

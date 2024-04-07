@@ -61,13 +61,21 @@ public class PaperPlaneProjectile : MonoBehaviour
 		this.crashingObject.SetActive(false);
 	}
 
-	public void Launch(Vector3 startPos, Vector3 vel)
+	public void Launch(Vector3 startPos, Quaternion startRot, Vector3 vel)
 	{
 		base.gameObject.SetActive(true);
 		this.ResetProjectile();
 		this.transform.position = startPos;
-		this.transform.LookAt(this.transform.position + vel.normalized);
-		this._speed = Mathf.Clamp(vel.sqrMagnitude / 2f, 1f, 10f);
+		if (this.enableRotation)
+		{
+			this.transform.rotation = startRot;
+		}
+		else
+		{
+			this.transform.LookAt(this.transform.position + vel.normalized);
+		}
+		this._direction = vel.normalized;
+		this._speed = Mathf.Clamp(vel.sqrMagnitude / 2f, this.minSpeed, this.maxSpeed);
 		this._stopped = false;
 	}
 
@@ -87,8 +95,8 @@ public class PaperPlaneProjectile : MonoBehaviour
 			return;
 		}
 		this._timeElapsed += Time.deltaTime;
-		this.nextPos = this.transform.position + this.transform.forward * this._speed * Time.deltaTime;
-		if (this._timeElapsed < this.maxFlightTime && (this._timeElapsed < this.minFlightTime || Physics.RaycastNonAlloc(this.transform.position, this.nextPos - this.transform.position, this.results, Vector3.Distance(this.transform.position, this.nextPos)) == 0))
+		this.nextPos = this.transform.position + this._direction * this._speed * Time.deltaTime;
+		if (this._timeElapsed < this.maxFlightTime && (this._timeElapsed < this.minFlightTime || Physics.RaycastNonAlloc(this.transform.position, this.nextPos - this.transform.position, this.results, Vector3.Distance(this.transform.position, this.nextPos), this.layerMask.value) == 0))
 		{
 			this.transform.position = this.nextPos;
 			this.transform.Rotate(Mathf.Sin(this._timeElapsed) * 10f * Time.deltaTime, 0f, 0f);
@@ -137,6 +145,9 @@ public class PaperPlaneProjectile : MonoBehaviour
 	private float _speed;
 
 	[NonSerialized]
+	private Vector3 _direction;
+
+	[NonSerialized]
 	private bool _stopped;
 
 	private Transform _tCached;
@@ -152,10 +163,22 @@ public class PaperPlaneProjectile : MonoBehaviour
 	private float minFlightTime = 0.5f;
 
 	[SerializeField]
+	private float maxSpeed = 10f;
+
+	[SerializeField]
+	private float minSpeed = 1f;
+
+	[SerializeField]
+	private bool enableRotation;
+
+	[SerializeField]
 	private GameObject flyingObject;
 
 	[SerializeField]
 	private GameObject crashingObject;
+
+	[SerializeField]
+	private LayerMask layerMask;
 
 	public delegate void PaperPlaneHit(Vector3 endPoint);
 }

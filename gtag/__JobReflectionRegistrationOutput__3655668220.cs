@@ -5,7 +5,7 @@ using Unity.Jobs;
 using UnityEngine;
 
 [DOTSCompilerGenerated]
-internal class __JobReflectionRegistrationOutput__2655142334
+internal class __JobReflectionRegistrationOutput__3655668220
 {
 	public static void CreateJobReflectionData()
 	{
@@ -27,6 +27,6 @@ internal class __JobReflectionRegistrationOutput__2655142334
 	[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterAssembliesLoaded)]
 	public static void EarlyInit()
 	{
-		__JobReflectionRegistrationOutput__2655142334.CreateJobReflectionData();
+		__JobReflectionRegistrationOutput__3655668220.CreateJobReflectionData();
 	}
 }

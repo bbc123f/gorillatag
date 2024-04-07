@@ -6,7 +6,7 @@ public enum GTShopEventType
 	item_try_on,
 	cart_item_add,
 	cart_item_remove,
-	checkout_init,
+	checkout_start,
 	checkout_cancel,
 	register_visit
 }

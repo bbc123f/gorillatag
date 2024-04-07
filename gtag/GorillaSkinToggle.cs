@@ -39,9 +39,9 @@ public class GorillaSkinToggle : MonoBehaviour
 	public void Remove()
 	{
 		GorillaSkin.ApplyToRig(this._rig, this._default);
-		float @float = PlayerPrefs.GetFloat("redValue", 0.0627451f);
-		float float2 = PlayerPrefs.GetFloat("greenValue", 0.0627451f);
-		float float3 = PlayerPrefs.GetFloat("blueValue", 0.0627451f);
+		float @float = PlayerPrefs.GetFloat("redValue", 0f);
+		float float2 = PlayerPrefs.GetFloat("greenValue", 0f);
+		float float3 = PlayerPrefs.GetFloat("blueValue", 0f);
 		GorillaTagger.Instance.UpdateColor(@float, float2, float3);
 		this._applied = false;
 	}

@@ -12,10 +12,10 @@ internal sealed class <PrivateImplementationDetails>
 	internal static readonly <PrivateImplementationDetails>.__StaticArrayInitTypeSize=32 1385A3395CDC9F7F90324CB0A06C5AC11AD4A425A35BBB7D5C9C0C33D8ADE9A0;
 
 	// Note: this field is marked with 'hasfieldrva'.
-	internal static readonly <PrivateImplementationDetails>.__StaticArrayInitTypeSize=65727 348043BE9F4202470B765812F41D25F5B71BDE25F1AFE99E484C9A31BCB3D8DC;
+	internal static readonly <PrivateImplementationDetails>.__StaticArrayInitTypeSize=512 38B7B4B046BC245D681009C0CF75E377102D263A7433F1055DBDF40EF7C58A26;
 
 	// Note: this field is marked with 'hasfieldrva'.
-	internal static readonly <PrivateImplementationDetails>.__StaticArrayInitTypeSize=512 38B7B4B046BC245D681009C0CF75E377102D263A7433F1055DBDF40EF7C58A26;
+	internal static readonly <PrivateImplementationDetails>.__StaticArrayInitTypeSize=66498 3A596B53B7AD425AA2B5C6BF1D617B13A2A76B201C2ECA48D968D1051ECF212A;
 
 	// Note: this field is marked with 'hasfieldrva'.
 	internal static readonly <PrivateImplementationDetails>.__StaticArrayInitTypeSize=12 59B7E757844D3BF9299877BD1C17451611BFBAB493374D6B18D973FDE534151A;
@@ -36,7 +36,7 @@ internal sealed class <PrivateImplementationDetails>
 	internal static readonly <PrivateImplementationDetails>.__StaticArrayInitTypeSize=12 7FCA397EF25DB53B2C58A05F9BBFA4E8E0685FDBC8AAF39536123447056895C0;
 
 	// Note: this field is marked with 'hasfieldrva'.
-	internal static readonly <PrivateImplementationDetails>.__StaticArrayInitTypeSize=37144 83FCFDC71A7C6DE5C770EA6432FC3FEEF8299AB07AC9C448361E9DD5439EE78E;
+	internal static readonly <PrivateImplementationDetails>.__StaticArrayInitTypeSize=37729 90CE96095D3C34F161499A1F53CCB982B759A2F0AA105BCA80F4EDAD99665CBA;
 
 	// Note: this field is marked with 'hasfieldrva'.
 	internal static readonly <PrivateImplementationDetails>.__StaticArrayInitTypeSize=12 918234F629EBF0C84BFE41B60824833200105B6094AB357EE6A872A28F2BAD6A;
@@ -116,13 +116,13 @@ internal sealed class <PrivateImplementationDetails>
 	{
 	}
 
-	[StructLayout(LayoutKind.Explicit, Pack = 1, Size = 37144)]
-	private struct __StaticArrayInitTypeSize=37144
+	[StructLayout(LayoutKind.Explicit, Pack = 1, Size = 37729)]
+	private struct __StaticArrayInitTypeSize=37729
 	{
 	}
 
-	[StructLayout(LayoutKind.Explicit, Pack = 1, Size = 65727)]
-	private struct __StaticArrayInitTypeSize=65727
+	[StructLayout(LayoutKind.Explicit, Pack = 1, Size = 66498)]
+	private struct __StaticArrayInitTypeSize=66498
 	{
 	}
 }

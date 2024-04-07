@@ -158,19 +158,30 @@ namespace GorillaTagScripts
 
 		public void OnAnimationIsDone(int state)
 		{
-			for (int i = 0; i < this.meshStates.Length; i++)
+			if (this.meshRenderer.enabled)
 			{
-				bool flag = i == (int)this.currentState;
-				this.meshStates[i].SetActive(flag);
+				for (int i = 0; i < this.meshStates.Length; i++)
+				{
+					bool flag = i == (int)this.currentState;
+					this.meshStates[i].SetActive(flag);
+				}
+				this.anim.enabled = false;
+				this.meshRenderer.enabled = false;
 			}
-			this.anim.enabled = false;
-			this.meshRenderer.enabled = false;
 		}
 
 		public void UpdateVisuals(bool enable)
 		{
 			this.shouldUpdateVisuals = enable;
 			this.meshStatesGameObject.SetActive(enable);
+		}
+
+		public void AnimCatch()
+		{
+			if (this.anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f)
+			{
+				this.OnAnimationIsDone(0);
+			}
 		}
 
 		public Flower()

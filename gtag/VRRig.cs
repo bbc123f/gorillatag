@@ -309,7 +309,7 @@ public class VRRig : MonoBehaviour, IWrappedSerializable, INetworkStruct, IPreDi
 
 	private void ApplyColorCode()
 	{
-		float num = 0.0627451f;
+		float num = 0f;
 		float @float = PlayerPrefs.GetFloat("redValue", num);
 		float float2 = PlayerPrefs.GetFloat("greenValue", num);
 		float float3 = PlayerPrefs.GetFloat("blueValue", num);
@@ -862,9 +862,9 @@ public class VRRig : MonoBehaviour, IWrappedSerializable, INetworkStruct, IPreDi
 		this.EnsureInstantiatedMaterial();
 		if (this.myDefaultSkinMaterialInstance != null)
 		{
-			color.r = Mathf.Clamp(color.r, 0.0627451f, 1f);
-			color.g = Mathf.Clamp(color.g, 0.0627451f, 1f);
-			color.b = Mathf.Clamp(color.b, 0.0627451f, 1f);
+			color.r = Mathf.Clamp(color.r, 0f, 1f);
+			color.g = Mathf.Clamp(color.g, 0f, 1f);
+			color.b = Mathf.Clamp(color.b, 0f, 1f);
 			this.myDefaultSkinMaterialInstance.color = color;
 		}
 		this.SetColor(color);
@@ -1353,10 +1353,27 @@ public class VRRig : MonoBehaviour, IWrappedSerializable, INetworkStruct, IPreDi
 		return Vector3.Lerp(this.velocityHistoryList[num].vel, this.velocityHistoryList[num2].vel, num5);
 	}
 
+	public Vector3 LatestVelocity()
+	{
+		if (this.velocityHistoryList.Count > 0)
+		{
+			return this.velocityHistoryList[0].vel;
+		}
+		return Vector3.zero;
+	}
+
 	public bool CheckDistance(Vector3 position, float max)
 	{
 		max = max * max * this.scaleFactor;
 		return Vector3.SqrMagnitude(this.syncPos - position) < max;
+	}
+
+	public bool CheckTagDistanceRollback(VRRig otherRig, float max, float timeInterval)
+	{
+		Vector3 vector;
+		Vector3 vector2;
+		GorillaMath.LineSegClosestPoints(this.syncPos, -this.LatestVelocity() * timeInterval, otherRig.syncPos, -otherRig.LatestVelocity() * timeInterval, out vector, out vector2);
+		return Vector3.SqrMagnitude(vector - vector2) < max * max * this.scaleFactor;
 	}
 
 	public void SetColor(Color color)
@@ -2035,7 +2052,7 @@ public class VRRig : MonoBehaviour, IWrappedSerializable, INetworkStruct, IPreDi
 			return char.IsLetterOrDigit(c);
 		}
 
-		internal void <SetColor>b__255_0(Color color1)
+		internal void <SetColor>b__257_0(Color color1)
 		{
 		}
 
@@ -2043,7 +2060,7 @@ public class VRRig : MonoBehaviour, IWrappedSerializable, INetworkStruct, IPreDi
 
 		public static Predicate<char> <>9__220_0;
 
-		public static Action<Color> <>9__255_0;
+		public static Action<Color> <>9__257_0;
 	}
 
 	[CompilerGenerated]

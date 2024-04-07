@@ -7,9 +7,33 @@ using UnityEngine.UI;
 
 public class DebugHudStats : MonoBehaviour
 {
+	public static DebugHudStats Instance
+	{
+		get
+		{
+			return DebugHudStats._instance;
+		}
+	}
+
 	private void Awake()
 	{
+		if (DebugHudStats._instance != null && DebugHudStats._instance != this)
+		{
+			Object.Destroy(base.gameObject);
+		}
+		else
+		{
+			DebugHudStats._instance = this;
+		}
 		base.gameObject.SetActive(false);
+	}
+
+	private void OnDestroy()
+	{
+		if (DebugHudStats._instance == this)
+		{
+			DebugHudStats._instance = null;
+		}
 	}
 
 	private void Update()
@@ -52,13 +76,22 @@ public class DebugHudStats : MonoBehaviour
 		{
 			this.builder.AppendLine("Server Time Unavailable");
 		}
+		this.builder.Append(this.appendedStrings.ToString());
+		this.appendedStrings.Clear();
 		this.text.text = this.builder.ToString();
 		this.updateTimer = 0f;
+	}
+
+	public void AppendString(string s)
+	{
+		this.appendedStrings.AppendLine(s);
 	}
 
 	public DebugHudStats()
 	{
 	}
+
+	private static DebugHudStats _instance;
 
 	[SerializeField]
 	private Text text;
@@ -83,4 +116,6 @@ public class DebugHudStats : MonoBehaviour
 	private bool rightHandTracked;
 
 	private StringBuilder builder;
+
+	private StringBuilder appendedStrings;
 }

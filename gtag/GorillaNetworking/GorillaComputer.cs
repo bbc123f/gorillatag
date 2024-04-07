@@ -1119,9 +1119,15 @@ namespace GorillaNetworking
 
 		private void StartupScreen()
 		{
+			string text = string.Empty;
+			if (PlayFabAuthenticator.instance.GetSafety())
+			{
+				text = "YOU ARE PLAYING ON A MANAGED ACCOUNT\nSOME SETTINGS ARE DISABLED\n\n";
+			}
 			this.screenText.Text = string.Concat(new string[]
 			{
 				"GORILLA OS\n\n",
+				text,
 				NetworkSystem.Instance.GlobalPlayerCount().ToString(),
 				" PLAYERS ONLINE\n\n",
 				this.usersBanned.ToString(),

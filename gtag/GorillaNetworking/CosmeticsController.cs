@@ -288,6 +288,7 @@ namespace GorillaNetworking
 			this.searchIndex = this.currentCart.IndexOf(pressedStand.thisCosmeticItem);
 			if (this.searchIndex != -1)
 			{
+				GorillaTelemetry.PostShopEvent(GorillaTagger.Instance.offlineVRRig, GTShopEventType.cart_item_remove, pressedStand.thisCosmeticItem);
 				this.currentCart.RemoveAt(this.searchIndex);
 				pressedStand.isOn = false;
 				for (int i = 0; i < 11; i++)
@@ -300,6 +301,7 @@ namespace GorillaNetworking
 			}
 			else
 			{
+				GorillaTelemetry.PostShopEvent(GorillaTagger.Instance.offlineVRRig, GTShopEventType.cart_item_add, pressedStand.thisCosmeticItem);
 				this.currentCart.Insert(0, pressedStand.thisCosmeticItem);
 				pressedStand.isOn = true;
 				if (this.currentCart.Count > this.fittingRoomButtons.Length)
@@ -405,6 +407,7 @@ namespace GorillaNetworking
 
 		public void ClearCheckout()
 		{
+			GorillaTelemetry.PostShopEvent(GorillaTagger.Instance.offlineVRRig, GTShopEventType.checkout_cancel, this.currentCart);
 			this.itemToBuy = this.allCosmetics[0];
 			this.checkoutHeadModel.SetCosmeticActive(this.itemToBuy.displayName, false);
 			this.currentPurchaseItemStage = CosmeticsController.PurchaseItemStages.Start;
@@ -488,6 +491,7 @@ namespace GorillaNetworking
 				this.UpdateShoppingCart();
 				return;
 			case CosmeticsController.PurchaseItemStages.CheckoutButtonPressed:
+				GorillaTelemetry.PostShopEvent(GorillaTagger.Instance.offlineVRRig, GTShopEventType.checkout_start, this.currentCart);
 				this.searchIndex = this.unlockedCosmetics.FindIndex((CosmeticsController.CosmeticItem x) => this.itemToBuy.itemName == x.itemName);
 				if (this.searchIndex > -1)
 				{
@@ -519,6 +523,7 @@ namespace GorillaNetworking
 			case CosmeticsController.PurchaseItemStages.ItemSelected:
 				if (buttonSide == "right")
 				{
+					GorillaTelemetry.PostShopEvent(GorillaTagger.Instance.offlineVRRig, GTShopEventType.item_select, this.itemToBuy);
 					this.FormattedPurchaseText("ARE YOU REALLY SURE?");
 					this.leftPurchaseButton.myText.text = "YES! I NEED IT!";
 					this.rightPurchaseButton.myText.text = "LET ME THINK ABOUT IT";

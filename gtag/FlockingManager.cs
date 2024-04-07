@@ -16,6 +16,7 @@ public class FlockingManager : MonoBehaviourPunCallbacks, IPunObservable
 			fishArea.colliders = gameObject.GetComponentsInChildren<BoxCollider>();
 			fishArea.colliderCenter = fishArea.colliders[0].bounds.center;
 			fishArea.fishList.AddRange(componentsInChildren);
+			fishArea.zoneBasedObject = gameObject.GetComponent<ZoneBasedObject>();
 			this.areaToWaypointDict[fishArea.id] = Vector3.zero;
 			Flocking[] array = componentsInChildren;
 			for (int i = 0; i < array.Length; i++)
@@ -59,6 +60,10 @@ public class FlockingManager : MonoBehaviourPunCallbacks, IPunObservable
 		{
 			foreach (FlockingManager.FishArea fishArea in this.fishAreaList)
 			{
+				if (fishArea.zoneBasedObject != null)
+				{
+					fishArea.zoneBasedObject.gameObject.SetActive(fishArea.zoneBasedObject.IsLocalPlayerInZone());
+				}
 				fishArea.nextWaypoint = this.GetRandomPointInsideCollider(fishArea);
 				this.areaToWaypointDict[fishArea.id] = fishArea.nextWaypoint;
 				Debug.DrawLine(fishArea.nextWaypoint, Vector3.forward * 5f, Color.magenta);
@@ -206,5 +211,7 @@ public class FlockingManager : MonoBehaviourPunCallbacks, IPunObservable
 		public BoxCollider[] colliders;
 
 		public Vector3 nextWaypoint = Vector3.zero;
+
+		public ZoneBasedObject zoneBasedObject;
 	}
 }

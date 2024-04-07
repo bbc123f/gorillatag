@@ -791,34 +791,78 @@ namespace GorillaExtensions
 			return GTExt.Matrix4X4LerpNoScale(a, b, t);
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static bool IsNaN(this Vector3 v)
 		{
 			return float.IsNaN(v.x) || float.IsNaN(v.y) || float.IsNaN(v.z);
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static bool IsNan(this Quaternion q)
 		{
 			return float.IsNaN(q.x) || float.IsNaN(q.y) || float.IsNaN(q.z) || float.IsNaN(q.w);
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static bool IsInfinity(this Vector3 v)
 		{
 			return float.IsInfinity(v.x) || float.IsInfinity(v.y) || float.IsInfinity(v.z);
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static bool IsInfinity(this Quaternion q)
 		{
 			return float.IsInfinity(q.x) || float.IsInfinity(q.y) || float.IsInfinity(q.z) || float.IsInfinity(q.w);
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static bool IsValid(this Vector3 v)
 		{
 			return !(v).IsNaN() && !(v).IsInfinity();
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Vector3 GetValidWithFallback(this Vector3 v, in Vector3 safeVal)
+		{
+			if (!(v).IsValid())
+			{
+				return safeVal;
+			}
+			return v;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void SetValueSafe(this Vector3 v, in Vector3 newVal)
+		{
+			if ((newVal).IsValid())
+			{
+				v = newVal;
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static bool IsValid(this Quaternion q)
 		{
 			return !(q).IsNan() && !(q).IsInfinity();
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Quaternion GetValidWithFallback(this Quaternion q, in Quaternion safeVal)
+		{
+			if (!(q).IsValid())
+			{
+				return safeVal;
+			}
+			return q;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void SetValueSafe(this Quaternion q, in Quaternion newVal)
+		{
+			if ((newVal).IsValid())
+			{
+				q = newVal;
+			}
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]

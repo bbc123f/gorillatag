@@ -276,7 +276,7 @@ public class GorillaTagManager : GorillaGameManager
 			}
 			else if (this.currentInfected.Contains(taggingPlayer) && !this.currentInfected.Contains(taggedPlayer) && (double)Time.time > this.lastTag + (double)this.tagCoolDown)
 			{
-				if (!this.taggingRig.CheckDistance(this.taggedRig.transform.position, 5f))
+				if (!this.taggingRig.CheckDistance(this.taggedRig.transform.position, 6f) && !this.taggingRig.CheckTagDistanceRollback(this.taggedRig, 6f, 0.2f))
 				{
 					GorillaNot.instance.SendReport("extremely far tag", taggingPlayer.UserId, taggingPlayer.NickName);
 				}
@@ -348,6 +348,15 @@ public class GorillaTagManager : GorillaGameManager
 			return this.currentIt != player && thisFrame;
 		}
 		return !this.waitingToStartNextInfectionGame && (double)Time.time >= this.timeInfectedGameEnded + (double)(2f * this.tagCoolDown) && !this.currentInfected.Contains(player);
+	}
+
+	public bool IsInfected(Player player)
+	{
+		if (this.isCurrentlyTag)
+		{
+			return this.currentIt == player;
+		}
+		return !this.waitingToStartNextInfectionGame && (double)Time.time >= this.timeInfectedGameEnded + (double)(2f * this.tagCoolDown) && this.currentInfected.Contains(player);
 	}
 
 	public override void OnPlayerEnteredRoom(Player newPlayer)

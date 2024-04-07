@@ -138,6 +138,47 @@ namespace GorillaLocomotion
 			}
 		}
 
+		public Vector3 Velocity
+		{
+			get
+			{
+				return this.playerRigidBody.velocity;
+			}
+		}
+
+		public Vector3 HeadCenterPosition
+		{
+			get
+			{
+				return this.headCollider.transform.position + this.headCollider.transform.rotation * new Vector3(0f, 0f, -0.11f);
+			}
+		}
+
+		public bool HandContactingSurface
+		{
+			get
+			{
+				return this.leftHandColliding || this.rightHandColliding;
+			}
+		}
+
+		public bool BodyOnGround
+		{
+			get
+			{
+				return this.bodyGroundContactTime >= Time.time - 0.05f;
+			}
+		}
+
+		public Quaternion PlayerRotationOverride
+		{
+			set
+			{
+				this.playerRotationOverride = value;
+				this.playerRotationOverrideFrame = Time.frameCount;
+			}
+		}
+
 		private void Awake()
 		{
 			if (Player._instance != null && Player._instance != this)
@@ -234,6 +275,11 @@ namespace GorillaLocomotion
 		public void TeleportToTrain(bool enable)
 		{
 			this.teleportToTrain = enable;
+		}
+
+		public void AddForce(Vector3 force, ForceMode mode)
+		{
+			this.playerRigidBody.AddForce(force, mode);
 		}
 
 		public void FixedUpdate()
@@ -556,6 +602,11 @@ namespace GorillaLocomotion
 			}
 			float time = Time.time;
 			Vector3 position = this.headCollider.transform.position;
+			if (this.playerRotationOverrideFrame < Time.frameCount - 1)
+			{
+				this.playerRotationOverride = Quaternion.Slerp(Quaternion.identity, this.playerRotationOverride, Mathf.Exp(-this.playerRotationOverrideDecayRate * Time.deltaTime));
+			}
+			base.transform.rotation = this.playerRotationOverride;
 			this.turnParent.transform.localScale = Vector3.one * this.scale;
 			this.playerRigidBody.MovePosition(this.playerRigidBody.position + position - this.headCollider.transform.position);
 			if (Math.Abs(this.lastScale - this.scale) > 0.001f)
@@ -610,10 +661,10 @@ namespace GorillaLocomotion
 				base.transform.position = base.transform.position + this.slideAverage * this.calcDeltaTime;
 				this.slideAverage += 9.8f * Vector3.down * this.calcDeltaTime * this.scale;
 			}
-			this.FirstHandIteration(this.leftControllerTransform, this.leftHandOffset, this.GetLastLeftHandPosition(), this.wasLeftHandSlide, this.wasLeftHandTouching, out this.leftHandPushDisplacement, ref this.leftHandSlipPercentage, ref this.leftHandSlide, ref this.leftHandSlideNormal, ref this.leftHandColliding, ref this.leftHandMaterialTouchIndex, ref this.leftHandSurfaceOverride, this.leftHandHolding);
+			this.FirstHandIteration(this.leftControllerTransform, this.leftHandOffset, this.GetLastLeftHandPosition(), this.wasLeftHandSlide, this.wasLeftHandTouching, this.LeftSlipOverriddenToMax(), out this.leftHandPushDisplacement, ref this.leftHandSlipPercentage, ref this.leftHandSlide, ref this.leftHandSlideNormal, ref this.leftHandColliding, ref this.leftHandMaterialTouchIndex, ref this.leftHandSurfaceOverride, this.leftHandHolding);
 			this.leftHandColliding = this.leftHandColliding && this.controllerState.LeftValid;
 			this.leftHandSlide = this.leftHandSlide && this.controllerState.LeftValid;
-			this.FirstHandIteration(this.rightControllerTransform, this.rightHandOffset, this.GetLastRightHandPosition(), this.wasRightHandSlide, this.wasRightHandTouching, out this.rightHandPushDisplacement, ref this.rightHandSlipPercentage, ref this.rightHandSlide, ref this.rightHandSlideNormal, ref this.rightHandColliding, ref this.rightHandMaterialTouchIndex, ref this.rightHandSurfaceOverride, this.rightHandHolding);
+			this.FirstHandIteration(this.rightControllerTransform, this.rightHandOffset, this.GetLastRightHandPosition(), this.wasRightHandSlide, this.wasRightHandTouching, this.RightSlipOverriddenToMax(), out this.rightHandPushDisplacement, ref this.rightHandSlipPercentage, ref this.rightHandSlide, ref this.rightHandSlideNormal, ref this.rightHandColliding, ref this.rightHandMaterialTouchIndex, ref this.rightHandSurfaceOverride, this.rightHandHolding);
 			this.rightHandColliding = this.rightHandColliding && this.controllerState.RightValid;
 			this.rightHandSlide = this.rightHandSlide && this.controllerState.RightValid;
 			this.touchPoints = 0;
@@ -663,7 +714,7 @@ namespace GorillaLocomotion
 			this.rightHandSlide = this.rightHandSlide && this.controllerState.RightValid;
 			this.StoreVelocities();
 			this.didAJump = false;
-			if (this.OverrideSlipToMax())
+			if (this.LeftSlipOverriddenToMax() && this.RightSlipOverriddenToMax())
 			{
 				this.didAJump = true;
 			}
@@ -894,7 +945,7 @@ namespace GorillaLocomotion
 			}
 		}
 
-		private Vector3 FirstHandIteration(Transform handTransform, Vector3 handOffset, Vector3 lastHandPosition, bool wasHandSlide, bool wasHandTouching, out Vector3 pushDisplacement, ref float handSlipPercentage, ref bool handSlide, ref Vector3 slideNormal, ref bool handColliding, ref int materialTouchIndex, ref GorillaSurfaceOverride touchedOverride, bool skipCollisionChecks)
+		private Vector3 FirstHandIteration(Transform handTransform, Vector3 handOffset, Vector3 lastHandPosition, bool wasHandSlide, bool wasHandTouching, bool fullSlideOverride, out Vector3 pushDisplacement, ref float handSlipPercentage, ref bool handSlide, ref Vector3 slideNormal, ref bool handColliding, ref int materialTouchIndex, ref GorillaSurfaceOverride touchedOverride, bool skipCollisionChecks)
 		{
 			Vector3 currentHandPosition = this.GetCurrentHandPosition(handTransform, handOffset);
 			Vector3 vector = currentHandPosition;
@@ -903,7 +954,7 @@ namespace GorillaLocomotion
 			{
 				this.distanceTraveled += Vector3.Project(-this.slideAverageNormal * this.stickDepth * this.scale, Vector3.down);
 			}
-			if (this.IterativeCollisionSphereCast(lastHandPosition, this.minimumRaycastDistance * this.scale, this.distanceTraveled, out this.finalPosition, true, out this.slipPercentage, out this.tempHitInfo, false) && !skipCollisionChecks && !this.InReportMenu)
+			if (this.IterativeCollisionSphereCast(lastHandPosition, this.minimumRaycastDistance * this.scale, this.distanceTraveled, out this.finalPosition, true, out this.slipPercentage, out this.tempHitInfo, fullSlideOverride) && !skipCollisionChecks && !this.InReportMenu)
 			{
 				if (wasHandTouching && this.slipPercentage <= this.defaultSlideFactor)
 				{
@@ -967,7 +1018,7 @@ namespace GorillaLocomotion
 			iterativeHitInfo = this.tempIterativeHit;
 			this.slideFactor = this.GetSlidePercentage(iterativeHitInfo);
 			slipPercentage = ((this.slideFactor != this.defaultSlideFactor) ? this.slideFactor : ((!singleHand) ? this.defaultSlideFactor : 0.001f));
-			if (fullSlide || this.OverrideSlipToMax())
+			if (fullSlide)
 			{
 				slipPercentage = 1f;
 			}
@@ -1230,15 +1281,15 @@ namespace GorillaLocomotion
 			Vector3 localPosition = this.climbHelper.localPosition;
 			if (climbable.snapX)
 			{
-				Player.<BeginClimbing>g__SnapAxis|259_0(ref localPosition.x, climbable.maxDistanceSnap);
+				Player.<BeginClimbing>g__SnapAxis|278_0(ref localPosition.x, climbable.maxDistanceSnap);
 			}
 			if (climbable.snapY)
 			{
-				Player.<BeginClimbing>g__SnapAxis|259_0(ref localPosition.y, climbable.maxDistanceSnap);
+				Player.<BeginClimbing>g__SnapAxis|278_0(ref localPosition.y, climbable.maxDistanceSnap);
 			}
 			if (climbable.snapZ)
 			{
-				Player.<BeginClimbing>g__SnapAxis|259_0(ref localPosition.z, climbable.maxDistanceSnap);
+				Player.<BeginClimbing>g__SnapAxis|278_0(ref localPosition.z, climbable.maxDistanceSnap);
 			}
 			this.climbHelperTargetPos = localPosition;
 			climbable.isBeingClimbed = true;
@@ -1522,12 +1573,28 @@ namespace GorillaLocomotion
 
 		public void SetMaximumSlipThisFrame()
 		{
-			this.disableGripFrameIdx = Time.frameCount;
+			this.leftSlipSetToMaxFrameIdx = Time.frameCount;
+			this.rightSlipSetToMaxFrameIdx = Time.frameCount;
 		}
 
-		public bool OverrideSlipToMax()
+		public void SetLeftMaximumSlipThisFrame()
 		{
-			return this.disableGripFrameIdx == Time.frameCount;
+			this.leftSlipSetToMaxFrameIdx = Time.frameCount;
+		}
+
+		public void SetRightMaximumSlipThisFrame()
+		{
+			this.rightSlipSetToMaxFrameIdx = Time.frameCount;
+		}
+
+		public bool LeftSlipOverriddenToMax()
+		{
+			return this.leftSlipSetToMaxFrameIdx == Time.frameCount;
+		}
+
+		public bool RightSlipOverriddenToMax()
+		{
+			return this.rightSlipSetToMaxFrameIdx == Time.frameCount;
 		}
 
 		public void OnEnterWaterVolume(Collider playerCollider, WaterVolume volume)
@@ -1668,6 +1735,26 @@ namespace GorillaLocomotion
 			return false;
 		}
 
+		private void OnCollisionStay(Collision collision)
+		{
+			this.bodyCollisionContactsCount = collision.GetContacts(this.bodyCollisionContacts);
+			float num = -1f;
+			for (int i = 0; i < this.bodyCollisionContactsCount; i++)
+			{
+				float num2 = Vector3.Dot(this.bodyCollisionContacts[i].normal, Vector3.up);
+				if (num2 > num)
+				{
+					this.bodyGroundContact = this.bodyCollisionContacts[i];
+					num = num2;
+				}
+			}
+			float num3 = 0.5f;
+			if (num > num3)
+			{
+				this.bodyGroundContactTime = Time.time;
+			}
+		}
+
 		internal void AddHandHold(Transform handHold, Transform grabber, bool rightHand, bool rotatePlayerWhenHeld, out Vector3 grabbedVelocity)
 		{
 			grabbedVelocity = Vector3.zero;
@@ -1748,31 +1835,31 @@ namespace GorillaLocomotion
 		}
 
 		[CompilerGenerated]
-		private bool <GetSlidePercentage>b__257_2(Player.MaterialData matData)
+		private bool <GetSlidePercentage>b__276_2(Player.MaterialData matData)
 		{
 			return matData.matName == this.findMatName;
 		}
 
 		[CompilerGenerated]
-		private bool <GetSlidePercentage>b__257_3(Player.MaterialData matData)
+		private bool <GetSlidePercentage>b__276_3(Player.MaterialData matData)
 		{
 			return matData.matName == this.findMatName;
 		}
 
 		[CompilerGenerated]
-		private bool <GetSlidePercentage>b__257_0(Player.MaterialData matData)
+		private bool <GetSlidePercentage>b__276_0(Player.MaterialData matData)
 		{
 			return matData.matName == this.findMatName;
 		}
 
 		[CompilerGenerated]
-		private bool <GetSlidePercentage>b__257_1(Player.MaterialData matData)
+		private bool <GetSlidePercentage>b__276_1(Player.MaterialData matData)
 		{
 			return matData.matName == this.findMatName;
 		}
 
 		[CompilerGenerated]
-		internal static void <BeginClimbing>g__SnapAxis|259_0(ref float val, float maxDist)
+		internal static void <BeginClimbing>g__SnapAxis|278_0(ref float val, float maxDist)
 		{
 			if (val > maxDist)
 			{
@@ -2064,7 +2151,9 @@ namespace GorillaLocomotion
 
 		private List<Material> tempMaterialArray = new List<Material>(16);
 
-		private int disableGripFrameIdx = -1;
+		private int leftSlipSetToMaxFrameIdx = -1;
+
+		private int rightSlipSetToMaxFrameIdx = -1;
 
 		private const float CameraFarClipDefault = 500f;
 
@@ -2119,6 +2208,20 @@ namespace GorillaLocomotion
 		private List<WaterVolume> bodyOverlappingWaterVolumes = new List<WaterVolume>(16);
 
 		private List<WaterCurrent> activeWaterCurrents = new List<WaterCurrent>(16);
+
+		private Quaternion playerRotationOverride;
+
+		private int playerRotationOverrideFrame = -1;
+
+		private float playerRotationOverrideDecayRate = Mathf.Exp(1.5f);
+
+		private ContactPoint[] bodyCollisionContacts = new ContactPoint[8];
+
+		private int bodyCollisionContactsCount;
+
+		private ContactPoint bodyGroundContact;
+
+		private float bodyGroundContactTime;
 
 		private BasePlatform currentPlatform;
 

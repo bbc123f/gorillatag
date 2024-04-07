@@ -25,7 +25,10 @@ public class ZoneDef : MonoBehaviour
 	public BoxCollider[] colliders = new BoxCollider[0];
 
 	[Space]
-	public GTZone[] zonesToIgnore = new GTZone[0];
+	public ZoneNode[] nodes = new ZoneNode[0];
+
+	[Space]
+	public Bounds bounds;
 
 	[Space]
 	public ZoneDef[] zoneOverlaps = new ZoneDef[0];

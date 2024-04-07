@@ -102,6 +102,32 @@ namespace GorillaExtensions
 			return -Vector4.one;
 		}
 
+		public static void LineSegClosestPoints(Vector3 a, Vector3 u, Vector3 b, Vector3 v, out Vector3 lineAPoint, out Vector3 lineBPoint)
+		{
+			lineAPoint = a;
+			lineBPoint = b;
+			Vector3 vector = b - a;
+			float num = Vector3.Dot(vector, u);
+			float num2 = Vector3.Dot(vector, v);
+			float num3 = Vector3.Dot(u, u);
+			float num4 = Vector3.Dot(u, v);
+			float num5 = Vector3.Dot(v, v);
+			float num6 = num3 * num5 - num4 * num4;
+			if ((double)Mathf.Abs(num6) < 0.001)
+			{
+				return;
+			}
+			float num7 = (num * num5 - num2 * num4) / num6;
+			float num8 = (num * num4 - num2 * num3) / num6;
+			num7 = Mathf.Clamp(num7, 0f, 1f);
+			float num9 = (Mathf.Clamp(num8, 0f, 1f) * num4 + num) / num3;
+			float num10 = (num7 * num4 - num2) / num5;
+			num9 = Mathf.Clamp(num9, 0f, 1f);
+			num10 = Mathf.Clamp(num10, 0f, 1f);
+			lineAPoint = a + num9 * u;
+			lineBPoint = b + num10 * v;
+		}
+
 		[Serializable]
 		public struct RemapFloatInfo
 		{

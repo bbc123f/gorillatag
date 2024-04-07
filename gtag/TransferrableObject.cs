@@ -1460,7 +1460,7 @@ public class TransferrableObject : HoldableObject, ISelfValidator, IRequestableO
 		}
 	}
 
-	public virtual void OnHover(InteractionPoint pointHovered, GameObject hoveringHand)
+	public override void OnHover(InteractionPoint pointHovered, GameObject hoveringHand)
 	{
 		if (!this.IsGrabbable())
 		{

@@ -126,11 +126,11 @@ public class EquipmentInteractor : MonoBehaviour
 			{
 				if (this.justGrabbed)
 				{
-					interactionPoint.parentTransferrableObject.OnGrab(interactionPoint, interactingHand);
+					interactionPoint.Holdable.OnGrab(interactionPoint, interactingHand);
 				}
 				else
 				{
-					interactionPoint.parentTransferrableObject.OnHover(interactionPoint, interactingHand);
+					interactionPoint.Holdable.OnHover(interactionPoint, interactingHand);
 				}
 			}
 			if (this.justReleased)
@@ -158,7 +158,7 @@ public class EquipmentInteractor : MonoBehaviour
 	{
 		if (forLeftHand)
 		{
-			if (newEquipment == this.rightHandHeldEquipment)
+			if (newEquipment != null && newEquipment == this.rightHandHeldEquipment && !newEquipment.TwoHanded)
 			{
 				this.rightHandHeldEquipment = null;
 			}
@@ -170,7 +170,7 @@ public class EquipmentInteractor : MonoBehaviour
 			this.autoGrabLeft = false;
 			return;
 		}
-		if (newEquipment == this.leftHandHeldEquipment)
+		if (newEquipment != null && newEquipment == this.leftHandHeldEquipment && !newEquipment.TwoHanded)
 		{
 			this.leftHandHeldEquipment = null;
 		}

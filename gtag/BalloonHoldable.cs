@@ -12,7 +12,7 @@ public class BalloonHoldable : TransferrableObject, IFXContext
 	{
 		base.Awake();
 		this.balloonDynamics = base.GetComponent<BalloonDynamics>();
-		this.mesh = base.GetComponent<MeshRenderer>();
+		this.mesh = base.GetComponent<Renderer>();
 		this.lineRenderer = base.GetComponent<LineRenderer>();
 		this.itemState = (TransferrableObject.ItemStates)0;
 		this.rb = base.GetComponent<Rigidbody>();
@@ -487,7 +487,7 @@ public class BalloonHoldable : TransferrableObject, IFXContext
 
 	private BalloonDynamics balloonDynamics;
 
-	private MeshRenderer mesh;
+	private Renderer mesh;
 
 	private LineRenderer lineRenderer;
 
