@@ -1,0 +1,61 @@
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class BalloonString : MonoBehaviour
+{
+	private void Awake()
+	{
+		this.lineRenderer = base.GetComponent<LineRenderer>();
+		this.vertices = new List<Vector3>(this.numSegments + 1);
+		if (this.startPositionXf != null && this.endPositionXf != null)
+		{
+			this.vertices.Add(this.startPositionXf.position);
+			int num = this.vertices.Count - 2;
+			for (int i = 0; i < num; i++)
+			{
+				float t = (float)((i + 1) / (this.vertices.Count - 1));
+				Vector3 item = Vector3.Lerp(this.startPositionXf.position, this.endPositionXf.position, t);
+				this.vertices.Add(item);
+			}
+			this.vertices.Add(this.endPositionXf.position);
+		}
+	}
+
+	private void UpdateDynamics()
+	{
+		this.vertices[0] = this.startPositionXf.position;
+		this.vertices[this.vertices.Count - 1] = this.endPositionXf.position;
+	}
+
+	private void UpdateRenderPositions()
+	{
+		this.lineRenderer.SetPosition(0, this.startPositionXf.transform.position);
+		this.lineRenderer.SetPosition(1, this.endPositionXf.transform.position);
+	}
+
+	private void LateUpdate()
+	{
+		if (this.startPositionXf != null && this.endPositionXf != null)
+		{
+			this.UpdateDynamics();
+			this.UpdateRenderPositions();
+		}
+	}
+
+	public BalloonString()
+	{
+	}
+
+	public Transform startPositionXf;
+
+	public Transform endPositionXf;
+
+	private List<Vector3> vertices;
+
+	public int numSegments = 1;
+
+	private bool endPositionFixed;
+
+	private LineRenderer lineRenderer;
+}
